@@ -6944,6 +6944,9 @@ textarea#comment_box {
 .mt20 {
   margin-top: 20px;
 }
+.nowrap {
+  text-wrap: nowrap;
+}
 /* Generic */
 
 /* Search form */
@@ -6951,3 +6954,82 @@ textarea#comment_box {
   height: 100%;
 }
 /* Search form */
+
+/* Cookie banner */
+#cookie-banner.sticky {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  z-index: 10;
+}
+#cookie-banner.above-footer {
+  position: absolute;
+  width: 100%;
+}
+div.show-cookie-list{
+  cursor: pointer;
+  position: absolute;
+  right: 25px;
+  bottom: 10px;
+}
+div.show-cookie-list i{
+  font-size: 16px;
+}
+#cookie-preferences-form .breakeable{
+  word-break: break-all;
+}
+@media (min-width: 768px) {
+  #cookieListModal .modal-dialog {
+    max-width: 80%;
+    width: fit-content;
+  }
+}
+/* Cookie banner */
+
+/* Bootstrap 5 switch */
+.form-check-input {
+  width: 1em;
+  height: 1em;
+  margin-top: .25em;
+  vertical-align: top;
+  background-color: #fff;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+  border: 1px solid rgba(0, 0, 0, .25);
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  -webkit-print-color-adjust: exact;
+  color-adjust: exact;
+  cursor: pointer;
+}
+.form-switch .form-check-input {
+  width: 2em;
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'%3e%3ccircle r='3' fill='rgba%280, 0, 0, 0.25%29'/%3e%3c/svg%3e");
+  background-position: left center;
+  border-radius: 2em;
+  transition: background-position .15s ease-in-out;
+}
+.form-switch .form-check-input:checked {
+  background-position: right center;
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'%3e%3ccircle r='3' fill='%23fff'/%3e%3c/svg%3e");
+}
+.form-check-input:checked {
+  background-color: #0d6efd;
+  border-color: #0d6efd;
+}
+.form-switch .form-check-input:focus {
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'%3e%3ccircle r='3' fill='%2386b7fe'/%3e%3c/svg%3e");
+  outline-offset: 0;
+  outline: 0;
+}
+.form-switch:has(input:disabled) {
+  cursor: not-allowed;
+}
+.form-check-input:disabled {
+  pointer-events: none;
+  filter: none;
+  opacity: .5;
+}
+/* Bootstrap 5 switch */

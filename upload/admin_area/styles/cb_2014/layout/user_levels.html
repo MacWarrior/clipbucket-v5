@@ -52,9 +52,9 @@
                                     <div class="col-md-4">
                                         {if in_array($perm.permission_name, ['allow_manage_user_level', 'admin_access']) && User::getInstance()->get('level') == $level_details.user_level_id}
                                             <input type="hidden" name="permission_value[{$perm.id_user_levels_permission}]" value="{$perm.permission_value}">
-                                            <input type="checkbox" disabled="disabled" {if $perm.permission_value==yes}checked{/if} class="ace ace-switch ace-switch-5 bootstrap-switch-on"/>
+                                            <input type="checkbox" disabled="disabled" {if $perm.permission_value==yes}checked{/if} class="ace ace-switch ace-switch-5"/>
                                         {else}
-                                            <input type="checkbox" name="permission_value[{$perm.id_user_levels_permission}]" value="yes" {if $perm.permission_value==yes}checked{/if} class="ace ace-switch ace-switch-5 bootstrap-switch-on"/>
+                                            <input type="checkbox" name="permission_value[{$perm.id_user_levels_permission}]" value="yes" {if $perm.permission_value==yes}checked{/if} class="ace ace-switch ace-switch-5"/>
                                         {/if}
                                             <span class="lbl"></span>
                                     </div>

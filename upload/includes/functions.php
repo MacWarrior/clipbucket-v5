@@ -46,29 +46,6 @@ function display_clean($var, $clean_quote = true): string
     return htmlentities($var);
 }
 
-function set_cookie_secure($name, $val, $time = null)
-{
-    if (is_null($time)) {
-        $time = time() + 3600;
-    }
-
-    $path = '/';
-    $flag_secure = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on');
-    $flag_httponly = true;
-
-    if (version_compare(System::get_software_version('php_web'), '7.3.0', '>=')) {
-        setcookie($name, $val, [
-            'expires'  => $time,
-            'path'     => $path,
-            'secure'   => $flag_secure,
-            'httponly' => $flag_httponly,
-            'samesite' => 'Strict'
-        ]);
-    } else {
-        setcookie($name, $val, $time, $path, '', $flag_secure, $flag_httponly);
-    }
-}
-
 function getBytesFromFileSize($size)
 {
     $units = [
@@ -1471,68 +1448,21 @@ function call_view_collection_functions($cdetails): void
  */
 function increment_views($id, $type = null): void
 {
+    $userid = user_id();
+
     switch ($type) {
-        case 'v':
-        case 'video':
-        default:
-            if (!isset($_COOKIE['video_' . $id])) {
-                $currentTime = time();
-                $views = (int)$videoViewsRecord['video_views'] + 1;
-                Clipbucket_db::getInstance()->update(tbl('video_views'), ['video_views', 'last_updated'], [$views, $currentTime], " video_id='$id' OR videokey='$id'");
-                $query = "UPDATE " . tbl("video_views") . " SET video_views = video_views + 1 WHERE video_id = {$id}";
-                Clipbucket_db::getInstance()->execute($query);
-                set_cookie_secure('video_' . $id, 'watched');
-            }
-            break;
-
-        case 'u':
-        case 'user':
-        case 'channel':
-            if (!isset($_COOKIE['user_' . $id])) {
-                Clipbucket_db::getInstance()->update(tbl("users"), ['profile_hits'], ['|f|profile_hits+1'], " userid='$id'");
-                set_cookie_secure('user_' . $id, 'watched');
-            }
-            break;
-
-        case 'photos':
-        case 'photo':
-        case 'p':
-            if (!isset($_COOKIE['photo_' . $id])) {
-                Clipbucket_db::getInstance()->update(tbl('photos'), ['views', 'last_viewed'], ['|f|views+1', NOW()], " photo_id = '$id'");
-                set_cookie_secure('photo_' . $id, 'viewed');
-            }
-            break;
-    }
-
-}
-
-/**
- * Function used to increment views of an object
- *
- * @param      $id
- * @param null $type
- *
- * @throws Exception
- * @internal param $ : { string } { $type } { type of object e.g video, user } { $type } { type of object e.g video, user }
- * @action : database updating
- * @internal param $ : { integer } { $id } { id of element to update views for } { $id } { id of element to update views for }
- */
-function increment_views_new($id, $type = null): void
-{
-    switch ($type) {
-        case 'v':
         case 'video':
         default:
             $vdetails = get_video_details($id);
             $sessionTime =  ($vdetails['duration'] ?? 3600);
-            if (!isset($_SESSION['video_' . $id]) || ( time() - $_SESSION['video_' . $id]  > $sessionTime) && $vdetails['status'] == 'Successful') {
+            if (!isset($_SESSION[$type . '_' . $id]) || ( time() - $_SESSION[$type . '_' . $id]  > $sessionTime) && $vdetails['status'] == 'Successful') {
                 Clipbucket_db::getInstance()->update(tbl('video'), ['views', 'last_viewed'], ['|f|views+1', '|f|NOW()'], " videokey='$id'");
                 if (config('enable_video_view_history') == 'yes') {
-                    Clipbucket_db::getInstance()->insert(tbl('video_views'), ['id_video', 'id_user', 'view_date'], [$vdetails['videoid'], (user_id() ?: 0), '|f|NOW()']);
+                    Clipbucket_db::getInstance()->insert(tbl('video_views'), ['id_video', 'id_user', 'view_date'], [$id, ($userid ?: 0), '|f|NOW()']);
                 }
-                $_SESSION['video_' . $id] = time();
+                $_SESSION[$type . '_' . $id] = time();
 
-                $userid = user_id();
+
                 if ($userid) {
                     $log_array = [
                         'success'       => 'NULL',
@@ -1545,21 +1475,27 @@ function increment_views_new($id, $type = null): void
             }
             break;
 
-        case 'u':
-        case 'user':
         case 'channel':
-            if (!isset($_COOKIE['user_' . $id])) {
-                Clipbucket_db::getInstance()->update(tbl('users'), ['profile_hits'], ['|f|profile_hits+1'], " userid='$id'");
-                set_cookie_secure('user_' . $id, 'watched');
+            $sessionTime = 3600;
+            if( !isset($_SESSION[$type . '_' . $id]) || ( time() - $_SESSION[$type . '_' . $id]  > $sessionTime) ){
+                Clipbucket_db::getInstance()->update(tbl('users'), ['profile_hits'], ['|f|profile_hits+1'], ' userid= ' . (int)$id);
+                $_SESSION[$type . '_' . $id] = time();
             }
             break;
 
-        case 'photos':
         case 'photo':
-        case 'p':
-            if (!isset($_COOKIE['photo_' . $id])) {
-                Clipbucket_db::getInstance()->update(tbl('photos'), ['views', 'last_viewed'], ['|f|views+1', NOW()], " photo_id = '$id'");
-                set_cookie_secure('photo_' . $id, 'viewed');
+            $sessionTime = 3600;
+            if( !isset($_SESSION[$type . '_' . $id]) || ( time() - $_SESSION[$type . '_' . $id]  > $sessionTime) ){
+                Clipbucket_db::getInstance()->update(tbl('photos'), ['views', 'last_viewed'], ['|f|views+1', NOW()], ' photo_id = ' . (int)$id);
+                $_SESSION[$type . '_' . $id] = time();
+            }
+            break;
+
+        case 'playlist':
+            $sessionTime = 3600;
+            if( !isset($_SESSION[$type . '_' . $id]) || ( time() - $_SESSION[$type . '_' . $id]  > $sessionTime) ){
+                Clipbucket_db::getInstance()->update(tbl('playlists'), ['played'], ['|f|played+1'], ' playlist_id = ' . (int)$id);
+                $_SESSION[$type . '_' . $id] = time();
             }
             break;
     }
@@ -1886,6 +1822,31 @@ function nicetime($date, $istime = false): string
     }
 
     return lang($tense, [$difference, $period]);
+}
+
+/**
+ * @throws Exception
+ */
+function format_duration($seconds): string
+{
+    $period_sing = [lang('second'), lang('minute'), lang('hour'), lang('day'), lang('week'), lang('month'), lang('year'), lang('decade')];
+    $period_plur = [lang('seconds'), lang('minutes'), lang('hours'), lang('days'), lang('weeks'), lang('months'), lang('years'), lang('decades')];
+    $lengths = [60, 60, 24, 7, 4.35, 12, 10]; // divisions successives
+
+    $result = [];
+    $diff = (int)$seconds;
+    if ($diff < 1) {
+        return "0 " . $period_plur[0];
+    }
+
+    for ($i = 0; $i < count($lengths) && $diff >= $lengths[$i]; $i++) {
+        $diff = $diff / $lengths[$i];
+    }
+
+    $diff = round($diff);
+    $name = ($diff > 1) ? $period_plur[$i] : $period_sing[$i];
+
+    return $diff . ' ' . $name;
 }
 
 /**

@@ -57,8 +57,8 @@ class pages
     //This Function Set The PageDirect
     function page_redir(): void
     {
-        set_cookie_secure('pageredir', display_clean($this->GetCurrentUrl()), time() + 7200);
-        assign('pageredir', @$_COOKIE['pageredir']);
+        $_SESSION['pageredir'] = $this->GetCurrentUrl();
+        assign('pageredir', $_SESSION['pageredir']);
     }
 
     /**
