@@ -493,10 +493,8 @@ function checkStatus() {
         type: "post",
         dataType: "json",
         success: function (data) {
-            $('#status_icon').find('span').removeClass();
-            $('#status_icon').find('span').addClass('status-'+ data.status);
-            $('#status_html').html(data.html);
             $('#changelog_display').html(data.changeLog);
+            $('#status_html').html(data.html);
         }
     });
 }
