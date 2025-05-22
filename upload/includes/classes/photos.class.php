@@ -2393,7 +2393,12 @@ class CBPhotos
                             if (empty($array['collection_id'])) {
                                 e(lang('collection_not_found'), 'w');
                             } elseif ($cid != $array['collection_id']) {
+                                $photo_detail = Photo::getInstance()->getOne(['photo_id'=>$pid]);
                                 Collections::getInstance()->deleteItemFromCollections($pid);
+                                $thumb = Collection::assignDefaultThumb($photo_detail['collection_id']);
+                                if (empty($thumb)) {
+                                    Collection::getInstance()->setDefautThumb(0, $photo_detail['collection_id']);;
+                                }
                                 Collection::getInstance()->addCollectionItem($pid, $array['collection_id'], 'photos');
                             }
 

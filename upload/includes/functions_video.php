@@ -399,8 +399,8 @@ function video_link($vdetails, $type = null): string
         $vdetails = get_video_details($vid);
     }
 
-    if (strtolower($vdetails['status']) == 'processing' && !User::getInstance()->hasAdminAccess()) {
-        return '';
+    if ((strtolower($vdetails['status']) == 'processing' || strtolower($vdetails['status']) == 'waiting') && !User::getInstance()->hasAdminAccess()) {
+        return '#';
     }
     //calling for custom video link functions
     $functions = cb_get_functions('video_link');

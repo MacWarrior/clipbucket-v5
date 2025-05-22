@@ -329,7 +329,7 @@ class Collection
         if( !User::getInstance()->hasAdminAccess() ){
             $conditions[] = $this->getGenericConstraints();
             if ($param_can_upload ) {
-                $conditions[] = $this->getTableName() . '.public_upload = \'yes\'';
+                $conditions[] = '(' . $this->getTableName() . '.public_upload = \'yes\' OR ' . $this->getTableName() . '.userid = ' . User::getInstance()->getCurrentUserID() . ')';
             }
         }
 
@@ -1154,7 +1154,7 @@ class Collections extends CBCategory
         }
 
         $userid = user_id();
-        if ($c['broadcast'] == 'private' && !userquery::getInstance()->is_confirmed_friend($c['userid'], $userid) && $c['userid'] != $userid ) {
+        if (($c['broadcast'] == 'private' && !userquery::getInstance()->is_confirmed_friend($c['userid'], $userid) && $c['userid'] != $userid ) && !User::getInstance()->hasAdminAccess()) {
             e(lang('collection_is', strtolower(lang('private'))));
             return false;
         }
@@ -2416,6 +2416,8 @@ class Collections extends CBCategory
 
         Clipbucket_db::getInstance()->execute('DELETE FROM ' . tbl('collection_items') . ' WHERE '
             . ('type=\'' . $type . '\'') . ' AND ' . ('object_id=\'' . $objId . '\''));
+
+
     }
 
     /**

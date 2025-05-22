@@ -54,7 +54,8 @@
                         </div>
                         {/if}
                         {if (User::getInstance()->hasPermission($upload_permission) && $c.public_upload == 'yes')
-                        || (User::getInstance()->isUserConnected() && User::getInstance()->get('userid') == $c.userid)}
+                        || (User::getInstance()->isUserConnected() && User::getInstance()->get('userid') == $c.userid)
+                        || User::getInstance()->hasAdminAccess()}
                             <a href="{$link_add_more}" class="btn btn-success pull-right">{lang('add_more')}</a>
                         {/if}
                     </div>
