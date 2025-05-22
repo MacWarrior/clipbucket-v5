@@ -55,7 +55,7 @@ function get_playlist_thumb($playlist, $size = false)
 
         $thumb = get_thumb($first_item, false, $size);
 
-        if (strpos($thumb, 'processing') === false) {
+        if (!str_contains($thumb, 'processing')) {
             return $thumb;
         }
     }
@@ -81,14 +81,10 @@ function get_playlist_default_thumb(): string
 /**
  * @throws Exception
  */
-function increment_playlist_played($args = [])
+function increment_playlist_played($args = []): void
 {
-    if (isset($args['playlist'])) {
-        $cookie = 'playlist_played_' . $args['playlist']['playlist_id'];
-        if (!isset($_COOKIE[$cookie])) {
-            Clipbucket_db::getInstance()->update(tbl('playlists'), ['played'], ['|f|played+1'], " playlist_id = '" . $args['playlist']['playlist_id'] . "' ");
-            set_cookie_secure($cookie, true);
-        }
+    if( !empty($args['playlist']['playlist_id']) ){
+        increment_views( $args['playlist']['playlist_id'], 'playlist');
     }
 }
 

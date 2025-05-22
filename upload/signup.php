@@ -55,13 +55,13 @@ if (isset($_POST['login'])) {
     $password = mysql_clean($_POST['password']);
 
     $remember = false;
-    if ($_POST['rememberme']) {
+    if ($_POST['remember_me']) {
         $remember = true;
     }
 
     if (userquery::getInstance()->login_user($username, $password, $remember)) {
-        if ($_COOKIE['pageredir']) {
-            redirect_to($_COOKIE['pageredir']);
+        if ($_SESSION['pageredir']) {
+            redirect_to($_SESSION['pageredir']);
         } else {
             redirect_to(cblink(['name' => 'my_account']));
         }
@@ -74,7 +74,6 @@ if (!isset($_POST['login']) && !isset($_POST['signup'])) {
         $msg = lang('usr_ban_err');
     }
 }
-
 
 if($_GET['mode'] ?? '' == 'login'){
     subtitle(lang('login'));

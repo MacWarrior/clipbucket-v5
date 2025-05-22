@@ -314,7 +314,7 @@ class Network{
         return $protocol;
     }
 
-    private static function is_ssl(): bool
+    public static function is_ssl(): bool
     {
         if (isset($_SERVER['HTTPS'])) {
             if ('on' == strtolower($_SERVER['HTTPS'])) {

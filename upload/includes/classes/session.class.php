@@ -35,7 +35,7 @@ class Session
      * @throws Exception
      * @todo: Find a proper solution to avoid database crashing because of sessions insertion and updation
      */
-    function add_session($user, $name, $value = false, $reg = false)
+    function add_session($user, $name, $value = false, $reg = false): void
     {
         if (!$value) {
             $value = $this->id;
@@ -117,7 +117,7 @@ class Session
      * @param $name
      * @param $value
      */
-    function session_val($name, $value)
+    function session_val($name, $value): void
     {
         $_SESSION[$name] = $value;
     }
@@ -128,16 +128,16 @@ class Session
      * @param $name
      * @param $val
      */
-    function set_session($name, $val)
+    function set_session($name, $val): void
     {
         if ($this->cookie) {
-            set_cookie_secure($name, $val, time() + $this->timeout);
+            self::setCookie($name, $val, time() + $this->timeout);
         } else {
             $_SESSION[$name] = $val;
         }
     }
 
-    function set($name, $val)
+    function set($name, $val): void
     {
         $this->set_session($name, $val);
     }
@@ -147,17 +147,17 @@ class Session
      *
      * @param $name
      */
-    function unset_session($name)
+    function unset_session($name): void
     {
         if ($this->cookie) {
             unset($_COOKIE[$name]);
-            set_cookie_secure($name, '', 0);
+            self::setCookie($name, '', 0);
         } else {
             unset($_SESSION[$name]);
         }
     }
 
-    function un_set($name)
+    function un_set($name): void
     {
         $this->unset_session($name);
     }
@@ -225,8 +225,170 @@ class Session
      * @return void
      * @throws Exception
      */
-    public static function deleteById($id)
+    public static function deleteById($id): void
     {
         Clipbucket_db::getInstance()->delete(tbl(self::tbl), ['session_id'], [$id]);
     }
+
+    /**
+     * @throws Exception
+     */
+    public static function getCookiesList(): array
+    {
+        $undefined = '<i>(' . lang('undefined') . ')</i>';
+        $cookies = [];
+
+        $cookies[] = [
+            'name'         => 'PHPSESSID'
+            ,'description' => lang('cookie_description_phpsessid')
+            ,'value'       => $_COOKIE['PHPSESSID'] ? display_clean($_COOKIE['PHPSESSID']) : $undefined
+            ,'required'    => true
+            ,'lifetime'    => format_duration(3600 * 24) . ' - ' . format_duration(3600 * 24 * 7)
+            ,'consent'     => self::isCookieConsent('PHPSESSID')
+        ];
+        if( config('enable_cookie_banner') == 'yes' ){
+            $cookies[] = [
+                'name'         => 'cookie_consent'
+                ,'description' => lang('cookie_description_consent')
+                ,'value'       => $_COOKIE['cookie_consent'] ? display_clean($_COOKIE['cookie_consent']) : $undefined
+                ,'required'    => true
+                ,'lifetime'    => format_duration(3600 * 24 * 365/2)
+                ,'consent'     => self::isCookieConsent('cookie_consent')
+            ];
+        }
+        if( config('enable_global_age_restriction') == 'yes' ){
+            $cookies[] = [
+                'name'         => 'age_restrict'
+                ,'description' => lang('cookie_description_age_restrict')
+                ,'value'       => $_COOKIE['age_restrict'] ? display_clean($_COOKIE['age_restrict']) : $undefined
+                ,'required'    => true
+                ,'lifetime'    => 'Session'
+                ,'consent'     => self::isCookieConsent('age_restrict')
+            ];
+        }
+        if( config('enable_quicklist') == 'yes' ){
+            $cookies[] = [
+                'name'         => 'fast_qlist'
+                ,'description' => lang('cookie_description_quicklist')
+                ,'value'       => $_COOKIE['fast_qlist'] ? display_clean($_COOKIE['fast_qlist']) : $undefined
+                ,'required'    => false
+                ,'lifetime'    => 'Session'
+                ,'consent'     => self::isCookieConsent('fast_qlist')
+            ];
+            // Temp disabled for now
+            /*$cookies[] = [
+                'name'         => 'quick_list_box'
+                ,'description' => 'quick_list_box ?'
+                ,'value'       => $_COOKIE['quick_list_box'] ? display_clean($_COOKIE['quick_list_box']) : $undefined
+                ,'required'    => false
+                ,'lifetime'    => 'Session'
+                ,'consent'     => self::isCookieConsent('quick_list_box')
+            ];*/
+        }
+        if( config('enable_theme_change') == 'yes' ){
+            $cookies[] = [
+                'name'         => 'user_theme'
+                ,'description' => lang('cookie_description_theme')
+                ,'value'       => $_COOKIE['user_theme'] ? display_clean($_COOKIE['user_theme']) : $undefined
+                ,'required'    => false
+                ,'lifetime'    => format_duration(3600)
+                ,'consent'     => self::isCookieConsent('user_theme')
+            ];
+            $cookies[] = [
+                'name'         => 'user_theme_os'
+                ,'description' => lang('cookie_description_theme_auto')
+                ,'value'       => $_COOKIE['user_theme_os'] ? display_clean($_COOKIE['user_theme_os']) : $undefined
+                ,'required'    => false
+                ,'lifetime'    => format_duration(3600)
+                ,'consent'     => self::isCookieConsent('user_theme_os')
+            ];
+        }
+        if( config('allow_language_change') == '1' ){
+            $cookies[] = [
+                'name'         => 'cb_lang'
+                ,'description' => lang('cookie_description_lang')
+                ,'value'       => $_COOKIE['cb_lang'] ? display_clean($_COOKIE['cb_lang']) : $undefined
+                ,'required'    => false
+                ,'lifetime'    => format_duration(3600)
+                ,'consent'     => self::isCookieConsent('cb_lang')
+            ];
+        }
+
+        return $cookies;
+    }
+
+    public static function isConsentCookieSet(): bool
+    {
+        return !empty($_COOKIE['cookie_consent']);
+    }
+
+    private static function getConsentCookie(): array
+    {
+        if( !self::isConsentCookieSet() ){
+            return [];
+        }
+
+        try{
+            return json_decode($_COOKIE['cookie_consent'], true);
+        }
+        catch(Exception $e){
+            return [];
+        }
+    }
+
+    public static function isCookieConsent(string $cookie): bool
+    {
+        if( !self::isConsentCookieSet() ){
+            return true;
+        }
+
+        $cookies_consent = self::getConsentCookie();
+
+        return ($cookies_consent[$cookie] ?? 'no') == 'yes';
+    }
+
+    /**
+     * @throws Exception
+     */
+    public static function setCookieConsent($post): void
+    {
+        if( $post != 'all' ){
+            $post = json_decode($post, true);
+        }
+        $cookies_list = self::getCookiesList();
+        $consent = [];
+        foreach($cookies_list as $cookie){
+            if( $post == 'all' ){
+                $consent[$cookie['name']] = 'yes';
+                continue;
+            }
+            $consent[$cookie['name']] = ($post[$cookie['name']] ?? '' == 'yes') ? 'yes' : 'no';
+            if( $consent[$cookie['name']] == 'no' ){
+                self::unsetCookie($cookie['name']);
+            }
+        }
+
+        self::setCookie('cookie_consent', json_encode($consent), time() + 3600 * 24 * 365/2);
+    }
+
+    public static function setCookie($name, $val, $time = null): void
+    {
+        if (is_null($time)) {
+            $time = time() + 3600;
+        }
+
+        setcookie($name, $val, [
+            'expires'  => $time,
+            'path'     => '/',
+            'secure'   => Network::is_ssl(),
+            'httponly' => true,
+            'samesite' => 'Strict'
+        ]);
+    }
+
+    public static function unsetCookie($name):void
+    {
+        self::setCookie($name, '', time() - 3600*24);
+    }
+
 }
