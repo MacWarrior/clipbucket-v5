@@ -1,15 +1,21 @@
 function headerFooter()
 {
-    var headerheight = "";
-    var footerheight = "";
-    var cont_height = "";
-    var cont_height_new = "";
+    let headerheight = "";
+    let footerheight = "";
+    let cookie_banner = 0;
+    let cont_height = "";
+    let cont_height_new = "";
+
     cont_height = $("#container").height();
     headerheight = $("#header").outerHeight();
     footerheight = $("#footer").outerHeight();
-    cont_height_new = cont_height - (headerheight + footerheight);
+    if( $("#cookie-banner").length > 0 ){
+        cookie_banner = $("#cookie-banner").is(":visible") ? $("#cookie-banner").outerHeight() : 0;
+    }
+
+    cont_height_new = cont_height - (headerheight + footerheight + cookie_banner);
     $("#container").css('padding-top',headerheight+'px');
-    $("#container").css('padding-bottom',footerheight+'px');
+    $("#container").css('padding-bottom',(footerheight+cookie_banner)+'px');
 
     $(".account-container, .page-error").css('height',cont_height_new+'px');
 }
@@ -595,3 +601,251 @@ document.addEventListener("DOMContentLoaded", function () {
     });
     /* Language switch */
 });
+
+/* Cookie banner */
+function updateCookieBannerPosition() {
+    let banner = document.getElementById('cookie-banner');
+    let footer = document.getElementById('footer');
+    if (!banner || !footer) {
+        return;
+    }
+
+    let footerRect = footer.getBoundingClientRect();
+    let windowHeight = window.innerHeight || document.documentElement.clientHeight;
+
+    if (footerRect.top < windowHeight) {
+        banner.classList.remove('sticky');
+        banner.classList.add('above-footer');
+        let bannerHeight = banner.offsetHeight;
+        banner.style.top = (footer.offsetTop - bannerHeight) + 'px';
+        banner.style.bottom = '';
+    } else {
+        banner.classList.remove('above-footer');
+        banner.classList.add('sticky');
+        banner.style.top = '';
+        banner.style.bottom = '0';
+    }
+}
+
+function showCookieBanner() {
+    if (!cookieConsent) {
+        document.getElementById('cookie-banner').style.display = '';
+        updateCookieBannerPosition();
+    }
+}
+function hideCookieBanner() {
+    document.getElementById('cookie-banner').style.display = 'none';
+}
+function showModal() {
+    let modal = document.getElementById('cookieListModal');
+    modal.classList.add('in');
+    modal.style.display = 'block';
+    if (!document.querySelector('.modal-backdrop')) {
+        let backdrop = document.createElement('div');
+        backdrop.className = 'modal-backdrop fade in';
+        backdrop.onclick = closeModal;
+        document.body.appendChild(backdrop);
+    }
+    document.body.classList.add('modal-open');
+
+    document.getElementById('refuse_all_optionnal').onclick = function() {
+        let form = document.getElementById('cookie-preferences-form');
+        let checkboxes = form.querySelectorAll('input[type="checkbox"]:not(:disabled)');
+        checkboxes.forEach(function(checkbox) {
+            checkbox.checked = false;
+        });
+        saveCookiePreferences();
+    };
+
+    document.getElementById('accept_all_cookies').onclick = function() {
+        let form = document.getElementById('cookie-preferences-form');
+        let checkboxes = form.querySelectorAll('input[type="checkbox"]:not(:disabled)');
+        checkboxes.forEach(function(checkbox) {
+            checkbox.checked = true;
+        });
+        saveCookiePreferences();
+    };
+
+    document.getElementById('save_cookie_preferences').onclick = function() {
+        saveCookiePreferences();
+    };
+}
+function closeModal() {
+    let modal = document.getElementById('cookieListModal');
+    modal.classList.remove('in');
+    modal.style.display = 'none';
+    document.body.classList.remove('modal-open');
+    let backdrop = document.querySelector('.modal-backdrop');
+    if (backdrop) {
+        backdrop.parentNode.removeChild(backdrop);
+    }
+}
+function renderCookieList() {
+    let xhr = new XMLHttpRequest();
+    xhr.open('GET', baseurl+'actions/cookie_consent_get.php', true);
+    xhr.onreadystatechange = function() {
+        if (xhr.readyState === XMLHttpRequest.DONE) {
+            try {
+                let response = JSON.parse(xhr.responseText);
+                if (response && response.template) {
+                    document.getElementById('cookie-list-content').innerHTML = response.template;
+                    showModal();
+                } else {
+                    document.getElementById('cookie-list-content').innerHTML = '<div class="alert alert-danger">Erreur lors de la récupération du contenu.</div>';
+                }
+            } catch(e) {
+                document.getElementById('cookie-list-content').innerHTML = '<div class="alert alert-danger">Réponse inattendue du serveur.</div>';
+            }
+        }
+    };
+    xhr.send();
+}
+function ajaxSetConsent(value, callback) {
+    let xhr = new XMLHttpRequest();
+    xhr.open("POST", baseurl+"actions/cookie_consent_set.php", true);
+    xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+    xhr.onreadystatechange = function() {
+        if (xhr.readyState === XMLHttpRequest.DONE) {
+            if (typeof callback === 'function') {
+                callback(xhr.responseText);
+            }
+        }
+    };
+    xhr.send("consent=" + encodeURIComponent(value));
+}
+
+function fade(element, type = 'in', duration = 400) {
+    let opacityStart = (type === 'in') ? 0 : 1;
+    let opacityEnd   = (type === 'in') ? 1 : 0;
+
+    if (type === 'in') {
+        element.style.opacity = opacityStart;
+        element.style.display = '';
+    }
+
+    let startTime = null;
+    function tick(now) {
+        if (!startTime) startTime = now;
+        let elapsed = now - startTime;
+        let progress = Math.min(elapsed / duration, 1);
+
+        let currentOpacity;
+        if (type === 'in') {
+            currentOpacity = opacityStart + (opacityEnd - opacityStart) * progress;
+            element.style.opacity = currentOpacity;
+            if (progress < 1) {
+                requestAnimationFrame(tick);
+            } else {
+                element.style.opacity = opacityEnd;
+            }
+        } else {
+            currentOpacity = opacityStart - (opacityStart - opacityEnd) * progress;
+            element.style.opacity = currentOpacity;
+            if (progress < 1) {
+                requestAnimationFrame(tick);
+            } else {
+                element.style.opacity = opacityEnd;
+                element.style.display = 'none';
+            }
+        }
+    }
+    requestAnimationFrame(tick);
+}
+
+function checkDisabledFeatured(data){
+    for (let key in data) {
+        if (Object.prototype.hasOwnProperty.call(data, key)) {
+            let type_animation = data[key] === 0 ? 'out' : 'in';
+            let elem, computedStyle, isVisible;
+            switch (key) {
+                case 'fast_qlist':
+                    let elems = document.querySelectorAll('.cb_quickie');
+                    elems.forEach(function(el) {
+                        computedStyle = window.getComputedStyle(el);
+                        isVisible = computedStyle.display !== 'none' && parseFloat(computedStyle.opacity) > 0;
+
+                        if ((type_animation === 'in' && !isVisible) ||
+                            (type_animation === 'out' && isVisible)) {
+                            fade(el, type_animation, 1000);
+                        }
+                    });
+
+                    let qlist_main = document.getElementById('qlist_main');
+                    let qlistCount = document.getElementById('qlist_count');
+                    if (qlist_main && qlistCount && qlistCount.textContent.trim() !== '' && qlistCount.textContent.trim() !== '0') {
+                        computedStyle = window.getComputedStyle(qlist_main);
+                        isVisible = computedStyle.display !== 'none' && parseFloat(computedStyle.opacity) > 0;
+
+                        if ((type_animation === 'in' && !isVisible) ||
+                            (type_animation === 'out' && isVisible)) {
+                            fade(qlist_main, type_animation, 1000);
+                        }
+                    }
+                    break;
+                case 'user_theme':
+                    elem = document.querySelector('.theme-switch');
+                    break;
+                case 'user_theme_os':
+                    elem = document.querySelector('.theme-switch button[data-theme="auto"]');
+                    break;
+                case 'cb_lang':
+                    elem = document.querySelector('.langdrop');
+                    break;
+            }
+
+            if( elem ){
+                computedStyle = window.getComputedStyle(elem);
+                isVisible = computedStyle.display !== 'none' && parseFloat(computedStyle.opacity) > 0;
+
+                if ((type_animation === 'in' && !isVisible) ||
+                    (type_animation === 'out' && isVisible)) {
+                    fade(elem, type_animation, 1000);
+                }
+            }
+        }
+    }
+}
+
+function saveCookiePreferences() {
+    let form = document.getElementById('cookie-preferences-form');
+    let data = {};
+    let inputs = form.querySelectorAll('input[type="checkbox"]');
+    inputs.forEach(function(input) {
+        data[input.name] = input.checked ? 1 : 0;
+    });
+    ajaxSetConsent(JSON.stringify(data), function(response) {
+        closeModal();
+        hideCookieBanner();
+        checkDisabledFeatured(data);
+    });
+}
+
+window.addEventListener('scroll', updateCookieBannerPosition);
+window.addEventListener('resize', updateCookieBannerPosition);
+
+document.addEventListener('DOMContentLoaded', function() {
+    showCookieBanner();
+
+    let cookieLinks = document.querySelectorAll('.show-cookie-list');
+    for (let i = 0; i < cookieLinks.length; i++) {
+        cookieLinks[i].onclick = function(e) {
+            renderCookieList();
+        };
+    }
+    document.getElementById('modal-close-btn').onclick = closeModal;
+    let acceptButtons = document.querySelectorAll('.accept-cookies');
+    acceptButtons.forEach(function(btn) {
+        btn.onclick = function() {
+            ajaxSetConsent('all', function() {
+                closeModal();
+                hideCookieBanner();
+            });
+        };
+    });
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+            closeModal();
+        }
+    });
+});
+/* Cookie banner */
