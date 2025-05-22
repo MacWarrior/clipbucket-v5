@@ -1,6 +1,6 @@
 {
   "version":"5.5.2",
-  "revision":"61",
+  "revision":"62",
   "status":"stable",
   "detail":[
     {
@@ -22,6 +22,7 @@
         ,"Fix possible error on video edition <i>(#602)</i>"
         ,"Fix video edition"
         ,"Fix TMDB search"
+        ,"Fix converting video refresh"
       ]
     },
     {
