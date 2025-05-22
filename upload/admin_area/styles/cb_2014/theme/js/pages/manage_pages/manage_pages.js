@@ -8,20 +8,20 @@ $(document).ready(function () {
         $(obj).next('span').remove();
     }
 
-    $('input#page_name').on('keyup', function () {
-        let page_name = $(this);
-        let page_name_val = page_name.val();
-        if (page_name_val === '') {
-            addErrClass(page_name, errors["empty_name"], true, false);
+    $('input#page_name,input#page_title').on('keyup', function () {
+        let input = $(this);
+        let input_val = input.val();
+        if (input_val === '') {
+            addErrClass(input, errors["empty_"+input.attr('id')], true, false);
             has_error = true;
-        } else if (page_name_val.indexOf(' ') >= 0) {
-            addErrClass(page_name, errors["page_name_cant_have_space"], true, false);
+        } else if (input_val.indexOf(' ') >= 0 && input.attr('id') === 'page_name') {
+            addErrClass(input, errors["page_name_cant_have_space"], true, false);
             has_error = true;
         } else {
             has_error = false;
         }
         if (!has_error) {
-            removeErrClass(page_name);
+            removeErrClass(input);
         }
     });
 
