@@ -362,7 +362,7 @@ function default_thumb($return_type = 'url'): string
  * @throws Exception
  * @internal param video $ARRAY details
  */
-function video_link($vdetails, $type = null): string
+function video_link($vdetails, $type = null)
 {
     $base_url = DirPath::getUrl('root');
     #checking what kind of input we have
@@ -990,7 +990,7 @@ function get_videos($param)
  * so that only register usernames can be set
  *
  * @param $users
- *
+ * @param bool $only_format
  * @return array
  * @throws Exception
  */
@@ -1031,6 +1031,7 @@ function video_users($users, $only_format = false): array
  * @param null $user
  *
  * @return bool
+ * @throws Exception
  */
 function is_video_user($vdo, $user = null): bool
 {
