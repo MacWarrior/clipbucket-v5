@@ -1579,4 +1579,9 @@ VALUES ('admin_setting'),
        ('accept_all'),
        ('refuse_all_optionnal'),
        ('lifetime'),
-       ('no_comment');
+       ('no_comment'),
+       ('overall_statistics'),
+       ('user_statistics'),
+       ('video_statistics'),
+       ('reported'),
+       ('total');
