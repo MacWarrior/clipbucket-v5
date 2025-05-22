@@ -1,6 +1,6 @@
 {
   "version":"5.5.2",
-  "revision":"59",
+  "revision":"60",
   "status":"stable",
   "detail":[
     {
@@ -9,6 +9,7 @@
         "Implement Nginx VirtualHost check"
         ,"Implement channel slogan"
         ,"Refactor conversion queue manager"
+        ,"Update configs organisation"
         ,"Fix code mode on page edition <i>(#595)</i>"
         ,"Fix email sending error catching <i>(#587)</i>"
         ,"Fix incorrect frontend URL <i>(#529)</i>"
@@ -63,6 +64,7 @@
         ,"Drop support for PHP 7.0 to 7.4"
         ,"Update Readme"
         ,"Reduce cookies usage"
+        ,"Remove unused configs"
         ,"Fix PHP8.X compatibility"
         ,"Fix 404 & 403 redirect on Apache <i>(#215)</i>"
         ,"Fix URL issue when base_url config is not correctly set"

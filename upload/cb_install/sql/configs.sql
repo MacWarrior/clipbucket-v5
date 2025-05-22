@@ -23,7 +23,6 @@ INSERT INTO `{tbl_prefix}config` (`configid`, `name`, `value`) VALUES
 	(NULL, 'video_embed', '1'),
 	(NULL, 'seo', 'no'),
 	(NULL, 'admin_pages', '100'),
-	(NULL, 'search_list_per_page', '25'),
 	(NULL, 'max_upload_size', '1000'),
 	(NULL, 'sbrate', '128000'),
 	(NULL, 'allowed_video_types', 'wmv,avi,divx,3gp,mov,mpeg,mpg,xvid,flv,asf,rm,dat,mp4,mkv,webm,m4v,ts'),
