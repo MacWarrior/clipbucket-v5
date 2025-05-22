@@ -1,6 +1,6 @@
 {
   "version":"5.5.2",
-  "revision":"58",
+  "revision":"62",
   "status":"stable",
   "detail":[
     {
@@ -9,6 +9,8 @@
         "Implement Nginx VirtualHost check"
         ,"Implement channel slogan"
         ,"Refactor conversion queue manager"
+        ,"Add empty page title error"
+        ,"Update configs organisation"
         ,"Fix code mode on page edition <i>(#595)</i>"
         ,"Fix email sending error catching <i>(#587)</i>"
         ,"Fix incorrect frontend URL <i>(#529)</i>"
@@ -19,6 +21,8 @@
         ,"Fix possible error 500 on System info page"
         ,"Fix possible error on video edition <i>(#602)</i>"
         ,"Fix video edition"
+        ,"Fix TMDB search"
+        ,"Fix converting video refresh"
       ]
     },
     {
@@ -63,6 +67,7 @@
         ,"Drop support for PHP 7.0 to 7.4"
         ,"Update Readme"
         ,"Reduce cookies usage"
+        ,"Remove unused configs"
         ,"Fix PHP8.X compatibility"
         ,"Fix 404 & 403 redirect on Apache <i>(#215)</i>"
         ,"Fix URL issue when base_url config is not correctly set"

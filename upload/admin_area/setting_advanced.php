@@ -38,7 +38,8 @@ if (isset($_POST['update'])) {
         'only_keep_max_resolution',
         'enable_chunk_upload',
         'photo_enable_nsfw_check',
-        'video_enable_nsfw_check'
+        'video_enable_nsfw_check',
+        'store_guest_session'
     ];
 
     $config_booleans_to_refactor = [
@@ -136,7 +137,9 @@ if (isset($_POST['update'])) {
         'base_url',
         'video_nsfw_check_model',
         'thumb_background_color',
-        'subtitle_format'
+        'subtitle_format',
+        'store_guest_session',
+        'cached_pagin_time'
     ];
 
     foreach (Upload::getInstance()->get_upload_options() as $optl) {

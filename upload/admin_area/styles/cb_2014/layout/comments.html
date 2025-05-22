@@ -33,13 +33,13 @@
             {if $comment.type == 'v'}
                 {assign var=comment_type value=lang('video')}
                 {assign var=comment_obj_baseurl value='./edit_video.php?video='}
-            {else if $comment.type == 'p'}
+            {elseif $comment.type == 'p'}
                 {assign var=comment_type value=lang('photo')}
                 {assign var=comment_obj_baseurl value='./edit_photo.php?photo='}
-            {else if $comment.type == 'cl'}
+            {elseif $comment.type == 'cl'}
                 {assign var=comment_type value=lang('collection')}
                 {assign var=comment_obj_baseurl value='./edit_collection.php?collection='}
-            {else if $comment.type == 'channel'}
+            {elseif $comment.type == 'channel'}
                 {assign var=comment_type value=lang('channel')}
                 {assign var=comment_obj_baseurl value='./view_user.php?uid='}
             {/if}
@@ -85,7 +85,7 @@
         {/foreach}
     </table>
     {else}
-    <div align="center"><em>{lang code='no_comments'}</em></div>
+    <div align="center"><em>{lang code='no_comment'}</em></div>
     {/if}
 </form>
 <div style="height:10px;clear:both;"></div>

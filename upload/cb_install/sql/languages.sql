@@ -1578,4 +1578,5 @@ VALUES ('admin_setting'),
        ('cookie_cant_be_disabled'),
        ('accept_all'),
        ('refuse_all_optionnal'),
-       ('lifetime');
+       ('lifetime'),
+       ('no_comment');
