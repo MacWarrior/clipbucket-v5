@@ -27,10 +27,9 @@ if ($vdetails['userid'] != $userid) {
 } else {
     //Updating Video Details
     if (isset($_POST['update_video'])) {
-        Upload::getInstance()->validate_video_upload_form();
+        $_POST['videoid'] = $vid;
+        CBvideo::getInstance()->update_video();
         if (empty(errorhandler::getInstance()->get_error())) {
-            $_POST['videoid'] = $vid;
-            CBvideo::getInstance()->update_video();
             Video::getInstance()->setDefautThumb($_POST['default_thumb'], 'thumb', $vid);
             Video::getInstance()->setDefautThumb($_POST['default_poster'], 'poster', $vid);
             Video::getInstance()->setDefautThumb($_POST['default_backdrop'], 'backdrop', $vid);
