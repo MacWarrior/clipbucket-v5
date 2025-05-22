@@ -35,7 +35,20 @@ $(function() {
         }
     });
 
-    $('[name="broadcast"]').trigger('change');
+    $('#oxygenz_remote_play_form').find('#video_password').attr('disabled', 'disabled').parent().slideUp();
+    $('#oxygenz_remote_play_form').find('#video_users').attr('disabled', 'disabled').parent().slideUp();
+    $('#oxygenz_remote_play_form').find('[name="broadcast"]').off('click').on('click', function () {
+        if ($(this).val() === 'unlisted') {
+            $(this).closest('form').find('#video_password').attr('disabled', false).parent().slideDown();
+            $(this).closest('form').find('#video_users').attr('disabled', 'disabled').parent().slideUp();
+        } else if ($(this).val() === 'private') {
+            $(this).closest('form').find('#video_users').attr('disabled', false).parent().slideDown();
+            $(this).closest('form').find('#video_password').attr('disabled', 'disabled').parent().slideUp();
+        } else {
+            $(this).closest('form').find('#video_password').attr('disabled', 'disabled').parent().slideUp();
+            $(this).closest('form').find('#video_users').attr('disabled', 'disabled').parent().slideUp();
+        }
+    });
 
     $('#oxygenz_remote_play_submit_form1').click(function(e) {
         e.preventDefault();

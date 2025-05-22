@@ -248,7 +248,7 @@
                         </div>
                         <div id="privacyoption" class="tab-pane">
                             {foreach from=$video_privacyoption item=field}
-                                {if $field.type == 'hidden'}
+                                {if $field.type == 'hidden' &&  $field.id != 'video_users'}
                                     {$formObj->createField($field)}
                                     {continue}
                                 {/if}

@@ -129,7 +129,20 @@ $(document).ready(function(){
                     alert_shown = false;
                 }
             });
-            $('[name="broadcast"]').trigger('change');
+            $(oneUploadForm).find('#video_password').attr('disabled', 'disabled').parent().slideUp();
+            $(oneUploadForm).find('#video_users').attr('disabled', 'disabled').parent().slideUp();
+            $(oneUploadForm).find('[name="broadcast"]').off('click').on('click', function () {
+                if ($(this).val() === 'unlisted') {
+                    $(this).closest('form').find('#video_password').attr('disabled', false).parent().slideDown();
+                    $(this).closest('form').find('#video_users').attr('disabled', 'disabled').parent().slideUp();
+                } else if ($(this).val() === 'private') {
+                    $(this).closest('form').find('#video_users').attr('disabled', false).parent().slideDown();
+                    $(this).closest('form').find('#video_password').attr('disabled', 'disabled').parent().slideUp();
+                } else {
+                    $(this).closest('form').find('#video_password').attr('disabled', 'disabled').parent().slideUp();
+                    $(this).closest('form').find('#video_users').attr('disabled', 'disabled').parent().slideUp();
+                }
+            });
 
             $(oneUploadForm).find('#button_info_tmdb').on('click', function () {
                 var videoid = $(oneUploadForm).find('#videoid_' + index).val();

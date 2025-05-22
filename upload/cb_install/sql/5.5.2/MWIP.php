@@ -42,7 +42,29 @@ class MWIP extends \Migration
         do {
             $results = \Video::getInstance()->getAll(['limit' => $limit . ', 100']);
             foreach ($results as $result) {
-                $user_ids = video_users($result['video_users']);
+                if (!empty($result['video_users'])) {
+                    $users_array = explode(',', $result['video_users']);
+                    $new_users = [];
+                    foreach ($users_array as $username) {
+                        $username = trim($username);
+                        $params = [];
+                        if (is_numeric($username) && $username != $result['userid']) {
+                            $params['userid'] = $username;
+                        } elseif($username != $result['username']) {
+                            $params['username'] = $username;
+                        }
+                        if (!empty($params)) {
+                            $user = \User::getInstance()->getOne($params);
+                        }
+                        if (!empty($user)) {
+                            $new_users[] = $user['userid'];
+                        }
+                    }
+                    $user_ids= array_unique($new_users);
+                } else {
+                    $user_ids = [];
+                }
+
                 foreach ($user_ids as $user_id) {
                     \Clipbucket_db::getInstance()->insert(tbl('video_users'), [
                         'videoid',

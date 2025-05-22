@@ -610,15 +610,7 @@ class Upload
             'db_field'          => 'broadcast',
             'required'          => 'no',
             'display_function'  => 'display_sharing_opt',
-            'default_value'     => 'public',
-            'extra_tags'        => ' onChange="
-				    $(this).closest(\'form\').find(\'#video_password\').attr(\'disabled\',\'disabled\').parent().slideUp();
-                    $(this).closest(\'form\').find(\'#video_users\').attr(\'disabled\',\'disabled\').parent().slideUp();
-					if($(this).val()==\'unlisted\'){
-					    $(this).closest(\'form\').find(\'#video_password\').attr(\'disabled\',false).parent().slideDown();
-					} else if($(this).val()==\'private\') {
-					    $(this).closest(\'form\').find(\'#video_users\').attr(\'disabled\',false).parent().slideDown();
-                    }"'
+            'default_value'     => 'public'
         ];
 
         $fields['video_password'] = [
