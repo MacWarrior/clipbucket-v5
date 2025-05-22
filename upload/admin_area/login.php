@@ -12,7 +12,7 @@ if (isset($_POST['login'])) {
 
     //Logging User
     if (userquery::getInstance()->login_user($username, $password)) {
-        redirect_to('index.php');
+        redirect_to(DirPath::getUrl('admin_area') . 'index.php');
     }
 }
 

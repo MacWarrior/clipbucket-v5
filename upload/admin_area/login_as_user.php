@@ -3,7 +3,6 @@ define('THIS_PAGE', 'login_as_user');
 
 require_once dirname(__FILE__, 2) . '/includes/admin_config.php';
 User::getInstance()->hasPermissionOrRedirect('member_moderation',true);
-pages::getInstance()->page_redir();
 
 $uid = $_GET['uid'];
 
