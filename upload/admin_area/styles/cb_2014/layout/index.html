@@ -170,7 +170,7 @@
     let ubarchart_users_active = '{User::getInstance()->getAll(['count'=>'yes','status'=>'ok','not_userid'=>userquery::getInstance()->get_anonymous_user()])}';
     let ubarchart_users_inactive = '{User::getInstance()->getAll(['count'=>'yes','status'=>'ToActivate','not_userid'=>userquery::getInstance()->get_anonymous_user()])}';
 
-    let vbarchart_total = '{get_videos count_only=yes}';
+    let vbarchart_total = piechart_videos;
     let vbarchart_active = '{Video::getInstance()->getAll(['count'=>'yes','active'=>'yes'])}';
     let vbarchart_deactive = '{Video::getInstance()->getAll(['count'=>'yes','active'=>'no'])}';
     let vbarchart_reported = donutchart_videos;
