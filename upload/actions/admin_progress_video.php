@@ -4,9 +4,11 @@ require_once dirname(__FILE__, 2) . '/includes/admin_config.php';
 
 User::getInstance()->hasPermissionAjax('admin_access');
 $return = [];
-$videos = Video::getInstance()->getAll([
-    'videoids' => $_POST['ids']
-]);
+$params= ['videoids' => $_POST['ids']];
+if (config('enable_video_categories') !='no') {
+    $params['get_detail']=true;
+}
+$videos = Video::getInstance()->getAll($params);
 $all_complete = true;
 foreach ($videos as $video) {
     assign('video', $video);
