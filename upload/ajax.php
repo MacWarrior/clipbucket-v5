@@ -665,8 +665,8 @@ if (!empty($mode)) {
 
             $ajax['id'] = $insert_id;
             $collections = Collection::getInstance()->getAllIndent([
-                'type'   => 'photos',
-                'userid' => user_id()
+                'type'       => 'photos',
+                'can_upload' => true
             ]);
             assign('collections', $collections);
             assign('selected', $insert_id);

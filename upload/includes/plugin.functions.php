@@ -86,7 +86,6 @@ function ANCHOR($params): void
 
 /**
  * FUNCTION USED TO REGISTER ANCHORS
- * before_comments etc.. see complete list on http://docs.clip-bucket.com
  *
  * @param      $name
  * @param null $type
@@ -132,12 +131,15 @@ function register_anchor_function($method, $type, $class = null): bool
     }
 
     if (empty($class)) {
-        ClipBucket::getInstance()->anchor_function_list[$type][] = $method;
+        if( empty(ClipBucket::getInstance()->anchor_function_list[$type]) || !in_array($method, ClipBucket::getInstance()->anchor_function_list[$type]) ){
+            ClipBucket::getInstance()->anchor_function_list[$type][] = $method;
+        }
     } else {
-        ClipBucket::getInstance()->anchor_function_list[$type][] = [
-            'class'    => $class
-            , 'method' => $method
-        ];
+        $entry = ['class' => $class, 'method' => $method];
+
+        if (empty(ClipBucket::getInstance()->anchor_function_list[$type]) || !in_array($entry, ClipBucket::getInstance()->anchor_function_list[$type], true)) {
+            ClipBucket::getInstance()->anchor_function_list[$type][] = $entry;
+        }
     }
     return true;
 }
@@ -149,7 +151,6 @@ function register_anchor_function($method, $type, $class = null): bool
  * it will create one, ( Header means titles ie 'Plugins' 'Videos' etc)
  *
  * @param STRING $header - Could be Plugin , Videos, Users , please check
- * http://docs.clip-bucket.com. for reference
  * @param        $name
  * @param        $link
  * @param bool $plug_folder
@@ -186,7 +187,6 @@ function add_admin_menu($header, $name, $link, $plug_folder = false, $is_player_
  * Function used to add custom upload fields
  * In this you will provide an array that has a complete
  * details of the field such as 'name',validate_func etc
- * please check docs.clip-bucket.com for "how to add custom upload field"
  *
  * @param $array
  */
@@ -204,7 +204,6 @@ function register_custom_upload_field($array): void
  * Function used to add custom form fields
  * In this you will provide an array that has a complete
  * details of the field such as 'name',validate_func etc
- * please check docs.clip-bucket.com for "how to add custom form field"
  *
  * @param      $array
  * @param bool $isGroup
@@ -230,9 +229,9 @@ function register_custom_form_field($array, bool $isGroup = false): void
  * Function used to add custom signup form fields
  * In this you will provide an array that has a complete
  * details of the field such as 'name',validate_func etc
- * please check docs.clip-bucket.com for "how to add custom signup field"
  *
  * @param $array
+ * @throws Exception
  */
 function register_signup_field($array): void
 {
@@ -248,10 +247,10 @@ function register_signup_field($array): void
  * Function used to add custom profile fields fields
  * In this you will provide an array that has a complete
  * details of the field such as 'name',validate_func etc
- * please check docs.clip-bucket.com for "how to add custom form field"
  *
  * @param      $array
  * @param bool $isGroup
+ * @throws Exception
  */
 function register_custom_profile_field($array, bool $isGroup = false): void
 {

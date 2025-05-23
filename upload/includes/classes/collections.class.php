@@ -229,6 +229,7 @@ class Collection
         $param_empty_thumb_objectid =$params['empty_thumb_objectid'] ?? false;
         $param_join_flag =$params['join_flag'] ?? false;
         $param_order_item = $params['order_item'] ?? false;
+        $param_can_upload = $params['can_upload'] ?? false;
 
         $param_condition = $params['condition'] ?? false;
         $param_limit = $params['limit'] ?? false;
@@ -327,6 +328,9 @@ class Collection
 
         if( !User::getInstance()->hasAdminAccess() ){
             $conditions[] = $this->getGenericConstraints();
+            if ($param_can_upload ) {
+                $conditions[] = '(' . $this->getTableName() . '.public_upload = \'yes\' OR ' . $this->getTableName() . '.userid = ' . User::getInstance()->getCurrentUserID() . ')';
+            }
         }
 
         $join = [];
@@ -364,7 +368,10 @@ class Collection
         if (config('hide_empty_collection') == 'yes' && $param_hide_empty_collection !== 'no' && !User::getInstance()->hasAdminAccess()) {
             $hide_empty_collection = $total_objects . ' > 0';
             if( !empty(User::getInstance()->getCurrentUserID()) ){
-                $hide_empty_collection = '(' . $hide_empty_collection . ' OR ' . $this->getTableName() . '.userid = ' . User::getInstance()->getCurrentUserID() . ')';
+                if ($param_can_upload) {
+                    $upload_condition = ' OR collections.public_upload = \'yes\'';
+                }
+                $hide_empty_collection = '(' . $hide_empty_collection . ' OR ' . $this->getTableName() . '.userid = ' . User::getInstance()->getCurrentUserID() . $upload_condition .' )';
             }
             $param_having[] = $hide_empty_collection;
 
@@ -603,13 +610,13 @@ class Collection
     /**
      * @throws Exception
      */
-    public static function display_banner($collection = [])
+    public static function display_banner($collection = []): void
     {
         $text = '';
         $class = '';
         if ($collection['broadcast'] == 'private') {
             $text = lang('collection_is', strtolower(lang('private')));
-            $class = 'label-warning';
+            $class = 'label-primary';
         }
 
         if( !empty($text) ){
@@ -617,6 +624,9 @@ class Collection
         }
     }
 
+    /**
+     * @throws Exception
+     */
     public function getChildCollection($collection_id)
     {
         return $this->getAll(['collection_id_parent'=>$collection_id]);
@@ -1147,7 +1157,7 @@ class Collections extends CBCategory
         }
 
         $userid = user_id();
-        if ($c['broadcast'] == 'private' && !userquery::getInstance()->is_confirmed_friend($c['userid'], $userid) && $c['userid'] != $userid ) {
+        if (($c['broadcast'] == 'private' && !userquery::getInstance()->is_confirmed_friend($c['userid'], $userid) && $c['userid'] != $userid ) && !User::getInstance()->hasAdminAccess()) {
             e(lang('collection_is', strtolower(lang('private'))));
             return false;
         }
@@ -2409,6 +2419,8 @@ class Collections extends CBCategory
 
         Clipbucket_db::getInstance()->execute('DELETE FROM ' . tbl('collection_items') . ' WHERE '
             . ('type=\'' . $type . '\'') . ' AND ' . ('object_id=\'' . $objId . '\''));
+
+
     }
 
     /**
