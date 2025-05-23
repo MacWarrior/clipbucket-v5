@@ -1,6 +1,6 @@
 {
   "version":"5.5.2",
-  "revision":"63",
+  "revision":"64",
   "status":"stable",
   "detail":[
     {
@@ -89,6 +89,7 @@
       "title": "Installation & Update",
       "description": [
         "Fix new installation errors <i>(#592)</i>"
+        ,"Fix revision 5.5.1 - #334 DB upgrade"
       ]
     },
     {
