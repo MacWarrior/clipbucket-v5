@@ -28,6 +28,7 @@ if (isset($_POST['mode'])) {
             $video_blocks = [];
             foreach ($items as $key => $video) {
                 assign('video', $video);
+                assign('width', 270);
                 get_fast_qlist();
                 $video_blocks[] = trim(getTemplate('blocks/videos/video-'.config('channel_video_style').'.html'));
             }
