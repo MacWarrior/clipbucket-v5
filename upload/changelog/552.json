@@ -1,6 +1,6 @@
 {
   "version":"5.5.2",
-  "revision":"60",
+  "revision":"62",
   "status":"stable",
   "detail":[
     {
@@ -9,6 +9,7 @@
         "Implement Nginx VirtualHost check"
         ,"Implement channel slogan"
         ,"Refactor conversion queue manager"
+        ,"Add empty page title error"
         ,"Update configs organisation"
         ,"Fix code mode on page edition <i>(#595)</i>"
         ,"Fix email sending error catching <i>(#587)</i>"
@@ -20,6 +21,8 @@
         ,"Fix possible error 500 on System info page"
         ,"Fix possible error on video edition <i>(#602)</i>"
         ,"Fix video edition"
+        ,"Fix TMDB search"
+        ,"Fix converting video refresh"
       ]
     },
     {
