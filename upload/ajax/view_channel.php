@@ -25,12 +25,13 @@ if (isset($_POST['mode'])) {
                 return false;
             }
 
+            $video_blocks = [];
             foreach ($items as $key => $video) {
                 assign('video', $video);
-                assign('display_type', 'ajaxHome');
                 get_fast_qlist();
-                echo trim(Fetch('blocks/videos/video.html'));
+                $video_blocks[] = trim(getTemplate('blocks/videos/video-'.config('channel_video_style').'.html'));
             }
+            echo json_encode($video_blocks);
             break;
 
         case 'channelMorePhotos':

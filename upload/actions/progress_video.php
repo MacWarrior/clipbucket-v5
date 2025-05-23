@@ -27,7 +27,7 @@ switch ($_POST['output']) {
     case 'home_collection':
         $display_type = 'user-videos';
         if (config('homepage_collection_video_style') == 'modern') {
-            $template = "blocks/videos/video-new.html";
+            $template = "blocks/videos/video-modern.html";
         } else {
             $template = 'blocks/videos/video.html';
         }

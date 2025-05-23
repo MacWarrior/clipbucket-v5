@@ -399,7 +399,8 @@ if (isset($_POST['update'])) {
         'player_default_resolution',
         'player_default_resolution_hls',
         'player_subtitles',
-        'enable_360_video'
+        'enable_360_video',
+        'channel_video_style'
     ];
 
     //Numeric Array
