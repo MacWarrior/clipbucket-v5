@@ -610,13 +610,13 @@ class Collection
     /**
      * @throws Exception
      */
-    public static function display_banner($collection = [])
+    public static function display_banner($collection = []): void
     {
         $text = '';
         $class = '';
         if ($collection['broadcast'] == 'private') {
             $text = lang('collection_is', strtolower(lang('private')));
-            $class = 'label-warning';
+            $class = 'label-primary';
         }
 
         if( !empty($text) ){
@@ -624,6 +624,9 @@ class Collection
         }
     }
 
+    /**
+     * @throws Exception
+     */
     public function getChildCollection($collection_id)
     {
         return $this->getAll(['collection_id_parent'=>$collection_id]);

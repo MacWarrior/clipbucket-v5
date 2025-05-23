@@ -161,9 +161,8 @@ if (isset($_POST['update'])) {
         , 'own_channel_rating'
         , 'photo_crop'
         , 'show_collapsed_checkboxes'
-        ,'activation'
-        ,'photo_activation'
-
+        , 'activation'
+        , 'photo_activation'
     ];
 
     $rows = [

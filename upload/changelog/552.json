@@ -1,6 +1,6 @@
 {
   "version":"5.5.2",
-  "revision":"62",
+  "revision":"63",
   "status":"stable",
   "detail":[
     {
@@ -56,6 +56,8 @@
         ,"Fix link to uploader channel page on recent videos"
         ,"Fix possible JS error on channel, video, photo & collection pages with disabled comments"
         ,"Fix video edition"
+        ,"Fix collection display"
+        ,"Fix collection upload privacy setting"
       ]
     },
     {
