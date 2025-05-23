@@ -72,7 +72,7 @@
     {/if}
 
     {if config('homepage_recent_video_style') == 'modern'}
-        {include file="$style_dir/blocks/videos/video-new.html" width=270}
+        {include file="$style_dir/blocks/videos/video-modern.html" width=270}
     {elseif  in_array(config('homepage_recent_video_style'), [false, 'classic'])}
         <div style="display:none;" class="item-video col-lg-4 col-md-4 col-sm-4 col-xs-12 recentAppending" data-id="{$video.videoid}">
             <div class="clearfix thumb-holder">
