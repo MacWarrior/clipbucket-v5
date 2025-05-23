@@ -634,7 +634,6 @@ class Upload
                 'required'                  => 'no',
                 'extra_tags'                => " $video_user_disable ",
                 'hint_1'                    => $hint_tags,
-                'hint_2'                    => lang('specify_video_users'),
                 'validate_function'         => 'video_users',
                 'second_parameter_validate' => true //don't display warning if unknown user
             ];

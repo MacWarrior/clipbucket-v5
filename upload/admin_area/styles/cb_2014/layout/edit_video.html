@@ -261,7 +261,7 @@
                                     {/if}
                                 {/if}
                                 {if !empty($field.title)}
-                                <label><strong>{$field.title|truncate:80}</strong></label><br/>
+                                <label><strong>{$field.title|truncate:80}</strong></label> {if $field.id != 'video_users'}<br/>{/if}
                                 {/if}
                                 {if $field.type != 'checkbox' && $field.type != 'radiobutton' && $field.type != 'checkbox2'}
                                     {if empty($field.class)}

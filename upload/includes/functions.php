@@ -3572,7 +3572,8 @@ function get_restorable_languages(array $list_language = []): array
     });
 }
 
-function ageRestriction($var):bool {
+//ne pas ajouter le typage de retour de fonction pour pouvoir renvoyer null
+function ageRestriction($var) {
     $var = (int)$var;
     if (empty($var)) {
         return 'null';
