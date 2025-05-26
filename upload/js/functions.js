@@ -907,10 +907,12 @@ function getAllComments(type,type_id,last_update,pageNum,total,object_type,admin
 }
 
 function checkUncheckAll(theElement) {
-    var theForm = theElement.form, z = 0;
+    let theForm = theElement.form
+        , z = 0;
 
+    console.log(theElement.form);
     for(z=0; z<theForm.length;z++){
-        if(theForm[z].type == 'checkbox' && theForm[z].name != 'checkall' && theForm[z].disabled == false){
+        if(theForm[z].type === 'checkbox' && theForm[z].name !== 'checkall'){
             theForm[z].checked = theElement.checked;
         }
     }

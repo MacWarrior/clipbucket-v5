@@ -12,11 +12,11 @@
                     <li>
                         {if $data.featured!='yes'}
                             <a href="{DirPath::getUrl('admin_area')}edit_photo.php?photo={$data.photo_id}&amp;mode=fp">
-                                Make Featured
+                                {lang code='make_featured'}
                             </a>
                             {else}
                             <a href="{DirPath::getUrl('admin_area')}edit_photo.php?photo={$data.photo_id}&amp;mode=ufp">
-                                Make Unfeatured
+                                {lang code='make_unfeatured'}
                             </a>
                         {/if}
                     </li>

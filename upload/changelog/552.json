@@ -1,6 +1,6 @@
 {
   "version":"5.5.2",
-  "revision":"64",
+  "revision":"65",
   "status":"stable",
   "detail":[
     {
@@ -10,7 +10,9 @@
         ,"Implement channel slogan"
         ,"Refactor conversion queue manager"
         ,"Add empty page title error"
+        ,"Add collection mass broadcast update"
         ,"Update configs organisation"
+        ,"Update collection management display"
         ,"Fix code mode on page edition <i>(#595)</i>"
         ,"Fix email sending error catching <i>(#587)</i>"
         ,"Fix incorrect frontend URL <i>(#529)</i>"
@@ -23,6 +25,8 @@
         ,"Fix video edition"
         ,"Fix TMDB search"
         ,"Fix converting video refresh"
+        ,"Fix collection search"
+        ,"Fix collection tags edition"
       ]
     },
     {
@@ -58,6 +62,7 @@
         ,"Fix video edition"
         ,"Fix collection display"
         ,"Fix collection upload privacy setting"
+        ,"Fix collection tags edition"
       ]
     },
     {

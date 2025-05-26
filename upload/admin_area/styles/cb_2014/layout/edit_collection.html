@@ -10,9 +10,9 @@
             <ul class="dropdown-menu pull-right" role="menu">
                 <li><a href="{DirPath::getUrl('admin_area')}manage_items.php?collection={$data.collection_id}&amp;type={$data.type}">{lang code='manage_items'}</a></li>
                 {if $data.featured == 'yes'}
-                    <li><a href="{DirPath::getUrl('admin_area')}edit_collection.php?collection={$data.collection_id}&amp;mode=unfeatured">{lang('make_unfeatured')}</a></li>
+                    <li><a href="{DirPath::getUrl('admin_area')}edit_collection.php?collection={$data.collection_id}&amp;mode=make_unfeature">{lang('make_unfeatured')}</a></li>
                 {else}
-                    <li><a href="{DirPath::getUrl('admin_area')}edit_collection.php?collection={$data.collection_id}&amp;mode=featured">{lang('make_featured')}</a></li>
+                    <li><a href="{DirPath::getUrl('admin_area')}edit_collection.php?collection={$data.collection_id}&amp;mode=make_feature">{lang('make_featured')}</a></li>
                 {/if}
                 <li>
                     <a href="javascript:void(0);" onClick="if (confirm('{lang('confirm_collection_delete')}')) document.location = 'collection_manager.php?delete_collection={$data.collection_id}'">{lang code='delete'}</a>
@@ -21,11 +21,7 @@
         </div>
     </h2>
     <div class="pull-right">
-		<span class="btn btn-app btn-sm btn-light no-hover">
-			<span class="line-height-1 smaller-90 blue">{$data.views|number_format}</span>
-			<br>
-			<span class="line-height-1 smaller-90"> Views </span>
-		</span>
+        {if config('enable_comments_collection') == 'yes' }
         <span class="btn btn-app btn-sm btn-yellow no-hover">
 			{if $data.comments_count > 0}
 				<span class="line-height-1 smaller-90"> {$data.comments_count} </span>
@@ -35,6 +31,7 @@
 			<br>
 			<span class="line-height-1 smaller-90"> {lang('comments')} </span>
 		</span>
+        {/if}
         <span class="btn btn-app btn-sm btn-pink no-hover">
 			<span class="line-height-1">
 				{if $data.active=='yes'}
@@ -99,7 +96,7 @@
 											<div>
 												{if $field.id == 'collection_tags'}
 													{$field.type='hidden'}
-													<ul id="list_tags" style="margin: 1px 0 0 0"></ul>
+													<ul id="list_tags" style="margin: 1px 0 0 0;"></ul>
 												{/if}
 												{$formObj->createField($field)}
 											</div>
