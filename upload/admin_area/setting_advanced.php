@@ -43,9 +43,7 @@ if (isset($_POST['update'])) {
     ];
 
     $config_booleans_to_refactor = [
-        'activation',
         'chromecast_fix',
-        'photo_activation',
         'force_8bits',
         'keep_audio_tracks',
         'keep_subtitles',
@@ -57,8 +55,6 @@ if (isset($_POST['update'])) {
         'allowed_photo_types',
         'approve_video_notification',
         'audio_codec',
-        'activation',
-        'photo_activation',
         'chromecast_fix',
         'force_8bits',
         'keep_audio_tracks',

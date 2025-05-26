@@ -10,7 +10,7 @@ class M00334 extends \Migration
      */
     public function start()
     {
-        $sql = 'UPDATE ' . tbl('collections') . ' SET broadcast = CASE WHEN broadcast= \'yes\' THEN \'public\' ELSE \'private\' END WHERE 1 ';
+        $sql = 'UPDATE ' . tbl('collections') . ' SET broadcast = \'public\' WHERE broadcast = \'yes\';';
         self::query($sql);
     }
 }

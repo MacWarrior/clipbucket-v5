@@ -76,14 +76,6 @@
                             <hr/>
                             <div class="row">
                                 <div class="col-md-4">
-                                    <label class="nowrap" for="activation" title="Video Activation"><span class="fa fa-question-circle tips" title="If left unchecked, all videos will be published directly. If checked, admin will have to approve videos before they appear on website"></span> Video
-                                        Activation</label>
-                                </div>
-                                <div class="col-md-2 row-size">
-                                    <input value="1" name="activation" id="activation" {if $row.activation=='1'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
-                                    <span class="lbl"></span>
-                                </div>
-                                <div class="col-md-4">
                                     <label class="nowrap" for="delete_mass_upload" title="Delete Mass upload"><span class="fa fa-question-circle tips" title="Delete original files once uploaded from mass upload"></span> Delete Mass upload</label>
                                 </div>
                                 <div class="col-md-2 row-size">
@@ -168,14 +160,6 @@
                                 </div>
                                 <div class="col-md-2 row-size">
                                     <input value="yes" name="enable_photo_file_upload" id="enable_photo_file_upload" {if $row.enable_photo_file_upload=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
-                                    <span class="lbl"></span>
-                                </div>
-                                <div class="col-md-4">
-                                    <label class="nowrap" for="photo_activation" title="Photo Activation"><span class="fa fa-question-circle tips" title="If left unchecked, all photos will be published directly. If checked, admin will have to approve videos before they appear on website"></span>
-                                        Photo Activation</label>
-                                </div>
-                                <div class="col-md-2 row-size">
-                                    <input value="1" name="photo_activation" id="photo_activation" {if $row.photo_activation=='1'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
                                     <span class="lbl"></span>
                                 </div>
                             </div>
