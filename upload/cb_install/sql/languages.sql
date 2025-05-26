@@ -1579,4 +1579,11 @@ VALUES ('admin_setting'),
        ('accept_all'),
        ('refuse_all_optionnal'),
        ('lifetime'),
-       ('no_comment');
+       ('no_comment'),
+       ('make_public'),
+       ('make_private'),
+       ('created_x'),
+       ('collection_made_public'),
+       ('collection_made_private'),
+       ('x_collections_made_public'),
+       ('x_collections_made_private');

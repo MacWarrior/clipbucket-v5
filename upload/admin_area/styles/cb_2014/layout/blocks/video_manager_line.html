@@ -114,10 +114,10 @@
                 {/if}
 
                 {if $video.featured == yes}
-                    <li><a role="menuitem" tabindex="-1" href="?make_unfeature={$video.videoid}">Make Unfeatured</a></li>
+                    <li><a role="menuitem" tabindex="-1" href="?make_unfeature={$video.videoid}">{lang code='make_unfeatured'}</a></li>
                 {/if}
                 {if $video.featured == no}
-                    <li><a role="menuitem" tabindex="-1" href="?make_feature={$video.videoid}">Make Featured</a></li>
+                    <li><a role="menuitem" tabindex="-1" href="?make_feature={$video.videoid}">{lang code='make_featured'}</a></li>
                 {/if}
                 {if $video.active == yes}
                     <li><a role="menuitem" tabindex="-1" href="?deactivate={$video.videoid}">{lang code='deactivate'}</a></li>

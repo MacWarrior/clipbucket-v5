@@ -20,9 +20,9 @@
                         {/if}
 
                         {if $modedata!='featured'}
-                            <li><a href="{DirPath::getUrl('admin_area')}edit_video.php?video={$data.videoid}&amp;mode=featured">Make Featured</a></li>
+                            <li><a href="{DirPath::getUrl('admin_area')}edit_video.php?video={$data.videoid}&amp;mode=featured">{lang code='make_featured'}</a></li>
                         {else}
-                            <li><a href="{DirPath::getUrl('admin_area')}edit_video.php?video={$data.videoid}&amp;mode=unfeature">Make Unfeatured</a></li>
+                            <li><a href="{DirPath::getUrl('admin_area')}edit_video.php?video={$data.videoid}&amp;mode=unfeature">{lang code='make_unfeatured'}</a></li>
                         {/if}
                         {if $video.status=='Successful'}
                             {if config('chromecast')=='yes' && !$data.is_castable}
