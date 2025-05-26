@@ -1243,3 +1243,6 @@ textarea[disabled]{
 .btn-primary[disabled]{
     color: white !important;
 }
+#config_player .col-md-6 .row {
+    height: 31px;
+}
