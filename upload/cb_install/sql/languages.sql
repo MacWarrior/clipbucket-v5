@@ -1579,4 +1579,12 @@ VALUES ('admin_setting'),
        ('accept_all'),
        ('refuse_all_optionnal'),
        ('lifetime'),
-       ('no_comment');
+       ('no_comment'),
+       ('option_photo_ratio'),
+       ('option_photo_ratio_help'),
+       ('option_large_photo_width'),
+       ('option_crop_image'),
+       ('option_photo_thumb_size'),
+       ('width'),
+       ('height'),
+       ('option_medium_photo_size');

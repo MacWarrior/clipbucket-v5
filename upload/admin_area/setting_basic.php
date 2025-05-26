@@ -245,13 +245,6 @@ if (isset($_POST['update'])) {
         'photo_user_photos',
         'photo_user_favorites',
         'photo_other_limit',
-        'photo_ratio',
-        'photo_lar_width',
-        'photo_crop',
-        'photo_thumb_width',
-        'photo_thumb_height',
-        'photo_med_width',
-        'photo_med_height',
 
         'site_title',
         'site_slogan',
