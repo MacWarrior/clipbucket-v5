@@ -14,12 +14,26 @@ if (@$_GET['msg']) {
     $msg = mysql_clean($_GET['msg']);
 }
 
-if (isset($_POST['reset_control_bar_logo_url'])) {
+if (isset($_POST['reset_player-logo_name'])) {
     if (file_exists(DirPath::get('logos') . 'player-logo.png')) {
         unlink(DirPath::get('logos') . 'player-logo.png');
     }
-    myquery::getInstance()->Set_Website_Details('control_bar_logo_url', 'images/icons/player-logo.png');
+    myquery::getInstance()->Set_Website_Details('player-logo_name', '');
+    myquery::getInstance()->Set_Website_Details('logo_update_timestamp', time());
     e(lang('player_logo_reset'), 'm');
+}
+
+if (isset($_POST['reset_site_logo'])) {
+    unlink(DirPath::get('logos') . config('logo_name'));
+    myquery::getInstance()->Set_Website_Details('logo_name', '');
+    myquery::getInstance()->Set_Website_Details('logo_update_timestamp', time());
+    e(lang('logo_reset'), 'm');
+}
+if (isset($_POST['reset_site_favicon'])) {
+    unlink(DirPath::get('logos') . config('favicon_name'));
+    myquery::getInstance()->Set_Website_Details('favicon_name', '');
+    myquery::getInstance()->Set_Website_Details('logo_update_timestamp', time());
+    e(lang('favicon_reset'), 'm');
 }
 
 if (isset($_POST['update'])) {
@@ -490,18 +504,13 @@ if (isset($_POST['update'])) {
     if (!empty($_FILES['upload_logo']['name'])) {
         // function used to upload site logo.
         upload_image('logo');
-        myquery::getInstance()->Set_Website_Details('logo_update_timestamp', time());
     }
     if (!empty($_FILES['upload_favicon']['name'])) {
         // function used to upload site logo.
         upload_image('favicon');
-        myquery::getInstance()->Set_Website_Details('logo_update_timestamp', time());
     }
-    if( !empty($_FILES['control_bar_logo_url']['name']) ){
-        $logo_file = Upload::getInstance()->upload_player_logo($_FILES['control_bar_logo_url']);
-        if ($logo_file) {
-            myquery::getInstance()->Set_Website_Details('control_bar_logo_url', $logo_file);
-        }
+    if( !empty($_FILES['upload_player-logo']['name']) ){
+        upload_image('player-logo');
     }
 
     //clear cache
