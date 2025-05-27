@@ -496,6 +496,9 @@ function checkStatus() {
             $('#status_icon').find('span').removeClass();
             $('#status_icon').find('span').addClass('status-'+ data.status);
             $('#status_html').html(data.html);
+            if (data.msg) {
+                $(".page-content").prepend(data.msg)
+            }
         }
     });
 }

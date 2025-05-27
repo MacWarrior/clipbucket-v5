@@ -7,4 +7,14 @@ $return = [];
 if( config('enable_update_checker') == '1' ){
     $return = ['status'=> Update::getInstance()->getCoreUpdateStatus(), 'html'=>Update::getInstance()->getUpdateHTML()];
 }
+//get logs
+$core_tool = new AdminTool();
+$core_tool->initByCode('update_core');
+$logs = $core_tool->getLastLogs();
+foreach ($logs['logs'] as $log) {
+    if ($log['message'] != lang('tool_started') && $log['message'] != lang('tool_ended')) {
+        e($log['message'], 'w');
+        $return['msg']= getTemplateMsg();
+    }
+}
 echo json_encode($return);
