@@ -359,8 +359,10 @@ class Category
             case 'photo':
                 $config_categ = 'max_photo_categories';
                 break;
-            default:
             case 'collection':
+                $config_categ = 'max_collection_categories';
+                break;
+            default:
                 $config_categ = '';
                 break;
         }

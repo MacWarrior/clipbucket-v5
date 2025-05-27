@@ -316,7 +316,8 @@ INSERT INTO `{tbl_prefix}config` (`configid`, `name`, `value`) VALUES
     (NULL, 'enable_channels_slogan_display', 'yes'),
     (NULL, 'enable_user_self_deletion', 'yes'),
     (NULL, 'enable_cookie_banner', 'yes'),
-    (NULL, 'max_photo_categories', 0);
+    (NULL, 'max_photo_categories', 0),
+    (NULL, 'max_collection_categories', 0);
 
 INSERT INTO `{tbl_prefix}video_resolution` (`title`, `ratio`, `enabled`, `width`, `height`, `video_bitrate`) VALUES
 	('240p', '16/9', 1, 426, 240, 240000),

@@ -1586,4 +1586,8 @@ VALUES ('admin_setting'),
        ('collection_made_public'),
        ('collection_made_private'),
        ('x_collections_made_public'),
-       ('x_collections_made_private');
+       ('x_collections_made_private'),
+       ('option_max_photo_categories'),
+       ('option_max_photo_categories_hint'),
+       ('option_max_collection_categories'),
+       ('option_max_collection_categories_hint');

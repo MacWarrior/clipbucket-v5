@@ -1479,8 +1479,12 @@ class Collections extends CBCategory
                 'validate_function' => 'Category::validate',
                 'invalid_err'       => lang('collect_cat_er'),
                 'display_function'  => 'convert_to_categories',
-                'category_type'     => 'collections'
+                'category_type'     => 'collections',
+                'second_parameter_validate' => 'collection'
             ];
+            if (config('max_collection_categories') > 0 && is_array($cat_array)) {
+                $data['cat']['hint_1'] = lang('vdo_cat_msg', config('max_collection_categories'));
+            }
         }
 
         if (config('enable_sub_collection') == 'yes') {
@@ -2018,7 +2022,11 @@ class Collections extends CBCategory
                 }
 
                 if (!empty($field['validate_function'])) {
-                    $val = $field['validate_function']($val);
+                    if (isset($field['second_parameter_validate'])) {
+                        $val = $field['validate_function']($val,$field['second_parameter_validate']);
+                    } else {
+                        $val = $field['validate_function']($val);
+                    }
                 }
 
                 if (!empty($field['db_field'])) {

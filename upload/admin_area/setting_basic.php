@@ -405,7 +405,8 @@ if (isset($_POST['update'])) {
         'activation',
         'photo_activation',
 
-        'max_photo_categories'
+        'max_photo_categories',
+        'max_collection_categories'
     ];
 
     //Numeric Array
@@ -458,7 +459,8 @@ if (isset($_POST['update'])) {
         'list_featured_videos',
         'video_thumbs_preview_count',
 
-        'max_photo_categories'
+        'max_photo_categories',
+        'max_collection_categories'
     ];
 
     foreach ($rows as $field) {
