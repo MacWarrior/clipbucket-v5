@@ -356,8 +356,10 @@ class Category
             case 'video':
                 $config_categ = 'video_categories';
                 break;
-            default:
             case 'photo':
+                $config_categ = 'max_photo_categories';
+                break;
+            default:
             case 'collection':
                 $config_categ = '';
                 break;
