@@ -714,16 +714,17 @@ class Update
         chdir($root_directory);
 
         $output = shell_exec(System::get_binaries('git') . ' reset --hard --quiet 2>&1');
-        if( $output === false ){
-            return false;
-        }
 
         $filepath_install_me = DirPath::get('temp') . 'install.me';
         $filepath_install_me_not = $filepath_install_me . '.not';
         if( file_exists($filepath_install_me) && !file_exists($filepath_install_me_not) ){
             unlink($filepath_install_me);
         }
-        return $output;
+
+        if( !empty($output) ){
+            return $output;
+        }
+        return true;
     }
 
     private function updateGitRepository(string $root_directory)
@@ -733,7 +734,7 @@ class Update
         return shell_exec(System::get_binaries('git') . ' pull --quiet 2>&1');
     }
 
-    public static function updateGitSources($with_logs = true)
+    public static function updateGitSources()
     {
         $update = self::getInstance();
         if( !$update->isGitInstalled() || !$update->isManagedWithGit() ){
@@ -747,24 +748,18 @@ class Update
 
         $return_reset = $update->resetGitRepository($root_directory);
         if( !empty($return_reset) ){
-            if( $with_logs ){
-                if( in_dev() ){
-                    DiscordLog::sendDump($return_reset);
-                }
-                return $return_reset;
+            if( in_dev() ){
+                DiscordLog::sendDump($return_reset);
             }
-            return false;
+            return $return_reset;
         }
 
         $return_update = $update->updateGitRepository($root_directory);
         if( !empty($return_update) ){
-            if( $with_logs ){
-                if( in_dev() ){
-                    DiscordLog::sendDump($return_update);
-                }
-                return $return_update;
+            if( in_dev() ){
+                DiscordLog::sendDump($return_update);
             }
-            return false;
+            return $return_update;
         }
 
         return true;
