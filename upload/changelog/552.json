@@ -80,6 +80,7 @@
         ,"Fix URL issue when base_url config is not correctly set"
         ,"Fix typo <i>(#596)</i>"
         ,"Fix Nginx vhost <i>(#604)</i>"
+        ,"Fix possible SQL injection"
       ]
     },
     {
