@@ -713,7 +713,7 @@ class Update
     {
         chdir($root_directory);
 
-        $output = shell_exec(System::get_binaries('git') . ' reset --hard');
+        $output = shell_exec(System::get_binaries('git') . ' reset --hard --quiet 2>&1');
         if( $output === false ){
             return false;
         }
