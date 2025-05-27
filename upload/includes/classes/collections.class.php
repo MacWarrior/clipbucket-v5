@@ -1368,20 +1368,44 @@ class Collections extends CBCategory
             $cond = ' 1 GROUP BY C.collection_id';
         }
         $collections_parent = Clipbucket_db::getInstance()->select(tbl($this->section_tbl) . ' C  
-            LEFT JOIN ' . tbl($this->items) . ' citem ON C.collection_id = citem.collection_id'
-            , 'C.*, COUNT(DISTINCT citem.ci_id) AS total_objects'
-            , $cond);
+            LEFT JOIN ' . tbl($this->items) . ' citem ON C.collection_id = citem.collection_id
+            LEFT JOIN ' . tbl('users') . ' U ON C.userid = U.userid'
+            , 'C.*, COUNT(DISTINCT citem.ci_id) AS total_objects, U.username, CASE WHEN C.userid = '.mysql_clean(User::getInstance()->getCurrentUserID()).' THEN 1 ELSE 0 END AS is_user_collection
+            , case when U.userid IN (SELECT contact_userid FROM '.tbl('contacts').' WHERE confirmed = \'yes\' AND userid = '.mysql_clean(User::getInstance()->getCurrentUserID()).' ) THEN 1 ELSE 0 END AS is_contact_collection'
+            , $cond, false, ' is_user_collection DESC, is_contact_collection DESC, collection_id ASC');
 
+
+        $last_user = '';
         foreach ($collections_parent as $col_parent) {
             $space = '';
             if (config('enable_sub_collection') == 'yes') {
                 $space = str_repeat('&nbsp;', $level * 3);
             }
+            if ($level==0) {
+                if ($col_parent['is_user_collection'] == 1 ) {
+                    //TODO assign to option_group
+                } else if ($col_parent['is_contact_collection'] == 1 ) {
+                    //TODO assign to option_group
+                } else {
+                    //TODO assign to option_group
+                }
+            }
+
+            if ($level == 0 && $col_parent['username'] != $last_user && $col_parent['is_user_collection'] == 0) {
+                $last_user = $col_parent['username'];
+            }
+            if (User::getInstance()->getCurrentUserID() != $col_parent['userid'] && !empty($last_user)) {
+                $space = $last_user . ': ' . $space;
+            }
             $data[$col_parent['collection_id']]['name'] = $space . display_clean($col_parent['collection_name']);
+            $data[$col_parent['collection_id']]['id'] = $col_parent['collection_id'];
             $data[$col_parent['collection_id']]['count'] = $col_parent['total_objects'];
             $collections_children = $this->get_collections_list(($level + 1), $col_parent['collection_id'], $exclude_id, $type, $userid);
             foreach ($collections_children as $col_id => $col_name) {
                 $data[$col_id] = $col_name;
+                if (!empty($last_user)) {
+                    $data[$col_id]['name'] = $last_user . ': ' . $col_name['name'];
+                }
             }
         }
 
