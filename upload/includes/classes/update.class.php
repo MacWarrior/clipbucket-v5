@@ -796,7 +796,7 @@ class Update
     /**
      * @throws Exception
      */
-    public function CheckPHPVersion()
+    public function CheckPHPVersion(): void
     {
         $filename = 'php_version.json';
 
