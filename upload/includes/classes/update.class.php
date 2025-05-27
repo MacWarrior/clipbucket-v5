@@ -709,7 +709,7 @@ class Update
         return shell_exec(System::get_binaries('git') . ' rev-parse --show-toplevel');
     }
 
-    private function resetGitRepository(string $root_directory): bool
+    private function resetGitRepository(string $root_directory)
     {
         chdir($root_directory);
 
@@ -723,20 +723,17 @@ class Update
         if( file_exists($filepath_install_me) && !file_exists($filepath_install_me_not) ){
             unlink($filepath_install_me);
         }
-        return true;
+        return $output;
     }
 
     private function updateGitRepository(string $root_directory)
     {
         chdir($root_directory);
 
-        return shell_exec(System::get_binaries('git') . ' pull');
+        return shell_exec(System::get_binaries('git') . ' pull --quiet 2>&1');
     }
 
-    /**
-     * @return bool
-     */
-    public static function updateGitSources(): bool
+    public static function updateGitSources($with_logs = true)
     {
         $update = self::getInstance();
         if( !$update->isGitInstalled() || !$update->isManagedWithGit() ){
@@ -748,11 +745,25 @@ class Update
             return false;
         }
 
-        if( !$update->resetGitRepository($root_directory) ){
+        $return_reset = $update->resetGitRepository($root_directory);
+        if( !empty($return_reset) ){
+            if( $with_logs ){
+                if( in_dev() ){
+                    DiscordLog::sendDump($return_reset);
+                }
+                return $return_reset;
+            }
             return false;
         }
 
-        if( !$update->updateGitRepository($root_directory) ){
+        $return_update = $update->updateGitRepository($root_directory);
+        if( !empty($return_update) ){
+            if( $with_logs ){
+                if( in_dev() ){
+                    DiscordLog::sendDump($return_update);
+                }
+                return $return_update;
+            }
             return false;
         }
 
