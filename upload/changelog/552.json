@@ -1,6 +1,6 @@
 {
   "version":"5.5.2",
-  "revision":"65",
+  "revision":"66",
   "status":"stable",
   "detail":[
     {
@@ -27,6 +27,7 @@
         ,"Fix converting video refresh"
         ,"Fix collection search"
         ,"Fix collection tags edition"
+        ,"Fix server configuration warning when using Apache"
       ]
     },
     {
