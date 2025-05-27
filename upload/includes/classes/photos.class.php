@@ -2195,9 +2195,13 @@ class CBPhotos
                 'required'                  => 'yes',
                 'validate_function'         => 'Category::validate',
                 'display_function'          => 'convert_to_categories',
+                'second_parameter_validate' => 'photo',
                 'category_type'             => 'photo',
                 'invalid_err'               => lang('vdo_cat_err3')
             ];
+            if (config('max_photo_categories') > 0 && is_array($cat_array)) {
+                $return['cat']['hint_1'] = lang('vdo_cat_msg', config('max_photo_categories'));
+            }
         }
         return $return;
     }
@@ -2326,7 +2330,11 @@ class CBPhotos
                 $val = $array[$name];
 
                 if (!empty($field['validate_function'])) {
-                    $val = $field['validate_function']($val);
+                    if (isset($field['second_parameter_validate'])) {
+                        $val = $field['validate_function']($val,$field['second_parameter_validate']);
+                    } else {
+                        $val = $field['validate_function']($val);
+                    }
                 }
 
 
