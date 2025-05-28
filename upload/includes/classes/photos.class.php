@@ -1886,12 +1886,16 @@ class CBPhotos
             $p['user'] = user_id();
         }
 
-        $collections = $this->collection->get_collections_list(0,null,null, 'photos',user_id()) ?? [];
-        $cl_array = $this->parse_array($collections);
-        $collection = $array['collection_id'];
-        if ($collection == null && !empty($cl_array)) {
-            $cl_array = [0=>''] + $cl_array;
+        $cl_array = [];
+        $params = [
+            'type'       => 'photos',
+            'can_upload' => true,
+        ];
+        $collections = Collection::getInstance()->getAllIndent($params, display_group: true);
+        foreach ($collections as $group => $collection) {
+            $cl_array[$group] = $this->parse_array($collection);
         }
+        $collection = $array['collection_id'];
         $this->unique = rand(0, 9999);
 
         $hint_tags = config('allow_tag_space') =='yes' ? '<span class="fa fa-question-circle tips" title=\''.lang('use_tab_tag').'\'></span>' : '';
@@ -1929,7 +1933,8 @@ class CBPhotos
             'collection' => [
                 'title'       => lang('collection'),
                 'name'        => 'collection_id',
-                'type'        => 'dropdown',
+                'id'          => 'collection_id',
+                'type'        => 'dropdown_group',
                 'value'       => $cl_array,
                 'checked'     => $collection,
                 'invalid_err' => lang('collection_not_found')
@@ -2250,7 +2255,7 @@ class CBPhotos
         $cl_arr= [];
         if (is_array($array)) {
             foreach ($array as $key => $v) {
-                $cl_arr[$key] = $v['name'];
+                $cl_arr[$v['collection_id']] = $v['collection_name'];
             }
         }
         return $cl_arr;

@@ -1586,4 +1586,7 @@ VALUES ('admin_setting'),
        ('collection_made_public'),
        ('collection_made_private'),
        ('x_collections_made_public'),
-       ('x_collections_made_private');
+       ('x_collections_made_private'),
+       ('my_collections'),
+       ('my_friends_collections'),
+       ('public_collections');

@@ -667,7 +667,7 @@ if (!empty($mode)) {
             $collections = Collection::getInstance()->getAllIndent([
                 'type'       => 'photos',
                 'can_upload' => true
-            ]);
+            ], display_group: true);
             assign('collections', $collections);
             assign('selected', $insert_id);
             $response = templateWithMsgJson('blocks/collection_select_upload.html', false);

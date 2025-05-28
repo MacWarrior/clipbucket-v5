@@ -16,6 +16,10 @@ $(document).ready(function(){
         }
     });
 
+    $('#collection_id').select2({
+        width: '100%'
+    });
+
     var error = '';
 
     function reFreshTabs(up)

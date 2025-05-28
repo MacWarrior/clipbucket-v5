@@ -12,8 +12,8 @@ if (isset($_GET['collection'])) {
 
 $collections = Collection::getInstance()->getAllIndent([
     'type'       => 'photos',
-    'can_upload' => true
-]);
+    'can_upload' => true,
+], display_group: true);
 
 assign('collections', $collections);
 assign('reqFields', Collections::getInstance()->load_required_fields(['type'=>'photos']));
