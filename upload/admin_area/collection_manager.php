@@ -21,100 +21,155 @@ if (!empty($_GET['missing_collection'])) {
 }
 
 if (isset($_GET['make_feature'])) {
-    $id = mysql_clean($_GET['make_feature']);
-    Collections::getInstance()->collection_actions('mcf', $id);
+    Collections::getInstance()->collection_actions('make_feature', $_GET['make_feature']);
 }
-
 if (isset($_GET['make_unfeature'])) {
-    $id = mysql_clean($_GET['make_unfeature']);
-    Collections::getInstance()->collection_actions('mcuf', $id);
+    Collections::getInstance()->collection_actions('make_unfeature', $_GET['make_unfeature']);
 }
-
 if (isset($_GET['activate'])) {
-    $id = mysql_clean($_GET['activate']);
-    Collections::getInstance()->collection_actions('ac', $id);
+    Collections::getInstance()->collection_actions('activate', $_GET['activate']);
 }
-
 if (isset($_GET['deactivate'])) {
-    $id = mysql_clean($_GET['deactivate']);
-    Collections::getInstance()->collection_actions('dac', $id);
+    Collections::getInstance()->collection_actions('deactivate', $_GET['deactivate']);
 }
-
+if (isset($_GET['make_public'])) {
+    Collections::getInstance()->collection_actions('make_public', $_GET['make_public']);
+}
+if (isset($_GET['make_private'])) {
+    Collections::getInstance()->collection_actions('make_private', $_GET['make_private']);
+}
 if (isset($_GET['delete_collection'])) {
-    $id = mysql_clean($_GET['delete_collection']);
-    Collections::getInstance()->delete_collection($id);
+    Collections::getInstance()->delete_collection($_GET['delete_collection']);
 }
 
 /* ACTIONS ON MULTI ITEMS */
 if (isset($_POST['activate_selected']) && is_array($_POST['check_collection'])) {
-    $total = count($_POST['check_collection']);
-    for ($i = 0; $i < $total; $i++) {
-        Collections::getInstance()->collection_actions('ac', $_POST['check_collection'][$i]);
+    foreach($_POST['check_collection'] as $cid){
+        Collections::getInstance()->collection_actions('activate', $cid);
     }
-    errorhandler::getInstance()->flush();
-    e($total . ' collections has been activated', 'm');
+    if( empty(errorhandler::getInstance()->get_error()) ){
+        errorhandler::getInstance()->flush();
+    }
+    e(count($_POST['check_collection']) . ' collections has been activated', 'm');
 }
 
 if (isset($_POST['deactivate_selected']) && is_array($_POST['check_collection'])) {
-    $total = count($_POST['check_collection']);
-    for ($i = 0; $i < $total; $i++) {
-        Collections::getInstance()->collection_actions('dac', $_POST['check_collection'][$i]);
+    foreach($_POST['check_collection'] as $cid){
+        Collections::getInstance()->collection_actions('deactivate', $cid);
     }
-    errorhandler::getInstance()->flush();
-    e($total . ' collections has been deactivated', 'm');
+    if( empty(errorhandler::getInstance()->get_error()) ){
+        errorhandler::getInstance()->flush();
+    }
+    e(count($_POST['check_collection']) . ' collections has been deactivated', 'm');
 }
 
 if (isset($_POST['make_featured_selected']) && is_array($_POST['check_collection'])) {
-    $total = count($_POST['check_collection']);
-    for ($i = 0; $i < $total; $i++) {
-        Collections::getInstance()->collection_actions('mcf', $_POST['check_collection'][$i]);
+    foreach($_POST['check_collection'] as $cid){
+        Collections::getInstance()->collection_actions('make_feature', $cid);
     }
-    errorhandler::getInstance()->flush();
-    e($total . ' collections has been marked as <strong>' . lang('featured') . '</strong>', 'm',false);
+    if( empty(errorhandler::getInstance()->get_error()) ){
+        errorhandler::getInstance()->flush();
+    }
+    e(count($_POST['check_collection']) . ' collections has been marked as <strong>' . lang('featured') . '</strong>', 'm',false);
 }
 
 if (isset($_POST['make_unfeatured_selected']) && is_array($_POST['check_collection'])) {
-    $total = count($_POST['check_collection']);
-    for ($i = 0; $i < $total; $i++) {
-        Collections::getInstance()->collection_actions('mcuf', $_POST['check_collection'][$i]);
+    foreach($_POST['check_collection'] as $cid){
+        Collections::getInstance()->collection_actions('make_unfeature', $cid);
     }
-    errorhandler::getInstance()->flush();
-    e($total . ' collections has been marked as <strong>Unfeatured</strong>', 'm', false);
-}
-
-if (isset($_POST['make_unfeatured_selected']) && is_array($_POST['check_collection'])) {
-    $total = count($_POST['check_collection']);
-    for ($i = 0; $i < $total; $i++) {
-        Collections::getInstance()->collection_actions('mcuf', $_POST['check_collection'][$i]);
+    if( empty(errorhandler::getInstance()->get_error()) ){
+        errorhandler::getInstance()->flush();
     }
-    errorhandler::getInstance()->flush();
-    e($total . ' collections has been marked as <strong>Unfeatured</strong>', 'm', false);
+    e(count($_POST['check_collection']) . ' collections has been marked as <strong>Unfeatured</strong>', 'm', false);
 }
 
 if (isset($_POST['delete_selected']) && is_array($_POST['check_collection'])) {
-    $total = count($_POST['check_collection']);
-    for ($i = 0; $i < $total; $i++) {
-        Collections::getInstance()->delete_collection($_POST['check_collection'][$i]);
+    foreach($_POST['check_collection'] as $cid){
+        Collections::getInstance()->delete_collection($cid);
     }
-    errorhandler::getInstance()->flush();
-    e($total . ' collection(s) has been deleted successfully', 'm');
+    if( empty(errorhandler::getInstance()->get_error()) ){
+        errorhandler::getInstance()->flush();
+    }
+
+    $total = count($_POST['check_collection']);
+    if( $total == 1 ){
+        e(lang('collection_deleted'), 'm');
+    } else {
+        e(count($_POST['check_collection']) . ' collections has been deleted successfully', 'm');
+    }
 }
 
-/* IF SEARCH EXISTS */
-if ($_GET['search']) {
-    $carray = [
-        'name'      => $_GET['title'],
-        'tags'      => $_GET['tags'],
-        'cid'       => $_GET['collectionid'],
-        'type'      => $_GET['collection_type'],
-        'user'      => $_GET['userid'],
-        'order'     => $_GET['order'],
-        'broadcast' => $_GET['broadcast'],
-        'featured'  => $_GET['featured'],
-        'active'    => $_GET['active']
-    ];
-} else {
-    $carray = [];
+if (isset($_POST['make_public_selected']) && is_array($_POST['check_collection'])) {
+    foreach($_POST['check_collection'] as $cid){
+        Collections::getInstance()->collection_actions('make_public', $cid);
+    }
+    if( empty(errorhandler::getInstance()->get_error()) ){
+        errorhandler::getInstance()->flush();
+    }
+    $total = count($_POST['check_collection']);
+    if( $total == 1 ){
+        e(lang('collection_made_public'), 'm');
+    } else {
+        e(lang('x_collections_made_public', $total), 'm');
+    }
+}
+
+if (isset($_POST['make_private_selected']) && is_array($_POST['check_collection'])) {
+    foreach($_POST['check_collection'] as $cid){
+        Collections::getInstance()->collection_actions('make_private', $cid);
+    }
+    if( empty(errorhandler::getInstance()->get_error()) ){
+        errorhandler::getInstance()->flush();
+    }
+    $total = count($_POST['check_collection']);
+    if( $total == 1 ){
+        e(lang('collection_made_private'), 'm');
+    } else {
+        e(lang('x_collections_made_private', $total), 'm');
+    }
+}
+
+$carray = [];
+if( isset($_POST['search']) ){
+    if( !empty($_POST['collection_name']) ){
+        $carray['collection_name'] = $_POST['collection_name'];
+    }
+    if( !empty($_POST['collectionid']) ){
+        $carray['collection_id'] = $_POST['collectionid'];
+    }
+    if( !empty($_POST['collection_type']) ){
+        $carray['type'] = $_POST['collection_type'];
+    }
+    if( !empty($_POST['userid']) ){
+        $carray['userid'] = $_POST['userid'];
+    }
+    if( !empty($_POST['order']) ){
+        switch($_POST['order']){
+            default:
+                break;
+
+            case 'total_objects':
+                $carray['order'] = $_POST['order'] . ' DESC';
+                break;
+
+            case 'collection_id':
+            case 'collection_name':
+                $carray['order'] = Collection::getInstance()->getTableName() . '.' . $_POST['order'] . ' DESC';
+                break;
+        }
+    }
+    if( !empty($_POST['featured']) ){
+        $carray['featured'] = $_POST['featured'];
+    }
+    if( !empty($_POST['active']) ){
+        $carray['active'] = $_POST['active'];
+    }
+    if( !empty($_POST['broadcast']) ){
+        $carray['broadcast'] = $_POST['broadcast'];
+    }
+    if( !empty($_POST['tags']) ){
+        $carray['tags'] = $_POST['tags'];
+    }
 }
 
 /* CREATING LIMIT */
@@ -124,10 +179,8 @@ $get_limit = create_query_limit($page, config('admin_pages'));
 $carray['limit'] = $get_limit;
 $carray['allow_children'] = true;
 $carray['hide_empty_collection'] = 'no';
-if (!empty($carray['order'])) {
-    $carray['order'] = $carray['order'] . ' DESC';
-} else {
-    $carray['order'] = ' collection_id DESC';
+if (empty($carray['order'])) {
+    $carray['order'] = Collection::getInstance()->getTableName() . '.collection_id DESC';
 }
 $carray['join_flag'] = true;
 $collections = Collection::getInstance()->getAll($carray);

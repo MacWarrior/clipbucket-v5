@@ -8,8 +8,8 @@
         {if $smarty.get.active!='no'}
             <input class="btn btn-primary btn-xs button" type="submit" name="deactivate_selected" value="{lang code='deactivate'}"/>
         {/if}
-        <input type="submit" name="make_featured_selected" value="Make Featured" class="btn btn-primary btn-xs"/>
-        <input type="submit" name="make_unfeatured_selected" value="Make Unfeatured" class="btn btn-primary btn-xs"/>
+        <input type="submit" name="make_featured_selected" value="{lang code='make_featured'}" class="btn btn-primary btn-xs"/>
+        <input type="submit" name="make_unfeatured_selected" value="{lang code='make_unfeatured'}" class="btn btn-primary btn-xs"/>
         <input type="submit" name="delete_selected" value="{lang code='delete'}" class="btn btn-primary btn-xs" onclick="return confirm_it('Are you sure you want to delete selected photos(s). This will permanently delete these photos from website.')"/>
     </div>
     <table class="table table-bordered table-striped manageUsersTable">
@@ -94,12 +94,12 @@
 
                                 {if $photos[list].featured == 'yes'}
                                     <li>
-                                        <a href="?make_unfeature={$photos[list].photo_id}">Make Unfeatured</a>
+                                        <a href="?make_unfeature={$photos[list].photo_id}">{lang code='make_unfeatured'}</a>
                                     </li>
                                 {/if}
                                 {if $photos[list].featured == 'no'}
                                     <li>
-                                        <a href="?make_feature={$photos[list].photo_id}">Make Featured</a>
+                                        <a href="?make_feature={$photos[list].photo_id}">{lang code='make_featured'}</a>
                                     </li>
                                 {/if}
                                 <li><a role="menuitem" tabindex="-1" id="delete-{$photos[list].photo_id}" href="?delete_photo={$photos[list].photo_id}">{lang code='delete'}</a></li>
@@ -114,8 +114,8 @@
             {if $smarty.get.active!='no'}
                 <input class="btn btn-primary btn-xs button" type="submit" name="deactivate_selected" value="{lang code='deactivate'}"/>
             {/if}
-            <input type="submit" name="make_featured_selected" value="Make Featured" class="btn btn-primary btn-xs"/>
-            <input type="submit" name="make_unfeatured_selected" value="Make Unfeatured" class="btn btn-primary btn-xs"/>
+            <input type="submit" name="make_featured_selected" value="{lang code='make_featured'}" class="btn btn-primary btn-xs"/>
+            <input type="submit" name="make_unfeatured_selected" value="{lang code='make_unfeatured'}" class="btn btn-primary btn-xs"/>
             <input type="submit" name="delete_selected" value="{lang code='delete'}" class="btn btn-primary btn-xs" onclick="return confirm_it('Are you sure you want to delete selected photos(s)')"/>
         </div>
     {else}
