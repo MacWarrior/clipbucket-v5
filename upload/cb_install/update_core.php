@@ -20,6 +20,6 @@ $return = ['success'=>$result];
 if( empty($result) || $result === true ){
     $return['msg']='ClipbucketV5 has been successfully updated !';
 } else {
-    $return['err']='An error occurred during update : ' . $result . '. Please try again';
+    $return['err']='An error occurred during update : ' . $result . '<br/>Please try again';
 }
 echo json_encode($return);
