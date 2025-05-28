@@ -114,7 +114,7 @@ if (config('enable_photo_categories')=='yes') {
     assign('category_links', implode(',', $category_links));
 }
 
-$min_suffixe = in_dev() ? '' : '.min';
+$min_suffixe = System::isInDev() ? '' : '.min';
 ClipBucket::getInstance()->addJS([
     'tag-it' . $min_suffixe . '.js'                              => 'admin',
     'photos' . $min_suffixe . '.js'                              => 'admin',

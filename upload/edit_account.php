@@ -141,7 +141,7 @@ if (is_array($profile)) {
     $udetails = array_merge($profile, $udetails);
 }
 
-$min_suffixe = in_dev() ? '' : '.min';
+$min_suffixe = System::isInDev() ? '' : '.min';
 ClipBucket::getInstance()->addJS([
     'tag-it' . $min_suffixe . '.js'                            => 'admin',
     'pages/edit_account/edit_account' . $min_suffixe . '.js'   => 'admin',

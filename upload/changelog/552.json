@@ -1,6 +1,6 @@
 {
   "version":"5.5.2",
-  "revision":"68",
+  "revision":"69",
   "status":"stable",
   "detail":[
     {
@@ -15,6 +15,7 @@
         ,"Update configs organisation"
         ,"Update collection management display"
         ,"Update data refresh after core update"
+        ,"Update core update error handling"
         ,"Fix code mode on page edition <i>(#595)</i>"
         ,"Fix email sending error catching <i>(#587)</i>"
         ,"Fix incorrect frontend URL <i>(#529)</i>"

@@ -503,6 +503,11 @@ function checkStatus() {
         success: function (data) {
             $('#changelog_display').html(data.changeLog);
             $('#status_html').html(data.html);
+
+            if (data.msg) {
+                $(".page-content").prepend(data.msg)
+            }
+
             $('.footer').find('em>a').html('V'+data.version +' - ' + data.revision);
         }
     });

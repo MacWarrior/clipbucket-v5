@@ -534,13 +534,10 @@ if (!empty($_POST)) {
     } else {
         unlink($filepath_custom_css);
     }
-
-} else {
-    assign('DEVELOPMENT_MODE', in_dev());
 }
 
 
-$min_suffixe = in_dev() ? '' : '.min';
+$min_suffixe = System::isInDev() ? '' : '.min';
 ClipBucket::getInstance()->addAdminJS([
     'jquery-ui-1.13.2.min.js'             => 'global'
     ,'pages/main/main'.$min_suffixe.'.js' => 'admin'

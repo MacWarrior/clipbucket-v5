@@ -203,7 +203,7 @@ if (!empty($_POST)) {
         if (is_writable(DirPath::get('temp'))) {
             file_put_contents($filepath_dev_file, '');
             if (file_exists($filepath_dev_file)) {
-                assign('DEVELOPMENT_MODE', true);
+                System::setInDev(true);
             }
         } else {
             e('"temp" directory is not writeable');
@@ -211,12 +211,12 @@ if (!empty($_POST)) {
     } else {
         unlink($filepath_dev_file);
         if (!file_exists($filepath_dev_file)) {
-            assign('DEVELOPMENT_MODE', false);
+            System::setInDev(false);
         }
     }
 
     if (!empty($_POST['discord_webhook_url']) && $_POST['discord_error_log'] == 'yes') {
-        if (!filter_var($_POST['discord_webhook_url'], FILTER_VALIDATE_URL) || strpos($_POST['discord_webhook_url'], 'https://discord.com/') !== 0) {
+        if (!filter_var($_POST['discord_webhook_url'], FILTER_VALIDATE_URL) || !str_starts_with($_POST['discord_webhook_url'], 'https://discord.com/')) {
             e(lang('discord_webhook_url_invalid'));
         } else {
             DiscordLog::getInstance()->enable($_POST['discord_webhook_url']);
@@ -224,9 +224,6 @@ if (!empty($_POST)) {
     } else {
         DiscordLog::getInstance()->disable();
     }
-
-} else {
-    assign('DEVELOPMENT_MODE', in_dev());
 }
 
 assign('discord_error_log', DiscordLog::getInstance()->isEnabled());
@@ -252,7 +249,7 @@ if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '99')) {
 }
 assign('allTimezone', $allTimezone);
 
-$min_suffixe = in_dev() ? '' : '.min';
+$min_suffixe = System::isInDev() ? '' : '.min';
 ClipBucket::getInstance()->addAdminJS([
     'jquery-ui-1.13.2.min.js' => 'global'
     ,

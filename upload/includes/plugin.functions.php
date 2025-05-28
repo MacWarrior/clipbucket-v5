@@ -124,7 +124,7 @@ function register_anchor($name, $type = null): void
 function register_anchor_function($method, $type, $class = null): bool
 {
     if( empty($type) ){
-        if( in_dev() ){
+        if( System::isInDev() ){
             error_log('register_anchor_function '.$method.' must have a type specified');
         }
         return false;
