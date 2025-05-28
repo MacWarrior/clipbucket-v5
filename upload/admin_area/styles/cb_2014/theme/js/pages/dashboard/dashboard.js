@@ -501,9 +501,9 @@ function checkStatus() {
         type: "post",
         dataType: "json",
         success: function (data) {
-            $('#status_icon').find('span').removeClass();
-            $('#status_icon').find('span').addClass('status-'+ data.status);
+            $('#changelog_display').html(data.changeLog);
             $('#status_html').html(data.html);
+            $('.footer').find('em>a').html('V'+data.version +' - ' + data.revision);
         }
     });
 }
