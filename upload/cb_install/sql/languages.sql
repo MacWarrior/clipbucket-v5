@@ -1591,4 +1591,7 @@ VALUES ('admin_setting'),
        ('user_statistics'),
        ('video_statistics'),
        ('reported'),
-       ('total');
+       ('total'),
+       ('my_collections'),
+       ('my_friends_collections'),
+       ('public_collections');

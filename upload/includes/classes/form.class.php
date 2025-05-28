@@ -39,7 +39,9 @@ class formObj
             case 'dropdown':
                 $fields = $this->createDropDown($field, $multi, $skipall);
                 break;
-
+            case 'dropdown_group':
+                $fields = $this->createDropDownWithOptionGroups($field, $multi, $skipall);
+                break;
             case 'checkboxv2':
                 $fields = $this->createCheckBoxV2($field);
                 break;
@@ -488,6 +490,64 @@ class formObj
                     $count++;
                 }
                 $fieldOpts .= '<option value="' . $key . '" ' . $checked . ' ' . $field['extra_option_tags'] . '>' . $value . '</option>';
+            }
+        }
+        $ddFieldEnd = '</select>';
+        echo $hidden . $ddFieldStart . $fieldOpts . $ddFieldEnd;
+    }
+    function createDropDownWithOptionGroups($field, $multi = false, $skipall = false)
+    {
+        if (!$multi) {
+            $field_name = $field['name'];
+        } else {
+            $field_name = $field['name'] . '[]';
+        }
+
+        $select = '';
+        if (!empty($field['id'])) {
+            $select .= ' id="' . $field['id'] . '"';
+        }
+
+        if (!empty($field['class'])) {
+            $select .= ' class="' . $field['class'] . '"';
+        }
+
+        if (!empty($field['disabled'])) {
+            $select .= ' disabled';
+        }
+
+        $hidden = '';
+        if (!empty($field['input_hidden'])) {
+            $hidden = '<input type="hidden" name="' . $field_name . '" value="' . $field['checked'] . '">';
+        }
+
+        $ddFieldStart = '<select name=\'' . $field_name . '\'' . $select . ' ' . $field['extra_tags'] . ' >';
+        $arrayName = $this->rmBrackets($field['name']);
+        if (is_string($field['value'])) {
+            $field['value'] = explode(',', $field['value']);
+        }
+        $fieldOpts = '';
+        if (is_array($field['value'])) {
+            foreach ($field['value'] as $group => $group_values) {
+                $fieldOpts .= '<optgroup label="' . lang($group) . '">';
+                foreach ($group_values as $key => $value) {
+                    if ((is_array($_REQUEST) && !empty($_REQUEST[$arrayName])) || !empty($field['checked'])) {
+                        if ((is_array($_REQUEST) && $_REQUEST[$arrayName] == $key) || $field['checked'] == $key) {
+                            $checked = ' selected ';
+                        } else {
+                            $checked = '';
+                        }
+                    } else {
+                        if ($count == 0) {
+                            $checked = ' selected ';
+                        } else {
+                            $checked = '';
+                        }
+                        $count++;
+                    }
+                    $fieldOpts .= '<option value="' . $key . '" ' . $checked . ' ' . $field['extra_option_tags'] . '>' . $value . '</option>';
+                }
+                $fieldOpts .= '</optgroup>';
             }
         }
         $ddFieldEnd = '</select>';
