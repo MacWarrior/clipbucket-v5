@@ -1243,3 +1243,28 @@ textarea[disabled]{
 .btn-primary[disabled]{
     color: white !important;
 }
+
+/* Buttons as dropdown list */
+.dropdown-menu>li>input[type=submit]{
+    font-size: 13px;
+    margin-bottom: 1px;
+    margin-top: 1px;
+    width: 100%;
+    display: block;
+    padding-top: 3px;
+    padding-bottom: 3px;
+    padding-left: 10px;
+    clear: both;
+    font-weight: 400;
+    line-height: 1.42857143;
+    color: #333;
+    white-space: nowrap;
+    background-color: transparent;
+    border: none;
+    text-align: left;
+}
+.dropdown-menu>li>input[type=submit]:hover{
+    background-color: #4f99c6;
+    color: #fff;
+}
+/* Buttons as dropdown list */

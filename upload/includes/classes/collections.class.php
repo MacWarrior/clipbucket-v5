@@ -2,18 +2,18 @@
 class Collection
 {
     private static $collection;
-    private $tablename = '';
-    private $tablename_items = '';
-    private $tablename_categories = '';
-    private $fields = [];
-    private $fields_items = [];
-    private $display_block = '';
-    private $search_limit = 0;
-    private $display_var_name = '';
+    private string $tablename = '';
+    private string $tablename_items = '';
+    private string $tablename_categories = '';
+    private array $fields = [];
+    private array $fields_items = [];
+    private string $display_block = '';
+    private int $search_limit = 0;
+    private string $display_var_name = '';
 
-    private $broadcast_options = [];
+    private array $broadcast_options = [];
 
-    private $type_list= [];
+    private array $type_list= [];
 
     /**
      * @throws Exception
@@ -219,9 +219,12 @@ class Collection
         $param_collection_id_parent = $params['collection_id_parent'] ?? false;
         $param_category = $params['category'] ?? false;
         $param_userid = $params['userid'] ?? false;
+        $param_collection_name = $params['collection_name'] ?? false;
         $param_search = $params['search'] ?? false;
+        $param_tags = $params['tags'] ?? false;
         $param_hide_empty_collection = $params['hide_empty_collection'];
         $param_featured = $params['featured'] ?? false;
+        $param_broadcast = $params['broadcast'] ?? false;
         $param_active = $params['active'] ?? false;
         $param_type = $params['type'] ?? false;
         $param_parents_only = $params['parents_only'] ?? false;
@@ -229,6 +232,7 @@ class Collection
         $param_empty_thumb_objectid =$params['empty_thumb_objectid'] ?? false;
         $param_join_flag =$params['join_flag'] ?? false;
         $param_order_item = $params['order_item'] ?? false;
+        $param_can_upload = $params['can_upload'] ?? false;
 
         $param_condition = $params['condition'] ?? false;
         $param_limit = $params['limit'] ?? false;
@@ -251,14 +255,28 @@ class Collection
         if( $param_userid ){
             $conditions[] = $this->getTableName() . '.userid = '.(int)$param_userid;
         }
+        if( $param_collection_name ){
+            $conditions[] = $this->getTableName() . '.collection_name LIKE \'%' . mysql_clean($param_collection_name) . '%\'';
+        }
         if( $param_condition ){
             $conditions[] = '(' . $param_condition . ')';
         }
         if( $param_featured ){
-            $conditions[] = $this->getTableName() . '.featured = \'yes\'';
+            if( in_array($param_featured, ['yes', 'no']) ){
+                $conditions[] = $this->getTableName() . '.featured = \'' . $param_featured . '\'';
+            } else {
+                $conditions[] = $this->getTableName() . '.featured = \'yes\'';
+            }
+        }
+        if( in_array($param_broadcast, ['public', 'private']) ){
+            $conditions[] = $this->getTableName() . '.broadcast = \'' . $param_broadcast . '\'';
         }
         if( $param_active ){
-            $conditions[] = $this->getTableName() . '.active = \'yes\'';
+            if( in_array($param_active, ['yes', 'no']) ){
+                $conditions[] = $this->getTableName() . '.active = \'' . $param_active . '\'';
+            } else {
+                $conditions[] = $this->getTableName() . '.active = \'yes\'';
+            }
         }
         if( $param_type ){
             $conditions[] = $this->getTableName() . '.type = \'' . mysql_clean($param_type) . '\'';
@@ -325,8 +343,17 @@ class Collection
             $conditions[] = $cond;
         }
 
+        if( $param_tags && Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.0', '264') ){
+            $match_tag = 'MATCH(tags.name) AGAINST (\'' . mysql_clean($param_tags) . '\' IN NATURAL LANGUAGE MODE) ';
+            $like_tag = 'LOWER(tags.name) LIKE \'%' . mysql_clean($param_tags) . '%\'';
+            $conditions[] = $match_tag . 'OR ' . $like_tag;
+        }
+
         if( !User::getInstance()->hasAdminAccess() ){
             $conditions[] = $this->getGenericConstraints();
+            if ($param_can_upload ) {
+                $conditions[] = '(' . $this->getTableName() . '.public_upload = \'yes\' OR ' . $this->getTableName() . '.userid = ' . User::getInstance()->getCurrentUserID() . ')';
+            }
         }
 
         $join = [];
@@ -364,7 +391,10 @@ class Collection
         if (config('hide_empty_collection') == 'yes' && $param_hide_empty_collection !== 'no' && !User::getInstance()->hasAdminAccess()) {
             $hide_empty_collection = $total_objects . ' > 0';
             if( !empty(User::getInstance()->getCurrentUserID()) ){
-                $hide_empty_collection = '(' . $hide_empty_collection . ' OR ' . $this->getTableName() . '.userid = ' . User::getInstance()->getCurrentUserID() . ')';
+                if ($param_can_upload) {
+                    $upload_condition = ' OR collections.public_upload = \'yes\'';
+                }
+                $hide_empty_collection = '(' . $hide_empty_collection . ' OR ' . $this->getTableName() . '.userid = ' . User::getInstance()->getCurrentUserID() . $upload_condition .' )';
             }
             $param_having[] = $hide_empty_collection;
 
@@ -603,13 +633,13 @@ class Collection
     /**
      * @throws Exception
      */
-    public static function display_banner($collection = [])
+    public static function display_banner($collection = []): void
     {
         $text = '';
         $class = '';
         if ($collection['broadcast'] == 'private') {
             $text = lang('collection_is', strtolower(lang('private')));
-            $class = 'label-warning';
+            $class = 'label-primary';
         }
 
         if( !empty($text) ){
@@ -617,6 +647,9 @@ class Collection
         }
     }
 
+    /**
+     * @throws Exception
+     */
     public function getChildCollection($collection_id)
     {
         return $this->getAll(['collection_id_parent'=>$collection_id]);
@@ -1092,7 +1125,7 @@ class Collections extends CBCategory
             LEFT JOIN ' . cb_sql_table($this->objTable) . ' ON ' . $this->objTable . '.'.$this->objFieldID .' = collection_items.object_id' . $left_join_cond
             . $join_tag
             ,'collections.*, users.userid, users.username, COUNT(DISTINCT ' . $this->objTable . '.' . $this->objFieldID . ') AS total_objects' . $select_tag,
-            ' collections.collection_id = ' . mysql_clean($id) . ' ' . $where . ' GROUP BY collections.collection_id') ;
+            ' collections.collection_id = ' . (int)$id . ' ' . $where . ' GROUP BY collections.collection_id') ;
 
         if ($result) {
             return $result[0];
@@ -1147,7 +1180,7 @@ class Collections extends CBCategory
         }
 
         $userid = user_id();
-        if ($c['broadcast'] == 'private' && !userquery::getInstance()->is_confirmed_friend($c['userid'], $userid) && $c['userid'] != $userid ) {
+        if (($c['broadcast'] == 'private' && !userquery::getInstance()->is_confirmed_friend($c['userid'], $userid) && $c['userid'] != $userid ) && !User::getInstance()->hasAdminAccess()) {
             e(lang('collection_is', strtolower(lang('private'))));
             return false;
         }
@@ -1371,7 +1404,7 @@ class Collections extends CBCategory
 
         $name = $default['collection_name'];
         $description = $default['collection_description'];
-        $tags = $default['collection_tags'];
+        $tags = $default['tags'];
         $type = $default['type'];
         $collection_id_parent = $default['collection_id_parent'];
         $collection_id = $default['collection_id'];
@@ -2356,34 +2389,35 @@ class Collections extends CBCategory
      */
     function collection_actions($action, $cid): void
     {
-        $cid = mysql_clean($cid);
         switch ($action) {
             case 'activate':
-            case 'activation':
-            case 'ac':
-                Clipbucket_db::getInstance()->update(tbl($this->section_tbl), ['active'], ['yes'], ' collection_id = ' . $cid);
+                Clipbucket_db::getInstance()->update(tbl($this->section_tbl), ['active'], ['yes'], ' collection_id = ' . (int)$cid);
                 e(lang('collection_activated'), 'm');
                 break;
 
             case 'deactivate':
-            case 'deactivation':
-            case 'dac':
-                Clipbucket_db::getInstance()->update(tbl($this->section_tbl), ['active'], ['no'], ' collection_id = ' . $cid);
+                Clipbucket_db::getInstance()->update(tbl($this->section_tbl), ['active'], ['no'], ' collection_id = ' . (int)$cid);
                 e(lang('collection_deactivated'), 'm');
                 break;
 
             case 'make_feature':
-            case 'featured':
-            case 'mcf':
-                Clipbucket_db::getInstance()->update(tbl($this->section_tbl), ['featured'], ['yes'], ' collection_id = ' . $cid);
+                Clipbucket_db::getInstance()->update(tbl($this->section_tbl), ['featured'], ['yes'], ' collection_id = ' . (int)$cid);
                 e(lang('collection_featured'), 'm');
                 break;
 
             case 'make_unfeature':
-            case 'unfeatured':
-            case 'mcuf':
-                Clipbucket_db::getInstance()->update(tbl($this->section_tbl), ['featured'], ['no'], ' collection_id = ' . $cid);
+                Clipbucket_db::getInstance()->update(tbl($this->section_tbl), ['featured'], ['no'], ' collection_id = ' . (int)$cid);
                 e(lang('collection_unfeatured'), 'm');
+                break;
+
+            case 'make_public':
+                Clipbucket_db::getInstance()->update(tbl($this->section_tbl), ['broadcast'], ['public'], ' collection_id = ' . (int)$cid);
+                e(lang('collection_made_public'), 'm');
+                break;
+
+            case 'make_private':
+                Clipbucket_db::getInstance()->update(tbl($this->section_tbl), ['broadcast'], ['private'], ' collection_id = ' . (int)$cid);
+                e(lang('collection_made_private'), 'm');
                 break;
 
             default:
@@ -2409,6 +2443,8 @@ class Collections extends CBCategory
 
         Clipbucket_db::getInstance()->execute('DELETE FROM ' . tbl('collection_items') . ' WHERE '
             . ('type=\'' . $type . '\'') . ' AND ' . ('object_id=\'' . $objId . '\''));
+
+
     }
 
     /**

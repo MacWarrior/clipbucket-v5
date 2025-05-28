@@ -7,6 +7,11 @@ User::getInstance()->isUserConnectedOrRedirect();
 
 User::getInstance()->hasPermissionOrRedirect('edit_video');
 
+global $breadcrumb;
+$breadcrumb[0] = ['title' => 'Photos', 'url' => ''];
+$breadcrumb[1] = ['title' => lang('manage_x', strtolower(lang('photos'))), 'url' => 'manage_photos.php'];
+$breadcrumb[2] = ['title' => lang('manage_x', strtolower(lang('photos'))), 'url' => DirPath::getUrl('admin_area') . 'photo_manager.php'];
+
 $udetails = userquery::getInstance()->get_user_details(user_id());
 assign('user', $udetails);
 assign('p', userquery::getInstance()->get_user_profile($udetails['userid']));

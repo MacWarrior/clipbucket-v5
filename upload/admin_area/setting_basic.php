@@ -161,6 +161,8 @@ if (isset($_POST['update'])) {
         , 'own_channel_rating'
         , 'photo_crop'
         , 'show_collapsed_checkboxes'
+        , 'activation'
+        , 'photo_activation'
     ];
 
     $rows = [
@@ -399,7 +401,9 @@ if (isset($_POST['update'])) {
         'player_default_resolution',
         'player_default_resolution_hls',
         'player_subtitles',
-        'enable_360_video'
+        'enable_360_video',
+        'activation',
+        'photo_activation',
     ];
 
     //Numeric Array

@@ -781,17 +781,19 @@ class System{
             return false;
         }
 
-        $nginx_infos = self::getNginxVhostInfos();
-        $nginx_vhost_version = $nginx_infos['nginx_vhost_version'];
-        $nginx_vhost_revision = $nginx_infos['nginx_vhost_revision'];
+        if( System::is_nginx() ){
+            $nginx_infos = self::getNginxVhostInfos();
+            $nginx_vhost_version = $nginx_infos['nginx_vhost_version'];
+            $nginx_vhost_revision = $nginx_infos['nginx_vhost_revision'];
 
-        if( Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.2', '9') ){
-            if( empty(config('nginx_vhost_version')) || empty(config('nginx_vhost_revision')) ){
-                return false;
-            }
+            if( Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.2', '9') ){
+                if( empty(config('nginx_vhost_version')) || empty(config('nginx_vhost_revision')) ){
+                    return false;
+                }
 
-            if(config('nginx_vhost_version') < $nginx_vhost_version || (config('nginx_vhost_version') == $nginx_vhost_version && config('nginx_vhost_revision') < $nginx_vhost_revision) ){
-                return false;
+                if(config('nginx_vhost_version') < $nginx_vhost_version || (config('nginx_vhost_version') == $nginx_vhost_version && config('nginx_vhost_revision') < $nginx_vhost_revision) ){
+                    return false;
+                }
             }
         }
 
