@@ -1,6 +1,6 @@
 {
   "version":"5.5.2",
-  "revision":"67",
+  "revision":"68",
   "status":"stable",
   "detail":[
     {
@@ -14,6 +14,7 @@
         ,"Add users and collections to dashboard flagged objects chart <i>(#74)</i>"
         ,"Update configs organisation"
         ,"Update collection management display"
+        ,"Update data refresh after core update"
         ,"Fix code mode on page edition <i>(#595)</i>"
         ,"Fix email sending error catching <i>(#587)</i>"
         ,"Fix incorrect frontend URL <i>(#529)</i>"
