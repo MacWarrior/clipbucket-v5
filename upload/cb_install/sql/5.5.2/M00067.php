@@ -3,7 +3,7 @@
 namespace V5_5_2;
 require_once \DirPath::get('classes') . DIRECTORY_SEPARATOR . 'migration' . DIRECTORY_SEPARATOR . 'migration.class.php';
 
-class MWIP extends \Migration
+class M00067 extends \Migration
 {
     /**
      * @throws \Exception
@@ -14,7 +14,6 @@ class MWIP extends \Migration
             'fr'=>'Statistiques globales',
             'en'=>'Overall Statistics'
         ]);
-
         self::generateTranslation('user_statistics', [
             'fr'=>'Statistiques utilisateurs',
             'en'=>'User Statistics'

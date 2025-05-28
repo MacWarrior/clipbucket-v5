@@ -1,6 +1,6 @@
 {
   "version":"5.5.2",
-  "revision":"66",
+  "revision":"67",
   "status":"stable",
   "detail":[
     {
@@ -11,6 +11,7 @@
         ,"Refactor conversion queue manager"
         ,"Add empty page title error"
         ,"Add collection mass broadcast update"
+        ,"Add users and collections to dashboard flagged objects chart"
         ,"Update configs organisation"
         ,"Update collection management display"
         ,"Fix code mode on page edition <i>(#595)</i>"
@@ -102,7 +103,8 @@
     {
       "title": "Translations",
       "description": [
-        "Fix translation"
+        "Translate hardcoded texts"
+        ,"Fix translation"
       ]
     },
     {
