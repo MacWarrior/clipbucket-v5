@@ -28,7 +28,7 @@ class CBTemplate
         $Smarty->setTemplateDir(DirPath::get('styles'));
         $Smarty->setCompileDir(DirPath::get('views'));
 
-        if (in_dev()) {
+        if (System::isInDev()) {
             $Smarty->clearAllCache();
         }
     }

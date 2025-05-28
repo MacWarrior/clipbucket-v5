@@ -49,7 +49,7 @@ class CacheRedis
             $this->client->incr('counter');
         } catch (Predis\Connection\ConnectionException $e) {
             $this->isEnabled = false;
-            if (in_dev()) {
+            if (System::isInDev()) {
                 //TODO translate without Language class
                 e('Cannot connect to Redis server');
             } else {
@@ -57,7 +57,7 @@ class CacheRedis
             }
         } catch (Predis\Response\ServerException $e) {
             $this->isEnabled = false;
-            if (in_dev()) {
+            if (System::isInDev()) {
                 //TODO translate without Language class
                 e('You need to authenticate to Redis server');
             } else {

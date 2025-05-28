@@ -41,7 +41,7 @@ class oxygenz_remote_play {
         }
 
         $js_file = self::class.'.min.js';
-        if(in_dev()){
+        if(System::isInDev()){
             $js_file =  self::class.'.js';
         }
         add_js([self::class.'/js/'.$js_file => 'plugin']);

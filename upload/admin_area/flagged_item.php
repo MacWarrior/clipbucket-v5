@@ -46,7 +46,7 @@ assign('type', $type);
 $total_pages = count_pages($total_rows, config('admin_pages'));
 pages::getInstance()->paginate($total_pages, $page);
 
-$min_suffixe = in_dev() ? '' : '.min';
+$min_suffixe = System::isInDev() ? '' : '.min';
 ClipBucket::getInstance()->addAdminJS(['pages/flagged_item/flagged_item'.$min_suffixe.'.js' => 'admin']);
 
 template_files('flagged_item.html');

@@ -232,7 +232,7 @@ switch ($mode) {
         subtitle(lang('manage_favorite_collections'));
 }
 
-$min_suffixe = in_dev() ? '' : '.min';
+$min_suffixe = System::isInDev() ? '' : '.min';
 ClipBucket::getInstance()->addJS([
     'tag-it' . $min_suffixe . '.js'                                      => 'admin',
     'pages/manage_collections/manage_collections' . $min_suffixe . '.js' => 'admin',

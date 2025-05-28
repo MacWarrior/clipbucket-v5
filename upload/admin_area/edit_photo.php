@@ -45,7 +45,7 @@ $otherFields = CBPhotos::getInstance()->load_other_forms($p);
 assign('requiredFields', $requiredFields);
 assign('otherFields', $otherFields);
 
-$min_suffixe = in_dev() ? '' : '.min';
+$min_suffixe = System::isInDev() ? '' : '.min';
 ClipBucket::getInstance()->addAdminJS([
     'tag-it' . $min_suffixe . '.js'                            => 'admin',
     'init_default_tag/init_default_tag' . $min_suffixe . '.js' => 'admin',

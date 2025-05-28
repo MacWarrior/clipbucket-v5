@@ -1679,7 +1679,7 @@ class CBPhotos
                 $memory_limit = ini_get('memory_limit');
                 if ($memory_needed > getBytesFromFileSize($memory_limit)) {
                     $msg = 'Photo generation would requiere ~' . System::get_readable_filesize($memory_needed, 0) . ' of memory, but it\'s currently limited to ' . $memory_limit;
-                    if (in_dev()) {
+                    if (System::isInDev()) {
                         e($msg);
                     } else {
                         e(lang('technical_error'));

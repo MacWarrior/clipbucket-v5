@@ -220,7 +220,7 @@ class Language
                 $this->uninstalled = true;
                 if (BACK_END) {
                     e('Translation system isn\'t installed, please connect and follow upgrade instructions.');
-                } elseif (in_dev()) {
+                } elseif (System::isInDev()) {
                     e('Translation system isn\'t installed, please contact your administrator.');
                 }
                 return [];

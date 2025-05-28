@@ -277,7 +277,7 @@ class Update
      */
     public function isWIPFile(): bool
     {
-        if (!in_dev()) {
+        if (!System::isInDev()) {
             return false;
         }
         if (file_exists(DirPath::get('sql') . $this->getCurrentCoreVersion() . DIRECTORY_SEPARATOR . 'MWIP.php')) {
@@ -432,7 +432,7 @@ class Update
         if( $dbversion['version'] == '-1' ){
             if (BACK_END) {
                 e('Version system isn\'t installed, please connect and follow upgrade instructions.');
-            } elseif (in_dev()) {
+            } elseif (System::isInDev()) {
                 e('Version system isn\'t installed, please contact your administrator.');
             }
             return false;
@@ -745,7 +745,7 @@ class Update
 
         $return_reset = $update->resetGitRepository($root_directory);
         if( !empty($return_reset) ){
-            if( in_dev() ){
+            if( System::isInDev() ){
                 DiscordLog::sendDump($return_reset);
             }
             return $return_reset;
@@ -753,7 +753,7 @@ class Update
 
         $return_update = $update->updateGitRepository($root_directory);
         if( !empty($return_update) ){
-            if( in_dev() ){
+            if( System::isInDev() ){
                 DiscordLog::sendDump($return_update);
             }
             return $return_update;

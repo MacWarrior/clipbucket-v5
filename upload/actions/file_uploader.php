@@ -134,7 +134,7 @@ switch ($mode) {
         Upload::getInstance()->add_conversion_queue($file_name . '.' . $extension);
 
         $cmd = FFmpeg::launchConversion($file_name);
-        if( in_dev() ){
+        if( System::isInDev() ){
             $log->writeLine(date('Y-m-d H:i:s').' - Conversion command : ' . $cmd);
         }
 
@@ -144,7 +144,7 @@ switch ($mode) {
         die();
 
     default:
-        if( in_dev() ){
+        if( System::isInDev() ){
             upload_error('Unknown command : '.$mode);
         } else {
             upload_error('Unknown command');

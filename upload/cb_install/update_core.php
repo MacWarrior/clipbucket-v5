@@ -10,13 +10,6 @@ require_once DirPath::get('classes') . 'errorhandler.class.php';
 require_once DirPath::get('includes') . 'functions_template.php';
 require_once DirPath::get('cb_install') . 'functions_install.php';
 
-if (file_exists(DirPath::get('temp') . 'development.dev')) {
-    define('DEVELOPMENT_MODE', true);
-
-} else {
-    define('DEVELOPMENT_MODE', false);
-}
-
 if (!file_exists(DirPath::get('temp') . 'install.me') && !file_exists(DirPath::get('temp') . 'install.me.not')) {
     return false;
 }

@@ -112,7 +112,7 @@ switch ($mode) {
         break;
 }
 
-$min_suffixe = in_dev() ? '' : '.min';
+$min_suffixe = System::isInDev() ? '' : '.min';
 ClipBucket::getInstance()->addJS([
     'tag-it' . $min_suffixe . '.js'                                => 'admin',
     'pages/manage_playlist/manage_playlist' . $min_suffixe . '.js' => 'admin',

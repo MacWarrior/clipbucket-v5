@@ -200,7 +200,7 @@ if( empty($collections) ){
 $total_pages = count_pages($total_rows, config('admin_pages'));
 pages::getInstance()->paginate($total_pages, $page);
 
-$min_suffixe = in_dev() ? '' : '.min';
+$min_suffixe = System::isInDev() ? '' : '.min';
 ClipBucket::getInstance()->addAdminJS([
     'jquery-ui-1.13.2.min.js'                                  => 'admin',
     'tag-it' . $min_suffixe . '.js'                            => 'admin',

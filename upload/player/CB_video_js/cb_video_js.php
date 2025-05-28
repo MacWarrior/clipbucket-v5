@@ -18,7 +18,7 @@ class CB_video_js
     {
         $player_name = self::class;
 
-        $min_suffixe = in_dev() ? '' : '.min';
+        $min_suffixe = System::isInDev() ? '' : '.min';
         ClipBucket::getInstance()->addAllJS([
             $player_name.'/js/video'.$min_suffixe.'.js' => 'player'
             ,$player_name.'/lang/'.get_current_language().'.js' => 'player'
