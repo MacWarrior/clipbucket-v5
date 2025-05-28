@@ -189,24 +189,24 @@ $(document).ready(function(){
                 "bold": false,
                 "id": "Title-1",
                 "size": 15,
-                "text": "Overall Statistics"
+                "text": lang['overall_statistics']
             }
         ],
         "dataProvider": [
             {
-                "category": "Users",
+                "category": lang['users'],
                 "column-1": piechart_users
             },
             {
-                "category": "Photos",
+                "category": lang['photos'],
                 "column-1": piechart_photos
             },
             {
-                "category": "Videos",
+                "category": lang['videos'],
                 "column-1": piechart_videos
             },
             {
-                "category": "Collections",
+                "category": lang['collections'],
                 "column-1": piechart_collections
             },
 
@@ -235,18 +235,26 @@ $(document).ready(function(){
                 "bold": false,
                 "id": "Title-1",
                 "size": 15,
-                "text": "Flagged Objects"
+                "text": lang['flagged_obj']
             }
         ],
         "dataProvider": [
 
             {
-                "category": "Photos",
+                "category": lang['photos'],
                 "column-1": donutchart_photos
             },
             {
-                "category": "Videos",
+                "category": lang['videos'],
                 "column-1": donutchart_videos
+            },
+            {
+                "category": lang['users'],
+                "column-1": donutchart_users
+            },
+            {
+                "category": lang['collections'],
+                "column-1": donutchart_collections
             }
         ]
     });
@@ -279,7 +287,7 @@ $(document).ready(function(){
         "valueAxes": [
             {
                 "id": "ValueAxis-1",
-                "title": "Users"
+                "title": lang['users']
             }
         ],
         "allLabels": [],
@@ -289,20 +297,20 @@ $(document).ready(function(){
                 "bold": false,
                 "id": "Title-1",
                 "size": 15,
-                "text": "Users Statistics"
+                "text": lang['user_statistics']
             }
         ],
         "dataProvider": [
             {
-                "category": "Total",
+                "category": lang["total"],
                 "column-1": ubarchart_users
             },
             {
-                "category": "Active",
+                "category": lang["active"],
                 "column-1": ubarchart_users_active
             },
             {
-                "category": "Inactive",
+                "category": lang["inactive"],
                 "column-1": ubarchart_users_inactive
             }
         ]
@@ -335,7 +343,7 @@ $(document).ready(function(){
         "valueAxes": [
             {
                 "id": "ValueAxis-1",
-                "title": "Videos"
+                "title": lang["videos"]
             }
         ],
         "allLabels": [],
@@ -345,24 +353,24 @@ $(document).ready(function(){
                 "bold": false,
                 "id": "Title-1",
                 "size": 15,
-                "text": "Video Statistics"
+                "text": lang['video_statistics']
             }
         ],
         "dataProvider": [
             {
-                "category": "Total",
+                "category": lang['total'],
                 "column-1": vbarchart_total
             },
             {
-                "category": "Active",
+                "category": lang['active'],
                 "column-1": vbarchart_active
             },
             {
-                "category": "Deactive",
+                "category": lang['inactive'],
                 "column-1": vbarchart_deactive
             },
             {
-                "category": "Reported",
+                "category": lang['reported'],
                 "column-1": vbarchart_reported
             }
         ]
@@ -493,12 +501,14 @@ function checkStatus() {
         type: "post",
         dataType: "json",
         success: function (data) {
-            $('#status_icon').find('span').removeClass();
-            $('#status_icon').find('span').addClass('status-'+ data.status);
+            $('#changelog_display').html(data.changeLog);
             $('#status_html').html(data.html);
+
             if (data.msg) {
                 $(".page-content").prepend(data.msg)
             }
+
+            $('.footer').find('em>a').html('V'+data.version +' - ' + data.revision);
         }
     });
 }

@@ -1586,4 +1586,9 @@ VALUES ('admin_setting'),
        ('collection_made_public'),
        ('collection_made_private'),
        ('x_collections_made_public'),
-       ('x_collections_made_private');
+       ('x_collections_made_private'),
+       ('overall_statistics'),
+       ('user_statistics'),
+       ('video_statistics'),
+       ('reported'),
+       ('total');

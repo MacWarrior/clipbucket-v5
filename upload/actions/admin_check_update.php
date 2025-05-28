@@ -5,7 +5,9 @@ require_once dirname(__FILE__, 2) . '/includes/admin_config.php';
 User::getInstance()->hasPermissionAjax('admin_access');
 $return = [];
 if( config('enable_update_checker') == '1' ){
-    $return = ['status'=> Update::getInstance()->getCoreUpdateStatus(), 'html'=>Update::getInstance()->getUpdateHTML()];
+    Assign('update_checker_status', Update::getInstance()->getCoreUpdateStatus());
+    assign('changelog_tab', [Update::getInstance()->getCurrentCoreVersionCode() => Update::getInstance()->getCurrentCoreVersion()]);
+    $return = ['html'=>Update::getInstance()->getUpdateHTML(), 'changeLog'=>getTemplate('changelog.html'), 'version'=>Update::getInstance()->getCurrentCoreVersion(), 'revision'=>Update::getInstance()->getCurrentCoreRevision()];
 }
 //get logs
 $core_tool = new AdminTool();
