@@ -721,10 +721,7 @@ class Update
             unlink($filepath_install_me);
         }
 
-        if( !empty($output) ){
-            return $output;
-        }
-        return true;
+        return $output;
     }
 
     private function updateGitRepository(string $root_directory)
