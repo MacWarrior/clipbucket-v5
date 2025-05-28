@@ -49,7 +49,7 @@ $total_pages = round($total_pages + 0.49, 0);
 //Pagination
 pages::getInstance()->paginate($total_pages, $current_page);
 
-$min_suffixe = in_dev() ? '' : '.min';
+$min_suffixe = System::isInDev() ? '' : '.min';
 ClipBucket::getInstance()->addAdminJS(['pages/manage_social_networks/manage_social_networks'.$min_suffixe.'.js' => 'admin']);
 
 $list_icons = SocialNetworks::getInstance()->getAllIcons() ?? [];

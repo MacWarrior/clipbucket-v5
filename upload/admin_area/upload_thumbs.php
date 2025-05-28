@@ -63,7 +63,7 @@ foreach ($msg as $ms) {
     e($ms, 'm');
 }
 
-$min_suffixe = in_dev() ? '' : '.min';
+$min_suffixe = System::isInDev() ? '' : '.min';
 ClipBucket::getInstance()->addAdminJS(['pages/upload_thumbs/upload_thumbs'.$min_suffixe.'.js' => 'admin']);
 
 subtitle(str_replace('%s',strtolower(lang($type)), lang('manage_x')));

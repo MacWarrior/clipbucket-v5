@@ -124,7 +124,7 @@ if( !Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.0', '323') ){
     ]));
 }
 
-$min_suffixe = in_dev() ? '' : '.min';
+$min_suffixe = System::isInDev() ? '' : '.min';
 ClipBucket::getInstance()->addAdminJS(['pages/category/category'.$min_suffixe.'.js' => 'admin']);
 
 subtitle(lang('manage_categories') . ' - ' . ucfirst(lang($type)));

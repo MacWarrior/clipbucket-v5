@@ -1,5 +1,5 @@
 <?php
-$min_suffixe = in_dev() ? '' : '.min';
+$min_suffixe = System::isInDev() ? '' : '.min';
 ClipBucket::getInstance()->addCSS([
     'bootstrap.min.css'                                 => 'admin',
     'fortawesome/font-awesome/css/font-awesome.min.css' => 'vendor',

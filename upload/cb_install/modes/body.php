@@ -1,7 +1,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
     <?php
-    $cache_key = DEVELOPMENT_MODE ? time() : str_replace('.', '', Update::getInstance()->getCurrentCoreVersion()) . Update::getInstance()->getCurrentCoreRevision();
+    $cache_key = System::isInDev() ? time() : str_replace('.', '', Update::getInstance()->getCurrentCoreVersion()) . Update::getInstance()->getCurrentCoreRevision();
     $favicon = DirPath::getUrl('styles') . 'cb_28/theme/images/favicon.png';
     ?>
     <head>
@@ -23,10 +23,10 @@
         <meta name="msapplication-TileColor" content="#ffffff">
         <meta name="theme-color" content="#ffffff">
         <title>ClipBucket v<?php echo Update::getInstance()->getCurrentCoreVersion(); ?> Installer</title>
-        <link href="./style<?php if(!DEVELOPMENT_MODE) echo '.min'?>.css" rel="stylesheet" type="text/css"/>
+        <link href="./style<?php if(!System::isInDev()) echo '.min'?>.css" rel="stylesheet" type="text/css"/>
         <script type="text/javascript" src="../vendor/components/jquery/jquery.min.js?v=<?php echo $cache_key; ?>"></script>
         <script type="text/javascript" src="../vendor/select2/select2/dist/js/select2.min.js?v=<?php echo $cache_key; ?>"></script>
-        <script type="text/javascript" src="./functions<?php if(!DEVELOPMENT_MODE) echo '.min'?>.js?v=<?php echo $cache_key; ?>"></script>
+        <script type="text/javascript" src="./functions<?php if(!System::isInDev()) echo '.min'?>.js?v=<?php echo $cache_key; ?>"></script>
         <link href="./bootstrap/css/bootstrap-theme.min.css?v=<?php echo $cache_key; ?>" rel="stylesheet" type="text/css"/>
         <link href="./bootstrap/css/bootstrap.min.css?v=<?php echo $cache_key; ?>" rel="stylesheet" type="text/css"/>
         <link href="../vendor/fortawesome/font-awesome/css/font-awesome.min.css?v=<?php echo $cache_key; ?>" rel="stylesheet" type="text/css"/>

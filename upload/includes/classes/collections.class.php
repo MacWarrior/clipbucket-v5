@@ -479,7 +479,7 @@ class Collection
         }
 
         $newline = ' ';
-        if( in_dev() ){
+        if( System::isInDev() ){
             $newline = "\n";
         }
 
