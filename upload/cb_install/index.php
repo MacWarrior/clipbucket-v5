@@ -11,12 +11,8 @@ require_once DirPath::get('classes') . 'AIVision.class.php';
 require_once DirPath::get('classes') . 'migration' . DIRECTORY_SEPARATOR . 'migration.class.php';
 
 $whoops = new \Whoops\Run;
-if (file_exists(DirPath::get('temp') . 'development.dev')) {
-    define('DEVELOPMENT_MODE', true);
-
+if( System::isInDev() ){
     $whoops->pushHandler(new \Whoops\Handler\PrettyPageHandler);
-} else {
-    define('DEVELOPMENT_MODE', false);
 }
 $whoops->pushHandler(function($e){
     $message = $e->getMessage().PHP_EOL.$e->getTraceAsString();

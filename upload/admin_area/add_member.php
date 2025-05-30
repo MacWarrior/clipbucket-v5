@@ -18,7 +18,7 @@ if (isset($_POST['add_member'])) {
     }
 }
 
-$min_suffixe = in_dev() ? '' : '.min';
+$min_suffixe = System::isInDev() ? '' : '.min';
 ClipBucket::getInstance()->addAdminJS(['pages/add_member/add_member'.$min_suffixe.'.js' => 'admin']);
 $datepicker_js_lang = '';
 if( Language::getInstance()->getLang() != 'en'){

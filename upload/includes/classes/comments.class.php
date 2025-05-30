@@ -585,7 +585,7 @@ class Comments
             return;
         }
 
-        $min_suffixe = in_dev() ? '' : '.min';
+        $min_suffixe = System::isInDev() ? '' : '.min';
         ClipBucket::getInstance()->addJS(['toastui/toastui-editor-all' . $min_suffixe . '.js' => 'libs']);
         ClipBucket::getInstance()->addCSS(['toastui/toastui-editor' . $min_suffixe . '.css' => 'libs']);
 

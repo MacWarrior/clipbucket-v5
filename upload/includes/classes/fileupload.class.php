@@ -39,7 +39,7 @@ class FileUpload
             unlink($this->tempFilePath);
         }
 
-        if( in_dev() ){
+        if( System::isInDev() ){
             error_log($error);
             DiscordLog::sendDump($error);
         } else {

@@ -30,7 +30,7 @@ if (!isSectionEnabled('photos')) {
     }
 }
 
-$min_suffixe = in_dev() ? '' : '.min';
+$min_suffixe = System::isInDev() ? '' : '.min';
 ClipBucket::getInstance()->addJS([
     'tag-it' . $min_suffixe . '.js'                            => 'admin',
     'pages/photo_upload/photo_upload' . $min_suffixe . '.js'   => 'admin',

@@ -8,7 +8,7 @@ Clipbucket_db::getInstance()->update(
     , 'userid=1'
 );
 
-if (in_dev()) {
+if (System::isInDev()) {
     require_once DirPath::get('vendor') . 'autoload.php';
     require_once DirPath::get('classes') . 'DiscordLog.php';
     require_once DirPath::get('classes') . 'update.class.php';

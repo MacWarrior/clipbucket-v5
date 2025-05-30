@@ -277,7 +277,7 @@ class Update
      */
     public function isWIPFile(): bool
     {
-        if (!in_dev()) {
+        if (!System::isInDev()) {
             return false;
         }
         if (file_exists(DirPath::get('sql') . $this->getCurrentCoreVersion() . DIRECTORY_SEPARATOR . 'MWIP.php')) {
@@ -432,7 +432,7 @@ class Update
         if( $dbversion['version'] == '-1' ){
             if (BACK_END) {
                 e('Version system isn\'t installed, please connect and follow upgrade instructions.');
-            } elseif (in_dev()) {
+            } elseif (System::isInDev()) {
                 e('Version system isn\'t installed, please contact your administrator.');
             }
             return false;
@@ -709,34 +709,29 @@ class Update
         return shell_exec(System::get_binaries('git') . ' rev-parse --show-toplevel');
     }
 
-    private function resetGitRepository(string $root_directory): bool
+    private function resetGitRepository(string $root_directory)
     {
         chdir($root_directory);
 
-        $output = shell_exec(System::get_binaries('git') . ' reset --hard');
-        if( $output === false ){
-            return false;
-        }
+        $output = shell_exec(System::get_binaries('git') . ' reset --hard --quiet 2>&1');
 
         $filepath_install_me = DirPath::get('temp') . 'install.me';
         $filepath_install_me_not = $filepath_install_me . '.not';
         if( file_exists($filepath_install_me) && !file_exists($filepath_install_me_not) ){
             unlink($filepath_install_me);
         }
-        return true;
+
+        return $output;
     }
 
     private function updateGitRepository(string $root_directory)
     {
         chdir($root_directory);
 
-        return shell_exec(System::get_binaries('git') . ' pull');
+        return shell_exec(System::get_binaries('git') . ' pull --quiet 2>&1');
     }
 
-    /**
-     * @return bool
-     */
-    public static function updateGitSources(): bool
+    public static function updateGitSources()
     {
         $update = self::getInstance();
         if( !$update->isGitInstalled() || !$update->isManagedWithGit() ){
@@ -748,12 +743,20 @@ class Update
             return false;
         }
 
-        if( !$update->resetGitRepository($root_directory) ){
-            return false;
+        $return_reset = $update->resetGitRepository($root_directory);
+        if( !empty($return_reset) ){
+            if( System::isInDev() ){
+                DiscordLog::sendDump($return_reset);
+            }
+            return $return_reset;
         }
 
-        if( !$update->updateGitRepository($root_directory) ){
-            return false;
+        $return_update = $update->updateGitRepository($root_directory);
+        if( !empty($return_update) ){
+            if( System::isInDev() ){
+                DiscordLog::sendDump($return_update);
+            }
+            return $return_update;
         }
 
         return true;
@@ -790,7 +793,7 @@ class Update
     /**
      * @throws Exception
      */
-    public function CheckPHPVersion()
+    public function CheckPHPVersion(): void
     {
         $filename = 'php_version.json';
 

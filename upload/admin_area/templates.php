@@ -6,7 +6,7 @@ global $cbtpl;
 User::getInstance()->hasPermissionOrRedirect('manage_template_access', true);
 pages::getInstance()->page_redir();
 
-if( count($cbtpl->get_templates()) <= 1 && !in_dev() ){
+if( count($cbtpl->get_templates()) <= 1 && !System::isInDev() ){
     redirect_to(DirPath::getUrl('admin_area'));
 }
 
