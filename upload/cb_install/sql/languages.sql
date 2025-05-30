@@ -1599,4 +1599,7 @@ VALUES ('admin_setting'),
        ('option_photo_thumb_size'),
        ('width'),
        ('height'),
-       ('option_medium_photo_size');
+       ('option_medium_photo_size'),
+       ('reset'),
+       ('logo_reset'),
+       ('favicon_reset');
