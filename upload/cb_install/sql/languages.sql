@@ -1591,4 +1591,12 @@ VALUES ('admin_setting'),
        ('user_statistics'),
        ('video_statistics'),
        ('reported'),
-       ('total');
+       ('total'),
+       ('option_photo_ratio'),
+       ('option_photo_ratio_help'),
+       ('option_large_photo_width'),
+       ('option_crop_image'),
+       ('option_photo_thumb_size'),
+       ('width'),
+       ('height'),
+       ('option_medium_photo_size');

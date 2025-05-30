@@ -41,6 +41,11 @@
                         <h8>{lang|ucfirst code='hosting'}</h8>
                     </a>
                 </li>
+                <li>
+                    <a data-toggle="tab" href="#config_photos">
+                        <h8>{lang|ucfirst code='photos'}</h8>
+                    </a>
+                </li>
             </ul>
             <div class="tab-content">
                 <div id="config_upload" class="tab-pane active">
@@ -524,516 +529,583 @@
                                 <div class="tab-content">
                                     {$first = true}
                                     {foreach from=$video_resolutions key=key item=ratio}
-                                    <div id="bitrates_{str_replace('/','_',$key)}" class="tab-pane resolutions {if $first}active{/if}">
-                                        {$count = 0}
-                                        {foreach from=$ratio item=resolution}
-                                            {if $count == 0}
-                                                <div class="row">
-                                            {/if}
-                                            <div class="col-md-3">
-                                                <label class="nowrap" for="vbrate_{$resolution.title}" title="{$resolution.title}">{$resolution.title}</label>
-                                            </div>
-                                            <div class="col-md-3">
-                                                <input class="form-control" name="vbrate_{$resolution.title}" id="vbrate_{$resolution.title}" value="{$resolution.video_bitrate}"/>
-                                            </div>
-                                            {$count = $count+1}
-                                            {if $count == 2}
+                                        <div id="bitrates_{str_replace('/','_',$key)}" class="tab-pane resolutions {if $first}active{/if}">
+                                            {$count = 1}
+                                            {foreach from=$ratio item=resolution}
+                                                {if $count%2 == 1}
+                                                    <div class="row">
+                                                {/if}
+                                                <div class="col-md-3">
+                                                    <label class="nowrap" for="vbrate_{$resolution.title}" title="{$resolution.title}">{$resolution.title}</label>
                                                 </div>
-                                                <hr/>
-                                                {$count = 0}
-                                            {/if}
-                                        {/foreach}
-                                        {if $count != 0}
-                                    </div>
-                                    {/if}
+                                                <div class="col-md-3">
+                                                    <input class="form-control" name="vbrate_{$resolution.title}" id="vbrate_{$resolution.title}" value="{$resolution.video_bitrate}"/>
+                                                </div>
+                                                {$count = $count+1}
+                                                {if $count%2 == 0 || $count == count($ratio)}
+                                                    </div>
+                                                    <hr/>
+                                                {/if}
+                                            {/foreach}
+                                        </div>
+                                        {$first = false}
+                                    {/foreach}
                                 </div>
-                                {$first = false}
-                                {/foreach}
                             </div>
-                        </div>
-                        <hr/>
-                        <div class="row">
-                            <div class="col-md-10">
-                                <label class="nowrap" for="allow_conversion_1_percent" title="Allow 1% difference"><span class="fa fa-question-circle tips" title="Allow a 1% lower difference between expected video height/width and current video height/width"></span> Allow 1% difference</label>
+                            <hr/>
+                            <div class="row">
+                                <div class="col-md-10">
+                                    <label class="nowrap" for="allow_conversion_1_percent" title="Allow 1% difference"><span class="fa fa-question-circle tips" title="Allow a 1% lower difference between expected video height/width and current video height/width"></span> Allow 1% difference</label>
+                                </div>
+                                <div class="col-md-2 row-size">
+                                    <input value="yes" name="allow_conversion_1_percent" id="allow_conversion_1_percent" {if $row.allow_conversion_1_percent=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+                                    <span class="lbl"></span>
+                                </div>
                             </div>
-                            <div class="col-md-2 row-size">
-                                <input value="yes" name="allow_conversion_1_percent" id="allow_conversion_1_percent" {if $row.allow_conversion_1_percent=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
-                                <span class="lbl"></span>
-                            </div>
-                        </div>
-                        <hr/>
-                        <div class="row">
-                            <div class="col-md-10">
-                                <label class="nowrap" for="only_keep_max_resolution" title="Keep subtitles">{lang code='only_keep_max_resolution'}</label>
-                            </div>
-                            <div class="col-md-2 row-size">
-                                <input value="yes" name="only_keep_max_resolution" id="only_keep_max_resolution" {if $row.only_keep_max_resolution=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
-                                <span class="lbl"></span>
+                            <hr/>
+                            <div class="row">
+                                <div class="col-md-10">
+                                    <label class="nowrap" for="only_keep_max_resolution" title="Keep subtitles">{lang code='only_keep_max_resolution'}</label>
+                                </div>
+                                <div class="col-md-2 row-size">
+                                    <input value="yes" name="only_keep_max_resolution" id="only_keep_max_resolution" {if $row.only_keep_max_resolution=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+                                    <span class="lbl"></span>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
-        </div>
-        <div id="config_emails" class="tab-pane">
-            <div class="row">
-                <div class="col-md-4">
+                <div id="config_emails" class="tab-pane">
                     <div class="row">
-                        <div class="col-md-6">
-                            <label class="nowrap" for="email_sender_address" title="{lang('email_sender_address')}">{lang('email_sender_address')}</label>
+                        <div class="col-md-4">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <label class="nowrap" for="email_sender_address" title="{lang('email_sender_address')}">{lang('email_sender_address')}</label>
+                                </div>
+                                <div class="col-md-6">
+                                    <input class="form-control" name="email_sender_address" id="email_sender_address" value="{$row.email_sender_address}"/>
+                                </div>
+                            </div>
+                            <hr/>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <label class="nowrap" for="email_sender_name" title="{lang('email_sender_name')}">{lang('email_sender_name')}</label>
+                                </div>
+                                <div class="col-md-6">
+                                    <input class="form-control" name="email_sender_name" id="email_sender_name" value="{$row.email_sender_name}"/>
+                                </div>
+                            </div>
+                            <hr/>
                         </div>
-                        <div class="col-md-6">
-                            <input class="form-control" name="email_sender_address" id="email_sender_address" value="{$row.email_sender_address}"/>
-                        </div>
-                    </div>
-                    <hr/>
-                    <div class="row">
-                        <div class="col-md-6">
-                            <label class="nowrap" for="email_sender_name" title="{lang('email_sender_name')}">{lang('email_sender_name')}</label>
-                        </div>
-                        <div class="col-md-6">
-                            <input class="form-control" name="email_sender_name" id="email_sender_name" value="{$row.email_sender_name}"/>
-                        </div>
-                    </div>
-                    <hr/>
-                </div>
-                <div class="col-md-4">
-                    <div class="row">
-                        <div class="col-md-6">
-                            <label class="nowrap" for="send_comment_notification" title="Send Comment Notification">Send Comment Notification</label>
-                        </div>
-                        <div class="col-md-6 row-size">
-                            <input value="yes" name="send_comment_notification" id="send_comment_notification" {if $row.send_comment_notification=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
-                            <span class="lbl"></span>
-                        </div>
-                    </div>
-                    <hr/>
-                    <div class="row">
-                        <div class="col-md-6">
-                            <label class="nowrap" for="approve_video_notification" title="Send Video Approve Notification">Send Video Approve Notification</label>
-                        </div>
-                        <div class="col-md-6 row-size">
-                            <input value="yes" name="approve_video_notification" id="approve_video_notification" {if $row.approve_video_notification=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
-                            <span class="lbl"></span>
-                        </div>
-                    </div>
-                    <hr/>
-                    <div class="row">
-                        <div class="col-md-6">
-                            <label class="nowrap" for="disable_email" title="{lang code='disable_email'}">{lang code='disable_email'}</label>
-                        </div>
-                        <div class="col-md-6 row-size">
-                            <input value="yes" name="disable_email" id="disable_email" {if $row.disable_email=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
-                            <span class="lbl"></span>
-                        </div>
-                    </div>
-                    <hr/>
+                        <div class="col-md-4">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <label class="nowrap" for="send_comment_notification" title="Send Comment Notification">Send Comment Notification</label>
+                                </div>
+                                <div class="col-md-6 row-size">
+                                    <input value="yes" name="send_comment_notification" id="send_comment_notification" {if $row.send_comment_notification=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+                                    <span class="lbl"></span>
+                                </div>
+                            </div>
+                            <hr/>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <label class="nowrap" for="approve_video_notification" title="Send Video Approve Notification">Send Video Approve Notification</label>
+                                </div>
+                                <div class="col-md-6 row-size">
+                                    <input value="yes" name="approve_video_notification" id="approve_video_notification" {if $row.approve_video_notification=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+                                    <span class="lbl"></span>
+                                </div>
+                            </div>
+                            <hr/>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <label class="nowrap" for="disable_email" title="{lang code='disable_email'}">{lang code='disable_email'}</label>
+                                </div>
+                                <div class="col-md-6 row-size">
+                                    <input value="yes" name="disable_email" id="disable_email" {if $row.disable_email=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+                                    <span class="lbl"></span>
+                                </div>
+                            </div>
+                            <hr/>
 
-                </div>
-                <div class="col-md-4">
-                    <div class="row">
-                        <div class="col-md-6">
-                            <label class="nowrap" for="mail_type" title="Mailer">Mailer</label>
                         </div>
-                        <div class="col-md-6 row-size">
-                            <select class="form-control" name="mail_type" id="mail_type">
-                                <option value="mail" {if $row.mail_type=='mail'}selected{/if}>PHP mail()</option>
-                                <option value="smtp" {if $row.mail_type=='smtp'}selected{/if}>smtp</option>
-                            </select>
-                        </div>
-                    </div>
-                    <hr/>
-                    <div class="row config_smtp" {if $row.mail_type=='mail'}style="display:none;"{/if}>
-                        <div class="col-md-6">
-                            <label class="nowrap" for="smtp_host" title="SMTP Host">SMTP Host</label>
-                        </div>
-                        <div class="col-md-6 row-size">
-                            <input class="form-control" name="smtp_host" id="smtp_host" value="{$row.smtp_host}"/>
-                        </div>
-                    </div>
-                    <hr class="config_smtp" {if $row.mail_type=='mail'}style="display:none;"{/if}/>
-                    <div class="row config_smtp" {if $row.mail_type=='mail'}style="display:none;"{/if}>
-                        <div class="col-md-6">
-                            <label class="nowrap" for="smtp_port" title="SMTP Port">SMTP Port</label>
-                        </div>
-                        <div class="col-md-6 row-size">
-                            <input class="form-control" name="smtp_port" id="smtp_port" value="{$row.smtp_port}"/>
-                        </div>
-                    </div>
-                    <hr class="config_smtp" {if $row.mail_type=='mail'}style="display:none;"{/if}/>
-                    <div class="row config_smtp" {if $row.mail_type=='mail'}style="display:none;"{/if}>
-                        <div class="col-md-6">
-                            <label class="nowrap" for="smtp_auth" title="SMTP Auth">SMTP Auth</label>
-                        </div>
-                        <div class="col-md-6 row-size">
-                            <input value="yes" name="smtp_auth" id="smtp_auth" {if $row.smtp_auth=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
-                            <span class="lbl"></span>
-                        </div>
-                    </div>
-                    <hr class="config_smtp config_smtp_auth" {if $row.mail_type=='mail'||$row.smtp_auth!='yes'}style="display:none;"{/if}/>
-                    <div class="row config_smtp config_smtp_auth" {if $row.mail_type=='mail'||$row.smtp_auth!='yes'}style="display:none;"{/if}>
-                        <div class="col-md-6">
-                            <label class="nowrap" for="smtp_user" title="SMTP Username">SMTP Username</label>
-                        </div>
-                        <div class="col-md-6 row-size">
-                            <input class="form-control" name="smtp_user" id="smtp_user" value="{$row.smtp_user}"/>
-                        </div>
-                    </div>
-                    <hr class="config_smtp config_smtp_auth" {if $row.mail_type=='mail'||$row.smtp_auth!='yes'}style="display:none;"{/if}/>
-                    <div class="row config_smtp config_smtp_auth" {if $row.mail_type=='mail'||$row.smtp_auth!='yes'}style="display:none;"{/if}>
-                        <div class="col-md-6">
-                            <label class="nowrap" for="smtp_pass" title="SMTP Password">SMTP Password</label>
-                        </div>
-                        <div class="col-md-6 row-size">
-                            <input class="form-control" name="smtp_pass" id="smtp_pass" value="{$row.smtp_pass}"/>
-                        </div>
-                    </div>
-                    <hr class="config_smtp config_smtp_auth" {if $row.mail_type=='mail'||$row.smtp_auth!='yes'}style="display:none;"{/if}/>
-
-                </div>
-
-            </div>
-        </div>
-        <div id="config_proxy" class="tab-pane">
-            <div class="row">
-                <div class="col-md-3">
-                    <div class="row">
-                        <div class="col-md-8">
-                            <label class="nowrap" for="proxy_enable" title="Enable proxy">Enable proxy</label>
-                        </div>
-                        <div class="col-md-4 row-size">
-                            <input value="yes" name="proxy_enable" id="proxy_enable" {if $row.proxy_enable=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
-                            <span class="lbl"></span>
-                        </div>
-                    </div>
-                    <hr/>
-
-                    <div class="row">
-                        <div class="col-md-8">
-                            <label class="nowrap" for="proxy_auth" title="Enable proxy authentification">Enable proxy authentification</label>
-                        </div>
-                        <div class="col-md-4 row-size">
-                            <input value="yes" name="proxy_auth" id="proxy_auth" {if $row.proxy_auth=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
-                            <span class="lbl"></span>
-                        </div>
-                    </div>
-                    <hr/>
-
-                </div>
-                <div class="col-md-3">
-                    <div class="row">
                         <div class="col-md-4">
-                            <label class="nowrap" for="proxy_url" title="URL">URL</label>
-                        </div>
-                        <div class="col-md-8 row-size">
-                            <input class="form-control" name="proxy_url" id="proxy_url" value="{$row.proxy_url}"/>
-                        </div>
-                    </div>
-                    <hr/>
-                    <div class="row">
-                        <div class="col-md-4">
-                            <label class="nowrap" for="proxy_username" title="Username">Username</label>
-                        </div>
-                        <div class="col-md-8 row-size">
-                            <input class="form-control" name="proxy_username" id="proxy_username" value="{$row.proxy_username}"/>
-                        </div>
-                    </div>
-                    <hr/>
-
-                </div>
-                <div class="col-md-3">
-                    <div class="row">
-                        <div class="col-md-4">
-                            <label class="nowrap" for="proxy_port" title="Port">Port</label>
-                        </div>
-                        <div class="col-md-8 row-size">
-                            <input class="form-control" name="proxy_port" id="proxy_port" value="{$row.proxy_port}"/>
-                        </div>
-                    </div>
-                    <hr/>
-                    <div class="row">
-                        <div class="col-md-4">
-                            <label class="nowrap" for="proxy_password" title="Password">Password</label>
-                        </div>
-                        <div class="col-md-8 row-size">
-                            <input class="form-control" name="proxy_password" id="proxy_password" value="{$row.proxy_password}"/>
-                        </div>
-                    </div>
-                    <hr/>
-                </div>
-            </div>
-        </div>
-        <div id="config_cache" class="tab-pane">
-            <div class="row">
-                <div class="col-md-12">
-                    <h3>Redis</h3>
-                </div>
-            </div>
-            <hr/>
-            <div class="row">
-                <div class="col-md-3">
-                    <div class="row">
-                        <div class="col-md-8">
-                            <label class="nowrap" for="cache_enable" title="{lang code='enable_cache'}">{lang code='enable_cache'}</label>
-                        </div>
-                        <div class="col-md-4 row-size">
-                            <input value="yes" name="cache_enable" id="cache_enable" {if $row.cache_enable=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
-                            <span class="lbl"></span>
-                        </div>
-                    </div>
-                    <hr/>
-                    <div class="row">
-                        <div class="col-md-8">
-                            <label class="nowrap" for="cache_auth" title="{lang code='enable_cache_authentification'}">{lang code='enable_cache_authentification'}</label>
-                        </div>
-                        <div class="col-md-4 row-size">
-                            <input value="yes" name="cache_auth" id="cache_auth" {if $row.cache_auth=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
-                            <span class="lbl"></span>
-                        </div>
-                    </div>
-                    <hr/>
-                </div>
-                <div class="col-md-3">
-                    <div class="row">
-                        <div class="col-md-4">
-                            <label class="nowrap" for="cache_host" title="{lang code='host'}">{lang code='host'}</label>
-                        </div>
-                        <div class="col-md-8 row-size">
-                            <input class="form-control" name="cache_host" id="cache_host" value="{$row.cache_host}"/>
-                        </div>
-                    </div>
-                    <hr/>
-                </div>
-                <div class="col-md-3">
-                    <div class="row">
-                        <div class="col-md-4">
-                            <label class="nowrap" for="cache_port" title="{lang code='port'}">{lang code='port'}</label>
-                        </div>
-                        <div class="col-md-8 row-size">
-                            <input class="form-control" name="cache_port" id="cache_port" value="{$row.cache_port}"/>
-                        </div>
-                    </div>
-                    <hr/>
-                    <div class="row">
-                        <div class="col-md-4">
-                            <label class="nowrap" for="cache_password" title="{lang code='password'}">{lang code='password'}</label>
-                        </div>
-                        <div class="col-md-8 row-size">
-                            <input class="form-control" name="cache_password" id="cache_password" value="{$row.cache_password}"/>
-                        </div>
-                    </div>
-                    <hr/>
-                </div>
-            </div>
-        </div>
-        <div id="config_dev" class="tab-pane">
-            <div class="row">
-                <div class="col-md-4">
-                    <div class="row">
-                        <div class="col-md-5">
-                            <label class="nowrap" for="enable_dev_mode" title="{lang code='dev_mode'}">{lang code='dev_mode'}</label>
-                        </div>
-                        <div class="col-md-2 row-size">
-                            <input value="yes" name="enable_dev_mode" id="enable_dev_mode" {if System::isInDev()}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
-                            <span class="lbl"></span>
-                        </div>
-                    </div>
-                    <hr/>
-                </div>
-                <div class="col-md-4">
-                    <div class="row">
-                        <div class="col-md-5">
-                            <label class="nowrap" for="discord_error_log" title="{lang code='discord_error_log'}">{lang code='discord_error_log'}</label>
-                        </div>
-                        <div class="col-md-2 row-size">
-                            <input value="yes" name="discord_error_log" id="discord_error_log" {if $discord_error_log}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
-                            <span class="lbl"></span>
-                        </div>
-                    </div>
-                    <hr/>
-                    <div class="row">
-                        <div class="col-md-4">
-                            <label class="nowrap" for="discord_webhook_url" title="{lang code='discord_webhook_url'}">{lang code='discord_webhook_url'}</label>
-                        </div>
-                        <div class="col-md-8 row-size">
-                            <input class="form-control" name="discord_webhook_url" id="discord_webhook_url" value="{$discord_webhook_url}" {if !$discord_error_log}disabled="disabled"{/if}/>
-                        </div>
-                    </div>
-                    <hr/>
-                </div>
-            </div>
-        </div>
-        <div id="config_hosting" class="tab-pane">
-            <div class="row">
-                <div class="col-md-4">
-                    <div class="row">
-                        <div class="col-md-6">
-                            <label class="nowrap" for="php_path" title="PHP Path"><span class="fa fa-question-circle tips" title="PHP Binary Path"></span> PHP Path</label>
-                        </div>
-                        <div class="col-md-6">
-                            <input class="form-control" name="php_path" id="php_path" value="{$row.php_path}"/>
-                        </div>
-                    </div>
-                    <hr/>
-                    <div class="row">
-                        <div class="col-md-6">
-                            <label class="nowrap" for="media_info" title="Mediainfo Path"><span class="fa fa-question-circle tips" title="Mediainfo Binary Path"></span> Mediainfo Path</label>
-                        </div>
-                        <div class="col-md-6">
-                            <input class="form-control" name="media_info" id="media_info" value="{$row.media_info}"/>
-                        </div>
-                    </div>
-                    <hr/>
-                    <div class="row">
-                        <div class="col-md-6">
-                            <label class="nowrap" for="ffmpegpath" title="FFmpeg Path"><span class="fa fa-question-circle tips" title="FFmpeg Binary Path"></span> FFmpeg Path</label>
-                        </div>
-                        <div class="col-md-6">
-                            <input class="form-control" name="ffmpegpath" id="ffmpegpath" value="{$row.ffmpegpath}"/>
-                        </div>
-                    </div>
-                    <hr/>
-                    <div class="row">
-                        <div class="col-md-6">
-                            <label class="nowrap" for="ffprobe_path" title="FFprobe Path"><span class="fa fa-question-circle tips" title="FFprobe Binary Path"></span> FFprobe Path</label>
-                        </div>
-                        <div class="col-md-6">
-                            <input class="form-control" name="ffprobe_path" id="ffprobe_path" value="{$row.ffprobe_path}"/>
-                        </div>
-                    </div>
-                    <hr/>
-                    <div class="row">
-                        <div class="col-md-6">
-                            <label class="nowrap" for="max_conversion" title="Max videos to convert at once">
-                                <span class="fa fa-question-circle tips" title="Video conversion use lot of ressources, be aware of what's you're doing !"></span>
-                                Max videos to convert at once
-                            </label>
-                        </div>
-                        <div class="col-md-6">
-                            <input class="form-control" name="max_conversion" id="max_conversion" value="{$row.max_conversion}"/>
-                        </div>
-                    </div>
-                    <hr/>
-                    <div class="row{if empty($row.base_url)} bg-danger{/if}">
-                        <div class="col-md-6">
-                            <label class="nowrap" for="base_url" title="{lang('website_base_url')}">
-                                <span class="fa fa-question-circle tips" title="{lang('website_base_url_hint')}"></span>
-                                {lang('website_base_url')}
-                            </label>
-                        </div>
-                        <div class="col-md-6">
-                            <input class="form-control" name="base_url" id="base_url" value="{$row.base_url}"/>
-                        </div>
-                    </div>
-                    <hr/>
-                    <div class="row">
-                        <div class="col-md-6">
-                            <label class="nowrap" for="cached_pagin_time" title="Pagination caching time">Pagination caching time</label>
-                        </div>
-                        <div class="col-md-6 row-size no_padding">
-                            <input class="form-control" name="cached_pagin_time" id="cached_pagin_time" value="{$row.cached_pagin_time}" size="5"/>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="row">
-                        <div class="col-md-6">
-                            <label class="nowrap" for="git_path" title="{lang code='option_git_path'}">{lang code='option_git_path'}</label>
-                        </div>
-                        <div class="col-md-6">
-                            <input class="form-control" name="git_path" id="git_path" value="{$row.git_path}"/>
-                        </div>
-                    </div>
-                    <hr/>
-                    {if System::is_nginx()}
-                        <div class="row">
-                            <div class="col-md-6">
-                                <label class="nowrap" for="nginx_path" title="{lang code='option_nginx_path'}">{lang code='option_nginx_path'}</label>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <label class="nowrap" for="mail_type" title="Mailer">Mailer</label>
+                                </div>
+                                <div class="col-md-6 row-size">
+                                    <select class="form-control" name="mail_type" id="mail_type">
+                                        <option value="mail" {if $row.mail_type=='mail'}selected{/if}>PHP mail()</option>
+                                        <option value="smtp" {if $row.mail_type=='smtp'}selected{/if}>smtp</option>
+                                    </select>
+                                </div>
                             </div>
-                            <div class="col-md-6">
-                                <input class="form-control" name="nginx_path" id="nginx_path" value="{$row.nginx_path}"/>
+                            <hr/>
+                            <div class="row config_smtp" {if $row.mail_type=='mail'}style="display:none;"{/if}>
+                                <div class="col-md-6">
+                                    <label class="nowrap" for="smtp_host" title="SMTP Host">SMTP Host</label>
+                                </div>
+                                <div class="col-md-6 row-size">
+                                    <input class="form-control" name="smtp_host" id="smtp_host" value="{$row.smtp_host}"/>
+                                </div>
                             </div>
+                            <hr class="config_smtp" {if $row.mail_type=='mail'}style="display:none;"{/if}/>
+                            <div class="row config_smtp" {if $row.mail_type=='mail'}style="display:none;"{/if}>
+                                <div class="col-md-6">
+                                    <label class="nowrap" for="smtp_port" title="SMTP Port">SMTP Port</label>
+                                </div>
+                                <div class="col-md-6 row-size">
+                                    <input class="form-control" name="smtp_port" id="smtp_port" value="{$row.smtp_port}"/>
+                                </div>
+                            </div>
+                            <hr class="config_smtp" {if $row.mail_type=='mail'}style="display:none;"{/if}/>
+                            <div class="row config_smtp" {if $row.mail_type=='mail'}style="display:none;"{/if}>
+                                <div class="col-md-6">
+                                    <label class="nowrap" for="smtp_auth" title="SMTP Auth">SMTP Auth</label>
+                                </div>
+                                <div class="col-md-6 row-size">
+                                    <input value="yes" name="smtp_auth" id="smtp_auth" {if $row.smtp_auth=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+                                    <span class="lbl"></span>
+                                </div>
+                            </div>
+                            <hr class="config_smtp config_smtp_auth" {if $row.mail_type=='mail'||$row.smtp_auth!='yes'}style="display:none;"{/if}/>
+                            <div class="row config_smtp config_smtp_auth" {if $row.mail_type=='mail'||$row.smtp_auth!='yes'}style="display:none;"{/if}>
+                                <div class="col-md-6">
+                                    <label class="nowrap" for="smtp_user" title="SMTP Username">SMTP Username</label>
+                                </div>
+                                <div class="col-md-6 row-size">
+                                    <input class="form-control" name="smtp_user" id="smtp_user" value="{$row.smtp_user}"/>
+                                </div>
+                            </div>
+                            <hr class="config_smtp config_smtp_auth" {if $row.mail_type=='mail'||$row.smtp_auth!='yes'}style="display:none;"{/if}/>
+                            <div class="row config_smtp config_smtp_auth" {if $row.mail_type=='mail'||$row.smtp_auth!='yes'}style="display:none;"{/if}>
+                                <div class="col-md-6">
+                                    <label class="nowrap" for="smtp_pass" title="SMTP Password">SMTP Password</label>
+                                </div>
+                                <div class="col-md-6 row-size">
+                                    <input class="form-control" name="smtp_pass" id="smtp_pass" value="{$row.smtp_pass}"/>
+                                </div>
+                            </div>
+                            <hr class="config_smtp config_smtp_auth" {if $row.mail_type=='mail'||$row.smtp_auth!='yes'}style="display:none;"{/if}/>
+
                         </div>
-                        <hr/>
-                    {/if}
+
+                    </div>
+                </div>
+                <div id="config_proxy" class="tab-pane">
                     <div class="row">
-                        <div class="col-md-6">
-                            <label class="nowrap" for="cloudflare_upload_limit" title="{lang code='cloudflare_upload_limit'}">
-                                <a href="https://developers.cloudflare.com/cache/concepts/default-cache-behavior/#upload-limits" target="_blank" style="text-decoration: none;">
-                                    <span class="fa fa-question-circle tips" title="{lang code='cloudflare_documentation'}"></span>
-                                </a> {lang code='cloudflare_upload_limit'}
-                            </label>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="input-group">
-                                <input class="form-control" name="cloudflare_upload_limit" id="cloudflare_upload_limit" value="{$row.cloudflare_upload_limit}" size="45"/>
-                                <span class="input-group-addon" title="{lang('in_x',lang('mb'))}">{lang code='mb'}</span>
+                        <div class="col-md-3">
+                            <div class="row">
+                                <div class="col-md-8">
+                                    <label class="nowrap" for="proxy_enable" title="Enable proxy">Enable proxy</label>
+                                </div>
+                                <div class="col-md-4 row-size">
+                                    <input value="yes" name="proxy_enable" id="proxy_enable" {if $row.proxy_enable=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+                                    <span class="lbl"></span>
+                                </div>
                             </div>
+                            <hr/>
+
+                            <div class="row">
+                                <div class="col-md-8">
+                                    <label class="nowrap" for="proxy_auth" title="Enable proxy authentification">Enable proxy authentification</label>
+                                </div>
+                                <div class="col-md-4 row-size">
+                                    <input value="yes" name="proxy_auth" id="proxy_auth" {if $row.proxy_auth=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+                                    <span class="lbl"></span>
+                                </div>
+                            </div>
+                            <hr/>
+
+                        </div>
+                        <div class="col-md-3">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <label class="nowrap" for="proxy_url" title="URL">URL</label>
+                                </div>
+                                <div class="col-md-8 row-size">
+                                    <input class="form-control" name="proxy_url" id="proxy_url" value="{$row.proxy_url}"/>
+                                </div>
+                            </div>
+                            <hr/>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <label class="nowrap" for="proxy_username" title="Username">Username</label>
+                                </div>
+                                <div class="col-md-8 row-size">
+                                    <input class="form-control" name="proxy_username" id="proxy_username" value="{$row.proxy_username}"/>
+                                </div>
+                            </div>
+                            <hr/>
+
+                        </div>
+                        <div class="col-md-3">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <label class="nowrap" for="proxy_port" title="Port">Port</label>
+                                </div>
+                                <div class="col-md-8 row-size">
+                                    <input class="form-control" name="proxy_port" id="proxy_port" value="{$row.proxy_port}"/>
+                                </div>
+                            </div>
+                            <hr/>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <label class="nowrap" for="proxy_password" title="Password">Password</label>
+                                </div>
+                                <div class="col-md-8 row-size">
+                                    <input class="form-control" name="proxy_password" id="proxy_password" value="{$row.proxy_password}"/>
+                                </div>
+                            </div>
+                            <hr/>
                         </div>
                     </div>
-                    <hr/>
+                </div>
+                <div id="config_cache" class="tab-pane">
                     <div class="row">
-                        <div class="col-md-6">
-                            <label class="nowrap" for="automate_launch_mode" title="{lang code='option_automate_launch_mode'}"><span class="fa fa-question-circle tips" title="{lang code='tips_automate_launch_mode'}"></span> {lang code='option_automate_launch_mode'}</label>
-                        </div>
-                        <div class="col-md-6">
-                            <select class="form-control" name="automate_launch_mode" id="automate_launch_mode">
-                                {assign var=array_automate value=[
-                                'crontab' => 'option_automate_launch_mode_crontab'
-                                ,'user_activity' => 'option_automate_launch_mode_user_activity'
-                                ,'disabled' => 'option_automate_launch_mode_disabled'
-                                ]}
-                                {foreach from=$array_automate item=trad key=code}
-                                    <option {if $code==$row.automate_launch_mode}selected{/if} value="{$code}">
-                                        {lang code=$trad}
-                                    </option>
-                                {/foreach}
-                            </select>
-                        </div>
-                    </div>
-                    <div class="row" id="crontab_details_block">
                         <div class="col-md-12">
-                            {lang('crontab_link_label')}
-                            <div class="input-group">
-                                <input class="form-control" value="{$cron_copy_paste}" size="45" disabled/>
-                                <span class="input-group-addon btn_copy_clipboard btn-info input-group-addon glyphicon glyphicon-copy btn_save_frequency" title="{lang('copy_clipboard')}"></span>
+                            <h3>Redis</h3>
+                        </div>
+                    </div>
+                    <hr/>
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="row">
+                                <div class="col-md-8">
+                                    <label class="nowrap" for="cache_enable" title="{lang code='enable_cache'}">{lang code='enable_cache'}</label>
+                                </div>
+                                <div class="col-md-4 row-size">
+                                    <input value="yes" name="cache_enable" id="cache_enable" {if $row.cache_enable=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+                                    <span class="lbl"></span>
+                                </div>
+                            </div>
+                            <hr/>
+                            <div class="row">
+                                <div class="col-md-8">
+                                    <label class="nowrap" for="cache_auth" title="{lang code='enable_cache_authentification'}">{lang code='enable_cache_authentification'}</label>
+                                </div>
+                                <div class="col-md-4 row-size">
+                                    <input value="yes" name="cache_auth" id="cache_auth" {if $row.cache_auth=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+                                    <span class="lbl"></span>
+                                </div>
+                            </div>
+                            <hr/>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <label class="nowrap" for="cache_host" title="{lang code='host'}">{lang code='host'}</label>
+                                </div>
+                                <div class="col-md-8 row-size">
+                                    <input class="form-control" name="cache_host" id="cache_host" value="{$row.cache_host}"/>
+                                </div>
+                            </div>
+                            <hr/>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <label class="nowrap" for="cache_port" title="{lang code='port'}">{lang code='port'}</label>
+                                </div>
+                                <div class="col-md-8 row-size">
+                                    <input class="form-control" name="cache_port" id="cache_port" value="{$row.cache_port}"/>
+                                </div>
+                            </div>
+                            <hr/>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <label class="nowrap" for="cache_password" title="{lang code='password'}">{lang code='password'}</label>
+                                </div>
+                                <div class="col-md-8 row-size">
+                                    <input class="form-control" name="cache_password" id="cache_password" value="{$row.cache_password}"/>
+                                </div>
+                            </div>
+                            <hr/>
+                        </div>
+                    </div>
+                </div>
+                <div id="config_dev" class="tab-pane">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="row">
+                                <div class="col-md-5">
+                                    <label class="nowrap" for="enable_dev_mode" title="{lang code='dev_mode'}">{lang code='dev_mode'}</label>
+                                </div>
+                                <div class="col-md-2 row-size">
+                                    <input value="yes" name="enable_dev_mode" id="enable_dev_mode" {if System::isInDev()}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+                                    <span class="lbl"></span>
+                                </div>
+                            </div>
+                            <hr/>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="row">
+                                <div class="col-md-5">
+                                    <label class="nowrap" for="discord_error_log" title="{lang code='discord_error_log'}">{lang code='discord_error_log'}</label>
+                                </div>
+                                <div class="col-md-2 row-size">
+                                    <input value="yes" name="discord_error_log" id="discord_error_log" {if $discord_error_log}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+                                    <span class="lbl"></span>
+                                </div>
+                            </div>
+                            <hr/>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <label class="nowrap" for="discord_webhook_url" title="{lang code='discord_webhook_url'}">{lang code='discord_webhook_url'}</label>
+                                </div>
+                                <div class="col-md-8 row-size">
+                                    <input class="form-control" name="discord_webhook_url" id="discord_webhook_url" value="{$discord_webhook_url}" {if !$discord_error_log}disabled="disabled"{/if}/>
+                                </div>
+                            </div>
+                            <hr/>
+                        </div>
+                    </div>
+                </div>
+                <div id="config_hosting" class="tab-pane">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <label class="nowrap" for="php_path" title="PHP Path"><span class="fa fa-question-circle tips" title="PHP Binary Path"></span> PHP Path</label>
+                                </div>
+                                <div class="col-md-6">
+                                    <input class="form-control" name="php_path" id="php_path" value="{$row.php_path}"/>
+                                </div>
+                            </div>
+                            <hr/>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <label class="nowrap" for="media_info" title="Mediainfo Path"><span class="fa fa-question-circle tips" title="Mediainfo Binary Path"></span> Mediainfo Path</label>
+                                </div>
+                                <div class="col-md-6">
+                                    <input class="form-control" name="media_info" id="media_info" value="{$row.media_info}"/>
+                                </div>
+                            </div>
+                            <hr/>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <label class="nowrap" for="ffmpegpath" title="FFmpeg Path"><span class="fa fa-question-circle tips" title="FFmpeg Binary Path"></span> FFmpeg Path</label>
+                                </div>
+                                <div class="col-md-6">
+                                    <input class="form-control" name="ffmpegpath" id="ffmpegpath" value="{$row.ffmpegpath}"/>
+                                </div>
+                            </div>
+                            <hr/>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <label class="nowrap" for="ffprobe_path" title="FFprobe Path"><span class="fa fa-question-circle tips" title="FFprobe Binary Path"></span> FFprobe Path</label>
+                                </div>
+                                <div class="col-md-6">
+                                    <input class="form-control" name="ffprobe_path" id="ffprobe_path" value="{$row.ffprobe_path}"/>
+                                </div>
+                            </div>
+                            <hr/>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <label class="nowrap" for="max_conversion" title="Max videos to convert at once">
+                                        <span class="fa fa-question-circle tips" title="Video conversion use lot of ressources, be aware of what's you're doing !"></span>
+                                        Max videos to convert at once
+                                    </label>
+                                </div>
+                                <div class="col-md-6">
+                                    <input class="form-control" name="max_conversion" id="max_conversion" value="{$row.max_conversion}"/>
+                                </div>
+                            </div>
+                            <hr/>
+                            <div class="row{if empty($row.base_url)} bg-danger{/if}">
+                                <div class="col-md-6">
+                                    <label class="nowrap" for="base_url" title="{lang('website_base_url')}">
+                                        <span class="fa fa-question-circle tips" title="{lang('website_base_url_hint')}"></span>
+                                        {lang('website_base_url')}
+                                    </label>
+                                </div>
+                                <div class="col-md-6">
+                                    <input class="form-control" name="base_url" id="base_url" value="{$row.base_url}"/>
+                                </div>
+                            </div>
+                            <hr/>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <label class="nowrap" for="cached_pagin_time" title="Pagination caching time">Pagination caching time</label>
+                                </div>
+                                <div class="col-md-6">
+                                    <input class="form-control" name="cached_pagin_time" id="cached_pagin_time" value="{$row.cached_pagin_time}" size="5"/>
+                                </div>
                             </div>
                         </div>
+                        <div class="col-md-4">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <label class="nowrap" for="git_path" title="{lang code='option_git_path'}">{lang code='option_git_path'}</label>
+                                </div>
+                                <div class="col-md-6">
+                                    <input class="form-control" name="git_path" id="git_path" value="{$row.git_path}"/>
+                                </div>
+                            </div>
+                            <hr/>
+                            {if System::is_nginx()}
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <label class="nowrap" for="nginx_path" title="{lang code='option_nginx_path'}">{lang code='option_nginx_path'}</label>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <input class="form-control" name="nginx_path" id="nginx_path" value="{$row.nginx_path}"/>
+                                    </div>
+                                </div>
+                                <hr/>
+                            {/if}
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <label class="nowrap" for="cloudflare_upload_limit" title="{lang code='cloudflare_upload_limit'}">
+                                        <a href="https://developers.cloudflare.com/cache/concepts/default-cache-behavior/#upload-limits" target="_blank" style="text-decoration: none;">
+                                            <span class="fa fa-question-circle tips" title="{lang code='cloudflare_documentation'}"></span>
+                                        </a> {lang code='cloudflare_upload_limit'}
+                                    </label>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="input-group">
+                                        <input class="form-control" name="cloudflare_upload_limit" id="cloudflare_upload_limit" value="{$row.cloudflare_upload_limit}" size="45"/>
+                                        <span class="input-group-addon" title="{lang('in_x',lang('mb'))}">{lang code='mb'}</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <hr/>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <label class="nowrap" for="automate_launch_mode" title="{lang code='option_automate_launch_mode'}"><span class="fa fa-question-circle tips" title="{lang code='tips_automate_launch_mode'}"></span> {lang code='option_automate_launch_mode'}</label>
+                                </div>
+                                <div class="col-md-6">
+                                    <select class="form-control" name="automate_launch_mode" id="automate_launch_mode">
+                                        {assign var=array_automate value=[
+                                        'crontab' => 'option_automate_launch_mode_crontab'
+                                        ,'user_activity' => 'option_automate_launch_mode_user_activity'
+                                        ,'disabled' => 'option_automate_launch_mode_disabled'
+                                        ]}
+                                        {foreach from=$array_automate item=trad key=code}
+                                            <option {if $code==$row.automate_launch_mode}selected{/if} value="{$code}">
+                                                {lang code=$trad}
+                                            </option>
+                                        {/foreach}
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="row" id="crontab_details_block">
+                                <div class="col-md-12">
+                                    {lang('crontab_link_label')}
+                                    <div class="input-group">
+                                        <input class="form-control" value="{$cron_copy_paste}" size="45" disabled/>
+                                        <span class="input-group-addon btn_copy_clipboard btn-info input-group-addon glyphicon glyphicon-copy btn_save_frequency" title="{lang('copy_clipboard')}"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <hr/>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <label class="nowrap" for="timezone" title="{lang code='option_timezone'}">{lang code='option_timezone'}</label>
+                                </div>
+                                <div class="col-md-6">
+                                    <select class="form-control check_timezone" name="timezone" id="timezone" style="width: 100%;">
+                                        <option {if ''==$row.timezone}selected{/if} value=""></option>
+                                        {foreach from=$allTimezone item=label key=code}
+                                            <option {if $label==$row.timezone}selected{/if} value="{$label}">
+                                                {$label}
+                                            </option>
+                                        {/foreach}
+                                    </select>
+                                </div>
+                            </div>
+                            <hr/>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <label class="nowrap" for="store_guest_session" title="Store guest Session">Store guest Session</label>
+                                </div>
+                                <div class="col-md-2 row-size no_padding">
+                                    <input value="yes" id="store_guest_session" {if $row.store_guest_session=='yes'}checked{/if} name="store_guest_session" type="checkbox" class="ace ace-switch ace-switch-5 bootstrap-switch-on"/>
+                                </div>
+                            </div>
+                            <hr/>
+                        </div>
                     </div>
-                    <hr/>
+                </div>
+                <div id="config_photos" class="tab-pane">
                     <div class="row">
                         <div class="col-md-6">
-                            <label class="nowrap" for="timezone" title="{lang code='option_timezone'}">{lang code='option_timezone'}</label>
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <label class="nowrap" for="photo_ratio" title="Photo ratio"><span class="fa fa-question-circle tips" title="{lang('option_photo_ratio_help')}"></span>{lang('option_photo_ratio')}</label>
+                                </div>
+                                <div class="col-md-3 row-size">
+                                    <select class="form-control" id="photo_ratio" name="photo_ratio">
+                                        <option class="form-control" value="4:3" {if $row.photo_ratio=='4:3'}selected{/if} >4:3</option>
+                                        <option class="form-control" value="16:9" {if $row.photo_ratio=='16:9'}selected{/if}>16:9</option>
+                                        <option class="form-control" value="16:10" {if $row.photo_ratio=='16:10'}selected{/if}>16:10</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <hr/>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <label class="nowrap" for="photo_lar_width" title="{lang('option_large_photo_width')}">{lang('option_large_photo_width')}</label>
+                                </div>
+                                <div class="col-md-2 row-size">
+                                    <input class="form-control" type="text" maxlength="3" name="photo_lar_width" id="photo_lar_width" value="{$row.photo_lar_width}"/>
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="nowrap" for="photo_crop" title="{lang('option_crop_image')}">{lang('option_crop_image')}</label>
+                                </div>
+                                <div class="col-md-2 row-size">
+                                    <input value="1" name="photo_crop" id="photo_crop" {if $row.photo_crop=='1'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+                                    <span class="lbl"></span>
+                                </div>
+                            </div>
+                            <hr/>
+
                         </div>
                         <div class="col-md-6">
-                            <select class="form-control check_timezone" name="timezone" id="timezone" style="width: 100%;">
-                                <option {if ''==$row.timezone}selected{/if} value=""></option>
-                                {foreach from=$allTimezone item=label key=code}
-                                    <option {if $label==$row.timezone}selected{/if} value="{$label}">
-                                        {$label}
-                                    </option>
-                                {/foreach}
-                            </select>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <label class="nowrap" title="{lang('option_photo_thumb_size')}">{lang('option_photo_thumb_size')}</label>
+                                </div>
+                                <div class="col-md-2">
+                                    <label class="nowrap" for="photo_thumb_width" title="{lang('width')}">{lang('width')}</label>
+                                </div>
+                                <div class="col-md-2">
+                                    <input class="form-control" name="photo_thumb_width" id="photo_thumb_width" value="{$row.photo_thumb_width}"/>
+                                </div>
+                                <div class="col-md-2">
+                                    <label class="nowrap" for="photo_thumb_height" title="{lang('height')}">{lang('height')}</label>
+                                </div>
+                                <div class="col-md-2">
+                                    <input class="form-control" name="photo_thumb_height" id="photo_thumb_height" value="{$row.photo_thumb_height}"/>
+                                </div>
+                            </div>
+                            <hr/>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <label class="nowrap" title="{lang('option_medium_photo_size')}">{lang('option_medium_photo_size')}</label>
+                                </div>
+                                <div class="col-md-2">
+                                    <label class="nowrap" for="photo_med_width" title="{lang('width')}">{lang('width')}</label>
+                                </div>
+                                <div class="col-md-2">
+                                    <input class="form-control" name="photo_med_width" id="photo_med_width" value="{$row.photo_med_width}"/>
+                                </div>
+                                <div class="col-md-2">
+                                    <label class="nowrap" for="photo_med_height" title="{lang('height')}">{lang('height')}</label>
+                                </div>
+                                <div class="col-md-2">
+                                    <input class="form-control" name="photo_med_height" id="photo_med_height" value="{$row.photo_med_height}"/>
+                                </div>
+                            </div>
+                            <hr/>
                         </div>
                     </div>
-                    <hr/>
-                    <div class="row">
-                        <div class="col-md-6">
-                            <label class="nowrap" for="store_guest_session" title="Store guest Session">Store guest Session</label>
-                        </div>
-                        <div class="col-md-6 row-size no_padding">
-                            <input value="yes" id="store_guest_session" {if $row.store_guest_session=='yes'}checked{/if} name="store_guest_session" type="checkbox" class="ace ace-switch ace-switch-5 bootstrap-switch-on"/>
-                            <span class="lbl"></span>
-                        </div>
-                    </div>
-                    <hr/>
                 </div>
             </div>
+
         </div>
-    </div>
-
-    </div>
-
     </div>
     <br/>
     <div style="text-align:center;">
