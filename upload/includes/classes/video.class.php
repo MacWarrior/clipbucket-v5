@@ -26,7 +26,6 @@ class Video
             'videoid'
             ,'videokey'
             ,'video_password'
-            ,'video_users'
             ,'username'
             ,'userid'
             ,'title'
@@ -89,6 +88,9 @@ class Video
         }
         if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '329')) {
             $this->fields[] = 'aspect_ratio';
+        }
+        if (!Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.2', '72')) {
+            $this->fields[] = 'video_users';
         }
 
         $this->fields_categories = [
@@ -463,6 +465,14 @@ class Video
             }
         }
 
+        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.2', '72')) {
+            if( !$param_count ) {
+                $select[] = ' GROUP_CONCAT( DISTINCT(users_video.username) SEPARATOR \',\') AS video_users ';
+            }
+            $join[] = ' LEFT JOIN ' . cb_sql_table('video_users') . ' ON video_users.videoid = video.videoid ';
+            $join[] = ' LEFT JOIN ' . tbl('users') . ' AS users_video ON users_video.userid = video_users.userid ';
+        }
+
         if( $param_collection_id ){
             $collection_items_table = Collection::getInstance()->getTableNameItems();
             $join[] = 'INNER JOIN ' . cb_sql_table($collection_items_table) . ' ON ' . $collection_items_table . '.collection_id = ' . $param_collection_id . ' AND ' . $this->getTableName() . '.videoid = ' . $collection_items_table . '.object_id';
@@ -558,6 +568,7 @@ class Video
         }
 
         $show_unlisted = $params['show_unlisted'] ?? false;
+        $sub_request = $params['sub_request'] ?? false;
 
         $cond = '( (video.active = \'yes\' AND video.status = \'Successful\'';
 
@@ -578,9 +589,17 @@ class Video
         $current_user_id = user_id();
         if ($current_user_id) {
             $select_contacts = 'SELECT contact_userid FROM ' . tbl('contacts') . ' WHERE confirmed = \'yes\' AND userid = ' . $current_user_id;
+            $condition_video_users = '';
+            if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.2', '72')) {
+                if ($sub_request) {
+                    $condition_video_users = ' OR video.videoid IN (SELECT videoid FROM '.tbl('video_users').' WHERE userid = ' . $current_user_id . ' )';
+                } else {
+                    $condition_video_users = ' OR video_users.userid = ' . $current_user_id . ' ';
+                }
+            }
             $cond .= ' OR video.userid = ' . $current_user_id . ')';
-            $cond .= ' OR (video.active = \'yes\' AND video.status = \'Successful\''.$sql_age_restrict.')';
-            $cond .= ' OR (video.broadcast = \'private\' AND video.userid IN(' . $select_contacts . ')'.$sql_age_restrict.')';
+            $cond .= ' OR (video.active = \'yes\' AND video.status = \'Successful\'' ;
+            $cond .= ' AND video.broadcast = \'private\' AND (video.userid IN(' . $select_contacts . ') ' . $condition_video_users . ' )' . $sql_age_restrict . ')';
         } else {
             $cond .= ')';
         }
@@ -1015,6 +1034,24 @@ class Video
         }
         return $this->status_list;
     }
+
+    /**
+     * @param int $video_id
+     * @param array $video_users
+     * @return bool
+     * @throws Exception
+     */
+    public function saveVideoUsers(int $video_id, array $video_users)
+    {
+        if (!Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.2', '72')) {
+            return false;
+        }
+        Clipbucket_db::getInstance()->delete(tbl('video_users'), ['videoid'], [$video_id]);
+        foreach ($video_users as $user_id) {
+            Clipbucket_db::getInstance()->insert(tbl('video_users'), ['videoid', 'userid'], [$video_id, $user_id]);
+        }
+        return true;
+    }
 }
 
 class CBvideo extends CBCategory
@@ -1186,7 +1223,7 @@ class CBvideo extends CBCategory
     {
         # Set basic video fields
         $basic_fields = [
-            'videoid', 'videokey', 'video_password', 'video_users', 'username', 'userid', 'title', 'file_name', 'file_type'
+            'videoid', 'videokey', 'video_password', 'username', 'userid', 'title', 'file_name', 'file_type'
             , 'file_directory', 'description', 'broadcast', 'location', 'datecreated'
             , 'country', 'allow_embedding', 'rating', 'rated_by', 'voter_ids', 'allow_comments'
             , 'comment_voting', 'comments_count', 'last_commented', 'featured', 'featured_date', 'allow_rating'
@@ -1433,6 +1470,9 @@ class CBvideo extends CBCategory
         if (!$array) {
             $array = $_POST;
         }
+        if (is_array($_FILES)) {
+            $array = array_merge($array, $_FILES);
+        }
         Upload::getInstance()->validate_video_upload_form($array, true);
 
         if (empty(errorhandler::getInstance()->get_error())) {
@@ -1465,14 +1505,10 @@ class CBvideo extends CBCategory
                 }
             }
 
-            if (is_array($_FILES)) {
-                $array = array_merge($array, $_FILES);
-            }
-
             foreach ($upload_fields as $field) {
                 $name = formObj::rmBrackets($field['name']);
                 $val = $array[$name];
-
+                //TODO dont check if db_field is empty
                 if (!empty($val) || !$field['use_if_value']) {
                     if (!empty($field['validate_function'])) {
                         if (isset($field['second_parameter_validate'])) {
@@ -1559,11 +1595,6 @@ class CBvideo extends CBCategory
                 return;
             }
 
-            validate_cb_form($upload_fields, $array);
-            if( !empty(errorhandler::getInstance()->get_error()) ){
-                return;
-            }
-
             Clipbucket_db::getInstance()->update(tbl('video'), $query_field, $query_val, ' videoid=\'' . $vid . '\'');
 
             foreach ($array as $key => $item) {
@@ -1584,6 +1615,10 @@ class CBvideo extends CBCategory
 
             if( !is_array($array['category']) ){
                 $array['category'] = [$array['category']];
+            }
+
+            if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.2', '72')) {
+                Video::getInstance()->saveVideoUsers($vid, video_users($array['video_users'], true));
             }
 
             if (config('enable_video_categories') != 'no') {
@@ -1650,6 +1685,7 @@ class CBvideo extends CBCategory
                 Clipbucket_db::getInstance()->execute('DELETE FROM ' . tbl('playlist_items') . ' WHERE object_id = ' . (int)$vdetails['videoid'] . ' AND playlist_item_type=\'v\'');
                 Clipbucket_db::getInstance()->delete(tbl('favorites'), ['type', 'id'], ['v', $vdetails['videoid']]);
                 Clipbucket_db::getInstance()->delete(tbl('video_views'), ['id_video'], [$vdetails['videoid']]);
+                Clipbucket_db::getInstance()->delete(tbl('video_users'), ['videoid'], [$vdetails['videoid']]);
                 Clipbucket_db::getInstance()->delete(tbl('conversion_queue'), ['cqueue_name'], [$vdetails['file_name']]);
 
                 //Removing video Comments
@@ -2118,8 +2154,7 @@ class CBvideo extends CBCategory
 
         $fields = [
             'video' => get_video_fields(),
-            'users' => $cb_columns->object('users')->temp_change('featured', 'user_featured')->get_columns(),
-            'video_users'
+            'users' => $cb_columns->object('users')->temp_change('featured', 'user_featured')->get_columns()
         ];
 
         $fields = table_fields($fields);

@@ -9,9 +9,9 @@ $video_id = $_GET['video'];
 
 //Updating Video Details
 if (isset($_POST['update'])) {
-    Upload::getInstance()->validate_video_upload_form();
+    myquery::getInstance()->update_video();
     if (empty(errorhandler::getInstance()->get_error())) {
-        myquery::getInstance()->update_video();
+        Video::getInstance()->setDefaultPicture($video_id, $_POST['default_thumb']?? '');
 
         if( !empty($_POST['default_thumb']) ){
             Video::getInstance()->setDefaultPicture($video_id, $_POST['default_thumb']);
