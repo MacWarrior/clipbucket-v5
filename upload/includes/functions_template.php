@@ -95,7 +95,7 @@ function display_it(): void
 {
     try {
         global $__devmsgs, $breadcrumb;
-        if( in_dev() ) {
+        if( System::isInDev() ) {
             assign('thebase', DirPath::get('root'));
             assign('__devmsgs', $__devmsgs);
         }

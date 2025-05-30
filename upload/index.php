@@ -41,7 +41,7 @@ if (!User::getInstance()->hasPermission('view_videos') && !user_id()) {
         }
     }
 
-    $min_suffixe = in_dev() ? '' : '.min';
+    $min_suffixe = System::isInDev() ? '' : '.min';
     ClipBucket::getInstance()->addJS(['pages/index/index' . $min_suffixe . '.js'  => 'admin']);
 
     $ids_to_check_progress = [];

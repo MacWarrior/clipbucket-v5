@@ -49,7 +49,7 @@ if (isset($_POST['load_type'])) {
 
         default:
             $data = Video::getInstance()->getAll($params);
-            if( in_dev() ){
+            if( System::isInDev() ){
                 $msg = 'Unknown load_type : ' . $load_type;
                 error_log($msg);
                 DiscordLog::sendDump($msg);

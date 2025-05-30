@@ -1080,7 +1080,7 @@ function lang($var, $params = [])
                 $msg = '[LANG] Missing translation for "' . $var . '"' . PHP_EOL;
                 error_log($msg);
 
-                if (in_dev()) {
+                if (System::isInDev()) {
                     DiscordLog::sendDump($msg);
 
                     $string = debug_backtrace_string();
@@ -2497,7 +2497,7 @@ function marked_spammed($comment): bool
  */
 function check_install($type)
 {
-    if (in_dev()) {
+    if (System::isInDev()) {
         return true;
     }
 
@@ -2981,19 +2981,6 @@ function verify_age($dob): bool
     $diff = $diff / 60 / 60 / 24 / 364;
     if ($diff >= $allowed_age) {
         return true;
-    }
-    return false;
-}
-
-/**
- * Checks development mode
- *
- * @return Boolean
- */
-function in_dev(): bool
-{
-    if (defined('DEVELOPMENT_MODE')) {
-        return DEVELOPMENT_MODE;
     }
     return false;
 }

@@ -192,7 +192,7 @@ if( empty($videos) ){
 $total_pages = count_pages($total_rows, config('admin_pages'));
 pages::getInstance()->paginate($total_pages, $page);
 
-$min_suffixe = in_dev() ? '' : '.min';
+$min_suffixe = System::isInDev() ? '' : '.min';
 ClipBucket::getInstance()->addAdminJS(['pages/video_manager/video_manager'.$min_suffixe.'.js' => 'admin']);
 
 subtitle(lang('manage_x', strtolower(lang('videos'))));
