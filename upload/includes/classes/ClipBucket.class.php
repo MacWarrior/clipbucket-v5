@@ -166,7 +166,7 @@ class ClipBucket
 
     public function getCacheKey()
     {
-        if(in_dev()){
+        if(System::isInDev()){
             $cache_key = time();
         } else {
             $cache_key = str_replace('.', '', Update::getInstance()->getCurrentCoreVersion()) . Update::getInstance()->getCurrentCoreRevision();
@@ -356,7 +356,7 @@ class ClipBucket
         $plugins_available = count($cbplugin->getNewPlugins());
         $plugins_installed = count($cbplugin->getInstalledPlugins());
         $plugins_count = $plugins_available + $plugins_installed;
-        if (User::getInstance()->hasPermission('plugins_moderation') && ($plugins_count >= 1 || in_dev())) {
+        if (User::getInstance()->hasPermission('plugins_moderation') && ($plugins_count >= 1 || System::isInDev())) {
             $menu_configuration['sub'][] = [
                 'title' => lang('manage_x', strtolower(lang('plugins'))),
                 'url'   => DirPath::getUrl('admin_area') . 'plugin_manager.php'
@@ -365,14 +365,14 @@ class ClipBucket
 
         if (User::getInstance()->hasPermission('manage_template_access')) {
             global $cbtpl, $cbplayer;
-            if (count($cbtpl->get_templates()) > 1 || in_dev()) {
+            if (count($cbtpl->get_templates()) > 1 || System::isInDev()) {
                 $menu_configuration['sub'][] = [
                     'title' => lang('manage_x', strtolower(lang('templates'))),
                     'url'   => DirPath::getUrl('admin_area') . 'templates.php'
                 ];
             }
 
-            if( count($cbplayer->getPlayers()) > 1 || in_dev() ){
+            if( count($cbplayer->getPlayers()) > 1 || System::isInDev() ){
                 $menu_configuration['sub'][] = [
                     'title' => lang('manage_x', strtolower(lang('players')))
                     , 'url' => DirPath::getUrl('admin_area') . 'manage_players.php'

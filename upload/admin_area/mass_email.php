@@ -74,7 +74,7 @@ $cats = Category::getInstance()->getAll([
 ]);
 assign('cats', $cats);
 
-$min_suffixe = in_dev() ? '' : '.min';
+$min_suffixe = System::isInDev() ? '' : '.min';
 ClipBucket::getInstance()->addAdminJS([
     'summernote/summernote' . $min_suffixe . '.js' => 'libs',
     'pages/mass_email/mass_email'.$min_suffixe.'.js' => 'admin'

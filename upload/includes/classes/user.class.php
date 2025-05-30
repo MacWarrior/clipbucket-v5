@@ -667,7 +667,7 @@ class User
     {
         if( !array_key_exists($value, $this->user_data) ){
             DiscordLog::sendDump($this->user_data);
-            if( in_dev() ){
+            if( System::isInDev() ){
                 $msg = 'User->get() - Unknown value : ' . $value . '```' . debug_backtrace_string() . '```';
                 error_log($msg);
                 DiscordLog::sendDump($msg);
@@ -695,7 +695,7 @@ class User
                 return $base_link . '?user=' . $username;
 
             default:
-                if( in_dev() ){
+                if( System::isInDev() ){
                     $msg = 'User->getLink() - Unknown type : ' . $type;
                     error_log($msg);
                     DiscordLog::sendDump($msg);

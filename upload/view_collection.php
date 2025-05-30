@@ -120,7 +120,7 @@ assign('link_edit_bo', DirPath::getUrl('admin_area') . 'edit_collection.php?coll
 assign('link_edit_fo',  DirPath::getUrl('root') . 'manage_collections.php?mode=edit_collection&cid=' . $collection_id);
 assign('anonymous_id', userquery::getInstance()->get_anonymous_user());
 
-$min_suffixe = in_dev() ? '' : '.min';
+$min_suffixe = System::isInDev() ? '' : '.min';
 ClipBucket::getInstance()->addJS([
     'pages/view_collection/view_collection'.$min_suffixe.'.js' => 'admin'
 ]);

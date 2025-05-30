@@ -9,7 +9,7 @@ if( config('enable_theme_change') != 'yes' || !in_array(config('default_theme'),
 $theme = '';
 $url = '';
 if( isset($_POST['theme']) && in_array($_POST['theme'],['light','dark','auto']) ){
-    $min_suffixe = in_dev() ? '' : '.min';
+    $min_suffixe = System::isInDev() ? '' : '.min';
 
     if( in_array($_POST['theme'], ['light','dark']) ){
         $theme = $_POST['theme'];

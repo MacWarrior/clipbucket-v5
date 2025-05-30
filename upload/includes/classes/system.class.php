@@ -4,7 +4,7 @@ class System{
     static array $extensionsCli = [];
     static string $versionCli;
     static array $configsCli = [];
-
+    static $is_in_dev = null;
     private static function init_php_extensions($type, $custom_filepath = null): array
     {
         switch($type){
@@ -781,17 +781,19 @@ class System{
             return false;
         }
 
-        $nginx_infos = self::getNginxVhostInfos();
-        $nginx_vhost_version = $nginx_infos['nginx_vhost_version'];
-        $nginx_vhost_revision = $nginx_infos['nginx_vhost_revision'];
+        if( System::is_nginx() ){
+            $nginx_infos = self::getNginxVhostInfos();
+            $nginx_vhost_version = $nginx_infos['nginx_vhost_version'];
+            $nginx_vhost_revision = $nginx_infos['nginx_vhost_revision'];
 
-        if( Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.2', '9') ){
-            if( empty(config('nginx_vhost_version')) || empty(config('nginx_vhost_revision')) ){
-                return false;
-            }
+            if( Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.2', '9') ){
+                if( empty(config('nginx_vhost_version')) || empty(config('nginx_vhost_revision')) ){
+                    return false;
+                }
 
-            if(config('nginx_vhost_version') < $nginx_vhost_version || (config('nginx_vhost_version') == $nginx_vhost_version && config('nginx_vhost_revision') < $nginx_vhost_revision) ){
-                return false;
+                if(config('nginx_vhost_version') < $nginx_vhost_version || (config('nginx_vhost_version') == $nginx_vhost_version && config('nginx_vhost_revision') < $nginx_vhost_revision) ){
+                    return false;
+                }
             }
         }
 
@@ -820,7 +822,7 @@ class System{
      */
     private static function displayConfigError($error): void
     {
-        if (in_dev()) {
+        if (System::isInDev()) {
             DiscordLog::sendDump($error . '```' . debug_backtrace_string() . '```');
         }
         self::setGlobalConfigCache(0);
@@ -1039,7 +1041,7 @@ class System{
     {
         foreach ($permissions as $permission) {
             if ( isset($permission['err'])) {
-                if(in_dev()) {
+                if(System::isInDev()) {
                     DiscordLog::sendDump('error reading folder : ' . $permission['path'] . '```' . debug_backtrace_string() . '```');
                 }
                 return 0;
@@ -1062,6 +1064,21 @@ class System{
             return htmlspecialchars($content);
         }
         return $content;
+    }
+
+    public static function isInDev(): bool
+    {
+        if( !empty(self::$is_in_dev) ){
+            return self::$is_in_dev;
+        }
+
+        self::$is_in_dev = file_exists(DirPath::get('temp') . 'development.dev');
+        return self::$is_in_dev;
+    }
+
+    public static function setInDev(bool $in_dev): void
+    {
+        self::$is_in_dev = $in_dev;
     }
 
 }

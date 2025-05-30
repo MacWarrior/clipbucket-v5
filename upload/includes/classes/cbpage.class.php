@@ -89,7 +89,7 @@ class cbpage
      */
     function get_page($id)
     {
-        $result = Clipbucket_db::getInstance()->select(tbl($this->page_tbl), '*', ' page_id ='.mysql_clean($id));
+        $result = Clipbucket_db::getInstance()->select(tbl($this->page_tbl), '*', ' page_id =' . (int)$id);
         if (count($result) > 0) {
             return $result[0];
         }

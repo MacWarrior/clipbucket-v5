@@ -103,7 +103,7 @@ assign('channel_profile_fields', $channel_profile_fields);
 
 template_files('view_channel.html');
 
-$min_suffixe = in_dev() ? '' : '.min';
+$min_suffixe = System::isInDev() ? '' : '.min';
 ClipBucket::getInstance()->addJS([
     'pages/view_channel/view_channel'.$min_suffixe.'.js'      => 'admin'
     ,'plupload/js/plupload.full.min.js'                       => 'admin'

@@ -161,6 +161,8 @@ if (isset($_POST['update'])) {
         , 'own_channel_rating'
         , 'photo_crop'
         , 'show_collapsed_checkboxes'
+        , 'activation'
+        , 'photo_activation'
     ];
 
     $rows = [
@@ -245,13 +247,6 @@ if (isset($_POST['update'])) {
         'photo_user_photos',
         'photo_user_favorites',
         'photo_other_limit',
-        'photo_ratio',
-        'photo_lar_width',
-        'photo_crop',
-        'photo_thumb_width',
-        'photo_thumb_height',
-        'photo_med_width',
-        'photo_med_height',
 
         'site_title',
         'site_slogan',
@@ -400,6 +395,8 @@ if (isset($_POST['update'])) {
         'player_default_resolution_hls',
         'player_subtitles',
         'enable_360_video',
+        'activation',
+        'photo_activation',
         'channel_video_style'
     ];
 
@@ -531,13 +528,10 @@ if (!empty($_POST)) {
     } else {
         unlink($filepath_custom_css);
     }
-
-} else {
-    assign('DEVELOPMENT_MODE', in_dev());
 }
 
 
-$min_suffixe = in_dev() ? '' : '.min';
+$min_suffixe = System::isInDev() ? '' : '.min';
 ClipBucket::getInstance()->addAdminJS([
     'jquery-ui-1.13.2.min.js'             => 'global'
     ,'pages/main/main'.$min_suffixe.'.js' => 'admin'

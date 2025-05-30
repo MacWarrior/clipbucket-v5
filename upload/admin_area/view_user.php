@@ -87,7 +87,7 @@ if ($udetails) {
     Clipbucket::getInstance()->show_page = false;
 }
 
-$min_suffixe = in_dev() ? '' : '.min';
+$min_suffixe = System::isInDev() ? '' : '.min';
 ClipBucket::getInstance()->addAdminJS([
     'pages/view_user/view_user' . $min_suffixe . '.js'         => 'admin',
     'init_default_tag/init_default_tag' . $min_suffixe . '.js' => 'admin',

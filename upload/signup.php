@@ -85,7 +85,7 @@ if($_GET['mode'] ?? '' == 'login'){
         $datepicker_js_lang = '_languages/datepicker-'.Language::getInstance()->getLang();
     }
 
-    $min_suffixe = in_dev() ? '' : '.min';
+    $min_suffixe = System::isInDev() ? '' : '.min';
     ClipBucket::getInstance()->addJS([
         'jquery_plugs/datepicker'.$datepicker_js_lang.'.js' => 'global',
         'pages/signup/signup' . $min_suffixe . '.js'        => 'admin'

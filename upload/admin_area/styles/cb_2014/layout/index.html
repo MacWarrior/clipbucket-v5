@@ -102,7 +102,7 @@
         </div>
     </div>
     <div class="col-md-6">
-        {include file="$style_dir/changelog.html"}
+        <div id="changelog_display">{include file="$style_dir/changelog.html"}</div>
         <div class="row" style="margin-top:5px;" id="update_div">
             {Update::getInstance()->displayGlobalSQLUpdateAlert()}
         </div>
@@ -115,7 +115,7 @@
         <ul class="nav nav-tabs">
             <li class="active">
                 <a data-toggle="tab" href="#overall_statistics">
-                    <h5>Overall Statistics</h5>
+                    <h5>{lang('overall_statistics')}</h5>
                 </a>
             </li>
             <li>
@@ -125,12 +125,12 @@
             </li>
             <li>
                 <a data-toggle="tab" href="#users_statistics">
-                    <h5>Users Statistics</h5>
+                    <h5>{lang('user_statistics')}</h5>
                 </a>
             </li>
             <li>
                 <a data-toggle="tab" href="#video_statistics">
-                    <h5>Video Statistics</h5>
+                    <h5>{lang('video_statistics')}</h5>
                 </a>
             </li>
         </ul>
@@ -156,23 +156,37 @@
     let is_update_processing = `{$is_update_processing}`;
     let can_sse = `{$can_sse}`;
 
-    let piechart_users = '{User::getInstance()->getAll(['count'=>'yes'])}';
+    let piechart_users = '{User::getInstance()->getAll(['count'=>'yes','not_userid'=>userquery::getInstance()->get_anonymous_user()])}';
     let piechart_photos = '{Photo::getInstance()->getAll(['count'=>'yes'])}';
     let piechart_videos = '{Video::getInstance()->getAll(['count'=>'yes'])}';
     let piechart_collections = '{Collection::getInstance()->getAll(['count'=>'yes'])}';
 
     let donutchart_photos = '{Flag::getAll(['count'=>true, 'element_type'=>'photo'])}';
     let donutchart_videos = '{Flag::getAll(['count'=>true, 'element_type'=>'video'])}';
+    let donutchart_users = '{Flag::getAll(['count'=>true, 'element_type'=>'user'])}';
+    let donutchart_collections = '{Flag::getAll(['count'=>true, 'element_type'=>'collection'])}';
 
-    let ubarchart_users = '{get_users count_only=yes}';
-    let ubarchart_users_active = '{get_users count_only=yes status='Ok'}';
-    let ubarchart_users_inactive = '{get_users count_only=yes status='ToActivate'}';
+    let ubarchart_users = '{User::getInstance()->getAll(['count'=>'yes','not_userid'=>userquery::getInstance()->get_anonymous_user()])}';
+    let ubarchart_users_active = '{User::getInstance()->getAll(['count'=>'yes','status'=>'ok','not_userid'=>userquery::getInstance()->get_anonymous_user()])}';
+    let ubarchart_users_inactive = '{User::getInstance()->getAll(['count'=>'yes','status'=>'ToActivate','not_userid'=>userquery::getInstance()->get_anonymous_user()])}';
 
-    let vbarchart_total = '{get_videos count_only=yes}';
-    let vbarchart_active = '{get_videos count_only=yes active="yes"}';
-    let vbarchart_deactive = '{get_videos count_only=yes active='no'}';
+    let vbarchart_total = piechart_videos;
+    let vbarchart_active = '{Video::getInstance()->getAll(['count'=>'yes','active'=>'yes'])}';
+    let vbarchart_deactive = '{Video::getInstance()->getAll(['count'=>'yes','active'=>'no'])}';
     let vbarchart_reported = donutchart_videos;
 
     let lang = [];
-    lang['technical_error'] = "{lang code='technical_error'}";
+    lang['technical_error'] = "{lang code='technical_error'}"
+    lang['users'] = "{lang('users')}";
+    lang['videos'] = "{lang('videos')}";
+    lang['photos'] = "{lang('photos')}";
+    lang['collections'] = "{lang('collections')}";
+    lang['overall_statistics'] = "{lang('overall_statistics')}";
+    lang['flagged_obj'] = "{lang('flagged_obj')}";
+    lang['user_statistics'] = "{lang('user_statistics')}";
+    lang['total'] = "{lang('total')}";
+    lang['active'] = "{lang('active')}";
+    lang['inactive'] = "{lang('inactive')}";
+    lang['video_statistics'] = "{lang('video_statistics')}";
+    lang['reported'] = "{lang('reported')}";
 </script>

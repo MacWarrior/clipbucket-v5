@@ -5,13 +5,11 @@ require_once 'constants.php';
 require_once DirPath::get('vendor') . 'autoload.php';
 require_once DirPath::get('classes') . 'DiscordLog.php';
 require_once DirPath::get('classes') . 'WhoopsManager.php';
+require_once DirPath::get('classes') . 'system.class.php';
 require_once DirPath::get('classes') . 'my_queries.class.php';
 
 $whoops = \WhoopsManager::getInstance();
-if (file_exists(DirPath::get('temp') . 'development.dev')) {
-    if( !defined('DEVELOPMENT_MODE') ){
-        define('DEVELOPMENT_MODE', true);
-    }
+if( System::isInDev() ){
     $__devmsgs = [
         'insert_queries'        => [],
         'select_queries'        => [],
@@ -35,10 +33,6 @@ if (file_exists(DirPath::get('temp') . 'development.dev')) {
 
     if (php_sapi_name() != 'cli') {
         $whoops->pushHandler(new \Whoops\Handler\PrettyPageHandler);
-    }
-} else {
-    if( !defined('DEVELOPMENT_MODE') ) {
-        define('DEVELOPMENT_MODE', false);
     }
 }
 $whoops->pushHandler(function($e){
@@ -100,7 +94,7 @@ require_once DirPath::get('classes') . 'sort_type.class.php';
 $cb_columns = new cb_columns();
 $row = myquery::getInstance()->Get_Website_Details();
 
-if (!in_dev()) {
+if (!System::isInDev()) {
     define('DEBUG_LEVEL', 0);
 } else {
     define('DEBUG_LEVEL', 2);

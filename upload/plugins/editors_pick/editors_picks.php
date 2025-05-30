@@ -142,7 +142,7 @@ CBvideo::getInstance()->video_manager_link_new[] = 'admin_area_tab';
 //Calling Editor Picks Function
 CBvideo::getInstance()->video_manager_funcs[] = 'editors_pick';
 
-$min_suffixe = in_dev() ? '' : '.min';
+$min_suffixe = System::isInDev() ? '' : '.min';
 ClipBucket::getInstance()->addJS(['editors_pick/assets/js/editors_pick' . $min_suffixe . '.js' => 'plugin']);
 ClipBucket::getInstance()->addCSS(['editors_pick/assets/css/themes/default' . $min_suffixe . '.css' => 'plugin']);
 

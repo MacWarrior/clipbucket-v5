@@ -223,7 +223,7 @@ assign('permissions_ok', System::checkPermissions($permissions));
 
 Network::check_forbidden_directory();
 
-$min_suffixe = in_dev() ? '' : '.min';
+$min_suffixe = System::isInDev() ? '' : '.min';
 ClipBucket::getInstance()->addAdminJS([
     'pages/system_info/system_info'.$min_suffixe.'.js' => 'admin'
 ]);
