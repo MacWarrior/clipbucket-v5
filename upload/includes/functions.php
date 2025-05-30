@@ -1984,8 +1984,7 @@ function sort_link($data, $mode, $type): string
     if (isset($_GET['sort'])) {
         $sort = $_GET['sort'];
     } else {
-//@TODO check if correct num revision refactor sort
-        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '479')) {
+        if (!Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '299')) {
             $sort = SortType::getDefaultByType($type)['id'];
         } else {
             $sort = 0;
@@ -2087,8 +2086,7 @@ function verify_captcha()
     $var = post('cb_captcha_enabled');
     if ($var == 'yes') {
         $captcha = get_captcha();
-        $val = $captcha['validate_function'](post(GLOBAL_CB_CAPTCHA));
-        return $val;
+        return $captcha['validate_function'](post(GLOBAL_CB_CAPTCHA));
     }
     return true;
 }
@@ -2100,7 +2098,7 @@ function verify_captcha()
  *
  * @internal param $ : { string } { $title } { title to be given to page } { $title } { title to be given to page }
  */
-function cbtitle($params = false)
+function cbtitle($params = false): void
 {
     global $cbsubtitle;
     $sub_sep = getArrayValue($params, 'sub_sep');
@@ -2125,7 +2123,7 @@ function cbtitle($params = false)
  * Adds subtitle for any given page
  * @param : { string } { $title } { title to be given to page }
  */
-function subtitle($title)
+function subtitle($title): void
 {
     global $cbsubtitle;
     $cbsubtitle = $title;
@@ -2180,7 +2178,7 @@ function foot_menu($params = null)
  *
  * @return string : { string } { $xml } { array converted into XML }
  */
-function array2xml($array, $level = 1)
+function array2xml($array, $level = 1): string
 {
     $xml = '';
     foreach ($array as $key => $value) {

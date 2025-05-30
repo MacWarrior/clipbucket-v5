@@ -89,7 +89,7 @@ class Video
         if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '329')) {
             $this->fields[] = 'aspect_ratio';
         }
-        if (!Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.2', '999')) {
+        if (!Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.2', '72')) {
             $this->fields[] = 'video_users';
         }
 
@@ -465,7 +465,7 @@ class Video
             }
         }
 
-        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.2', '999')) {
+        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.2', '72')) {
             if( !$param_count ) {
                 $select[] = ' GROUP_CONCAT( DISTINCT(users_video.username) SEPARATOR \',\') AS video_users ';
             }
@@ -590,7 +590,7 @@ class Video
         if ($current_user_id) {
             $select_contacts = 'SELECT contact_userid FROM ' . tbl('contacts') . ' WHERE confirmed = \'yes\' AND userid = ' . $current_user_id;
             $condition_video_users = '';
-            if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.2', '999')) {
+            if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.2', '72')) {
                 if ($sub_request) {
                     $condition_video_users = ' OR video.videoid IN (SELECT videoid FROM '.tbl('video_users').' WHERE userid = ' . $current_user_id . ' )';
                 } else {
@@ -1043,7 +1043,7 @@ class Video
      */
     public function saveVideoUsers(int $video_id, array $video_users)
     {
-        if (!Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.2', '999')) {
+        if (!Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.2', '72')) {
             return false;
         }
         Clipbucket_db::getInstance()->delete(tbl('video_users'), ['videoid'], [$video_id]);
@@ -1617,7 +1617,7 @@ class CBvideo extends CBCategory
                 $array['category'] = [$array['category']];
             }
 
-            if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.2', '999')) {
+            if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.2', '72')) {
                 Video::getInstance()->saveVideoUsers($vid, video_users($array['video_users'], true));
             }
 
@@ -1685,7 +1685,7 @@ class CBvideo extends CBCategory
                 Clipbucket_db::getInstance()->execute('DELETE FROM ' . tbl('playlist_items') . ' WHERE object_id = ' . (int)$vdetails['videoid'] . ' AND playlist_item_type=\'v\'');
                 Clipbucket_db::getInstance()->delete(tbl('favorites'), ['type', 'id'], ['v', $vdetails['videoid']]);
                 Clipbucket_db::getInstance()->delete(tbl('video_views'), ['id_video'], [$vdetails['videoid']]);
-                Clipbucket_db::getInstance()->delete(tbl('video_users'), ['id_video'], [$vdetails['videoid']]);
+                Clipbucket_db::getInstance()->delete(tbl('video_users'), ['videoid'], [$vdetails['videoid']]);
                 Clipbucket_db::getInstance()->delete(tbl('conversion_queue'), ['cqueue_name'], [$vdetails['file_name']]);
 
                 //Removing video Comments

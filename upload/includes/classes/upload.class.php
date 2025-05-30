@@ -624,7 +624,7 @@ class Upload
             'extra_tags' => " $video_pass_disable ",
             'hint_2'     => lang('set_video_password')
         ];
-        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.2', '999')) {
+        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.2', '72')) {
             $fields['video_users'] = [
                 'title'                     => lang('video_users'),
                 'type'                      => 'hidden',
