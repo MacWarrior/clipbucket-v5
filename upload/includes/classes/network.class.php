@@ -135,7 +135,7 @@ class Network{
             return $ip;
         }
 
-        if( in_dev() ){
+        if( System::isInDev() ){
             $msg = 'IP detection error : ' . $ip;
             error_log($msg);
             \DiscordLog::sendDump($msg);
@@ -210,7 +210,7 @@ class Network{
             default:
                 $msg = 'Wrong $type for Network::get_ip_infos : ' . $type;
                 error_log($msg);
-                if( in_dev() ){
+                if( System::isInDev() ){
                     \DiscordLog::sendDump($msg);
                 }
         }
@@ -373,7 +373,7 @@ class Network{
                         echo $msg;
                     }
 
-                    if( (function_exists('in_dev') && in_dev()) || (defined('DEVELOPMENT_MODE') && DEVELOPMENT_MODE) ){
+                    if( System::isInDev() ){
                         DiscordLog::sendDump($msg);
                     }
                 }

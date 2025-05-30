@@ -120,7 +120,7 @@ switch ($mode) {
 
 }
 
-$min_suffixe = in_dev() ? '' : '.min';
+$min_suffixe = System::isInDev() ? '' : '.min';
 ClipBucket::getInstance()->addAdminJS([
     'summernote/summernote' . $min_suffixe . '.js' => 'libs',
     'pages/manage_pages/manage_pages'.$min_suffixe.'.js' => 'admin'

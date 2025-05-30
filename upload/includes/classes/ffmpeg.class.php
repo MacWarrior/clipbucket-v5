@@ -397,12 +397,12 @@ class FFMpeg
                 $count++;
                 $display_count = str_pad((string)$count, 2, '0', STR_PAD_LEFT);
                 $command = config('ffmpegpath') . ' -y -i ' . $this->input_file . ' -map 0:' . $map_id . ' -f ' . config('subtitle_format') . ' ' . $subtitle_dir . $this->file_name . '-' . $display_count . '.srt 2>&1';
-                if (in_dev()) {
+                if (System::isInDev()) {
                     $this->log->writeLine('<div class="showHide"><p class="title glyphicon-chevron-right">Command : </p><p class="content">'.$command.'</p></div>', false, true);
                 }
 
                 $output = shell_exec($command);
-                if (in_dev()) {
+                if (System::isInDev()) {
                     $this->log->writeLine('<div class="showHide"><p class="title glyphicon-chevron-right">Output : </p><p class="content">'.$output.'</p></div>', false, true);
                 }
                 Clipbucket_db::getInstance()->insert(tbl('video_subtitle'), ['videoid', 'number', 'title'], [$video['videoid'], $display_count, $data['title']], null, true);;
@@ -668,13 +668,13 @@ class FFMpeg
         $command .= $this->get_conversion_option('hls');
         $command .= ' 2>&1';
 
-        if (in_dev()) {
+        if (System::isInDev()) {
             $this->log->writeLine('<div class="showHide"><p class="title glyphicon-chevron-right">Command : </p><p class="content">'.$command.'</p></div>', false, true);
         }
 
         $output = $this->exec_with_percent($command);
 
-        if (in_dev()) {
+        if (System::isInDev()) {
             $this->log->writeLine('<div class="showHide"><p class="title glyphicon-chevron-right">Output : </p><p class="content">'.$output.'</p></div>', false, true);
         }
 
@@ -706,13 +706,13 @@ class FFMpeg
         $this->log->writeLine(date('Y-m-d H:i:s').' - Converting into '.$resolution['height'].'...');
         $command = config('ffmpegpath') . $opt_av . ' ' . $this->output_file . ' 2>&1';
 
-        if (in_dev()) {
+        if (System::isInDev()) {
             $this->log->writeLine('<div class="showHide"><p class="title glyphicon-chevron-right">Command : </p><p class="content">'.$command.'</p></div>', false, true);
         }
 
         $output = $this->exec_with_percent($command, $resolution);
 
-        if (in_dev()) {
+        if (System::isInDev()) {
             $this->log->writeLine('<div class="showHide"><p class="title glyphicon-chevron-right">Output : </p><p class="content">'.$output.'</p></div>', false, true);
         }
 
@@ -950,7 +950,7 @@ class FFMpeg
                     ,'output_path' => $file_path
                 ]);
 
-                if(in_dev()){
+                if(System::isInDev()){
                     $this->log->writeLine('<div class="showHide"><p class="title glyphicon-chevron-right">Command : </p><p class="content">'.$return['command'].'</p></div>', false, true);
                     $this->log->writeLine('<div class="showHide"><p class="title glyphicon-chevron-right">Output : </p><p class="content">'.$return['output'].'</p></div>', false, true);
                 }
@@ -1006,7 +1006,7 @@ class FFMpeg
         $cmd .= ' -map 0:' . $track_id . ' -c:s mov_text';
         $cmd .= ' -f mp4 -movflags faststart+frag_keyframe+empty_moov /dev/null 2>&1';
 
-        if (in_dev()) {
+        if (System::isInDev()) {
             $this->log->writeLine('<div class="showHide"><p class="title glyphicon-chevron-right">Subtitle track ' . $track_id . ' check command : </p><p class="content">'.$cmd.'</p></div>', false, true);
         }
 

@@ -60,7 +60,7 @@ class Migration
             $this->start();
         } catch (mysqli_sql_exception $e) {
             Clipbucket_db::getInstance()->rollback();
-            if( in_dev() ){
+            if( System::isInDev() ){
                 e('ERROR : ' . $e->getMessage());
                 DiscordLog::sendDump('ERROR : ' . $e->getMessage());
             }
@@ -224,7 +224,7 @@ class Migration
 
         if (!empty($params_exists)) {
             if( (!empty($params_exists['column']) || !empty($params_exists['columns'])) && empty($params_exists['table']) ){
-                if( in_dev() ){
+                if( System::isInDev() ){
                     $msg = 'Table constraint has to be specified in alterTable with column constraint, in migration ';
                 } else {
                     $msg = 'A technical error occurred on migration ';
@@ -267,7 +267,7 @@ class Migration
 
             if (!empty($params_exists['constraint'])) {
                 if( empty($params_exists['constraint']['type']) ){
-                    if( in_dev() ){
+                    if( System::isInDev() ){
                         $msg = 'Missing constraint type, in migration ';
                     } else {
                         $msg = 'A technical error occurred on migration ';
@@ -292,7 +292,7 @@ class Migration
                         break;
 
                     default:
-                        if( in_dev() ){
+                        if( System::isInDev() ){
                             $msg = 'Unsupported constraint type : ' . $type . ', in migration ';
                         } else {
                             $msg = 'A technical error occurred on migration ';
@@ -303,7 +303,7 @@ class Migration
                 if( !empty($required_values) ){
                     foreach($required_values as $value){
                         if( empty($params_exists['constraint'][$value]) ){
-                            if( in_dev() ){
+                            if( System::isInDev() ){
                                 $msg = 'Missing constraint ' . $value . ' for type ' . $type . ', in migration ';
                             } else {
                                 $msg = 'A technical error occurred on migration ';
@@ -358,7 +358,7 @@ class Migration
 
         if (!empty($params_not_exists)) {
             if( (!empty($params_not_exists['column']) || !empty($params_not_exists['columns'])) && empty($params_not_exists['table']) ){
-                if( in_dev() ){
+                if( System::isInDev() ){
                     $msg = 'Table constraint has to be specified in alterTable with column constraint, in migration ';
                 } else {
                     $msg = 'A technical error occurred on migration ';
@@ -401,7 +401,7 @@ class Migration
 
             if (!empty($params_not_exists['constraint'])) {
                 if( empty($params_not_exists['constraint']['type']) ){
-                    if( in_dev() ){
+                    if( System::isInDev() ){
                         $msg = 'Missing constraint type, in migration ';
                     } else {
                         $msg = 'A technical error occurred on migration ';
@@ -426,7 +426,7 @@ class Migration
                         break;
 
                     default:
-                        if( in_dev() ){
+                        if( System::isInDev() ){
                             $msg = 'Unsupported constraint type : ' . $type . ', in migration ';
                         } else {
                             $msg = 'A technical error occurred on migration ';
@@ -437,7 +437,7 @@ class Migration
                 if( !empty($required_values) ){
                     foreach($required_values as $value){
                         if( empty($params_not_exists['constraint'][$value]) ){
-                            if( in_dev() ){
+                            if( System::isInDev() ){
                                 $msg = 'Missing constraint ' . $value . ' for type ' . $type . ', in migration ';
                             } else {
                                 $msg = 'A technical error occurred on migration ';

@@ -248,7 +248,7 @@ class Tags
                 FROM tags_to_insert';
 
             if (!Clipbucket_db::getInstance()->execute($sql_insert_tag, 'insert')) {
-                if( !in_dev() ){
+                if( !System::isInDev() ){
                     e(lang('technical_error'));
                 }
                 return false;
@@ -271,7 +271,7 @@ class Tags
             ';
 
             if (!Clipbucket_db::getInstance()->execute($sql_link_tag, 'insert')) {
-                if( !in_dev() ){
+                if( !System::isInDev() ){
                     e(lang('technical_error'));
                 }
                 return false;

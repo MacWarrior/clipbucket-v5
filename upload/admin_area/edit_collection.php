@@ -68,7 +68,7 @@ $params['order'] = ' comment_id DESC';
 $comments = Comments::getAll($params);
 assign('comments', $comments);
 
-$min_suffixe = in_dev() ? '' : '.min';
+$min_suffixe = System::isInDev() ? '' : '.min';
 ClipBucket::getInstance()->addAdminJS([
     'tag-it' . $min_suffixe . '.js'                                => 'admin',
     'pages/edit_collection/edit_collection' . $min_suffixe . '.js' => 'admin',

@@ -17,7 +17,7 @@ if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.0', '367')) {
 if(($error_init['core'] === false && $_POST['type'] == 'core' )|| $error_init['db'] === false) {
     echo json_encode([
         'success' => false
-        ,'error_msg' => in_dev() ? 'Failed to find tools for update' : lang('technical_error')
+        ,'error_msg' => System::isInDev() ? 'Failed to find tools for update' : lang('technical_error')
     ]);
     die();
 }

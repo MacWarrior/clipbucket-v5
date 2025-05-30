@@ -116,7 +116,7 @@ switch ($mode) {
         break;
 }
 
-$min_suffixe = in_dev() ? '' : '.min';
+$min_suffixe = System::isInDev() ? '' : '.min';
 
 $params = [];
 $params['limit'] = 10;
