@@ -84,7 +84,7 @@ class Clipbucket_db
         } catch (\Exception $e) {
             $error = $e->getMessage();
             error_log($error);
-            if (in_dev()) {
+            if (System::isInDev()) {
                 DiscordLog::sendDump($error);
                 throw new Exception($e);
             } else {
@@ -111,7 +111,7 @@ class Clipbucket_db
         try {
             $redis = CacheRedis::getInstance();
             if ($redis->isEnabled() && $cached_time != -1) {
-                if (in_dev()) {
+                if (System::isInDev()) {
                     $start = microtime(true);
                     $return = $redis->get($cached_key . ':' . $query);
                     $end = microtime(true);
@@ -238,7 +238,7 @@ class Clipbucket_db
         $this->ping();
 
         try {
-            if (in_dev()) {
+            if (System::isInDev()) {
                 $start = microtime(true);
                 $data = $this->mysqli->query($query);
                 $end = microtime(true);
@@ -269,7 +269,7 @@ class Clipbucket_db
             $this->mysqli->query($sql);
         }
         catch(mysqli_sql_exception $e){
-            if( in_dev() ){
+            if( System::isInDev() ){
                 e('SQL : ' . $sql);
                 DiscordLog::sendDump('SQL : ' . $sql);
             }
@@ -551,7 +551,7 @@ class Clipbucket_db
                 throw new \Exception('missing_table');
             }
 
-            if (in_dev()) {
+            if (System::isInDev()) {
                 e('SQL : ' . $query);
                 e('ERROR : ' . $this->getError());
                 error_log('SQL : ' . $query);

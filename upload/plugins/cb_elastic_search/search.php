@@ -146,7 +146,7 @@ if (defined('IN_MODULE') && $section == 'elastic') {
         $total_pages = count_pages($total_rows, 10);
         pages::getInstance()->paginate($total_pages, $page);
 
-        if (in_dev()) {
+        if (System::isInDev()) {
             assign("time_took", $results["took"] / 1000);
         }
 

@@ -14,12 +14,26 @@ if (@$_GET['msg']) {
     $msg = mysql_clean($_GET['msg']);
 }
 
-if (isset($_POST['reset_control_bar_logo_url'])) {
+if (isset($_POST['reset_player-logo_name'])) {
     if (file_exists(DirPath::get('logos') . 'player-logo.png')) {
         unlink(DirPath::get('logos') . 'player-logo.png');
     }
-    myquery::getInstance()->Set_Website_Details('control_bar_logo_url', 'images/icons/player-logo.png');
+    myquery::getInstance()->Set_Website_Details('player-logo_name', '');
+    myquery::getInstance()->Set_Website_Details('logo_update_timestamp', time());
     e(lang('player_logo_reset'), 'm');
+}
+
+if (isset($_POST['reset_site_logo'])) {
+    unlink(DirPath::get('logos') . config('logo_name'));
+    myquery::getInstance()->Set_Website_Details('logo_name', '');
+    myquery::getInstance()->Set_Website_Details('logo_update_timestamp', time());
+    e(lang('logo_reset'), 'm');
+}
+if (isset($_POST['reset_site_favicon'])) {
+    unlink(DirPath::get('logos') . config('favicon_name'));
+    myquery::getInstance()->Set_Website_Details('favicon_name', '');
+    myquery::getInstance()->Set_Website_Details('logo_update_timestamp', time());
+    e(lang('favicon_reset'), 'm');
 }
 
 if (isset($_POST['update'])) {
@@ -161,6 +175,8 @@ if (isset($_POST['update'])) {
         , 'own_channel_rating'
         , 'photo_crop'
         , 'show_collapsed_checkboxes'
+        , 'activation'
+        , 'photo_activation'
     ];
 
     $rows = [
@@ -245,13 +261,6 @@ if (isset($_POST['update'])) {
         'photo_user_photos',
         'photo_user_favorites',
         'photo_other_limit',
-        'photo_ratio',
-        'photo_lar_width',
-        'photo_crop',
-        'photo_thumb_width',
-        'photo_thumb_height',
-        'photo_med_width',
-        'photo_med_height',
 
         'site_title',
         'site_slogan',
@@ -399,7 +408,9 @@ if (isset($_POST['update'])) {
         'player_default_resolution',
         'player_default_resolution_hls',
         'player_subtitles',
-        'enable_360_video'
+        'enable_360_video',
+        'activation',
+        'photo_activation',
     ];
 
     //Numeric Array
@@ -486,18 +497,13 @@ if (isset($_POST['update'])) {
     if (!empty($_FILES['upload_logo']['name'])) {
         // function used to upload site logo.
         upload_image('logo');
-        myquery::getInstance()->Set_Website_Details('logo_update_timestamp', time());
     }
     if (!empty($_FILES['upload_favicon']['name'])) {
         // function used to upload site logo.
         upload_image('favicon');
-        myquery::getInstance()->Set_Website_Details('logo_update_timestamp', time());
     }
-    if( !empty($_FILES['control_bar_logo_url']['name']) ){
-        $logo_file = Upload::getInstance()->upload_player_logo($_FILES['control_bar_logo_url']);
-        if ($logo_file) {
-            myquery::getInstance()->Set_Website_Details('control_bar_logo_url', $logo_file);
-        }
+    if( !empty($_FILES['upload_player-logo']['name']) ){
+        upload_image('player-logo');
     }
 
     //clear cache
@@ -530,13 +536,10 @@ if (!empty($_POST)) {
     } else {
         unlink($filepath_custom_css);
     }
-
-} else {
-    assign('DEVELOPMENT_MODE', in_dev());
 }
 
 
-$min_suffixe = in_dev() ? '' : '.min';
+$min_suffixe = System::isInDev() ? '' : '.min';
 ClipBucket::getInstance()->addAdminJS([
     'jquery-ui-1.13.2.min.js'             => 'global'
     ,'pages/main/main'.$min_suffixe.'.js' => 'admin'

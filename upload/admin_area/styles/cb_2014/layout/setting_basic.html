@@ -421,11 +421,14 @@
                                     </div>
                                     <div class="col-md-4">
                                         <div class="row">
-                                            <div class="col-md-3">
-                                                <label><span class="fa fa-question-circle tips" title="{lang code='tips_logo'}"></span> Logo</label>
+                                            <div class="col-md-4">
+                                                <label for="upload_logo">
+                                                    <span class="fa fa-question-circle tips" title="{lang code='tips_logo'}"></span> Logo
+                                                </label>
+                                                <br><input type="submit" name="reset_site_logo" class="btn btn-primary btn-xs" style="padding-left:15px;padding-right:15px;"{if config('logo_name')==''} disabled="disabled"{/if} value="{lang('reset')}">
                                             </div>
-                                            <div class="col-md-9">
-                                                <input type="file" accept='image/*' name="upload_logo"/>
+                                            <div class="col-md-8 no-padding" style="margin-top:14px;">
+                                                <input type="file" accept='image/*' name="upload_logo" id="upload_logo"/>
                                                 <span><i>{lang('recommended_dimension', [200,40])}</i></span>
                                             </div>
                                         </div>
@@ -436,11 +439,14 @@
                                         </div>
                                         <hr/>
                                         <div class="row">
-                                            <div class="col-md-3">
-                                                <label><span class="fa fa-question-circle tips" title="{lang code='tips_favicon'}"></span> {lang('favicon')}</label>
+                                            <div class="col-md-4">
+                                                <label for="upload_favicon">
+                                                    <span class="fa fa-question-circle tips" title="{lang code='tips_favicon'}"></span> {lang('favicon')}
+                                                </label>
+                                                <br><input type="submit" name="reset_site_favicon" class="btn btn-primary btn-xs" style="padding-left:15px;padding-right:15px;"{if config('favicon_name')==''} disabled="disabled"{/if} value="{lang('reset')}">
                                             </div>
-                                            <div class="col-md-9">
-                                                <input type="file" accept='image/*' name="upload_favicon"/>
+                                            <div class="col-md-8 no-padding" style="margin-top:14px;">
+                                                <input type="file" accept='image/*' name="upload_favicon" id="upload_favicon"/>
                                                 <span><i>{lang('recommended_dimension', [256,256])}</i></span>
                                             </div>
                                         </div>
@@ -1388,6 +1394,14 @@
                                     <input value="yes" name="enable_location_video_field" id="enable_location_video_field" {if $row.enable_location_video_field=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
                                     <span class="lbl"></span>
                                 </div>
+                                <div class="col-md-4">
+                                    <label class="nowrap" for="activation" title="Video Activation"><span class="fa fa-question-circle tips" title="If left unchecked, all videos will be published directly. If checked, admin will have to approve videos before they appear on website"></span> Video
+                                        Activation</label>
+                                </div>
+                                <div class="col-md-2 row-size">
+                                    <input value="1" name="activation" id="activation" {if $row.activation=='1'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+                                    <span class="lbl"></span>
+                                </div>
                             </div>
                             <hr/>
 
@@ -1707,81 +1721,22 @@
                     <div class="row">
                         <div class="col-md-4">
                             <div class="row">
-                                <div class="col-md-3">
-                                    <label class="nowrap" for="photo_ratio" title="Photo ratio"><span class="fa fa-question-circle tips" title="Your photo thumb and medium size thumb will be resized according to these ratios"></span> Photo ratio</label>
-                                </div>
-                                <div class="col-md-3 row-size">
-                                    <select class="form-control" id="photo_ratio" name="photo_ratio">
-                                        <option class="form-control" value="4:3" {if $row.photo_ratio=='4:3'}selected{/if} >4:3</option>
-                                        <option class="form-control" value="16:9" {if $row.photo_ratio=='16:9'}selected{/if}>16:9</option>
-                                        <option class="form-control" value="16:10" {if $row.photo_ratio=='16:10'}selected{/if}>16:10</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <hr/>
-                            <div class="row">
-                                <div class="col-md-4">
-                                    <label class="nowrap" for="photo_lar_width" title="Large photo width">Large photo width</label>
-                                </div>
-                                <div class="col-md-2 row-size">
-                                    <input class="form-control" type="text" maxlength="3" name="photo_lar_width" id="photo_lar_width" value="{$row.photo_lar_width}"/>
-                                </div>
-                                <div class="col-md-4">
-                                    <label class="nowrap" for="photo_crop" title="Crop Image">Crop Image</label>
-                                </div>
-                                <div class="col-md-2 row-size">
-                                    <input value="1" name="photo_crop" id="photo_crop" {if $row.photo_crop=='1'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
-                                    <span class="lbl"></span>
-                                </div>
-                            </div>
-                            <hr/>
-
-                        </div>
-                        <div class="col-md-4">
-                            <div class="row">
-                                <div class="col-md-4">
-                                    <label class="nowrap" title="Photo thumb size">Thumb size</label>
-                                </div>
-                                <div class="col-md-2">
-                                    <label class="nowrap" for="photo_thumb_width" title="Width">Width</label>
-                                </div>
-                                <div class="col-md-2">
-                                    <input class="form-control" name="photo_thumb_width" id="photo_thumb_width" value="{$row.photo_thumb_width}"/>
-                                </div>
-                                <div class="col-md-2">
-                                    <label class="nowrap" for="photo_thumb_height" title="Height">Height</label>
-                                </div>
-                                <div class="col-md-2">
-                                    <input class="form-control" name="photo_thumb_height" id="photo_thumb_height" value="{$row.photo_thumb_height}"/>
-                                </div>
-                            </div>
-                            <hr/>
-                            <div class="row">
-                                <div class="col-md-4">
-                                    <label class="nowrap" title="Photo thumb size">Medium thumb size</label>
-                                </div>
-                                <div class="col-md-2">
-                                    <label class="nowrap" for="photo_med_width" title="Width">Width</label>
-                                </div>
-                                <div class="col-md-2">
-                                    <input class="form-control" name="photo_med_width" id="photo_med_width" value="{$row.photo_med_width}"/>
-                                </div>
-                                <div class="col-md-2">
-                                    <label class="nowrap" for="photo_med_height" title="Height">Height</label>
-                                </div>
-                                <div class="col-md-2">
-                                    <input class="form-control" name="photo_med_height" id="photo_med_height" value="{$row.photo_med_height}"/>
-                                </div>
-                            </div>
-                            <hr/>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="row">
                                 <div class="col-md-4">
                                     <label class="nowrap" for="enable_photo_categories" title="{lang('enable_categories')}">{lang('enable_categories')}</label>
                                 </div>
                                 <div class="col-md-2 row-size">
                                     <input value="yes" name="enable_photo_categories" id="enable_photo_categories" {if $row.enable_photo_categories=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+                                    <span class="lbl"></span>
+                                </div>
+                            </div>
+                            <hr/>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <label class="nowrap" for="photo_activation" title="Photo Activation"><span class="fa fa-question-circle tips" title="If left unchecked, all photos will be published directly. If checked, admin will have to approve videos before they appear on website"></span>
+                                        Photo Activation</label>
+                                </div>
+                                <div class="col-md-2 row-size">
+                                    <input value="1" name="photo_activation" id="photo_activation" {if $row.photo_activation=='1'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
                                     <span class="lbl"></span>
                                 </div>
                             </div>
@@ -2366,10 +2321,10 @@
                                     </label>
                                 </div>
                                 <div class="col-md-8">
-                                    <input type="file" accept='image/*' name="control_bar_logo_url" id="control_bar_logo_url" style="display:inline-block;" {if $row.control_bar_logo!='yes'}disabled{/if}/>
-                                    <div style="display:inline-block;width:40px;height:30px;background-color:rgba(43, 51, 63, 0.7);background-image:url({$row.control_bar_logo_url});background-repeat:no-repeat;background-position:center;vertical-align:middle;">
+                                    <input type="file" accept='image/*' name="upload_player-logo" id="upload_player-logo" style="display:inline-block;" {if $row.control_bar_logo!='yes'}disabled{/if}/>
+                                    <div style="display:inline-block;width:40px;height:30px;background-color:rgba(43, 51, 63, 0.7);background-image:url({get_player_logo_path()});background-repeat:no-repeat;background-position:center;vertical-align:middle;">
                                     </div>
-                                    <input type="submit" name="reset_control_bar_logo_url" value="Reset" {if $row.control_bar_logo!='yes'}disabled{/if}/>
+                                    <input type="submit" name="reset_player-logo_name" value="{lang code='reset'}" {if $row.control_bar_logo!='yes' || config('player-logo_name') == ''}disabled{/if}/>
                                 </div>
                             </div>
                             <hr/>
@@ -2381,7 +2336,7 @@
                                     </label>
                                 </div>
                                 <div class="col-md-8">
-                                    <input class="form-control" name="player_logo_url" type="text" id="player_logo_url" value="{$row.player_logo_url}" {if $row.control_bar_logo!='yes'}disabled{/if}/>
+                                    <input class="form-control" name="player_logo_url" type="text" id="player_logo_url" value="{$row.player_logo_url}" {if $row.control_bar_logo!='yes' }disabled{/if}/>
                                 </div>
                             </div>
                             <hr/>

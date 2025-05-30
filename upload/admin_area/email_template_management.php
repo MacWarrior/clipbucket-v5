@@ -12,7 +12,7 @@ $breadcrumb[1] = ['title' => lang('email_template_management'), 'url' => DirPath
 EmailTemplate::assignListEmailTemplate('email_template');
 EmailTemplate::assignListEmailTemplate('email');
 
-$min_suffixe = in_dev() ? '' : '.min';
+$min_suffixe = System::isInDev() ? '' : '.min';
 ClipBucket::getInstance()->addAdminJS(['pages/email_templates/email_template'.$min_suffixe.'.js' => 'admin']);
 
 subtitle(lang('email_template_management'));

@@ -2,11 +2,10 @@
     {$myAccountLinks = userquery::getInstance()->my_account_links()}
     {foreach $myAccountLinks as $key => $value}
         <li class="active"><a>{$key}</a></li>
-
         {foreach $value as $subKey => $subValue}
             <li>
                 <a href="{$subValue}">
-                    {if Network::is_current_url($subValue)}
+                    {if Network::is_current_url($subValue) || strtolower($breadcrumb[1]['title']) == strtolower($subKey)}
                         <i class="glyphicon glyphicon-hand-right"></i>
                     {/if}
                     {$subKey}

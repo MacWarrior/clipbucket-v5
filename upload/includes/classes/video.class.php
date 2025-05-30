@@ -710,7 +710,7 @@ class Video
             return;
         }
         if (!in_array($type, ['auto', 'custom', 'poster', 'backdrop']) ) {
-            if( in_dev() ){
+            if( System::isInDev() ){
                 e(lang('unknown_type', $type));
             } else {
                 e(lang('technical_error'));
@@ -734,7 +734,7 @@ class Video
     public function resetDefaultPicture($video_id, string $type = 'auto'): void
     {
         if (!in_array($type, ['auto', 'custom', 'poster', 'backdrop']) ) {
-            if( in_dev() ){
+            if( System::isInDev() ){
                 e(lang('unknown_type', $type));
             } else {
                 e(lang('technical_error'));
@@ -758,7 +758,7 @@ class Video
     public function deletePictures(array $video_detail, string $type): void
     {
         if (!in_array($type, ['auto', 'custom', 'poster', 'backdrop']) ) {
-            if( in_dev() ){
+            if( System::isInDev() ){
                 e(lang('unknown_type', $type));
             } else {
                 e(lang('technical_error'));

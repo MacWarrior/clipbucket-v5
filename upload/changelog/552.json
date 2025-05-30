@@ -1,6 +1,6 @@
 {
   "version":"5.5.2",
-  "revision":"62",
+  "revision":"71",
   "status":"stable",
   "detail":[
     {
@@ -8,9 +8,15 @@
       "description": [
         "Implement Nginx VirtualHost check"
         ,"Implement channel slogan"
+        ,"Implement reset logo & favicon"
         ,"Refactor conversion queue manager"
         ,"Add empty page title error"
+        ,"Add collection mass broadcast update"
+        ,"Add users and collections to dashboard flagged objects chart <i>(#74)</i>"
         ,"Update configs organisation"
+        ,"Update collection management display"
+        ,"Update data refresh after core update"
+        ,"Update core update error handling"
         ,"Fix code mode on page edition <i>(#595)</i>"
         ,"Fix email sending error catching <i>(#587)</i>"
         ,"Fix incorrect frontend URL <i>(#529)</i>"
@@ -23,6 +29,9 @@
         ,"Fix video edition"
         ,"Fix TMDB search"
         ,"Fix converting video refresh"
+        ,"Fix collection search"
+        ,"Fix collection tags edition"
+        ,"Fix server configuration warning when using Apache"
       ]
     },
     {
@@ -56,6 +65,9 @@
         ,"Fix link to uploader channel page on recent videos"
         ,"Fix possible JS error on channel, video, photo & collection pages with disabled comments"
         ,"Fix video edition"
+        ,"Fix collection display"
+        ,"Fix collection upload privacy setting"
+        ,"Fix collection tags edition"
       ]
     },
     {
@@ -73,6 +85,7 @@
         ,"Fix URL issue when base_url config is not correctly set"
         ,"Fix typo <i>(#596)</i>"
         ,"Fix Nginx vhost <i>(#604)</i>"
+        ,"Fix possible SQL injection"
       ]
     },
     {
@@ -87,12 +100,14 @@
       "title": "Installation & Update",
       "description": [
         "Fix new installation errors <i>(#592)</i>"
+        ,"Fix revision 5.5.1 - #334 DB upgrade"
       ]
     },
     {
       "title": "Translations",
       "description": [
-        "Fix translation"
+        "Translate hardcoded texts"
+        ,"Fix translation"
       ]
     },
     {

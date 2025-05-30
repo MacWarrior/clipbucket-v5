@@ -44,7 +44,7 @@ assign('tags', $tags);
 assign('tag_types', $tag_types);
 assign('selected_tag_type', $selected_tag_type);
 
-$min_suffixe = in_dev() ? '' : '.min';
+$min_suffixe = System::isInDev() ? '' : '.min';
 ClipBucket::getInstance()->addAdminJS(['pages/manage_tags/manage_tags' . $min_suffixe . '.js' => 'admin']);
 
 subtitle(lang('manage_x', strtolower(lang('tags'))));

@@ -1080,7 +1080,7 @@ function lang($var, $params = [])
                 $msg = '[LANG] Missing translation for "' . $var . '"' . PHP_EOL;
                 error_log($msg);
 
-                if (in_dev()) {
+                if (System::isInDev()) {
                     DiscordLog::sendDump($msg);
 
                     $string = debug_backtrace_string();
@@ -2498,7 +2498,7 @@ function marked_spammed($comment): bool
  */
 function check_install($type)
 {
-    if (in_dev()) {
+    if (System::isInDev()) {
         return true;
     }
 
@@ -2987,19 +2987,6 @@ function verify_age($dob): bool
 }
 
 /**
- * Checks development mode
- *
- * @return Boolean
- */
-function in_dev(): bool
-{
-    if (defined('DEVELOPMENT_MODE')) {
-        return DEVELOPMENT_MODE;
-    }
-    return false;
-}
-
-/**
  * Dumps data in pretty format [ latest CB prefers pr() instead ]
  *
  * @param array $data
@@ -3324,13 +3311,23 @@ function get_website_favicon_path(): string
     return DirPath::getUrl('styles') . ClipBucket::getInstance()->template . '/theme/images/favicon.png';
 }
 
+function get_player_logo_path(): string
+{
+    $player_logo_name = config('player-logo_name');
+    if ($player_logo_name && $player_logo_name != '') {
+        $version = config('logo_update_timestamp') ? '?v=' . config('logo_update_timestamp') : '';
+        return DirPath::getUrl('logos') . $player_logo_name . $version;
+    }
+    return DirPath::getUrl('root') . 'images/icons/player-logo.png';
+}
+
 /**
  * @throws Exception
  */
 function upload_image($type = 'logo')
 {
     $file_post = 'upload_' . $type;
-    if (!in_array($type, ['logo', 'favicon'])) {
+    if (!in_array($type, ['logo', 'favicon', 'player-logo'])) {
         e(lang('unknown_type'));
         return false;
     }
@@ -3359,6 +3356,7 @@ function upload_image($type = 'logo')
     move_uploaded_file($_FILES[$file_post]['tmp_name'], $logo_path);
 
     myquery::getInstance()->Set_Website_Details($type . '_name', $type . '.' . $file_ext);
+    myquery::getInstance()->Set_Website_Details('logo_update_timestamp', time());
     return true;
 }
 

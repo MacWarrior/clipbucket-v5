@@ -14,7 +14,7 @@ if (isset($_POST['update'])) {
 
 assign('announcement', cb_global_announcement::get_global_announcement(false));
 
-$min_suffixe = in_dev() ? '' : '.min';
+$min_suffixe = System::isInDev() ? '' : '.min';
 ClipBucket::getInstance()->addAdminJS([
     'summernote/summernote' . $min_suffixe . '.js' => 'libs'
 ]);

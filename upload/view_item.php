@@ -25,7 +25,7 @@ if( empty($photo['collection_id']) && !User::getInstance()->hasAdminAccess() && 
     redirect_to(DirPath::getUrl('root'));
 }
 
-$cid = $photo['collection_id'];
+$cid = $photo['collection_id'] ?? 0;
 $param = [
     'type'          => 'photos',
     'collection_id' => $cid
@@ -65,13 +65,15 @@ if (!empty($collect)) {
     assign('breadcrum', array_reverse($breadcrum));
     assign('collection_baseurl', Collections::getInstance()->get_base_url());
     subtitle($collect['collection_name'] . ' > ' . $photo['photo_title']);
+    assign('collections', []);
+
 } else {
     assign('breadcrum', $breadcrum);
     assign('collection_baseurl', '');
     if (User::getInstance()->hasAdminAccess()) {
         $param = ['type'=>'photos'];
     } else {
-        $param = ['userid' => user_id(),'type'=>'photos'];
+        $param = ['userid' => user_id(),'type'=>'photos', 'can_upload'=>true];
     }
     $collections = Collection::getInstance()->getAll($param) ? : [];
     assign('collections', $collections);
@@ -112,7 +114,7 @@ if (config('enable_photo_categories')=='yes') {
     assign('category_links', implode(',', $category_links));
 }
 
-$min_suffixe = in_dev() ? '' : '.min';
+$min_suffixe = System::isInDev() ? '' : '.min';
 ClipBucket::getInstance()->addJS([
     'tag-it' . $min_suffixe . '.js'                              => 'admin',
     'photos' . $min_suffixe . '.js'                              => 'admin',

@@ -32,7 +32,7 @@ assign('cancel_uploading', lang('cancel_uploading'));
 assign('pourcent_completed', lang('pourcent_completed'));
 subtitle(lang('upload'));
 
-$min_suffixe = in_dev() ? '' : '.min';
+$min_suffixe = System::isInDev() ? '' : '.min';
 ClipBucket::getInstance()->addJS([
     'tag-it' . $min_suffixe . '.js'                            => 'admin',
     'pages/upload/upload' . $min_suffixe . '.js'               => 'admin',

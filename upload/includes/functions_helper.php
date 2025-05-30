@@ -13,7 +13,7 @@ function config($input)
         return ClipBucket::getInstance()->configs[$input];
     }
 
-    if (in_dev()) {
+    if (System::isInDev()) {
         error_log('[CONFIG] Missing config : ' . $input . PHP_EOL);
     }
     return false;
