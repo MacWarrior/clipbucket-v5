@@ -121,7 +121,7 @@ $(document).ready(function (){
                 $(document).find('#more-view-channel').text('Loading videos..')
             },
             success: function(data) {
-                $('#more-view-channel').remove();
+                $('#more-view-channel').parent().remove();
                 if (data.length >= 1) {
                     data.forEach(function(elem){
                         $('#usr-vids').append('<div class="item-video col-lg-4 col-md-4 col-sm-6 col-xs-120" >'+elem+'</div>').fadeIn('slow');
