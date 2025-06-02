@@ -91,7 +91,8 @@
 
                                 {foreach from=$requiredFields item=field}
 									<tr>
-										<td class="first"><label>{$field.title}{if $field.hint_1}{$field.hint_1}{/if}</label></td>
+										<td class="first"><label for="{$field.id}">{$field.title}</label>
+                                            {if $field.hint_1}<div class="hint">{$field.hint_1}</div>{/if}</td>
 										<td class="last">
 											<div>
 												{if $field.id == 'collection_tags'}
