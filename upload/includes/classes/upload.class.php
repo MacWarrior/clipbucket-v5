@@ -574,7 +574,6 @@ class Upload
         $broadcast = $default['broadcast'] ?? 'public';
 
         //Checking weather to enabled or disable password field
-        $video_pass_disable = 'disabled="disabled" ';
         $video_user_disable = 'disabled="disabled" ';
 
         if ($broadcast == 'unlisted') {
@@ -584,6 +583,8 @@ class Upload
                 $video_user_disable = '';
             }
         }
+
+        $hint_tags = config('allow_username_spaces') =='yes' ? '<span class="fa fa-question-circle tips" style="margin-left: 5px;" title=\''.lang('use_tab_tag').'\'></span>' : '';
 
         $fields = [];
         if( config('enable_age_restriction') == 'yes' ) {
@@ -609,15 +610,7 @@ class Upload
             'db_field'          => 'broadcast',
             'required'          => 'no',
             'display_function'  => 'display_sharing_opt',
-            'default_value'     => 'public',
-            'extra_tags'        => ' onChange="
-				    $(this).closest(\'form\').find(\'#video_password\').attr(\'disabled\',\'disabled\');
-                    $(this).closest(\'form\').find(\'#video_users\').attr(\'disabled\',\'disabled\');
-					if($(this).val()==\'unlisted\'){
-					    $(this).closest(\'form\').find(\'#video_password\').attr(\'disabled\',false);
-					} else if($(this).val()==\'private\') {
-					    $(this).closest(\'form\').find(\'#video_users\').attr(\'disabled\',false);
-                    }"'
+            'default_value'     => 'public'
         ];
 
         $fields['video_password'] = [
@@ -631,19 +624,20 @@ class Upload
             'extra_tags' => " $video_pass_disable ",
             'hint_2'     => lang('set_video_password')
         ];
-
-        $fields['video_users'] =[
-            'title'             => lang('video_users'),
-            'type'              => 'textarea',
-            'name'              => 'video_users',
-            'id'                => 'video_users',
-            'value'             => $default['video_users'],
-            'db_field'          => 'video_users',
-            'required'          => 'no',
-            'extra_tags'        => " $video_user_disable ",
-            'hint_2'            => lang('specify_video_users'),
-            'validate_function' => 'video_users',
-        ];
+        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.2', '72')) {
+            $fields['video_users'] = [
+                'title'                     => lang('video_users'),
+                'type'                      => 'hidden',
+                'name'                      => 'video_users',
+                'id'                        => 'video_users',
+                'value'                     => genTags($default['video_users']),
+                'required'                  => 'no',
+                'extra_tags'                => " $video_user_disable ",
+                'hint_1'                    => $hint_tags,
+                'validate_function'         => 'video_users',
+                'second_parameter_validate' => true //don't display warning if unknown user
+            ];
+        }
 
         if( config('enable_comments_video') == 'yes' ){
             $fields['comments'] = [
@@ -1031,37 +1025,6 @@ class Upload
                 e(lang('class_error_occured'));
                 return false;
 
-        }
-        return false;
-    }
-
-    /**
-     * Function used to upload website logo
-     * @param $file
-     * @return string|bool;
-     */
-    function upload_player_logo($file)
-    {
-        global $imgObj;
-
-        if (!empty($file['name'])) {
-            $ext = getExt($file['name']);
-            $file_name = 'player-logo' . '.' . $ext;
-            if ($imgObj->ValidateImage($file['tmp_name'], $ext)) {
-                $file_path = DirPath::get('logos') . $file_name;
-                if (file_exists($file_path)) {
-                    if (!unlink($file_path)) {
-                        e("Unable to remove '$file_path', please chmod it to 0777");
-                        return false;
-                    }
-                }
-
-                move_uploaded_file($file['tmp_name'], $file_path);
-                e('Player logo has been uploaded', 'm');
-                return DirPath::getUrl('logos') . $file_name;
-            } else {
-                e('Invalid player logo image file');
-            }
         }
         return false;
     }

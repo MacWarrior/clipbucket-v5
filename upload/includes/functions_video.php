@@ -362,7 +362,7 @@ function default_thumb($return_type = 'url'): string
  * @throws Exception
  * @internal param video $ARRAY details
  */
-function video_link($vdetails, $type = null): string
+function video_link($vdetails, $type = null)
 {
     $base_url = DirPath::getUrl('root');
     #checking what kind of input we have
@@ -993,28 +993,37 @@ function get_videos($param)
  * so that only register usernames can be set
  *
  * @param $users
- *
- * @return string
+ * @param bool $only_format
+ * @return array
  * @throws Exception
  */
-function video_users($users): string
+function video_users($users, $only_format = false): array
 {
     if (!empty($users)) {
         $users_array = explode(',', $users);
+    } else {
+        return [];
     }
     $new_users = [];
-    foreach ($users_array as $user) {
-        if ($user != user_name() && !is_numeric($user) && userquery::getInstance()->user_exists($user)) {
-            $new_users[] = $user;
+    foreach ($users_array as $username) {
+        $username = trim($username);
+        $params = [];
+        if (is_numeric($username) && $username != User::getInstance()->get('userid')) {
+            $params['userid'] = $username;
+        } elseif($username != user_name()) {
+            $params['username'] = $username;
+        }
+        if (!empty($params)) {
+            $user = User::getInstance()->getOne($params);
+        }
+        if (!empty($user)) {
+            $new_users[] = $user['userid'];
+        } elseif(!$only_format) {
+            e(lang('user_no_exist_wid_username', $username),'w');
         }
     }
 
-    $new_users = array_unique($new_users);
-
-    if (count($new_users) > 0) {
-        return implode(',', $new_users);
-    }
-    return " ";
+    return array_unique($new_users);
 }
 
 /**
@@ -1025,6 +1034,7 @@ function video_users($users): string
  * @param null $user
  *
  * @return bool
+ * @throws Exception
  */
 function is_video_user($vdo, $user = null): bool
 {
