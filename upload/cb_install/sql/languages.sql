@@ -1600,4 +1600,7 @@ VALUES ('admin_setting'),
        ('width'),
        ('height'),
        ('option_medium_photo_size'),
+       ('reset'),
+       ('logo_reset'),
+       ('favicon_reset'),
        ('channel_video_style');

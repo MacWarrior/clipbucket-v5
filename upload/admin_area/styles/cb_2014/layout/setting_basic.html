@@ -421,11 +421,14 @@
                                     </div>
                                     <div class="col-md-4">
                                         <div class="row">
-                                            <div class="col-md-3">
-                                                <label><span class="fa fa-question-circle tips" title="{lang code='tips_logo'}"></span> Logo</label>
+                                            <div class="col-md-4">
+                                                <label for="upload_logo">
+                                                    <span class="fa fa-question-circle tips" title="{lang code='tips_logo'}"></span> Logo
+                                                </label>
+                                                <br><input type="submit" name="reset_site_logo" class="btn btn-primary btn-xs" style="padding-left:15px;padding-right:15px;"{if config('logo_name')==''} disabled="disabled"{/if} value="{lang('reset')}">
                                             </div>
-                                            <div class="col-md-9">
-                                                <input type="file" accept='image/*' name="upload_logo"/>
+                                            <div class="col-md-8 no-padding" style="margin-top:14px;">
+                                                <input type="file" accept='image/*' name="upload_logo" id="upload_logo"/>
                                                 <span><i>{lang('recommended_dimension', [200,40])}</i></span>
                                             </div>
                                         </div>
@@ -436,11 +439,14 @@
                                         </div>
                                         <hr/>
                                         <div class="row">
-                                            <div class="col-md-3">
-                                                <label><span class="fa fa-question-circle tips" title="{lang code='tips_favicon'}"></span> {lang('favicon')}</label>
+                                            <div class="col-md-4">
+                                                <label for="upload_favicon">
+                                                    <span class="fa fa-question-circle tips" title="{lang code='tips_favicon'}"></span> {lang('favicon')}
+                                                </label>
+                                                <br><input type="submit" name="reset_site_favicon" class="btn btn-primary btn-xs" style="padding-left:15px;padding-right:15px;"{if config('favicon_name')==''} disabled="disabled"{/if} value="{lang('reset')}">
                                             </div>
-                                            <div class="col-md-9">
-                                                <input type="file" accept='image/*' name="upload_favicon"/>
+                                            <div class="col-md-8 no-padding" style="margin-top:14px;">
+                                                <input type="file" accept='image/*' name="upload_favicon" id="upload_favicon"/>
                                                 <span><i>{lang('recommended_dimension', [256,256])}</i></span>
                                             </div>
                                         </div>
@@ -2329,10 +2335,10 @@
                                     </label>
                                 </div>
                                 <div class="col-md-8">
-                                    <input type="file" accept='image/*' name="control_bar_logo_url" id="control_bar_logo_url" style="display:inline-block;" {if $row.control_bar_logo!='yes'}disabled{/if}/>
-                                    <div style="display:inline-block;width:40px;height:30px;background-color:rgba(43, 51, 63, 0.7);background-image:url({$row.control_bar_logo_url});background-repeat:no-repeat;background-position:center;vertical-align:middle;">
+                                    <input type="file" accept='image/*' name="upload_player-logo" id="upload_player-logo" style="display:inline-block;" {if $row.control_bar_logo!='yes'}disabled{/if}/>
+                                    <div style="display:inline-block;width:40px;height:30px;background-color:rgba(43, 51, 63, 0.7);background-image:url({get_player_logo_path()});background-repeat:no-repeat;background-position:center;vertical-align:middle;">
                                     </div>
-                                    <input type="submit" name="reset_control_bar_logo_url" value="Reset" {if $row.control_bar_logo!='yes'}disabled{/if}/>
+                                    <input type="submit" name="reset_player-logo_name" value="{lang code='reset'}" {if $row.control_bar_logo!='yes' || config('player-logo_name') == ''}disabled{/if}/>
                                 </div>
                             </div>
                             <hr/>
@@ -2344,7 +2350,7 @@
                                     </label>
                                 </div>
                                 <div class="col-md-8">
-                                    <input class="form-control" name="player_logo_url" type="text" id="player_logo_url" value="{$row.player_logo_url}" {if $row.control_bar_logo!='yes'}disabled{/if}/>
+                                    <input class="form-control" name="player_logo_url" type="text" id="player_logo_url" value="{$row.player_logo_url}" {if $row.control_bar_logo!='yes' }disabled{/if}/>
                                 </div>
                             </div>
                             <hr/>
