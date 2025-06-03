@@ -1602,4 +1602,8 @@ VALUES ('admin_setting'),
        ('option_medium_photo_size'),
        ('reset'),
        ('logo_reset'),
-       ('favicon_reset');
+       ('favicon_reset'),
+       ('option_max_photo_categories'),
+       ('option_max_photo_categories_hint'),
+       ('option_max_collection_categories'),
+       ('option_max_collection_categories_hint');
