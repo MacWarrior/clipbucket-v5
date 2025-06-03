@@ -1602,4 +1602,6 @@ VALUES ('admin_setting'),
        ('option_medium_photo_size'),
        ('reset'),
        ('logo_reset'),
-       ('favicon_reset');
+       ('favicon_reset'),
+       ('request_has_been_canceled'),
+       ('confirm_unfriend');

@@ -1507,8 +1507,6 @@ class userquery extends CBCategory
      */
     function get_user_details($id = null, $checksess = false, $email = false)
     {
-        global $sess;
-
         $is_email = str_contains($id, '@');
         $select_field = (!$is_email && !is_numeric($id)) ? 'username' : (!is_numeric($id) ? 'email' : 'userid');
 
@@ -1921,23 +1919,39 @@ class userquery extends CBCategory
 
     /**
      * Function used to remove user from contact list
-     * @param $fid {id of friend that user wants to remove}
-     * @param $uid {id of user who is removing other from friendlist}
+     * @param $friend_id {id of friend that user wants to remove}
+     * @param $user_id {id of user who is removing other from friendlist}
      * @throws Exception
      */
-    function remove_contact($fid, $uid = null): void
+    function remove_contact($friend_id, $user_id = null, $delete_request = false): void
     {
-        if (!$uid) {
-            $uid = user_id();
+        if (!$user_id) {
+            $user_id = user_id();
         }
 
-        if (!$this->is_friend($fid, $uid)) {
+        if (!$delete_request && !$this->is_friend($friend_id, $user_id)) {
             e(lang('user_no_in_contact_list'));
         } else {
             Clipbucket_db::getInstance()->execute('DELETE FROM ' . tbl($this->dbtbl['contacts']) . " WHERE 
-                        (userid='$uid' AND contact_userid='$fid') OR (userid='$fid' AND contact_userid='$uid')");
-            e(lang('user_removed_from_contact_list'), 'm');
+                        (userid='$user_id' AND contact_userid='$friend_id') OR (userid='$friend_id' AND contact_userid='$user_id')");
+            //get sub for friend
+            $this->unsubscrib_no_friends($user_id);
+            if (!$delete_request) {
+                e(lang('user_removed_from_contact_list'), 'm');
+            } else {
+                e(lang('request_has_been_canceled'), 'm');
+            }
+
         }
+    }
+
+    function unsubscrib_no_friends($user_id)
+    {
+        $sql = 'DELETE FROM `'.tbl('subscriptions').'` AS S 
+        WHERE S.subscribed_to = '.mysql_clean($user_id).' AND S.userid NOT IN (
+            SELECT userid FROM cb_contacts WHERE contact_userid = '.mysql_clean($user_id).'
+        );';
+        Clipbucket_db::getInstance()->execute($sql);
     }
 
     /**
@@ -1965,10 +1979,10 @@ class userquery extends CBCategory
         }
 
         $to_user = $this->get_user_details($to);
-
+        $p = userquery::getInstance()->get_user_profile($to_user['userid']);
         if (!$this->user_exists($to)) {
             e(lang('usr_exist_err'));
-        } elseif ($to_user['userid'] == $this->get_anonymous_user()) {
+        } elseif ($to_user['userid'] == $this->get_anonymous_user() || ($p['allow_subscription'] == 'no' && !userquery::getInstance()->is_friend($to_user['userid'], User::getInstance()->getCurrentUserID()))) {
             e(lang('technical_error'));
         } elseif (!$user) {
             e(lang('please_login_subscribe', $to_user['username']));
@@ -3014,6 +3028,9 @@ class userquery extends CBCategory
 
             Clipbucket_db::getInstance()->update(tbl($this->dbtbl['user_profile']), $query_field, $query_val, " userid='" . mysql_clean($array['userid']) . "'");
 
+            if ($array['allow_subscription'] == 'no') {
+                $this->unsubscrib_no_friends($array['userid']);
+            }
             if ($array['profile_tags'] !== null) {
                 Tags::saveTags($array['profile_tags'], 'profile', $array['userid']);
             }
