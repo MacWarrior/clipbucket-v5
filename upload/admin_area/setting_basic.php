@@ -411,6 +411,9 @@ if (isset($_POST['update'])) {
         'enable_360_video',
         'activation',
         'photo_activation',
+
+        'max_photo_categories',
+        'max_collection_categories'
     ];
 
     //Numeric Array
@@ -461,7 +464,10 @@ if (isset($_POST['update'])) {
 
         'max_profile_pic_width',
         'list_featured_videos',
-        'video_thumbs_preview_count'
+        'video_thumbs_preview_count',
+
+        'max_photo_categories',
+        'max_collection_categories'
     ];
 
     foreach ($rows as $field) {
@@ -471,7 +477,7 @@ if (isset($_POST['update'])) {
                 e(lang('error_age_restriction_save'));
                 break;
             }
-            if (($value <= 0 || !is_numeric($value)) && $field != 'video_categories') {
+            if (($value <= 0 || !is_numeric($value)) && !in_array($field, ['video_categories', 'max_collection_categories', 'max_photo_categories']) ) {
                 $value = 1;
             }
         }
