@@ -1,6 +1,6 @@
 {
   "version":"5.5.2",
-  "revision":"72",
+  "revision":"73",
   "status":"stable",
   "detail":[
     {
@@ -41,6 +41,7 @@
         ,"Implement channel slogan"
         ,"Implement account deletion <i>(#144, #599)</i>"
         ,"Implement cookies banner <i>(#312, #151)</i>"
+        ,"Implement collections & photos categories limit"
         ,"Update video & photos management pages display"
         ,"Hide banned users from channels page, search results & popular user"
         ,"Fix collection privacy on photos page"

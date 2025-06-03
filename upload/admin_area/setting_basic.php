@@ -477,7 +477,7 @@ if (isset($_POST['update'])) {
                 e(lang('error_age_restriction_save'));
                 break;
             }
-            if (($value <= 0 || !is_numeric($value)) && $field != 'video_categories') {
+            if (($value <= 0 || !is_numeric($value)) && !in_array($field, ['video_categories', 'max_collection_categories', 'max_photo_categories']) ) {
                 $value = 1;
             }
         }
