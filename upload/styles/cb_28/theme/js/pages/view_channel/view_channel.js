@@ -252,4 +252,31 @@ $(document).ready(function (){
     }
 
     progressVideoCheck(ids_to_check_progress, display_type);
+
+    eventFriendButton();
 });
+
+function eventFriendButton() {
+    $('.friend_button').on('click', function () {
+        var mode = $(this).data('mode');
+        var friend_id = $(this).data('friend-id');
+        var to_sent = true;
+        if (mode == 'unfriend') {
+            to_sent = _cb.confirm_it(lang_confirm_unfriend);
+        }
+        if (to_sent) {
+            $.ajax({
+                url: baseurl + "manage_contacts.php",
+                type: "POST",
+                data: {mode: mode, friend_id: friend_id},
+                dataType: 'json',
+                success: function (result) {
+                    hideSpinner();
+                    $('.friend-block').html(result.template);
+                    $(result.msg).insertAfter('#header').fadeIn('slow').delay(3000).fadeOut();
+                    eventFriendButton();
+                },
+            });
+        }
+    });
+}

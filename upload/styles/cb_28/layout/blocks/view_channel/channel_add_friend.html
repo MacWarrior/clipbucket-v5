@@ -1,0 +1,19 @@
+{if user_id() && $user.userid != user_id()}
+    {$friend_status = userquery::getInstance()->friendship_status(user_id(), $user.userid)}
+    <button data-friend-id="{$user.userid}" class="friend_button btn btn-sm new1 {if $friend_status == "f"} btn-danger {else} btn-primary {/if}"
+
+    {if $friend_status == "f"}
+        data-mode="unfriend" >
+        {lang code="unfriend"}
+    {elseif $friend_status == "r"}
+        data-mode="accept_request" >
+        {lang code="accept_request"}
+    {elseif $friend_status == 's'}
+        data-mode="cancel_request" >
+        {lang code="cancel_request"}
+    {else}
+        data-mode="add_friend" >
+        {lang code="add_as_friend"}
+    {/if}
+    </button>
+{/if}

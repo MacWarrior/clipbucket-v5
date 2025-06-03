@@ -1606,4 +1606,6 @@ VALUES ('admin_setting'),
        ('option_max_photo_categories'),
        ('option_max_photo_categories_hint'),
        ('option_max_collection_categories'),
-       ('option_max_collection_categories_hint');
+       ('option_max_collection_categories_hint'),
+       ('request_has_been_canceled'),
+       ('confirm_unfriend');
