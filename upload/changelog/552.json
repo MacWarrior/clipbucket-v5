@@ -1,6 +1,6 @@
 {
   "version":"5.5.2",
-  "revision":"72",
+  "revision":"73",
   "status":"stable",
   "detail":[
     {
@@ -9,6 +9,7 @@
         "Implement Nginx VirtualHost check"
         ,"Implement channel slogan"
         ,"Implement reset logo & favicon"
+        ,"Implement collections & photos categories limit"
         ,"Refactor conversion queue manager"
         ,"Add empty page title error"
         ,"Add collection mass broadcast update"
