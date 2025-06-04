@@ -24,15 +24,18 @@ if (isset($_POST['mode'])) {
             if ($start >= $total_items) {
                 return false;
             }
-
+            $ids_to_check_progress = [];
             $video_blocks = [];
             foreach ($items as $key => $video) {
                 assign('video', $video);
                 assign('width', 270);
                 get_fast_qlist();
-                $video_blocks[] = trim(getTemplate('blocks/videos/video-'.config('channel_video_style').'.html'));
+                if (in_array($video['status'], ['Processing', 'Waiting'])) {
+                    $ids_to_check_progress[] = $video['videoid'];
+                }
+                $video_blocks[] = ['html'=>trim(getTemplate('blocks/videos/video-'.config('channel_video_style').'.html')), 'id'=>$video['videoid']];
             }
-            echo json_encode($video_blocks);
+            echo json_encode(['videos'=>$video_blocks, 'ids_to_check_progress'=>$ids_to_check_progress]);
             break;
 
         case 'channelMorePhotos':

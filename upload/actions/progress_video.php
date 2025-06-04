@@ -7,21 +7,29 @@ $videos = Video::getInstance()->getAll([
     'videoids' => $_POST['ids']
 ]);
 $all_complete = true;
-$template = 'blocks/videos/video.html';
+$template = 'blocks/videos/video-classic.html';
 switch ($_POST['output']) {
-    case 'videos':
-    case 'view_channel':
-    case 'view_collection':
-        $display_type = 'homeVideos';
-        break;
     case 'home':
-        $display_type = 'ajaxHome';
+        if (config('homepage_recent_video_style') == 'modern') {
+            $template = "blocks/videos/video-modern.html";
+        } else {
+            $template = 'blocks/videos/video-classic.html';
+        }
+        break;
+    case 'view_channel':
+        if (config('channel_video_style') == 'modern') {
+            $template = "blocks/videos/video-modern.html";
+        } else {
+            $template = 'blocks/videos/video-classic.html';
+        }
         break;
     case 'home_featured':
         $display_type = 'featuredHome';
         if (config('featured_video_style') == 'modern') {
             $display_type = '';
             $template = 'blocks/videos/featured_video_slider_block.html';
+        } else {
+            $template = 'blocks/videos/video-classic.html';
         }
         break;
     case 'home_collection':
@@ -29,14 +37,8 @@ switch ($_POST['output']) {
         if (config('homepage_collection_video_style') == 'modern') {
             $template = "blocks/videos/video-modern.html";
         } else {
-            $template = 'blocks/videos/video.html';
+            $template = 'blocks/videos/video-classic.html';
         }
-        break;
-    case 'search':
-        $display_type = 'normal';
-        break;
-    case 'default_slider':
-        $display_type = 'user-videos';
         break;
     case 'watch_video':
         $display_type = '';
@@ -50,14 +52,17 @@ switch ($_POST['output']) {
         $template = 'blocks/manage/account_video.html';
         break;
     case 'view_channel_player':
-        $display_type = 'homeVideos';
         $get_player = true;
+        if (config('channel_video_style') == 'modern') {
+            $template = "blocks/videos/video-modern.html";
+        } else {
+            $template = 'blocks/videos/video-classic.html';
+        }
         break;
     default:
-        $display_type = '';
+        $template = 'blocks/videos/video-classic.html';
         break;
 }
-assign('display_type', $display_type);
 get_fast_qlist();
 foreach ($videos as $video) {
     assign('video', $video);

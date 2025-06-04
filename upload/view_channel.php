@@ -157,7 +157,7 @@ if( isSectionEnabled('videos') ){
             foreach ($videos as $video) {
                 if (in_array($video['status'], ['Processing', 'Waiting'])) {
                     $ids_to_check_progress[] = $video['videoid'];
-                if ($first_video['videokey'] == $video['videokey']) {
+                    if ($first_video['videokey'] == $video['videokey']) {
                         $display_type = 'view_channel_player';
                     }
                 }
