@@ -45,7 +45,6 @@ if (isset($_POST['update'])) {
         , 'collectionsSection'
         , 'channelsSection'
         , 'enable_advertisement'
-        , 'use_cached_pagin'
         , 'gravatars'
         , 'picture_url'
         , 'picture_upload'
