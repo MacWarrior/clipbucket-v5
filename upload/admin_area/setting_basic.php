@@ -2,7 +2,11 @@
 define('THIS_PAGE', 'basic_settings');
 require_once dirname(__FILE__, 2) . '/includes/admin_config.php';
 
-User::getInstance()->hasPermissionOrRedirect('basic_settings',true);
+$permission = 'basic_settings';
+if( !Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '275') ){
+    $permission = 'web_config_access';
+}
+User::getInstance()->hasPermissionOrRedirect($permission,true);
 pages::getInstance()->page_redir();
 
 /* Generating breadcrumb */
@@ -45,7 +49,6 @@ if (isset($_POST['update'])) {
         , 'collectionsSection'
         , 'channelsSection'
         , 'enable_advertisement'
-        , 'use_cached_pagin'
         , 'gravatars'
         , 'picture_url'
         , 'picture_upload'
@@ -298,7 +301,6 @@ if (isset($_POST['update'])) {
         'users_items_subscriptions',
         'users_items_contacts_channel',
         'users_items_search_page',
-        'use_cached_pagin',
 
         'vid_cat_height',
         'vid_cat_width',
