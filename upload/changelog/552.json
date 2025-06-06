@@ -1,6 +1,6 @@
 {
   "version":"5.5.2",
-  "revision":"73",
+  "revision":"74",
   "status":"stable",
   "detail":[
     {
@@ -33,6 +33,7 @@
         ,"Fix collection search"
         ,"Fix collection tags edition"
         ,"Fix server configuration warning when using Apache"
+        ,"Fix pages acces when updating from before 5.5.1 - #275"
       ]
     },
     {
