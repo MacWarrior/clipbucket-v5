@@ -49,7 +49,6 @@ if (isset($_POST['update'])) {
         , 'collectionsSection'
         , 'channelsSection'
         , 'enable_advertisement'
-        , 'use_cached_pagin'
         , 'gravatars'
         , 'picture_url'
         , 'picture_upload'
@@ -302,7 +301,6 @@ if (isset($_POST['update'])) {
         'users_items_subscriptions',
         'users_items_contacts_channel',
         'users_items_search_page',
-        'use_cached_pagin',
 
         'vid_cat_height',
         'vid_cat_width',

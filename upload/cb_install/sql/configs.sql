@@ -134,8 +134,6 @@ INSERT INTO `{tbl_prefix}config` (`configid`, `name`, `value`) VALUES
 	(NULL, 'comments_per_page', '15'),
 	(NULL, 'feedsSection', 'yes'),
 	(NULL, 'seo_vido_url', '1'),
-	(NULL, 'use_cached_pagin', 'yes'),
-	(NULL, 'cached_pagin_time', '5'),
 	(NULL, 'player_logo_url', '#'),
 	(NULL, 'ffprobe_path', ''),
 	(NULL, 'media_info', ''),
