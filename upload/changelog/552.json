@@ -1,6 +1,6 @@
 {
   "version":"5.5.2",
-  "revision":"74",
+  "revision":"75",
   "status":"stable",
   "detail":[
     {
@@ -70,6 +70,7 @@
         ,"Fix collection display"
         ,"Fix collection upload privacy setting"
         ,"Fix collection tags edition"
+        ,"Fix related videos channel link"
       ]
     },
     {
