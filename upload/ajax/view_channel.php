@@ -28,12 +28,24 @@ if (isset($_POST['mode'])) {
             $video_blocks = [];
             foreach ($items as $key => $video) {
                 assign('video', $video);
-                assign('width', 270);
-                get_fast_qlist();
+
+                if( config('enable_quicklist') == 'yes' && Session::isCookieConsent('fast_qlist') ) {
+                    get_fast_qlist();
+                }
+
                 if (in_array($video['status'], ['Processing', 'Waiting'])) {
                     $ids_to_check_progress[] = $video['videoid'];
                 }
-                $video_blocks[] = ['html'=>trim(getTemplate('blocks/videos/video-'.config('channel_video_style').'.html')), 'id'=>$video['videoid']];
+                if (config('channel_video_style') == 'modern') {
+                    $template = "video-modern.html";
+                } else {
+                    $template = 'video-classic.html';
+                }
+
+                $video_blocks[] = [
+                    'html' => trim(getTemplate('blocks/videos/'.$template))
+                    ,'id'  => $video['videoid']
+                ];
             }
             echo json_encode(['videos'=>$video_blocks, 'ids_to_check_progress'=>$ids_to_check_progress]);
             break;
@@ -57,7 +69,6 @@ if (isset($_POST['mode'])) {
             break;
 
         default:
-            # code...
             break;
     }
 }

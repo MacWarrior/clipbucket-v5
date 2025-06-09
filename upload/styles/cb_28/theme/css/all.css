@@ -834,6 +834,11 @@ h1 {
   margin: 0 0 5px;
 }
 
+.videos .item-video .slider-video-container{
+  width: -webkit-fill-available;
+  width: -moz-available;
+}
+
 .featured-videos .item-video .thumb-holder .video-link .title {
   padding: 10px 94px 15px 10px;
 }

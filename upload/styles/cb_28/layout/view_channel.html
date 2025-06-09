@@ -146,7 +146,7 @@
                                         {foreach $uservideos as $video}
                                             <div class="item-video col-lg-4 col-md-4 col-sm-6 col-xs-120" data-id="{$video['videoid']}">
                                                 {if config('channel_video_style') == 'modern'}
-                                                    {include file="$style_dir/blocks/videos/video-modern.html" width=270}
+                                                    {include file="$style_dir/blocks/videos/video-modern.html"}
                                                 {else}
                                                     {include file="$style_dir/blocks/videos/video-classic.html"}
                                                 {/if}

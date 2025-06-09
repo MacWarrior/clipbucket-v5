@@ -7,11 +7,12 @@ $videos = Video::getInstance()->getAll([
     'videoids' => $_POST['ids']
 ]);
 $all_complete = true;
-$template = 'blocks/videos/video-classic.html';
+
 switch ($_POST['output']) {
     case 'home':
         assign('popup_video', config('popup_video') == 'yes');
         if (config('homepage_recent_video_style') == 'modern') {
+            assign('width', 270);
             $template = "blocks/videos/video-modern.html";
         } else {
             $template = 'blocks/videos/video-classic.html';
@@ -20,7 +21,6 @@ switch ($_POST['output']) {
 
     case 'view_channel':
         if (config('channel_video_style') == 'modern') {
-            assign('width', 270);
             $template = "blocks/videos/video-modern.html";
         } else {
             $template = 'blocks/videos/video-classic.html';
@@ -40,6 +40,7 @@ switch ($_POST['output']) {
 
     case 'home_collection':
         if (config('homepage_collection_video_style') == 'modern') {
+            assign('width', 270);
             $template = "blocks/videos/video-modern.html";
         } else {
             $template = 'blocks/videos/video-classic.html';
@@ -62,7 +63,6 @@ switch ($_POST['output']) {
     case 'view_channel_player':
         $get_player = true;
         if (config('channel_video_style') == 'modern') {
-            assign('width', 270);
             $template = "blocks/videos/video-modern.html";
         } else {
             $template = 'blocks/videos/video-classic.html';
@@ -73,7 +73,10 @@ switch ($_POST['output']) {
         $template = 'blocks/videos/video-classic.html';
         break;
 }
-get_fast_qlist();
+
+if( config('enable_quicklist') == 'yes' && Session::isCookieConsent('fast_qlist') ) {
+    get_fast_qlist();
+}
 foreach ($videos as $video) {
     assign('video', $video);
     $data = ['videoid' => $video['videoid'], 'status'=>$video['status']];
