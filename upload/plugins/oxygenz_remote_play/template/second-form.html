@@ -125,7 +125,6 @@
                 <div class="sectionContent hidden">
                     {foreach $sharingOptions.fields as $field}
                     <div class="form-group">
-                        {$field.id = ''}
                         {if $field.type != 'checkbox' && $field.type != 'radiobutton' && $field.type != 'checkbox2'}
                             {if empty($field.class)}
                                 {$field.class = 'form-control'}
@@ -139,7 +138,16 @@
                             {$formObj->createField($field)}
                         {else}
                         <label for="{$field.id}">{$field.title}</label>
+                            {if $field.hint_1}<br/>
+                                {$field.hint_1}
+                            {/if}
                             {$formObj->createField($field)}
+                            {if $field.id == 'video_users'}
+                                <ul id="remote_list_{$field.id}"></ul>
+                            {/if}
+                            {if $field.hint_2}<br/>
+                                {$field.hint_2}
+                            {/if}
                         {/if}
                     </div>
                     {/foreach}

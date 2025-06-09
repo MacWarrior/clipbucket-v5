@@ -2,7 +2,11 @@
 define('THIS_PAGE', 'basic_settings');
 require_once dirname(__FILE__, 2) . '/includes/admin_config.php';
 
-User::getInstance()->hasPermissionOrRedirect('basic_settings',true);
+$permission = 'basic_settings';
+if( !Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '275') ){
+    $permission = 'web_config_access';
+}
+User::getInstance()->hasPermissionOrRedirect($permission,true);
 pages::getInstance()->page_redir();
 
 /* Generating breadcrumb */
@@ -14,12 +18,26 @@ if (@$_GET['msg']) {
     $msg = mysql_clean($_GET['msg']);
 }
 
-if (isset($_POST['reset_control_bar_logo_url'])) {
+if (isset($_POST['reset_player-logo_name'])) {
     if (file_exists(DirPath::get('logos') . 'player-logo.png')) {
         unlink(DirPath::get('logos') . 'player-logo.png');
     }
-    myquery::getInstance()->Set_Website_Details('control_bar_logo_url', 'images/icons/player-logo.png');
+    myquery::getInstance()->Set_Website_Details('player-logo_name', '');
+    myquery::getInstance()->Set_Website_Details('logo_update_timestamp', time());
     e(lang('player_logo_reset'), 'm');
+}
+
+if (isset($_POST['reset_site_logo'])) {
+    unlink(DirPath::get('logos') . config('logo_name'));
+    myquery::getInstance()->Set_Website_Details('logo_name', '');
+    myquery::getInstance()->Set_Website_Details('logo_update_timestamp', time());
+    e(lang('logo_reset'), 'm');
+}
+if (isset($_POST['reset_site_favicon'])) {
+    unlink(DirPath::get('logos') . config('favicon_name'));
+    myquery::getInstance()->Set_Website_Details('favicon_name', '');
+    myquery::getInstance()->Set_Website_Details('logo_update_timestamp', time());
+    e(lang('favicon_reset'), 'm');
 }
 
 if (isset($_POST['update'])) {
@@ -31,7 +49,6 @@ if (isset($_POST['update'])) {
         , 'collectionsSection'
         , 'channelsSection'
         , 'enable_advertisement'
-        , 'use_cached_pagin'
         , 'gravatars'
         , 'picture_url'
         , 'picture_upload'
@@ -247,13 +264,6 @@ if (isset($_POST['update'])) {
         'photo_user_photos',
         'photo_user_favorites',
         'photo_other_limit',
-        'photo_ratio',
-        'photo_lar_width',
-        'photo_crop',
-        'photo_thumb_width',
-        'photo_thumb_height',
-        'photo_med_width',
-        'photo_med_height',
 
         'site_title',
         'site_slogan',
@@ -291,7 +301,6 @@ if (isset($_POST['update'])) {
         'users_items_subscriptions',
         'users_items_contacts_channel',
         'users_items_search_page',
-        'use_cached_pagin',
 
         'vid_cat_height',
         'vid_cat_width',
@@ -404,6 +413,10 @@ if (isset($_POST['update'])) {
         'enable_360_video',
         'activation',
         'photo_activation',
+
+        'max_photo_categories',
+        'max_collection_categories',
+        'channel_video_style'
     ];
 
     //Numeric Array
@@ -454,7 +467,10 @@ if (isset($_POST['update'])) {
 
         'max_profile_pic_width',
         'list_featured_videos',
-        'video_thumbs_preview_count'
+        'video_thumbs_preview_count',
+
+        'max_photo_categories',
+        'max_collection_categories'
     ];
 
     foreach ($rows as $field) {
@@ -464,7 +480,7 @@ if (isset($_POST['update'])) {
                 e(lang('error_age_restriction_save'));
                 break;
             }
-            if (($value <= 0 || !is_numeric($value)) && $field != 'video_categories') {
+            if (($value <= 0 || !is_numeric($value)) && !in_array($field, ['video_categories', 'max_collection_categories', 'max_photo_categories']) ) {
                 $value = 1;
             }
         }
@@ -490,18 +506,13 @@ if (isset($_POST['update'])) {
     if (!empty($_FILES['upload_logo']['name'])) {
         // function used to upload site logo.
         upload_image('logo');
-        myquery::getInstance()->Set_Website_Details('logo_update_timestamp', time());
     }
     if (!empty($_FILES['upload_favicon']['name'])) {
         // function used to upload site logo.
         upload_image('favicon');
-        myquery::getInstance()->Set_Website_Details('logo_update_timestamp', time());
     }
-    if( !empty($_FILES['control_bar_logo_url']['name']) ){
-        $logo_file = Upload::getInstance()->upload_player_logo($_FILES['control_bar_logo_url']);
-        if ($logo_file) {
-            myquery::getInstance()->Set_Website_Details('control_bar_logo_url', $logo_file);
-        }
+    if( !empty($_FILES['upload_player-logo']['name']) ){
+        upload_image('player-logo');
     }
 
     //clear cache

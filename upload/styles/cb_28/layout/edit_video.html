@@ -1,296 +1,302 @@
 {assign var='custom_upload_fields' value=Upload::getInstance()->load_custom_upload_fields($v,TRUE)}
 
 <div class="container manage-page marginBottom">
-	<div class="row cb-box">
-		<div class="leftSidebar col-lg-3 col-md-3 col-sm-3 hidden-xs">
-			{include file="$style_dir/blocks/manage/userMenuLeft.html"}
-		</div>
-		<div class="mainContent col-lg-9 col-md-9 col-sm-9 col-xs-12">
-			{$videoFields = Upload::getInstance()->load_video_fields($v)}
-			{$requiredFields = $videoFields[0]}
-			{$sharingOptions = $videoFields[1]}
-			{$dateAndLocation = $videoFields[2]}
-			{$custom_fields = $videoFields[4]}
-			<div class="marginBottom">
-				<h2>{lang code='vdo_edit_vdo'}</h2>
-				{if config('enable_tmdb') == 'yes' && config('tmdb_token') != '' && config('tmdb_enable_on_front_end') == 'yes'}
-					<button class="btn btn-primary" style="margin-bottom: 15px;" tabindex="-1" href="javascript:void(0);" data-id="{$v.videoid}" id="button_info_tmdb">{lang code='get_data_tmdb'}</button>
-				{/if}
-				<div class="account_form">
-					<div id="updateVideoInfo">
-						<form method="post" name="edit_video" enctype="multipart/form-data">
-						{ANCHOR place="before_upload_form_required_fields"}
-						<div class="requiredFields">
-							{foreach $requiredFields.fields as $field}
-							<div class="form-group">
-								{$field.class='form-control'}
-								{$field.notShowSeprator='yes'}
-								{if $field.type == 'radiobutton'}
-									{$field.label_class='radio'}
-									{$field.class=''}
-									{$formObj->createField($field)}
-								{elseif $field.type == 'checkbox'}
-									{$categories = $field}
-								{elseif $field.id == 'tags_video'}
-									<label for="{$field.id}">{$field.title}</label>
-									{if $field.hint_1}
-										{$field.hint_1}
-									{/if}
-									{$formObj->createField($field)}
-									<ul id="list_{$field.id}"></ul>
-								{elseif !$field.id|strstr:'tags'}
-									<label for="{$field.id}">{$field.title}</label>
-									{$formObj->createField($field)}
-								{/if}
-							</div>
-							{/foreach}
+    <div class="row cb-box">
+        <div class="leftSidebar col-lg-3 col-md-3 col-sm-3 hidden-xs">
+            {include file="$style_dir/blocks/manage/userMenuLeft.html"}
+        </div>
+        <div class="mainContent col-lg-9 col-md-9 col-sm-9 col-xs-12">
+            {$videoFields = Upload::getInstance()->load_video_fields($v)}
+            {$requiredFields = $videoFields[0]}
+            {$sharingOptions = $videoFields[1]}
+            {$dateAndLocation = $videoFields[2]}
+            {$custom_fields = $videoFields[4]}
+            <div class="marginBottom">
+                <h2>{lang code='vdo_edit_vdo'}</h2>
+                {if config('enable_tmdb') == 'yes' && config('tmdb_token') != '' && config('tmdb_enable_on_front_end') == 'yes'}
+                    <button class="btn btn-primary" style="margin-bottom: 15px;" tabindex="-1" href="javascript:void(0);" data-id="{$v.videoid}" id="button_info_tmdb">{lang code='get_data_tmdb'}</button>
+                {/if}
+                <div class="account_form">
+                    <div id="updateVideoInfo">
+                        <form method="post" name="edit_video" enctype="multipart/form-data">
+                            {ANCHOR place="before_upload_form_required_fields"}
+                            <div class="requiredFields">
+                                {foreach $requiredFields.fields as $field}
+                                    <div class="form-group">
+                                        {$field.class='form-control'}
+                                        {$field.notShowSeprator='yes'}
+                                        {if $field.type == 'radiobutton'}
+                                            {$field.label_class='radio'}
+                                            {$field.class=''}
+                                            {$formObj->createField($field)}
+                                        {elseif $field.type == 'checkbox'}
+                                            {$categories = $field}
+                                        {elseif $field.id == 'tags_video'}
+                                            <label for="{$field.id}">{$field.title}</label>
+                                            {if $field.hint_1}
+                                                {$field.hint_1}
+                                            {/if}
+                                            {$formObj->createField($field)}
+                                            <ul id="list_{$field.id}"></ul>
+                                        {elseif !$field.id|strstr:'tags'}
+                                            <label for="{$field.id}">{$field.title}</label>
+                                            {$formObj->createField($field)}
+                                        {/if}
+                                    </div>
+                                {/foreach}
 
-							<div class="form-group hidden">
-								<label for="duration">Duration</label>
-								<input type="text" placeholder="" name="duration" id="duration" class="form-control" disabled>
-							</div>
-						</div>
-						{ANCHOR place="before_edit_video_form_thumbs"}
-						<div class="formSection clear">
-							<h4>{lang code='thumbs'} <i class="glyphicon glyphicon-chevron-down pull-right"></i></h4>
-							<div class="sectionContent hidden">
-								<div class="row">
-									<h5>{lang code="extracted_thumbs"}</h5>
-									{foreach from=$vidthumbs item=vid_thumb}
-									<div class="col-md-3">
-										<div class="form-group text-center">
-											<label for="{$vid_thumb|getname}"><img class="edit-img-thumbnail" src="{$vid_thumb}" width="100" height="100" />
-												<input class="show" style="margin:5px auto;" type="radio" value="{$vid_thumb|get_thumb_num}" id="{$vid_thumb|getname}" name="default_thumb" {if $v.default_thumb==$vid_thumb|get_thumb_num}checked{/if}/>{lang code='default'}
-											</label>
-										</div>
-									</div>
-									{/foreach}
-								</div>
-								{if !empty($vidthumbs_custom)}
-								<hr/>
-								<div class="row">
-									<h5>{lang code="custom_thumbs"}</h5>
-									{foreach from=$vidthumbs_custom item=vid_thumb}
-									<div class="col-md-3">
-										<div class="form-group text-center">
-											<label for="{$vid_thumb|getname}"><img class="edit-img-thumbnail" src="{$vid_thumb}" width="100" height="100" />
-												<input class="show" style="margin:5px auto;" type="radio" value="{$vid_thumb|get_thumb_num}" id="{$vid_thumb|getname}" name="default_thumb" {if $v.default_thumb==$vid_thumb|get_thumb_num}checked{/if} />{lang code='default'}
-											</label>
-										</div>
-									</div>
-									{/foreach}
-								</div>
-								{/if}
-								<div style="clear: both;"></div>
-								{ANCHOR place="before_edit_video_form_thumbs_upload"}
-								<div class="row">
-									<h5>{lang code='upload_custom_thumbnail'}</h5>
-									<input name="vid_thumb[]" id="new_thumbs" type="file" />
-									<label for="upload_thumbs"></label>
-									<div class="form-group pull-right">
-										<input type="submit" id="upload_thumbs" value="{lang code='upload'}" class="btn btn-primary btn-sm"/>
-									</div>
-								</div>
-								{ANCHOR place="after_edit_video_form_thumbs_upload"}
-							</div>
-						</div>
-						{if config('enable_video_poster') == 'yes'}
-						<div class="formSection clear">
-							<h4>{lang('posters')|ucfirst} <i class="glyphicon glyphicon-chevron-down pull-right"></i></h4>
-							<div class="sectionContent hidden">
-								<div class="row">
-									{foreach from=$vidthumbs_poster item=vid_thumb}
-									<div class="col-md-3">
-										<div class="form-group text-center">
-											<label for="{$vid_thumb|getname}"><img class="edit-img-thumbnail" src="{$vid_thumb}" width="100" height="150" />
-												<input class="show" style="margin:5px auto;" type="radio" value="{$vid_thumb|get_thumb_num}" id="{$vid_thumb|getname}" name="default_poster" {if $v.default_poster==$vid_thumb|get_thumb_num}checked{/if} />{lang code='default'}
-											</label>
-										</div>
-									</div>
-									{/foreach}
-								</div>
-								<div style="clear: both;"></div>
-								{ANCHOR place="before_edit_video_form_thumbs_upload"}
-								<div class="row">
-									<h5>{lang code='upload_poster'}</h5>
-									<input name="vid_thumb_poster[]" id="new_thumbs_poster" type="file" />
-									<label for="upload_thumbs_poster"></label>
-									<div class="form-group pull-right">
-										<input type="submit" id="upload_thumbs_poster" value="{lang code='upload'}" class="btn btn-primary btn-sm"/>
-									</div>
-								</div>
-								{ANCHOR place="after_edit_video_form_thumbs_upload"}
-							</div>
-						</div>
-						{/if}
-						{if config('enable_video_backdrop') == 'yes'}
-						<div class="formSection clear">
-							<h4>{lang('backdrop')|ucfirst} <i class="glyphicon glyphicon-chevron-down pull-right"></i></h4>
-							<div class="sectionContent hidden">
-								<div class="row">
-									{foreach from=$vidthumbs_backdrop item=vid_thumb}
-									<div class="col-md-3">
-										<div class="form-group text-center">
-											<label for="{$vid_thumb|getname}"><img class="edit-img-thumbnail" src="{$vid_thumb}" width="100" height="100" />
-												<input class="show" style="margin:5px auto;" type="radio" value="{$vid_thumb|get_thumb_num}" id="{$vid_thumb|getname}" name="default_backdrop" {if $v.default_backdrop==$vid_thumb|get_thumb_num}checked{/if} />{lang code='default'}
-											</label>
-										</div>
-									</div>
-									{/foreach}
-								</div>
-								<div style="clear: both;"></div>
-								{ANCHOR place="before_edit_video_form_thumbs_upload"}
-								<div class="row">
-									<h5>{lang code='upload_backdrop'}</h5>
-									<input name="vid_thumb_backdrop[]" id="new_thumbs_backdrop" type="file" />
-									<label for="upload_thumbs_backdrop"></label>
-									<div class="form-group pull-right">
-										<input type="submit" id="upload_thumbs_backdrop" value="{lang code='upload'}" class="btn btn-primary btn-sm"/>
-									</div>
-								</div>
-								{ANCHOR place="after_edit_video_form_thumbs_upload"}
-							</div>
-						</div>
-						{/if}
-						{ANCHOR place="after_edit_video_form_thumbs"}
+                                <div class="form-group hidden">
+                                    <label for="duration">Duration</label>
+                                    <input type="text" placeholder="" name="duration" id="duration" class="form-control" disabled>
+                                </div>
+                            </div>
+                            {ANCHOR place="before_edit_video_form_thumbs"}
+                            <div class="formSection clear">
+                                <h4>{lang code='thumbs'} <i class="glyphicon glyphicon-chevron-down pull-right"></i></h4>
+                                <div class="sectionContent hidden">
+                                    <div class="row">
+                                        <h5>{lang code="extracted_thumbs"}</h5>
+                                        {foreach from=$vidthumbs item=vid_thumb}
+                                            <div class="col-md-3">
+                                                <div class="form-group text-center">
+                                                    <label for="{$vid_thumb|getname}"><img class="edit-img-thumbnail" src="{$vid_thumb}" width="100" height="100" />
+                                                        <input class="show" style="margin:5px auto;" type="radio" value="{$vid_thumb|get_thumb_num}" id="{$vid_thumb|getname}" name="default_thumb" {if $v.default_thumb==$vid_thumb|get_thumb_num}checked{/if}/>{lang code='default'}
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        {/foreach}
+                                    </div>
+                                    {if !empty($vidthumbs_custom)}
+                                        <hr/>
+                                        <div class="row">
+                                            <h5>{lang code="custom_thumbs"}</h5>
+                                            {foreach from=$vidthumbs_custom item=vid_thumb}
+                                                <div class="col-md-3">
+                                                    <div class="form-group text-center">
+                                                        <label for="{$vid_thumb|getname}"><img class="edit-img-thumbnail" src="{$vid_thumb}" width="100" height="100" />
+                                                            <input class="show" style="margin:5px auto;" type="radio" value="{$vid_thumb|get_thumb_num}" id="{$vid_thumb|getname}" name="default_thumb" {if $v.default_thumb==$vid_thumb|get_thumb_num}checked{/if} />{lang code='default'}
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            {/foreach}
+                                        </div>
+                                    {/if}
+                                    <div style="clear: both;"></div>
+                                    {ANCHOR place="before_edit_video_form_thumbs_upload"}
+                                    <div class="row">
+                                        <h5>{lang code='upload_custom_thumbnail'}</h5>
+                                        <input name="vid_thumb[]" id="new_thumbs" type="file" />
+                                        <label for="upload_thumbs"></label>
+                                        <div class="form-group pull-right">
+                                            <input type="submit" id="upload_thumbs" value="{lang code='upload'}" class="btn btn-primary btn-sm"/>
+                                        </div>
+                                    </div>
+                                    {ANCHOR place="after_edit_video_form_thumbs_upload"}
+                                </div>
+                            </div>
+                            {if config('enable_video_poster') == 'yes'}
+                                <div class="formSection clear">
+                                    <h4>{lang('posters')|ucfirst} <i class="glyphicon glyphicon-chevron-down pull-right"></i></h4>
+                                    <div class="sectionContent hidden">
+                                        <div class="row">
+                                            {foreach from=$vidthumbs_poster item=vid_thumb}
+                                                <div class="col-md-3">
+                                                    <div class="form-group text-center">
+                                                        <label for="{$vid_thumb|getname}"><img class="edit-img-thumbnail" src="{$vid_thumb}" width="100" height="150" />
+                                                            <input class="show" style="margin:5px auto;" type="radio" value="{$vid_thumb|get_thumb_num}" id="{$vid_thumb|getname}" name="default_poster" {if $v.default_poster==$vid_thumb|get_thumb_num}checked{/if} />{lang code='default'}
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            {/foreach}
+                                        </div>
+                                        <div style="clear: both;"></div>
+                                        {ANCHOR place="before_edit_video_form_thumbs_upload"}
+                                        <div class="row">
+                                            <h5>{lang code='upload_poster'}</h5>
+                                            <input name="vid_thumb_poster[]" id="new_thumbs_poster" type="file" />
+                                            <label for="upload_thumbs_poster"></label>
+                                            <div class="form-group pull-right">
+                                                <input type="submit" id="upload_thumbs_poster" value="{lang code='upload'}" class="btn btn-primary btn-sm"/>
+                                            </div>
+                                        </div>
+                                        {ANCHOR place="after_edit_video_form_thumbs_upload"}
+                                    </div>
+                                </div>
+                            {/if}
+                            {if config('enable_video_backdrop') == 'yes'}
+                                <div class="formSection clear">
+                                    <h4>{lang('backdrop')|ucfirst} <i class="glyphicon glyphicon-chevron-down pull-right"></i></h4>
+                                    <div class="sectionContent hidden">
+                                        <div class="row">
+                                            {foreach from=$vidthumbs_backdrop item=vid_thumb}
+                                                <div class="col-md-3">
+                                                    <div class="form-group text-center">
+                                                        <label for="{$vid_thumb|getname}"><img class="edit-img-thumbnail" src="{$vid_thumb}" width="100" height="100" />
+                                                            <input class="show" style="margin:5px auto;" type="radio" value="{$vid_thumb|get_thumb_num}" id="{$vid_thumb|getname}" name="default_backdrop" {if $v.default_backdrop==$vid_thumb|get_thumb_num}checked{/if} />{lang code='default'}
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            {/foreach}
+                                        </div>
+                                        <div style="clear: both;"></div>
+                                        {ANCHOR place="before_edit_video_form_thumbs_upload"}
+                                        <div class="row">
+                                            <h5>{lang code='upload_backdrop'}</h5>
+                                            <input name="vid_thumb_backdrop[]" id="new_thumbs_backdrop" type="file" />
+                                            <label for="upload_thumbs_backdrop"></label>
+                                            <div class="form-group pull-right">
+                                                <input type="submit" id="upload_thumbs_backdrop" value="{lang code='upload'}" class="btn btn-primary btn-sm"/>
+                                            </div>
+                                        </div>
+                                        {ANCHOR place="after_edit_video_form_thumbs_upload"}
+                                    </div>
+                                </div>
+                            {/if}
+                            {ANCHOR place="after_edit_video_form_thumbs"}
 
 
-						<div class="formSection clear">
-							{if config('enable_video_categories') != 'no'}
-								{ANCHOR place="before_upload_form_categories_field"}
-								<h4>{$categories.title}<i class="glyphicon glyphicon-chevron-down pull-right"></i></h4>
-								<div class="sectionContent hidden">
-									<small>{$categories.hint_1}</small>
-									<div class="categoriesContainer">
-										{$categories.label_class='checkbox'}
-										{$categories.class='checkbox'}
-										{$formObj->createField($categories)}
-									</div>
-								</div>
-								{ANCHOR place="after_upload_form_categories_field"}
-							{/if}
-						</div>
-						<div class="formSection clear">
-							<h4>{lang code='movie_infos'} <i class="glyphicon glyphicon-chevron-down pull-right"></i></h4>
-							<div class="sectionContent hidden">
-								{foreach $requiredFields.fields as $field}
-								<div class="form-group">
-									{$field.class='form-control'}
-									{$field.notShowSeprator='yes'}
-									{if $field.id|strstr:'tags' && $field.id != 'tags_video'}
-										<label for="{$field.id}">{$field.title}</label>
-										{$formObj->createField($field)}
-										<ul id="list_{$field.id}"></ul>
-									{/if}
-								</div>
-								{/foreach}
-							</div>
-						</div>
-						{ANCHOR place="after_upload_form_required_fields"}
+                            <div class="formSection clear">
+                                {if config('enable_video_categories') != 'no'}
+                                    {ANCHOR place="before_upload_form_categories_field"}
+                                    <h4>{$categories.title}<i class="glyphicon glyphicon-chevron-down pull-right"></i></h4>
+                                    <div class="sectionContent hidden">
+                                        <small>{$categories.hint_1}</small>
+                                        <div class="categoriesContainer">
+                                            {$categories.label_class='checkbox'}
+                                            {$categories.class='checkbox'}
+                                            {$formObj->createField($categories)}
+                                        </div>
+                                    </div>
+                                    {ANCHOR place="after_upload_form_categories_field"}
+                                {/if}
+                            </div>
+                            <div class="formSection clear">
+                                <h4>{lang code='movie_infos'} <i class="glyphicon glyphicon-chevron-down pull-right"></i></h4>
+                                <div class="sectionContent hidden">
+                                    {foreach $requiredFields.fields as $field}
+                                        <div class="form-group">
+                                            {$field.class='form-control'}
+                                            {$field.notShowSeprator='yes'}
+                                            {if $field.id|strstr:'tags' && $field.id != 'tags_video'}
+                                                <label for="{$field.id}">{$field.title}</label>
+                                                {$formObj->createField($field)}
+                                                <ul id="list_{$field.id}"></ul>
+                                            {/if}
+                                        </div>
+                                    {/foreach}
+                                </div>
+                            </div>
+                            {ANCHOR place="after_upload_form_required_fields"}
 
-						{if $custom_flag && $custom_fields!=""}
-						{ANCHOR place="before_upload_form_custom_fields"}
-						<div class="formSection clear">
-							<h4>{$custom_fields.group_name} <i class="glyphicon glyphicon-chevron-down pull-right"></i></h4>
-							<div class="sectionContent hidden">
-								{foreach $custom_fields.fields as $field}
-								<div class="form-group">
-									{$field.class='form-control'}
-									{$field.notShowSeprator='yes'}
-									{if $field.type == 'radiobutton'}
-										{$field.label_class='radio'}
-										{$field.class=''}
-										{$formObj->createField($field)}
-									{elseif $field.type == 'checkbox'}
-										<h4>{$field.title}</h4>
-										{$field.label_class='checkbox'}
-										{$field.class='checkbox'}
-										{$formObj->createField($field)}
-									{else}
-										<label for="{$field.id}">{$field.title}</label>
-										{$formObj->createField($field)}
-									{/if}
-								</div>
-								{/foreach}
-							</div>
-						</div>
-						{ANCHOR place="after_upload_form_custom_fields"}
-						{/if}
+                            {if $custom_flag && $custom_fields!=""}
+                                {ANCHOR place="before_upload_form_custom_fields"}
+                                <div class="formSection clear">
+                                    <h4>{$custom_fields.group_name} <i class="glyphicon glyphicon-chevron-down pull-right"></i></h4>
+                                    <div class="sectionContent hidden">
+                                        {foreach $custom_fields.fields as $field}
+                                            <div class="form-group">
+                                                {$field.class='form-control'}
+                                                {$field.notShowSeprator='yes'}
+                                                {if $field.type == 'radiobutton'}
+                                                    {$field.label_class='radio'}
+                                                    {$field.class=''}
+                                                    {$formObj->createField($field)}
+                                                {elseif $field.type == 'checkbox'}
+                                                    <h4>{$field.title}</h4>
+                                                    {$field.label_class='checkbox'}
+                                                    {$field.class='checkbox'}
+                                                    {$formObj->createField($field)}
+                                                {else}
+                                                    <label for="{$field.id}">{$field.title}</label>
+                                                    {$formObj->createField($field)}
+                                                {/if}
+                                            </div>
+                                        {/foreach}
+                                    </div>
+                                </div>
+                                {ANCHOR place="after_upload_form_custom_fields"}
+                            {/if}
 
-						{ANCHOR place="before_upload_form_location_fields"}
-						{if config('enable_country_video_field') == 'yes' || config('enable_location_video_field') == 'yes' || config('enable_recorded_date_video_field') == 'yes' }
-							<div class="formSection clear">
-								<h4>{$dateAndLocation.group_name} <i class="glyphicon glyphicon-chevron-down pull-right"></i></h4>
-								<div class="sectionContent hidden">
-									{foreach $dateAndLocation.fields as $field}
-									<div class="form-group">
-										{$field.class='form-control'}
-										{$field.notShowSeprator='yes'}
-										{if $field.type == 'radiobutton'}
-											{$field.label_class='radio'}
-											{$field.class=''}
-											{$formObj->createField($field)}
-										{elseif $field.type == 'checkbox'}
-											<h4>{$field.title}</h4>
-											{$field.label_class='checkbox'}
-											{$field.class='checkbox'}
-											{$formObj->createField($field)}
-										{else}
-											<label for="{$field.id}">{$field.title}</label>
-											{$formObj->createField($field)}
-										{/if}
-									</div>
-									{/foreach}
-								</div>
-							</div>
-						{/if}
-						{ANCHOR place="after_upload_form_location_fields"}
+                            {ANCHOR place="before_upload_form_location_fields"}
+                            {if config('enable_country_video_field') == 'yes' || config('enable_location_video_field') == 'yes' || config('enable_recorded_date_video_field') == 'yes' }
+                                <div class="formSection clear">
+                                    <h4>{$dateAndLocation.group_name} <i class="glyphicon glyphicon-chevron-down pull-right"></i></h4>
+                                    <div class="sectionContent hidden">
+                                        {foreach $dateAndLocation.fields as $field}
+                                            <div class="form-group">
+                                                {$field.class='form-control'}
+                                                {$field.notShowSeprator='yes'}
+                                                {if $field.type == 'radiobutton'}
+                                                    {$field.label_class='radio'}
+                                                    {$field.class=''}
+                                                    {$formObj->createField($field)}
+                                                {elseif $field.type == 'checkbox'}
+                                                    <h4>{$field.title}</h4>
+                                                    {$field.label_class='checkbox'}
+                                                    {$field.class='checkbox'}
+                                                    {$formObj->createField($field)}
+                                                {else}
+                                                    <label for="{$field.id}">{$field.title}</label>
+                                                    {$formObj->createField($field)}
+                                                {/if}
+                                            </div>
+                                        {/foreach}
+                                    </div>
+                                </div>
+                            {/if}
+                            {ANCHOR place="after_upload_form_location_fields"}
 
-						{ANCHOR place="before_upload_form_sharing_fields"}
-						<div class="formSection clear">
-							<h4>{$sharingOptions.group_name}<i class="glyphicon glyphicon-chevron-down pull-right"></i></h4>
-							<div class="sectionContent hidden">
-								{foreach $sharingOptions.fields as $field}
-									{if $field.type == 'hidden'}
-										{$formObj->createField($field)}
-										{continue}
-									{/if}
-								<div class="form-group">
-									{$field.class='form-control'}
-									{$field.notShowSeprator='yes'}
-									{if $field.type == 'radiobutton'}
-										{$field.label_class='radio'}
-										{$field.class=''}
-										{$formObj->createField($field)}
-									{else}
-										{if !empty($field.id) && !empty($field.title)}
-											<label for="{$field.id}">{$field.title}</label>
-										{/if}
-										{$formObj->createField($field)}
-									{/if}
-								</div>
-								{/foreach}
-							</div>
-						</div>
-						{ANCHOR place="after_upload_form_sharing_fields"}
+                            {ANCHOR place="before_upload_form_sharing_fields"}
+                            <div class="formSection clear">
+                                <h4>{$sharingOptions.group_name}<i class="glyphicon glyphicon-chevron-down pull-right"></i></h4>
+                                <div class="sectionContent hidden">
+                                    {foreach $sharingOptions.fields as $field}
+                                        {if $field.type == 'hidden' && $field.id != 'video_users'}
+                                            {$formObj->createField($field)}
+                                            {continue}
+                                        {/if}
+                                        <div class="form-group">
+                                            {$field.class='form-control'}
+                                            {$field.notShowSeprator='yes'}
+                                            {if $field.type == 'radiobutton'}
+                                                {$field.label_class='radio'}
+                                                {$field.class=''}
+                                                {$formObj->createField($field)}
+                                            {else}
+                                                {if $field.type != 'checkboxv2'}
+                                                    <label for="{$field.id}">{$field.title}</label>
+                                                {/if}
+                                                {if $field.hint_1}
+                                                    {$field.hint_1}<br/>
+                                                {/if}
+                                                {if $field.id == 'video_users'}
+                                                    <ul id="list_{$field.id}"></ul>
+                                                {/if}
+                                                {$formObj->createField($field)}
+                                            {/if}
+                                        </div>
+                                    {/foreach}
+                                </div>
+                            </div>
+                            {ANCHOR place="after_upload_form_sharing_fields"}
 
-						{ANCHOR place="before_upload_form_submit"}
-							<div align="right">
-								<button name="update_video" id="button" value="submit" class="btn btn-primary">{lang code='update_video'}</button>
-							</div>
-						{ANCHOR place="after_upload_form_submit"}
-						</form>
-					</div>
+                            {ANCHOR place="before_upload_form_submit"}
+                            <div align="right">
+                                <button name="update_video" id="button" value="submit" class="btn btn-primary">{lang code='update_video'}</button>
+                            </div>
+                            {ANCHOR place="after_upload_form_submit"}
+                        </form>
+                    </div>
 
-				</div>
-			</div>
-		</div>
-	</div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 <div class="modal fade" id="myModal" role="dialog">
 </div>
 <script>
-	var videoid = '{$v.videoid}';
-	var available_tags = JSON.parse('{$available_tags|json_encode|replace:"'": "\'"}');
-	var videoid = '{$v.videoid}';
+    var videoid = '{$v.videoid}';
+    var available_tags = JSON.parse('{$available_tags|json_encode|replace:"'": "\'"}');
+    var videoid = '{$v.videoid}';
 </script>

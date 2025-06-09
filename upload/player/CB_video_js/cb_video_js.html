@@ -74,7 +74,7 @@
         // PLUGIN : Clipbucket - Controlbar Logo
         if( "{config('control_bar_logo')}" === 'yes' ){
             var controlbar_logo_options = {
-                branding_logo : baseurl+"{config('control_bar_logo_url')}",
+                branding_logo : "{get_player_logo_path()}",
                 product_link : "{config('player_logo_url')}"
             };
             this.clipbucket_controlbar_logo(controlbar_logo_options);

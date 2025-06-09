@@ -43,7 +43,7 @@ INSERT INTO `{tbl_prefix}config` (`configid`, `name`, `value`) VALUES
 	(NULL, 'videos_items_ufav_page', '25'),
 	(NULL, 'videos_items_uvid_page', '25'),
 	(NULL, 'videos_items_search_page', '28'),
-	(NULL, 'videos_item_channel_page', '25'),
+	(NULL, 'videos_item_channel_page', '9'),
 	(NULL, 'users_items_subscriptions', '5'),
 	(NULL, 'users_items_contacts_channel', '5'),
 	(NULL, 'users_items_search_page', '12'),
@@ -134,8 +134,6 @@ INSERT INTO `{tbl_prefix}config` (`configid`, `name`, `value`) VALUES
 	(NULL, 'comments_per_page', '15'),
 	(NULL, 'feedsSection', 'yes'),
 	(NULL, 'seo_vido_url', '1'),
-	(NULL, 'use_cached_pagin', 'yes'),
-	(NULL, 'cached_pagin_time', '5'),
 	(NULL, 'player_logo_url', '#'),
 	(NULL, 'ffprobe_path', ''),
 	(NULL, 'media_info', ''),
@@ -161,7 +159,7 @@ INSERT INTO `{tbl_prefix}config` (`configid`, `name`, `value`) VALUES
 	(NULL, 'bits_color_warning', '1'),
 	(NULL, 'control_bar_logo', 'yes'),
 	(NULL, 'contextual_menu_disabled', ''),
-	(NULL, 'control_bar_logo_url', 'images/icons/player-logo.png'),
+	(NULL, 'player-logo_name', ''),
 	(NULL, 'player_thumbnails', 'yes'),
 	(NULL, 'enable_update_checker', '1'),
 	(NULL, 'email_domain_restriction', ''),
@@ -315,7 +313,10 @@ INSERT INTO `{tbl_prefix}config` (`configid`, `name`, `value`) VALUES
     (NULL, 'enable_channel_description', 'yes'),
     (NULL, 'enable_channels_slogan_display', 'yes'),
     (NULL, 'enable_user_self_deletion', 'yes'),
-    (NULL, 'enable_cookie_banner', 'yes');
+    (NULL, 'enable_cookie_banner', 'yes'),
+    (NULL, 'max_photo_categories', 0),
+    (NULL, 'max_collection_categories', 0),
+    (NULL, 'channel_video_style', 'modern');
 
 INSERT INTO `{tbl_prefix}video_resolution` (`title`, `ratio`, `enabled`, `width`, `height`, `video_bitrate`) VALUES
 	('240p', '16/9', 1, 426, 240, 240000),

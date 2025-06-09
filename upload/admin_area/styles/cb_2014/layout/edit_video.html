@@ -248,7 +248,7 @@
                         </div>
                         <div id="privacyoption" class="tab-pane">
                             {foreach from=$video_privacyoption item=field}
-                                {if $field.type == 'hidden'}
+                                {if $field.type == 'hidden' &&  $field.id != 'video_users'}
                                     {$formObj->createField($field)}
                                     {continue}
                                 {/if}
@@ -261,7 +261,7 @@
                                     {/if}
                                 {/if}
                                 {if !empty($field.title)}
-                                <label><strong>{$field.title|truncate:80}</strong></label><br/>
+                                <label><strong>{$field.title|truncate:80}</strong></label> {if $field.id != 'video_users'}<br/>{/if}
                                 {/if}
                                 {if $field.type != 'checkbox' && $field.type != 'radiobutton' && $field.type != 'checkbox2'}
                                     {if empty($field.class)}
@@ -274,6 +274,9 @@
                                     {$field.hint_1}<br/>
                                 {/if}
                                 {$formObj->createField($field)}
+                                {if $field.id == 'video_users'}
+                                    <ul id="list_{$field.id}"></ul>
+                                {/if}
                                 {if $field.hint_2}<br/>
                                     {$field.hint_2}
                                 {/if}

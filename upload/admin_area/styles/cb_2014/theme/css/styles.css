@@ -1268,3 +1268,6 @@ textarea[disabled]{
     color: #fff;
 }
 /* Buttons as dropdown list */
+#config_player .col-md-6 .row {
+    height: 31px;
+}
