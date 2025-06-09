@@ -116,7 +116,7 @@ function getInfoTmdb(video_id, type, video_title, page,sort, sort_order, selecte
     });
 }
 
-function saveInfoTmdb(tmdb_video_id) {
+function saveInfoTmdb(tmdb_video_id, type) {
     showSpinner();
     $.ajax({
         url: baseurl+"actions/admin_import_tmdb.php",
