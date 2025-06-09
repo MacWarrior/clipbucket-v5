@@ -392,7 +392,7 @@ class Collection
                 $join[] = 'LEFT JOIN ' . cb_sql_table('sorts') . ' ON sorts.id = collections.sort_type';
             }
 
-            if ($param_display_indent) {
+            if ($param_display_indent && User::getInstance()->isUserConnected()) {
                 $select[] = 'CASE WHEN '.$this->getTableName().'.userid = '.mysql_clean(User::getInstance()->getCurrentUserID()).' THEN 1 ELSE 0 END AS is_user_collection';
                 $select[] = 'CASE WHEN '.$this->getTableName().'.userid IN (SELECT contact_userid FROM '.tbl('contacts').' WHERE confirmed = \'yes\' AND userid = '.mysql_clean(User::getInstance()->getCurrentUserID()).' ) THEN 1 ELSE 0 END AS is_contact_collection';
             }
@@ -454,7 +454,11 @@ class Collection
 
         $order = '';
         if($param_display_indent && !$param_count){
-            $order = ' ORDER BY is_user_collection DESC, is_contact_collection DESC, collection_id ASC ' ;
+            $order = ' ORDER BY ';
+            if( User::getInstance()->isUserConnected() ){
+                $order .= 'is_user_collection DESC, is_contact_collection DESC,';
+            }
+            $order .= 'collection_id ASC';
         } elseif (!empty($order_search)) {
             $order = $order_search;
         } elseif ($param_order && !$param_count) {
