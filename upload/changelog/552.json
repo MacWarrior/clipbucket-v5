@@ -1,6 +1,6 @@
 {
   "version":"5.5.2",
-  "revision":"78",
+  "revision":"79",
   "status":"stable",
   "detail":[
     {
@@ -45,6 +45,7 @@
         ,"Implement cookies banner <i>(#312, #151)</i>"
         ,"Implement modern video style on channel page"
         ,"Update video & photos management pages display"
+        ,"Update video edition display"
         ,"Hide banned users from channels page, search results & popular user"
         ,"Fix collection privacy on photos page"
         ,"Fix visual editor theme change <i>(#590)</i>"
