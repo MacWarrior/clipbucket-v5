@@ -77,6 +77,7 @@ if (isset($_POST['load_type'])) {
                 $ids_to_check[] = $video['videoid'];
             }
             assign("video", $video);
+            assign('popup_video', config('popup_video') == 'yes');
             assign("display_type", $display_type);
             Template('blocks/videos/video.html');
         }
