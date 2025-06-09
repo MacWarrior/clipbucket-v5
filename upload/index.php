@@ -106,6 +106,7 @@ if (!User::getInstance()->hasPermission('view_videos') && !user_id()) {
     }
     Assign('ids_to_check_progress_featured', json_encode($ids_to_check_progress));
 
+    assign('popup_video', config('popup_video') == 'yes');
     template_files('index.html');
 }
 display_it();

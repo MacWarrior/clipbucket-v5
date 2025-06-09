@@ -4552,6 +4552,10 @@ textarea#comment_box {
   background: #4caf50;
 }
 
+.cd-popup-trigger{
+  cursor: pointer;
+}
+
 .cd-popup {
   position: fixed;
   visibility: hidden;

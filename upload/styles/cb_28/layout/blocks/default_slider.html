@@ -34,8 +34,8 @@
             <div class="videos">
                 {$count = 0}
                 {foreach $video_list as $video}
-                <div class="item-video" data-id="{$video.videoid}"
-                    {include file="$style_dir/blocks/videos/video.html" display_type='user-videos'}
+                <div class="item-video" data-id="{$video.videoid}">
+                    {include file="$style_dir/blocks/videos/video-classic.html"}
                 </div>
                     {$count = $count + 1}
                     {if $limit && $count >= $limit}

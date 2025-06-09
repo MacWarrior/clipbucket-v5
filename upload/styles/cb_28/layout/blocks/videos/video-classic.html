@@ -1,6 +1,12 @@
 <div class="clearfix thumb-holder userAppending no_overflow">
-    <a class="video-link" href="{video_link($video)}" title="{display_clean($video.title)|title}">
-        <img alt="{display_clean($video.title)|title}" class="img-responsive {if Video::getInstance()->isToBlur($video['videoid'])}blur{/if}" src="{getThumb vdetails=$video size=416x260}" {Video::get_thumbs_preview($video, '416x260')}/>
+    <a
+        {if $popup_video && $video.status|lower == 'successful'}
+            class="video-link cd-popup-trigger no_overflow" onclick="_cb.getModalVideo({$video.videoid})"
+        {else}
+            class="video-link no_overflow" href="{video_link($video)}"
+        {/if}
+         title="{display_clean($video.title|title)}">
+        <img class="lazy img-responsive no_select{if Video::getInstance()->isToBlur($video['videoid'])} blur{/if}" alt="{display_clean($video.title)|title}" src="{getThumb vdetails=$video size=416x260}" {Video::get_thumbs_preview($video, '416x260')}/>
     </a>
     {ANCHOR place='in_video_thumb' data=$video}
     {if config('enable_quicklist') == 'yes' && !Video::getInstance()->isToBlur($video['videoid']) && $video.status|lower == 'successful' && Session::isCookieConsent('fast_qlist')}

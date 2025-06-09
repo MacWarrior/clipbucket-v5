@@ -1442,6 +1442,7 @@
 
 						$('.my-modal-content').attr('id',vData.videoid).html(data.video).promise().done(function(){
 							let videoplayer = $('.my-modal-content').find('video')[0];
+							$('.cd-popup').addClass('is-visible');
 
 							document.querySelector('.player-holder video').addEventListener( "loadedmetadata", function (e) {
 								adaptRatioPlayer();
