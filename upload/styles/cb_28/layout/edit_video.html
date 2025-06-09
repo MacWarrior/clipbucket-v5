@@ -263,7 +263,9 @@
                                                 {$field.class=''}
                                                 {$formObj->createField($field)}
                                             {else}
-                                                <label for="{$field.id}">{$field.title}</label>
+                                                {if $field.type != 'checkboxv2'}
+                                                    <label for="{$field.id}">{$field.title}</label>
+                                                {/if}
                                                 {if $field.hint_1}
                                                     {$field.hint_1}<br/>
                                                 {/if}
