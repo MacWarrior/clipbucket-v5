@@ -2,7 +2,11 @@
 define('THIS_PAGE', 'basic_settings');
 require_once dirname(__FILE__, 2) . '/includes/admin_config.php';
 
-User::getInstance()->hasPermissionOrRedirect('basic_settings',true);
+$permission = 'basic_settings';
+if( !Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '275') ){
+    $permission = 'web_config_access';
+}
+User::getInstance()->hasPermissionOrRedirect($permission,true);
 pages::getInstance()->page_redir();
 
 /* Generating breadcrumb */
@@ -45,7 +49,6 @@ if (isset($_POST['update'])) {
         , 'collectionsSection'
         , 'channelsSection'
         , 'enable_advertisement'
-        , 'use_cached_pagin'
         , 'gravatars'
         , 'picture_url'
         , 'picture_upload'
@@ -298,7 +301,6 @@ if (isset($_POST['update'])) {
         'users_items_subscriptions',
         'users_items_contacts_channel',
         'users_items_search_page',
-        'use_cached_pagin',
 
         'vid_cat_height',
         'vid_cat_width',
@@ -411,6 +413,10 @@ if (isset($_POST['update'])) {
         'enable_360_video',
         'activation',
         'photo_activation',
+
+        'max_photo_categories',
+        'max_collection_categories',
+        'channel_video_style'
     ];
 
     //Numeric Array
@@ -461,7 +467,10 @@ if (isset($_POST['update'])) {
 
         'max_profile_pic_width',
         'list_featured_videos',
-        'video_thumbs_preview_count'
+        'video_thumbs_preview_count',
+
+        'max_photo_categories',
+        'max_collection_categories'
     ];
 
     foreach ($rows as $field) {
@@ -471,7 +480,7 @@ if (isset($_POST['update'])) {
                 e(lang('error_age_restriction_save'));
                 break;
             }
-            if (($value <= 0 || !is_numeric($value)) && $field != 'video_categories') {
+            if (($value <= 0 || !is_numeric($value)) && !in_array($field, ['video_categories', 'max_collection_categories', 'max_photo_categories']) ) {
                 $value = 1;
             }
         }

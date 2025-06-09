@@ -7,41 +7,51 @@ $videos = Video::getInstance()->getAll([
     'videoids' => $_POST['ids']
 ]);
 $all_complete = true;
-$template = 'blocks/videos/video.html';
+
 switch ($_POST['output']) {
-    case 'videos':
-    case 'view_channel':
-    case 'view_collection':
-        $display_type = 'homeVideos';
-        break;
     case 'home':
-        $display_type = 'ajaxHome';
+        assign('popup_video', config('popup_video') == 'yes');
+        if (config('homepage_recent_video_style') == 'modern') {
+            assign('width', 270);
+            $template = "blocks/videos/video-modern.html";
+        } else {
+            $template = 'blocks/videos/video-classic.html';
+        }
         break;
+
+    case 'view_channel':
+        if (config('channel_video_style') == 'modern') {
+            $template = "blocks/videos/video-modern.html";
+        } else {
+            $template = 'blocks/videos/video-classic.html';
+        }
+        break;
+
     case 'home_featured':
         $display_type = 'featuredHome';
+        assign('popup_video', config('popup_video') == 'yes');
         if (config('featured_video_style') == 'modern') {
             $display_type = '';
             $template = 'blocks/videos/featured_video_slider_block.html';
-        }
-        break;
-    case 'home_collection':
-        $display_type = 'user-videos';
-        if (config('homepage_collection_video_style') == 'modern') {
-            $template = "blocks/videos/video-new.html";
         } else {
-            $template = 'blocks/videos/video.html';
+            $template = 'blocks/videos/video-classic.html';
         }
         break;
-    case 'search':
-        $display_type = 'normal';
+
+    case 'home_collection':
+        if (config('homepage_collection_video_style') == 'modern') {
+            assign('width', 270);
+            $template = "blocks/videos/video-modern.html";
+        } else {
+            $template = 'blocks/videos/video-classic.html';
+        }
         break;
-    case 'default_slider':
-        $display_type = 'user-videos';
-        break;
+
     case 'watch_video':
         $display_type = '';
         $template = "blocks/videos/watch_video.html";
         break;
+
     case 'account':
         $display_type = '';
         $favorites = User::getInstance()->getFavoritesVideos();
@@ -49,16 +59,24 @@ switch ($_POST['output']) {
         assign('control', 'full');
         $template = 'blocks/manage/account_video.html';
         break;
+
     case 'view_channel_player':
-        $display_type = 'homeVideos';
         $get_player = true;
+        if (config('channel_video_style') == 'modern') {
+            $template = "blocks/videos/video-modern.html";
+        } else {
+            $template = 'blocks/videos/video-classic.html';
+        }
         break;
+
     default:
-        $display_type = '';
+        $template = 'blocks/videos/video-classic.html';
         break;
 }
-assign('display_type', $display_type);
-get_fast_qlist();
+
+if( config('enable_quicklist') == 'yes' && Session::isCookieConsent('fast_qlist') ) {
+    get_fast_qlist();
+}
 foreach ($videos as $video) {
     assign('video', $video);
     $data = ['videoid' => $video['videoid'], 'status'=>$video['status']];

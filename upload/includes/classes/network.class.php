@@ -291,11 +291,16 @@ class Network{
 
         $subdir = str_replace('\\', '/', dirname($_SERVER['SCRIPT_NAME']));
 
-        // Exclure cb_install, ajax et admin_area s'ils sont dans le chemin
-        if (preg_match('#/(cb_install|ajax|admin_area)(/|$)#', $subdir)) {
-            $subdir = preg_replace('#/(cb_install|ajax|admin_area)(/|$)#', '/', $subdir);
-        }
+        // Exclude unwanted subdirectories
+        do {
+            $old = $subdir;
+            $subdir = preg_replace('#/(cb_install|ajax|admin_area|actions|sse)(?:/|$)#', '/', $subdir);
+        } while ($subdir !== $old);
 
+        $subdir = preg_replace('#/+#', '/', $subdir);
+        if ($subdir !== '/') {
+            $subdir = rtrim($subdir, '/');
+        }
         if ($subdir === '/' || $subdir === '\\') {
             $subdir = '';
         }
