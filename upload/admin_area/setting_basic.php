@@ -415,7 +415,8 @@ if (isset($_POST['update'])) {
         'photo_activation',
 
         'max_photo_categories',
-        'max_collection_categories'
+        'max_collection_categories',
+        'channel_video_style'
     ];
 
     //Numeric Array

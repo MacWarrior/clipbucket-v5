@@ -1,6 +1,6 @@
 <div class="slider-video-container"{if empty($width) === false} style="--width:{$width}px;"{/if} data-id="{$video['videoid']}">
     <div class="thumb-video-padding">
-        <div class="thumb-video video-link {if config('popup_video') == 'yes' && $video.status|lower == 'successful'}cd-popup-trigger{/if}" data-videoid="{$video.videoid}" data-href="{video_link($video)}" title="{display_clean($video.title)|title}">
+        <div class="thumb-video video-link{if $popup_video && $video.status|lower == 'successful'} cd-popup-trigger{/if}" data-videoid="{$video.videoid}" data-href="{video_link($video)}" title="{display_clean($video.title)|title}">
             <img src="{getThumb vdetails=$video size=416x260}" loading="lazy" class="{if Video::getInstance()->isToBlur($video['videoid'])}blur{/if}" {Video::get_thumbs_preview($video, '416x260')}/>
             <div class="status"></div>
             {if config('enable_quicklist') == 'yes' && !Video::getInstance()->isToBlur($video['videoid']) && $video.status|lower == 'successful' && Session::isCookieConsent('fast_qlist')}

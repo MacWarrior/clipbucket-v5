@@ -763,7 +763,7 @@
                             </div>
                             <div class="tab-pane interfaces" id="interfaces_channels">
                                 <div class="row">
-                                    <div class="col-md-4">
+                                    <div class="col-md-6">
                                         <div class="row">
                                             <div class="col-md-8">
                                                 <label class="nowrap" for="enable_channels_slogan_display" title="{lang('option_enable_channels_slogan_display')}">{lang('option_enable_channels_slogan_display')}</label>
@@ -771,6 +771,20 @@
                                             <div class="col-md-2 row-size">
                                                 <input value="yes" name="enable_channels_slogan_display" id="enable_channels_slogan_display" {if $row.enable_channels_slogan_display=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
                                                 <span class="lbl"></span>
+                                            </div>
+                                        </div>
+                                        <hr/>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="row">
+                                            <div class="col-md-8">
+                                                <label class="nowrap" for="channel_video_style" title="{lang('channel_video_style')}">{lang('channel_video_style')}</label>
+                                            </div>
+                                            <div class="col-md-4 row-size">
+                                                <select class='form-control' name="channel_video_style" id="channel_video_style">
+                                                    <option value="classic" {if $row.channel_video_style=='classic'}selected{/if}>{lang('classic')}</option>
+                                                    <option value="modern" {if $row.channel_video_style=='modern'}selected{/if}>{lang('modern')}</option>
+                                                </select>
                                             </div>
                                         </div>
                                         <hr/>

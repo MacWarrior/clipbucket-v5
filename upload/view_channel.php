@@ -57,10 +57,6 @@ $p = userquery::getInstance()->get_user_profile($udetails['userid']);
 assign('p', $p);
 assign('backgroundPhoto', userquery::getInstance()->getBackground($udetails['userid']));
 
-//Getting users channel List
-$result_array['order'] = ' profile_hits DESC limit 6';
-$users = get_users($result_array);
-assign('users', $users);
 
 //Checking Profile permissions
 $perms = $p['show_profile'];
@@ -149,7 +145,7 @@ if( isSectionEnabled('videos') ){
         $params = [
             'userid' => $udetails['userid']
             ,'order' => 'date_added DESC'
-            ,'limit' => 9
+            ,'limit' => config('videos_item_channel_page')
         ];
         $videos = Video::getInstance()->getAll($params);
     $first_video = $videos[0];
@@ -161,7 +157,7 @@ if( isSectionEnabled('videos') ){
             foreach ($videos as $video) {
                 if (in_array($video['status'], ['Processing', 'Waiting'])) {
                     $ids_to_check_progress[] = $video['videoid'];
-                if ($first_video['videokey'] == $video['videokey']) {
+                    if ($first_video['videokey'] == $video['videokey']) {
                         $display_type = 'view_channel_player';
                     }
                 }
@@ -185,7 +181,7 @@ if( isSectionEnabled('videos') ){
 if( isSectionEnabled('photos') && User::getInstance($udetails['userid'])->get('show_my_photos') == 'yes' ){
     $photos = Photo::getInstance()->getAll([
         'userid'=>$udetails['userid'],
-        'limit'=>9
+        'limit'=>config('photo_channel_page')
     ]);
     assign('photos', $photos);
 }
