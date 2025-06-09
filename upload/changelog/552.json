@@ -1,6 +1,6 @@
 {
   "version":"5.5.2",
-  "revision":"77",
+  "revision":"78",
   "status":"stable",
   "detail":[
     {
@@ -108,6 +108,7 @@
       "description": [
         "Fix new installation errors <i>(#592)</i>"
         ,"Fix revision 5.5.1 - #334 DB upgrade"
+        ,"Update default config"
       ]
     },
     {

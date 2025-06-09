@@ -43,7 +43,7 @@ INSERT INTO `{tbl_prefix}config` (`configid`, `name`, `value`) VALUES
 	(NULL, 'videos_items_ufav_page', '25'),
 	(NULL, 'videos_items_uvid_page', '25'),
 	(NULL, 'videos_items_search_page', '28'),
-	(NULL, 'videos_item_channel_page', '25'),
+	(NULL, 'videos_item_channel_page', '9'),
 	(NULL, 'users_items_subscriptions', '5'),
 	(NULL, 'users_items_contacts_channel', '5'),
 	(NULL, 'users_items_search_page', '12'),
