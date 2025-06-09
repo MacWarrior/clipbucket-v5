@@ -1,6 +1,6 @@
 {
   "version":"5.5.2",
-  "revision":"76",
+  "revision":"77",
   "status":"stable",
   "detail":[
     {
@@ -43,6 +43,7 @@
         ,"Implement channel slogan"
         ,"Implement account deletion <i>(#144, #599)</i>"
         ,"Implement cookies banner <i>(#312, #151)</i>"
+        ,"Implement modern video style on channel page"
         ,"Update video & photos management pages display"
         ,"Hide banned users from channels page, search results & popular user"
         ,"Fix collection privacy on photos page"
@@ -71,6 +72,8 @@
         ,"Fix collection upload privacy setting"
         ,"Fix collection tags edition"
         ,"Fix related videos channel link"
+        ,"Fix homepage popup video"
+        ,"Fix channel videos style"
       ]
     },
     {
