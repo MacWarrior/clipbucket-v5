@@ -1,6 +1,6 @@
 {
   "version":"5.5.2",
-  "revision":"79",
+  "revision":"80",
   "status":"stable",
   "detail":[
     {
@@ -34,6 +34,7 @@
         ,"Fix collection tags edition"
         ,"Fix server configuration warning when using Apache"
         ,"Fix pages acces when updating from before 5.5.1 - #275"
+        ,"Fix TMDB import"
       ]
     },
     {
@@ -75,6 +76,7 @@
         ,"Fix related videos channel link"
         ,"Fix homepage popup video"
         ,"Fix channel videos style"
+        ,"Fix TMDB import"
       ]
     },
     {
