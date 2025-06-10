@@ -1,6 +1,6 @@
 {
   "version":"5.5.2",
-  "revision":"80",
+  "revision":"81",
   "status":"stable",
   "detail":[
     {
@@ -77,6 +77,9 @@
         ,"Fix homepage popup video"
         ,"Fix channel videos style"
         ,"Fix TMDB import"
+        ,"Fix JS error when cookie banner was disabled"
+        ,"Fix pop-in closing with escape"
+        ,"Fix filter error on outdated DB"
       ]
     },
     {
