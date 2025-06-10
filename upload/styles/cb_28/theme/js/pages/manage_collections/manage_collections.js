@@ -73,4 +73,8 @@ document.addEventListener('DOMContentLoaded', function () {
             .finally(hideSpinner);
         });
     }
+
+    $('#collection_id_parent').select2({
+        width: '100%'
+    });
 });

@@ -893,7 +893,7 @@ class Collection
             $children = $this->getAllIndent($params, $level + 1);
             foreach ($children as &$child) {
                 $child['collection_name'] = $display_user . '&nbsp&nbsp&nbsp' . $child['collection_name'];
-                if ($level == 0) {
+                if ($level == 0 && $display_group) {
                     $indentList[$group][] = $child;
                 } else {
                     $indentList[] = $child;
@@ -906,10 +906,8 @@ class Collection
     /**
      * @throws Exception
      */
-    public function getAvailableParents($collection_id, $type): array
+    public function getAvailableParents($collection_id, $type, $display_group = false): array
     {
-        $list_parent_categories = ['null' => lang('collection_no_parent')];
-
         $params = [
             'type'   => $type,
             'userid' => user_id()
@@ -918,15 +916,22 @@ class Collection
         if (!empty($collection_id)) {
             $params['condition'] = ' collections.collection_id != ' . mysql_clean($collection_id);
         }
-        $collection_list = Collection::getInstance()->getAllIndent($params);
-        $list_parent_categories += array_combine(
-            array_column($collection_list, 'collection_id') ,
-            array_column($collection_list,'collection_name')
-        );
-        return $list_parent_categories;
+        $collection_list = Collection::getInstance()->getAllIndent($params, display_group: $display_group);
+        $list_collection_display=[];
+        if (!$display_group) {
+            $list_collection_display = array_combine(
+                array_column($collection_list, 'collection_id') ,
+                array_column($collection_list,'collection_name')
+            );
+        } else {
+            foreach ($collection_list as $group => $collection) {
+                $list_collection_display[$group] = CBPhotos::getInstance()->parse_array($collection);
+            }
+        }
+
+        return $list_collection_display;
     }
 }
-
 
 class Collections extends CBCategory
 {
@@ -1489,17 +1494,17 @@ class Collections extends CBCategory
                 $data['type']['disabled'] = true;
                 $data['type']['input_hidden'] = true;
             }
-            $list_parent_categories = Collection::getInstance()->getAvailableParents($collection_id, $default['type'] ?? array_keys($this->types)[0]);
-
+            $list_parent_categories = Collection::getInstance()->getAvailableParents($collection_id, ($default['type'] ?? array_keys($this->types)[0]), true);
             $data['parent'] = [
-                'title'    => lang('collection_parent'),
-                'type'     => 'dropdown',
-                'name'     => 'collection_id_parent',
-                'id'       => 'collection_id_parent',
-                'value'    => $list_parent_categories,
-                'db_field' => 'collection_id_parent',
-                'required' => 'yes',
-                'checked'  => $collection_id_parent
+                'title'       => lang('collection_parent'),
+                'type'        => 'dropdown_group',
+                'name'        => 'collection_id_parent',
+                'id'          => 'collection_id_parent',
+                'value'       => $list_parent_categories,
+                'db_field'    => 'collection_id_parent',
+                'required'    => 'yes',
+                'checked'     => $collection_id_parent,
+                'null_option' => lang('collection_no_parent')
             ];
         }
 

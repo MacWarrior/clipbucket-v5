@@ -540,6 +540,9 @@ class formObj
             $field['value'] = explode(',', $field['value']);
         }
         $fieldOpts = '';
+        if (!empty($field['null_option'])) {
+            $fieldOpts .= '<option value="null">' . $field['null_option'] . '</option>';
+        }
         if (is_array($field['value'])) {
             foreach ($field['value'] as $group => $group_values) {
                 $fieldOpts .= '<optgroup label="' . lang($group) . '">';
