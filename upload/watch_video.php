@@ -48,7 +48,7 @@ if( config('playlistsSection') == 'yes' ){
     }
 }
 
-if( config('collectionsSection') == 'yes' ){
+if( config('collectionsSection') == 'yes' && User::getInstance()->hasPermission('allow_create_collection') ){
     $params = [];
     $params['type'] = 'videos';
 

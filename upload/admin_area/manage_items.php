@@ -24,10 +24,10 @@ $breadcrumb[2] = [
 ];
 $breadcrumb[3] = [
     'title' => lang('manage_collection_items'),
-    'url'   => DirPath::getUrl('admin_area') . 'manage_items.php?collection=' . display_clean($id) . '&type=videos'
+    'url'   => DirPath::getUrl('admin_area') . 'manage_items.php?collection=' . display_clean($id)
 ];
 
-$type = mysql_clean($_GET['type']);
+$type = $c['type'];
 $items = [];
 switch ($type) {
     case 'photos':
@@ -46,7 +46,6 @@ switch ($type) {
             $new = mysql_clean($_POST['collection_id']);
             for ($i = 0; $i < $total; $i++) {
                 CBPhotos::getInstance()->collection->change_collection($new, $_POST['check_obj'][$i], $id);
-                Clipbucket_db::getInstance()->update(tbl('photos'), ['collection_id'], [$new], ' collection_id = ' . $id . ' AND photo_id = ' . $_POST['check_obj'][$i]);
             }
             errorhandler::getInstance()->flush();
             e($total . ' photo(s) have been moved to \'<strong>' . display_clean(get_collection_field($new, 'collection_name')) . '</strong>\'', 'm', false);
@@ -107,7 +106,11 @@ if (!empty($items)) {
     assign('objects', $items);
 }
 
-$collections = Collections::getInstance()->get_collections_list(0, null, null, $type, user_id());
+$collections = Collection::getInstance()->getAllIndent([
+    'type'       => 'photos',
+    'can_upload' => true,
+    'not_collection_id'=>$c['collection_id'],
+], display_group: true);
 assign('collections', $collections);
 
 assign('obj', $items);
