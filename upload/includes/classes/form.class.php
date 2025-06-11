@@ -540,9 +540,9 @@ class formObj
             $field['value'] = explode(',', $field['value']);
         }
         $fieldOpts = '';
-        if (!empty($field['null_option'])) {
-            $fieldOpts .= '<option value="null">' . $field['null_option'] . '</option>';
-        }
+        $fieldOptsNull= '';
+
+        $is_checked = false;
         if (is_array($field['value'])) {
             foreach ($field['value'] as $group => $group_values) {
                 $fieldOpts .= '<optgroup label="' . lang($group) . '">';
@@ -550,12 +550,14 @@ class formObj
                     if ((is_array($_REQUEST) && !empty($_REQUEST[$arrayName])) || !empty($field['checked'])) {
                         if ((is_array($_REQUEST) && $_REQUEST[$arrayName] == $key) || $field['checked'] == $key) {
                             $checked = ' selected ';
+                            $is_checked = true;
                         } else {
                             $checked = '';
                         }
                     } else {
-                        if ($count == 0) {
+                        if ($count == 0 && empty($field['null_option'])) {
                             $checked = ' selected ';
+                            $is_checked = true;
                         } else {
                             $checked = '';
                         }
@@ -566,6 +568,10 @@ class formObj
                 $fieldOpts .= '</optgroup>';
             }
         }
+        if (!empty($field['null_option'])) {
+            $fieldOptsNull = '<option value="null" ' . (!$is_checked? ' selected ' : '') . '>' . $field['null_option'] . '</option>';
+        }
+        $fieldOpts = $fieldOptsNull . $fieldOpts;
         $ddFieldEnd = '</select>';
         echo $hidden . $ddFieldStart . $fieldOpts . $ddFieldEnd;
     }
