@@ -20,6 +20,9 @@ class MWIP extends \Migration
             'en' => 'Are you sure you want to unfriend %s ?'
         ]);
 
+        $sql = 'DELETE FROM ' . tbl('subscriptions') . ' WHERE `subscribed_to` NOT REGEXP \'^[0-9]+$\' OR `subscribed_to` IS NULL OR `subscribed_to` NOT IN (SELECT `userid` FROM ' . tbl('users') . ') OR `userid` NOT IN (SELECT `userid` FROM ' . tbl('users') . ')';
+        self::query($sql);
+
         self::alterTable('ALTER TABLE ' . tbl('subscriptions') . ' CHANGE `subscribed_to` `subscribed_to` BIGINT NOT NULL;',
             [
                 'table'  => 'subscriptions',
@@ -52,5 +55,17 @@ class MWIP extends \Migration
                 'name' => 'subscriptions_userid_fk'
             ]
         ]);
+
+        //maj compteurs
+        $sql = 'UPDATE ' . tbl('users') . ' U
+        INNER JOIN (
+        SELECT `userid`, COUNT(*) AS `total_subscriptions` FROM ' . tbl('subscriptions') . ' GROUP BY `userid`) sub on U.userid = sub.userid
+        SET U.`total_subscriptions` = sub.total_subscriptions';
+        self::query($sql);
+        $sql = 'UPDATE ' . tbl('users') . ' U
+        INNER JOIN (
+        SELECT `subscribed_to`, COUNT(*) AS `total_subscribers` FROM ' . tbl('subscriptions') . ' GROUP BY `subscribed_to`) sub on U.userid = sub.subscribed_to
+        SET U.`subscribers` = sub.total_subscribers';
+        self::query($sql);
     }
 }
