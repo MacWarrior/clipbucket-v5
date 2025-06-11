@@ -629,8 +629,11 @@ function updateCookieBannerPosition() {
 
 function showCookieBanner() {
     if (!cookieConsent) {
-        document.getElementById('cookie-banner').style.display = '';
-        updateCookieBannerPosition();
+        let banner = document.getElementById('cookie-banner');
+        if (banner) {
+            banner.style.display = '';
+            updateCookieBannerPosition();
+        }
     }
 }
 function hideCookieBanner() {
@@ -827,25 +830,31 @@ document.addEventListener('DOMContentLoaded', function() {
     showCookieBanner();
 
     let cookieLinks = document.querySelectorAll('.show-cookie-list');
-    for (let i = 0; i < cookieLinks.length; i++) {
-        cookieLinks[i].onclick = function(e) {
-            renderCookieList();
-        };
-    }
-    document.getElementById('modal-close-btn').onclick = closeModal;
-    let acceptButtons = document.querySelectorAll('.accept-cookies');
-    acceptButtons.forEach(function(btn) {
-        btn.onclick = function() {
-            ajaxSetConsent('all', function() {
-                closeModal();
-                hideCookieBanner();
-            });
-        };
-    });
-    document.addEventListener('keydown', function(e) {
-        if (e.key === 'Escape') {
-            closeModal();
+    if( cookieLinks.length > 0 ){
+        for (let i = 0; i < cookieLinks.length; i++) {
+            cookieLinks[i].onclick = function(e) {
+                renderCookieList();
+            };
         }
-    });
+        document.getElementById('modal-close-btn').onclick = closeModal;
+
+        let acceptButtons = document.querySelectorAll('.accept-cookies');
+        acceptButtons.forEach(function(btn) {
+            btn.onclick = function() {
+                ajaxSetConsent('all', function() {
+                    closeModal();
+                    hideCookieBanner();
+                });
+            };
+        });
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                let modal = document.getElementById('cookieListModal');
+                if (modal && window.getComputedStyle(modal).display !== 'none') {
+                    closeModal();
+                }
+            }
+        });
+    }
 });
 /* Cookie banner */

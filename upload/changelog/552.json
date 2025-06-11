@@ -1,6 +1,6 @@
 {
   "version":"5.5.2",
-  "revision":"80",
+  "revision":"82",
   "status":"stable",
   "detail":[
     {
@@ -45,6 +45,7 @@
         ,"Implement account deletion <i>(#144, #599)</i>"
         ,"Implement cookies banner <i>(#312, #151)</i>"
         ,"Implement modern video style on channel page"
+        ,"Implement meta tags for social networks"
         ,"Update video & photos management pages display"
         ,"Update video edition display"
         ,"Hide banned users from channels page, search results & popular user"
@@ -77,6 +78,9 @@
         ,"Fix homepage popup video"
         ,"Fix channel videos style"
         ,"Fix TMDB import"
+        ,"Fix JS error when cookie banner was disabled"
+        ,"Fix pop-in closing with escape"
+        ,"Fix filter error on outdated DB"
       ]
     },
     {

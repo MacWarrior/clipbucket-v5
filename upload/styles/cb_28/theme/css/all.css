@@ -6965,7 +6965,7 @@ textarea#comment_box {
 /* Cookie banner */
 #cookie-banner.sticky {
   position: fixed;
-  bottom: 0;
+  margin-bottom: 0;
   width: 100%;
   z-index: 10;
 }
