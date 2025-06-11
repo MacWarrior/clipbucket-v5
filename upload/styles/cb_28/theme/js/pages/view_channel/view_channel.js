@@ -273,7 +273,7 @@ function eventFriendButton() {
         }
         if (to_sent) {
             $.ajax({
-                url: baseurl + "manage_contacts.php",
+                url: baseurl + "actions/manage_contacts.php",
                 type: "POST",
                 data: {mode: mode, friend_id: friend_id},
                 dataType: 'json',
@@ -281,6 +281,10 @@ function eventFriendButton() {
                     hideSpinner();
                     $('.friend-block').html(result.template);
                     $(result.msg).insertAfter('#header').fadeIn('slow').delay(3000).fadeOut();
+                    if (!result.can_subscribe) {
+                        $('.subs_' + friend_id).hide().prop('disabled', true);
+                    }
+                    $('#user_subscribers_' + friend_id).html(result.nb_subscribers);
                     eventFriendButton();
                 },
             });

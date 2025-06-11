@@ -241,5 +241,5 @@
     var photo_extensions = "{ClipBucket::getInstance()->get_extensions('photo')}";
     var ids_to_check_progress = JSON.parse('{$ids_to_check_progress}');
     var display_type = "{$display_type}"
-    var lang_confirm_unfriend = '{lang('confirm_unfriend', $user['username'])}';
+    var lang_confirm_unfriend = '{lang('confirm_unfriend', display_clean($user['username']))}';
 </script>

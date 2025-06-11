@@ -1935,8 +1935,15 @@ class userquery extends CBCategory
             Clipbucket_db::getInstance()->execute('DELETE FROM ' . tbl($this->dbtbl['contacts']) . " WHERE 
                         (userid='$user_id' AND contact_userid='$friend_id') OR (userid='$friend_id' AND contact_userid='$user_id')");
             //get sub for friend
-            $this->unsubscrib_no_friends($user_id);
             if (!$delete_request) {
+                $user_profile = $this->get_user_profile($user_id);
+                if ($user_profile['allow_subscription'] == 'no') {
+                    $this->unsubscrib_no_friends($user_id);
+                }
+                $friend_profile = $this->get_user_profile($friend_id);
+                if ($friend_profile['allow_subscription'] == 'no') {
+                    $this->unsubscrib_no_friends($friend_id);
+                }
                 e(lang('user_removed_from_contact_list'), 'm');
             } else {
                 e(lang('request_has_been_canceled'), 'm');
@@ -1947,12 +1954,21 @@ class userquery extends CBCategory
 
     function unsubscrib_no_friends($user_id)
     {
-        $sql = 'DELETE FROM `'.tbl('subscriptions').'` AS S 
-        WHERE S.subscribed_to = '.mysql_clean($user_id).' AND S.userid NOT IN (
+
+        $sql = 'select * FROM `'.tbl('subscriptions').'`
+        WHERE subscribed_to = '.mysql_clean($user_id).' AND userid NOT IN (
             SELECT userid FROM cb_contacts WHERE contact_userid = '.mysql_clean($user_id).'
         );';
-        Clipbucket_db::getInstance()->execute($sql);
+        $res = Clipbucket_db::getInstance()->_select($sql);
+        foreach ($res as $subscription) {
+            Clipbucket_db::getInstance()->delete(tbl('subscriptions'), ['subscription_id'], [$subscription['subscription_id']]);
+            Clipbucket_db::getInstance()->update(tbl($this->dbtbl['users']), ['subscribers'],
+                [$this->get_user_subscribers($subscription['subscribed_to'], true)], " userid=".$subscription['subscribed_to']);
+        }
+        Clipbucket_db::getInstance()->update(tbl($this->dbtbl['users']), ['total_subscriptions'],
+            [$this->get_user_subscriptions($user_id, 'count')], " userid=".$user_id);
     }
+
 
     /**
      * Function used to increas user total_watched field
