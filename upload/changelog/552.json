@@ -1,6 +1,6 @@
 {
   "version":"5.5.2",
-  "revision":"81",
+  "revision":"82",
   "status":"stable",
   "detail":[
     {
@@ -45,6 +45,7 @@
         ,"Implement account deletion <i>(#144, #599)</i>"
         ,"Implement cookies banner <i>(#312, #151)</i>"
         ,"Implement modern video style on channel page"
+        ,"Implement meta tags for social networks"
         ,"Update video & photos management pages display"
         ,"Update video edition display"
         ,"Hide banned users from channels page, search results & popular user"
