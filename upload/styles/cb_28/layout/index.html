@@ -184,9 +184,9 @@
         //close popup when clicking the esc keyboard button
         $(document).keydown(function (event) {
             if (event.which == '27') {
-                var video_player = _cb.getPlayerEl($(".my-modal-content").attr('id'));
+                let video_player = _cb.getPlayerEl($(".my-modal-content").attr('id'));
 
-                if (!$(video_player).hasClass('vjs-fullscreen')) {
+                if (video_player && !$(video_player).hasClass('vjs-fullscreen')) {
                     $('.cd-popup').removeClass('is-visible');
                     videojs($('.my-modal-content').find('video')[0]).dispose();
                     $(".my-modal-content").html('');

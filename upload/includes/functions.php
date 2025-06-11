@@ -1984,7 +1984,7 @@ function sort_link($data, $mode, $type): string
     if (isset($_GET['sort'])) {
         $sort = $_GET['sort'];
     } else {
-        if (!Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '299')) {
+        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '299')) {
             $sort = SortType::getDefaultByType($type)['id'];
         } else {
             $sort = 0;
