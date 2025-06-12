@@ -4,25 +4,26 @@ define('PARENT_PAGE', 'channels');
 
 require 'includes/config.inc.php';
 
-User::getInstance()->isUserConnectedOrRedirect();
-
-if( !isSectionEnabled('channels') || (!User::getInstance()->hasPermission('view_channel') && (!User::getInstance()->hasPermission('enable_channel_page') || User::getInstance()->get('disabled_channel') == 'yes') )) {
+if (!isSectionEnabled('channels') || User::getInstance()->get('disabled_channel') == 'yes') {
     redirect_to(cblink(['name' => 'my_account']));
 }
+User::getInstance()->hasPermissionOrRedirect('view_channel', true);
+User::getInstance()->hasPermissionOrRedirect('enable_channel_page', true);
 
 $udetails = userquery::getInstance()->get_user_details(user_id());
 assign('user', $udetails);
 assign('p', userquery::getInstance()->get_user_profile($udetails['userid']));
-
-$mode = $_GET['mode'];
-if ($mode = 'request' && isset($_GET['confirm'])) {
-    $confirm = mysql_clean($_GET['confirm']);
-    userquery::getInstance()->confirm_request($confirm);
-}
-
-if ($mode = 'delete' && isset($_GET['userid'])) {
-    $userid = mysql_clean($_GET['userid']);
-    userquery::getInstance()->remove_contact($userid);
+$friend_id = $_REQUEST['userid'];
+switch ($_REQUEST['mode']) {
+    case 'unfriend':
+        userquery::getInstance()->remove_contact($friend_id);
+        break;
+    case 'accept_request':
+        userquery::getInstance()->confirm_request($friend_id);
+        break;
+    case 'cancel_request':
+        userquery::getInstance()->remove_contact($friend_id, User::getInstance()->getCurrentUserID(), true);
+        break;
 }
 
 assign('mode', 'manage');

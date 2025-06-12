@@ -1300,21 +1300,17 @@
 			curObj = this;
 			$('#'+result_cont).css('display','block').html(this.loading);
 
-			$.post(page,
-				{
-					mode : 'add_friend',
-					uid : uid
-				}
-				,function(data)
-				{
+			$.post(page
+				, {mode : 'add_friend', uid : uid}
+				,function(data) {
 					if(!data){
 						alert('No data');
 					} else {
-						$('#'+result_cont).css('display','none');
-						curObj.showMeTheMsg(data);
+						$('#'+result_cont).html(data['html']);
+						curObj.showMeTheMsg(data['msg']);
 					}
 				}
-				,'text'
+				,'json'
 			);
 		};
 
