@@ -52,21 +52,9 @@ document.addEventListener('DOMContentLoaded', function () {
                     }
                 }
 
-                if (Array.isArray(data.parents)) {
+                if (data.parents) {
                     const parentSelect = document.querySelector('#collection_id_parent');
-                    parentSelect.innerHTML = '';
-                    data.parents.forEach(function (parent) {
-                        const option = document.createElement('option');
-                        option.value = parent.id;
-                        option.innerHTML = parent.name;
-                        if (parent.id === null || parent.id === 'null') {
-                            parentSelect.insertBefore(option, parentSelect.firstChild);
-                        } else {
-                            parentSelect.appendChild(option);
-                        }
-                    });
-                    const firstOption = parentSelect.querySelector('option');
-                    if (firstOption) parentSelect.value = firstOption.value;
+                    parentSelect.innerHTML = data.parents;
                 }
             })
             .catch(error => console.error(error))
