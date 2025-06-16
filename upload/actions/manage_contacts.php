@@ -38,7 +38,7 @@ if (!isSectionEnabled('channels') || (!User::getInstance()->hasPermission('view_
             break;
     }
     /** updated data */
-    $friend_details_new = User::getInstance()->getOne(['userid' => mysql_clean($_POST['friend_id'])]);
+    $friend_details_new = User::getInstance()->getOne(['userid' => $_POST['friend_id']]);
     $return['can_subscribe'] = ($friend_details_new['allow_subscribe'] == 'yes' || userquery::getInstance()->is_friend($friend_id, User::getInstance()->getCurrentUserID()));
     $return['nb_subscribers'] = $friend_details_new['subscribers'];
 }
