@@ -1,6 +1,6 @@
 {
   "version":"5.5.2",
-  "revision":"82",
+  "revision":"83",
   "status":"stable",
   "detail":[
     {
@@ -113,9 +113,10 @@
     {
       "title": "Installation & Update",
       "description": [
-        "Fix new installation errors <i>(#592)</i>"
+        "Update default config"
+        ,"Fix new installation errors <i>(#592)</i>"
         ,"Fix revision 5.5.1 - #334 DB upgrade"
-        ,"Update default config"
+        ,"Fix possible discord error during installation process"
       ]
     },
     {
