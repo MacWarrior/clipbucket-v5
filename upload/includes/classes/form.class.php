@@ -522,7 +522,7 @@ class formObj
         }
 
         if (!empty($field['class'])) {
-            $select .= ' class="' . $field['class'] . '"';
+            $select .= ' class="' . $field['class'] . ' select2"';
         }
 
         if (!empty($field['disabled'])) {
@@ -534,7 +534,11 @@ class formObj
             $hidden = '<input type="hidden" name="' . $field_name . '" value="' . $field['checked'] . '">';
         }
 
-        $ddFieldStart = '<select name=\'' . $field_name . '\'' . $select . ' ' . $field['extra_tags'] . ' >';
+        $required = '';
+        if (!empty($field['required']) ) {
+            $required = ' required ';
+        }
+        $ddFieldStart = '<select name=\'' . $field_name . '\'' . $select . ' ' . $field['extra_tags'] . ' '. $required. ' >';
         $arrayName = $this->rmBrackets($field['name']);
         if (is_string($field['value'])) {
             $field['value'] = explode(',', $field['value']);
@@ -569,7 +573,7 @@ class formObj
             }
         }
         if (!empty($field['null_option'])) {
-            $fieldOptsNull = '<option value="null" ' . (!$is_checked? ' selected ' : '') . '>' . $field['null_option'] . '</option>';
+            $fieldOptsNull = '<option value="null" ' . (!$is_checked? ' selected ' : '') . ' '.($field['null_option_disabled'] ? ' disabled="disabled" ':'').' >' . $field['null_option'] . '</option>';
         }
         $fieldOpts = $fieldOptsNull . $fieldOpts;
         $ddFieldEnd = '</select>';

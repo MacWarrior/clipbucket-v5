@@ -1937,7 +1937,10 @@ class CBPhotos
                 'type'        => 'dropdown_group',
                 'value'       => $cl_array,
                 'checked'     => $collection,
-                'invalid_err' => lang('collection_not_found')
+                'invalid_err' => lang('collection_not_found'),
+                'required'    => 'yes',
+                'null_option' => ' ',
+                'null_option_disabled' => true,
             ]
         ];
     }
@@ -2407,10 +2410,12 @@ class CBPhotos
                                 e(lang('collection_not_found'), 'w');
                             } elseif ($cid != $array['collection_id']) {
                                 $photo_detail = Photo::getInstance()->getOne(['photo_id'=>$pid]);
-                                Collections::getInstance()->deleteItemFromCollections($pid);
-                                $thumb = Collection::assignDefaultThumb($photo_detail['collection_id']);
-                                if (empty($thumb)) {
-                                    Collection::getInstance()->setDefautThumb(0, $photo_detail['collection_id']);;
+                                if (!empty($photo_detail['collection_id'])) {
+                                    Collections::getInstance()->deleteItemFromCollections($pid);
+                                    $thumb = Collection::assignDefaultThumb($photo_detail['collection_id']);
+                                    if (empty($thumb)) {
+                                        Collection::getInstance()->setDefautThumb(0, $photo_detail['collection_id']);
+                                    }
                                 }
                                 Collection::getInstance()->addCollectionItem($pid, $array['collection_id'], 'photos');
                             }
