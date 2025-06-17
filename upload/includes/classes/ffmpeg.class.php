@@ -1296,4 +1296,41 @@ class FFMpeg
 
         return $cmd;
     }
+
+    public static function isValidWebVTT(string $filepath): bool
+    {
+        if (!file_exists($filepath)) {
+            return false;
+        }
+
+        $lines = file($filepath, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+        if (count($lines) === 0 || !preg_match('/^WEBVTT(\s|$)/', $lines[0])) {
+            return false;
+        }
+
+        foreach ($lines as $line) {
+            // Vérifie la ligne de timecode
+            if (preg_match('/^(\d{2}:)?\d{2}:\d{2}\.\d{3} --> (\d{2}:)?\d{2}:\d{2}\.\d{3}/', $line)) {
+                return true; // au moins un bloc trouvé → format valide
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * @param string $filepath
+     * @return bool
+     */
+    public static function isValidWebVTTWithFFmpeg(string $filepath): bool
+    {
+        if (!self::isValidWebVTT($filepath)) {
+            return false;
+        }
+
+        $cmd = escapeshellcmd(config('ffmpegpath') ." -v error -i " . escapeshellarg($filepath) . " -f " . config('subtitle_format')." - 2>&1");
+        $output = shell_exec($cmd);
+
+        return empty($output);
+    }
 }

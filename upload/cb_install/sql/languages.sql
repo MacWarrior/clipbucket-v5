@@ -1609,4 +1609,12 @@ VALUES ('admin_setting'),
        ('option_max_collection_categories_hint'),
        ('channel_video_style'),
        ('request_has_been_canceled'),
-       ('confirm_unfriend');
+       ('confirm_unfriend'),
+       ('file'),
+       ('submit'),
+       ('invalid_subtitle_file'),
+       ('invalid_subtitle_extension'),
+       ('subtitle_uploaded_successfully'),
+       ('file_size_exceeded'),
+       ('option_maximum_allowed_subtitle_size'),
+       ('option_can_upload_subtitles');

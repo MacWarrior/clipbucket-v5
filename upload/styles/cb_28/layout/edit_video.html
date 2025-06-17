@@ -280,6 +280,14 @@
                             </div>
                             {ANCHOR place="after_upload_form_sharing_fields"}
 
+                            {if config('player_subtitles') && (!empty($subtitle_list) || config('can_upload_subtitles')=='yes')}
+                                <div class="formSection clear">
+                                    <h4>{lang code='video_subtitle_management'}<i class="glyphicon glyphicon-chevron-down pull-right"></i></h4>
+                                    <div class="sectionContent hidden" id="subtitiles">
+                                        {include file="$style_dir/blocks/subtitle_list.html"}
+                                    </div>
+                                </div>
+                            {/if}
                             {ANCHOR place="before_upload_form_submit"}
                             <div align="right">
                                 <button name="update_video" id="button" value="submit" class="btn btn-primary">{lang code='update_video'}</button>
@@ -287,7 +295,6 @@
                             {ANCHOR place="after_upload_form_submit"}
                         </form>
                     </div>
-
                 </div>
             </div>
         </div>
@@ -298,5 +305,4 @@
 <script>
     var videoid = '{$v.videoid}';
     var available_tags = JSON.parse('{$available_tags|json_encode|replace:"'": "\'"}');
-    var videoid = '{$v.videoid}';
 </script>

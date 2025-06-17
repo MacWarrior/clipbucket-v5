@@ -329,6 +329,23 @@ function get_video_subtitles($vdetails)
 }
 
 /**
+ * @param int $videoid
+ * @return string|bool
+ * @throws Exception
+ */
+function get_video_subtitle_last_num(int $videoid): string|bool
+{
+    if (empty($videoid)) {
+        return false;
+    }
+    $results = Clipbucket_db::getInstance()->select(tbl('video_subtitle'), 'MAX(number) as number', 'videoid=' . $videoid);
+    if (empty($results)) {
+        return '00';
+    }
+    return $results[0]['number'];
+}
+
+/**
  * function used to get default thumb of ClipBucket
  */
 function default_thumb($return_type = 'url'): string

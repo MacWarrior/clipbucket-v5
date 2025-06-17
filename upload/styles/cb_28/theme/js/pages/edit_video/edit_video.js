@@ -174,3 +174,28 @@ function showSpinner() {
 function hideSpinner() {
     $('.taskHandler').hide();
 }
+
+function editTitle(number) {
+    $('#buttons-' + number).css('display', 'inline');
+    $('#edit_sub_' + number).css('display', 'inline');
+    $('#span_sub_' + number).hide();
+}
+
+function cancelEditTitle(number) {
+    $('#buttons-' + number).hide();
+    $('#edit_sub_' + number).hide();
+    $('#span_sub_' + number).show();
+}
+function saveSubtitle(number) {
+    $.ajax({
+        url: baseurl+"actions/subtitle_edit.php",
+        type: "POST",
+        data: {title: $('#edit_sub_' + number).val(), videoid: videoid, number: number},
+        dataType: 'json',
+        success: function (result) {
+            $('#subtitiles').html(result['template']);
+            $('.close').click();
+            $('.page-content').prepend(result['msg']);
+        }
+    });
+}

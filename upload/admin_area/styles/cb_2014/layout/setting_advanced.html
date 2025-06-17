@@ -145,7 +145,28 @@
                                 </div>
                             </div>
                             <hr/>
-
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <label class="nowrap" for="maximum_allowed_subtitle_size" title="{lang('option_maximum_allowed_subtitle_size')}">{lang('option_maximum_allowed_subtitle_size')}</label>
+                                </div>
+                                <div class="col-md-6 ">
+                                    <div class="input-group">
+                                        <input value="{$row.maximum_allowed_subtitle_size}" name="maximum_allowed_subtitle_size" id="maximum_allowed_subtitle_size" class="form-control" size="45"/>
+                                        <span class="input-group-addon" title="{lang('in_x',lang('mb'))}">{lang code='mb'}</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <hr/>
+                            <div class="row">
+                                <div class="col-md-8">
+                                    <label class="nowrap" for="can_upload_subtitles" title="{lang('option_can_upload_subtitles')}">{lang('option_can_upload_subtitles')}</label>
+                                </div>
+                                <div class="col-md-4 ">
+                                    <input value="yes" name="can_upload_subtitles" id="can_upload_subtitles" {if $row.can_upload_subtitles=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+                                    <span class="lbl"></span>
+                                </div>
+                            </div>
+                            <hr/>
                         </div>
                         <div class="col-md-4">
                             <div class="row">
