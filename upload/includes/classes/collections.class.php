@@ -216,6 +216,7 @@ class Collection
     public function getAll(array $params = [])
     {
         $param_collection_id = $params['collection_id'] ?? false;
+        $param_not_collection_id = $params['not_collection_id'] ?? false;
         $param_collection_id_parent = $params['collection_id_parent'] ?? false;
         $param_category = $params['category'] ?? false;
         $param_userid = $params['userid'] ?? false;
@@ -233,6 +234,7 @@ class Collection
         $param_join_flag =$params['join_flag'] ?? false;
         $param_order_item = $params['order_item'] ?? false;
         $param_can_upload = $params['can_upload'] ?? false;
+        $param_display_indent = $params['display_indent'] ?? false;
 
         $param_condition = $params['condition'] ?? false;
         $param_limit = $params['limit'] ?? false;
@@ -251,6 +253,9 @@ class Collection
         $conditions = [];
         if( $param_collection_id !== false ){
             $conditions[] = $this->getTableName() . '.collection_id = '.(int)$param_collection_id;
+        }
+        if( $param_not_collection_id !== false ){
+            $conditions[] = $this->getTableName() . '.collection_id != '.(int)$param_collection_id;
         }
         if( $param_userid ){
             $conditions[] = $this->getTableName() . '.userid = '.(int)$param_userid;
@@ -386,6 +391,11 @@ class Collection
                 $select[] = ' sorts.id as sort_type ';
                 $join[] = 'LEFT JOIN ' . cb_sql_table('sorts') . ' ON sorts.id = collections.sort_type';
             }
+
+            if ($param_display_indent && User::getInstance()->isUserConnected()) {
+                $select[] = 'CASE WHEN '.$this->getTableName().'.userid = '.mysql_clean(User::getInstance()->getCurrentUserID()).' THEN 1 ELSE 0 END AS is_user_collection';
+                $select[] = 'CASE WHEN '.$this->getTableName().'.userid IN (SELECT contact_userid FROM '.tbl('contacts').' WHERE confirmed = \'yes\' AND userid = '.mysql_clean(User::getInstance()->getCurrentUserID()).' ) THEN 1 ELSE 0 END AS is_contact_collection';
+            }
         }
 
         if (config('hide_empty_collection') == 'yes' && $param_hide_empty_collection !== 'no' && !User::getInstance()->hasAdminAccess()) {
@@ -443,7 +453,13 @@ class Collection
         }
 
         $order = '';
-        if (!empty($order_search)) {
+        if($param_display_indent && !$param_count){
+            $order = ' ORDER BY ';
+            if( User::getInstance()->isUserConnected() ){
+                $order .= 'is_user_collection DESC, is_contact_collection DESC,';
+            }
+            $order .= 'collection_id ASC';
+        } elseif (!empty($order_search)) {
             $order = $order_search;
         } elseif ($param_order && !$param_count) {
             $order = ' ORDER BY ' . $param_order;
@@ -834,21 +850,54 @@ class Collection
      * @return array
      * @throws Exception
      */
-    public function getAllIndent(array $params = []): array
+    public function getAllIndent(array $params = [], $level = 0, $display_group = false): array
     {
         $indentList = [];
+        $last_user = '';
         if (empty($params['collection_id_parent'])) {
             $params['collection_id_parent'] = 0;
         }
+        $params['display_indent'] = true;
         $parents = $this->getAll($params);
 
-        foreach ($parents as $parent) {
-            $indentList[] = $parent;
+        foreach ($parents as &$parent) {
+            $display_user = '';
+            if (User::getInstance()->getCurrentUserID() != $parent['userid'] && !empty($last_user)) {
+                $display_user = $last_user . ': ';
+            }
+            if ($level == 0) {
+                if ($parent['is_user_collection'] == 1) {
+                    $group = 'my_collections';
+                } elseif ($parent['is_contact_collection'] == 1) {
+                    $group = 'my_friends_collections';
+                } else {
+                    $group = 'public_collections';
+                }
+                if ($parent['user_username'] != $last_user && $parent['is_user_collection'] == 0) {
+                    $last_user = $parent['user_username'];
+                }
+            }
+            if (User::getInstance()->getCurrentUserID() != $parent['userid'] && !empty($last_user)) {
+                $display_user = $last_user . ': ';
+            }
+            if ($level == 0) {
+                $parent['collection_name'] = $display_user . $parent['collection_name'];
+            }
+            if ($display_group && $level==0 && !empty($group)) {
+                $indentList[$group][] = $parent;
+            } else {
+                $indentList[] = $parent;
+            }
+
             $params['collection_id_parent'] = $parent['collection_id'];
-            $children = $this->getAllIndent($params);
+            $children = $this->getAllIndent($params, $level + 1);
             foreach ($children as &$child) {
-                $child['collection_name'] = '&nbsp&nbsp&nbsp' . $child['collection_name'];
-                $indentList[] = $child;
+                $child['collection_name'] = $display_user . '&nbsp&nbsp&nbsp' . $child['collection_name'];
+                if ($level == 0 && $display_group) {
+                    $indentList[$group][] = $child;
+                } else {
+                    $indentList[] = $child;
+                }
             }
         }
         return $indentList;
@@ -857,10 +906,8 @@ class Collection
     /**
      * @throws Exception
      */
-    public function getAvailableParents($collection_id, $type): array
+    public function getAvailableParents($collection_id, $type, $display_group = false): array
     {
-        $list_parent_categories = ['null' => lang('collection_no_parent')];
-
         $params = [
             'type'   => $type,
             'userid' => user_id()
@@ -869,15 +916,22 @@ class Collection
         if (!empty($collection_id)) {
             $params['condition'] = ' collections.collection_id != ' . mysql_clean($collection_id);
         }
-        $collection_list = Collection::getInstance()->getAllIndent($params);
-        $list_parent_categories += array_combine(
-            array_column($collection_list, 'collection_id') ,
-            array_column($collection_list,'collection_name')
-        );
-        return $list_parent_categories;
+        $collection_list = Collection::getInstance()->getAllIndent($params, display_group: $display_group);
+        $list_collection_display=[];
+        if (!$display_group) {
+            $list_collection_display = array_combine(
+                array_column($collection_list, 'collection_id') ,
+                array_column($collection_list,'collection_name')
+            );
+        } else {
+            foreach ($collection_list as $group => $collection) {
+                $list_collection_display[$group] = CBPhotos::getInstance()->parse_array($collection);
+            }
+        }
+
+        return $list_collection_display;
     }
 }
-
 
 class Collections extends CBCategory
 {
@@ -1334,59 +1388,6 @@ class Collections extends CBCategory
         return false;
     }
 
-    /**
-     * @throws Exception
-     */
-    public function get_collections_list(int $level = 0, $collection_id = null, $exclude_id = null, $type = null, $userid = null): array
-    {
-        $data = [];
-
-        if( Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.0', '43') ){
-            if ($level == 0 && is_null($collection_id)) {
-                $cond = ' C.collection_id_parent IS NULL';
-            } else {
-                $cond = ' C.collection_id_parent = ' . mysql_clean($collection_id);
-            }
-        } else {
-            $cond = ' 1=1';
-        }
-
-        if (!is_null($exclude_id)) {
-            $cond .= ' AND C.collection_id != ' . mysql_clean($exclude_id);
-        }
-
-        if (!is_null($type) && Collection::getInstance()->isValidType($type)) {
-            $cond .= ' AND C.type = \'' . mysql_clean($type) . '\'';
-        }
-
-        if (!is_null($userid) && !User::getInstance()->hasAdminAccess()) {
-            $cond .= ' AND (C.userid = ' . mysql_clean($userid) . ' OR (broadcast = \'public\' AND public_upload = \'yes\') )';
-        }
-        if (!empty ($cond)) {
-            $cond .= ' GROUP BY C.collection_id';
-        } else {
-            $cond = ' 1 GROUP BY C.collection_id';
-        }
-        $collections_parent = Clipbucket_db::getInstance()->select(tbl($this->section_tbl) . ' C  
-            LEFT JOIN ' . tbl($this->items) . ' citem ON C.collection_id = citem.collection_id'
-            , 'C.*, COUNT(DISTINCT citem.ci_id) AS total_objects'
-            , $cond);
-
-        foreach ($collections_parent as $col_parent) {
-            $space = '';
-            if (config('enable_sub_collection') == 'yes') {
-                $space = str_repeat('&nbsp;', $level * 3);
-            }
-            $data[$col_parent['collection_id']]['name'] = $space . display_clean($col_parent['collection_name']);
-            $data[$col_parent['collection_id']]['count'] = $col_parent['total_objects'];
-            $collections_children = $this->get_collections_list(($level + 1), $col_parent['collection_id'], $exclude_id, $type, $userid);
-            foreach ($collections_children as $col_id => $col_name) {
-                $data[$col_id] = $col_name;
-            }
-        }
-
-        return $data;
-    }
 
     /**
      * Function used to load collections fields
@@ -1493,17 +1494,17 @@ class Collections extends CBCategory
                 $data['type']['disabled'] = true;
                 $data['type']['input_hidden'] = true;
             }
-            $list_parent_categories = Collection::getInstance()->getAvailableParents($collection_id, $default['type'] ?? array_keys($this->types)[0]);
-
+            $list_parent_categories = Collection::getInstance()->getAvailableParents($collection_id, ($default['type'] ?? array_keys($this->types)[0]), true);
             $data['parent'] = [
-                'title'    => lang('collection_parent'),
-                'type'     => 'dropdown',
-                'name'     => 'collection_id_parent',
-                'id'       => 'collection_id_parent',
-                'value'    => $list_parent_categories,
-                'db_field' => 'collection_id_parent',
-                'required' => 'yes',
-                'checked'  => $collection_id_parent
+                'title'       => lang('collection_parent'),
+                'type'        => 'dropdown_group',
+                'name'        => 'collection_id_parent',
+                'id'          => 'collection_id_parent',
+                'value'       => $list_parent_categories,
+                'db_field'    => 'collection_id_parent',
+                'required'    => 'yes',
+                'checked'     => $collection_id_parent,
+                'null_option' => lang('collection_no_parent')
             ];
         }
 
@@ -2384,7 +2385,7 @@ class Collections extends CBCategory
         if ($old == 0 || $old == null) {
             $this->add_collection_item($obj, $new);
         } else {
-            Clipbucket_db::getInstance()->update(tbl($this->items), ['collection_id'], [$new], ' collection_id = ' . $old . ' AND type = \'' . $this->objType . '\' AND object_id = ' . $obj);
+            Clipbucket_db::getInstance()->update(tbl($this->items), ['collection_id'], [$new], ' collection_id = ' . $old . ' AND type = \'' . $this->objTable . '\' AND object_id = ' . $obj);
         }
     }
 
