@@ -1,6 +1,6 @@
 {
   "version":"5.5.2",
-  "revision":"84",
+  "revision":"85",
   "status":"stable",
   "detail":[
     {
@@ -47,6 +47,7 @@
         ,"Implement modern video style on channel page"
         ,"Implement meta tags for social networks"
         ,"Refactor friends requests & management"
+        ,"Refactor collection selections"
         ,"Update video & photos management pages display"
         ,"Update video edition display"
         ,"Hide banned users from channels page, search results & popular user"
@@ -82,6 +83,7 @@
         ,"Fix JS error when cookie banner was disabled"
         ,"Fix pop-in closing with escape"
         ,"Fix filter error on outdated DB"
+        ,"Fix orphan photo saving"
       ]
     },
     {
