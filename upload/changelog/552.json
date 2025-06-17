@@ -1,6 +1,6 @@
 {
   "version":"5.5.2",
-  "revision":"82",
+  "revision":"84",
   "status":"stable",
   "detail":[
     {
@@ -46,6 +46,7 @@
         ,"Implement cookies banner <i>(#312, #151)</i>"
         ,"Implement modern video style on channel page"
         ,"Implement meta tags for social networks"
+        ,"Refactor friends requests & management"
         ,"Update video & photos management pages display"
         ,"Update video edition display"
         ,"Hide banned users from channels page, search results & popular user"
@@ -113,9 +114,10 @@
     {
       "title": "Installation & Update",
       "description": [
-        "Fix new installation errors <i>(#592)</i>"
+        "Update default config"
+        ,"Fix new installation errors <i>(#592)</i>"
         ,"Fix revision 5.5.1 - #334 DB upgrade"
-        ,"Update default config"
+        ,"Fix possible discord error during installation process"
       ]
     },
     {

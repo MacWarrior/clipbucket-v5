@@ -1,95 +1,75 @@
 <div id="messageFav" class="channel-alert"></div>
 <div class="cover" id="coverContainer">
-	<div class="cover-holder clearfix">
-		<img class="img-responsive cb-live-background" src="{if $backgroundPhoto != ''}{$backgroundPhoto}{else}{DirPath::getUrl('images')}background_default.jpg{/if}" alt="channel_banner"/>
-		
-		{if $user.userid == user_id()}
-		<a href="#" class="btn btn-sm changeCover" id="changeCover">
-			{lang code="update_cover"}<span class="icon-photo"></span>
-		</a>
-		{/if}
+    <div class="cover-holder clearfix">
+        <img class="img-responsive cb-live-background" src="{if $backgroundPhoto != ''}{$backgroundPhoto}{else}{DirPath::getUrl('images')}background_default.jpg{/if}" alt="channel_banner"/>
 
-		<div class="ratting-counts clearfix">
-			{if user_id() && $user.userid != user_id() && config('channel_rating') == '1' }
-			<div class="user-ratting" id="rating_container">
-				{show_video_rating rating=$p.rating ratings=$p.rated_by total='10' id=$user.userid type=user}
-			</div>
-			{/if}
-			<ul class="counters">
-			{if isSectionEnabled('videos') && User::getInstance($user.userid)->get('show_my_videos') == 'yes'}
-				<li>
-					<i class="icon-videos"></i>{prettyNum($user.total_videos)} &nbsp;<span>{lang code='videos'}</span>
-				</li>
-			{/if}
-			{if isSectionEnabled('photos') && User::getInstance($user.userid)->get('show_my_photos') == 'yes'}
-				<li>
-					<i class="icon-photos"></i>{prettyNum($user.total_photos)} &nbsp;<span>{lang code='photos'}</span>
-				</li>
-			{/if}
-				<li>
-					<i class="icon-views"></i>{prettyNum($user.profile_hits)} &nbsp;<span>{lang code='views'}</span>
-				</li>
-			{if User::getInstance($user.userid)->get('show_my_subscribers') == 'yes'}
-				<li>
-					<i class="icon-subscribers"></i><span id="user_subscribers_{$user.userid}">{prettyNum($user.subscribers)}</span> &nbsp;<span>{lang code='subscribers'}</span>
-				</li>
-			{/if}
-			</ul>
-		</div>
-		<div class="friend-block clearfix">
-			{if user_id() && $user.userid != user_id()}
-				{$friend_status = userquery::getInstance()->friendship_status(user_id(), $user.userid)}
-				{if $friend_status == "f"}
-				<a href="{$baseurl}manage_contacts.php?mode=delete&userid={$u.userid}" class="btn btn-danger btn-sm new1">
-					{lang code="unfriend"}
-				</a>
-				{elseif $friend_status == "r"}
-				<a href="{$baseurl}manage_contacts.php?mode=requests&confirm={$u.userid}" class="btn btn-primary btn-sm new1">
-					{lang code="accept_request"}
-				</a>
-				{elseif $friend_status == 's'}
-				<a href="{$baseurl}manage_contacts.php?mode=delete&userid={$u.userid}" class="btn btn-primary btn-sm new1">
-					{lang code="cancel_request"}
-				</a>
-				{else}
-				<a href="javascript:void(0);" class="btn btn-primary btn-sm new1"
-				   onclick="_cb.add_friendNew('{$user.userid}','result_cont')"> 
-					{lang code="add_as_friend"}
-				{/if}
-				</a>
-			{/if}
-		</div>
-	</div>
+        {if $user.userid == user_id()}
+            <a href="#" class="btn btn-sm changeCover" id="changeCover">
+                {lang code="update_cover"}<span class="icon-photo"></span>
+            </a>
+        {/if}
 
-	<div class="avatar">
-		<img class="img-responsive img-circle" src="{userquery::getInstance()->getUserThumb($user)}"/>
-	</div>
+        <div class="ratting-counts clearfix">
+            {if user_id() && $user.userid != user_id() && config('channel_rating') == '1' && User::getInstance($user.userid)->get('allow_ratings') == 'yes' }
+                <div class="user-ratting" id="rating_container">
+                    {show_video_rating rating=$p.rating ratings=$p.rated_by total='10' id=$user.userid type=user}
+                </div>
+            {/if}
+            <ul class="counters">
+                {if isSectionEnabled('videos') && User::getInstance($user.userid)->get('show_my_videos') == 'yes'}
+                    <li>
+                        <i class="icon-videos"></i>{prettyNum($user.total_videos)} &nbsp;<span>{lang code='videos'}</span>
+                    </li>
+                {/if}
+                {if isSectionEnabled('photos') && User::getInstance($user.userid)->get('show_my_photos') == 'yes'}
+                    <li>
+                        <i class="icon-photos"></i>{prettyNum($user.total_photos)} &nbsp;<span>{lang code='photos'}</span>
+                    </li>
+                {/if}
+                <li>
+                    <i class="icon-views"></i>{prettyNum($user.profile_hits)} &nbsp;<span>{lang code='views'}</span>
+                </li>
+                {if User::getInstance($user.userid)->get('show_my_subscribers') == 'yes'}
+                    <li>
+                        <i class="icon-subscribers"></i><span id="user_subscribers_{$user.userid}">{prettyNum($user.subscribers)}</span> &nbsp;<span>{lang code='subscribers'}</span>
+                    </li>
+                {/if}
+            </ul>
+        </div>
+        <div class="friend-block clearfix">
+            {include "./channel_add_friend.html"}
+        </div>
+    </div>
 
-	<div class="profile-buttons clearfix">
-		<h2 style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;max-width: 100%;">
-			{display_clean($user.username)}
-			{if Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.2', '37') && config('enable_channel_slogan') == 'yes' && !empty($p.profile_slogan)}
-				<span class="separator"> - </span><span title="{User::getClean($p.profile_slogan)}">{User::getClean($p.profile_slogan)|truncate:35}</span>
-			{/if}
-		</h2>
-		<div class="btn-holder">
-			{if user_id() && $user.userid != user_id()}
-				<button id="report-user" class="btn btn-default">{lang code="report_usr"}</button>
-			{/if}
-			{if user_id() && $user.userid != user_id()}
-				<a href="{$baseurl}private_message.php?mode=new_msg&to={display_clean($user.username)}" class="btn btn-default">
-					{lang code="user_send_message"}
-				</a>
-				{if userquery::getInstance()->is_subscribed($user.userid,user_id())}
-					<button class="btn btn-default subs_{$user.userid}" onclick="_cb.unsubscribeToChannel('{$user.userid}','unsubscribe_user');">
-						{lang code="unsubscribe"}
-					</button>
-				{else}
-					<button class="btn btn-default subs_{$user.userid}" onclick="_cb.subscribeToChannelNew('{$user.userid}','subscribe_user');">
-						{lang code="subscribe"}
-					</button>
-				{/if}
-			{/if}
-		</div>
-	</div>
+    <div class="avatar">
+        <img class="img-responsive img-circle" src="{userquery::getInstance()->getUserThumb($user)}"/>
+    </div>
+
+    <div class="profile-buttons clearfix">
+        <h2 style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;max-width: 100%;">
+            {display_clean($user.username)}
+            {if Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.2', '37') && config('enable_channel_slogan') == 'yes' && !empty($p.profile_slogan)}
+                <span class="separator"> - </span><span title="{User::getClean($p.profile_slogan)}">{User::getClean($p.profile_slogan)|truncate:35}</span>
+            {/if}
+        </h2>
+        <div class="btn-holder">
+            {if user_id() && $user.userid != user_id()}
+                <button id="report-user" class="btn btn-default">{lang code="report_usr"}</button>
+            {/if}
+            {if user_id() && $user.userid != user_id()}
+                <a href="{$baseurl}private_message.php?mode=new_msg&to={display_clean($user.username)}" class="btn btn-default">
+                    {lang code="user_send_message"}
+                </a>
+                {if userquery::getInstance()->is_subscribed($user.userid,user_id())}
+                    <button class="btn btn-default subs_{$user.userid}" onclick="_cb.unsubscribeToChannel('{$user.userid}','unsubscribe_user');">
+                        {lang code="unsubscribe"}
+                    </button>
+                {elseif $p.allow_subscription == 'yes' or userquery::getInstance()->is_friend($user.userid, User::getInstance()->getCurrentUserID())}
+                    <button class="btn btn-default subs_{$user.userid}" onclick="_cb.subscribeToChannelNew('{$user.userid}','subscribe_user');">
+                        {lang code="subscribe"}
+                    </button>
+                {/if}
+            {/if}
+        </div>
+    </div>
 </div>

@@ -320,35 +320,6 @@ if (!empty($mode)) {
             }
             break;
 
-        case 'add_friend':
-            $friend = mysql_clean($_POST['uid']);
-            $userid = user_id();
-            $username = user_name();
-            $mailId = userquery::getInstance()->get_user_details($friend, false, true);
-            Email::send_friend_request($mailId['email'], $username);
-
-            if ($userid) {
-                userquery::getInstance()->add_contact($userid, $friend);
-                $error = errorhandler::getInstance()->get_error();
-                $warning = errorhandler::getInstance()->get_warning();
-                $message = errorhandler::getInstance()->get_message();
-
-                if ($error) {
-                    echo '<div class="error">' . $error[0]['val'] . '</div>';
-                } else {
-                    if ($warning) {
-                        echo '<div class="warning">' . $warning[0]['val'] . '</div>';
-                    } else {
-                        if ($message) {
-                            echo '<div class="msg">' . $message[0]['val'] . '</div>';
-                        }
-                    }
-                }
-            } else {
-                echo '<div class="error">' . lang('you_not_logged_in') . '</div>';
-            }
-            break;
-
         case 'ban_user':
             $user = $_POST['user'];
             userquery::getInstance()->ban_user($user);
