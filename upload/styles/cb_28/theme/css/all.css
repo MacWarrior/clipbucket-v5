@@ -823,10 +823,20 @@ h1 {
   margin: 0 -8px;
 }
 
-.videos .item-video,
+.videos .item-video:not(:has(.slider-video-container)),
 .featured-videos .item-video {
   padding: 0 8px;
   margin: 0 0 16px;
+}
+
+.videos .item-video:has(.slider-video-container) {
+  padding: 0;
+  margin: 0 0 5px;
+}
+
+.videos .item-video .slider-video-container{
+  width: -webkit-fill-available;
+  width: -moz-available;
 }
 
 .featured-videos .item-video .thumb-holder .video-link .title {
@@ -4547,6 +4557,10 @@ textarea#comment_box {
   background: #4caf50;
 }
 
+.cd-popup-trigger{
+  cursor: pointer;
+}
+
 .cd-popup {
   position: fixed;
   visibility: hidden;
@@ -6951,7 +6965,7 @@ textarea#comment_box {
 /* Cookie banner */
 #cookie-banner.sticky {
   position: fixed;
-  bottom: 0;
+  margin-bottom: 0;
   width: 100%;
   z-index: 10;
 }

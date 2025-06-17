@@ -3,8 +3,6 @@ define('THIS_PAGE', 'reports');
 
 require_once dirname(__FILE__, 2) . '/includes/admin_config.php';
 
-User::getInstance()->hasPermissionOrRedirect('admin_access', true);
-
 /* Generating breadcrumb */
 global $breadcrumb;
 $breadcrumb[0] = ['title' => lang('tool_box'), 'url' => ''];

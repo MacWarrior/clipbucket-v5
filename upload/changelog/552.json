@@ -1,6 +1,6 @@
 {
   "version":"5.5.2",
-  "revision":"73",
+  "revision":"85",
   "status":"stable",
   "detail":[
     {
@@ -33,6 +33,8 @@
         ,"Fix collection search"
         ,"Fix collection tags edition"
         ,"Fix server configuration warning when using Apache"
+        ,"Fix pages acces when updating from before 5.5.1 - #275"
+        ,"Fix TMDB import"
       ]
     },
     {
@@ -42,7 +44,12 @@
         ,"Implement channel slogan"
         ,"Implement account deletion <i>(#144, #599)</i>"
         ,"Implement cookies banner <i>(#312, #151)</i>"
+        ,"Implement modern video style on channel page"
+        ,"Implement meta tags for social networks"
+        ,"Refactor friends requests & management"
+        ,"Refactor collection selections"
         ,"Update video & photos management pages display"
+        ,"Update video edition display"
         ,"Hide banned users from channels page, search results & popular user"
         ,"Fix collection privacy on photos page"
         ,"Fix visual editor theme change <i>(#590)</i>"
@@ -69,6 +76,14 @@
         ,"Fix collection display"
         ,"Fix collection upload privacy setting"
         ,"Fix collection tags edition"
+        ,"Fix related videos channel link"
+        ,"Fix homepage popup video"
+        ,"Fix channel videos style"
+        ,"Fix TMDB import"
+        ,"Fix JS error when cookie banner was disabled"
+        ,"Fix pop-in closing with escape"
+        ,"Fix filter error on outdated DB"
+        ,"Fix orphan photo saving"
       ]
     },
     {
@@ -101,8 +116,10 @@
     {
       "title": "Installation & Update",
       "description": [
-        "Fix new installation errors <i>(#592)</i>"
+        "Update default config"
+        ,"Fix new installation errors <i>(#592)</i>"
         ,"Fix revision 5.5.1 - #334 DB upgrade"
+        ,"Fix possible discord error during installation process"
       ]
     },
     {

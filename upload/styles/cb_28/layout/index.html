@@ -56,7 +56,7 @@
                                 </div>
                             </section>
                         {else}
-                            {include file="$style_dir/blocks/default_slider.html"  home=true video_ratio=config('homepage_recent_video_ratio') video_style=config('homepage_recent_video_style') video_list=$recent_videos title={lang code="recent_videos"} main_link={cblink(['name' => 'videos'])} view_more=$view_more_recent}
+                            {include file="$style_dir/blocks/default_slider.html" home=true video_ratio=config('homepage_recent_video_ratio') video_style=config('homepage_recent_video_style') video_list=$recent_videos title={lang code="recent_videos"} main_link={cblink(['name' => 'videos'])} view_more=$view_more_recent}
                         {/if}
                     {/if}
                 {/if}
@@ -71,7 +71,7 @@
                         {if $collection.total_objects > config('list_home_collection_videos')}
                             {$view_more_collection = true}
                         {/if}
-                        {include file="$style_dir/blocks/default_slider.html"  home=true video_ratio=config('homepage_collection_video_ratio') video_style=config('homepage_collection_video_style') video_list=$collection.items title=$collection.collection_name main_link={Collections::getInstance()->collection_links($collection,'view')} view_more=$view_more_collection limit={config('list_home_collection_videos')}}
+                        {include file="$style_dir/blocks/default_slider.html" home=true video_ratio=config('homepage_collection_video_ratio') video_style=config('homepage_collection_video_style') video_list=$collection.items title=$collection.collection_name main_link={Collections::getInstance()->collection_links($collection,'view')} view_more=$view_more_collection limit={config('list_home_collection_videos')}}
                     {/foreach}
                 {/if}
                 {ANCHOR place='after_featured_collections'}
@@ -184,9 +184,9 @@
         //close popup when clicking the esc keyboard button
         $(document).keydown(function (event) {
             if (event.which == '27') {
-                var video_player = _cb.getPlayerEl($(".my-modal-content").attr('id'));
+                let video_player = _cb.getPlayerEl($(".my-modal-content").attr('id'));
 
-                if (!$(video_player).hasClass('vjs-fullscreen')) {
+                if (video_player && !$(video_player).hasClass('vjs-fullscreen')) {
                     $('.cd-popup').removeClass('is-visible');
                     videojs($('.my-modal-content').find('video')[0]).dispose();
                     $(".my-modal-content").html('');

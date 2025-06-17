@@ -2,7 +2,11 @@
 define('THIS_PAGE', 'advanced_settings');
 require_once dirname(__FILE__, 2) . '/includes/admin_config.php';
 
-User::getInstance()->hasPermissionOrRedirect('advanced_settings', true);
+$permission = 'advanced_settings';
+if( !Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '275') ){
+    $permission = 'web_config_access';
+}
+User::getInstance()->hasPermissionOrRedirect($permission,true);
 pages::getInstance()->page_redir();
 
 /* Generating breadcrumb */
@@ -39,7 +43,8 @@ if (isset($_POST['update'])) {
         'enable_chunk_upload',
         'photo_enable_nsfw_check',
         'video_enable_nsfw_check',
-        'store_guest_session'
+        'store_guest_session',
+
     ];
 
     $config_booleans_to_refactor = [
@@ -135,14 +140,13 @@ if (isset($_POST['update'])) {
         'thumb_background_color',
         'subtitle_format',
         'store_guest_session',
-        'cached_pagin_time',
         'photo_ratio',
         'photo_lar_width',
         'photo_crop',
         'photo_thumb_width',
         'photo_thumb_height',
         'photo_med_width',
-        'photo_med_height',
+        'photo_med_height'
     ];
 
     foreach (Upload::getInstance()->get_upload_options() as $optl) {

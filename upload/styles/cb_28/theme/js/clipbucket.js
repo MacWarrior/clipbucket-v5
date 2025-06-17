@@ -1300,21 +1300,17 @@
 			curObj = this;
 			$('#'+result_cont).css('display','block').html(this.loading);
 
-			$.post(page,
-				{
-					mode : 'add_friend',
-					uid : uid
-				}
-				,function(data)
-				{
+			$.post(page
+				, {mode : 'add_friend', uid : uid}
+				,function(data) {
 					if(!data){
 						alert('No data');
 					} else {
-						$('#'+result_cont).css('display','none');
-						curObj.showMeTheMsg(data);
+						$('#'+result_cont).html(data['html']);
+						curObj.showMeTheMsg(data['msg']);
 					}
 				}
-				,'text'
+				,'json'
 			);
 		};
 
@@ -1442,6 +1438,7 @@
 
 						$('.my-modal-content').attr('id',vData.videoid).html(data.video).promise().done(function(){
 							let videoplayer = $('.my-modal-content').find('video')[0];
+							$('.cd-popup').addClass('is-visible');
 
 							document.querySelector('.player-holder video').addEventListener( "loadedmetadata", function (e) {
 								adaptRatioPlayer();
