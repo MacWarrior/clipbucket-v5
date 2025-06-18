@@ -45,12 +45,12 @@
                         <div class="col-md-4">
                             <div class="row">
                                 <div class="col-md-10 col-md-offset-1 myWell">
-                                    <div class="col-md-{if $perm.permission_name == 'download_limit'}7{else}8{/if} paddingTop">
+                                    <div class="col-md-{if $perm.permission_name == 'download_speed_limit'}7{else}8{/if} paddingTop">
                                         <strong>{lang($perm.permission_name)}</strong><br/>
                                         <small><em>{lang($perm.permission_description)}</em></small>
                                     </div>
-                                    <div class="col-md-{if $perm.permission_name == 'download_limit'}5{else}4{/if}">
-                                        {if $perm.permission_name == 'download_limit'}
+                                    <div class="col-md-{if $perm.permission_name == 'download_speed_limit'}5{else}4{/if}">
+                                        {if $perm.permission_name == 'download_speed_limit'}
                                             <div class="input-group" style="padding-top: 10px;">
                                                 <input class="form-control" value="{$perm.permission_value}" name="permission_value[{$perm.id_user_levels_permission}]">
                                                 <span class="input-group-addon" title="{lang('in_x',lang('kbps'))}">{lang code='kbps'}</span>

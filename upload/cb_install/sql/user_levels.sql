@@ -47,7 +47,7 @@ VALUES (1, 3, 'admin_access', 'admin_access_desc'),
        (30, 4, 'enable_channel_page', 'enable_channel_page_desc'),
        (31, 3, 'email_template_management', 'email_template_management_desc'),
        (32, 3, 'advanced_settings', 'advanced_settings_desc'),
-       (33, 4, 'download_limit', 'download_limit_desc');
+       (33, 4, 'download_speed_limit', 'download_speed_limit_desc');
 
 INSERT INTO `{tbl_prefix}user_levels_permissions_values` (`user_level_id`, `id_user_levels_permission`, `permission_value`)
 VALUES (1, 1, 'yes'),

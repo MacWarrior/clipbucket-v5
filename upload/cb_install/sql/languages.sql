@@ -1613,6 +1613,6 @@ VALUES ('admin_setting'),
        ('my_collections'),
        ('my_friends_collections'),
        ('public_collections'),
-       ('download_limit'),
-       ('download_limit_desc'),
+       ('download_speed_limit'),
+       ('download_speed_limit_desc'),
        ('kbps');
