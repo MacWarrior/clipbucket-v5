@@ -1309,9 +1309,8 @@ class FFMpeg
         }
 
         foreach ($lines as $line) {
-            // Vérifie la ligne de timecode
             if (preg_match('/^(\d{2}:)?\d{2}:\d{2}\.\d{3} --> (\d{2}:)?\d{2}:\d{2}\.\d{3}/', $line)) {
-                return true; // au moins un bloc trouvé → format valide
+                return true;
             }
         }
 

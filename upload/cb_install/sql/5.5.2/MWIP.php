@@ -5,6 +5,9 @@ require_once \DirPath::get('classes') . DIRECTORY_SEPARATOR . 'migration' . DIRE
 
 class MWIP extends \Migration
 {
+    /**
+     * @throws \Exception
+     */
     public function start()
     {
         self::generateTranslation('upload_subtitles', [

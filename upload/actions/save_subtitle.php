@@ -29,7 +29,7 @@ if (pathinfo($_FILES['subtitles']['name'])['extension']!= 'srt') {
     e(lang('invalid_subtitle_file'));
     $success = false;
 } elseif ($_FILES['subtitles']['size'] >= (1024 * 1024 * config('maximum_allowed_subtitle_size')) ) {
-    e(lang('file_size_exceeded', config('maximum_allowed_subtitle_size').'Mo'));
+    e(lang('file_size_exceeded', config('maximum_allowed_subtitle_size') . lang('mb')));
     $success = false;
 } else {
     rename($_FILES['subtitles']['tmp_name'], $temp_file_path);
