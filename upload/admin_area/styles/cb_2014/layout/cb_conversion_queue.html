@@ -22,76 +22,12 @@
             </td>
             <td class="head">{lang code='details'}</td>
         </tr>
-
-
+        {assign var="ids_to_check" value=[]}
         {foreach from=$queues item=queue}
-            {$video = Video::getInstance()->getOne(['file_name'=>$queue.cqueue_name])}
-            <tr bgcolor="{$bgcolor}">
-                <td width="30">
-                    <input name="check_queue[]" type="checkbox" value="{$queue.cqueue_id}"/>
-                </td>
-                <td class="video_opt_td">
-                    {if $video}
-                        {lang|ucfirst code='video'} :
-                        {if User::getInstance()->hasPermission('video_moderation')}
-                        <a href="{DirPath::getUrl('admin_area')}edit_video.php?video={$video.videoid}" title="{display_clean($video.title)}">
-                            {display_clean($video.title|truncate:80)}
-                        </a>
-                        {else}
-                            <span title="{display_clean($video.title)}">{display_clean($video.title|truncate:80)}</span>
-                        {/if}
-                        <br/>
-                    {/if}
-                    {if User::getInstance()->hasPermission('video_moderation')}
-                    {lang code='conversion_log'} : <a href="{DirPath::getUrl('admin_area')}view_conversion_log.php?file_name={$queue.cqueue_name}" target="_blank">
-                        {$queue.cqueue_name}
-                    </a>
-                    {/if}
-                    <br>
-                    <span class="vdo_sets">
-                        <label class="label label-primary">
-                            File Type :<strong>{$queue.cqueue_ext}</strong>
-                        </label>
-                        <label class="label label-danger">
-                            Temp Ext :<strong>{$queue.cqueue_tmp_ext}</strong>
-                        </label>
-
-                        {if $video}
-                        <label class="label {if $video.status=='Successful'}label-success{else}label-warning{/if}">
-                            {lang code='vdo_status'} : {lang(strtolower($video.status))}
-                        </label>
-                        {else}
-                        <label class="label
-                            {if $queue.cqueue_conversion=='yes'}label-success{elseif $queue.cqueue_conversion=='no'}label-info{else}label-warning{/if}">Conversion Process :
-                            {if $queue.cqueue_conversion=='yes'}Proccessed{elseif $queue.cqueue_conversion=='no'}Pending{else}Processing{/if}
-                        </label>
-                        {/if}
-
-                        {if $queue.time_started}
-                            <label class="label label-info">
-                                Started :<strong>{"Y-m-d H:i:s"|date:$queue.time_started|niceTime}</strong>
-                            </label>
-                        {/if}
-
-                        {if $video.status|lower == 'processing' && Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '279')}
-                        <div class="col-md-4" style="float:right;">
-                            {lang code='ongoing_conversion'} :<br/>
-                            <div class="progress" style="margin-bottom:0;">
-                                <div class="progress-bar progress-bar-striped animate" role="progressbar" id="progress-bar" aria-valuenow="{$video.convert_percent}" aria-valuemin="0" aria-valuemax="100" style="width:{$video.convert_percent}%;">
-                                    {$video.convert_percent}%
-                                </div>
-                            </div>
-                        </div>
-                        {/if}
-
-                        {if $queue.time_completed}
-                            <label class="label label-default">
-                                Completed :<strong>{"Y-m-d H:i:s"|date:$queue.time_completed|niceTime}</strong>
-                            </label>
-                        {/if}
-                    </span>
-                </td>
+            <tr bgcolor="{$bgcolor}" data-id="{$queue.cqueue_id}">
+                {include file="$style_dir/blocks/cb_conversion_queue_line.html" scope=parent}
             </tr>
+            {assign var="video" value=null}
         {/foreach}
     </table>
 </form>
@@ -102,3 +38,6 @@
         <strong>No Conversion Queue File Found</strong>
     </div>
 {/if}
+<script>
+    var ids_to_check_progress = JSON.parse('{json_encode($ids_to_check)}');
+</script>
