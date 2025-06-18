@@ -638,10 +638,11 @@ if (!empty($mode)) {
             $collections = Collection::getInstance()->getAllIndent([
                 'type'       => 'photos',
                 'can_upload' => true
-            ]);
+            ], display_group: true);
             assign('collections', $collections);
             assign('selected', $insert_id);
             $response = templateWithMsgJson('blocks/collection_select_upload.html', false);
+            $response['photoForm'] = getTemplate('blocks/upload/photo_form.html');
             $response['success'] = (bool)$insert_id;
             echo json_encode($response);
             break;
