@@ -1,11 +1,9 @@
 <?php
 define('THIS_PAGE', 'myaccount');
 define('PARENT_PAGE', 'home');
-
 require 'includes/config.inc.php';
-User::getInstance()->isUserConnectedOrRedirect();
 
-global $cbvid, $cbphoto, $cbvideo;
+User::getInstance()->isUserConnectedOrRedirect();
 
 assign('user', userquery::getInstance()->get_user_details(user_id()));
 $videos = userquery::getInstance()->get_user_vids(user_id(), false, false, true);
@@ -22,14 +20,14 @@ Assign('ids_to_check_progress', json_encode($ids_to_check_progress));
 
 if (isset($_GET['delete_video'])) {
     $video = mysql_clean($_GET['delete_video']);
-    $cbvideo->delete_video($video);
+    CBvideo::getInstance()->delete_video($video);
 }
 $storage_use = null;
 if (config('enable_storage_history_fo') == 'yes') {
-    $storage_use = System::get_readable_filesize(User::getInstance()->getLastStorageUseByUser(user_id()), 2);
+    $storage_use = System::get_readable_filesize(User::getInstance()->getLastStorageUseByUser(), 2);
 }
 assign('storage_use', $storage_use);
-$favorites = User::getInstance()->getFavoritesVideos(user_id());
+$favorites = User::getInstance()->getFavoritesVideos();
 assign('favorites', $favorites);
 $current_membership = null;
 if (config('enable_membership') == 'yes') {

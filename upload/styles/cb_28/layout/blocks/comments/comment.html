@@ -11,14 +11,14 @@
 	<div class="reply-holder">
 		<div class="comments-box clearfix">
 			{$user_id = $comment.userid}
-			{$user=$userquery->get_user_details($user_id)}
+			{$user=userquery::getInstance()->get_user_details($user_id)}
 			<div class="comment-avatar">
 				<img src="{avatar details=$user}" alt="" class="reply_pic"/>
 			</div>
 			<div class="comment-info">
 				<strong class="commenter">
 			{if isSectionEnabled('channels')}
-				<a href="{$userquery->profile_link($video)}">
+				<a href="{userquery::getInstance()->profile_link($video)}">
 				{if $comment.anonym_name != ''}
 					{display_clean($comment.anonym_name)} ({lang code='guest'})
 				{else}
@@ -75,7 +75,7 @@
 					<div id="says_{$comment.comment_id}" speaker="{display_clean($comment.anonym_name)}"></div>
 					{else}
 						{if isSectionEnabled('channels')}
-							<a href="{$userquery->profile_link($comment.userid)}">{display_clean($comment.username)}</a>
+							<a href="{userquery::getInstance()->profile_link($comment.userid)}">{display_clean($comment.username)}</a>
 						{else}
 							{display_clean($comment.username)}
 						{/if}
@@ -121,7 +121,7 @@
 								{display_clean($comment.anonym_name)} ({lang code='guest'})
 							{else}
 								{if isSectionEnabled('channels')}
-									<a href="{$userquery->profile_link($reply.userid)}">{display_clean($reply.username)}</a>
+									<a href="{userquery::getInstance()->profile_link($reply.userid)}">{display_clean($reply.username)}</a>
 								{else}
 									{display_clean($reply.username)}
 								{/if}

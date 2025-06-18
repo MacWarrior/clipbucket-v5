@@ -3,7 +3,7 @@
         <div class="navbar-header pull-left">
             <div class="logoContainer clearfix">
                 <a href="{DirPath::getUrl('admin_area')}">
-                    <img class="pull-left" src="{get_website_logo_path()}" height="45px">
+                    <img class="pull-left" src="{get_website_logo_path()}" height="45px"/>
                 </a>
             </div>
         </div>
@@ -119,14 +119,14 @@
                             <li class="dropdown-header">
                                 <form id="display_opts" name="display_opts" method="post">
                                     Results Per Page :
-                                    <input name="admin_pages" type="text" style="width:50px;" value="{$Cbucket->configs.admin_pages}"/>
+                                    <input name="admin_pages" type="text" style="width:50px;" value="{ClipBucket::getInstance()->configs.admin_pages}"/>
                                     <input type="submit" name="update_dp_options" id="button" value="{lang code='update'}" class="btn btn-primary btn-xs"/>
                                 </form>
                             </li>
                         </ul>
                     </li>
                     <li class="blue">
-                        <a target="_blank" href="/">
+                        <a target="_blank" href="{DirPath::getUrl('root')}" title="{lang code="access_to_front_end"}">
                             <i class="glyphicon glyphicon-home"></i>
                             <span class="badge badge-success"></span>
                         </a>
@@ -134,7 +134,7 @@
                 {/if}
                 <li class="blue">
                     <a data-toggle="dropdown" href="#" class="dropdown-toggle">
-                        <img src="{$userquery->getUserThumb('', '',user_id())}" class="img-circle" width="25" height="25"/>
+                        <img src="{userquery::getInstance()->getUserThumb('', '',user_id())}" class="img-circle" width="25" height="25"/>
                         <span class="user-info">
                          {display_clean(User::getInstance()->get('username'))|ucfirst}<br/>
                          {display_clean(User::getInstance()->get('user_level_name'))}
@@ -143,20 +143,22 @@
                     </a>
                     <ul class="user-menu pull-right dropdown-menu dropdown-yellow dropdown-caret dropdown-close">
                         {if !$NEED_UPDATE}
-                            <li>
-                                <a href="setting_basic.php">
-                                    <i class="glyphicon glyphicon-cog"></i> {lang('basic_settings')}
-                                </a>
-                            </li>
-                            <li>
-                                <a href="/admin_area/view_user.php?uid={user_id()}">
-                                    <i class="glyphicon glyphicon-user"></i> Profile
-                                </a>
-                            </li>
-                            <li class="divider"></li>
+                        <li>
+                            <a href="{DirPath::getUrl('admin_area')}setting_basic.php">
+                                <i class="glyphicon glyphicon-cog"></i> {lang('basic_settings')}
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="{DirPath::getUrl('admin_area')}view_user.php?uid={user_id()}">
+                                <i class="glyphicon glyphicon-user"></i> Profile
+                            </a>
+                        </li>
+
+                        <li class="divider"></li>
                         {/if}
                         <li>
-                            <a href="logout.php">
+                            <a href="{DirPath::getUrl('admin_area')}logout.php">
                                 <i class="glyphicon glyphicon-off"></i> {lang code='logout'}
                             </a>
                         </li>

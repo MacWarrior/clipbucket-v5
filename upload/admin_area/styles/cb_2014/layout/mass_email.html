@@ -3,7 +3,7 @@
 </div>
 
 {if $send_email==""}
-	<form name="mass_email" method="post" action="mass_email.php?action=new">
+	<form name="mass_email" method="post" action="{DirPath::getUrl('admin_area')}mass_email.php?action=new">
 		<h3 class="cb_title">
 			Email manager
 		</h3>
@@ -90,7 +90,7 @@
 								<h4>User level<br/>
 									<small>Choose which user level to send email</small>
 								</h4>
-								{assign var=levels value=$userquery->get_levels()}
+								{assign var=levels value=userquery::getInstance()->get_levels()}
 								{foreach from=$levels item=level}
 									{if $level.user_level_id !='4'}
 										<label class="checkbox-inline">
@@ -201,9 +201,9 @@
 			</tr>
 		</table>
 
-		<a class="btn btn-primary" href="mass_email.php">Go back to mass email page</a>
+		<a class="btn btn-primary" href="{DirPath::getUrl('admin_area')}mass_email.php">Go back to mass email page</a>
 
-		{$eh->message_list.0}
+		{errorhandler::getInstance()->message_list.0}
 		{if $msgs}
 		<ul>
 			{foreach from=$msgs item=msg}
@@ -233,8 +233,9 @@
 				var email_id = '{$email.id}';
 				var pause = false;
 				$(document).oneTime(5000,function(){
-					if(!pause)
-						$(window.location).attr('href', '?send_email='+email_id+'&index='+start_index)
+					if(!pause) {
+						$(window.location).attr('href', '?send_email=' + email_id + '&index=' + start_index)
+					}
 				});
 			</script>
 		{/if}
@@ -246,9 +247,3 @@
 	</script>
 	{/literal}
 {/if}
-
-<script>
-    $(document).ready(function() {
-        $('#desc').summernote();
-    });
-</script>

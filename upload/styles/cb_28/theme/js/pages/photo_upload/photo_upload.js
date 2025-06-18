@@ -16,6 +16,10 @@ $(document).ready(function(){
         }
     });
 
+    $('#collectionSelection').select2({
+        width: '100%'
+    });
+
     var error = '';
 
     function reFreshTabs(up)
@@ -151,7 +155,7 @@ $(document).ready(function(){
                 data += "&collection_id="+collectionId;
                 data += "&updatePhoto=yes";
                 $.ajax({
-                    url : "/actions/photo_uploader.php",
+                    url : baseurl+"actions/photo_uploader.php",
                     type : "post",
                     data : data,
                     success: function (msg) {
@@ -321,7 +325,7 @@ $(document).ready(function(){
         });
 
         $.ajax({
-            url : "/actions/photo_uploader.php",
+            url : baseurl+"actions/photo_uploader.php",
             type : "post",
             data : {
                 insertPhoto : "yes"
@@ -381,7 +385,7 @@ $(document).ready(function(){
             e.preventDefault();
             $.ajax({
                 type: "post",
-                url: "/actions/display_new_collection_form.php",
+                url: baseurl+"actions/display_new_collection_form.php",
                 dataType: 'json',
                 success: function(response){
                     $('.close').click();
@@ -391,6 +395,9 @@ $(document).ready(function(){
                     $('#CollectionDIV').toggle("fast");
                     $('.form_header').hide();
                     $(".upload-area").hide();
+                    $('#collection_id_parent').select2({
+                        width: '100%'
+                    });
 
                     //listener submit
                     $("#addNewCollection").on({
@@ -398,10 +405,9 @@ $(document).ready(function(){
                             e.preventDefault();
                             var formData = $(this).parents("form").serialize();
                             formData += "&mode=add_collection";
-                            var collectionName = $(this).parents("form").find("#collection_name").val();
                             $.ajax({
                                 type: "post",
-                                url: "/ajax.php",
+                                url: baseurl+"ajax.php",
                                 data: formData,
                                 success: function(response){
                                     response = $.parseJSON(response);
@@ -410,8 +416,12 @@ $(document).ready(function(){
                                     if (response.success) {
                                         $("#CollectionDIV").toggle("fast");
                                         $("#SelectionDIV").html(response.template);
+                                        $('#photoForm').html(response.photoForm);
                                         $('.form_header').show();
                                         $(".upload-area").show();
+                                        $('#collectionSelection').select2({
+                                            width: '100%'
+                                        });
                                         $('#collectionSelection').parent().show();
                                     }
                                 }

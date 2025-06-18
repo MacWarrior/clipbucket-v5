@@ -45,8 +45,7 @@ class Photo
             ,'photo_details'
         ];
 
-        $version = Update::getInstance()->getDBVersion();
-        if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 305)) {
+        if( Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.0', '305') ){
             $this->fields[] = 'age_restriction';
         }
 
@@ -110,9 +109,11 @@ class Photo
             default:
                 $params['order'] = $this->getTableName() . '.date_added DESC';
                 break;
+
             case 'most_old':
                 $params['order'] = $this->getTableName() . '.date_added ASC';
                 break;
+
             case 'most_viewed':
                 $params['order'] = $this->getTableName() . '.views DESC';
                 break;
@@ -130,9 +131,19 @@ class Photo
                     $params['order'] = $this->getTableName() . '.total_comments DESC';
                 }
                 break;
+
             case 'viewed_recently':
                 $params['order'] = $this->getTableName() . '.last_viewed DESC';
                 break;
+
+            case 'alphabetical':
+                $params['order'] = $this->getTableName() . '.photo_title ASC';
+                break;
+
+            case 'reverse_alphabetical':
+                $params['order'] = $this->getTableName() . '.photo_title DESC';
+                break;
+
             case 'all_time':
             case 'today':
             case 'yesterday':
@@ -246,7 +257,6 @@ class Photo
             $conditions[] = $this->getGenericConstraints(['show_unlisted' => $param_first_only || $param_show_unlisted]);
         }
 
-        $version = Update::getInstance()->getDBVersion();
         if ($param_search) {
             /* Search is done on photo title, photo tags, uploader username, photo categories */
 
@@ -262,7 +272,7 @@ class Photo
             $cond = '( ' . $match_title . 'OR ' . $like_title;
 
             /** TAG */
-            if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 264)) {
+            if( Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.0', '264') ){
                 $match_tag = 'MATCH(tags.name) AGAINST (\'' . mysql_clean($param_search) . '\' IN NATURAL LANGUAGE MODE)';
                 $like_tag = 'LOWER(tags.name) LIKE \'%' . mysql_clean($param_search) . '%\'';
                 $cond .= ' OR ' . $match_tag . ' OR ' . $like_tag;
@@ -275,7 +285,7 @@ class Photo
             $order_search .= ', MAX(CASE WHEN ' . $like_user . ' THEN 1 ELSE 0 END ) DESC ';
 
             /** CATEGORIES */
-            if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 331)) {
+            if( Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.0', '331') ){
                 $match_categ = 'MATCH(categories.category_name) AGAINST (\'' . mysql_clean($param_search) . '\' IN NATURAL LANGUAGE MODE)';
                 $like_categ = 'LOWER(categories.category_name) LIKE \'%' . mysql_clean($param_search) . '%\'';
                 $cond .= ' OR ' . $match_categ . ' OR ' . $like_categ;
@@ -300,8 +310,7 @@ class Photo
             $group[] = 'photos.photo_id';
         }
 
-        $version = Update::getInstance()->getDBVersion();
-        if( $version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 264) ){
+        if( Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.0', '264') ){
             if( !$param_count ){
                 $select[] = 'GROUP_CONCAT( DISTINCT(tags.name) SEPARATOR \',\') AS photo_tags';
 
@@ -310,7 +319,7 @@ class Photo
             $join[] = 'LEFT JOIN ' . cb_sql_table('tags') .' ON photo_tags.id_tag = tags.id_tag';
         }
 
-        if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 331)) {
+        if( Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.0', '331') ){
             $join[] = 'LEFT JOIN ' . cb_sql_table('photos_categories') . ' ON photos.photo_id = photos_categories.id_photo';
             $join[] = 'LEFT JOIN ' . cb_sql_table('categories') . ' ON photos_categories.id_category = categories.category_id';
 
@@ -336,6 +345,13 @@ class Photo
         } else {
             $join[] = 'LEFT JOIN  ' . cb_sql_table($collection_items_table) . ' ON  photos.photo_id = ' . $collection_items_table . '.object_id AND ' . $collection_items_table . '.type = \'photos\'';
         }
+
+        if (!User::getInstance()->hasAdminAccess()) {
+            $collection_table = Collection::getInstance()->getTableName();
+            $conditions[] = '(' . Collection::getInstance()->getGenericConstraints() . ' OR ' . $collection_table . '.collection_id IS NULL )';
+            $join[] = 'LEFT JOIN ' . cb_sql_table($collection_table) . ' ON ' . $collection_items_table . '.collection_id = ' . $collection_table . '.collection_id';
+        }
+
         if (!$param_count) {
             $group[] = $collection_items_table.'.collection_id';
         }
@@ -347,7 +363,6 @@ class Photo
         if ($param_join_flag && Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '255') && !$param_count) {
             $join[] = ' LEFT JOIN ' . cb_sql_table(Flag::getTableName()) . ' ON ' . Flag::getTableName() . '.id_element = ' . $this->tablename . '.photo_id AND ' . Flag::getTableName() . '.id_flag_element_type = (SELECT id_flag_element_type FROM ' . tbl(Flag::getTableNameElementType()) . ' WHERE name = \'photo\' ) ';
             $select[] = ' IF(COUNT(distinct ' . Flag::getTableName() . '.flag_id) > 0, 1, 0) AS is_flagged ';
-
         }
 
         if( $param_group ){
@@ -362,17 +377,20 @@ class Photo
         $order = '';
         if (!empty($order_search)) {
             $order = $order_search;
-        } elseif ($param_order) {
+        } elseif ($param_order && !$param_count) {
             $group[] = str_replace(['asc', 'desc'], '', strtolower($param_order));
             $order = ' ORDER BY ' . $param_order;
         }
-        if (!$param_not_join_user_profile) {
+
+        if( !$param_not_join_user_profile ){
             $join[] = 'LEFT JOIN ' . cb_sql_table('user_profile') . ' ON user_profile.userid = users.userid';
-            if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '136')) {
+
+            if( !$param_count && Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '136') ){
                 $select[] = 'user_profile.disabled_channel';
                 $group[] = 'user_profile.disabled_channel';
             }
         }
+
         $limit = '';
         if ($param_limit) {
             $limit = ' LIMIT ' . $param_limit;
@@ -442,7 +460,6 @@ class Photo
             $select_contacts = 'SELECT contact_userid FROM ' . tbl('contacts') . ' WHERE confirmed = \'yes\' AND userid = ' . $current_user_id;
             $cond .= ' OR (photos.active = \'yes\' AND photos.broadcast IN(\'public\',\'logged\')'.$sql_age_restrict.')';
             $cond .= ' OR (photos.broadcast = \'private\' AND photos.userid IN(' . $select_contacts . ')'.$sql_age_restrict.')';
-            $cond .= ' OR (photos.broadcast = \'private\' AND photos.userid IN(' . $select_contacts . ')'.$sql_age_restrict.')';
         } else {
             $cond .= ')';
         }
@@ -454,7 +471,7 @@ class Photo
     /**
      * @throws Exception
      */
-    public static function display_restricted($photo)
+    public static function display_restricted($photo): void
     {
         if( !empty($photo['age_restriction']) ){
             echo '<span class="restricted" title="' . lang('access_forbidden_under_age', $photo['age_restriction']) . '">' . lang('access_forbidden_under_age_display', $photo['age_restriction']) . '</span>';
@@ -550,14 +567,14 @@ class Photo
     public function getPhotoRelated($photo_id, $limit, $order = 'date_added DESC')
     {
         $photo = $this->getOne(['photo_id'=>$photo_id]);
-        $version = Update::getInstance()->getDBVersion();
         $title = mysql_clean($photo['title']);
         $tags = mysql_clean($photo['tags']);
 
         $cond_title = '(MATCH(photos.photo_title) AGAINST (\'' . $title . '\' IN NATURAL LANGUAGE MODE) OR LOWER(photos.photo_title) LIKE \'%' . $title . '%\'';
         $cond_title .= ')';
         $cond_tag = '(MATCH(photos.photo_title) AGAINST (\'' . $tags . '\' IN NATURAL LANGUAGE MODE) OR LOWER(photos.photo_title) LIKE \'%' . $tags . '%\'';
-        if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 264)) {
+
+        if( Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.0', '264') ){
             $cond_tag .= ' OR MATCH(tags.name) AGAINST (\'' . $tags . '\' IN NATURAL LANGUAGE MODE) OR LOWER(tags.name) LIKE \'%' . $tags . '%\'';
         }
         $cond_tag .= ')';
@@ -588,21 +605,38 @@ class Photo
      * @return string
      * @throws Exception
      */
-    public function getFOLink($photo_id)
+    public function getFOLink($photo_id): string
     {
+        $base_url = DirPath::getUrl('root');
         $details = $this->getOne(['photo_id'=>$photo_id]);
         if (SEO == 'yes') {
             if (empty($details['collection_id'])) {
-                return Network::get_server_url();
+                return $base_url;
             }
-            return Network::get_server_url() . 'item/photos/' . $details['collection_id'] . '/' . $details['photo_key'] . '/' . SEO(display_clean(str_replace(' ', '-', $details['photo_title'])));
+            return $base_url . 'item/photos/' . $details['collection_id'] . '/' . $details['photo_key'] . '/' . SEO(display_clean(str_replace(' ', '-', $details['photo_title'])));
         }
-        return Network::get_server_url() . 'view_item.php?item=' . $details['photo_key'] . '&amp;collection=' . $details['collection_id'];
+        return $base_url . 'view_item.php?item=' . $details['photo_key'] . '&amp;collection=' . $details['collection_id'];
     }
 }
 
 class CBPhotos
 {
+    private static self $instance;
+    public static function getInstance(): self
+    {
+        if( empty(self::$instance) ){
+            self::$instance = new self();
+            self::$instance->thumb_width = config('photo_thumb_width');
+            self::$instance->thumb_height = config('photo_thumb_height');
+            self::$instance->mid_width = config('photo_med_width');
+            self::$instance->mid_height = config('photo_med_height');
+            self::$instance->lar_width = config('photo_lar_width');
+            self::$instance->cropping = config('photo_crop');
+            self::$instance->position = config('watermark_placement');
+        }
+        return self::$instance;
+    }
+
     var $action = '';
     var $collection = '';
     var $p_tbl = 'photos';
@@ -624,12 +658,6 @@ class CBPhotos
 
     private $basic_fields = [];
     private $extra_fields = [];
-
-    public static function getInstance()
-    {
-        global $cbphoto;
-        return $cbphoto;
-    }
 
     /**
      * __Constructor of CBPhotos
@@ -695,8 +723,7 @@ class CBPhotos
             'last_commented', 'total_comments'
         ];
 
-        $version = Update::getInstance()->getDBVersion();
-        if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 305)) {
+        if( Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.0', '305') ){
             $basic_fields[] = 'age_restriction';
         }
 
@@ -766,8 +793,9 @@ class CBPhotos
 
     /**
      * Setting up Photos Section
+     * @throws Exception
      */
-    function init_photos()
+    function init_photos(): void
     {
         $this->init_actions();
         $this->init_collections();
@@ -778,14 +806,15 @@ class CBPhotos
 
     /**
      * Initiating Actions for Photos
+     * @throws Exception
      */
-    function init_actions()
+    function init_actions(): void
     {
         $this->action = new cbactions();
         $this->action->init();     // Setting up reporting excuses
         $this->action->type = 'p';
         $this->action->name = 'photo';
-        $this->action->obj_class = 'cbphoto';
+        $this->action->obj_class = self::class;
         $this->action->check_func = 'photo_exists';
         $this->action->type_tbl = "photos";
         $this->action->type_id_field = 'photo_id';
@@ -796,7 +825,7 @@ class CBPhotos
      *
      * @param $data
      */
-    function set_share_email($data)
+    function set_share_email($data): void
     {
         $this->share_email_vars = [
             'photo_description' => $data['photo_description'],
@@ -811,11 +840,11 @@ class CBPhotos
     /**
      * Initiating Collections for Photos
      */
-    function init_collections()
+    function init_collections(): void
     {
         $this->collection = new Collections();
         $this->collection->objType = "p";
-        $this->collection->objClass = "cbphoto";
+        $this->collection->objClass = self::class;
         $this->collection->objTable = "photos";
         $this->collection->objName = "Photo";
         $this->collection->objFunction = "photo_exists";
@@ -826,7 +855,7 @@ class CBPhotos
      * Create Admin Area menu for photos
      * @throws Exception
      */
-    function photos_admin_menu()
+    function photos_admin_menu(): void
     {
         if (User::getInstance()->hasPermission('photos_moderation') && isSectionEnabled('photos') && !NEED_UPDATE) {
             $menu_photo = [
@@ -870,7 +899,7 @@ class CBPhotos
      * Setting other things
      * @throws Exception
      */
-    function setting_other_things()
+    function setting_other_things(): void
     {
         // Search type
         if (isSectionEnabled('photos')) {
@@ -894,14 +923,12 @@ class CBPhotos
         ClipBucket::getInstance()->links['photo_upload'] = ['photo_upload.php', 'photo_upload'];
         ClipBucket::getInstance()->links['manage_favorite_photos'] = ['manage_photos.php?mode=favorite', 'manage_photos.php?mode=favorite'];
         ClipBucket::getInstance()->links['manage_orphan_photos'] = ['manage_photos.php?mode=orphan', 'manage_photos.php?mode=orphan'];
-        ClipBucket::getInstance()->links['user_photos'] = ['user_photos.php?mode=uploaded&amp;user=', 'user_photos.php?mode=uploaded&amp;user='];
-        ClipBucket::getInstance()->links['user_fav_photos'] = ['user_photos.php?mode=favorite&amp;user=', 'user_photos.php?mode=favorite&amp;user='];
     }
 
     /**
      * Set File Max Size
      */
-    function set_photo_max_size()
+    function set_photo_max_size(): void
     {
         $adminSize = ClipBucket::getInstance()->configs['max_photo_size'];
         if (!$adminSize) {
@@ -951,8 +978,8 @@ class CBPhotos
 
         $select_tag = '';
         $join_tag = '';
-        $version = Update::getInstance()->getDBVersion();
-        if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 264)) {
+
+        if( Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.0', '264') ){
             $select_tag = ', GROUP_CONCAT( DISTINCT(T.name) SEPARATOR \',\') as photo_tags';
             $join_tag = 'LEFT JOIN ' . tbl('photo_tags') . ' AS PT ON P.photo_id = PT.id_photo  
                     LEFT JOIN ' . tbl('tags') . ' AS T ON PT.id_tag = T.id_tag';
@@ -987,6 +1014,7 @@ class CBPhotos
 
         if (!User::getInstance()->hasAdminAccess()) {
             $cond .= Photo::getInstance()->getGenericConstraints();
+            $cond .= ' AND ( ' . Collection::getInstance()->getGenericConstraints() . ')';
         } else {
             if ($p['active']) {
                 $cond .= 'photos.active = \'' . mysql_clean($p['active']) . '\'';
@@ -1116,8 +1144,8 @@ class CBPhotos
         $join_tag = '';
         $group_tag = '';
         $match_tag='';
-        $version = Update::getInstance()->getDBVersion();
-        if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 264)) {
+
+        if( Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.0', '264') ){
             $match_tag = 'T.name';
             $select_complement = ', GROUP_CONCAT( DISTINCT(T.name) SEPARATOR \',\') as photo_tags';
             $join_tag = ' LEFT JOIN ' . tbl('photo_tags') . ' AS PT ON photos.photo_id = PT.id_photo 
@@ -1308,8 +1336,9 @@ class CBPhotos
     /**
      * Used to generate photo key
      * Replica of video_keygen function
+     * @throws Exception
      */
-    function photo_key()
+    function photo_key(): string
     {
         $char_list = 'ABDGHKMNORSUXWY';
         $char_list .= '123456789';
@@ -1353,10 +1382,10 @@ class CBPhotos
      * @param bool $orphan
      * @throws Exception
      */
-    function delete_photo($id, $orphan = false)
+    function delete_photo($id, bool $orphan = false): void
     {
         if ($this->photo_exists($id)) {
-            $photo = $this->get_photo($id);
+            $photo = Photo::getInstance()->getOne(['photo_id'=>$id]);
 
             $del_photo_funcs = cb_get_functions('delete_photo');
             if (is_array($del_photo_funcs)) {
@@ -1367,9 +1396,7 @@ class CBPhotos
                 }
             }
 
-            if (!$orphan && !empty($photo['collection_id'])) {//removing from collection
-                $this->collection->remove_item($photo['photo_id'], $photo['collection_id']);
-            }
+            Collections::getInstance()->deleteItemFromCollections($id, 'photos');
 
             //Remove tags
             Tags::deleteTags('photo', $photo['photo_id']);
@@ -1407,7 +1434,7 @@ class CBPhotos
      * @param $id
      * @throws Exception
      */
-    function delete_photo_files($id)
+    function delete_photo_files($id): void
     {
         if (!is_array($id)) {
             $photo = $this->get_photo($id);
@@ -1434,7 +1461,7 @@ class CBPhotos
      * @param $id
      * @throws Exception
      */
-    function delete_from_db($id)
+    function delete_from_db($id): void
     {
         if (is_array($id)) {
             $delete_id = $id['photo_id'];
@@ -1545,7 +1572,7 @@ class CBPhotos
      * @param $array
      * @throws Exception
      */
-    function generate_photos($array)
+    function generate_photos($array): void
     {
         $path = DirPath::get('photos');
 
@@ -1587,7 +1614,7 @@ class CBPhotos
      * @param $photo
      * @throws Exception
      */
-    function update_image_details($photo)
+    function update_image_details($photo): void
     {
         if (is_array($photo) && !empty($photo['photo_id'])) {
             $p = $photo;
@@ -1637,7 +1664,7 @@ class CBPhotos
      * @param bool $force_copy
      * @throws Exception
      */
-    function createThumb($from, $to, $ext, $d_width = null, $d_height = null, $force_copy = false)
+    function createThumb($from, $to, $ext, $d_width = null, $d_height = null, $force_copy = false): void
     {
         $file = $from;
         $info = getimagesize($file);
@@ -1652,7 +1679,7 @@ class CBPhotos
                 $memory_limit = ini_get('memory_limit');
                 if ($memory_needed > getBytesFromFileSize($memory_limit)) {
                     $msg = 'Photo generation would requiere ~' . System::get_readable_filesize($memory_needed, 0) . ' of memory, but it\'s currently limited to ' . $memory_limit;
-                    if (in_dev()) {
+                    if (System::isInDev()) {
                         e($msg);
                     } else {
                         e(lang('technical_error'));
@@ -1730,11 +1757,11 @@ class CBPhotos
 
     /**
      * Fetches watermark default position from database
-     * @return : { position of watermark }
+     * @return bool|string : { position of watermark }
      */
     function get_watermark_position()
     {
-        return ClipBucket::getInstance()->configs['watermark_placement'];
+        return config('watermark_placement');
     }
 
     /**
@@ -1756,8 +1783,8 @@ class CBPhotos
 
         $x = $info[0];
         $y = $info[1];
-        list($w, $h) = getimagesize($file);
-        list($ww, $wh) = getimagesize($watermark);
+        [$w, $h] = getimagesize($file);
+        [$ww, $wh] = getimagesize($watermark);
         $padding = $this->padding;
 
         switch ($x) {
@@ -1808,7 +1835,7 @@ class CBPhotos
             return false;
         }
 
-        list($Swidth, $Sheight, $Stype) = getimagesize($input);
+        [$Swidth, $Sheight, $Stype] = getimagesize($input);
         $wImage = imagecreatefrompng($watermark_file);
         $ww = imagesx($wImage);
         $wh = imagesy($wImage);
@@ -1859,12 +1886,16 @@ class CBPhotos
             $p['user'] = user_id();
         }
 
-        $collections = $this->collection->get_collections_list(0,null,null, 'photos',user_id()) ?? [];
-        $cl_array = $this->parse_array($collections);
-        $collection = $array['collection_id'];
-        if ($collection == null && !empty($cl_array)) {
-            $cl_array = [0=>''] + $cl_array;
+        $cl_array = [];
+        $params = [
+            'type'       => 'photos',
+            'can_upload' => true,
+        ];
+        $collections = Collection::getInstance()->getAllIndent($params, display_group: true);
+        foreach ($collections as $group => $collection) {
+            $cl_array[$group] = $this->parse_array($collection);
         }
+        $collection = $array['collection_id'];
         $this->unique = rand(0, 9999);
 
         $hint_tags = config('allow_tag_space') =='yes' ? '<span class="fa fa-question-circle tips" title=\''.lang('use_tab_tag').'\'></span>' : '';
@@ -1902,10 +1933,14 @@ class CBPhotos
             'collection' => [
                 'title'       => lang('collection'),
                 'name'        => 'collection_id',
-                'type'        => 'dropdown',
+                'id'          => 'collection_id',
+                'type'        => 'dropdown_group',
                 'value'       => $cl_array,
                 'checked'     => $collection,
-                'invalid_err' => lang('collection_not_found')
+                'invalid_err' => lang('collection_not_found'),
+                'required'    => 'yes',
+                'null_option' => ' ',
+                'null_option_disabled' => true,
             ]
         ];
     }
@@ -2168,9 +2203,13 @@ class CBPhotos
                 'required'                  => 'yes',
                 'validate_function'         => 'Category::validate',
                 'display_function'          => 'convert_to_categories',
+                'second_parameter_validate' => 'photo',
                 'category_type'             => 'photo',
                 'invalid_err'               => lang('vdo_cat_err3')
             ];
+            if (config('max_photo_categories') > 0 && is_array($cat_array)) {
+                $return['cat']['hint_1'] = lang('vdo_cat_msg', config('max_photo_categories'));
+            }
         }
         return $return;
     }
@@ -2223,7 +2262,7 @@ class CBPhotos
         $cl_arr= [];
         if (is_array($array)) {
             foreach ($array as $key => $v) {
-                $cl_arr[$key] = $v['name'];
+                $cl_arr[$v['collection_id']] = $v['collection_name'];
             }
         }
         return $cl_arr;
@@ -2299,7 +2338,11 @@ class CBPhotos
                 $val = $array[$name];
 
                 if (!empty($field['validate_function'])) {
-                    $val = $field['validate_function']($val);
+                    if (isset($field['second_parameter_validate'])) {
+                        $val = $field['validate_function']($val,$field['second_parameter_validate']);
+                    } else {
+                        $val = $field['validate_function']($val);
+                    }
                 }
 
 
@@ -2366,7 +2409,15 @@ class CBPhotos
                             if (empty($array['collection_id'])) {
                                 e(lang('collection_not_found'), 'w');
                             } elseif ($cid != $array['collection_id']) {
-                                $this->collection->change_collection($array['collection_id'], $pid, $cid);
+                                $photo_detail = Photo::getInstance()->getOne(['photo_id'=>$pid]);
+                                if (!empty($photo_detail['collection_id'])) {
+                                    Collections::getInstance()->deleteItemFromCollections($pid);
+                                    $thumb = Collection::assignDefaultThumb($photo_detail['collection_id']);
+                                    if (empty($thumb)) {
+                                        Collection::getInstance()->setDefautThumb(0, $photo_detail['collection_id']);
+                                    }
+                                }
+                                Collection::getInstance()->addCollectionItem($pid, $array['collection_id'], 'photos');
                             }
 
                             Clipbucket_db::getInstance()->update(tbl('photos'), $query_field, $query_val, " photo_id='$pid'");
@@ -2539,6 +2590,7 @@ class CBPhotos
                         $size = '_' . $p['size'];
 
                         $src = array_find_cb($photo['filename'] . $size, $thumbs);
+                        DiscordLog::sendDump($src);
                         if (empty($src)) {
                             $src = $this->default_thumb($size);
                         }
@@ -2666,29 +2718,28 @@ class CBPhotos
      */
     function photo_links($details, $type): string
     {
+        $base_url = DirPath::getUrl('root');
         if (empty($type)) {
-            return Network::get_server_url();
+            return $base_url;
         }
 
         switch ($type) {
             case 'upload':
-                if (SEO == 'yes') {
-                    return '/photo_upload';
-                }
-                return '/photo_upload.php';
+                return cblink(['name' => 'photo_upload']);
 
             case 'upload_more':
+                $base_url = cblink(['name' => 'photo_upload']);
                 if (SEO == 'yes') {
-                    return '/photo_upload/' . $this->encode_key($details['collection_id']);
+                    return $base_url . '/' . $this->encode_key($details['collection_id']);
                 }
-                return '/photo_upload.php?collection=' . $this->encode_key($details['collection_id']);
+                return $base_url . '?collection=' . $this->encode_key($details['collection_id']);
 
             case 'view_item':
             case 'view_photo':
                 return $this->collection->collection_links($details, 'view_item');
 
             default:
-                return Network::get_server_url();
+                return $base_url;
         }
     }
 
@@ -2902,12 +2953,14 @@ class CBPhotos
         if (is_array($image_file)) {
             $image_file = $image_file[0];
         }
+
+        $base_url = DirPath::getUrl('root');
         switch ($type) {
             case 'html':
                 if ($p['with_url']) {
                     $code .= "&lt;a href='" . $this->collection->collection_links($photo, 'view_item') . "' target='_blank'&gt;";
                 }
-                $code .= "&lt;img src='" . Network::get_server_url() . $image_file . "' title='" . display_clean($photo['photo_title']) . "' alt='" . display_clean($photo['photo_title']) . '&nbsp;' . TITLE . "' /&gt;";
+                $code .= "&lt;img src='" . $base_url . $image_file . "' title='" . display_clean($photo['photo_title']) . "' alt='" . display_clean($photo['photo_title']) . '&nbsp;' . TITLE . "' /&gt;";
                 if ($p['with_url']) {
                     $code .= '&lt;/a&gt;';
                 }
@@ -2917,7 +2970,7 @@ class CBPhotos
                 if ($p['with_url']) {
                     $code .= '&#91;URL=' . $this->collection->collection_links($photo, 'view_item') . '&#93;';
                 }
-                $code .= '&#91;IMG&#93;' . Network::get_server_url() . $image_file . '&#91;/IMG&#93;';
+                $code .= '&#91;IMG&#93;' . $base_url . $image_file . '&#91;/IMG&#93;';
                 if ($p['with_url']) {
                     $code .= '&#91;/URL&#93;';
                 }
@@ -2928,7 +2981,7 @@ class CBPhotos
                 break;
 
             case 'direct':
-                $code .= Network::get_server_url() . $image_file;
+                $code .= $base_url . $image_file;
                 break;
 
             default:
@@ -2937,8 +2990,6 @@ class CBPhotos
 
         return $code;
     }
-
-
 
     /**
      * Used encode photo key

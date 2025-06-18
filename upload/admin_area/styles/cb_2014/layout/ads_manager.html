@@ -22,7 +22,7 @@
       {/if}
       {/section}
     </select>
-    <a href="ads_add_placements.php">Add More Placements</a>
+    <a href="{DirPath::getUrl('admin_area')}ads_add_placements.php">Add More Placements</a>
   </div>
     </div>
     <div class="row">
@@ -48,7 +48,7 @@
 <div class="heading">
   <h2>Add Advertisement</h2>
 </div>
-<form id="form1" name="form1" method="post" action="ads_manager.php">
+<form id="form1" name="form1" method="post" action="{DirPath::getUrl('admin_area')}ads_manager.php">
     <p class="alert alert-info">{lang code='all_fields_req'}</p>
     <div class="row">
   <div class="col-md-6">
@@ -66,7 +66,7 @@
       {/if}
       {/section}
     </select>
-    <a href="ads_add_placements.php">Add More Placements</a>
+    <a href="{DirPath::getUrl('admin_area')}ads_add_placements.php">Add More Placements</a>
   </div>
         </div>
     <div class="row">
@@ -108,7 +108,7 @@
     <td>{$ad.ad_id}</td>
     <td>{$ad.ad_name}</td>
     <td>
-      {$ad.ad_codes}<a href="ads_manager.php?ad_id={$ad.ad_id}">View Advertisment</a>
+      {$ad.ad_codes}<a href="{DirPath::getUrl('admin_area')}ads_manager.php?ad_id={$ad.ad_id}">View Advertisment</a>
     </td>
     <td>{$ad.ad_impressions|number_format}</td>
     <td>{$ad.date_added|date_format}</td>       
@@ -118,10 +118,10 @@
         <button id="dropdownMenu1" class="btn btn-primary btn-xs dropdown-toggle" data-toggle="dropdown">Actions <i class="caret"></i></button>
         <ul class="dropdown-menu" aria-labelledby="dropdownMenu1" role="menu">
           <li role="presentation">
-            <a role="menuitem" tabindex="-1" href="ads_manager.php?ad_id={$ad.ad_id}">{lang code='edit'}</a>
+            <a role="menuitem" tabindex="-1" href="{DirPath::getUrl('admin_area')}ads_manager.php?ad_id={$ad.ad_id}">{lang code='edit'}</a>
           </li>
           <li role="presentation">
-            <a role="menuitem" tabindex="-1" href="ads_manager.php?delete={$ad.ad_id}">{lang code='delete'}</a>
+            <a role="menuitem" tabindex="-1" href="{DirPath::getUrl('admin_area')}ads_manager.php?delete={$ad.ad_id}">{lang code='delete'}</a>
           </li>
           <li role="presentation">
             {if $ad.ad_status!=1}

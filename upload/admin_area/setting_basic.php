@@ -2,7 +2,11 @@
 define('THIS_PAGE', 'basic_settings');
 require_once dirname(__FILE__, 2) . '/includes/admin_config.php';
 
-User::getInstance()->hasPermissionOrRedirect('basic_settings',true);
+$permission = 'basic_settings';
+if( !Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '275') ){
+    $permission = 'web_config_access';
+}
+User::getInstance()->hasPermissionOrRedirect($permission,true);
 pages::getInstance()->page_redir();
 
 /* Generating breadcrumb */
@@ -14,25 +18,37 @@ if (@$_GET['msg']) {
     $msg = mysql_clean($_GET['msg']);
 }
 
-if (isset($_POST['reset_control_bar_logo_url'])) {
+if (isset($_POST['reset_player-logo_name'])) {
     if (file_exists(DirPath::get('logos') . 'player-logo.png')) {
         unlink(DirPath::get('logos') . 'player-logo.png');
     }
-    myquery::getInstance()->Set_Website_Details('control_bar_logo_url', '/images/icons/player-logo.png');
+    myquery::getInstance()->Set_Website_Details('player-logo_name', '');
+    myquery::getInstance()->Set_Website_Details('logo_update_timestamp', time());
     e(lang('player_logo_reset'), 'm');
+}
+
+if (isset($_POST['reset_site_logo'])) {
+    unlink(DirPath::get('logos') . config('logo_name'));
+    myquery::getInstance()->Set_Website_Details('logo_name', '');
+    myquery::getInstance()->Set_Website_Details('logo_update_timestamp', time());
+    e(lang('logo_reset'), 'm');
+}
+if (isset($_POST['reset_site_favicon'])) {
+    unlink(DirPath::get('logos') . config('favicon_name'));
+    myquery::getInstance()->Set_Website_Details('favicon_name', '');
+    myquery::getInstance()->Set_Website_Details('logo_update_timestamp', time());
+    e(lang('favicon_reset'), 'm');
 }
 
 if (isset($_POST['update'])) {
     $config_booleans = [
         'seo'
-        , 'store_guest_session'
         , 'videosSection'
         , 'photosSection'
         , 'playlistsSection'
         , 'collectionsSection'
         , 'channelsSection'
         , 'enable_advertisement'
-        , 'use_cached_pagin'
         , 'gravatars'
         , 'picture_url'
         , 'picture_upload'
@@ -135,6 +151,11 @@ if (isset($_POST['update'])) {
         , 'enable_video_categories'
         , 'enable_collection_categories'
         , 'enable_theme_change'
+        , 'enable_channel_slogan'
+        , 'enable_channel_description'
+        , 'enable_channels_slogan_display'
+        , 'enable_user_self_deletion'
+        , 'enable_cookie_banner'
         , 'enable_membership'
         , 'enable_public_video_page'
     ];
@@ -159,6 +180,8 @@ if (isset($_POST['update'])) {
         , 'own_channel_rating'
         , 'photo_crop'
         , 'show_collapsed_checkboxes'
+        , 'activation'
+        , 'photo_activation'
     ];
 
     $rows = [
@@ -243,19 +266,11 @@ if (isset($_POST['update'])) {
         'photo_user_photos',
         'photo_user_favorites',
         'photo_other_limit',
-        'photo_ratio',
-        'photo_lar_width',
-        'photo_crop',
-        'photo_thumb_width',
-        'photo_thumb_height',
-        'photo_med_width',
-        'photo_med_height',
 
         'site_title',
         'site_slogan',
         'seo',
         'seo_vido_url',
-        'search_list_per_page',
         'enable_country',
         'enable_gender',
         'enable_user_category',
@@ -288,8 +303,6 @@ if (isset($_POST['update'])) {
         'users_items_subscriptions',
         'users_items_contacts_channel',
         'users_items_search_page',
-        'use_cached_pagin',
-        'cached_pagin_time',
 
         'vid_cat_height',
         'vid_cat_width',
@@ -307,7 +320,6 @@ if (isset($_POST['update'])) {
         'photo_rating',
         'video_categories',
         'feedsSection',
-        'store_guest_session',
         'popup_video',
         'video_round_views',
         'enable_quicklist',
@@ -389,12 +401,24 @@ if (isset($_POST['update'])) {
         'chromecast',
         'control_bar_logo',
         'contextual_menu_disabled',
+        'enable_channel_slogan',
+        'enable_channel_description',
+        'enable_channels_slogan_display',
+        'enable_user_self_deletion',
+        'enable_cookie_banner',
 
         'player_logo_url',
         'player_thumbnails',
         'player_default_resolution',
         'player_default_resolution_hls',
         'player_subtitles',
+        'enable_360_video',
+        'activation',
+        'photo_activation',
+
+        'max_photo_categories',
+        'max_collection_categories',
+        'channel_video_style',
         'enable_360_video',
         'video_thumbs_preview_count',
         'allow_tag_space',
@@ -413,8 +437,6 @@ if (isset($_POST['update'])) {
         'max_video_desc',
         'min_video_title',
         'min_video_desc',
-
-        'search_list_per_page',
 
         'users_items_subscriptions',
         'users_items_contacts_channel',
@@ -455,7 +477,10 @@ if (isset($_POST['update'])) {
 
         'max_profile_pic_width',
         'list_featured_videos',
-        'video_thumbs_preview_count'
+        'video_thumbs_preview_count',
+
+        'max_photo_categories',
+        'max_collection_categories'
     ];
 
     foreach ($rows as $field) {
@@ -465,7 +490,7 @@ if (isset($_POST['update'])) {
                 e(lang('error_age_restriction_save'));
                 break;
             }
-            if (($value <= 0 || !is_numeric($value)) && $field != 'video_categories') {
+            if (($value <= 0 || !is_numeric($value)) && !in_array($field, ['video_categories', 'max_collection_categories', 'max_photo_categories']) ) {
                 $value = 1;
             }
         }
@@ -491,18 +516,13 @@ if (isset($_POST['update'])) {
     if (!empty($_FILES['upload_logo']['name'])) {
         // function used to upload site logo.
         upload_image('logo');
-        myquery::getInstance()->Set_Website_Details('logo_update_timestamp', time());
     }
     if (!empty($_FILES['upload_favicon']['name'])) {
         // function used to upload site logo.
         upload_image('favicon');
-        myquery::getInstance()->Set_Website_Details('logo_update_timestamp', time());
     }
-    if( !empty($_FILES['control_bar_logo_url']['name']) ){
-        $logo_file = Upload::getInstance()->upload_player_logo($_FILES['control_bar_logo_url']);
-        if ($logo_file) {
-            myquery::getInstance()->Set_Website_Details('control_bar_logo_url', $logo_file);
-        }
+    if( !empty($_FILES['upload_player-logo']['name']) ){
+        upload_image('player-logo');
     }
 
     //clear cache
@@ -535,13 +555,10 @@ if (!empty($_POST)) {
     } else {
         unlink($filepath_custom_css);
     }
-
-} else {
-    assign('DEVELOPMENT_MODE', in_dev());
 }
 
 
-$min_suffixe = in_dev() ? '' : '.min';
+$min_suffixe = System::isInDev() ? '' : '.min';
 ClipBucket::getInstance()->addAdminJS([
     'jquery-ui-1.13.2.min.js'             => 'global'
     ,'pages/main/main'.$min_suffixe.'.js' => 'admin'

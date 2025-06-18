@@ -1,5 +1,5 @@
-{assign var='reqFields'  value=$cbphoto->load_required_forms($photoArray)}
-{assign var='otherFields'  value=$cbphoto->load_other_forms($photoArray)}
+{assign var='reqFields'  value=CBPhotos::getInstance()->load_required_forms($photoArray)}
+{assign var='otherFields'  value=CBPhotos::getInstance()->load_other_forms($photoArray)}
 <div id="uploadFormContainer0" class="uploadFormContainer">
     <form action="#" method="post" id="Form{$uniqueID}"> 
         <div class="row">
@@ -22,6 +22,7 @@
                         {foreach from=$otherFields item=field}
                             <div class="form-group">
                             <label class="show">{$field.title}</label>
+                            {if $field.hint_1}<div class="hint">{$field.hint_1}</div>{/if}
                             {$field.label_class='radio-inline'}
                             {$formObj->createField($field)}
                             </div>

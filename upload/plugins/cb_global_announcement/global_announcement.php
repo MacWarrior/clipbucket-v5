@@ -3,18 +3,18 @@
     Plugin Name: CB - Global announcement
     Description: This will let you post a global announcement on your website
     Author: Arslan Hassan & MacWarrior
-    Version: 2.0.5
+    Version: 2.0.6
     Website: https://github.com/MacWarrior/clipbucket-v5/
-    ClipBucket Version: 5.5.1
+    ClipBucket Version: 5.5.2
 */
 
 class cb_global_announcement
 {
-    private static $plugin;
-    public $template_dir = '';
-    public $pages_url = '';
-    public static $table_name = 'plugin_' . self::class;
-    public static $lang_prefix = 'plugin_' . self::class . '_';
+    private static self $plugin;
+    public string $template_dir = '';
+    public string $pages_url = '';
+    public static string $table_name = 'plugin_' . self::class;
+    public static string $lang_prefix = 'plugin_' . self::class . '_';
 
     /**
      * @throws Exception
@@ -39,11 +39,13 @@ class cb_global_announcement
     /**
      * @throws Exception
      */
-    private function addAdminMenu(){
+    private function addAdminMenu(): void
+    {
         add_admin_menu(lang('configurations'), lang($this::$lang_prefix.'menu'), $this->pages_url.'edit_announcement.php');
     }
 
-    private function register_anchor_function(){
+    private function register_anchor_function(): void
+    {
         register_anchor_function('get_global_announcement', 'global', self::class);
     }
 
@@ -68,7 +70,7 @@ class cb_global_announcement
     /**
      * @throws Exception
      */
-    public static function update_announcement($text)
+    public static function update_announcement($text): void
     {
         $textCheck = str_replace(['<p>', '</p>', '<br>'], '', $text);
         if (strlen($textCheck) < 1) {

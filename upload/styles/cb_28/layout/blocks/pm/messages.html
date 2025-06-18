@@ -57,7 +57,7 @@
       </td>
       <td>{$user_msgs[msg].date_added}</td>
       {if $mode =='inbox'}
-      <td><a {if $user_msgs[msg].message_from == $anonymous_id} disabled="disabled" {else} href="/private_message.php?mode=new_msg&to={$user_msgs[msg].message_from_user}" {/if} class="btn btn-primary">{lang code='reply'}</a></td>
+      <td><a {if $user_msgs[msg].message_from == $anonymous_id} disabled="disabled" {else} href="{$baseurl}private_message.php?mode=new_msg&to={$user_msgs[msg].message_from_user}" {/if} class="btn btn-primary">{lang code='reply'}</a></td>
       {/if}
     </tr>
     {sectionelse}
@@ -83,7 +83,7 @@
       {lang code='from'} : 
       <strong>
           {if $pr_msg.message_from != $anonymous_id}
-          <a href="{$userquery->profile_link($pr_msg)}">{display_clean($pr_msg.username)}</a>
+          <a href="{userquery::getInstance()->profile_link($pr_msg)}">{display_clean($pr_msg.username)}</a>
           {else}
             {display_clean(lang($pr_msg.username))}
           {/if}
@@ -95,7 +95,7 @@
         {$to_id = $pr_msg.message_to}
         {$trimed_to = str_replace('#','', $to_id)}
           {if $trimed_to != $anonymous_id}
-            <a href="{$userquery->profile_link($trimed_to)}">
+            <a href="{userquery::getInstance()->profile_link($trimed_to)}">
               {display_clean(ucfirst(get_username($trimed_to)))}
             </a>
           {else}

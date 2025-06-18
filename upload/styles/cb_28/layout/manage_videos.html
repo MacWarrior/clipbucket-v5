@@ -1,4 +1,3 @@
-{$myAccountLinks = $userquery->my_account_links()}
 <div class="container manage-page marginBottom">
     <div class="cb-box">
         <div class="row">
@@ -6,100 +5,80 @@
                 {include file="$style_dir/blocks/manage/userMenuLeft.html"}
             </div>
 
-            <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12">
+            <div class="mainContent col-md-9 col-sm-9 col-xs-12">
                 {if $mode=='uploaded'}
-                    <div class="tabbable managevideo-tabarea">
-                        <ul class="nav nav-tabs manageTabs" id="myTab2">
-                            <li class="active">
-                                <a data-toggle="tab" href="#myvideos">
-                                    {lang('manage_x', strtolower(lang('videos')))}
-                                </a>
-                            </li>
-                        </ul>
-                        <div class="tab-content">
-                            <div id="myvideos" class="tab-pane active">
-                                <header class="clearfix manage-tab-header">
-                                    <div class="no_padding col-lg-4 col-md-4 col-sm-12 col-xs-12">
-                                        <h2>{lang('manage_x', strtolower(lang('videos')))}</h2>
-                                    </div>
-
-                                    <div class="pull-right col-lg-8 col-md-8 col-sm-12 col-xs-12">
-                                        <div class="row">
-                                            <form class="clearfix searchBox" id="form1" name="form1" method="get">
-                                                <input name="mode" value="{$mode}" type="hidden"/>
-                                                <div class="input-group form-group">
-                                                    <input name="query" type="text" class="form-control" id="query" value="{display_clean($smarty.get.query)}"/>
-                                                    <span class="input-group-btn">
-														<button class="btn btn-primary" type="submit" name="input">{lang code='search'}</button>
-													</span>
-                                                </div>
-                                            </form>
-                                        </div>
-                                    </div>
-                                </header>
-                                <table class="table table-bordered table-striped manageUsersTable">
-                                    <tr>
-                                        <td><i class="icon-facetime-video"></i> Videos Details</td>
-                                        <td class="text-center">Option</td>
-                                    </tr>
-                                    {section name=uvid loop=$uservids}
-                                        <tr class="item-video" data-id="{$uservids[uvid]['videoid']}">
-                                            {include file="$style_dir/blocks/manage/account_video.html" video=$uservids[uvid] control='full' }
-                                        </tr>
-                                        {sectionelse}
-                                        <div><strong><em>{lang code="you_dont_have_videos"}</em></strong></div>
-                                    {/section}
-                                </table>
-                                {include file="$style_dir/blocks/pagination.html"}
-                            </div>
+                    <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                        <h2 style="margin-top: 20px;">{lang('manage_x', lang('videos')|lower)}</h2>
+                    </div>
+                    <div class="pull-right col-lg-8 col-md-8 col-sm-12 col-xs-12">
+                        <div class="row">
+                            <form class="clearfix searchBox" id="form1" name="form1" method="get">
+                                <input name="mode" value="{$mode}" type="hidden"/>
+                                <div class="input-group form-group">
+                                    <input name="query" type="text" class="form-control" id="query" value="{display_clean($smarty.get.query)}"/>
+                                    <span class="input-group-btn">
+                                        <button class="btn btn-primary" type="submit" name="input">{lang code='search'}</button>
+                                    </span>
+                                </div>
+                            </form>
                         </div>
                     </div>
-                {elseif $mode =='favorites'}
-                    <div class="tabbable">
-                        <ul class="nav nav-tabs" id="myTab2">
-                            <li class="active">
 
-                                <a data-toggle="tab" href="#fvideos">
-                                    <h5>{lang code='user_fav_videos'}</h5>
-                                </a>
-                            </li>
-                        </ul>
-                        <header class="clearfix manage-tab-header">
-                            <div class="no_padding col-lg-6 col-md-6 col-sm-12">
-                                <h2>{lang code='com_manage_fav'}</h2>
-                            </div>
-                            <div class="pull-right col-lg-6 col-md-6 col-sm-12">
-                                <div class="row">
-                                    <form class="clearfix searchBox" id="form1" name="form1" method="get">
-                                        <div class="input-group">
-                                            <input name="query" type="text" class="form-control" id="query" value="{display_clean($smarty.get.query)}"/>
-                                            <span class="input-group-btn">
-											<input name="mode" value="{$mode}" type="hidden"/>
-											<input name="input" type="submit" class="btn btn-primary" value="{lang code='search'}"/>
-										</span>
-                                        </div>
-                                    </form>
-                                </div>
-                            </div>
-                        </header>
-                        <!-- Manage Uploaded Videos Start -->
-                        <form name="videos_manager" method="post">
-                            <table class="table table-bordered table-striped manageUsersTable">
-                                <tr>
-                                    <td><i class="icon-facetime-video"></i> Videos Details</td>
-                                    <td>Option</td>
+                    {if !empty($uservids)}
+                        <table class="table table-bordered table-striped manageUsersTable">
+                            <tr>
+                                <td><i class="icon-facetime-video"></i> Videos Details</td>
+                                <td class="text-center">Option</td>
+                            </tr>
+                            {section name=uvid loop=$uservids}
+                                <tr class="item-video" data-id="{$uservids[uvid]['videoid']}">
+                                    {include file="$style_dir/blocks/manage/account_video.html" video=$uservids[uvid] control='full' }
                                 </tr>
-                                {section name=uvid loop=$uservids}
-                                    <tr class="item-video" data-id="{$uservids[uvid]['videoid']}">
-                                        {include file="$style_dir/blocks/manage/account_video.html" video=$uservids[uvid] control='full'}
-                                    </tr>
-                                    {sectionelse}
-                                    <div><strong><em>{lang code='you_dont_hv_fav_vids'}</em></strong></div>
-                                {/section}
-                            </table>
-                            {include file="$style_dir/blocks/pagination.html"}
+                            {/section}
+                        </table>
+                        {include file="$style_dir/blocks/pagination.html"}
+                    {else}
+                        <div>
+                            <strong><em>{lang code="you_dont_have_videos"}</em></strong>
+                        </div>
+                    {/if}
+
+                {elseif $mode =='favorites'}
+                <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                    <h2 style="margin-top: 20px;">{lang('user_fav_videos')}</h2>
+                </div>
+                <div class="pull-right col-lg-8 col-md-8 col-sm-12 col-xs-12">
+                    <div class="row">
+                        <form class="clearfix searchBox" id="form1" name="form1" method="get">
+                            <input name="mode" value="{$mode}" type="hidden"/>
+                            <div class="input-group form-group">
+                                <input name="query" type="text" class="form-control" id="query" value="{display_clean($smarty.get.query)}"/>
+                                <span class="input-group-btn">
+                                    <button class="btn btn-primary" type="submit" name="input">{lang code='search'}</button>
+                                </span>
+                            </div>
                         </form>
                     </div>
+                </div>
+
+                    {if !empty($uservids)}
+                        <table class="table table-bordered table-striped manageUsersTable">
+                            <tr>
+                                <td><i class="icon-facetime-video"></i> Videos Details</td>
+                                <td>Option</td>
+                            </tr>
+                            {section name=uvid loop=$uservids}
+                                <tr class="item-video" data-id="{$uservids[uvid]['videoid']}">
+                                    {include file="$style_dir/blocks/manage/account_video.html" video=$uservids[uvid] control='full'}
+                                </tr>
+                            {/section}
+                        </table>
+                        {include file="$style_dir/blocks/pagination.html"}
+                    {else}
+                        <div>
+                            <strong><em>{lang code='you_dont_hv_fav_vids'}</em></strong>
+                        </div>
+                    {/if}
                 {/if}
             </div>
         </div>

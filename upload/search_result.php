@@ -24,14 +24,18 @@ switch($type){
 }
 
 if (!User::getInstance()->hasPermission('view_' . $type) || !isSectionEnabled($type)) {
-    redirect_to(Network::get_server_url());
+    redirect_to(DirPath::getUrl('root'));
 }
+
+$params = [];
+$params['search'] = $_GET['query'];
+$params['ban_status'] = 'no';
 
 switch($type) {
     case 'videos':
         $obj = Video::getInstance();
-
         break;
+
     case 'photos':
         $obj = Photo::getInstance();
         break;
@@ -42,6 +46,8 @@ switch($type) {
 
     case 'channels':
         $obj = User::getInstance();
+        $params['channel_enable'] = true;
+        $params['not_userid'] =  userquery::getInstance()->get_anonymous_user();
         break;
 }
 
@@ -49,7 +55,6 @@ $params = [];
 if ($access_public_video && !$access_video) {
     $params['public'] = true;
 }
-$params['search'] = $_GET['query'];
 $params['limit'] = create_query_limit($page, $obj->getSearchLimit());
 $results = $obj->getAll($params);
 
@@ -77,7 +82,5 @@ if (get('query')) {
     }
 }
 
-//Displaying The Template
 template_files('search.html');
 display_it();
-

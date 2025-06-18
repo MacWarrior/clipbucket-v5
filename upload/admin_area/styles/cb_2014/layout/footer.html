@@ -6,10 +6,10 @@
 	</div>
 		<div class="col-lg-6 col-md-6 col-sm-12 col">
 			<div class="col-right" style="float:right;color:#fff;">
-				{if in_dev()}
+				{if System::isInDev()}
 					<i class="fa fa-bug open-modal" title="{lang code='open_debug'}" data-toggle="modal" data-target="#devModal"></i>
 				{/if}
-				<em><a href="https://github.com/MacWarrior/clipbucket-v5" target="_blank">V{$Cbucket->cbinfo.version} - {$Cbucket->cbinfo.rev}</a></em> | <a href="https://github.com/MacWarrior/clipbucket-v5/issues" target="_blank">Bug report</a>
+				<em><a href="https://github.com/MacWarrior/clipbucket-v5" target="_blank">V{ClipBucket::getInstance()->cbinfo.version} - {ClipBucket::getInstance()->cbinfo.rev}</a></em> | <a href="https://github.com/MacWarrior/clipbucket-v5/issues" target="_blank">Bug report</a>
 			</div>
 		</div>
 	</div>

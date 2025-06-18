@@ -64,9 +64,8 @@ class CBreindex
                 }
 
                 if ($params['photos_count']) {
-                    global $cbphoto;
                     $details = ['user' => $params['user'], 'active' => 'yes', 'count_only' => true];
-                    $photos_count = $cbphoto->get_photos($details);
+                    $photos_count = CBPhotos::getInstance()->get_photos($details);
                     $arr[] = $photos_count;
                 }
 

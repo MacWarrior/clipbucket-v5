@@ -2,12 +2,9 @@
 define('THIS_PAGE', 'rss');
 require 'includes/config.inc.php';
 
-if( !isSectionEnabled('videos') || config('enable_rss_feeds') == 'no' || !User::getInstance()->hasPermission('view_videos')){
-    redirect_to(Network::get_server_url());
-    die;
+if( config('enable_rss_feeds') != 'yes' || !isSectionEnabled('videos') || !User::getInstance()->hasPermission('view_videos')){
+    redirect_to(cblink(['name' => 'error_403']));
 }
-
-header("Content-type: text/xml; charset=utf-8");
 
 $limit = 20;
 $page = $_GET['page'];
@@ -56,18 +53,20 @@ switch ($mode) {
 }
 
 subtitle($title);
+
+header("Content-type: text/xml; charset=utf-8");
 ?>
 
 <rss version="2.0" xmlns:media="http://search.yahoo.com/mrss/">
     <channel>
         <title><?php echo cbtitle(); ?></title>
-        <link><?php echo Network::get_server_url(); ?></link>
+        <link><?php echo DirPath::getUrl('root'); ?></link>
         <image>
             <url><?php echo get_website_logo_path(); ?></url>
-            <link><?php echo Network::get_server_url(); ?></link>
+            <link><?php echo DirPath::getUrl('root'); ?></link>
             <title><?php echo cbtitle(); ?></title>
         </image>
-        <description><?php echo $Cbucket->configs['description']; ?></description>
+        <description><?php echo config('description'); ?></description>
         <?php
         if ($total_vids) {
             ?>

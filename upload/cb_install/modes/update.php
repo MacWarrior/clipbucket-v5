@@ -5,10 +5,6 @@
     </div>
 </div>
 
-<?php
-
-
-?>
 <div id="sub_container" class="grey-text"">
 <div style="text-align: center;">
     <div class="errorDiv" style="display:none;"></div>
@@ -17,21 +13,21 @@
     <dl style="margin-top: 10px;">
         <dd>
             <?php
-
                 echo '<div id="update_button"><span>A new version is available ! Click here to update <button class="btn btn-success update_core " style="min-width: 6em;">
                         <div class="text">Update</div>
                         <div class="spinner-content" id="spinner-content" style="display: none;">
                             <p class="fa-spinner fa fa-spin animate-spin"></p>
                         </div>
                         </button></span><br></div>';
-                $diff_log = Update::getInstance()->getChangeLogDiffCurrent();?>
-                <div id="changelog">
-                    <?php if ($diff_log) {
-                        echo Update::getInstance()->getChangelogHTML($diff_log);
-                    } else {
-                        echo '<span>The new revision has the same changelog</span>';
-                    } ?>
-                </div>
+                $diff_log = Update::getInstance()->getChangeLogDiffCurrent();
+            ?>
+            <div id="changelog">
+                <?php if ($diff_log) {
+                    echo Update::getInstance()->getChangelogHTML($diff_log);
+                } else {
+                    echo '<span>The new revision has the same changelog</span>';
+                } ?>
+            </div>
         </dd>
     </dl>
 </div>
@@ -43,7 +39,8 @@
                 <div class="text">Continue to next step</div>
                 <div class="spinner-content" id="spinner-content" style="display: none;">
                     <p class="fa-spinner fa fa-spin animate-spin"></p>
-                </div></button>
+                </div>
+            </button>
         </div>
     </form>
 </div>

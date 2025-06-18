@@ -458,7 +458,7 @@ class Tmdb
             case 'series':
                 break;
             default:
-                if( in_dev() ){
+                if( System::isInDev() ){
                     $msg = 'Wrong TMDB type : ' . $type;
                     error_log($msg);
                     DiscordLog::sendDump($msg);

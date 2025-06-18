@@ -6,7 +6,7 @@
     </a>
 </div>
 <div class="search_box well" id="searchdiv" {if $smarty.cookies.show_searchdiv_search!='show'} style="display:none;"{/if}>
-  <form action="photo_manager.php" method="get" name="search_photos">
+  <form action="{DirPath::getUrl('admin_area')}photo_manager.php" method="get" name="search_photos">
     <div class="row">
       <div class="col-md-4">
         <div class="form-group">
@@ -54,7 +54,7 @@
           <label for="extension">Extension</label>
           <select class="form-control" name="extension" id="extension">
             <option value="" ></option>
-            {foreach from=$cbphoto->exts item=ext}
+            {foreach from=CBPhotos::getInstance()->exts item=ext}
               <option value="{$ext}"{if $smarty.get.extension == $ext} selected{/if}>{$ext|capitalize}</option>
             {/foreach}
           </select>

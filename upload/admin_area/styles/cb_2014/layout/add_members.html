@@ -1,5 +1,5 @@
-{assign var='required_fields' value=$userquery->load_signup_fields()}
-{assign var='custom_field' value=$userquery->custom_signup_fields}
+{assign var='required_fields' value=userquery::getInstance()->load_signup_fields()}
+{assign var='custom_field' value=userquery::getInstance()->custom_signup_fields}
 <div class="heading">
     <h2>Add New User</h2>
 </div>
@@ -112,7 +112,7 @@
         <div class="col-md-4">
             <label for="level">User level</label>
             <select class="form-control" name="level" id="level">
-                {assign var=levels value=$userquery->get_levels()}
+                {assign var=levels value=userquery::getInstance()->get_levels()}
                 {foreach from=$levels item=level}
                 <option value="{$level.user_level_id}" {if isset($smarty.post.level) && $smarty.post.level==$level.user_level_id} selected{elseif $level.user_level_id== UserLevel::getDefaultId()}selected{/if}>{$level.user_level_name}</option>
                 {/foreach}

@@ -1,4 +1,4 @@
-var page = '/ajax.php';
+var page = baseurl+'ajax.php';
 var loading_img = "<img style='vertical-align:middle' src='"+imageurl+"/ajax-loader.gif'>";
 var loading = loading_img+" Loading...";
 
@@ -32,7 +32,7 @@ function load_more(limit,mode,inner_mode,append_id,attrb,cat_id,total)
             $('#'+inner_mode).html('loading');
         },
         type: 'POST',
-        url: '/ajax.php',
+        url: baseurl+'ajax.php',
         data: {
             limit : limit,
             mode : mode,
@@ -77,8 +77,8 @@ var total_size = 0;
 var cur_speed = 0;
 
 var status_refesh = 1 //in seconds
-var result_page = '/actions/file_results.php';
-var download_page = '/actions/file_downloader.php';
+var result_page = baseurl+'actions/file_results.php';
+var download_page = baseurl+'actions/file_downloader.php';
 var count = 0;
 
 var force_stop = false;
@@ -105,7 +105,7 @@ function check_remote_url()
         dataType : 'json',
         beforeSend : function() {
             status_update();
-            $("#loading").html('<div style="float:left;display:inline-block;"><img src="'+imageurl+'/ajax-loader.gif"></div><div style="float:left;line-height:16px;padding-left:5px;">'+lang.remoteUploadFile+'</div><div class="clear"></div>');
+            $("#loading").html('<div style="float:left;display:inline-block;"><img src="'+imageurl+'/ajax-loader.gif"/></div><div style="float:left;line-height:16px;padding-left:5px;">'+lang.remoteUploadFile+'</div><div class="clear"></div>');
             $('#remoteFileName').replaceWith('"'+file_name+'"');
         },
         success: function(data) {
@@ -119,7 +119,7 @@ function check_remote_url()
 
             var vid = data.vid;
 
-            $.post('/actions/file_uploader.php', {
+            $.post(baseurl+'actions/file_uploader.php', {
                 "getForm":"get_form",
                 "title":$("#remote_file_url").val(),
                 "objId":remoteObjID,
@@ -221,7 +221,7 @@ function status_update()
 
 function upload_file(Val,file_name)
 {
-    var page = '/actions/file_downloader.php';
+    var page = baseurl+'actions/file_downloader.php';
     $.post(page, {
         file_url : Val,
         file_name : file_name
@@ -541,7 +541,7 @@ function collection_actions(form,mode,objID,result_con,type,cid)
                  $(result_con).html('No Data returned');
                  return false;
             }
-            $.post('/actions/add_to_collection.php', {
+            $.post(baseurl+'actions/add_to_collection.php', {
                 mode: mode,
                 cid: value,
                 obj_id: objID,
@@ -907,10 +907,12 @@ function getAllComments(type,type_id,last_update,pageNum,total,object_type,admin
 }
 
 function checkUncheckAll(theElement) {
-    var theForm = theElement.form, z = 0;
+    let theForm = theElement.form
+        , z = 0;
 
+    console.log(theElement.form);
     for(z=0; z<theForm.length;z++){
-        if(theForm[z].type == 'checkbox' && theForm[z].name != 'checkall' && theForm[z].disabled == false){
+        if(theForm[z].type === 'checkbox' && theForm[z].name !== 'checkall'){
             theForm[z].checked = theElement.checked;
         }
     }
@@ -921,7 +923,7 @@ function checkUncheckAll(theElement) {
  */
 function rate(id,rating,type)
 {
-    var page = '/ajax.php';
+    var page = baseurl+'ajax.php';
     $.post(page, {
         mode : 'rating',
         id:id,
@@ -979,6 +981,10 @@ function set_cookie_secure(name, value){
     }
 }
 
+function unset_cookie(name){
+    document.cookie=name + "=;expires=Thu, 01 Jan 1970 00:00:01 GMT;path=/;samesite=strict;";
+}
+
 function age_disclaimer(accept) {
     if ( accept) {
         $('#disclaimer').hide();
@@ -989,39 +995,47 @@ function age_disclaimer(accept) {
     }
 }
 
-function progressVideoCheck(ids_to_check_progress, displayType) {
+function progressVideoCheck(ids_to_check_progress, displayType, intervalName) {
+    if (typeof intervalName === 'undefined') {
+        intervalName = 'intervalId';
+    }
     if (ids_to_check_progress && ids_to_check_progress.length > 0) {
-        intervalId = setInterval(function () {
+        window[intervalName] = setInterval(function () {
             $.post({
-                url: '/actions/progress_video.php',
+                url: baseurl+'actions/progress_video.php',
                 dataType: 'json',
                 data: {
                     ids: ids_to_check_progress,
                     output: displayType
                 },
                 success: function (response) {
-                    var data = response.data;
+                    let data = response.data;
+
+                    if( data.videos === undefined ){
+                        clearInterval(window[intervalName]);
+                        return;
+                    }
 
                     data.videos.forEach(function (video) {
-                        if (video.status.toLowerCase() == 'processing') {
+                        if (video.status.toLowerCase() === 'processing') {
                             //update %
                             var process_div = $('.processing[data-id="' + video.videoid + '"]');
                             //if process don't exist : get thumb + process div
-                            if (process_div.length == 0) {
+                            if (process_div.length === 0) {
                                 $('.item-video[data-id="'+video.videoid+'"]').html(video.html);
                             } else {
                                 process_div.find('span').html(video.percent + '%');
                             }
                         } else {
                             $('.item-video[data-id="'+video.videoid+'"]').html(video.html);
-                            if (displayType === 'view_channel_player' && data.player !== undefined && data.player.id == video.videoid) {
+                            if (displayType === 'view_channel_player' && data.player !== undefined && data.player.id === video.videoid) {
                                 $('#cb_player').html(data.player.html);
                             }
                         }
                     });
 
                     if (response.all_complete) {
-                        clearInterval(intervalId);
+                        clearInterval(window[intervalName]);
                     }
                 }
             })

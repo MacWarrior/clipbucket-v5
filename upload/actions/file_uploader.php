@@ -1,15 +1,13 @@
 <?php
 define('THIS_PAGE', 'file_uploader');
-
 include('../includes/config.inc.php');
+
 require_once DirPath::get('classes') . 'sLog.php';
 
 if( !User::getInstance()->hasPermission('allow_video_upload') ){
     upload_error(lang('insufficient_privileges_loggin'));
     die();
 }
-
-global $cbvid, $Upload, $eh;
 
 $mode = '';
 if ($_FILES['Filedata']) {
@@ -24,7 +22,7 @@ if ($_POST['getForm']) {
 
 switch ($mode) {
     case 'update_video':
-        $cbvid->update_video();
+        CBvideo::getInstance()->update_video();
 
         if (error()) {
             echo json_encode(['error' => error('single')]);
@@ -54,8 +52,7 @@ switch ($mode) {
             'tags'        => $tags
         ];
 
-        $version = Update::getInstance()->getDBVersion();
-        if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 331)) {
+        if( Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.0', '331') ){
             $category = [Category::getInstance()->getDefaultByType('video')['category_id']];
         } else {
             $category = [];
@@ -68,7 +65,7 @@ switch ($mode) {
         $vid = $_POST['vid'];
         assign('videoid', $vid);
 
-        $videoFields = $Upload->load_video_fields($vidDetails);
+        $videoFields = Upload::getInstance()->load_video_fields($vidDetails);
         Template('blocks/upload/upload_form.html');
         break;
 
@@ -104,8 +101,7 @@ switch ($mode) {
             $filename_without_ext = substr($filename_without_ext, 0, config('max_video_title'));
         }
 
-        $version = Update::getInstance()->getDBVersion();
-        if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 331)) {
+        if( Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.0', '331') ){
             $category = [Category::getInstance()->getDefaultByType('video')['category_id']];
         } else {
             $category = [];
@@ -128,27 +124,22 @@ switch ($mode) {
             $vidDetails['broadcast'] = 'logged';
         }
 
-        $vid = $Upload->submit_upload($vidDetails);
+        $vid = Upload::getInstance()->submit_upload($vidDetails);
 
         if (!$vid) {
-            upload_error($eh->get_error()[0]['val']);
+            upload_error(errorhandler::getInstance()->get_error()[0]['val']);
             die();
         }
 
         if (!empty($_POST['collection_id'])) {
             Collection::getInstance()->addCollectionItem($vid, $_POST['collection_id'], 'videos');
         }
-        $Upload->add_conversion_queue($file_name . '.' . $extension);
+        Upload::getInstance()->add_conversion_queue($file_name . '.' . $extension);
 
-        $default_cmd = System::get_binaries('php') . ' -q ' . DirPath::get('actions') . 'video_convert.php ' . $DestinationFilePath . ' ' . $file_name . ' ' . $file_directory . ' ' . $logFile;
-        if (stristr(PHP_OS, 'WIN')) {
-            $complement = '';
-        } elseif (stristr(PHP_OS, 'darwin')) {
-            $complement = ' </dev/null >/dev/null &';
-        } else { // for ubuntu or linux
-            $complement = ' > /dev/null &';
+        $cmd = FFmpeg::launchConversion($file_name);
+        if( System::isInDev() ){
+            $log->writeLine(date('Y-m-d H:i:s').' - Conversion command : ' . $cmd);
         }
-        exec($default_cmd . $complement);
 
         $log->writeLine(date('Y-m-d H:i:s').' - Video Converson File executed successfully with Target File > ' . $DestinationFilePath);
 
@@ -156,7 +147,7 @@ switch ($mode) {
         die();
 
     default:
-        if( in_dev() ){
+        if( System::isInDev() ){
             upload_error('Unknown command : '.$mode);
         } else {
             upload_error('Unknown command');

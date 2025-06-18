@@ -39,7 +39,7 @@ class ComposerStaticInitc5bfc8e5670876b11014ce9f23d445ff
         ),
         'Psr\\Log\\' => 
         array (
-            0 => __DIR__ . '/..' . '/psr/log/Psr/Log',
+            0 => __DIR__ . '/..' . '/psr/log/src',
         ),
         'Psr\\Http\\Server\\' => 
         array (
@@ -85,7 +85,6 @@ class ComposerStaticInitc5bfc8e5670876b11014ce9f23d445ff
         'Smarty' => __DIR__ . '/..' . '/smarty/smarty/libs/Smarty.class.php',
         'SmartyBC' => __DIR__ . '/..' . '/smarty/smarty/libs/SmartyBC.class.php',
         'SmartyCompilerException' => __DIR__ . '/..' . '/smarty/smarty/libs/sysplugins/smartycompilerexception.php',
-        'SmartyCompilerException80' => __DIR__ . '/..' . '/smarty/smarty/libs/sysplugins/smartycompilerexception80.php',
         'SmartyException' => __DIR__ . '/..' . '/smarty/smarty/libs/sysplugins/smartyexception.php',
         'Smarty_Autoloader' => __DIR__ . '/..' . '/smarty/smarty/libs/Autoloader.php',
         'Smarty_CacheResource' => __DIR__ . '/..' . '/smarty/smarty/libs/sysplugins/smarty_cacheresource.php',

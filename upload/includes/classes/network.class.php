@@ -2,7 +2,7 @@
 class Network{
 
     // Cloudflare IPv4 : https://www.cloudflare.com/ips-v4
-    private static $cloudflare_ipv4 = [
+    private static array $cloudflare_ipv4 = [
         '173.245.48.0/20',
         '103.21.244.0/22',
         '103.22.200.0/22',
@@ -21,7 +21,7 @@ class Network{
     ];
 
     // Cloudflare IPv6 : https://www.cloudflare.com/ips-v6
-    private static $cloudflare_ipv6 = [
+    private static array $cloudflare_ipv6 = [
         '2400:cb00::/32',
         '2606:4700::/32',
         '2803:f800::/32',
@@ -33,7 +33,7 @@ class Network{
 
     private static function is_ipv4_in_range(string $ip, string $range): bool
     {
-        if (strpos($range, '/') === false){
+        if (!str_contains($range, '/')){
             $range .= '/32';
         }
 
@@ -46,7 +46,7 @@ class Network{
 
     private static function is_ipv6_in_range(string $ip, string $range): bool
     {
-        if (strpos($range, '/') === false){
+        if (!str_contains($range, '/')){
             $range .= '/32';
         }
 
@@ -135,7 +135,7 @@ class Network{
             return $ip;
         }
 
-        if( in_dev() ){
+        if( System::isInDev() ){
             $msg = 'IP detection error : ' . $ip;
             error_log($msg);
             \DiscordLog::sendDump($msg);
@@ -210,7 +210,7 @@ class Network{
             default:
                 $msg = 'Wrong $type for Network::get_ip_infos : ' . $type;
                 error_log($msg);
-                if( in_dev() ){
+                if( System::isInDev() ){
                     \DiscordLog::sendDump($msg);
                 }
         }
@@ -219,7 +219,7 @@ class Network{
 
     public static function is_current_url($needed): bool
     {
-        return strpos($_SERVER['REQUEST_URI'], $needed) !== false;
+        return str_contains($_SERVER['REQUEST_URI'], $needed);
     }
 
     /**
@@ -255,7 +255,7 @@ class Network{
         }
     }
 
-    public static function download_file($url_source, $filepath_destination)
+    public static function download_file($url_source, $filepath_destination): void
     {
         file_put_contents($filepath_destination . '_ongoing', '');
 
@@ -280,8 +280,8 @@ class Network{
 
     public static function get_server_url(): string
     {
-        if( !empty(trim(config('base_url'))) && filter_var(config('base_url'), FILTER_VALIDATE_URL) ){
-            return config('base_url');
+        if( function_exists('config') && Clipbucket_db::isAvailable() && !empty(trim(config('base_url'))) && filter_var(config('base_url'), FILTER_VALIDATE_URL) ){
+            return rtrim(config('base_url'), '/') . '/';
         }
         
         $port = '';
@@ -289,7 +289,23 @@ class Network{
             $port = ':' . $_SERVER['SERVER_PORT'];
         }
 
-        return self::get_server_protocol() . $_SERVER['HTTP_HOST'] . $port . '/';
+        $subdir = str_replace('\\', '/', dirname($_SERVER['SCRIPT_NAME']));
+
+        // Exclude unwanted subdirectories
+        do {
+            $old = $subdir;
+            $subdir = preg_replace('#/(cb_install|ajax|admin_area|actions|sse)(?:/|$)#', '/', $subdir);
+        } while ($subdir !== $old);
+
+        $subdir = preg_replace('#/+#', '/', $subdir);
+        if ($subdir !== '/') {
+            $subdir = rtrim($subdir, '/');
+        }
+        if ($subdir === '/' || $subdir === '\\') {
+            $subdir = '';
+        }
+
+        return rtrim(self::get_server_protocol() . $_SERVER['HTTP_HOST'] . $port . $subdir, '/') . '/';
     }
 
     private static function get_server_protocol(): string
@@ -303,7 +319,7 @@ class Network{
         return $protocol;
     }
 
-    private static function is_ssl(): bool
+    public static function is_ssl(): bool
     {
         if (isset($_SERVER['HTTPS'])) {
             if ('on' == strtolower($_SERVER['HTTPS'])) {
@@ -320,5 +336,56 @@ class Network{
             return true;
         }
         return false;
+    }
+
+    /**
+     * @throws Exception
+     */
+    public static function check_forbidden_directory($show_error = true): bool
+    {
+        $server_url = self::get_server_url();
+
+        $forbidden_subdir = [
+            'upload'
+            ,'upload_photo'
+            ,'files'
+            ,'rss'
+            ,'collections'
+            ,'collection'
+            ,'videos'
+            ,'video'
+            ,'item'
+            ,'photos'
+            ,'channels'
+            ,'user'
+            ,'signup'
+            ,'signin'
+            ,'page'
+        ];
+
+        foreach ($forbidden_subdir as $subdir) {
+            if(str_contains($server_url, '/' . $subdir . '/')) {
+                if( $show_error ){
+                    if( function_exists('lang') ){
+                        $msg = lang('directory_x_is_forbidden', $subdir);
+                    } else {
+                        $msg = 'The subdirectory "' . $subdir . '" is reserved by the system and cannot be used to host the site. Please choose a different one to ensure proper platform functionality.';
+                    }
+
+                    if( function_exists('e') ){
+                        e($msg);
+                    } else {
+                        echo $msg;
+                    }
+
+                    if( System::isInDev() ){
+                        DiscordLog::sendDump($msg);
+                    }
+                }
+
+                return false;
+            }
+        }
+        return true;
     }
 }

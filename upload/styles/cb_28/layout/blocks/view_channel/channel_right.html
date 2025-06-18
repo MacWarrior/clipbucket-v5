@@ -1,12 +1,36 @@
-<div id="userFeeds" class="user-activities clearfix">
-	{assign var=userFeeds value=$cbfeeds->getUserFeeds($u)}
-	{if $userFeeds}
-	{foreach from=$userFeeds item=userFeed}
-		{include file="$style_dir/blocks/feed.html" feed=$userFeed}
-	{/foreach}
-	{else}
-	<div class="well well-info clearfix">
-		{lang('no_activity', $u.username)}
+{if !empty($userFeeds)}
+	<h2>{lang code="user_activity"}</h2>
+	<div id="userFeeds" class="user-activities clearfix sidebar-items">
+		{foreach from=$userFeeds item=userFeed}
+			{include file="$style_dir/blocks/feed.html" feed=$userFeed}
+		{/foreach}
 	</div>
-	{/if}
-</div>
+{else}
+	<div class="well well-info clearfix">
+		{lang('no_activity', display_clean($user.username))}
+	</div>
+{/if}
+
+{if !empty($popular_users)}
+	<h2>{lang code="popular_users"}</h2>
+	<div class="clearfix sidebar-channels">
+		{foreach $popular_users as $popular}
+			<div class="clearfix channel-item">
+				<a href="{User::getInstance($popular.userid)->getLink('channel')}" class="avatar">
+					<img src="{userquery::getInstance()->getuserthumb($popular,'small')}" width="50" height="50" class="img-circle" alt="channel_thumb"/>
+				</a>
+				<div class="channel-info">
+					<h3>
+						<a href="{User::getInstance($popular.userid)->getLink('channel')}">{display_clean(User::getInstance($popular.userid)->get('username'))}</a>
+					</h3>
+					<div class="clearfix views-videos">
+						<span>{User::getInstance($popular.userid)->get('profile_hits')|number_format} {lang code='views'}</span>
+						{if isSectionEnabled('videos') && User::getInstance($popular.userid)->get('show_my_videos') == 'yes'}
+							<span>{User::getInstance($popular.userid)->get('total_videos')|number_format} {lang code='videos'}</span>
+						{/if}
+					</div>
+				</div>
+			</div>
+		{/foreach}
+	</div>
+{/if}

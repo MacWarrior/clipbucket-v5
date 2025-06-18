@@ -5,7 +5,7 @@ define('PARENT_PAGE', 'collections');
 require 'includes/config.inc.php';
 
 if( config('collectionsSection') != 'yes' || (config('videosSection') != 'yes' && config('photosSection') != 'yes') ) {
-    redirect_to(Network::get_server_url());
+    redirect_to(DirPath::getUrl('root'));
 }
 
 $child_ids = false;
@@ -21,7 +21,7 @@ $page = mysql_clean($_GET['page']);
 $get_limit = create_query_limit($page, config('collection_per_page'));
 $sort_label = SortType::getSortLabelById($_GET['sort']) ?? '';
 $params = Collection::getInstance()->getFilterParams($sort_label, []);
-$params = Collection::getInstance()->getFilterParams($_GET['time'], $params);
+$params = Collection::getInstance()->getFilterParams($_GET['time'] ?? '', $params);
 $params['limit'] = $get_limit;
 if( $child_ids ){
     $params['category'] = $child_ids;

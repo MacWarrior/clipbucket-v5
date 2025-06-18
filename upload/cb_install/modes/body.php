@@ -1,19 +1,36 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
     <?php
-    $cache_key = DEVELOPMENT_MODE ? time() : str_replace('.', '', Update::getInstance()->getCurrentCoreVersion()) . Update::getInstance()->getCurrentCoreRevision();
+    $cache_key = System::isInDev() ? time() : str_replace('.', '', Update::getInstance()->getCurrentCoreVersion()) . Update::getInstance()->getCurrentCoreRevision();
+    $favicon = DirPath::getUrl('styles') . 'cb_28/theme/images/favicon.png';
     ?>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+        <link rel="apple-touch-icon" sizes="57x57" href="<?php echo $favicon; ?>">
+        <link rel="apple-touch-icon" sizes="60x60" href="<?php echo $favicon; ?>">
+        <link rel="apple-touch-icon" sizes="72x72" href="<?php echo $favicon; ?>">
+        <link rel="apple-touch-icon" sizes="76x76" href="<?php echo $favicon; ?>">
+        <link rel="apple-touch-icon" sizes="114x114" href="<?php echo $favicon; ?>">
+        <link rel="apple-touch-icon" sizes="120x120" href="<?php echo $favicon; ?>">
+        <link rel="apple-touch-icon" sizes="144x144" href="<?php echo $favicon; ?>">
+        <link rel="apple-touch-icon" sizes="152x152" href="<?php echo $favicon; ?>">
+        <link rel="apple-touch-icon" sizes="180x180" href="<?php echo $favicon; ?>">
+        <link rel="icon" type="image/png" sizes="192x192" href="<?php echo $favicon; ?>">
+        <link rel="icon" type="image/png" sizes="32x32" href="<?php echo $favicon; ?>">
+        <link rel="icon" type="image/png" sizes="96x96" href="<?php echo $favicon; ?>">
+        <link rel="icon" type="image/png" sizes="16x16" href="<?php echo $favicon; ?>">
+        <meta name="msapplication-TileImage" content="<?php echo $favicon; ?>">
+        <meta name="msapplication-TileColor" content="#ffffff">
+        <meta name="theme-color" content="#ffffff">
         <title>ClipBucket v<?php echo Update::getInstance()->getCurrentCoreVersion(); ?> Installer</title>
-        <link href="./style<?php if(!DEVELOPMENT_MODE) echo '.min'?>.css" rel="stylesheet" type="text/css"/>
-        <script type="text/javascript" src="/vendor/components/jquery/jquery.min.js?v=<?php echo $cache_key; ?>"></script>
-        <script type="text/javascript" src="/vendor/select2/select2/dist/js/select2.min.js?v=<?php echo $cache_key; ?>"></script>
-        <script type="text/javascript" src="./functions<?php if(!DEVELOPMENT_MODE) echo '.min'?>.js?v=<?php echo $cache_key; ?>"></script>
+        <link href="./style<?php if(!System::isInDev()) echo '.min'?>.css" rel="stylesheet" type="text/css"/>
+        <script type="text/javascript" src="../vendor/components/jquery/jquery.min.js?v=<?php echo $cache_key; ?>"></script>
+        <script type="text/javascript" src="../vendor/select2/select2/dist/js/select2.min.js?v=<?php echo $cache_key; ?>"></script>
+        <script type="text/javascript" src="./functions<?php if(!System::isInDev()) echo '.min'?>.js?v=<?php echo $cache_key; ?>"></script>
         <link href="./bootstrap/css/bootstrap-theme.min.css?v=<?php echo $cache_key; ?>" rel="stylesheet" type="text/css"/>
         <link href="./bootstrap/css/bootstrap.min.css?v=<?php echo $cache_key; ?>" rel="stylesheet" type="text/css"/>
-        <link href="/vendor/fortawesome/font-awesome/css/font-awesome.min.css?v=<?php echo $cache_key; ?>" rel="stylesheet" type="text/css"/>
-        <link href="/vendor/select2/select2/dist/css/select2.min.css?v=<?php echo $cache_key; ?>" rel="stylesheet" type="text/css"/>
+        <link href="../vendor/fortawesome/font-awesome/css/font-awesome.min.css?v=<?php echo $cache_key; ?>" rel="stylesheet" type="text/css"/>
+        <link href="../vendor/select2/select2/dist/css/select2.min.css?v=<?php echo $cache_key; ?>" rel="stylesheet" type="text/css"/>
     </head>
     <body>
     <div class="top clearfix">

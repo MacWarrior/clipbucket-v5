@@ -6,7 +6,7 @@
         <div class="watermarSettings">
             <div class="col-md-4">
                 <label class="pull-right inline" style="  margin-right: 238px;">
-                    <input name="watermark_photo" id="watermark_photo" type="checkbox" value="1"{if $row.watermark_photo == '1'}checked{/if}  name="closed"  type="checkbox" class="ace ace-switch ace-switch-5 bootstrap-switch-on" >
+                    <input name="watermark_photo" id="watermark_photo" type="checkbox" value="1"{if $row.watermark_photo == '1'}checked{/if}  name="closed"  type="checkbox" class="ace ace-switch ace-switch-5" >
                     Enable Watermark
                     <span class="lbl"></span>
                 </label>
@@ -43,9 +43,9 @@
         </div>
         <div class="col-md-4">
             <h4>Current Watermark</h4>
-            {assign var=file value=$cbphoto->watermark_file()}
+            {assign var=file value=CBPhotos::getInstance()->watermark_file()}
             {if $file}
-            <img src="{$cbphoto->watermark_file()}" />
+            <img src="{CBPhotos::getInstance()->watermark_file()}" />
             {else}
             <p>Watermark not found</p>
             {/if}

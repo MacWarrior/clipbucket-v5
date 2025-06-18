@@ -1,5 +1,5 @@
 <?php
-function redirect_to($url)
+function redirect_to($url): void
 {
     $header = './';
     //if not complete URL
@@ -25,7 +25,7 @@ function Fetch($name, $inside = false)
 }
 
 //Simple Template Displaying Function
-function Template($template, $layout = true)
+function Template($template, $layout = true): void
 {
     global $cbtpl;
     if ($layout) {
@@ -53,9 +53,8 @@ function templateWithMsgJson($template, bool $jsonReturn = true)
     $return = ['msg' => $msg, 'template' => $template];
     if ($jsonReturn) {
         return json_encode($return);
-    } else {
-        return $return;
     }
+    return $return;
 }
 
 function getTemplateMsg()
@@ -72,7 +71,7 @@ function getTemplate($template)
     return ob_get_clean();
 }
 
-function Assign($name, $value)
+function Assign($name, $value): void
 {
     global $cbtpl;
     $cbtpl->assign($name, $value);
@@ -84,7 +83,7 @@ function Assign($name, $value)
  * @return array
  * @throws Exception
  */
-function cb_menu()
+function cb_menu(): array
 {
     return ClipBucket::getInstance()->cbMenu();
 }
@@ -92,11 +91,11 @@ function cb_menu()
 /**
  * Function used to call display
  */
-function display_it()
+function display_it(): void
 {
     try {
         global $__devmsgs, $breadcrumb;
-        if( in_dev() ) {
+        if( System::isInDev() ) {
             assign('thebase', DirPath::get('root'));
             assign('__devmsgs', $__devmsgs);
         }
@@ -119,7 +118,11 @@ function display_it()
         assign('template_files', $new_list);
         assign('breadcrumb', $breadcrumb);
 
-        Template('body.html');
+        if( config('enable_cookie_banner') == 'yes' ){
+            assign('cookie_consent', Session::isConsentCookieSet());
+        }
+
+        template('body.html');
 
         footer();
     } catch (SmartyException $e) {
@@ -130,7 +133,7 @@ function display_it()
 /**
  * @throws Exception
  */
-function display_restorable_language_list()
+function display_restorable_language_list(): void
 {
     $restorable_langs = get_restorable_languages();
     //Get List Of Languages
@@ -155,7 +158,7 @@ function display_language_list()
 /**
  * @throws Exception
  */
-function display_language_edit()
+function display_language_edit(): void
 {
     $detail = Language::getInstance()->getLangById($_POST['language_id']);
     assign('lang_details', $detail);
@@ -214,7 +217,7 @@ function display_thumb_list($data, $type)
  * @return void
  * @throws Exception
  */
-function display_thumb_list_start($data)
+function display_thumb_list_start($data): void
 {
     $vidthumbs = [];
     if (config('num_thumbs') > $data['duration']) {
@@ -259,19 +262,19 @@ function display_thumb_list_regenerate ($data)
     return display_thumb_list_with_param($data, $vidthumbs, $vidthumbs_custom,$nb_thumbs, false);
 }
 
-function display_resolution_list($data)
+function display_resolution_list($data): void
 {
     assign('resolution_list', $data);
     echo templateWithMsgJson('blocks/resolution_list.html');
 }
 
-function display_subtitle_list($data)
+function display_subtitle_list($data): void
 {
     assign('subtitle_list', $data);
     echo templateWithMsgJson('blocks/subtitle_list.html');
 }
 
-function display_tmdb_result($data, $videoid)
+function display_tmdb_result($data, $videoid): void
 {
     assign('results', $data['results']);
     assign('search', $data['title']);
@@ -289,7 +292,7 @@ function display_tmdb_result($data, $videoid)
  * @param int $videoid
  * @return void
  */
-function display_video_view_history(array $data, int $videoid)
+function display_video_view_history(array $data, int $videoid): void
 {
     assign('results', $data['results']);
     assign('modal', $data['modal']);
@@ -319,10 +322,10 @@ function return_thumb_mini_list($data)
     assign('vidthumbs', get_thumb($data,TRUE,'168x105','auto'));
     assign('vidthumbs_custom', get_thumb($data,TRUE,'168x105','custom'));
 
-    return (templateWithMsgJson('blocks/thumb_mini_list.html'));
+    return templateWithMsgJson('blocks/thumb_mini_list.html');
 }
 
-function display_categ_form()
+function display_categ_form(): void
 {
     echo templateWithMsgJson('blocks/edit_category.html');
 }

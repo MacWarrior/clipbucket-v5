@@ -1,5 +1,3 @@
-{$myAccountLinks = $userquery->my_account_links()}
-{$leftMenuLinks = array_slice($myAccountLinks, 7)}
 <div id="main" class="clearfix container">
     <div class="clearfix">
         <section id="content" class="clearfix channels">
@@ -14,19 +12,23 @@
                 <div class="cat-col col-lg-6 col-md-6 col-sm-6 col-xs-12 clearfix">
                     {include file="$style_dir/blocks/category_list.html" type='channels'}
                 </div>
-
-                <div class="sorting-col col-lg-6 col-md-6 col-sm-6 col-xs-12 clearfix">
-                {else}
-                <div class="sorting-col col-lg-12 col-md-12 col-sm-12 col-xs-12 clearfix">
                 {/if}
-                       {if $sort_list}
+
+                <div class="sorting-col col-lg-6 col-md-6 col-sm-6 col-xs-12 clearfix pull-right">
+                    {if $sort_list}
                         <div class="dropdown">
-                            {if $sort_link}
+                            {if $smarty.get.sort}
+                                {$empty = true}
                                 {foreach from=$sort_list item=sort key=key}
                                     {if $sort_link == $key}
                                         <a href="javascript:void(0);" data-toggle="dropdown" class="dropdown-toggle">{$sort} <span class="icon-down-arrow"></span></a>
+                                        {$empty = false}
+                                        {break}
                                     {/if}
                                 {/foreach}
+                                {if $empty}
+                                    <a href="javascript:void(0);" data-toggle="dropdown" class="dropdown-toggle">{lang('sort_by_'|cat:$default_sort.label)}<span class="icon-down-arrow"></span></a>
+                                {/if}
                             {else}
                                 <a href="javascript:void(0);" data-toggle="dropdown" class="dropdown-toggle">{lang('sort_by_'|cat:$default_sort.label)}<span class="icon-down-arrow"></span></a>
                             {/if}
@@ -39,42 +41,48 @@
                                 {/foreach}
                             </ul>
                         </div>
-                       {/if}
-                        <div class="dropdown">
-                            {if $smarty.get.time}
-
-                                {foreach from=$time_list item=name key=sort name=times}
-                                    {if $smarty.get.time==$sort && isset($smarty.get.time)}
-                                        <a href="javascript:void(0);" data-toggle="dropdown" class="dropdown-toggle">{$name} <span class="icon-down-arrow"></span></a>
-                                    {/if}
-                                {/foreach}
-                            {else}
-                                <a href="javascript:void(0);" data-toggle="dropdown" class="dropdown-toggle">all time <span class="icon-down-arrow"></span></a>
+                    {/if}
+                    <div class="dropdown">
+                        {if $smarty.get.time}
+                            {$empty = true}
+                            {foreach from=$time_list item=name key=sort name=times}
+                                {if $smarty.get.time==$sort}
+                                    <a href="javascript:void(0);" data-toggle="dropdown" class="dropdown-toggle">{$name} <span class="icon-down-arrow"></span></a>
+                                    {$empty = false}
+                                    {break}
+                                {/if}
+                            {/foreach}
+                            {if $empty}
+                                <a href="javascript:void(0);" data-toggle="dropdown" class="dropdown-toggle">{lang code='alltime'}<span class="icon-down-arrow"></span></a>
                             {/if}
-                            <ul class="dropdown-menu">
-                                {foreach from=$time_list item=name key=sort name=times}
-                                    <li>
+                        {else}
+                            <a href="javascript:void(0);" data-toggle="dropdown" class="dropdown-toggle">{lang code='alltime'}<span class="icon-down-arrow"></span></a>
+                        {/if}
+                        <ul class="dropdown-menu">
+                            {foreach from=$time_list item=name key=sort name=times}
+                                <li>
                                         <a href="{cblink name=time sort=$sort type=channels}" {if $smarty.get.time==$sort} class="selected"{/if}>{if $smarty.get.time==$sort}<i class="icon-tick"></i>{/if}{$name}</a>
-                                    </li>
-                                {/foreach}
-                            </ul>
-                        </div>
+                                </li>
+                            {/foreach}
+                        </ul>
                     </div>
                 </div>
-                <div class="clearfix row">
-                    {if $users}
-                        {foreach $users as $user}
-                            {if !empty($user['username'])}
-                                <div class="item-channel col-lg-3 col-md-4 col-sm-4 col-xs-12">
-                                    {include file="$style_dir/blocks/channels.html"}
-                                </div>
-                            {/if}
-                        {/foreach}
-                    {else}
-                        <div class="well well-info">{lang code="no_channel_found"}</div>
-                    {/if}
-                </div>
-                {include file="$style_dir/blocks/pagination.html"}
+            </div>
+
+            <div class="clearfix row">
+                {if $users}
+                    {foreach $users as $user}
+                        {if !empty($user['username'])}
+                            <div class="item-channel col-lg-3 col-md-4 col-sm-4 col-xs-12">
+                                {include file="$style_dir/blocks/channels.html"}
+                            </div>
+                        {/if}
+                    {/foreach}
+                {else}
+                    <div class="well well-info">{lang code="no_channel_found"}</div>
+                {/if}
+            </div>
+            {include file="$style_dir/blocks/pagination.html"}
         </section>
         <aside id="sidebar">
             {if config("enable_advertisement") == "yes"}
@@ -85,11 +93,11 @@
                 <div class="clearfix sidebar-channels">
                     {foreach $feature_users as $user}
                         <div class="clearfix channel-item">
-                            <a href="{$userquery->profile_link($user)}" class="avatar">
-                                <img src="{$userquery->getuserthumb($user,'m')}" width="50" height="50" class="img-circle">
+                            <a href="{userquery::getInstance()->profile_link($user)}" class="avatar">
+                                <img src="{userquery::getInstance()->getuserthumb($user,'m')}" width="50" height="50" class="img-circle"/>
                             </a>
                             <div class="channel-info">
-                                <h3><a href="{$userquery->profile_link($user)}">{display_clean($user.username)}</a></h3>
+                                <h3><a href="{userquery::getInstance()->profile_link($user)}">{display_clean($user.username)}</a></h3>
                                 <div class="clearfix views-videos">
                                     <span>{prettyNum($user.profile_hits|number_format)} {lang code='views'}</span>
                                     <span>{prettyNum($user.total_videos|number_format)} {lang code='videos'}</span>

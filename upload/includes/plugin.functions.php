@@ -8,22 +8,21 @@
  *
  * @deprecated : Since v2.7
  */
-function register_action($name, $type = null)
+function register_action($name, $type = null): void
 {
-    global $Cbucket;
     if (is_array($name)) {
         foreach ($name as $key => $naam) {
             if (is_array($naam)) {
                 foreach ($naam as $name) {
-                    $Cbucket->actionList[$name][] = $key;
+                    ClipBucket::getInstance()->actionList[$name][] = $key;
                 }
             } else {
-                $Cbucket->actionList[$naam][] = $key;
+                ClipBucket::getInstance()->actionList[$naam][] = $key;
             }
         }
     } else {
         if ($type != null) {
-            $Cbucket->actionList[$type][] = $name;
+            ClipBucket::getInstance()->actionList[$type][] = $name;
         }
     }
 }
@@ -37,15 +36,14 @@ function register_action($name, $type = null)
  * then our function will get all the code for this placement and will display it
  * @param : array(Ad Code, LIMIT);
  */
-function ANCHOR($params)
+function ANCHOR($params): void
 {
     if( empty($params['place']) ){
         return;
     }
 
-    global $Cbucket;
     //Getting List of codes to display at this anchor
-    $codes = $Cbucket->get_anchor_codes($params['place']);
+    $codes = ClipBucket::getInstance()->get_anchor_codes($params['place']);
     if (!empty($codes)) {
         if (is_array($codes)) {
             foreach ($codes as $code) {
@@ -57,7 +55,7 @@ function ANCHOR($params)
     }
 
     //Getting list of function that will be performed while calling achor
-    $funcs = $Cbucket->get_anchor_function_list($params['place']);
+    $funcs = ClipBucket::getInstance()->get_anchor_function_list($params['place']);
     global $current_anchor;
     $current_anchor = $params['place'];
 
@@ -88,27 +86,25 @@ function ANCHOR($params)
 
 /**
  * FUNCTION USED TO REGISTER ANCHORS
- * before_comments etc.. see complete list on http://docs.clip-bucket.com
  *
  * @param      $name
  * @param null $type
  */
-function register_anchor($name, $type = null)
+function register_anchor($name, $type = null): void
 {
-    global $Cbucket;
     if (is_array($name)) {
         foreach ($name as $key => $naam) {
             if (is_array($naam)) {
                 foreach ($naam as $name) {
-                    $Cbucket->anchorList[$name][] = $key;
+                    ClipBucket::getInstance()->anchorList[$name][] = $key;
                 }
             } else {
-                $Cbucket->anchorList[$naam][] = $key;
+                ClipBucket::getInstance()->anchorList[$naam][] = $key;
             }
         }
     } else {
         if ($type != null) {
-            $Cbucket->anchorList[$type][] = $name;
+            ClipBucket::getInstance()->anchorList[$type][] = $name;
         }
     }
 }
@@ -127,22 +123,23 @@ function register_anchor($name, $type = null)
  */
 function register_anchor_function($method, $type, $class = null): bool
 {
-    global $Cbucket;
-
     if( empty($type) ){
-        if( in_dev() ){
+        if( System::isInDev() ){
             error_log('register_anchor_function '.$method.' must have a type specified');
         }
         return false;
     }
 
     if (empty($class)) {
-        $Cbucket->anchor_function_list[$type][] = $method;
+        if( empty(ClipBucket::getInstance()->anchor_function_list[$type]) || !in_array($method, ClipBucket::getInstance()->anchor_function_list[$type]) ){
+            ClipBucket::getInstance()->anchor_function_list[$type][] = $method;
+        }
     } else {
-        $Cbucket->anchor_function_list[$type][] = [
-            'class'    => $class
-            , 'method' => $method
-        ];
+        $entry = ['class' => $class, 'method' => $method];
+
+        if (empty(ClipBucket::getInstance()->anchor_function_list[$type]) || !in_array($entry, ClipBucket::getInstance()->anchor_function_list[$type], true)) {
+            ClipBucket::getInstance()->anchor_function_list[$type][] = $entry;
+        }
     }
     return true;
 }
@@ -154,19 +151,16 @@ function register_anchor_function($method, $type, $class = null): bool
  * it will create one, ( Header means titles ie 'Plugins' 'Videos' etc)
  *
  * @param STRING $header - Could be Plugin , Videos, Users , please check
- * http://docs.clip-bucket.com. for reference
  * @param        $name
  * @param        $link
  * @param bool $plug_folder
  * @param bool $is_player_file
  */
-function add_admin_menu($header, $name, $link, $plug_folder = false, $is_player_file = false)
+function add_admin_menu($header, $name, $link, $plug_folder = false, $is_player_file = false): void
 {
     if (NEED_UPDATE) {
         return;
     }
-
-    global $Cbucket;
 
     if ($plug_folder) {
         $link = 'plugin.php?folder=' . $plug_folder . '&file=' . $link;
@@ -193,17 +187,15 @@ function add_admin_menu($header, $name, $link, $plug_folder = false, $is_player_
  * Function used to add custom upload fields
  * In this you will provide an array that has a complete
  * details of the field such as 'name',validate_func etc
- * please check docs.clip-bucket.com for "how to add custom upload field"
  *
  * @param $array
  */
-function register_custom_upload_field($array)
+function register_custom_upload_field($array): void
 {
-    global $Upload;
     $name = key($array);
     if (is_array($array) && !empty($array[$name]['name'])) {
         foreach ($array as $key => $arr) {
-            $Upload->custom_upload_fields[$key] = $arr;
+            Upload::getInstance()->custom_upload_fields[$key] = $arr;
         }
     }
 }
@@ -212,25 +204,23 @@ function register_custom_upload_field($array)
  * Function used to add custom form fields
  * In this you will provide an array that has a complete
  * details of the field such as 'name',validate_func etc
- * please check docs.clip-bucket.com for "how to add custom form field"
  *
  * @param      $array
  * @param bool $isGroup
  */
-function register_custom_form_field($array, $isGroup = false)
+function register_custom_form_field($array, bool $isGroup = false): void
 {
-    global $Upload;
     $name = key($array);
 
     if (!$isGroup) {
         if (is_array($array) && !empty($array[$name]['name'])) {
             foreach ($array as $key => $arr) {
-                $Upload->custom_form_fields[$key] = $arr;
+                Upload::getInstance()->custom_form_fields[$key] = $arr;
             }
         }
     } else {
         if (is_array($array) && !empty($array['group_name'])) {
-            $Upload->custom_form_fields_groups[] = $array;
+            Upload::getInstance()->custom_form_fields_groups[] = $array;
         }
     }
 }
@@ -239,11 +229,11 @@ function register_custom_form_field($array, $isGroup = false)
  * Function used to add custom signup form fields
  * In this you will provide an array that has a complete
  * details of the field such as 'name',validate_func etc
- * please check docs.clip-bucket.com for "how to add custom signup field"
  *
  * @param $array
+ * @throws Exception
  */
-function register_signup_field($array)
+function register_signup_field($array): void
 {
     $name = key($array);
     if (is_array($array) && !empty($array[$name]['name'])) {
@@ -257,12 +247,12 @@ function register_signup_field($array)
  * Function used to add custom profile fields fields
  * In this you will provide an array that has a complete
  * details of the field such as 'name',validate_func etc
- * please check docs.clip-bucket.com for "how to add custom form field"
  *
  * @param      $array
  * @param bool $isGroup
+ * @throws Exception
  */
-function register_custom_profile_field($array, $isGroup = false)
+function register_custom_profile_field($array, bool $isGroup = false): void
 {
     $name = key($array);
 
@@ -282,12 +272,11 @@ function register_custom_profile_field($array, $isGroup = false)
 /**
  * Function used to add actions that will be performed
  * when video is uploaded
- * @param string Function name
+ * @param string $func Function name
  */
-function register_after_video_upload_action($func)
+function register_after_video_upload_action(string $func): void
 {
-    global $Upload;
-    $Upload->actions_after_video_upload[] = $func;
+    Upload::getInstance()->actions_after_video_upload[] = $func;
 }
 
 /**
@@ -302,11 +291,10 @@ function register_actions_play_video(string $method, string $class = null): bool
         return false;
     }
 
-    global $Cbucket;
     if (empty($class)) {
-        $Cbucket->actions_play_video[] = $method;
+        ClipBucket::getInstance()->actions_play_video[] = $method;
     } else {
-        $Cbucket->actions_play_video[] = [
+        ClipBucket::getInstance()->actions_play_video[] = [
             'class'    => $class
             , 'method' => $method
         ];
@@ -314,10 +302,9 @@ function register_actions_play_video(string $method, string $class = null): bool
     return true;
 }
 
-function register_collection_delete_functions($func)
+function register_collection_delete_functions($func): void
 {
-    global $cbcollection;
-    $cbcollection->collection_delete_functions[] = $func;
+    Collections::getInstance()->collection_delete_functions[] = $func;
 }
 
 /**
@@ -326,11 +313,10 @@ function register_collection_delete_functions($func)
  *
  * @param string $func
  */
-function register_action_remove_video($func)
+function register_action_remove_video(string $func): void
 {
-    global $cbvid;
     //Editing this thing without special consideration can trun whole CB into "WTF"
-    $cbvid->video_delete_functions[] = $func;
+    CBvideo::getInstance()->video_delete_functions[] = $func;
 }
 
 /**
@@ -338,10 +324,9 @@ function register_action_remove_video($func)
  *
  * @param string $func
  */
-function register_action_remove_video_files($func)
+function register_action_remove_video_files(string $func): void
 {
-    global $Cbucket;
-    $Cbucket->on_delete_video[] = $func;
+    ClipBucket::getInstance()->on_delete_video[] = $func;
 }
 
 /**
@@ -369,10 +354,9 @@ function comment_rating($input): string
  * @param      $ver_func
  * @param bool $show_field
  */
-function register_cb_captcha($func, $ver_func, $show_field = true)
+function register_cb_captcha($func, $ver_func, bool $show_field = true): void
 {
-    global $Cbucket;
-    $Cbucket->captchas[] = ['load_function' => $func, 'validate_function' => $ver_func, 'show_field' => $show_field];
+    ClipBucket::getInstance()->captchas[] = ['load_function' => $func, 'validate_function' => $ver_func, 'show_field' => $show_field];
 }
 
 /**
@@ -382,12 +366,10 @@ function register_cb_captcha($func, $ver_func, $show_field = true)
  * @param      $place
  * @param null $params
  */
-function cb_register_function($func_name, $place, $params = null)
+function cb_register_function($func_name, $place, $params = null): void
 {
-    global $Cbucket;
-
     if (function_exists($func_name)) {
-        $Cbucket->clipbucket_functions[$place][] = ['func' => $func_name, 'params' => $params];
+        ClipBucket::getInstance()->clipbucket_functions[$place][] = ['func' => $func_name, 'params' => $params];
     }
 }
 
@@ -400,10 +382,9 @@ function cb_register_function($func_name, $place, $params = null)
  */
 function cb_get_functions($place)
 {
-    global $Cbucket;
-    if (isset($Cbucket->clipbucket_functions[$place])) {
-        if (count($Cbucket->clipbucket_functions[$place]) > 0) {
-            return $Cbucket->clipbucket_functions[$place];
+    if (isset(ClipBucket::getInstance()->clipbucket_functions[$place])) {
+        if (count(ClipBucket::getInstance()->clipbucket_functions[$place]) > 0) {
+            return ClipBucket::getInstance()->clipbucket_functions[$place];
         }
         return false;
     }
@@ -420,7 +401,7 @@ function cb_get_functions($place)
  * @param      $place
  * @param null $extra
  */
-function cb_call_functions($place, $extra = null)
+function cb_call_functions($place, $extra = null): void
 {
     $funcs = cb_get_functions($place);
     if (is_array($funcs)) {
@@ -456,18 +437,17 @@ function cb_call_functions($place, $extra = null)
 /**
  * Register Embed Function
  *
- * @param $name
+ * @param string $name
  */
-function register_embed_function($name)
+function register_embed_function(string $name): void
 {
-    global $cbvid;
-    $cbvid->embed_func_list [] = $name;
+    CBvideo::getInstance()->embed_func_list [] = $name;
 }
 
 /**
  * function used to get remote url function
  */
-function get_remote_url_function()
+function get_remote_url_function(): string
 {
     $funcs = cb_get_functions('remote_url_function');
 
@@ -481,4 +461,3 @@ function get_remote_url_function()
     }
     return 'check_remote_url()';
 }
-

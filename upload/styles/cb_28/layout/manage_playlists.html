@@ -1,4 +1,3 @@
-{$myAccountLinks = $userquery->my_account_links()}
 <div class="container manage-page">
     <div class="row cb-box">
         <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3 hidden-xs">
@@ -41,7 +40,7 @@
                                     <td width="130" class="last_td"><strong>{lang code='total_items'}</strong></td>
                                 </tr>
                                 {section name=plist loop=$playlists}
-                                    {assign var=playlist_items value=$cbvid->get_playlist_items($playlists[plist].playlist_id, 'playlist_items.date_added DESC')}
+                                    {assign var=playlist_items value=CBvideo::getInstance()->get_playlist_items($playlists[plist].playlist_id, 'playlist_items.date_added DESC')}
                                     <tr>
                                         <td>
                                             <input type="checkbox" name="check_playlist[]" id="check_playlist-{$playlists[plist].playlist_id}" value="{$playlists[plist].playlist_id}"/>
@@ -63,7 +62,7 @@
                                             </span>
                                         </td>
                                         <td>{$playlists[plist].date_added|date_format}</td>
-                                        <td>{$cbvid->action->count_playlist_items($playlists[plist].playlist_id)|number_format}</td>
+                                        <td>{CBvideo::getInstance()->action->count_playlist_items($playlists[plist].playlist_id)|number_format}</td>
                                     </tr>
                                 {/section}
                             </table>
@@ -77,7 +76,7 @@
                         <form method="post" name="edit_profile">
 
                             <h3>{lang code='edit_playlist'}</h3>
-                            {assign var='playlist_fields' value=$cbvid->action->load_playlist_fields($playlist)}
+                            {assign var='playlist_fields' value=CBvideo::getInstance()->action->load_playlist_fields($playlist)}
 
                             {foreach from=$playlist_fields item=group}
                                 {foreach from=$group.fields item=field}

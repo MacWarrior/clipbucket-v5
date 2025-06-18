@@ -7,8 +7,7 @@ if( !User::getInstance()->hasPermission('allow_video_upload') ){
     die();
 }
 
-global $Upload;
-if( empty($Upload->get_upload_options()) ) {
+if( empty(Upload::getInstance()->get_upload_options()) ) {
     echo json_encode(['error'=>lang('video_upload_disabled')]);
     die();
 }
@@ -59,8 +58,13 @@ switch($step){
         $video_infos = $ffmpeg->get_file_info($video_url);
 
         if( empty($video_infos['format']) ){
-            echo json_encode(['error'=>lang('plugin_oxygenz_remote_play_not_valid_video')]);
-            die();
+            $not_valid_format = lang('plugin_oxygenz_remote_play_not_valid_video');
+            if ($step == 'check_link') {
+                echo json_encode(['error'=>$not_valid_format]);
+                die();
+            } else {
+                e($not_valid_format);
+            }
         }
 
         if( $step == 'check_link' ){
@@ -69,23 +73,23 @@ switch($step){
         }
 
         $_POST['file_name'] = time() . RandomString(5);
-        $video_id = $Upload->submit_upload();
+        $video_id = Upload::getInstance()->submit_upload();
 
-        global $eh;
-        $errors = $eh->get_error();
-        if( !empty($errors) ){
-            echo json_encode(['error'=>$errors[0]['val']]);
-            die();
+        $errors = errorhandler::getInstance()->get_error();
+        $response = [];
+        if( empty($errors) ) {
+            e(lang('plugin_oxygenz_remote_play_video_saved'), 'm');
+            update_video_status($_POST['file_name'], 'Waiting');
+        } else {
+            $response['error'] = 1;
         }
+        $response['msg'] =getTemplateMsg();
 
-        update_video_status($_POST['file_name'], 'Waiting');
 
-        sendClientResponseAndContinue(function () use($video_id) {
+        sendClientResponseAndContinue(function () use($video_id, $response) {
             $vdetails = get_video_details($video_id);
-            echo json_encode([
-                'msg'       => lang('plugin_oxygenz_remote_play_video_saved')
-                ,'videokey' => $vdetails['videokey']
-            ]);
+            $response['videokey'] = $vdetails['videokey'];
+            echo json_encode($response);
         });
 
         oxygenz_remote_play::process_file($video_url, $video_id);
@@ -105,15 +109,16 @@ switch($step){
         }
 
         $_POST['file_name'] = $vdetails['file_name'];
-        $Upload->submit_upload();
+        Upload::getInstance()->submit_upload();
 
-        global $eh;
-        $errors = $eh->get_error();
-        if( !empty($errors) ){
-            echo json_encode(['error'=>$errors[0]['val']]);
-            die();
+        $response = [];
+        $errors = errorhandler::getInstance()->get_error();
+        if( empty($errors) ) {
+            e(lang('class_vdo_update_msg'), 'm');
+        } else {
+            $response['error'] = 1;
         }
-
-        echo json_encode(['msg'=>lang('class_vdo_update_msg')]);
+        $response['msg'] =getTemplateMsg();
+        echo json_encode($response);
         die();
 }

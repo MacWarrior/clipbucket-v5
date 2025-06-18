@@ -2,10 +2,19 @@
 
 class cbfeeds
 {
+    private static self $instance;
+    public static function getInstance(): self
+    {
+        if( empty(self::$instance) ){
+            self::$instance = new self();
+        }
+        return self::$instance;
+    }
+
     /**
      * Function used to add feed in user feed file
      *
-     * @param array
+     * @param array $feed
      * action => upload,joined,comment,created
      * object => video, photo, group
      * object_id => id of object
@@ -13,7 +22,7 @@ class cbfeeds
      * uid => user id
      * udetails => user details array
      *
-     * @return bool
+     * @return bool|void
      */
     function addFeed($feed)
     {
@@ -109,7 +118,7 @@ class cbfeeds
      *
      * @return string
      */
-    function getFeedFile($uid)
+    function getFeedFile($uid): string
     {
         $time = time();
         $ufeedDir = DirPath::get('userfeeds') . $uid;
@@ -125,9 +134,9 @@ class cbfeeds
      *
      * @param null $uid
      *
-     * @return array|bool
+     * @throws Exception
      */
-    function getUserFeedsFiles($uid = null)
+    function getUserFeedsFiles($uid = null): array
     {
         if (!$uid) {
             $uid = user_id();
@@ -146,26 +155,25 @@ class cbfeeds
 
             return $feeds;
         }
-        return false;
+        return $feeds;
     }
 
     /**
      * Function used to get user feed
      *
-     * @param $user
+     * @param array $user
      *
-     * @return array|bool
+     * @return array
      * @throws Exception
      */
-    function getUserFeeds($user)
+    function getUserFeeds(array $user): array
     {
-        global $cbphoto, $userquery, $cbvid, $cbcollection;
         $allowed_feeds = 15;
         $uid = $user['userid'];
         $feeds = $this->getUserFeedsFiles($uid);
 
-        if (!$feeds) {
-            return false;
+        if( empty($feeds) ){
+            return [];
         }
         $newFeeds = [];
         $count = 0;
@@ -186,11 +194,11 @@ class cbfeeds
                 $farr['file'] = getName($feed['file']);
                 $farr['datetime'] = nicetime($farr['time'], true);
 
-                $userlink = '<a href="' . $userquery->profile_link($user) . '">' . display_clean($user['username']) . '</a>';
+                $userlink = '<a href="' . userquery::getInstance()->profile_link($user) . '">' . display_clean($user['username']) . '</a>';
                 //Creating Links
                 switch ($action) {
                     case 'upload_photo':
-                        $photo = $cbphoto->get_photo($object_id);
+                        $photo = CBPhotos::getInstance()->get_photo($object_id);
 
                         //If photo does not exists, simply remove the feed
                         if (!$photo) {
@@ -201,14 +209,14 @@ class cbfeeds
                             $objectArr['size'] = 't';
                             $objectArr['output'] = 'non_html';
                             $objectArr['alt'] = $photo['photo_title'];
-                            $farr['thumb'] = $cbphoto->getFileSmarty($objectArr);
-                            $farr['link'] = $cbphoto->photo_links($photo, 'view_item');
+                            $farr['thumb'] = CBPhotos::getInstance()->getFileSmarty($objectArr);
+                            $farr['link'] = CBPhotos::getInstance()->photo_links($photo, 'view_item');
 
                             //Content Title
                             $farr['title'] = $photo['photo_title'];
                             $farr['action_title'] = lang('user_has_uploaded_new_photo', $userlink);
 
-                            $farr['links'][] = ['link' => ($cbphoto->photo_links($photo, 'view_item')), 'text' => lang('view_photo')];
+                            $farr['links'][] = ['link' => (CBPhotos::getInstance()->photo_links($photo, 'view_item')), 'text' => lang('view_photo')];
 
                             $farr['icon'] = 'images.png';
                         }
@@ -216,7 +224,7 @@ class cbfeeds
 
                     case 'upload_video':
                     case 'add_favorite':
-                        $video = $cbvid->get_video($object_id);
+                        $video = CBvideo::getInstance()->get_video($object_id);
                         //If photo does not exists, simply remove the feed
                         if (!$video) {
                             $this->deleteFeed($uid, $feed['file']);
@@ -250,28 +258,28 @@ class cbfeeds
                         break;
 
                     case 'add_friend':
-                        $friend = $userquery->get_user_details($object_id);
+                        $friend = userquery::getInstance()->get_user_details($object_id);
 
                         if (!$friend) {
                             $this->deleteFeed($uid, $feed['file']);
                             $remove_feed = true;
                         } else {
-                            $friendlink = '<a href="' . $userquery->profile_link($friend) . '">' . display_clean($friend['username']) . '</a>';
+                            $friendlink = '<a href="' . userquery::getInstance()->profile_link($friend) . '">' . display_clean($friend['username']) . '</a>';
                             $farr['action_title'] = lang('user_is_now_friend_with_other', [$userlink, $friendlink]);
                             $farr['icon'] = 'user_add.png';
                         }
                         break;
 
                     case 'add_collection':
-                        $collection = $cbcollection->get_collection($object_id);
+                        $collection = Collections::getInstance()->get_collection($object_id);
                         if (!$collection) {
                             $this->deleteFeed($uid, $feed['file']);
                             $remove_feed = true;
                         } else {
                             $farr['action_title'] = lang('user_has_created_new_collection', $userlink);
-                            $farr['thumb'] = $cbcollection->get_thumb($collection, 'small');
+                            $farr['thumb'] = Collections::getInstance()->get_thumb($collection, 'small');
                             $farr['title'] = $collection['collection_name'];
-                            $collection_link = $cbcollection->collection_links($collection, 'view');
+                            $collection_link = Collections::getInstance()->collection_links($collection, 'view');
                             $farr['link'] = $collection_link;
                             $farr['object_content'] = $collection['collection_description'] . '<br>' . $collection['total_objects'] . ' ' . $collection['type'];
                             $farr['icon'] = 'photos.png';
@@ -320,7 +328,7 @@ class cbfeeds
      * @param $uid
      * @param $feedid
      */
-    function deleteFeed($uid, $feedid)
+    function deleteFeed($uid, $feedid): void
     {
         $ufeedDir = DirPath::get('userfeeds') . $uid . DIRECTORY_SEPARATOR . getName($feedid) . '.feed';
         if (file_exists($ufeedDir)) {

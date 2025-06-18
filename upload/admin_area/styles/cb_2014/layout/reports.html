@@ -153,11 +153,11 @@
 					<span class="show">Users Reported : <strong>{Flag::getAll(['count'=>true, 'element_type'=>'user'])}</strong></span>
 				</td>
 				<td>
-					<span class="show">Video PlayList: <strong>{$cbvid->action->count_total_playlist()}</strong></span>
-					<span class="show">Videos in Playlist: <strong>{$cbvid->action->count_total_playlist(true)}</strong></span>
+					<span class="show">Video PlayList: <strong>{CBvideo::getInstance()->action->count_total_playlist()}</strong></span>
+					<span class="show">Videos in Playlist: <strong>{CBvideo::getInstance()->action->count_total_playlist(true)}</strong></span>
 				</td>
 				<td>
-					<span class="show">Favorite Videos: <strong>{$cbvid->action->total_favorites()}</strong></span>
+					<span class="show">Favorite Videos: <strong>{CBvideo::getInstance()->action->total_favorites()}</strong></span>
 				</td>
 			</tr>
 		</tbody>

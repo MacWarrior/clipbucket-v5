@@ -13,7 +13,6 @@ $(document).ready(function() {
 
 	function pushToQlist(obj, id) {
 		id = parseInt(id);
-		set_cookie_secure("btn-q-" + id, "yes");
 		currentList = $.cookie("fast_qlist");
 		cleanList = JSON.parse(currentList);
 		//console.log(cleanList);
@@ -76,7 +75,8 @@ $(document).ready(function() {
 		$('#qlist_count').html(cleanList.length);
 		$(this).closest('.qlist_item').fadeOut('slow');
 		if (cleanList.length == 0) {
-			set_cookie_secure("fast_qlist", null);
+			unset_cookie('fast_qlist');
+			unset_cookie('quick_list_box');
 			$('#qlist_main').fadeOut('slow');
 		} else {
 			set_cookie_secure("fast_qlist", JSON.stringify(cleanList));
@@ -86,7 +86,8 @@ $(document).ready(function() {
 	$(document).on("click", ".ql_rem", function (e) {
 		e.preventDefault();
 		$('#qlist_count').html(0);
-		set_cookie_secure("fast_qlist", null);
+		unset_cookie('fast_qlist');
+		unset_cookie('quick_list_box');
 		$('.qlist_item').fadeOut('slow');
 		$('#qlist_main').fadeOut('slow');
 		$('.cb_quickie').removeClass('icon-tick');

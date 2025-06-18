@@ -43,15 +43,15 @@
 		</ul>
 		<!-- Left Column Start -->
 		<ul class="cat-list clearfix">
-			{$categories= $cbvid->getCbCategories($var)}
+			{$categories= CBvideo::getInstance()->getCbCategories($var)}
 			{if $categories}
 			{foreach $categories as $category}
 				{$cat_id=$category.category_id}
-				{$_is_parent = $cbvid->is_parent($cat_id)}
+				{$_is_parent = CBvideo::getInstance()->is_parent($cat_id)}
 				{if !$_is_parent}
 					<li>
 						<a {if $smarty.get.cat==$category.category_id } class="active" {/if} href="{cblink(['name'=>'category','data'=>$category,'type'=>'v'])}">
-							<img src="{$cbvid->get_category_thumb($category,'video')}" class="img-responsive" alt="">
+							<img src="{CBvideo::getInstance()->get_category_thumb($category,'video')}" class="img-responsive" alt="">
 							<span>{$category.category_name}</span>
 						</a>
 					</li>

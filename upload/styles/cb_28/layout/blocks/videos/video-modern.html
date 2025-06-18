@@ -1,0 +1,32 @@
+<div class="slider-video-container"{if empty($width) === false} style="--width:{$width}px;"{/if} data-id="{$video['videoid']}">
+    <div class="thumb-video-padding">
+        <div class="thumb-video video-link{if $popup_video && $video.status|lower == 'successful'} cd-popup-trigger{/if}" data-videoid="{$video.videoid}" data-href="{video_link($video)}" title="{display_clean($video.title)|title}">
+            <img src="{getThumb vdetails=$video size=416x260}" loading="lazy" class="{if Video::getInstance()->isToBlur($video['videoid'])}blur{/if}" {Video::get_thumbs_preview($video, '416x260')}/>
+            <div class="status"></div>
+            {if config('enable_quicklist') == 'yes' && !Video::getInstance()->isToBlur($video['videoid']) && $video.status|lower == 'successful' && Session::isCookieConsent('fast_qlist')}
+                <div class="add-playlist cb_quickie cb-btn-quick-{$video.videoid} {if in_array($video.videoid, $qlist_vids)}icon-tick{/if}" data-quick="quick-{$video.videoid}" vtitle="{display_clean($video.title)}" v-id="{$video.videoid}" vlink="{video_link($video)}" vthumb="{getThumb vdetails=$video size=416x260}" vduration="{$video.duration|SetTime}" vauthor="{if config('enable_hide_uploader_name') != 'yes'}{lang code='by'} {display_clean($video.user_username)}{/if}" title="Add {display_clean($video.title)} to Quicklist"></div>
+            {/if}
+            {if $video.duration>1}
+                <time class="time" title="Video duration : {$video.duration|SetTime}">{$video.duration|SetTime}</time>
+            {/if}
+            {ANCHOR place='in_video_thumb' data=$video}
+        </div>
+    </div><div class="shadow"></div>
+    <div class="details">
+        <div class="titre">
+            <a href="{video_link($video)}" title="{display_clean($video.title)}">{display_clean($video.title|truncate:50)}</a>
+        </div>
+        {if config('enable_hide_uploader_name') != 'yes'}
+            <div class="auteur">
+                {lang code="by"}
+                {if isSectionEnabled('channels') && $video.disabled_channel !='yes'}
+                    <a href="{userquery::getInstance()->profile_link($video)}">{display_clean($video.user_username)}</a>
+                {else}
+                    {display_clean($video.user_username)}
+                {/if}
+            </div>
+        {/if}
+        <div class="view">{$video.views}&nbsp;views</div>
+        <div class="date">{$video.date_added|niceTime}</div>
+    </div>
+</div>

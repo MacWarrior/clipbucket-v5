@@ -2,10 +2,9 @@
 define('THIS_PAGE', 'user_levels');
 require_once dirname(__FILE__, 2) . '/includes/admin_config.php';
 require_once DirPath::get('classes') . 'migration' . DIRECTORY_SEPARATOR . 'migration.class.php';
-global $pages, $Cbucket;
 
 User::getInstance()->hasPermissionOrRedirect('admin_access', true);
-$pages->page_redir();
+pages::getInstance()->page_redir();
 
 /* Generating breadcrumb */
 global $breadcrumb;
@@ -19,7 +18,7 @@ $breadcrumb[1] = [
 ];
 
 if (!User::getInstance()->hasPermission('allow_manage_user_level') && userquery::getInstance()->udetails['level'] != 1) {
-    $Cbucket->show_page = false;
+    ClipBucket::getInstance()->show_page = false;
     e('You are not allowed to manage user levels');
 }
 

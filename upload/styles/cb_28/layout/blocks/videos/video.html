@@ -13,11 +13,11 @@
             <strong class="title"><a href="{video_link($pop_video)}">{display_clean($pop_video.title|truncate:50)}</a></strong>
 
             {if config('enable_hide_uploader_name') != 'yes'}
-            <span class="author">
+            <span class="author">{lang code="by"}
             {if isSectionEnabled('channels') && $anonymous_id != $pop_video.userid && $pop_video.disabled_channel !='yes'}
-                {lang code="by"} <a href="{$userquery->profile_link($video)}">{display_clean($pop_video.user_username)}</a>
+                <a href="{userquery::getInstance()->profile_link($pop_video)}">{display_clean($pop_video.user_username)}</a>
             {elseif $anonymous_id != $pop_video.userid}
-                {lang code="by"} {display_clean($pop_video.user_username)}
+                {display_clean($pop_video.user_username)}
             {/if}
             </span>
             {/if}
@@ -36,7 +36,7 @@
             <img alt="{display_clean($video.title)|title}" class="img-responsive {if Video::getInstance()->isToBlur($video['videoid'])}blur{/if}" src="{getThumb vdetails=$video size=416x260}" {Video::get_thumbs_preview($video, '416x260')}/>
         </a>
         {ANCHOR place='in_video_thumb' data=$video}
-        {if config('enable_quicklist') == 'yes' && !Video::getInstance()->isToBlur($video['videoid']) && $video.status|lower == 'successful'}
+        {if config('enable_quicklist') == 'yes' && !Video::getInstance()->isToBlur($video['videoid']) && $video.status|lower == 'successful' && Session::isCookieConsent('fast_qlist')}
             <button data-quick="quick-{$video.videoid}" class="icon-plus2 cb_quickie cb-btn-quick-{$video.videoid} {if in_array($video.videoid, $qlist_vids)}icon-tick{/if}" vtitle="{display_clean($video.title)}" v-id="{$video.videoid}" vlink="{video_link($video)}" vthumb="{getThumb vdetails=$video size=416x260}" vduration="{$video.duration|SetTime}" vauthor="{if config('enable_hide_uploader_name') != 'yes'}{lang code='by'} {display_clean($video.user_username)}{/if}" title="Add {display_clean($video.title)} to Quicklist">
             </button>
         {/if}
@@ -45,14 +45,16 @@
         {/if}
     </div>
     <div class="clearfix video-info {if config('enable_hide_uploader_name') == 'yes'}nouploader{/if}">
-        <h2 class="title"><a href="{video_link($video)}">{display_clean($video.title|truncate:50)}</a></h2>
+        <h2 class="title" title="{display_clean($video.title)}">
+            <a href="{video_link($video)}">{display_clean($video.title|truncate:50)}</a>
+        </h2>
 
         {if config('enable_hide_uploader_name') != 'yes'}
-        <span class="author">
-			{if isSectionEnabled('channels') && $anonymous_id != $video.userid && $video.disabled_channel !='yes'}
-                {lang code="by"} <a href="{$userquery->profile_link($video)}">{display_clean($video.user_username)}</a>
+        <span class="author">{lang code="by"}
+            {if isSectionEnabled('channels') && $anonymous_id != $video.userid && $video.disabled_channel !='yes'}
+                <a href="{userquery::getInstance()->profile_link($video)}">{display_clean($video.user_username)}</a>
             {elseif $anonymous_id != $video.userid}
-                {lang code="by"} {display_clean($video.user_username)}
+                {display_clean($video.user_username)}
             {/if}
 		</span>
         {/if}
@@ -70,52 +72,14 @@
     {/if}
 
     {if config('homepage_recent_video_style') == 'modern'}
-        {include file="$style_dir/blocks/videos/video-new.html" width=270}
-    {elseif  in_array(config('homepage_recent_video_style'), [false, 'classic'])}
+        {include file="$style_dir/blocks/videos/video-modern.html" width=270}
+    {elseif in_array(config('homepage_recent_video_style'), [false, 'classic'])}
         <div style="display:none;" class="item-video col-lg-4 col-md-4 col-sm-4 col-xs-12 recentAppending" data-id="{$video.videoid}">
-            <div class="clearfix thumb-holder">
-                <a
-                        {if config('popup_video') == 'yes'}
-                            class="video-link cd-popup-trigger no_overflow" onclick="_cb.getModalVideo({$video.videoid})"
-                        {else}
-                            class="video-link no_overflow"
-                        {/if}
-                        href="{video_link($video)}" title="{display_clean($video.title|title)}">
-                    <img class="lazy img-responsive no_select{if Video::getInstance()->isToBlur($video['videoid'])} blur{/if}" src="{getThumb vdetails=$video size=416x260}" {Video::get_thumbs_preview($video, '416x260')}>
-                </a>
-                {ANCHOR place='in_video_thumb' data=$video}
-                {if config('enable_quicklist') == 'yes' && !Video::getInstance()->isToBlur($video['videoid']) && $video.status|lower == 'successful'}
-                    <button data-quick="quick-{$video.videoid}" class="icon-plus2 add_icon cb_quickie cb-btn-quick-{$video.videoid} {if in_array($video.videoid, $qlist_vids)}icon-tick{/if}" vtitle="{display_clean($video.title)}" v-id="{$video.videoid}" vlink="{video_link($video)}" vthumb="{getThumb vdetails=$video size=416x260}" vduration="{$video.duration|SetTime}" vauthor="{if config('enable_hide_uploader_name') != 'yes'}{lang code='by'} {display_clean($video.user_username)}{/if}" title="Add {display_clean($video.title)} to Quicklist"></button>
-                {/if}
-                {if $video.duration>1}
-                    <time class="duration" title="Video duration : {$video.duration|SetTime}">{$video.duration|SetTime}</time>
-                {/if}
-            </div>
-            <div class="clearfix video-info {if config('enable_hide_uploader_name') == 'yes'}nouploader{/if}">
-                <h2 class="title">
-                    <a href="{video_link($video)}">{display_clean($video.title)|truncate:50}</a>
-                </h2>
-
-                {if config('enable_hide_uploader_name') != 'yes'}
-                <span class="author">
-                    {if isSectionEnabled('channels') && $anonymous_id != $video.userid && $video.disabled_channel !='yes'}
-                        {lang code="by"} <a href="{$userquery->profile_link($video)}">{display_clean($video.user_username)}</a>
-                    {elseif $anonymous_id != $video.userid}
-                        {lang code="by"} {display_clean($video.user_username)}
-                    {/if}
-                </span>
-                {/if}
-
-                <div class="clearfix views-date">
-                    <span>{$video.views}&nbsp;{lang code="views"}</span>
-                    <time class="date">{$video.date_added|niceTime}</time>
-                </div>
-            </div>
+            {include file="$style_dir/blocks/videos/video-classic.html"}
         </div>
     {/if}
 {/if}
 
-{* Used by editor's pick only *}
 {if $display_type=='featuredVideos_sidebar'}
     <div class="featured-video clearfix" data-id-video="{$video.videoid}">
         <div class="video_thumb">
@@ -129,11 +93,11 @@
 
         <div class="details_block">
             <strong class="title"><a href="{video_link($video)}">{display_clean($video.title|truncate:50)}</a></strong>
-            <span class="author">
-			{if isSectionEnabled('channels') && $anonymous_id != $video.userid && $video.disabled_channel !='yes'}
-                {lang code='by'} <a href="{$userquery->profile_link($video)}">{display_clean($video.user_username)}</a>
+            <span class="author">{lang code='by'}
+            {if isSectionEnabled('channels') && $anonymous_id != $video.userid && $video.disabled_channel !='yes'}
+                <a href="{userquery::getInstance()->profile_link($video)}">{display_clean($video.user_username)}</a>
             {elseif $anonymous_id != $video.userid}
-                {lang code='by'} {display_clean($video.user_username)}
+                {display_clean($video.user_username)}
             {/if}
 			</span>
             <div class="views-date">
@@ -149,7 +113,7 @@
     {/if}
     <div style="display:none;" class="item-video col-lg-6 col-md-6 col-sm-6 col-xs-12 featAppending" data-id="{$video.videoid}">
         <div class="clearfix thumb-holder">
-            <a {if config('popup_video') == 'yes'}
+            <a {if $popup_video}
                 class="video-link cd-popup-trigger no_overflow" onclick="_cb.getModalVideo({$video.videoid})"
             {else}
                 class="video-link no_overflow"
@@ -159,7 +123,7 @@
                 <h2 class="title">{display_clean($video.title|truncate:50)}</h2>
             </a>
             {ANCHOR place='in_video_thumb' data=$video}
-            {if config('enable_quicklist') == 'yes' && !Video::getInstance()->isToBlur($video['videoid']) && $video.status|lower == 'successful'}
+            {if config('enable_quicklist') == 'yes' && !Video::getInstance()->isToBlur($video['videoid']) && $video.status|lower == 'successful' && Session::isCookieConsent('fast_qlist')}
                 <button data-quick="quick-{$video.videoid}" class="icon-plus2 add_icon cb_quickie cb-btn-quick-{$video.videoid} {if in_array($video.videoid, $qlist_vids)}icon-tick{/if}" vtitle="{display_clean($video.title)}" v-id="{$video.videoid}" vlink="{video_link($video)}" vthumb="{getThumb vdetails=$video size=416x260 }" vduration="{$video.duration|SetTime}" vauthor="{if config('enable_hide_uploader_name') != 'yes'}{lang code='by'} {display_clean($video.user_username)}{/if}" title="Add {display_clean($video.title)} to Quicklist">
                 </button>
             {/if}
@@ -178,7 +142,7 @@
             </a>
 
             {ANCHOR place='in_video_thumb' data=$video}
-            {if config('enable_quicklist') == 'yes' && !Video::getInstance()->isToBlur($video['videoid']) && $video.status|lower == 'successful'}
+            {if config('enable_quicklist') == 'yes' && !Video::getInstance()->isToBlur($video['videoid']) && $video.status|lower == 'successful' && Session::isCookieConsent('fast_qlist')}
                 <button data-quick="quick-{$video.videoid}" class="icon-plus2 cb_quickie cb-btn-quick-{$video.videoid} {if in_array($video.videoid, $qlist_vids)}icon-tick{/if}" vtitle="{display_clean($video.title)}" v-id="{$video.videoid}" vlink="{video_link($video)}" vthumb="{getThumb vdetails=$video size=416x260}" vduration="{$video.duration|SetTime}" vauthor="{if config('enable_hide_uploader_name') != 'yes'}{lang code='by'} {display_clean($video.user_username)}{/if}" title="Add {display_clean($video.title)} to Quicklist">
                 </button>
             {/if}
@@ -188,14 +152,16 @@
 
         </div>
         <div class="clearfix video-info {if config('enable_hide_uploader_name') == 'yes'}nouploader{/if}">
-            <h2 class="title"><a href="{video_link($video)}">{display_clean($video.title|truncate:50)}</a></h2>
+            <h2 class="title" title="{display_clean($video.title)}">
+                <a href="{video_link($video)}">{display_clean($video.title|truncate:50)}</a>
+            </h2>
 
             {if config('enable_hide_uploader_name') != 'yes'}
-            <span class="author">
+            <span class="author">{lang code="by"}
                 {if isSectionEnabled('channels') && $anonymous_id != $video.userid && $video.disabled_channel !='yes'}
-                    {lang code="by"} <a href="{$userquery->profile_link($video)}">{display_clean($video.user_username)}</a>
+                    <a href="{userquery::getInstance()->profile_link($video)}">{display_clean($video.user_username)}</a>
                 {elseif $anonymous_id != $video.userid}
-                    {lang code="by"} {display_clean($video.user_username)}
+                    {display_clean($video.user_username)}
                 {/if}
             </span>
             {/if}
@@ -205,25 +171,6 @@
                 <time class="date">{$video.date_added|niceTime}</time>
             </div>
         </div>
-    </div>
-{/if}
-
-{if $display_type=='user_videos'}
-    <div class="col-md-3  col-sm-4  col-xs-6">
-        <a href="{video_link($video)}" title="{display_clean($video.title)|title}">
-            <img {if Video::getInstance()->isToBlur($video.videoid)}class="blur"{/if} alt="{display_clean($video.title)|title}" src="{getThumb vdetails=$video size='416x260'}" id="thumbs_{$video.videoid}" title="{display_clean($video.title)|title}" {Video::get_thumbs_preview($video, '416x260')}/>
-        </a>
-        <p class="cbHomeVidDuration duration_view">
-            {if $video.duration>1}
-                {$video.duration|SetTime}
-            {else}
-                00:00
-            {/if}
-        </p>
-        <a href="{video_link($video)}" title="{display_clean($video.title)|title}"><h5>
-                <b> {display_clean($video.title)|truncate:25}</b></h5></a>
-        <span class="pull-left"><h5><small>{$video.views}&nbsp;{lang code="views"}</small></h5></span>
-        <span class="pull-right"><h5><small>{$video.date_added|niceTime}</small></h5></span>
     </div>
 {/if}
 
@@ -240,7 +187,7 @@
             </div>
         </a>
         {ANCHOR place='in_video_thumb' data=$video}
-        {if config('enable_quicklist') == 'yes' && !Video::getInstance()->isToBlur($video['videoid']) && $video.status|lower == 'successful'}
+        {if config('enable_quicklist') == 'yes' && !Video::getInstance()->isToBlur($video['videoid']) && $video.status|lower == 'successful' && Session::isCookieConsent('fast_qlist')}
             <i data-quick="quick-{$video.videoid}" class="icon-plus2 add_icon cb_quickie cb-btn-quick-{$video.videoid} {if in_array($video.videoid, $qlist_vids)}icon-tick{/if}" title="Add {display_clean($video.title)} to Quicklist"></i>
         {/if}
     </div>
@@ -258,7 +205,7 @@
                     <img class="img-responsive {if Video::getInstance()->isToBlur($video.videoid)}blur{/if}" src="{getThumb vdetails=$video size=416x260}" {Video::get_thumbs_preview($video, '416x260')} border="1"/>
                 </a>
                 {ANCHOR place='in_video_thumb' data=$video}
-                {if config('enable_quicklist') == 'yes' && !Video::getInstance()->isToBlur($video['videoid']) && $video.status|lower == 'successful'}
+                {if config('enable_quicklist') == 'yes' && !Video::getInstance()->isToBlur($video['videoid']) && $video.status|lower == 'successful' && Session::isCookieConsent('fast_qlist')}
                     <button data-quick="quick-{$video.videoid}"
                             class="icon-plus2 add_icon cb_quickie cb-btn-quick-{$video.videoid} {if in_array($video.videoid, $qlist_vids)}icon-tick{/if}" vtitle="{display_clean($video.title)}" v-id="{$video.videoid}" vlink="{video_link($video)}" vthumb="{getThumb vdetails=$video size=416x260 }" vduration="{$video.duration|SetTime}" vauthor="{if config('enable_hide_uploader_name') != 'yes'}{lang code='by'} {display_clean($video.user_username)}{/if}" title="Add {display_clean($video.title)} to Quicklist">
                     </button>
@@ -273,7 +220,7 @@
             {if config('enable_hide_uploader_name') != 'yes'}
             <h5>
                 {if isSectionEnabled('channels') && $video.disabled_channel !='yes'}
-                    {lang code="by"} <a href="{$userquery->profile_link($video)}">{display_clean(name($video))}</a>
+                    {lang code="by"} <a href="{userquery::getInstance()->profile_link($video)}">{display_clean(name($video))}</a>
                 {else}
                     {lang code="by"} {display_clean(name($video))}
                 {/if}
@@ -299,7 +246,7 @@
                     <img class="img-responsive {if Video::getInstance()->isToBlur($video.videoid)}blur{/if}" src="{getThumb vdetails=$video size=416x260}" {Video::get_thumbs_preview($video, '416x260')} border="1"/>
                 </a>
                 {ANCHOR place='in_video_thumb' data=$video}
-                {if config('enable_quicklist') == 'yes' && !Video::getInstance()->isToBlur($video['videoid']) && $video.status|lower == 'successful'}
+                {if config('enable_quicklist') == 'yes' && !Video::getInstance()->isToBlur($video['videoid']) && $video.status|lower == 'successful' && Session::isCookieConsent('fast_qlist')}
                     <button data-quick="quick-{$video.videoid}"
                             class="icon-plus2 add_icon cb_quickie cb-btn-quick-{$video.videoid} {if in_array($video.videoid, $qlist_vids)}icon-tick{/if}" vtitle="{display_clean($video.title)}" v-id="{$video.videoid}" vlink="{video_link($video)}" vthumb="{getThumb vdetails=$video size=416x260}" vduration="{$video.duration|SetTime}" vauthor="{if config('enable_hide_uploader_name') != 'yes'}{lang code='by'} {display_clean($video.user_username)}{/if}" title="Add {display_clean($video.title)} to Quicklist">
                     </button>
@@ -326,7 +273,7 @@
                     <img class="img-responsive {if Video::getInstance()->isToBlur($video.videoid)}blur{/if}" src="{getThumb vdetails=$video size=416x260}" {Video::get_thumbs_preview($video, '416x260')} border="1"/>
                 </a>
                 {ANCHOR place='in_video_thumb' data=$video}
-                {if config('enable_quicklist') == 'yes' && !Video::getInstance()->isToBlur($video['videoid']) && $video.status|lower == 'successful'}
+                {if config('enable_quicklist') == 'yes' && !Video::getInstance()->isToBlur($video['videoid']) && $video.status|lower == 'successful' && Session::isCookieConsent('fast_qlist')}
                     <img src="{$imageurl}/dot.gif" data-quick="quick-{$video.videoid}" class="icon-plus2 add_icon cb_quickie cb-btn-quick-{$video.videoid} {if in_array($video.videoid, $qlist_vids)}icon-tick{/if}" title="Add {display_clean($video.title)} to Quicklist" alt="">
                 {/if}
             </div>
@@ -339,7 +286,7 @@
             {if config('enable_hide_uploader_name') != 'yes'}
             <h5>
                 {if isSectionEnabled('channels') && $video.disabled_channel !='yes'}
-                    {lang code="by"} <a href="{$userquery->profile_link($video)}">{display_clean(name($video))}</a>
+                    {lang code="by"} <a href="{userquery::getInstance()->profile_link($video)}">{display_clean(name($video))}</a>
                 {elseif $anonymous_id != $video.userid}}
                     {lang code="by"} {display_clean(name($video))}
                 {/if}

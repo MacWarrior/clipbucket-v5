@@ -14,6 +14,7 @@
             <th>Users</th>
             <th>Actions</th>
         </tr>
+        {assign var=levels value=userquery::getInstance()->get_levels()}
         {section name=l loop=$levels}
             <tr>
                 <td>{$levels[l].user_level_id}</td>
@@ -26,7 +27,7 @@
                     <input name="user_level_is_default" data-id="{$levels[l].user_level_id}" {if $levels[l].user_level_is_default == 'yes'}checked disabled="disabled" title="{lang('cannot_remove_default_have_to_add_one')}"{/if} type="checkbox" class="ace ace-switch ace-switch-5 user_level_is_default"/>
                     <span class="lbl"></span>
                 </td>
-                <td>{$userquery->get_level_users($levels[l].user_level_id,true)}</td>
+                <td>{userquery::getInstance()->get_level_users($levels[l].user_level_id,true)}</td>
                 <td>
                     <div class="dropdown align-center" >
                         <button id="dropdownMenu1" class="btn btn-primary btn-xs dropdown-toggle" data-toggle="dropdown">
@@ -62,7 +63,7 @@
             </div>
         </div>
         <input type="hidden" name="user_level_id" value="{$level_details.user_level_id}">
-        {assign var='types' value=$userquery->get_level_types()}
+        {assign var='types' value=userquery::getInstance()->get_level_types()}
         {section name=t loop=$types}
             <h3>{lang($types[t].user_permission_type_name)}</h3>
             <div class="row">
@@ -87,9 +88,9 @@
                                         <div class="col-md-4">
                                         {if in_array($perm.permission_name, ['allow_manage_user_level', 'admin_access']) && User::getInstance()->get('level') == $level_details.user_level_id}
                                             <input type="hidden" name="permission_value[{$perm.id_user_levels_permission}]" value="{$perm.permission_value}">
-                                            <input type="checkbox" disabled="disabled" {if $perm.permission_value==yes}checked{/if} class="ace ace-switch ace-switch-5 bootstrap-switch-on"/>
+                                            <input type="checkbox" disabled="disabled" {if $perm.permission_value==yes}checked{/if} class="ace ace-switch ace-switch-5"/>
                                         {else}
-                                            <input type="checkbox" name="permission_value[{$perm.id_user_levels_permission}]" value="yes" {if $perm.permission_value==yes}checked{/if} class="ace ace-switch ace-switch-5 bootstrap-switch-on"/>
+                                            <input type="checkbox" name="permission_value[{$perm.id_user_levels_permission}]" value="yes" {if $perm.permission_value==yes}checked{/if} class="ace ace-switch ace-switch-5"/>
                                         {/if}
                                             <span class="lbl"></span>
                                         </div>

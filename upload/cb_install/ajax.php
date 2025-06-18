@@ -8,13 +8,6 @@ require_once DirPath::get('classes') . 'update.class.php';
 require_once DirPath::get('classes') . 'system.class.php';
 require_once DirPath::get('cb_install') . 'functions_install.php';
 
-if (file_exists(DirPath::get('temp') . 'development.dev')) {
-    define('DEVELOPMENT_MODE', true);
-
-} else {
-    define('DEVELOPMENT_MODE', false);
-}
-
 if (!file_exists(DirPath::get('temp') . 'install.me') && !file_exists(DirPath::get('temp') . 'install.me.not')) {
     return false;
 }
@@ -115,7 +108,7 @@ if ($mode == 'sitesettings') {
 
         if ($current) {
             $res = false;
-            if ($current != 'reset_db' || DEVELOPMENT_MODE) {
+            if ($current != 'reset_db' || System::isInDev()) {
                 $res = install_execute_sql_file($cnnct, DirPath::get('sql') . $files[$current]['file'], $dbprefix, $dbname);
             }
         }

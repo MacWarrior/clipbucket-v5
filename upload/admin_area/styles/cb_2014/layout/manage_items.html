@@ -1,4 +1,4 @@
-<h2>{lang code='manage_items'} - <a href="/admin_area/edit_collection.php?collection={$smarty.get.collection}">{display_clean($collection.collection_name)}</a></h2>
+<h2>{lang code='manage_items'} - <a href="{DirPath::getUrl('admin_area')}edit_collection.php?collection={$smarty.get.collection}">{display_clean($collection.collection_name)}</a></h2>
 <form method="post">
     <table width="100%" border="0" align="center" cellpadding="0" cellspacing="0">
         <tr>
@@ -7,8 +7,12 @@
                 <input type="submit" name="remove_selected" value="Remove Selected" class="btn btn-primary btn-xs"/>
                 <input type="submit" name="move_selected" value="Move Selected" class="btn btn-primary btn-xs"/>
                 <select name="collection_id" id="collection_id">
-                    {foreach $collections as $col_id => $col_data}
-                        <option value="{$col_id}" {if $col_id==$smarty.get.collection}selected{/if}>{$col_data['name']}</option>
+                    {foreach $collections as $group_name => $group_data}
+                        <optgroup label="{lang($group_name)}">
+                            {foreach $group_data as $col_id => $col_data}
+                                <option value="{$col_data['collection_id']}" {if $col_data['collection_id']==$smarty.get.collection}selected{/if}>{$col_data['collection_name']}</option>
+                            {/foreach}
+                        </optgroup>
                     {/foreach}
                 </select>
                 <br />
@@ -19,11 +23,6 @@
         {if $type == ''}
             <div align="center"><strong><em>Unknown Type</em></strong></div>
         {else}
-            {if $type == 'photos'}
-                <div class="clearfix PhotoDetails" style=" text-align:center; min-height:10px;">
-                    <a style="font-size:11px;" href="/admin_area/recreate_thumbs.php?mode=collection&cid={$smarty.get.collection}">Re-create photos</a>. This will re-create photos found in the collection.
-                </div>
-            {/if}
             <table class="table table-bordered table-striped manageUsersTable">
                 <tr>
                     <td>
@@ -49,7 +48,7 @@
                                                 <img src="{get_photo details=$obj[list]}" class="img-responsive" id="photo" style="padding:2px;border:1px solid #ccc;"/>
                                             </div>
                                             <div class="col-md-9">
-                                                <a class="block" href="/admin_area/edit_photo.php?photo={$obj[list].photo_id}">{display_clean($obj[list].photo_title)}</a>
+                                                <a class="block" href="{DirPath::getUrl('admin_area')}edit_photo.php?photo={$obj[list].photo_id}">{display_clean($obj[list].photo_title)}</a>
                                                 <span>
                                                     <strong>{$obj[list].date_added|niceTime}</strong>
                                                     {lang code='views'} : <strong>{$obj[list].views|number_format}</strong>
@@ -65,7 +64,7 @@
                                         </div>
                                     </div>
                                     <div class="col-md-2">
-                                        <a href="view_user.php?uid={$obj[list].userid}">{display_clean($obj[list].username)}</a>
+                                        <a href="{DirPath::getUrl('admin_area')}view_user.php?uid={$obj[list].userid}">{display_clean($obj[list].username)}</a>
                                     </div>
                                 </div>
                             </td>
@@ -86,7 +85,7 @@
                                                 <img src="{get_thumb($obj[list],FALSE,'168x105')}" width="120" height="70" id="video_{$obj[list].videoid}" style="padding:2px; border:1px solid #ccc" />
                                             </div>
                                             <div class="col-md-9">
-                                                <a href="/admin_area/edit_collection.php?collection={$obj[list].collection_id}" target="_blank">{display_clean($obj[list].title)}</a>
+                                                <a href="{DirPath::getUrl('admin_area')}edit_collection.php?collection={$obj[list].collection_id}" target="_blank">{display_clean($obj[list].title)}</a>
                                                 <br/>
                                                 <span>
                                                     <strong>{$obj[list].date_added|niceTime}</strong>
@@ -105,7 +104,7 @@
                                         </div>
                                     </div>
                                     <div class="col-md-2">
-                                        <a href="view_user.php?uid={$obj[list].userid}">{display_clean($obj[list].username)}</a>
+                                        <a href="{DirPath::getUrl('admin_area')}view_user.php?uid={$obj[list].userid}">{display_clean($obj[list].username)}</a>
                                     </div>
                                 </div>
                             </td>
@@ -127,9 +126,9 @@
                                             <div class="col-md-3 collections-grid">
                                                 <div class="clearfix collection-item col-lg-6 col-md-6 col-sm-12 col-xs-6">
                                                     {if config('seo') != 'yes'}
-                                                        {$main_url = "/view_collection.php?cid={$collection.collection_id}"}
+                                                        {$main_url = "view_collection.php?cid={$collection.collection_id}"}
                                                     {else}
-                                                        {$main_url = "/collection/{$collection.collection_id}/{$collection.type}/{display_clean($collection.collection_name)}"}
+                                                        {$main_url = "collection/{$collection.collection_id}/{$collection.type}/{display_clean($collection.collection_name)}"}
                                                     {/if}
 
                                                     {$first_elem = Collection::getInstance()->getFirstItem(['collection_id' => $collection.collection_id])}
@@ -141,8 +140,8 @@
 
                                                     <div class="collection-holder">
                                                         <div class="photo-block no_select no_overflow">
-                                                            <a href="{$main_url}" title="{display_clean($collection.collection_name)}">
-                                                                <img alt="{display_clean($collection.collection_name)}" title="{display_clean($collection.collection_name)}" class="img-responsive {if $blur}blur{/if}" id="collection_{$collection.collection_id}" src="{$cbcollection->coll_first_thumb($collection,'l')}"/>
+                                                            <a href="{DirPath::getUrl('root')}{$main_url}" title="{display_clean($collection.collection_name)}">
+                                                                <img alt="{display_clean($collection.collection_name)}" title="{display_clean($collection.collection_name)}" class="img-responsive {if $blur}blur{/if}" id="collection_{$collection.collection_id}" src="{Collections::getInstance()->coll_first_thumb($collection,'l')}"/>
                                                                 {ANCHOR place='in_collection_thumb' data=$collection}
                                                                 <div class="collection-info">
                                                                     <span>{$collection.total_objects}</span>{lang code=$collection.type}
@@ -154,7 +153,7 @@
                                                 </div>
                                             </div>
                                             <div class="col-md-9">
-                                                <a href="/admin_area/edit_collection.php?collection={$obj[list].collection_id}" target="_blank">{display_clean($obj[list].collection_name)}</a>
+                                                <a href="{DirPath::getUrl('admin_area')}edit_collection.php?collection={$obj[list].collection_id}" target="_blank">{display_clean($obj[list].collection_name)}</a>
                                                 <br/>
                                                 <span>
                                                     <strong>{$obj[list].date_added|niceTime}</strong>
@@ -173,7 +172,7 @@
                                         </div>
                                     </div>
                                     <div class="col-md-2">
-                                        <a href="view_user.php?uid={$obj[list].userid}">{display_clean($obj[list].user_username)}</a>
+                                        <a href="{DirPath::getUrl('admin_area')}view_user.php?uid={$obj[list].userid}">{display_clean($obj[list].user_username)}</a>
                                     </div>
                                 </div>
                             </td>
@@ -184,3 +183,10 @@
         {/if}
     {/if}
 </form>
+<script>
+    $(function () {
+        $('#collection_id').select2({
+            width: '20%'
+        });
+    })
+</script>

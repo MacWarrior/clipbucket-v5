@@ -80,7 +80,7 @@
                             </nav>
                         </div>
                         {$types_list = array()}
-                        {foreach from=$Cbucket->search_types item=t key=stypes}
+                        {foreach from=ClipBucket::getInstance()->search_types item=t key=stypes}
                             {if !User::getInstance()->hasPermission('view_'|cat:$menu.this)}
                                 {continue}
                             {/if}
@@ -114,11 +114,11 @@
                             {/if}
                             <ul class="nav navbar-nav navbar-right right-menu">
                                 {if user_id()}
-                                    {if (isSectionEnabled('videos') && !empty($Upload->get_upload_options()) && User::getInstance()->hasPermission('allow_video_upload')) || (isSectionEnabled('photos') && config('enable_photo_file_upload') == 'yes' && User::getInstance()->hasPermission('allow_photo_upload'))}
+                                    {if (isSectionEnabled('videos') && !empty(Upload::getInstance()->get_upload_options()) && User::getInstance()->hasPermission('allow_video_upload')) || (isSectionEnabled('photos') && config('enable_photo_file_upload') == 'yes' && User::getInstance()->hasPermission('allow_photo_upload'))}
                                         <li class="dropdown upload_link">
                                             <a href="{cblink name='upload'}" class="dropdown-toggle btn-upload btn btn-default" data-toggle="dropdown"><i class="icon-upload"></i><span>{lang code="upload"}</span><b class="icon-down-arrow"></b></a>
                                             <ul role="menu" class="dropdown-menu">
-                                                {if User::getInstance()->hasPermission('allow_video_upload') && isSectionEnabled('videos') && !empty($Upload->get_upload_options())}
+                                                {if User::getInstance()->hasPermission('allow_video_upload') && isSectionEnabled('videos') && !empty(Upload::getInstance()->get_upload_options())}
                                                     <li class="up_vid"><a href="{cblink name='upload'}">{lang code="upload_video"}<i class="icon-video visible-xs"></i></a></li>
                                                 {/if}
                                                 {if User::getInstance()->hasPermission('allow_photo_upload') && isSectionEnabled('photos') && config('enable_photo_file_upload') == 'yes'}
@@ -131,7 +131,7 @@
 
                                     <li class="dropdown myaccount-dd">
                                         <a href="javascript:void(0);" class="user-area dropdown-toggle" data-toggle="dropdown">
-                                            <img src="{$userquery->getUserThumb('', '',user_id())}" class="no_select" width="35" height="35"/>
+                                            <img src="{userquery::getInstance()->getUserThumb('', '',user_id())}" class="no_select" width="35" height="35"/>
                                             <span>{display_clean(User::getInstance()->get('username')|truncate:15)} {if User::getInstance()->isUserMustRenewMembership()}<i class="fa fa-bell"></i>{/if}</span>
                                         </a>
                                         <ul class="dropdown-menu">
@@ -149,7 +149,7 @@
                                                 <li class="hidden-xs"><a href="{cblink name='manage_collections'}">{lang('manage_x', lang('collections')|lower)}</a></li>
                                             {/if}
                                             {if isSectionEnabled('playlists') && User::getInstance()->hasPermission('allow_create_playlist')}
-                                                <li><a href="/manage_playlists.php?user={display_clean(User::getInstance()->get('username'))}">{lang('manage_x', lang('playlists')|lower)}</a></li>
+                                                <li><a href="{$baseurl}manage_playlists.php?user={display_clean(User::getInstance()->get('username'))}">{lang('manage_x', lang('playlists')|lower)}</a></li>
                                             {/if}
                                             {if isSectionEnabled('channels') && Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '136') && User::getInstance()->get('is_channel_enable')}
                                                 <li><a href="{User::getInstance()->getLink('channel')}">{lang code="my_channel"}</a></li>
@@ -170,7 +170,7 @@
                                         </li>
                                     {/if}
                                     <li class="navbar-sm-login-links">
-                                        <a class="btn btn-default btn-login" href="{cblink name='signup'}?mode=login">{lang code='login'}</a>
+                                        <a class="btn btn-default btn-login" href="{cblink name='signin'}">{lang code='login'}</a>
                                     </li>
 
                                 {/if}
@@ -182,7 +182,7 @@
         </div>
     </nav>
 </header>
-{include file="$style_dir/blocks/spinner.html" }
+{include file="$style_dir/blocks/spinner.html"}
 <script>
     $(function () {
         $(".cbsearchtype a").on({

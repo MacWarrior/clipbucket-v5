@@ -6,7 +6,7 @@ User::getInstance()->hasPermissionOrRedirect('member_moderation',true);
 pages::getInstance()->page_redir();
 
 if (config('disable_email') == 'yes') {
-    redirect_to(DirPath::getUrl('admin_area', true));
+    redirect_to(DirPath::getUrl('admin_area'));
 }
 
 /* Generating breadcrumb */
@@ -74,7 +74,15 @@ $cats = Category::getInstance()->getAll([
 ]);
 assign('cats', $cats);
 
-//Displaying template...
+$min_suffixe = System::isInDev() ? '' : '.min';
+ClipBucket::getInstance()->addAdminJS([
+    'summernote/summernote' . $min_suffixe . '.js' => 'libs',
+    'pages/mass_email/mass_email'.$min_suffixe.'.js' => 'admin'
+]);
+ClipBucket::getInstance()->addAdminCSS([
+    'summernote/summernote' . $min_suffixe . '.css'     => 'libs'
+]);
+
 subtitle('Mass Email');
 template_files('mass_email.html');
 display_it();

@@ -332,10 +332,11 @@ CREATE TABLE `{tbl_prefix}stats` (
 
 CREATE TABLE `{tbl_prefix}subscriptions` (
   `subscription_id` int(225) NOT NULL,
-  `userid` int(11) NOT NULL,
-  `subscribed_to` mediumtext NOT NULL,
+  `userid` BIGINT NOT NULL,
+  `subscribed_to` BIGINT NOT NULL,
   `date_added` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_520_ci;
+
 
 CREATE TABLE `{tbl_prefix}template` (
   `template_id` int(20) NOT NULL,
@@ -451,7 +452,7 @@ CREATE TABLE `{tbl_prefix}user_profile` (
   `user_profile_id` int(11) NOT NULL,
   `show_my_collections` enum('yes','no') NOT NULL DEFAULT 'yes',
   `userid` bigint(20) NOT NULL UNIQUE,
-  `profile_title` mediumtext NOT NULL,
+  `profile_slogan` mediumtext NOT NULL,
   `profile_desc` mediumtext NOT NULL,
   `featured_video` mediumtext NOT NULL,
   `first_name` varchar(100) NOT NULL DEFAULT '',
@@ -499,7 +500,6 @@ CREATE TABLE `{tbl_prefix}video` (
   `videoid` bigint(20) NOT NULL,
   `videokey` mediumtext NOT NULL,
   `video_password` varchar(255) NOT NULL DEFAULT '',
-  `video_users` text NULL DEFAULT NULL,
   `username` text NULL DEFAULT NULL,
   `userid` int(11) NULL DEFAULT NULL,
   `title` text DEFAULT NULL,
@@ -1258,6 +1258,21 @@ CREATE TABLE IF NOT EXISTS `{tbl_prefix}sorts`
 
 ALTER TABLE `{tbl_prefix}collections`
     ADD CONSTRAINT `sort_type_ibfk_1` FOREIGN KEY (`sort_type`) REFERENCES `{tbl_prefix}sorts` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+CREATE TABLE IF NOT EXISTS `{tbl_prefix}video_users`
+(
+    videoid BIGINT(20) NOT NULL,
+    userid  BIGINT(20) NOT NULL,
+    PRIMARY KEY (videoid, userid)
+) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE utf8mb4_unicode_520_ci;
+
+ALTER TABLE `{tbl_prefix}video_users` ADD CONSTRAINT `video_users_ibfk_1` FOREIGN KEY (`videoid`) REFERENCES `{tbl_prefix}video` (`videoid`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+ALTER TABLE `{tbl_prefix}video_users` ADD CONSTRAINT `video_users_ibfk_2` FOREIGN KEY (`userid`) REFERENCES `{tbl_prefix}users` (`userid`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+ALTER TABLE `{tbl_prefix}subscriptions`
+    ADD CONSTRAINT `subscriptions_subscribed_to_fk` FOREIGN KEY (`subscribed_to`) REFERENCES `{tbl_prefix}users` (`userid`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+ALTER TABLE `{tbl_prefix}subscriptions`
+    ADD CONSTRAINT `subscriptions_userid_fk` FOREIGN KEY (`userid`) REFERENCES `{tbl_prefix}users` (`userid`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 CREATE TABLE `{tbl_prefix}currency`
 (

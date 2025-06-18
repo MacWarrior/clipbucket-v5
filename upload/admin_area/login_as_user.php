@@ -2,13 +2,7 @@
 define('THIS_PAGE', 'login_as_user');
 
 require_once dirname(__FILE__, 2) . '/includes/admin_config.php';
-
-global $pages;
-
-if (!userquery::getInstance()->is_admin_logged_as_user()) {
-    User::getInstance()->hasPermissionOrRedirect('member_moderation',true);
-}
-$pages->page_redir();
+User::getInstance()->hasPermissionOrRedirect('member_moderation',true);
 
 $uid = $_GET['uid'];
 

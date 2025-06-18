@@ -1,6 +1,6 @@
 function regenerateThumbs(videoid) {
     $.ajax({
-        url: "/actions/regenerate_thumbs.php",
+        url: baseurl+"actions/regenerate_thumbs.php",
         type: "post",
         data: {videoid: videoid, origin: 'edit_video'},
         dataType: 'json',
@@ -23,7 +23,7 @@ function regenerateThumbs(videoid) {
 function deleteResolution(resolution) {
     if (confirm_it(text_confirm_vid_file.replace('%s', resolution))) {
         $.ajax({
-            url: "/actions/resolution_delete.php",
+            url: baseurl+"actions/resolution_delete.php",
             type: "POST",
             data: {resolution: resolution, videoid: videoid},
             dataType: 'json',
@@ -39,7 +39,7 @@ function deleteResolution(resolution) {
 function deleteSubtitle(number) {
     if (confirm_it(text_confirm_sub_file.replace('%s', number))) {
         $.ajax({
-            url: "/actions/subtitle_delete.php",
+            url: baseurl+"actions/subtitle_delete.php",
             type: "POST",
             data: {number: number, videoid: videoid},
             dataType: 'json',
@@ -55,7 +55,7 @@ function deleteSubtitle(number) {
 function deleteComment(comment_id) {
     if (confirm_it(text_confirm_comment)) {
         $.ajax({
-            url: "/actions/admin_comment_delete.php",
+            url: baseurl+"actions/admin_comment_delete.php",
             type: "POST",
             data: {comment_id: comment_id},
             dataType: 'json',
@@ -87,7 +87,7 @@ function cancelEditTitle(number) {
 
 function saveSubtitle(number) {
     $.ajax({
-        url: "/actions/subtitle_edit.php",
+        url: baseurl+"actions/subtitle_edit.php",
         type: "POST",
         data: {title: $('#edit_sub_' + number).val(), videoid: videoid, number: number},
         dataType: 'json',
@@ -102,7 +102,7 @@ function saveSubtitle(number) {
 function getInfoTmdb(video_id, type, video_title, page,sort, sort_order, selected_year) {
     showSpinner();
     $.ajax({
-        url: "/actions/admin_info_tmdb.php",
+        url: baseurl+"actions/admin_info_tmdb.php",
         type: "POST",
         data: {videoid: video_id, video_title: video_title, type: type, page: page,sort: sort, sort_order: sort_order, selected_year: selected_year },
         dataType: 'json',
@@ -116,10 +116,10 @@ function getInfoTmdb(video_id, type, video_title, page,sort, sort_order, selecte
     });
 }
 
-function saveInfoTmdb(tmdb_video_id) {
+function saveInfoTmdb(tmdb_video_id, type) {
     showSpinner();
     $.ajax({
-        url: "/actions/admin_import_tmdb.php",
+        url: baseurl+"actions/admin_import_tmdb.php",
         type: "POST",
         data: {tmdb_video_id: tmdb_video_id, videoid: videoid, type: type},
         dataType: 'json',
@@ -153,7 +153,7 @@ function pageInfoTmdb(page) {
 function getViewHistory(video_id, page) {
     showSpinner();
     $.ajax({
-        url: "/actions/video_view_history.php",
+        url: baseurl+"actions/video_view_history.php",
         type: "POST",
         data: {videoid: video_id, page: page, modal: false },
         dataType: 'json',
@@ -173,6 +173,39 @@ $( document ).ready(function() {
     $("[id^=tags]").each(function(elem){
         init_tags(this.id, available_tags, '#list_'+this.id);
     });
+
+    $('#list_video_users').tagit({
+        singleField: true,
+        fieldName: "tags",
+        readOnly: false,
+        singleFieldNode: $('#video_users'),
+        animate: true,
+        caseSensitive: false,
+        allowSpaces: allow_username_spaces,
+        beforeTagAdded: function (event,info) {
+            if (info.tagLabel.length <= 2) {
+                if (!alert_shown) {
+                    alert_shown = true;
+                    alert(tag_too_short);
+                }
+                return false;
+            }
+            alert_shown = false;
+        }
+    });
+
+    $('[name="broadcast"]').off('click').on('click', function () {
+        if ($(this).val() === 'unlisted') {
+            $(this).closest('form').find('#video_password').attr('disabled', false).parent().slideDown();
+            $(this).closest('form').find('#video_users').attr('disabled', 'disabled').parent().slideUp();
+        } else if ($(this).val() === 'private') {
+            $(this).closest('form').find('#video_users').attr('disabled', false).parent().slideDown();
+            $(this).closest('form').find('#video_password').attr('disabled', 'disabled').parent().slideUp();
+        } else {
+            $(this).closest('form').find('#video_password').attr('disabled', 'disabled').parent().slideUp();
+            $(this).closest('form').find('#video_users').attr('disabled', 'disabled').parent().slideUp();
+        }
+    }).trigger('click');
 
     $('#button_info_tmdb').on('click', function () {
         var video_title = $('#title').val();
@@ -212,10 +245,9 @@ $( document ).ready(function() {
     }
 
     if (ids_to_check_progress.length > 0) {
-
         intervalId = setInterval(function () {
             $.post({
-                url: '/actions/admin_progress_video.php',
+                url: baseurl+'actions/admin_progress_video.php',
                 dataType: 'json',
                 data: {
                     ids: ids_to_check_progress,
@@ -236,4 +268,14 @@ $( document ).ready(function() {
             })
         }, 30000);
     }
+
+    $('#datecreated').datepicker({
+        showOtherMonths: true,
+        selectOtherMonths: false,
+        changeMonth: true,
+        dateFormat: format_date_js,
+        changeYear: true,
+        yearRange: "-99y:+0",
+        regional: language
+    });
 });

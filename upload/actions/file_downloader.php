@@ -1,9 +1,7 @@
 <?php
 define('THIS_PAGE', 'file_downloader');
-
-global $cbvid, $Upload;
-
 include('../includes/config.inc.php');
+
 include('../includes/classes/curl/class.curl.php');
 ini_set('max_execution_time', 3000);
 
@@ -55,7 +53,7 @@ the fourth is the total number of bytes expected to be uploaded in
 this transfer, and the fifth is the number of bytes uploaded so far. 
 */
 
-function callback($resource, $download_size, $downloaded, $upload_size, $uploaded)
+function callback($resource, $download_size, $downloaded, $upload_size, $uploaded): void
 {
     global $log_file, $logDetails;
 
@@ -135,7 +133,7 @@ fclose($temp_fo);
 sleep(2);
 $details = $logDetails;
 $targetFileName = $file_name . '.' . $ext;
-$Upload->add_conversion_queue($targetFileName);
+Upload::getInstance()->add_conversion_queue($targetFileName);
 
 if (file_exists($log_file)) {
     unlink($log_file);
@@ -159,14 +157,10 @@ $vidDetails = [
     'file_directory' => create_dated_folder()
 ];
 
-$vid = $Upload->submit_upload($vidDetails);
+$vid = Upload::getInstance()->submit_upload($vidDetails);
 
 echo json_encode(['vid' => $vid]);
 $file_dir = $vidDetails['file_directory'];
 $logFile = DirPath::get('logs') . $file_dir . DIRECTORY_SEPARATOR . $file_name . '.log';
 
-if (stristr(PHP_OS, 'WIN')) {
-    exec(System::get_binaries('php') . ' -q ' . DirPath::get('actions') . 'video_convert.php ' . $targetFileName . ' sleep');
-} else {
-    exec(System::get_binaries('php') . ' -q ' . DirPath::get('actions') . 'video_convert.php ' . $targetFileName . ' ' . $file_name . ' ' . $file_dir . ' ' . $logFile . ' > /dev/null &');
-}
+FFmpeg::launchConversion($targetFileName);

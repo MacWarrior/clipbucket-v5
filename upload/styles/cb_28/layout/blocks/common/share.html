@@ -9,13 +9,13 @@
     {$watch_right = 'view_photos'}
     {$link_config = 'enable_video_link_sharing'}
     {$share_config = 'enable_video_internal_sharing'}
-    {$item_link = $cbphoto->photo_links($params.photo,'view_item')}
+    {$item_link = CBPhotos::getInstance()->photo_links($params.photo,'view_item')}
     {$trad_link = 'link_this_photo'}
 {elseif $type=='collection'}
     {$watch_right = 'view_collections'}
     {$link_config = 'enable_collection_link_sharing'}
     {$share_config = 'enable_collection_internal_sharing'}
-    {$item_link = $cbcollection->collection_links($params.collection,'view')}
+    {$item_link = Collections::getInstance()->collection_links($params.collection,'view')}
     {$trad_link = 'link_this_collection'}
 {/if}
 <div id="share_form_div" class="action_box share_form clearfix">
@@ -53,14 +53,14 @@
         }
             <div class="form-group">
                 <label for="embed_code" class="block-label">{lang code='embed_code'}</label>
-                <textarea name="embed_code" id="embed_code" onclick="this.select()" class="form-control">{display_clean($cbvid->embed_code($vdo))}</textarea>
+                <textarea name="embed_code" id="embed_code" onclick="this.select()" class="form-control">{display_clean(CBvideo::getInstance()->embed_code($vdo))}</textarea>
             </div>
             <div class="form-group">
                 <label class="block-label">{lang code='player_size'}</label>
                 <div class="clearfix">
                     <label class="radio-inline">
                         <input type="radio" name="player_size" value="default" id="player_size_0" checked onclick="updateEmbed('{config('embed_player_width')}' ,'{config('embed_player_height')}')">
-                        {lang code='default'} ({$Cbucket->configs.embed_player_width}x{$Cbucket->configs.embed_player_height})
+                        {lang code='default'} ({ClipBucket::getInstance()->configs.embed_player_width}x{ClipBucket::getInstance()->configs.embed_player_height})
                     </label>
 
                     <label class="radio-inline">

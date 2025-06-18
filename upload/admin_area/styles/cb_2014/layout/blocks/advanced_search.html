@@ -6,7 +6,7 @@
     </a>
 </div>
 <div class="search_box well" id="searchdiv" {if !$param_search || $url_active} style="display:none;"{/if}>
-    <form id="video_search" name="video_search" method="POST" action="video_manager.php" class="video_search">
+    <form id="video_search" name="video_search" method="POST" action="{DirPath::getUrl('admin_area')}video_manager.php" class="video_search">
         <div class="row">
             <div class="col-md-4">
               <div class="form-group">

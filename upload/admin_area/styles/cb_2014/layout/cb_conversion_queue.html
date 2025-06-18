@@ -1,68 +1,104 @@
 <div class="heading">
-  <h2>ClipBucket Queue Manager</h2> 
-</div>
-{if conv_lock_exists()}
-<span class="btn btn-primary" onclick="window.location='?delete_lock=yes'">
-    Delete Conversion Lock
-</span>
-{/if}
-<p class="alert alert-info">
-    do not try to change the things here, can cause problems to your Clipbucket conversion system.
-</p>
-
-
-<!-- DIsplaying Videos -->
-<form name="video_manage" method="post">
-
-<div class="btn-group marginBottomSmall">
-    <input type="submit" name="delete_selected" value="{lang code='delete'}" class="btn btn-primary btn-xs" onclick="return confirm_it('Are your sure you want to remove these items')"/>
-    <input name="processed" type="submit"class="btn btn-primary btn-xs" id="processed" value="Set as processed" />
-    <input name="pending" type="submit"class="btn btn-primary btn-xs" id="pending" value="Set as pending" /></td>
-</div>
-
-
-<table class="table table-bordered table-striped">
-  <tr>
-    <td width="30" align="center" valign="middle" class="left_head">
-    <input type="checkbox" name="checkall" onclick="checkUncheckAll(this);"/></td>
-    <td width="50" class="head">ID</td>
-    <td class="head">Details</td>
-  </tr>
-{if $queues}
-
-{foreach from=$queues item=queue}
-<tr bgcolor="{$bgcolor}">
-	<td width="30">
-        <input name="check_queue[]" type="checkbox"  value="{$queue.cqueue_id}" />
-    </td>
-    <td width="50">
-    	{$queue.cqueue_id}
-    </td>
-    <td class="video_opt_td">
-        <a class="block" href="{$admin_url}{$queue.file_directory}/view_conversion_log.php?file_name={$queue.cqueue_name}" target="_blank">
-        {$queue.cqueue_name}
-        </a>
-        <br>
-        <span class="vdo_sets">
-           <label class="label label-primary"> File Type :<strong>{$queue.cqueue_ext}</strong> &#8226;</label>
-             <label class="label label-danger">Temp Ext : <strong>{$queue.cqueue_tmp_ext}</strong> &#8226;</label>
-             <label class="label {if $queue.cqueue_conversion=='yes'}label-success{elseif $queue.cqueue_conversion=='no'}label-info{else}label-warning{/if}">Conversion Process :
-                 {if $queue.cqueue_conversion=='yes'}Proccessed{elseif $queue.cqueue_conversion=='no'}Pending{else}Processing{/if}</label>
-
-            {if $queue.time_started}
-             <label class="label label-info">Started : <strong>{"Y-m-d H:i:s"|date:$queue.time_started|niceTime}</strong> &#8226;</label>
-            {/if}
-            {if $queue.time_completed}
-            <label class="label label-default"> Completed : <strong>{"Y-m-d H:i:s"|date:$queue.time_completed|niceTime}</strong></label>
-            {/if}
+    <h2>Conversion Queue Manager
+    {if conv_lock_exists()}
+        <span class="btn btn-primary" onclick="window.location='?delete_lock=yes'">
+            Delete conversion locks
         </span>
-    </td>
-</tr>
-{/foreach}
-</table>
-{else}
-	<div align="center"><strong>No Conversion Queue File Found</strong></div>
-{/if}
+    {/if}
+    </h2>
+</div>
+
+{if $queues}
+<form name="video_manage" method="post">
+    <div class="btn-group marginBottomSmall">
+        <input type="submit" name="delete_selected" value="{lang code='delete'}" class="btn btn-primary btn-xs" onclick="return confirm_it('Are your sure you want to remove these items')"/>
+        <input name="resume" type="submit" class="btn btn-primary btn-xs" id="resume" value="{lang code='resume_conversion'}"/>
+    </div>
+
+    <table class="table table-bordered table-striped">
+        <tr>
+            <td width="30" align="center" valign="middle" class="left_head">
+                <input type="checkbox" name="checkall" onclick="checkUncheckAll(this);"/>
+            </td>
+            <td class="head">{lang code='details'}</td>
+        </tr>
+
+
+        {foreach from=$queues item=queue}
+            {$video = Video::getInstance()->getOne(['file_name'=>$queue.cqueue_name])}
+            <tr bgcolor="{$bgcolor}">
+                <td width="30">
+                    <input name="check_queue[]" type="checkbox" value="{$queue.cqueue_id}"/>
+                </td>
+                <td class="video_opt_td">
+                    {if $video}
+                        {lang|ucfirst code='video'} :
+                        {if User::getInstance()->hasPermission('video_moderation')}
+                        <a href="{DirPath::getUrl('admin_area')}edit_video.php?video={$video.videoid}" title="{display_clean($video.title)}">
+                            {display_clean($video.title|truncate:80)}
+                        </a>
+                        {else}
+                            <span title="{display_clean($video.title)}">{display_clean($video.title|truncate:80)}</span>
+                        {/if}
+                        <br/>
+                    {/if}
+                    {if User::getInstance()->hasPermission('video_moderation')}
+                    {lang code='conversion_log'} : <a href="{DirPath::getUrl('admin_area')}view_conversion_log.php?file_name={$queue.cqueue_name}" target="_blank">
+                        {$queue.cqueue_name}
+                    </a>
+                    {/if}
+                    <br>
+                    <span class="vdo_sets">
+                        <label class="label label-primary">
+                            File Type :<strong>{$queue.cqueue_ext}</strong>
+                        </label>
+                        <label class="label label-danger">
+                            Temp Ext :<strong>{$queue.cqueue_tmp_ext}</strong>
+                        </label>
+
+                        {if $video}
+                        <label class="label {if $video.status=='Successful'}label-success{else}label-warning{/if}">
+                            {lang code='vdo_status'} : {lang(strtolower($video.status))}
+                        </label>
+                        {else}
+                        <label class="label
+                            {if $queue.cqueue_conversion=='yes'}label-success{elseif $queue.cqueue_conversion=='no'}label-info{else}label-warning{/if}">Conversion Process :
+                            {if $queue.cqueue_conversion=='yes'}Proccessed{elseif $queue.cqueue_conversion=='no'}Pending{else}Processing{/if}
+                        </label>
+                        {/if}
+
+                        {if $queue.time_started}
+                            <label class="label label-info">
+                                Started :<strong>{"Y-m-d H:i:s"|date:$queue.time_started|niceTime}</strong>
+                            </label>
+                        {/if}
+
+                        {if $video.status|lower == 'processing' && Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '279')}
+                        <div class="col-md-4" style="float:right;">
+                            {lang code='ongoing_conversion'} :<br/>
+                            <div class="progress" style="margin-bottom:0;">
+                                <div class="progress-bar progress-bar-striped animate" role="progressbar" id="progress-bar" aria-valuenow="{$video.convert_percent}" aria-valuemin="0" aria-valuemax="100" style="width:{$video.convert_percent}%;">
+                                    {$video.convert_percent}%
+                                </div>
+                            </div>
+                        </div>
+                        {/if}
+
+                        {if $queue.time_completed}
+                            <label class="label label-default">
+                                Completed :<strong>{"Y-m-d H:i:s"|date:$queue.time_completed|niceTime}</strong>
+                            </label>
+                        {/if}
+                    </span>
+                </td>
+            </tr>
+        {/foreach}
+    </table>
 </form>
 
-{include file="$style_dir/blocks/pagination.html"}
+    {include file="$style_dir/blocks/pagination.html"}
+{else}
+    <div align="center">
+        <strong>No Conversion Queue File Found</strong>
+    </div>
+{/if}

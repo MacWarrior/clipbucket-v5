@@ -1,15 +1,14 @@
 <?php
 define('THIS_PAGE', 'manage_players');
-
 require_once dirname(__FILE__, 2) . '/includes/admin_config.php';
 
-global $Upload, $myquery, $cbplayer;
+global $cbplayer;
 
 User::getInstance()->hasPermissionOrRedirect('admin_access', true);
 pages::getInstance()->page_redir();
 
-if( count($cbplayer->getPlayers()) <= 1 && !in_dev() ){
-    redirect_to(DirPath::getUrl('admin_area', true));
+if( count($cbplayer->getPlayers()) <= 1 && !System::isInDev() ){
+    redirect_to(DirPath::getUrl('admin_area'));
 }
 
 /* Generating breadcrumb */

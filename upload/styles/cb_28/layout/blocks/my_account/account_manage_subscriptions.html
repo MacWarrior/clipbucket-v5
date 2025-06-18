@@ -16,10 +16,10 @@
                     <input type="checkbox" name="sub[]" id="check_userd-{$user_detail.userid}" value="{$sub.subscribed_to}" />
                 </td>
                 <td>
-                    <a href="{$userquery->profile_link($sub)}"><img src="{$userquery->getUserThumb($sub)}" alt="{display_clean($sub.username)}" width="40" height="40" border="0"></a>
+                    <a href="{userquery::getInstance()->profile_link($sub)}"><img src="{userquery::getInstance()->getUserThumb($sub)}" alt="{display_clean($sub.username)}" width="40" height="40" border="0"></a>
                 </td>
                 <td>
-                    <a href="{$userquery->profile_link($sub)}">{display_clean($sub.username)}</a> | <a href="{$userquery->get_user_videos_link($sub)}">{lang code='grp_view_vdos'}</a>
+                    <a href="{userquery::getInstance()->profile_link($sub)}">{display_clean($sub.username)}</a>
                 </td>
                 <td width="100">
                     {$sub.profile_hits|number_format}

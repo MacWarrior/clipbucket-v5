@@ -21,8 +21,8 @@ require_once("classes/reCaptchav2.class.php");
 $recv2 = new reCaptchav2();
 assign('recv2', $recv2);
 
-$sitekey = $Cbucket->configs['recaptcha_v2_site_key'];
-$privatekey = $Cbucket->configs['recaptcha_v2_secret_key'];
+$sitekey = ClipBucket::getInstance()->configs['recaptcha_v2_site_key'];
+$privatekey = ClipBucket::getInstance()->configs['recaptcha_v2_secret_key'];
 
 # the response from reCAPTCHA v2
 $resp = null;

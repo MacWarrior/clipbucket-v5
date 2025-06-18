@@ -15,8 +15,6 @@ function get_video_fields($extra = null)
  */
 function video_playable($id): bool
 {
-    global $cbvideo;
-
     if (isset($_POST['watch_protected_video'])) {
         $video_password = mysql_clean(post('video_password'));
     } else {
@@ -24,7 +22,7 @@ function video_playable($id): bool
     }
 
     if (!is_array($id)) {
-        $vdo = $cbvideo->get_video($id);
+        $vdo = CBvideo::getInstance()->get_video($id);
     } else {
         $vdo = $id;
     }
@@ -133,14 +131,14 @@ function get_thumb($vdetails, $multi = false, $size = false, $type = false, $max
     }
 
     $fields = ['V.videoid', 'V.file_name', 'V.file_directory', 'VT.num', 'V.default_thumb', 'V.status'];
-    $version = Update::getInstance()->getDBVersion();
-    if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 366)) {
+
+    if( Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.0', '366') ){
         $fields[] = 'V.default_poster';
         $fields[] = 'V.default_backdrop';
     }
 
     //get current video from db
-    if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 163)) {
+    if( Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.0', '163') ){
         $resVideo = Clipbucket_db::getInstance()->select(tbl('video') . ' AS V LEFT JOIN ' . tbl('video_thumbs') . ' AS VT ON VT.videoid = V.videoid ', implode(',', $fields), 'V.videoid = ' . mysql_clean($vid));
     } else {
         return $multi ? [default_thumb($return_type)] : default_thumb($return_type);
@@ -277,7 +275,7 @@ function create_thumb($video_db, $multi, $size)
 /**
  * @throws Exception
  */
-function get_player_thumbs_json($data)
+function get_player_thumbs_json($data): void
 {
     $thumbs = get_thumb($data, true, '168x105', 'auto');
     $duration = (int)$data['duration'];
@@ -364,14 +362,15 @@ function default_thumb($return_type = 'url'): string
  * @throws Exception
  * @internal param video $ARRAY details
  */
-function video_link($vdetails, $type = null, $is_public = false): string
+function video_link($vdetails, $type = null, $is_public = false):string
 {
+    $base_url = DirPath::getUrl('root');
     #checking what kind of input we have
     if (is_array($vdetails)) {
         if (empty($vdetails['title'])) {
             #check for videoid
             if (empty($vdetails['videoid']) && empty($vdetails['vid']) && empty($vdetails['videokey'])) {
-                return '/';
+                return $base_url;
             }
 
             if (!empty($vdetails['videoid'])) {
@@ -383,7 +382,7 @@ function video_link($vdetails, $type = null, $is_public = false): string
                     if (!empty($vdetails['videokey'])) {
                         $vid = $vdetails['videokey'];
                     } else {
-                        return '/';
+                        return $base_url;
                     }
                 }
             }
@@ -392,12 +391,16 @@ function video_link($vdetails, $type = null, $is_public = false): string
         if (is_numeric($vdetails)) {
             $vid = $vdetails;
         } else {
-            return '/';
+            return $base_url;
         }
     }
     #checking if we have vid , so fetch the details
     if (!empty($vid)) {
         $vdetails = get_video_details($vid);
+    }
+
+    if ((strtolower($vdetails['status']) == 'processing' || strtolower($vdetails['status']) == 'waiting') && !User::getInstance()->hasAdminAccess()) {
+        return '#';
     }
     $is_public = config('enable_public_video_page')=='yes' && User::getInstance()->hasPermission('allow_public_video_page') && $vdetails['broadcast'] == 'public';
     //calling for custom video link functions
@@ -424,29 +427,29 @@ function video_link($vdetails, $type = null, $is_public = false): string
 
         switch (config('seo_vido_url')) {
             default:
-                $link = Network::get_server_url() . 'video' . ($is_public ? '_public' : '') . '/' . $vdetails['videokey'] . '/' . SEO(display_clean(str_replace(' ', '-', $vdetails['title']))) . $plist;
+                $link = $base_url . 'video/' . $vdetails['videokey'] . '/' . SEO(display_clean(str_replace(' ', '-', $vdetails['title']))) . $plist;
                 break;
             case 1:
-                $link = Network::get_server_url() . ($is_public ? 'video_public-' : '') .  SEO(display_clean(str_replace(' ', '-', $vdetails['title']))) . '_v' . $vdetails['videoid'] . $plist;
+                $link = $base_url . SEO(display_clean(str_replace(' ', '-', $vdetails['title']))) . '_v' . $vdetails['videoid'] . $plist;
                 break;
             case 2:
-                $link = Network::get_server_url() . 'video' . ($is_public ? '_public' : '') . '/' . $vdetails['videoid'] . '/' . SEO(display_clean(str_replace(' ', '-', $vdetails['title']))) . $plist;
+                $link = $base_url . 'video/' . $vdetails['videoid'] . '/' . SEO(display_clean(str_replace(' ', '-', $vdetails['title']))) . $plist;
                 break;
             case 3:
-                $link = Network::get_server_url() . 'video' . ($is_public ? '_public' : '') . '/' . $vdetails['videoid'] . '_' . SEO(display_clean(str_replace(' ', '-', $vdetails['title']))) . $plist;
+                $link = $base_url . 'video/' . $vdetails['videoid'] . '_' . SEO(display_clean(str_replace(' ', '-', $vdetails['title']))) . $plist;
                 break;
         }
     } else {
         if ($vdetails['playlist_id']) {
             $plist = '&play_list=' . $vdetails['playlist_id'];
         }
-        $link = Network::get_server_url() . 'watch' . ($is_public ? '_public' : '') . '_video.php?v=' . $vdetails['videokey'] . $plist;
+        $link = $base_url . 'watch_video.php?v=' . $vdetails['videokey'] . $plist;
     }
     if (!$type || $type == 'link') {
         return $link;
     }
     if ($type == 'download') {
-        return '/download.php?v=' . $vdetails['videokey'];
+        return $base_url . 'download.php?v=' . $vdetails['videokey'];
     }
 }
 
@@ -515,16 +518,13 @@ function file_name_exists($name)
  */
 function get_queued_video(string $fileName): array
 {
-    $queueName = getName($fileName);
-    $ext = getExt($fileName);
-
-    $results = Clipbucket_db::getInstance()->select(tbl('conversion_queue'), '*', "cqueue_conversion='no' AND cqueue_name ='$queueName' AND cqueue_ext ='$ext'", 1);
+    $results = Clipbucket_db::getInstance()->select(tbl('conversion_queue'), '*', ' cqueue_conversion != \'yes\' AND cqueue_name = \''.mysql_clean($fileName).'\'', 1);
     if( empty($results) ){
         return [];
     }
 
     $result = $results[0];
-    Clipbucket_db::getInstance()->update(tbl('conversion_queue'), ['cqueue_conversion', 'time_started'], ['p', time()], " cqueue_id = '" . $result['cqueue_id'] . "'");
+    Clipbucket_db::getInstance()->update(tbl('conversion_queue'), ['cqueue_conversion', 'time_started'], ['p', time()], ' cqueue_id = \'' . $result['cqueue_id'] . '\'');
     return $result;
 }
 
@@ -558,8 +558,7 @@ function get_video_details($vid = null, $basic = false)
         return false;
     }
 
-    global $cbvid;
-    return $cbvid->get_video($vid, false, $basic);
+    return CBvideo::getInstance()->get_video($vid, false, $basic);
 }
 
 /**
@@ -567,8 +566,7 @@ function get_video_details($vid = null, $basic = false)
  */
 function get_video_basic_details($vid)
 {
-    global $cbvid;
-    return $cbvid->get_video($vid, false, true);
+    return CBvideo::getInstance()->get_video($vid, false, true);
 }
 
 /**
@@ -576,8 +574,7 @@ function get_video_basic_details($vid)
  */
 function get_basic_video_details_from_filename($filename)
 {
-    global $cbvid;
-    return $cbvid->get_video($filename, true, true);
+    return CBvideo::getInstance()->get_video($filename, true, true);
 }
 
 /**
@@ -725,7 +722,7 @@ function update_video_by_filename($file_name, $fields, $values)
  * @param $vid
  * @throws Exception
  */
-function activate_video_with_file($vid)
+function activate_video_with_file($vid): void
 {
     $vdetails = get_video_basic_details($vid);
     $file_name = $vdetails['file_name'];
@@ -812,7 +809,7 @@ function get_thumb_num($name): string
  * @param $type
  * @throws Exception
  */
-function delete_video_thumb($videoDetails, $num, $type)
+function delete_video_thumb($videoDetails, $num, $type): void
 {
     $db = Clipbucket_db::getInstance();
     $type_file = array_search($type,Upload::getInstance()->types_thumb);
@@ -867,10 +864,9 @@ function delete_video_thumb($videoDetails, $num, $type)
  * @param $vdetails
  * @throws Exception
  */
-function remove_video_thumbs($vdetails)
+function remove_video_thumbs($vdetails): void
 {
-    global $cbvid;
-    $cbvid->remove_thumbs($vdetails);
+    CBvideo::getInstance()->remove_thumbs($vdetails);
 }
 
 /**
@@ -879,10 +875,9 @@ function remove_video_thumbs($vdetails)
  * @param $vdetails
  * @throws Exception
  */
-function remove_video_log($vdetails)
+function remove_video_log($vdetails): void
 {
-    global $cbvid;
-    $cbvid->remove_log($vdetails);
+    CBvideo::getInstance()->remove_log($vdetails);
 }
 
 /**
@@ -895,17 +890,15 @@ function remove_video_log($vdetails)
  */
 function remove_video_files($vdetails)
 {
-    global $cbvid;
-    return $cbvid->remove_files($vdetails);
+    return CBvideo::getInstance()->remove_files($vdetails);
 }
 
 /**
  * @throws Exception
  */
-function remove_video_subtitles($vdetails)
+function remove_video_subtitles($vdetails): void
 {
-    global $cbvid;
-    $cbvid->remove_subtitles($vdetails);
+    CBvideo::getInstance()->remove_subtitles($vdetails);
 }
 
 /**
@@ -916,7 +909,7 @@ function remove_video_subtitles($vdetails)
  * @param $vdo
  * @throws Exception
  */
-function call_watch_video_function($vdo)
+function call_watch_video_function($vdo): void
 {
     $funcs = get_functions('watch_video_functions');
 
@@ -928,7 +921,7 @@ function call_watch_video_function($vdo)
         }
     }
 
-    increment_views_new($vdo['videokey'], 'video');
+    increment_views($vdo['videokey'], 'video');
 
     $userid = user_id();
     if ($userid) {
@@ -987,13 +980,12 @@ function call_download_video_function($vdo)
  *
  * @param $param
  *
- * @return bool|array|void|int
+ * @return array|bool|int
  * @throws Exception
  */
 function get_videos($param)
 {
-    global $cbvideo;
-    return $cbvideo->get_videos($param);
+    return CBvideo::getInstance()->get_videos($param);
 }
 
 /**
@@ -1002,28 +994,37 @@ function get_videos($param)
  * so that only register usernames can be set
  *
  * @param $users
- *
- * @return string
+ * @param bool $only_format
+ * @return array
  * @throws Exception
  */
-function video_users($users)
+function video_users($users, $only_format = false): array
 {
     if (!empty($users)) {
         $users_array = explode(',', $users);
+    } else {
+        return [];
     }
     $new_users = [];
-    foreach ($users_array as $user) {
-        if ($user != user_name() && !is_numeric($user) && userquery::getInstance()->user_exists($user)) {
-            $new_users[] = $user;
+    foreach ($users_array as $username) {
+        $username = trim($username);
+        $params = [];
+        if (is_numeric($username) && $username != User::getInstance()->get('userid')) {
+            $params['userid'] = $username;
+        } elseif($username != user_name()) {
+            $params['username'] = $username;
+        }
+        if (!empty($params)) {
+            $user = User::getInstance()->getOne($params);
+        }
+        if (!empty($user)) {
+            $new_users[] = $user['userid'];
+        } elseif(!$only_format) {
+            e(lang('user_no_exist_wid_username', $username),'w');
         }
     }
 
-    $new_users = array_unique($new_users);
-
-    if (count($new_users) > 0) {
-        return implode(',', $new_users);
-    }
-    return " ";
+    return array_unique($new_users);
 }
 
 /**
@@ -1034,6 +1035,7 @@ function video_users($users)
  * @param null $user
  *
  * @return bool
+ * @throws Exception
  */
 function is_video_user($vdo, $user = null): bool
 {
@@ -1071,11 +1073,10 @@ function register_custom_video_file_func($method, $class = null): bool
         return false;
     }
 
-    global $Cbucket;
     if (empty($class)) {
-        $Cbucket->custom_video_file_funcs[] = $method;
+        ClipBucket::getInstance()->custom_video_file_funcs[] = $method;
     } else {
-        $Cbucket->custom_video_file_funcs[] = [
+        ClipBucket::getInstance()->custom_video_file_funcs[] = [
             'class'    => $class
             , 'method' => $method
         ];
@@ -1085,8 +1086,7 @@ function register_custom_video_file_func($method, $class = null): bool
 
 function get_custom_video_file_funcs()
 {
-    global $Cbucket;
-    return $Cbucket->custom_video_file_funcs;
+    return ClipBucket::getInstance()->custom_video_file_funcs;
 }
 
 function exec_custom_video_file_funcs($vdetails, $hq = false)
@@ -1237,8 +1237,7 @@ function get_high_res_file($vdetails): string
             return $filepath . $vdetails['file_name'] . '-' . $max_quality . '.mp4';
 
         case 'hls':
-            global $myquery;
-            $video_quality_title = $myquery->getVideoResolutionTitleFromHeight($max_quality);
+            $video_quality_title = myquery::getInstance()->getVideoResolutionTitleFromHeight($max_quality);
             return $filepath . $vdetails['file_name'] . DIRECTORY_SEPARATOR . 'video_' . $video_quality_title . '.m3u8';
     }
 }
@@ -1257,7 +1256,6 @@ function get_high_res_file($vdetails): string
  */
 function get_fast_qlist($cookie_name = false): array
 {
-    global $cbvid;
     if ($cookie_name) {
         $cookie = $cookie_name;
     } else {
@@ -1272,7 +1270,7 @@ function get_fast_qlist($cookie_name = false): array
 
     foreach ($vids as $vid) {
         if( !empty($vid) ){
-            $vid_dets[] = $cbvid->get_video($vid);
+            $vid_dets[] = CBvideo::getInstance()->get_video($vid);
         }
     }
 
@@ -1320,7 +1318,7 @@ function dateNow(): string
  *
  * @action : Updates database
  */
-function setVideoStatus($video, $status, $reconv = false, $byFilename = false)
+function setVideoStatus($video, $status, $reconv = false, $byFilename = false): void
 {
     if ($byFilename) {
         $type = 'file_name';
@@ -1365,7 +1363,7 @@ function get_audio_channels($filepath): int
 /**
  * @throws Exception
  */
-function update_castable_status($vdetails)
+function update_castable_status($vdetails): void
 {
     if (is_null($vdetails) || $vdetails['status'] != 'Successful' || empty($vdetails['video_files']) ) {
         return;
@@ -1387,7 +1385,7 @@ function update_castable_status($vdetails)
 /**
  * @throws Exception
  */
-function update_video_files($vdetails)
+function update_video_files($vdetails): void
 {
     $fileDirectory = $vdetails['file_directory'] . DIRECTORY_SEPARATOR;
     $video_qualities = [];
@@ -1441,7 +1439,7 @@ function update_video_files($vdetails)
 /**
  * @throws Exception
  */
-function update_bits_color($vdetails)
+function update_bits_color($vdetails): void
 {
     if (is_null($vdetails) || $vdetails['status'] != 'Successful' || empty($vdetails['video_files']) ) {
         return;
@@ -1457,7 +1455,7 @@ function update_bits_color($vdetails)
 /**
  * @throws Exception
  */
-function update_aspect_ratio($vdetails)
+function update_aspect_ratio($vdetails): void
 {
     if (is_null($vdetails) || $vdetails['status'] != 'Successful' || empty($vdetails['video_files'])) {
         return;
@@ -1532,9 +1530,8 @@ function isReconvertAble($vdetails): bool
  * @author : { Saqib Razzaq }
  * @since : October 28th, 2016
  */
-function reConvertVideos($data = '')
+function reConvertVideos($data = ''): void
 {
-    global $cbvid, $Upload, $myquery;
     $toConvert = 0;
     // if nothing is passed in data array, read from $_POST
     if (!is_array($data)) {
@@ -1551,7 +1548,7 @@ function reConvertVideos($data = '')
     // Loop through all video ids
     foreach ($videos as $daVideo) {
         // get details of single video
-        $vdetails = $cbvid->get_video($daVideo);
+        $vdetails = CBvideo::getInstance()->get_video($daVideo);
 
         if (!empty($vdetails['file_server_path'])) {
             if (empty($vdetails['file_directory'])) {
@@ -1573,7 +1570,6 @@ function reConvertVideos($data = '')
             curl_setopt($request, CURLOPT_RETURNTRANSFER, true);
             $results_curl = curl_exec($request);
             $results_curl_arr = json_decode($results_curl, true);
-            $returnCode = (int)curl_getinfo($request, CURLINFO_HTTP_CODE);
             curl_close($request);
 
             if (isset($results_curl_arr['success']) && $results_curl_arr['success'] == 'yes') {
@@ -1593,10 +1589,13 @@ function reConvertVideos($data = '')
                 continue;
             }
 
-            $toConvert++;
-            e('Started re-conversion process for id ' . $vdetails['videoid'], 'm');
+            setVideoStatus($daVideo, 'Waiting');
 
-            setVideoStatus($daVideo, 'Processing');
+            if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '279')) {
+                $fields = ['convert_percent'];
+                $values= [0];
+                update_video_by_filename($vdetails['file_name'], $fields, $values);
+            }
 
             switch ($vdetails['file_type']) {
                 default:
@@ -1604,37 +1603,37 @@ function reConvertVideos($data = '')
                     $max_quality_file = get_high_res_file($vdetails);
                     $conversion_filepath = DirPath::get('temp') . $vdetails['file_name'] . '.mp4';
                     copy($max_quality_file, $conversion_filepath);
-                    $Upload->add_conversion_queue($vdetails['file_name'] . '.mp4');
+                    Upload::getInstance()->add_conversion_queue($vdetails['file_name'] . '.mp4');
                     break;
+
                 case 'hls':
-                    $conversion_dir = DirPath::get('temp') . $vdetails['file_name'] . DIRECTORY_SEPARATOR;
-                    mkdir($conversion_dir);
-                    $max_quality = max(json_decode($vdetails['video_files']));
-                    $conversion_filepath = $conversion_dir . $max_quality . '.m3u8';
-                    $original_files_path = DirPath::get('videos') . $vdetails['file_directory'] . DIRECTORY_SEPARATOR . $vdetails['file_name'] . DIRECTORY_SEPARATOR . $max_quality . '*';
+                    $temp_dir = DirPath::get('temp') . $vdetails['file_name'] . DIRECTORY_SEPARATOR;
+                    mkdir($temp_dir);
+                    $original_files_path = DirPath::get('videos') . $vdetails['file_directory'] . DIRECTORY_SEPARATOR . $vdetails['file_name'] . DIRECTORY_SEPARATOR . '*';
                     foreach (glob($original_files_path) as $file) {
                         $files_part = explode('/', $file);
                         $video_file = $files_part[count($files_part) - 1];
-                        if ($video_file == $max_quality . '.m3u8') {
+                        if ($video_file == 'index.m3u8') {
                             $video_file = $vdetails['file_name'] . '.m3u8';
                         }
-                        copy($file, $conversion_dir . $video_file);
+                        copy($file, $temp_dir . $video_file);
                     }
-                    $Upload->add_conversion_queue($vdetails['file_name'] . '.m3u8', $vdetails['file_name'] . DIRECTORY_SEPARATOR, $vdetails['file_name']);
+                    Upload::getInstance()->add_conversion_queue($vdetails['file_name'] . '.m3u8', $vdetails['file_name'] . DIRECTORY_SEPARATOR, $vdetails['file_name']);
                     break;
             }
 
             remove_video_files($vdetails);
+            if( empty(errorhandler::getInstance()->get_error()) ){
+                errorhandler::getInstance()->flush();
+            }
 
-            $logFile = DirPath::get('logs') . $vdetails['file_directory'] . DIRECTORY_SEPARATOR . $vdetails['file_name'] . '.log';
-            exec(System::get_binaries('php') . ' -q ' . DirPath::get('actions')  . "video_convert.php {$conversion_filepath} {$vdetails['file_name']} {$vdetails['file_directory']} {$logFile} '' 'reconvert' > /dev/null &");
+            e(lang('reconversion_started_for_x', display_clean($vdetails['title'])), 'm');
+
+            FFmpeg::launchReconvert($vdetails['file_name']);
 
             setVideoStatus($daVideo, 'started', true);
         }
 
-    }
-    if ($toConvert >= 1) {
-        e("Reconversion is underway. Kindly don't run reconversion on videos that are already reconverting. Doing so may cause things to become lunatic fringes :P", "w");
     }
 }
 
@@ -1644,7 +1643,7 @@ function reConvertVideos($data = '')
  * @return void
  * @throws Exception
  */
-function generatingMoreThumbs($data, bool $regenerate = false)
+function generatingMoreThumbs($data, bool $regenerate = false): void
 {
     $vid_file = get_high_res_file($data);
     require_once DirPath::get('classes') . 'sLog.php';
@@ -1673,7 +1672,7 @@ function generatingMoreThumbs($data, bool $regenerate = false)
  * @return void
  * @throws Exception
  */
-function update_duration($vdetails)
+function update_duration($vdetails): void
 {
     if (is_null($vdetails)) {
         return;

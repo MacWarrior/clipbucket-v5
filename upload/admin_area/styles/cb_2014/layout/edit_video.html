@@ -1,16 +1,9 @@
-{assign var='video_privacyoption' value=$Upload->loadOptionFields($data)}
-{assign var='video_datelocation' value=$Upload->loadLocationFields($data)}
-{assign var='custom_upload_fields' value=$Upload->load_custom_upload_fields($data,TRUE)}
-{assign var='video_fields' value=$Upload->loadRequiredFields($data)}
+{assign var='video_privacyoption' value=Upload::getInstance()->loadOptionFields($data)}
+{assign var='video_datelocation' value=Upload::getInstance()->loadLocationFields($data)}
+{assign var='custom_upload_fields' value=Upload::getInstance()->load_custom_upload_fields($data,TRUE)}
+{assign var='video_fields' value=Upload::getInstance()->loadRequiredFields($data)}
 
 {if $data.title neq ""}
-<script>
-    $(document).ready(function(){
-        $("#datecreated").datepicker({
-            format: 'yyyy-mm-dd' // TODO : Use config date_format
-        });
-    });
-</script>
 	<div class="row">
 		<div class="heading clearfix">
             <h2 class="pull-left paddingLeftLarge">Editing <small>&gt; <span title="{display_clean($data.title)}">{display_clean($data.title)|truncate:80}</span></small>
@@ -21,38 +14,38 @@
                     <ul class="dropdown-menu pull-right" role="menu">
                         <li><a href="{videoLink vdetails=$data}">{lang code='watch'}</a></li>
                         {if $data.active!='yes'}
-                            <li><a href="edit_video.php?video={$data.videoid}&amp;mode=activate">{lang code='activate'}</a></li>
+                            <li><a href="{DirPath::getUrl('admin_area')}edit_video.php?video={$data.videoid}&amp;mode=activate">{lang code='activate'}</a></li>
                         {else}
-                            <li><a href="edit_video.php?video={$data.videoid}&amp;mode=deactivate">{lang code='deactivate'}</a></li>
+                            <li><a href="{DirPath::getUrl('admin_area')}edit_video.php?video={$data.videoid}&amp;mode=deactivate">{lang code='deactivate'}</a></li>
                         {/if}
 
                         {if $modedata!='featured'}
-                            <li><a href="edit_video.php?video={$data.videoid}&amp;mode=featured">Make Featured</a></li>
+                            <li><a href="{DirPath::getUrl('admin_area')}edit_video.php?video={$data.videoid}&amp;mode=featured">{lang code='make_featured'}</a></li>
                         {else}
-                            <li><a href="edit_video.php?video={$data.videoid}&amp;mode=unfeature">Make Unfeatured</a></li>
+                            <li><a href="{DirPath::getUrl('admin_area')}edit_video.php?video={$data.videoid}&amp;mode=unfeature">{lang code='make_unfeatured'}</a></li>
                         {/if}
                         {if $video.status=='Successful'}
                             {if config('chromecast')=='yes' && !$data.is_castable}
-                                <li><a href="edit_video.php?video={$data.videoid}&amp;mode=check_castable">{lang code='castable_status_check'}</a></li>
+                                <li><a href="{DirPath::getUrl('admin_area')}edit_video.php?video={$data.videoid}&amp;mode=check_castable">{lang code='castable_status_check'}</a></li>
                             {/if}
-                            <li><a href="edit_video.php?video={$data.videoid}&amp;mode=update_bits_color">{lang code='update_bits_color'}</a></li>
+                            <li><a href="{DirPath::getUrl('admin_area')}edit_video.php?video={$data.videoid}&amp;mode=update_bits_color">{lang code='update_bits_color'}</a></li>
                             <li><a href="javascript:void(0);" onClick="javascript:Confirm_Delete('video_manager.php?delete_video={$data.videoid}')">{lang code='delete'}</a></li>
                             {if $data.embeded != 'yes'}
                                 <li role="presentation"><a role="menuitem" tabindex="-1" href="javascript:void(0);" onClick="regenerateThumbs({$data.videoid});">Regenerate thumbnails</a></li>
                             {/if}
                         {/if}
-                        <li role="presentation"><a role="menuitem" tabindex="-1" href="upload_thumbs.php?video={$data.videoid}&type=thumbs">{lang('manage_x', lang('thumbs')|lower)}</a></li>
+                        <li role="presentation"><a role="menuitem" tabindex="-1" href="{DirPath::getUrl('admin_area')}upload_thumbs.php?video={$data.videoid}&type=thumbs">{lang('manage_x', lang('thumbs')|lower)}</a></li>
                         {if config('enable_video_poster') == 'yes'}
-                            <li role="presentation"><a role="menuitem" tabindex="-1" href="upload_thumbs.php?video={$data.videoid}&type=poster">{lang('manage_x', lang('posters')|lower)}</a></li>
+                            <li role="presentation"><a role="menuitem" tabindex="-1" href="{DirPath::getUrl('admin_area')}upload_thumbs.php?video={$data.videoid}&type=poster">{lang('manage_x', lang('posters')|lower)}</a></li>
                         {/if}
                         {if config('enable_video_backdrop') == 'yes'}
-                            <li role="presentation"><a role="menuitem" tabindex="-1" href="upload_thumbs.php?video={$data.videoid}&type=backdrop">{lang('manage_x', lang('backdrops')|lower)}</a></li>
+                            <li role="presentation"><a role="menuitem" tabindex="-1" href="{DirPath::getUrl('admin_area')}upload_thumbs.php?video={$data.videoid}&type=backdrop">{lang('manage_x', lang('backdrops')|lower)}</a></li>
                         {/if}
 
                         {if config('enable_tmdb') == 'yes' && config('tmdb_token') != ''}
                             <li role="presentation"><a role="menuitem" tabindex="-1" href="javascript:void(0);" data-id="{$data.videoid}" id="button_info_tmdb">{lang code='get_data_tmdb'}</a></li>
                         {/if}
-                        <li><a href="edit_video.php?video={$data.videoid}&amp;mode=delete" onclick="return _cb.confirm_it('{lang code='confirm_delete_video'}')">{lang code='delete'}</a></li>
+                        <li><a href="{DirPath::getUrl('admin_area')}edit_video.php?video={$data.videoid}&amp;mode=delete" onclick="return _cb.confirm_it('{lang code='confirm_delete_video'}')">{lang code='delete'}</a></li>
                     </ul>
 				</div>
 			</h2>
@@ -187,7 +180,7 @@
                                                 <label>{lang code='conversion_log'}</label>
                                             </td>
                                             <td>
-                                                <p><span>{if $has_log}<a href="view_conversion_log.php?file_name={$data.file_name}">{lang code='watch_conversion_log'}</a>{else}{lang code='no_conversion_log'}{/if}</span></p>
+                                                <p><span>{if $has_log}<a href="{DirPath::getUrl('admin_area')}view_conversion_log.php?file_name={$data.file_name}">{lang code='watch_conversion_log'}</a>{else}{lang code='no_conversion_log'}{/if}</span></p>
                                             </td>
                                         </tr>
                                         <tr>
@@ -248,13 +241,17 @@
                                 </div>
                                 {if $data.userid != $anonymous_id}
                                     <div class="col-md-2">
-                                        <img src="{$userquery->getUserThumb($u)}" alt="User avatar" class="img-thumbnail marginBottomLarge"/>
+                                        <img src="{userquery::getInstance()->getUserThumb($u)}" alt="User avatar" class="img-thumbnail marginBottomLarge"/>
                                     </div>
                                 {/if}
                             </div>
                         </div>
                         <div id="privacyoption" class="tab-pane">
                             {foreach from=$video_privacyoption item=field}
+                                {if $field.type == 'hidden' &&  $field.id != 'video_users'}
+                                    {$formObj->createField($field)}
+                                    {continue}
+                                {/if}
                             <div class="table">
                                 {if $field.type != 'checkbox' && $field.type != 'radiobutton' && $field.type != 'checkbox2'}
                                     {if empty($field.class)}
@@ -263,7 +260,9 @@
                                         {$field.class = $field.class|cat:' form-control'}
                                     {/if}
                                 {/if}
-                                <label><strong>{$field.title|truncate:80}</strong></label><br/>
+                                {if !empty($field.title)}
+                                <label><strong>{$field.title|truncate:80}</strong></label> {if $field.id != 'video_users'}<br/>{/if}
+                                {/if}
                                 {if $field.type != 'checkbox' && $field.type != 'radiobutton' && $field.type != 'checkbox2'}
                                     {if empty($field.class)}
                                         {$field.class = 'form-control'}
@@ -275,6 +274,9 @@
                                     {$field.hint_1}<br/>
                                 {/if}
                                 {$formObj->createField($field)}
+                                {if $field.id == 'video_users'}
+                                    <ul id="list_{$field.id}"></ul>
+                                {/if}
                                 {if $field.hint_2}<br/>
                                     {$field.hint_2}
                                 {/if}
@@ -501,7 +503,7 @@
                         {if config('enable_comments_video') == 'yes'}
                             <div id="comments" class="tab-pane">
                                 <div class="form-group">
-                                    {include file="$style_dir/blocks/comments.html"}
+                                    {include file="$style_dir/blocks/comments.html" comment_type='video'}
                                 </div>
                             </div>
                         {/if}
@@ -604,13 +606,15 @@
 <div class="modal fade" id="myModal" role="dialog">
 </div>
 <script>
-    var text_confirm_vid_file = '{lang code = "confirm_delete_video_file"}';
-    var text_confirm_sub_file = '{lang code = "confirm_delete_subtitle_file"}';
-    var videoid = '{$data.videoid}';
-    var available_tags = JSON.parse('{$available_tags|json_encode|replace:"'": "\'"}');
-    var text_confirm_comment = '{lang('text_confirm_comment')}';
-    var text_no_comment = '{lang('no_comments',strtolower(lang('video')))}';
+    let text_confirm_vid_file = '{lang code = "confirm_delete_video_file"}';
+    let text_confirm_sub_file = '{lang code = "confirm_delete_subtitle_file"}';
+    let videoid = '{$data.videoid}';
+    let available_tags = JSON.parse('{$available_tags|json_encode|replace:"'": "\'"}');
+    let text_confirm_comment = '{lang('text_confirm_comment')}';
+    let text_no_comment = '{lang('no_comments',strtolower(lang('video')))}';
     let visual_editor_comments_enabled = "{config('enable_visual_editor_comments') == 'yes'}";
-    var ids_to_check_progress = JSON.parse('{$ids_to_check_progress}');
+    let ids_to_check_progress = JSON.parse('{$ids_to_check_progress}');
+    let format_date_js = '{get_date_js()}';
+    let language = '{$lang_obj->getLang()}';
 </script>
 {/if}

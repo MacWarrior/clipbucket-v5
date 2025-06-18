@@ -1017,7 +1017,7 @@ a[role='menuitem'] {
     transform: translate(calc(150% * -.125), calc(150% * -.125));
     filter: blur(8px);
     opacity: .5;
-    background: url('/styles/cb_28/theme/images/favicon.png');
+    background: url('../../../../../styles/cb_28/theme/images/favicon.png');
     background-repeat: no-repeat;
     z-index: -1;
 }
@@ -1208,4 +1208,66 @@ a[role='menuitem'] {
 /* Fix menu top */
 .navbar-header .dropdown-menu.dropdown-close.pull-right{
     right: 0;
+}
+
+/* System Info > Nginx VirtualHost */
+#nginx_vhost .holder{
+    margin: 10px 0;
+    padding: 5px;
+    background-color: #F5F5F5;
+    border: 1px solid #ADADAD;
+    border-radius: 3px;
+    box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.2);
+}
+#nginx_vhost .holder .content{
+    padding: 3px 15px;
+    height: 300px;
+    color: #555;
+    font-size: 14px;
+    text-align: left;
+    overflow: auto;
+}
+#nginx_vhost .holder .content pre{
+    color: inherit;
+    margin: 0;
+    padding: 0;
+    border: none;
+}
+
+textarea[disabled]{
+    cursor: not-allowed;
+    background-color: #eee;
+}
+
+/* Miscellaneous */
+.btn-primary[disabled]{
+    color: white !important;
+}
+
+/* Buttons as dropdown list */
+.dropdown-menu>li>input[type=submit]{
+    font-size: 13px;
+    margin-bottom: 1px;
+    margin-top: 1px;
+    width: 100%;
+    display: block;
+    padding-top: 3px;
+    padding-bottom: 3px;
+    padding-left: 10px;
+    clear: both;
+    font-weight: 400;
+    line-height: 1.42857143;
+    color: #333;
+    white-space: nowrap;
+    background-color: transparent;
+    border: none;
+    text-align: left;
+}
+.dropdown-menu>li>input[type=submit]:hover{
+    background-color: #4f99c6;
+    color: #fff;
+}
+/* Buttons as dropdown list */
+#config_player .col-md-6 .row {
+    height: 31px;
 }

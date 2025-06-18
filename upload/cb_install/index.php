@@ -11,12 +11,8 @@ require_once DirPath::get('classes') . 'AIVision.class.php';
 require_once DirPath::get('classes') . 'migration' . DIRECTORY_SEPARATOR . 'migration.class.php';
 
 $whoops = new \Whoops\Run;
-if (file_exists(DirPath::get('temp') . 'development.dev')) {
-    define('DEVELOPMENT_MODE', true);
-
+if( System::isInDev() ){
     $whoops->pushHandler(new \Whoops\Handler\PrettyPageHandler);
-} else {
-    define('DEVELOPMENT_MODE', false);
 }
 $whoops->pushHandler(function($e){
     $message = $e->getMessage().PHP_EOL.$e->getTraceAsString();
@@ -72,8 +68,8 @@ $has_translation = class_exists('Language');
 
 require_once DirPath::get('cb_install') . 'functions_install.php';
 if (!empty($_POST['language'])) {
-    if (isset($_COOKIE['cb_lang'])) {
-        unset($_COOKIE['cb_lang']);
+    if( isset($_COOKIE['cb_lang']) ){
+        Session::unsetCookie( 'cb_lang');
     }
     Language::getInstance()->make_default($_POST['language']);
     Language::getInstance()->init();

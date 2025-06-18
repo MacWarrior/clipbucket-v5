@@ -9,7 +9,7 @@ if (
     && !(config('collectionsSection')=='yes' && User::getInstance()->hasPermission('collection_moderation'))
     && !(config('channelsSection')=='yes' && User::getInstance()->hasPermission('member_moderation'))
 ) {
-    sessionMessageHandler::add_message(lang('cannot_access_page'), 'w',  DirPath::getUrl('admin_area', true));
+    sessionMessageHandler::add_message(lang('cannot_access_page'), 'w',  DirPath::getUrl('admin_area'));
 }
 /* Generating breadcrumb */
 global $breadcrumb;

@@ -1,5 +1,5 @@
-{assign var=requiredFields value=$cbcollection->load_required_fields($data)}
-{assign var=otherFields value=$cbcollection->load_other_fields($data)}
+{assign var=requiredFields value=Collections::getInstance()->load_required_fields($data)}
+{assign var=otherFields value=Collections::getInstance()->load_other_fields($data)}
 
 <div class="heading clearfix marginBottomLarge paddingBottomSmall">
     <h2 class="pull-left">Editing <small>&gt; {display_clean($data.collection_name)}</small>
@@ -8,11 +8,11 @@
                 Actions <span class="caret caret_margin"></span>
             </button>
             <ul class="dropdown-menu pull-right" role="menu">
-                <li><a href="manage_items.php?collection={$data.collection_id}&amp;type={$data.type}">{lang code='manage_items'}</a></li>
+                <li><a href="{DirPath::getUrl('admin_area')}manage_items.php?collection={$data.collection_id}&amp;type={$data.type}">{lang code='manage_items'}</a></li>
                 {if $data.featured == 'yes'}
-                    <li><a href="edit_collection.php?collection={$data.collection_id}&amp;mode=unfeatured">{lang('make_unfeatured')}</a></li>
+                    <li><a href="{DirPath::getUrl('admin_area')}edit_collection.php?collection={$data.collection_id}&amp;mode=make_unfeature">{lang('make_unfeatured')}</a></li>
                 {else}
-                    <li><a href="edit_collection.php?collection={$data.collection_id}&amp;mode=featured">{lang('make_featured')}</a></li>
+                    <li><a href="{DirPath::getUrl('admin_area')}edit_collection.php?collection={$data.collection_id}&amp;mode=make_feature">{lang('make_featured')}</a></li>
                 {/if}
                 <li>
                     <a href="javascript:void(0);" onClick="if (confirm('{lang('confirm_collection_delete')}')) document.location = 'collection_manager.php?delete_collection={$data.collection_id}'">{lang code='delete'}</a>
@@ -21,11 +21,7 @@
         </div>
     </h2>
     <div class="pull-right">
-		<span class="btn btn-app btn-sm btn-light no-hover">
-			<span class="line-height-1 smaller-90 blue">{$data.views|number_format}</span>
-			<br>
-			<span class="line-height-1 smaller-90"> Views </span>
-		</span>
+        {if config('enable_comments_collection') == 'yes' }
         <span class="btn btn-app btn-sm btn-yellow no-hover">
 			{if $data.comments_count > 0}
 				<span class="line-height-1 smaller-90"> {$data.comments_count} </span>
@@ -35,6 +31,7 @@
 			<br>
 			<span class="line-height-1 smaller-90"> {lang('comments')} </span>
 		</span>
+        {/if}
         <span class="btn btn-app btn-sm btn-pink no-hover">
 			<span class="line-height-1">
 				{if $data.active=='yes'}
@@ -94,12 +91,13 @@
 
                                 {foreach from=$requiredFields item=field}
 									<tr>
-										<td class="first"><label>{$field.title}{if $field.hint_1}{$field.hint_1}{/if}</label></td>
+										<td class="first"><label for="{$field.id}">{$field.title}</label>
+                                            {if $field.hint_1}<div class="hint">{$field.hint_1}</div>{/if}</td>
 										<td class="last">
 											<div>
 												{if $field.id == 'collection_tags'}
 													{$field.type='hidden'}
-													<ul id="list_tags" style="margin: 1px 0 0 0"></ul>
+													<ul id="list_tags" style="margin: 1px 0 0 0;"></ul>
 												{/if}
 												{$formObj->createField($field)}
 											</div>
@@ -150,7 +148,7 @@
                             </div>
                             {if $data.userid != $anonymous_id}
                                 <div class="col-md-2">
-                                    <img src="{$userquery->getUserThumb($u)}" alt="User avatar" class="img-thumbnail marginBottomLarge"/>
+                                    <img src="{userquery::getInstance()->getUserThumb($u)}" alt="User avatar" class="img-thumbnail marginBottomLarge"/>
                                 </div>
                             {/if}
                         </div>
@@ -221,13 +219,13 @@
                     <div id="clpreview" class="tab-pane">
                         <legend>Collection Preview</legend>
                         <div class="form-group">
-                            <img style="padding:2px; border:1px solid #ccc;" src="{$cbcollection->coll_first_thumb($data,'l')}"/>
+                            <img style="padding:2px; border:1px solid #ccc;" src="{Collections::getInstance()->coll_first_thumb($data,'l')}"/>
                         </div>
                     </div>
                     {if config('enable_comments_collection') == 'yes'}
                         <div id="clcomments" class="tab-pane">
                             <div class="form-group">
-                                {include file="$style_dir/blocks/comments.html"}
+                                {include file="$style_dir/blocks/comments.html" comment_type='collection'}
                             </div>
                         </div>
                     {/if}

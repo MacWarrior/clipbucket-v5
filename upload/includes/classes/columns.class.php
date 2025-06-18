@@ -182,7 +182,6 @@ class cb_columns
      */
     function change_column($from, $to)
     {
-
         $from = is_array($from) ? $from : explode(",", $from);
         $to = is_array($to) ? $to : explode(",", $to);
         $replacements = [];

@@ -18,7 +18,7 @@ class CB_video_js
     {
         $player_name = self::class;
 
-        $min_suffixe = in_dev() ? '' : '.min';
+        $min_suffixe = System::isInDev() ? '' : '.min';
         ClipBucket::getInstance()->addAllJS([
             $player_name.'/js/video'.$min_suffixe.'.js' => 'player'
             ,$player_name.'/lang/'.get_current_language().'.js' => 'player'
@@ -88,9 +88,8 @@ class CB_video_js
      */
     public static function getVideoResolutionTitleFromFilePath($filepath): string
     {
-        global $myquery;
         $quality = self::getVideoQualityFromFilePath($filepath);
-        return $myquery->getVideoResolutionTitleFromHeight($quality);
+        return myquery::getInstance()->getVideoResolutionTitleFromHeight($quality);
     }
 
     /**
@@ -99,7 +98,6 @@ class CB_video_js
      */
     public static function getDefaultVideo($video_files)
     {
-        global $myquery;
         if (!empty($video_files) && is_array($video_files)) {
             $res = [];
             foreach ($video_files as $file) {
@@ -109,7 +107,7 @@ class CB_video_js
             $player_default_resolution = config('player_default_resolution');
 
             if (in_array($player_default_resolution, $res)){
-                return $myquery->getVideoResolutionTitleFromHeight($player_default_resolution);
+                return myquery::getInstance()->getVideoResolutionTitleFromHeight($player_default_resolution);
             }
             if ($player_default_resolution > max($res)) {
                 return 'high';

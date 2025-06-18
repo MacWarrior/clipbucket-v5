@@ -15,7 +15,6 @@ $breadcrumb[1] = ['title' => 'ReIndexer', 'url' => DirPath::getUrl('admin_area')
 
 $vtbl = tbl('video');
 $utbl = tbl('users');
-$gtbl = tbl('groups');
 
 $start_index = $_GET['start_index'] ? $_GET['start_index'] : 0;
 $loop_size = $_GET['loop_size'];

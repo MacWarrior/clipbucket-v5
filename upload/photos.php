@@ -5,7 +5,7 @@ define('PARENT_PAGE', 'photos');
 require 'includes/config.inc.php';
 
 if( !isSectionEnabled('photos') ){
-    redirect_to(Network::get_server_url());
+    redirect_to(DirPath::getUrl('root'));
 }
 
 User::getInstance()->hasPermissionOrRedirect('view_photos');
@@ -20,7 +20,7 @@ $page = mysql_clean($_GET['page']);
 $get_limit = create_query_limit($page, config('photo_main_list'));
 $sort_label = SortType::getSortLabelById($_GET['sort']) ?? '';
 $params = Photo::getInstance()->getFilterParams($sort_label, []);
-$params = Photo::getInstance()->getFilterParams($_GET['time'], $params);
+$params = Photo::getInstance()->getFilterParams($_GET['time'] ?? '', $params);
 $params['limit'] = $get_limit;
 if( $child_ids ){
     $params['category'] = $child_ids;

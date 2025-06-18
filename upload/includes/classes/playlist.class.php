@@ -116,12 +116,11 @@ class Playlist
             $conditions[] = '(' . $param_condition . ')';
         }
 
-        $version = Update::getInstance()->getDBVersion();
-
         if( $param_search ){
             /* Search is done on playlist name, playlist tags */
             $cond = '(MATCH('.$this->getTablename() .'.playlist_name) AGAINST (\'' . mysql_clean($param_search) . '\' IN NATURAL LANGUAGE MODE) OR LOWER('.$this->getTablename() .'.playlist_name) LIKE \'%' . mysql_clean($param_search) . '%\'';
-            if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 264)) {
+
+            if( Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.0', '264') ){
                 $cond .= 'OR MATCH(tags.name) AGAINST (\'' . mysql_clean($param_search) . '\' IN NATURAL LANGUAGE MODE) OR LOWER(tags.name) LIKE \'%' . mysql_clean($param_search) . '%\'';
             }
             $cond .= ')';
@@ -142,7 +141,7 @@ class Playlist
 
         $join = [];
         $group = [];
-        if( $version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 264) ) {
+        if( Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.0', '264') ){
             if( !$param_count ){
                 $select[] = 'GROUP_CONCAT( DISTINCT(tags.name) SEPARATOR \',\') AS playlists_tags';
             }
@@ -150,7 +149,7 @@ class Playlist
             $join[] = 'LEFT JOIN ' . cb_sql_table('tags') .' ON playlist_tags.id_tag = tags.id_tag';
         }
 
-        if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 331)) {
+        if( Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.0', '331') ){
             $join[] = 'LEFT JOIN ' . cb_sql_table('playlists_categories') . ' ON playlists.playlist_id = playlists_categories.id_playlist';
             $join[] = 'LEFT JOIN ' . cb_sql_table('categories') . ' ON playlists_categories.id_category = categories.category_id';
 

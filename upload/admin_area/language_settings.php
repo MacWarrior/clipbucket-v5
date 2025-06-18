@@ -3,7 +3,11 @@ define('THIS_PAGE', 'language_setting');
 
 require_once dirname(__FILE__, 2) . '/includes/admin_config.php';
 
-User::getInstance()->hasPermissionOrRedirect('basic_settings',true);
+$permission = 'basic_settings';
+if( !Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '275') ){
+    $permission = 'web_config_access';
+}
+User::getInstance()->hasPermissionOrRedirect($permission,true);
 pages::getInstance()->page_redir();
 
 /* Generating breadcrumb */
@@ -51,7 +55,7 @@ if (!empty($_GET['edit_language']) && Language::getInstance()->getLangById($_GET
     pages::getInstance()->paginate($total_pages, $current_page);
 }
 
-$min_suffixe = in_dev() ? '' : '.min';
+$min_suffixe = System::isInDev() ? '' : '.min';
 ClipBucket::getInstance()->addAdminJS(['pages/language_settings/language_settings'.$min_suffixe.'.js' => 'admin']);
 
 assign('client_id', Clipbucket::getInstance()->configs['clientid']);

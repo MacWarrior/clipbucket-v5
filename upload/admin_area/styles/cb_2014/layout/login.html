@@ -3,7 +3,7 @@
         <div class="container">
             <div class="row ">
                 <div class="logo-admin">
-                    <a href="/" class="login-logo">
+                    <a href="{$baseurl}" class="login-logo">
                         <img src="{get_website_logo_path()}" class="img-responsive"/>
                     </a>
                 </div>
@@ -24,7 +24,7 @@
                             </div>
                             {if config('disable_email') == 'no'}
                                 <div align="center">
-                                    <a href="/forgot.php">{lang code='user_forgot_message'}</a>
+                                    <a href="{$baseurl}forgot.php">{lang code='user_forgot_message'}</a>
                                 </div>
                             {/if}
                         </form>

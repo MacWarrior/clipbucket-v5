@@ -2,6 +2,38 @@ $(function () {
     $("[id^=tags]").each(function(elem){
         init_tags(this.id, available_tags, '#list_'+this.id);
     });
+    $('#list_video_users').tagit({
+        singleField: true,
+        fieldName: "tags",
+        readOnly: false,
+        singleFieldNode: $('#video_users'),
+        animate: true,
+        caseSensitive: false,
+        allowSpaces: allow_username_spaces,
+        beforeTagAdded: function (event,info) {
+            if (info.tagLabel.length <= 2) {
+                if (!alert_shown) {
+                    alert_shown = true;
+                    alert(tag_too_short);
+                }
+                return false;
+            }
+            alert_shown = false;
+        }
+    });
+
+    $('[name="broadcast"]').off('click').on('click', function () {
+        if ($(this).val() === 'unlisted') {
+            $(this).closest('form').find('#video_password').attr('disabled', false).parent().slideDown();
+            $(this).closest('form').find('#video_users').attr('disabled', 'disabled').parent().slideUp();
+        } else if ($(this).val() === 'private') {
+            $(this).closest('form').find('#video_users').attr('disabled', false).parent().slideDown();
+            $(this).closest('form').find('#video_password').attr('disabled', 'disabled').parent().slideUp();
+        } else {
+            $(this).closest('form').find('#video_password').attr('disabled', 'disabled').parent().slideUp();
+            $(this).closest('form').find('#video_users').attr('disabled', 'disabled').parent().slideUp();
+        }
+    }).trigger('click');
     $('#button_info_tmdb').on('click', function (e) {
         var video_title = $('#title').val();
         getInfoTmdb(videoid, 'movie',video_title, 1);
@@ -88,7 +120,7 @@ $(function () {
 function getInfoTmdb(video_id, type, video_title, page,sort, sort_order,selected_year) {
     showSpinner();
     $.ajax({
-        url: "/actions/info_tmdb.php",
+        url: baseurl+"actions/info_tmdb.php",
         type: "POST",
         data: {videoid: video_id, video_title:video_title, type: type, page: page,sort: sort, sort_order: sort_order,selected_year },
         dataType: 'json',
@@ -102,10 +134,10 @@ function getInfoTmdb(video_id, type, video_title, page,sort, sort_order,selected
     });
 }
 
-function saveInfoTmdb(tmdb_video_id) {
+function saveInfoTmdb(tmdb_video_id, type) {
     showSpinner();
     $.ajax({
-        url: "/actions/import_tmdb.php",
+        url: baseurl+"actions/import_tmdb.php",
         type: "POST",
         data: {tmdb_video_id: tmdb_video_id, videoid: videoid, type: type},
         dataType: 'json',
