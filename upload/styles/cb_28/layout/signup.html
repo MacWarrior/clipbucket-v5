@@ -1,10 +1,10 @@
-{$required_fields=$userquery->load_signup_fields()|array_filter}
-{$custom_fields=$userquery->custom_signup_fields}
+{$required_fields=userquery::getInstance()->load_signup_fields()|array_filter}
+{$custom_fields=userquery::getInstance()->custom_signup_fields}
 {if $mode == 'signup_success'}
-	<div class="simple_container">
+	<div class="simple_container alert-success alert container mt20">
 		{if $udetails.usr_status != 'Ok'}
-			<h2 style="margin: 5px 5px 8px; font-family: Arial,Verdana,sans-serif;">{lang code='signup_success_usr_ok'}</h2>
-			<p style="margin: 0px 5px; line-height: 18px; font-size: 14px;">
+			<h2>{lang code='signup_success_usr_ok'}</h2>
+			<p>
 				{if config('disable_email') == 'no'}
 					{lang code='signup_success_usr_ok_description'}
 				{else}
@@ -16,356 +16,118 @@
 		{/if}
 	</div>
 {else}
-	{$mode = $smarty.get.mode}
 	<div class="account-container">
-		{if $mode == 'login'}
-			<div class="clearfix signin-block">
-				<div class="account-holder">
-					<form name="login_form" method="post" style="display:block;margin:auto;" id="login_form" class="user-form">
-						<h2>{lang code="login"}</h2>
-						<div class="form-group">
-							{*<label for="login_username_sp">{lang code="username"}</label>*}
-							<input type="text" id="login_username_sp" placeholder="{lang code='type_username_here'}"
-							class="form-control" name="username">
-						</div>
-
-						<div class="form-group">
-							{*<label for="login_password_sp">{lang code="password"}</label>*}
-							<input type="password" id="login_password_sp" placeholder="{lang code='type_password_here'}"
-							class="form-control" name="password">
-						</div>
-
-						<div class="checkbox form-group">
-							<label>
-								<input type="checkbox" name="remember_me" value="yes">
-								{lang code="remember_me"}
-							</label>
-						</div>
-
-						<input id="login_btn" type="submit" name="login" value="{lang code='login'}" class="btn btn-primary btn-lg btn-block">
-						{if config('disable_email') == 'no'}
-							<a href="/forgot.php?mode=recover_username">{lang code='user_forgot_username'}</a> - <a href="/forgot.php">{lang code='user_forgot_message'}</a>
+		<div class="clearfix signup-block">
+			<div class="account-holder">
+				{if $allow_registeration}
+					{$allow_registeration}
+				{else}
+				<form name="signup_form" id="signup_form" method="post" action="{$baseurl}signup.php" class="user-form">
+					<h2>{lang code='signup'}!</h2>
+					{foreach from=$required_fields item=field}
+						{if $field.type!='checkbox' && $field.type!='radiobutton'}
+							{$field.class='form-control'}
 						{/if}
-						<input type="hidden" name="login" value="login"/>
-					</form>
-				</div>
-			</div>
-		{else}
-			<div class="clearfix signup-block">
-				<div class="account-holder">
-					{if $allow_registeration}
-						{$allow_registeration}
-					{else}
-					<form name="signup_form" id="signup_form" method="post" action="/signup.php" class="user-form">
-						<h2>{lang code='signup'}!</h2>
-						{foreach from=$required_fields item=field}
-							{if $field.type!='checkbox' && $field.type!='radiobutton'}
-								{$field.class='form-control'}
+
+						<div class="form-group clearfix">
+							{if $field.type=='radiobutton'}
+								{$field.label_class="radio-inline"}
+								{$field.sep=" "}
 							{/if}
 
-							<div class="form-group clearfix">
-								{if $field.type=='radiobutton'}
-									{$field.label_class="radio-inline"}
-									{$field.sep=" "}
-								{/if}
+							{if $field.type=='checkbox'}
+								{$field.label_class="checkbox-inline"}
+								{$field.sep=" "}
+							{/if}
 
-								{if $field.type=='checkbox'}
-									{$field.label_class="checkbox-inline"}
-									{$field.sep=" "}
-								{/if}
+							{if $field.hint_before}
+							<span class="help-block">{$field.hint_before}</span>
+							{/if}
 
-								{if $field.hint_before}
-								<span class="help-block">{$field.hint_before}</span>
-								{/if}
+							{ANCHOR place=$field.anchor_before}
+							{$formObj->createField($field,false, true)}
+							{ANCHOR place=$field.anchor_after}
+							{if $field.hint_after}
+							<span class="help-block">{$field.hint_after}</span>
+							{/if}
+						</div>
+					{/foreach}
+					{foreach from=$custom_fields item=field}
+						<div class="form-group clearfix">
+							{if $field.type=='radiobutton'}
+								{$field.label_class="radio-inline"}
+								{$field.sep=" "}
+							{/if}
 
-								{ANCHOR place=$field.anchor_before}
-								{$formObj->createField($field,false, true)}
-								{ANCHOR place=$field.anchor_after}
-								{if $field.hint_after}
-								<span class="help-block">{$field.hint_after}</span>
-								{/if}
-							</div>
-						{/foreach}
-						<!-- Loading Custom Fields -->
-						{foreach from=$custom_fields item=field}
-							<div class="form-group clearfix">
-								{if $field.type=='radiobutton'}
-									{$field.label_class="radio-inline"}
-									{$field.sep=" "}
-								{/if}
+							{if $field.type=='checkbox'}
+								{$field.label_class="checkbox-inline"}
+								{$field.sep=" "}
+							{/if}
 
-								{if $field.type=='checkbox'}
-									{$field.label_class="checkbox-inline"}
-									{$field.sep=" "}
-								{/if}
+							{if $field.hint_before}
+							<span class="help-block">{$field.hint_before}</span>
+							{/if}
+							{ANCHOR place=$field.anchor_before}
 
-								{if $field.hint_before}
-								<span class="help-block">{$field.hint_before}</span>
-								{/if}
-								{ANCHOR place=$field.anchor_before}
+							{$formObj->createField($field)}
+							{ANCHOR place=$field.anchor_after}
+							{if $field.hint_after}
+							<span class="help-block">{$field.hint_after}</span>
+							{/if}
+						</div>
+					{/foreach}
 
-								{$formObj->createField($field)}
-								{ANCHOR place=$field.anchor_after}
-								{if $field.hint_after}
-								<span class="help-block">{$field.hint_after}</span>
-								{/if}
-							</div>
-						{/foreach}
-
-						{$captcha = get_captcha()}
-						{if $captcha} 
-							{if $captcha.show_field}
-						 		{*<label class="label" for="verification_code">Verification Code</label>*}
-								{load_captcha captcha=$captcha load=field field_params = ' id="verification_code" '}
-						 	{/if}
-							<div align="center">
-								{load_captcha captcha=$captcha load=function}
-							</div>
+					{$captcha = get_captcha()}
+					{if $captcha}
+						{if $captcha.show_field}
+							{load_captcha captcha=$captcha load=field field_params = ' id="verification_code" '}
 						{/if}
-
-						<div class="form-group checkbox">
-							<label>
-								<input name="agree" type="checkbox" id="agree" value="yes" checked>
-								{lang('user_i_agree_to_the', [$cbpage->get_page_link(3),$cbpage->get_page_link(2)])}
-							</label>
+						<div align="center">
+							{load_captcha captcha=$captcha load=function}
 						</div>
-						{ANCHOR place="the_form"}
-						<input type="hidden" name="signup" value="signup"/>
-						<div class="form-group checkbox">
-							<button type="submit" name="signup" value="signup" class="btn btn-success btn-lg btn-block" id="signup_submit">{lang code='signup'}</button>
-						</div>
-						{ANCHOR place='signup_form'}
-					</form>
 					{/if}
-				</div>
+
+					<div class="form-group checkbox">
+						<label>
+							<input name="agree" type="checkbox" id="agree" value="yes"/>
+							{lang('user_i_agree_to_the', [cbpage::getInstance()->get_page_link(3), cbpage::getInstance()->get_page_link(2)])}
+						</label>
+					</div>
+					{ANCHOR place="before_submit_signup_form"}
+					<input type="hidden" name="signup" value="signup"/>
+					<div class="form-group checkbox">
+						<button type="submit" name="signup" value="signup" class="btn btn-success btn-lg btn-block" id="signup_submit">{lang code='signup'}</button>
+					</div>
+					{ANCHOR place='after_signup_form'}
+				</form>
+				{/if}
 			</div>
-		{/if}
+		</div>
 	</div>
 {/if}
 
 <script>
-	$(document).ready(function(){
-		var pageMode = "{display_clean($smarty.get.mode)}";
-		if (pageMode == 'login') {
-			document.title = 'Login - {config("site_title")}';
-		}
-		jQuery('#dob').datepicker({
-			showOtherMonths: true,
-			selectOtherMonths: false,
-			changeMonth: true,
-			dateFormat:"{get_date_js()}",
-			changeYear: true,
-			yearRange: "-99:+0",
-			regional:"{$lang_obj->getLang()}"
-		});
-		$('.simple_container').addClass('alert-success alert container');
-	 });
+	let errors = {
+			"empty_name"         : "{lang code='usr_uname_err'}",
+			"name_length"        : "{lang code='user_name_invalid_len'}",
+			"name_invalid_chars" : "{lang code='usr_uname_err3'}",
+			"pass_mismatch"      : "{lang code='usr_pass_err3'}",
+			"empty_pass"         : "{lang code='usr_pass_err2'}",
+			"empty_email"        : "{lang code='usr_email_err1'}" ,
+			"invalid_email"      : "{lang code='usr_email_err2'}",
+			"user_exists"        : "{lang code='usr_uname_err2'}",
+			"email_exists"       : "{lang code='usr_email_err3'}",
+			"email_unauthorized" : "{lang code='signup_error_email_unauthorized'}",
+			"weak_pass"          : "{lang code='weak_pass'}",
+			"username_spaces"    : "{lang code='username_spaces'}"
+		},
 
-	var errors = {
-		"empty_name"         : "{lang code='usr_uname_err'}",
-		"name_length"        : "{lang code='user_name_invalid_len'}",
-		"name_invalid_chars" : "{lang code='usr_uname_err3'}",
-		"pass_mismatch"      : "{lang code='usr_pass_err3'}",
-		"empty_pass"         : "{lang code='usr_pass_err2'}",
-		"empty_email"        : "{lang code='usr_email_err1'}" ,
-		"invalid_email"      : "{lang code='usr_email_err2'}",
-		"user_exists"        : "{lang code='usr_uname_err2'}",
-		"email_exists"       : "{lang code='usr_email_err3'}",
-		"email_unauthorized" : "{lang code='signup_error_email_unauthorized'}",
-		"weak_pass"          : "{lang code='weak_pass'}",
-		"username_spaces"    : "{lang code='username_spaces'}",
-	};
-	function removeErrClass(obj, passSec = false) {
-		$(obj).closest('.form-group').removeClass('invalid-error');
-		$(obj).closest('.form-group').removeClass('warning-ind');
-		$(obj).closest('.form-group').addClass('success-ind');
-		$(obj).next('span').remove();
-		if (passSec === true) {
-			theVal = 'password';
-		} else {
-			theVal = $(obj).val();
-		}
-		$('<span class="help-block"><strong>'+theVal+'</strong> seems good to go</span>').insertAfter(obj);
-	}
+		config_username_spaces = {config('allow_username_spaces') == 'yes'},
+		config_min_username = {config('min_username')},
+		config_max_username = {config('max_username')},
 
-	function addErrClass(obj, msg, override = false, scroll = true, tclass = false) {
-		$(obj).closest('.form-group').removeClass('success-ind');
-		if (tclass !== false) {
-			$(obj).closest('.form-group').removeClass('invalid-error');
-			$(obj).closest('.form-group').addClass(tclass);
-		} else {
-			$(obj).closest('.form-group').removeClass('warning-ind');
-			$(obj).closest('.form-group').addClass('invalid-error');
-		}
-		if (override === true) {
-			$(obj).next('span').remove();
-		}
-		$('<span class="help-block">'+msg+"</span>").insertAfter(obj);
-		if (scroll === true) {
-			$("html, body").animate({ scrollTop: 0 }, "slow");
-		}
-	}
+		lang_password = "{lang code='password'}",
 
-	$('input#username').on('keyup', function() {
-	     var userSect = $('#username'),
-	     usernameVal = userSect.val(),
-	     usernameLen = usernameVal.length;
-	     if (usernameVal === '') {
-	     	addErrClass(userSect, errors["empty_name"], true, false);
-	     } else if (usernameLen <= 2 || usernameLen >= 50) {
-	     	addErrClass(userSect, errors["name_length"], true, false);
-	     } else if (userSect.val().indexOf(' ') >= 0) {
-	     	addErrClass(userSect, errors["username_spaces"], true, false);
-	     } else {
-	     	if(!userSect.val().match(/^[A-Za-z0-9_.]+$/)){
-	     		addErrClass(userSect, errors["name_invalid_chars"], true, false);
-	     	}else{
-		     	$.ajax({
-					url: "/ajax/commonAjax.php",
-					type: "post",
-					dataType: "html",
-					data: {
-						"mode":'userExists',
-						"username":usernameVal,
-					},
-					beforeSend: function() {
-						$(document).find('#more-view-channel').text('Loading videos..')
-					},
-
-					success: function(data) {
-						data = $.trim(data);
-						if (data === 'NO') {
-							removeErrClass(userSect);	
-						} else {
-							addErrClass(userSect, errors['user_exists'], true, false)
-						}
-					}
-				});
-		     }
-	     }
-	});
-
-	$('input#email').on('keyup change', function() {
-	     var emailSec = $('#email'),
-	     email = emailSec.val(),
-	     emailLen = email.length;
-
-	     if (emailLen === 0 || email === '') {
-	     	addErrClass(emailSec, errors["empty_email"], true, false);
-	     } else if (!isValidEmail(email)) {
-	     	addErrClass(emailSec, errors["invalid_email"], true, false);
-	     } else {
-	     	$.ajax({
-				url: "/ajax/commonAjax.php",
-				type: "post",
-				dataType: "html",
-				data: {
-					"mode":'check_email',
-					"email":email,
-				},
-				success: function(data) {
-					data = $.trim(data);
-					if (data === 'OK') {
-						removeErrClass(emailSec);	
-					} else if( data === 'emailExists' ) {
-						addErrClass(emailSec, errors['email_exists'], true, false)
-					} else if( data === 'unauthorized' ) {
-                        addErrClass(emailSec, errors['email_unauthorized'], true, false)
-					} else {
-                        addErrClass(emailSec, data, true, false)
-					}
-				}
-			});
-	     }
-	});
-
-	$('input#password').on('keyup', function() {
-	     var passSec = $('#password'),
-	     passVal = passSec.val(),
-	     passLen = passVal.length;
-	     if (passLen == 0 || passVal == '') {
-	     	addErrClass(passSec, errors["empty_pass"], true, false);
-	     } else {
-	     	if (passLen < 8) {
-	     		addErrClass(passSec,errors["weak_pass"],true, false ,'warning-ind');
-	     	} else {
-	     		removeErrClass(passSec,true);
-	     	}
-	     }
-	});
-
-	$('input#cpassword').on('keyup', function() {
-	     var cPassSec = $('#cpassword'),
-	     cPassVal = cPassSec.val();
-	     passVal = $('#password').val();
-	     if (cPassVal != passVal) {
-	     	addErrClass(cPassSec, errors["pass_mismatch"], true, false);
-	     } else {
-	     	removeErrClass(cPassSec,true);
-	     }
-	});
-
-	$('#login_btn').on("click",function(e){
-		e.preventDefault();
-		$('#login_form').submit();
-	});
-
-	$('#signup_submit').on("click",function(e){
-		e.preventDefault();
-		$('.help-block').remove();
-		$('div').removeClass('invalid-error');
-		var usernameSect = $('#username'),
-		username = usernameSect.val(),
-		emailSect = $('#email'),
-		email = emailSect.val(),
-		passwordSect = $('#password'),
-		password = passwordSect.val(),
-		cpasswordSect = $('#cpassword'),
-		cpassword = cpasswordSect.val();
-		gotNums = username.match(/\d+/g);
-		var goodToGo = true;
-
-		if (username.length == 0) {
-			addErrClass(usernameSect, errors["empty_name"]);
-			goodToGo = false;
-		} else if (username.length < 2 || username.length > 50) {
-			addErrClass(usernameSect, errors["name_length"]);
-			goodToGo = false;
-		} else if (username.indexOf(' ') >= 0) {
-			addErrClass(usernameSect, errors["username_spaces"]);
-			goodToGo = false;
-		} else if(!username.match(/^[A-Za-z0-9_.]+$/)){
-	     	addErrClass(usernameSect, errors["name_invalid_chars"], true, false);
-	    	goodToGo = false;
-	    }  
-
-		if (email.length == 0) {
-			addErrClass(emailSect, errors["empty_email"]);
-			goodToGo = false;
-		} else if (!isValidEmail(email)) {
-			addErrClass(emailSect, errors["invalid_email"]);
-			goodToGo = false;
-		}
-
-		if (password.length == 0)  {
-			addErrClass(passwordSect, errors["empty_pass"]);
-			goodToGo = false;
-		}
-
-		if (password != cpassword) {
-			addErrClass(cpasswordSect, errors["pass_mismatch"]);
-			goodToGo = false;
-		}
-
-		if (goodToGo == true) {
-			$('#signup_form').submit();
-		}
-	});
+		format_date_js = '{get_date_js()}',
+		language = '{$lang_obj->getLang()}';
 </script>
-
-<style>
-    .ui-datepicker {
-        width: 140px;
-        vertical-align: center;
-    }
-</style>

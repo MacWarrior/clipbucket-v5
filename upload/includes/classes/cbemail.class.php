@@ -70,17 +70,17 @@ class CBEmail
         //Common Variables
         $com_array = [
             '{website_title}' => TITLE,
-            '{baseurl}'       => get_server_url(),
-            '{website_url}'   => get_server_url(),
-            '{date_format}'   => cbdate(DATE_FORMAT),
+            '{baseurl}'       => DirPath::getUrl('root'),
+            '{website_url}'   => DirPath::getUrl('root'),
+            '{date_format}'   => cbdate(config('date_format')),
             '{date}'          => cbdate(),
             '{username}'      => user_name(),
             '{userid}'        => user_id(),
             '{date_year}'     => cbdate("Y"),
             '{date_month}'    => cbdate("m"),
             '{date_day}'      => cbdate("d"),
-            '{signup_link}'   => cblink(['name' => 'signup'], true),
-            '{login_link}'    => cblink(['name' => 'login'], true)
+            '{signup_link}'   => cblink(['name' => 'signup']),
+            '{login_link}'    => cblink(['name' => 'login'])
         ];
 
         if (is_array($array) && count($array) > 0) {

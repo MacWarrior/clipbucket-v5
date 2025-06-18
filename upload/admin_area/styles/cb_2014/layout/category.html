@@ -9,7 +9,6 @@
         </h2>
     </div>
 </div>
-
 <div class="row" >
     <div id="content"></div>
 </div>
@@ -18,69 +17,10 @@
     <h4>Category List</h4>
 
 {if $total != 0}
-    <form name="category" action="?update_order" method="post">
-        <table class="table table-bordered" width="100%" border="0" align="left" cellpadding="0" cellspacing="0">
-            <tr>
-                <td width="20"><input type="checkbox" name="checkall" onclick="checkUncheckAll(this);"/></td>
-                <td width="225" class="left_head" style="text-indent:10px">Category Name</td>
-                <td width="75" align="left" class="head">Order</td>
-                {if config('use_subs')==1}
-                <td width="225" align="left" class="head">Parent Category</td>
-                {/if}
-                <td width="250" class="head">{lang code='description'}</td>
-                <td width="100" class="head">Default</td>
-                <td width="150" class="head">Action</td>
-            </tr>
-    {section name=list loop=$category}
-        {if $category[list].parent_id == null}
-            {assign var=p_name value="None"}
-        {else}
-            {assign var=parent value=Category::getInstance()->getById($category[list].parent_id)}
-            {assign var=p_name value=$parent['category_name']}
-        {/if}
-            <tr>
-                <td>
-                    <input name="check_user[]" type="checkbox" id="check_user" value="{$u.userid}"/>
-                </td>
-                <td>
-                    {display_clean($category[list].category_name)}
-                    <a id="thumbs_{$category[list].category_id}" class="label label-danger arrowed popoverButton" data-html="true" data-placement="top" data-toggle="popover" data-content="<img src='{$cbvid->get_category_thumb($category[list], $type)}' height='90' width='90'/>" href="javascript:void(0);">View Thumb</a>
-                </td>
-                <td>
-                    <input name="category_order[{$category[list].category_id}]" type="text" id="order_{$category[list].category_id}" style="border:1px solid #999; padding:2px; width:30px" value="{$category[list].category_order}" size="5" maxlength="5" />
-                </td>
-                {if config('use_subs')==1}
-                <td>{display_clean($p_name)}</td>
-                {/if}
-                <td>{if $category[list].category_desc}{display_clean($category[list].category_desc)}{else}<em>N/A</em>{/if}</td>
-                <td>{$category[list].is_default}</td>
-                <td>
-                    <div class="lead dropdown">
-                        <button id="dropdownMenu1" class="btn btn-primary btn-xs dropdown-toggle" data-toggle="dropdown">
-                            Options <i class="caret"></i>
-                        </button>
-                        <ul class="dropdown-menu" aria-labelledby="dropdownMenu1" role="menu">
-                            <li role="presentation">
-                                <a role="menuitem" tabindex="-1" href="" onclick="addOrEdit('{$category[list].category_id}'); return false;">{lang code='edit'}</a>
-                            </li>
-                        {if $category[list].isdefault != "yes"}
-                            <li role="presentation">
-                                <a role="menuitem" tabindex="-1" href="?type={$type}&delete_category={$category[list].category_id}">{lang code="delete"}</a>
-                            </li>
-                            <li>
-                                <a href="?make_default={$category[list].category_id}"></a>
-                            </li>
-                        {/if}
-
-                        {foreach from=$cbvid->video_categories_manager_link item=links}
-                            {$cbvid->video_categories_manager_link($links,$category[list])}
-                        {/foreach}
-                        </ul>
-                    </div>
-                </td>
-            </tr>
-    {/section}
-        </table>
+    <form  name="category" action="?update_order" method="post">
+        <div id="category_list">
+            {include file="$style_dir/blocks/category_list.html"}
+        </div>
         <input type="submit" value="Update Category" name="update_order" class="btn btn-primary btn-sm" style="margin-top:10px;"/>
     </form>
 {else}

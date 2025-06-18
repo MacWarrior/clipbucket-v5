@@ -2,12 +2,12 @@
     <div class="itemdiv dialogdiv comment_line" id="comment_{$comment.comment_id}">
         {if $comment != ''}
             {if !empty($comment.userid)}
-                {$userdetails = $userquery->get_user_details($comment.userid)}
+                {$userdetails = userquery::getInstance()->get_user_details($comment.userid)}
                 {$username = $userdetails.username}
-                {$avatar = $userquery->getUserThumb($userdetails,'small')}
+                {$avatar = userquery::getInstance()->getUserThumb($userdetails,'small')}
             {else}
                 {$username = $comment.anonym_name}
-                {$avatar = $userquery->get_default_thumb('small')}
+                {$avatar = userquery::getInstance()->get_default_thumb('small')}
             {/if}
             <div class="user">
                 <img alt="{display_clean($username)}" title="{display_clean($username)}" src="{$avatar}">
@@ -26,7 +26,7 @@
             </div>
         {else}
             <div class="body">
-                <p>{lang('no_comments',strtolower(lang('video')))}</p>
+                <p>{lang('no_comments',strtolower(lang($comment_type)))}</p>
             </div>
         {/if}
     </div>

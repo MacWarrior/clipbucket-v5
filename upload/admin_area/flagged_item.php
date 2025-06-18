@@ -4,14 +4,14 @@ require_once dirname(__FILE__, 2) . '/includes/admin_config.php';
 
 $right = 'admin_access';
 if (empty($_GET['type'])) {
-    redirect_to('/');
+    redirect_to(DirPath::getUrl('admin_area'));
 }
 $type = $_GET['type'] ;
 $right = Flag::getPermissionByType($type);
 User::getInstance()->hasPermissionOrRedirect($right,true);
 
-if (!Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', 255)) {
-    sessionMessageHandler::add_message(lang('must_update_version'), 'e', DirPath::getUrl('admin_area', true));
+if (!Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '255')) {
+    sessionMessageHandler::add_message(lang('must_update_version'), 'e', DirPath::getUrl('admin_area'));
 }
 
 global $breadcrumb;
@@ -46,7 +46,7 @@ assign('type', $type);
 $total_pages = count_pages($total_rows, config('admin_pages'));
 pages::getInstance()->paginate($total_pages, $page);
 
-$min_suffixe = in_dev() ? '' : '.min';
+$min_suffixe = System::isInDev() ? '' : '.min';
 ClipBucket::getInstance()->addAdminJS(['pages/flagged_item/flagged_item'.$min_suffixe.'.js' => 'admin']);
 
 template_files('flagged_item.html');

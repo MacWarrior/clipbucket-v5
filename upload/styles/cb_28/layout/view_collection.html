@@ -15,21 +15,52 @@
                     </ul>
                 </div>
             {/if}
-
-            <h1>
-                {display_clean($c.collection_name)}&nbsp;
-                ({$c.total_objects}&nbsp;{lang code="{$c.type}"})
-                {lang code='collection' assign='object_type'}
+            <div class="row">
+                <div class="col-md-6">
+                    <h1>
+                        {display_clean($c.collection_name)}&nbsp;
+                        ({$c.total_objects}&nbsp;{lang code="{$c.type}"})
+                        {lang code='collection' assign='object_type'}
+                    </h1>
+                </div>
                 {if $c.type=='videos'}
                     {$upload_permission = 'allow_video_upload'}
                 {else}
                     {$upload_permission = 'allow_photo_upload'}
                 {/if}
-                {if (User::getInstance()->hasPermission($upload_permission) && $c.public_upload == 'true')
-                    || (User::getInstance()->isUserConnected() && User::getInstance()->get('userid') == $c.userid)}
-                    <a href="{$link_add_more}" class="btn btn-success pull-right">{lang('add_more')}</a>
-                {/if}
-            </h1>
+                <div class="col-md-6">
+                    <div class="filter-dropdowns">
+                        {if $sort_link || !empty($default_sort)}
+                        <div class="dropdown pull-right">
+                            {if $sort_link}
+                                {foreach from=$sort_list item=sort key=key}
+                                    {if $sort_link == $key}
+                                        <a href="javascript:void(0);" data-toggle="dropdown" class="dropdown-toggle">{$sort} <span class="icon-down-arrow"></span></a>
+                                    {/if}
+                                {/foreach}
+                            {else}
+                                <a href="javascript:void(0);" data-toggle="dropdown" class="dropdown-toggle">{lang('sort_by_'|cat:$default_sort.label)}<span class="icon-down-arrow"></span></a>
+                            {/if}
+
+                            {if $sort_link}
+                            <ul class="dropdown-menu">
+                                {foreach from=$sort_list item=sort key=key}
+                                    <li>
+                                        <a href="#" data-sort="{$key}" class="sort_dropdown {if $sort_id==$key} selected{/if}">{if $sort_id == $key}<i class="icon-tick"></i>{/if}{$sort}</a>
+                                    </li>
+                                {/foreach}
+                            </ul>
+                            {/if}
+                        </div>
+                        {/if}
+                        {if (User::getInstance()->hasPermission($upload_permission) && $c.public_upload == 'yes')
+                        || (User::getInstance()->isUserConnected() && User::getInstance()->get('userid') == $c.userid)
+                        || User::getInstance()->hasAdminAccess()}
+                            <a href="{$link_add_more}" class="btn btn-success pull-right">{lang('add_more')}</a>
+                        {/if}
+                    </div>
+                </div>
+            </div>
 
             {if $collections}
                 <div class="collections clearfix">
@@ -57,8 +88,8 @@
                 <div class="videos clearfix">
                     {if $objects}
                         {foreach $objects as $video}
-                            <div class="item-video col-lg-3 col-md-4 col-sm-4 col-xs-12">
-                                {include file="$style_dir/blocks/videos/video.html" display_type='homeVideos'}
+                            <div class="item-video col-lg-3 col-md-4 col-sm-4 col-xs-12" data-id="{$video.videoid}">
+                                {include file="$style_dir/blocks/videos/video-classic.html"}
                             </div>
                         {/foreach}
                     {else}
@@ -71,9 +102,11 @@
 
             <div class="clearfix fav-repo">
                 <div class="show clearfix photoStats">
-                    <a  class="btn btn-ghost" id="addToFav" onclick="slide_up_watch_video('#video_action_result_cont');_cb.add_to_favNew('collection','{$c.collection_id}');">{lang code='add_to_my_favorites'}</a>
-                    {if $c.userid != user_id()}
-                        <a  class="btn btn-ghost" id="flagPhotoButton" onclick="$('#report_item').toggle();">{lang code='report_this'}</a>
+                    {if user_id()}
+                        <a  class="btn btn-ghost" id="addToFav" onclick="slide_up_watch_video('#video_action_result_cont');_cb.add_to_favNew('collection','{$c.collection_id}');">{lang code='add_to_my_favorites'}</a>
+                        {if user_id() != $photo.userid}
+                            <a  class="btn btn-ghost" id="flagPhotoButton" onclick="$('#report_item').toggle();">{lang code='report_this'}</a>
+                        {/if}
                     {/if}
                     {if (config('enable_collection_link_sharing') =='yes' || config('enable_collection_internal_sharing') =='yes') && $c.total_objects > 0 }
                         <a id="shareButton" data-toggle="tab" class="btn btn-ghost" onclick="$('#cb-item-share').toggle();"><span class="icon-share" style="margin-right: 10px;"></span>{lang code='share'}</a>
@@ -101,7 +134,7 @@
                     {/if}
                 </div>
 
-                {if $c.userid != user_id()}
+                {if user_id() && $c.userid != user_id()}
                     <div class="video_action_result_boxes clearfix tab-pane " style="display:none;" id="report_item">
                         {show_flag_form id=$c.collection_id type=Collection}
                         <div class="action_box" style="display:none;" id="video_action_result_cont"></div>
@@ -117,19 +150,21 @@
                     <li>
                         <strong>{lang code="uploaded"}:</strong>&nbsp;{$c.date_added|niceTime}
                     </li>
-                    <li>
-                        <strong>{lang code="category"}:</strong>&nbsp;{$c.category_names}
-                    </li>
+                    {if config('enable_collection_categories')=='yes'}
+                        <li><strong>{lang code='category'}</strong>:&nbsp;{$category_links}</li>
+                    {/if}
+                    {if !empty($c.tags)}
                     <li>
                         <strong class="pull-left" id="label_tags">{lang('tags')}:&nbsp;&nbsp;</strong>
                         <input type="hidden" id="tags" value="{$c.tags}">
                         <ul id="list_tags" style="border:0;"></ul>
                     </li>
+                    {/if}
                 </ul>
             </div>
             {if config('enable_comments_collection') == 'yes'}
                 <div class="clearfix comments-block">
-                    {if $myquery->is_commentable($c,'collection')}
+                    {if myquery::getInstance()->is_commentable($c,'collection')}
                         <div class="collectionComments addComment">
                             <h2>
                                 {if $c.total_comments <= 1 }
@@ -197,8 +232,9 @@
     </div>
 </div>
 <script>
-    var collection_id = "{$c.collection_id}";
-    var last_commented = "{$c.last_commented}";
-    var total_comments = "{$c.total_comments}";
-    var object_type = "{$object_type}";
+    let collection_id = "{$c.collection_id}";
+    let last_commented = "{$c.last_commented}";
+    let total_comments = "{$c.total_comments}";
+    let object_type = "{$object_type}";
+    let ids_to_check_progress = JSON.parse('{$ids_to_check_progress}');
 </script>

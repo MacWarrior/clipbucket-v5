@@ -1,18 +1,22 @@
 <?php
 class myquery
 {
+    private static self $instance;
+    public static function getInstance(): self
+    {
+        if( empty(self::$instance) ){
+            self::$instance = new self();
+        }
+        return self::$instance;
+    }
+
     static $website_details = [];
     static $video_resolutions = [];
-
-    public static function getInstance(){
-        global $myquery;
-        return $myquery;
-    }
 
     /**
      * @throws Exception
      */
-    function Set_Website_Details($name, $value)
+    function Set_Website_Details($name, $value): void
     {
         Clipbucket_db::getInstance()->update(tbl('config'), ['value'], [$value], " name = '" . $name . "'");
         ClipBucket::getInstance()->configs[$name] = $value;
@@ -72,7 +76,7 @@ class myquery
     /**
      * @throws Exception
      */
-    public function saveVideoResolutions($post)
+    public function saveVideoResolutions($post): void
     {
         $video_resolutions = self::getVideoResolutions();
         foreach ($video_resolutions as $ratio) {
@@ -157,39 +161,28 @@ class myquery
      */
     function video_exists($videoid)
     {
-        global $cbvid;
-        return $cbvid->video_exists($videoid);
+        return CBvideo::getInstance()->video_exists($videoid);
     }
 
     /**
      * Function used to get video details
      * from video table
      *
-     * @param INPUT vid or videokey
+     * @param INPUT $vid vid or videokey
      *
      * @return bool|mixed|STRING
      * @throws Exception
      */
     function get_video_details($vid)
     {
-        global $cbvid;
-        return $cbvid->get_video($vid);
-    }
-
-    /**
-     * Function used to check weather username exists not
-     * @throws Exception
-     */
-    function check_user($username)
-    {
-        return userquery::getInstance()->username_exists($username);
+        return CBvideo::getInstance()->get_video($vid);
     }
 
     /**
      * Function used to check weather email exists not
      * @throws Exception
      */
-    function check_email($email)
+    function check_email($email): bool
     {
         return userquery::getInstance()->email_exists($email);
     }
@@ -204,38 +197,22 @@ class myquery
     }
 
     /**
-     * Function used to update video and set a thumb as default
-     *
-     * @param $vid
-     * @param $thumb
-     *
-     * @return void
+     * Function used to update video
      * @throws Exception
      */
-    function set_default_thumb($vid, $thumb)
+    function update_video(): void
     {
-        global $cbvid;
-        $cbvid->set_default_thumb($vid, $thumb);
-    }
-
-    /**
-     * Function used to update video
-     */
-    function update_video()
-    {
-        global $cbvid;
-        return $cbvid->update_video();
+        CBvideo::getInstance()->update_video();
     }
 
     /**
      * Function used to set website template
      * @throws Exception
      */
-    function set_template($template)
+    function set_template($template): void
     {
-        global $myquery;
         if (is_dir(DirPath::get('styles') . $template) && $template) {
-            $myquery->Set_Website_Details('template_dir', $template);
+            self::getInstance()->Set_Website_Details('template_dir', $template);
             e(lang('template_activated'), 'm');
         } else {
             e(lang('error_occured_changing_template'));
@@ -254,7 +231,7 @@ class myquery
     /**
      * @throws Exception
      */
-    function insert_todo($text)
+    function insert_todo($text): void
     {
         Clipbucket_db::getInstance()->insert(tbl('admin_todo'), ['todo,date_added,userid'], [mysql_clean($text), NOW(), user_id()]);
     }
@@ -262,7 +239,7 @@ class myquery
     /**
      * @throws Exception
      */
-    function delete_todo($id)
+    function delete_todo($id): void
     {
         Clipbucket_db::getInstance()->delete(tbl('admin_todo'), ['todo_id'], [$id]);
     }
@@ -271,7 +248,7 @@ class myquery
      * Function used to insert note in data base for admin referance
      * @throws Exception
      */
-    function insert_note($note)
+    function insert_note($note): void
     {
         Clipbucket_db::getInstance()->insert(tbl('admin_notes'), ['note,date_added,userid'], [$note, now(), user_id()]);
     }
@@ -289,7 +266,7 @@ class myquery
      * Function usde to delete note
      * @throws Exception
      */
-    function delete_note($id)
+    function delete_note($id): void
     {
         Clipbucket_db::getInstance()->delete(tbl('admin_notes'), ['note_id'], [$id]);
     }
@@ -297,7 +274,7 @@ class myquery
     /**
      * Function used to check weather object is commentable or not
      */
-    function is_commentable($obj, $type)
+    function is_commentable($obj, $type): bool
     {
         switch ($type) {
             case 'video':
@@ -346,16 +323,16 @@ class myquery
      * @param null $limit
      * @param string $order
      *
-     * @return array|bool
+     * @return array
      * @throws Exception
      */
-    function get_conversion_queue($cond = null, $limit = null, $order = 'date_added DESC')
+    function get_conversion_queue($cond = null, $limit = null, string $order = 'date_added DESC'): array
     {
         $result = Clipbucket_db::getInstance()->select(tbl('conversion_queue'), '*', $cond, $limit, $order);
         if (count($result) > 0) {
             return $result;
         }
-        return false;
+        return [];
     }
 
     /**
@@ -365,17 +342,32 @@ class myquery
      * @param $id
      * @throws Exception
      */
-    function queue_action($action, $id)
+    function queue_action($action, $id): void
     {
         switch ($action) {
             case 'delete':
-                Clipbucket_db::getInstance()->execute('DELETE FROM ' . tbl('conversion_queue') . ' WHERE cqueue_id =\'' . mysql_clean($id) . '\'');
+                Clipbucket_db::getInstance()->execute('DELETE FROM ' . tbl('conversion_queue') . ' WHERE cqueue_id = ' . (int)$id);
                 break;
-            case 'processed':
-                Clipbucket_db::getInstance()->update(tbl('conversion_queue'), ['cqueue_conversion'], ['yes'], 'cqueue_id =\'' . mysql_clean($id) . '\'');
-                break;
-            case 'pending':
-                Clipbucket_db::getInstance()->update(tbl('conversion_queue'), ['cqueue_conversion'], ['no'], 'cqueue_id =\'' . mysql_clean($id) . '\'');
+
+            case 'resume':
+                $conversion_queue = self::get_conversion_queue('cqueue_id = '. (int)$id);
+                if( empty($conversion_queue) || empty($conversion_queue[0]['cqueue_name']) ){
+                    e(lang('conversion_not_found_x', $id));
+                    break;
+                }
+
+                $file_name = $conversion_queue[0]['cqueue_name'];
+                $video = Video::getInstance()->getOne(['file_name'=>$file_name]);
+                if( empty($video) ){
+                    e(lang('video_not_found_with_filename_x', $file_name), 'w');
+                    break;
+                }
+                if( !in_array(strtolower($video['status']), ['waiting', 'processing']) ){
+                    e(lang('conversion_x_cannot_be_resumed', display_clean($video['title'])), 'w');
+                    break;
+                }
+
+                FFmpeg::launchResume($file_name);;
                 break;
         }
     }

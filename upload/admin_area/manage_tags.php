@@ -4,7 +4,11 @@ define('THIS_PAGE', 'manage_tags');
 require_once dirname(__FILE__, 2) . '/includes/admin_config.php';
 require_once('../includes/classes/admin_tool.class.php');
 
-User::getInstance()->hasPermissionOrRedirect('web_config_access', true);
+$permission = 'advanced_settings';
+if( !Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '275') ){
+    $permission = 'web_config_access';
+}
+User::getInstance()->hasPermissionOrRedirect($permission,true);
 pages::getInstance()->page_redir();
 
 /* Generating breadcrumb */
@@ -44,7 +48,7 @@ assign('tags', $tags);
 assign('tag_types', $tag_types);
 assign('selected_tag_type', $selected_tag_type);
 
-$min_suffixe = in_dev() ? '' : '.min';
+$min_suffixe = System::isInDev() ? '' : '.min';
 ClipBucket::getInstance()->addAdminJS(['pages/manage_tags/manage_tags' . $min_suffixe . '.js' => 'admin']);
 
 subtitle(lang('manage_x', strtolower(lang('tags'))));

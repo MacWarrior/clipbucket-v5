@@ -32,31 +32,27 @@ function apply_filters($content, $type)
 /**
  * get list of filters of given type
  *
- * @param STRING type
+ * @param STRING $type
  * @return array|void filters
  */
 function get_filters($type)
 {
-    global $Cbucket;
-
-    if (isset($Cbucket->filters[$type])) {
-        return $Cbucket->filters[$type];
+    if (isset(ClipBucket::getInstance()->filters[$type])) {
+        return ClipBucket::getInstance()->filters[$type];
     }
 }
 
 /**
  * register ae clipbucket filter
  *
- * @param STRING filtername
- * @param STRING function nam
+ * @param STRING $name filtername
+ * @param STRING $func function nam
  * @param array|bool $params parameters to be passed when registering a filter
  */
-function register_filter($name, $func, $params = false)
+function register_filter($name, $func, $params = false): void
 {
-    global $Cbucket;
-
     if ($name && function_exists($func)) {
-        $Cbucket->filters[$name][] = ['filter' => $func, 'params' => $params];
+        ClipBucket::getInstance()->filters[$name][] = ['filter' => $func, 'params' => $params];
     }
 }
 
@@ -70,7 +66,7 @@ function register_filter($name, $func, $params = false)
  * @since 1.2.1
  *
  */
-function remove_accents($string)
+function remove_accents($string): string
 {
     if (!preg_match('/[\x80-\xff]/', $string)) {
         return $string;

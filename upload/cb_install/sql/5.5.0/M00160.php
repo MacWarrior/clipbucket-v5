@@ -1,7 +1,7 @@
 <?php
 
 namespace V5_5_0;
-require_once \DirPath::get('classes') . DIRECTORY_SEPARATOR . 'migration' . DIRECTORY_SEPARATOR . 'migration.class.php';
+require_once \DirPath::get('classes') . 'migration' . DIRECTORY_SEPARATOR . 'migration.class.php';
 
 class M00160 extends \Migration
 {
@@ -2283,7 +2283,7 @@ class M00160 extends \Migration
             'en' => 'Invalid User'
         ]);
         self::generateTranslation('vdo_cat_err3', [
-            'en' => 'Please SELECT at least 1 category'
+            'en' => 'Please select at least 1 category'
         ]);
         self::generateTranslation('embed_code_invalid_err', [
             'en' => 'Invalid video embed code'
@@ -2904,7 +2904,7 @@ class M00160 extends \Migration
             'en' => 'Error occured while uploading language file'
         ]);
         self::generateTranslation('default_lang_del_error', [
-            'en' => 'This is the default language, please SELECT another language as «default» and then delete this pack'
+            'en' => 'This is the default language, please select another language as «default» and then delete this pack'
         ]);
         self::generateTranslation('lang_deleted', [
             'en' => 'Language pack has been deleted'

@@ -3,6 +3,7 @@
 class UserLevel
 {
     private static $user_permissions = [];
+    private static $user_permission_types = [];
 
     private static $tableName = 'user_levels';
     private static $tableNamePermission = 'user_levels_permissions';
@@ -97,7 +98,7 @@ class UserLevel
             User::redirectToLogin();
         }
         if (!self::hasPermission($permission, $user_id)) {
-            redirect_to(get_server_url() . '/403.php');
+            redirect_to(cblink(['name' => 'error_403']));
         }
         return true;
     }
@@ -306,5 +307,13 @@ class UserLevel
         return false;
     }
 
+    public static function getUserPermissionTypeByCode(string $code)
+    {
+        if (empty(self::$user_permission_types)) {
+            $results = Clipbucket_db::getInstance()->select(tbl('user_permission_types'));
+            self::$user_permission_types = array_combine(array_column($results, 'user_permission_type_code'), array_column($results, 'user_permission_type_name'));
+        }
+        return self::$user_permission_types[$code];
+    }
 
 }

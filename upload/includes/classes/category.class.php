@@ -80,7 +80,7 @@ class Category
             $conditions[] = 'id_category_type = '. mysql_clean($param_category_type);
         }
         if ($param_category_default !== false) {
-            $conditions[] = 'is_default = '. mysql_clean($param_category_type);
+            $conditions[] = 'is_default = \'' . mysql_clean($param_category_default) . '\'';
         }
         if ($param_parent_id !== false) {
             $conditions[] = 'parent_id = '. mysql_clean($param_parent_id);
@@ -102,7 +102,7 @@ class Category
             $having = ' HAVING '.$param_having;
         }
 
-        $order = '';
+        $order = ' ORDER BY category_order ASC ';
         if( $param_order ){
             $order = ' ORDER BY '.$param_order;
         }
@@ -279,6 +279,7 @@ class Category
             return;
         }
 
+        $type = $this->typeNamesByIds[$cat_details['id_category_type']];
         //si has child
         $childs = $this->getAll([
             'condition' => 'parent_id = \'' . mysql_clean($category_id) . '\''
@@ -286,7 +287,7 @@ class Category
         if (!empty($childs)) {
             //deplacer
             //si a un parent => décaler vers parent sinon vers default
-            $dest_category_id = (!empty($cat_details['parent_id']) ? $cat_details['parent_id'] : $this->getDefaultByType($this->typeNamesByIds[$cat_details['id_category_type']])['category_id']);
+            $dest_category_id = (!empty($cat_details['parent_id']) ? $cat_details['parent_id'] : $this->getDefaultByType($type)['category_id']);
             //@TODO rework update for update all children with 1 request
             foreach ($childs as $child) {
                 $this->update([
@@ -296,7 +297,19 @@ class Category
             }
         }
 
+        //si has item
+        $sql = 'SELECT '.$this->getTypeTableID($type).' FROM ' . tbl($this->getTypeTableName($type)) . ' WHERE id_category = ' . $category_id;
+        $has_item = Clipbucket_db::getInstance()->_select($sql);
+        if (!empty($has_item)) {
+            e(lang('cannot_delete_not_empty_category'));
+            return;
+        }
+
         //Removing Category
+
+        if (!empty($cat_details['category_thumb'])) {
+            unlink(DirPath::get('category_thumbs') . $type . DIRECTORY_SEPARATOR . $cat_details['category_thumb']);
+        }
         Clipbucket_db::getInstance()->execute('DELETE FROM ' . tbl($this->tablename) . ' WHERE '. $this->primary_key .' = ' . mysql_clean($category_id));
         e(lang('class_cat_del_msg'), 'm');
     }
@@ -325,19 +338,33 @@ class Category
             return false;
         }
         return $this->getAll([
-            'category_type' => $categ_type_id,
-            'is_default'    => 'yes',
-            'first_only'    => true
+            'category_type'    => $categ_type_id,
+            'category_default' => 'yes',
+            'first_only'       => true
         ]);
     }
 
     /**
      * @throws Exception
      */
-    public function validate($array): bool
+    public static function validate($array, $type = ''): bool
     {
         if ($array == null) {
             $array = $_POST['category'];
+        }
+        switch ($type) {
+            case 'video':
+                $config_categ = 'video_categories';
+                break;
+            case 'photo':
+                $config_categ = 'max_photo_categories';
+                break;
+            case 'collection':
+                $config_categ = 'max_collection_categories';
+                break;
+            default:
+                $config_categ = '';
+                break;
         }
 
         if (!is_array($array)) {
@@ -360,12 +387,13 @@ class Category
             return false;
         }
 
-        if (count($new_array) > config('video_categories')) {
-            e(lang('vdo_cat_err2', config('video_categories')));
+        if(!empty($config_categ) && config($config_categ) > 0 && count($new_array) > config($config_categ) ){
+            e(lang('vdo_cat_err2', config($config_categ)));
             return false;
         }
 
-        return true;    }
+        return true;
+    }
 
     /**
      * @param string $type
@@ -470,7 +498,7 @@ class Category
             return false;
         }
 
-        $path = $dir_path . DIRECTORY_SEPARATOR . $cid . '.' . $ext;
+        $path = $dir_path . $cid . '.' . $ext;
 
         //Removing File if already exists
         if (file_exists($path)) {
@@ -486,7 +514,7 @@ class Category
             $imgObj->CreateThumb($path, $path, $this->cat_thumb_width, $ext, $this->cat_thumb_height);
             Category::getInstance()->update([
                 'category_id'    => $cid,
-                'category_thumb' => $file['name']
+                'category_thumb' => $cid . '.' . $ext
             ]);
         }
         return true;

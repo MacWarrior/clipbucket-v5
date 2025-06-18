@@ -1,6 +1,6 @@
 <div class="my_account_left">
 	<ul>
-		{foreach from=$userquery->my_account_links() item=link key=name}
+		{foreach from=userquery::getInstance()->my_account_links() item=link key=name}
 		<li class="li">
 			<span class="heading">{$name}</span>
 			<ul>

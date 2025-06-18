@@ -1,7 +1,6 @@
 <?php
 define('THIS_PAGE', 'manage_playlists');
 define('PARENT_PAGE', 'videos');
-
 require 'includes/config.inc.php';
 
 User::getInstance()->isUserConnectedOrRedirect();
@@ -9,8 +8,6 @@ User::getInstance()->isUserConnectedOrRedirect();
 if( config('videosSection') != 'yes' || config('playlistsSection') != 'yes' || !User::getInstance()->hasPermission('allow_create_playlist') ){
     redirect_to(cblink(['name' => 'my_account']));
 }
-
-global $cbvid;
 
 $udetails = userquery::getInstance()->get_user_details(user_id());
 assign('user', $udetails);
@@ -27,7 +24,7 @@ switch ($mode) {
     default:
         //Deleting Playlist
         if (!empty($_GET['delete_pl'])) {
-            $cbvid->action->delete_playlist($_GET['delete_pl']);
+            CBvideo::getInstance()->action->delete_playlist($_GET['delete_pl']);
         }
 
         if (isset($_POST['delete_playlists'])) {
@@ -35,7 +32,7 @@ switch ($mode) {
 
             if (!empty($playlists) && count($playlists) > 0) {
                 foreach ($playlists as $playlist) {
-                    $cbvid->action->delete_playlist($playlist);
+                    CBvideo::getInstance()->action->delete_playlist($playlist);
                 }
 
                 errorhandler::getInstance()->flush();
@@ -52,7 +49,7 @@ switch ($mode) {
 
         //Adding New Playlist
         if (isset($_POST['add_playlist'])) {
-            $cbvid->action->create_playlist($_POST);
+            CBvideo::getInstance()->action->create_playlist($_POST);
         }
 
         assign('mode', 'manage_playlist');
@@ -70,7 +67,7 @@ switch ($mode) {
             if (is_array($items) && count($items) > 0) {
                 foreach ($items as $item) {
                     $item = mysql_clean($item);
-                    $cbvid->action->delete_playlist_item($item);
+                    CBvideo::getInstance()->action->delete_playlist_item($item);
                 }
 
                 if (!error()) {
@@ -90,13 +87,13 @@ switch ($mode) {
 
         if (isset($_POST['edit_playlist'])) {
             $_POST['playlist_id'] = $pid;
-            $cbvid->action->edit_playlist();
+            CBvideo::getInstance()->action->edit_playlist();
         }
 
         //Deleting Item
         if (!empty($_GET['delete_item'])) {
             $delid = mysql_clean($_GET['delete_item']);
-            $cbvid->action->delete_playlist_item($delid);
+            CBvideo::getInstance()->action->delete_playlist_item($delid);
         }
 
         $playlist = Playlist::getInstance()->getAll([
@@ -107,7 +104,7 @@ switch ($mode) {
         if ($playlist) {
             assign('playlist', $playlist);
             //Getting Playlist Item
-            $items = $cbvid->get_playlist_items($pid, 'playlist_items.date_added DESC', 0);
+            $items = CBvideo::getInstance()->get_playlist_items($pid, 'playlist_items.date_added DESC', 0);
             assign('items', $items);
         } else {
             e(lang('playlist_not_exist'));
@@ -115,7 +112,7 @@ switch ($mode) {
         break;
 }
 
-$min_suffixe = in_dev() ? '' : '.min';
+$min_suffixe = System::isInDev() ? '' : '.min';
 ClipBucket::getInstance()->addJS([
     'tag-it' . $min_suffixe . '.js'                                => 'admin',
     'pages/manage_playlist/manage_playlist' . $min_suffixe . '.js' => 'admin',

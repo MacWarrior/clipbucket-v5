@@ -1,14 +1,16 @@
 <?php
 define('THIS_PAGE', 'edit_photo');
 define('PARENT_PAGE', 'photos');
-
 require 'includes/config.inc.php';
 
 User::getInstance()->isUserConnectedOrRedirect();
 
-global $cbphoto;
-
 User::getInstance()->hasPermissionOrRedirect('edit_video');
+
+global $breadcrumb;
+$breadcrumb[0] = ['title' => 'Photos', 'url' => ''];
+$breadcrumb[1] = ['title' => lang('manage_x', strtolower(lang('photos'))), 'url' => 'manage_photos.php'];
+$breadcrumb[2] = ['title' => lang('manage_x', strtolower(lang('photos'))), 'url' => DirPath::getUrl('admin_area') . 'photo_manager.php'];
 
 $udetails = userquery::getInstance()->get_user_details(user_id());
 assign('user', $udetails);
@@ -24,13 +26,13 @@ if (empty($photo)) {
     ClipBucket::getInstance()->show_page = false;
 } else {
     if (isset($_POST['update_photo'])) {
-        $cbphoto->update_photo();
+        CBPhotos::getInstance()->update_photo();
         $photo = Photo::getInstance()->getOne(['photo_id' => $pid]);
     }
     assign('p', $photo);
 }
 
-$min_suffixe = in_dev() ? '' : '.min';
+$min_suffixe = System::isInDev() ? '' : '.min';
 ClipBucket::getInstance()->addJS([
     'tag-it' . $min_suffixe . '.js'                            => 'admin',
     'pages/edit_photo/edit_photo' . $min_suffixe . '.js'       => 'admin',

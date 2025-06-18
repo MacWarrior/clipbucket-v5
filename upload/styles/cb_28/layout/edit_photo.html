@@ -1,4 +1,3 @@
-{$myAccountLinks = $userquery->my_account_links()}
 <div class="container manage-page marginBottom" xmlns="http://www.w3.org/1999/html">
 	{include file="$style_dir/blocks/manage/account_menu.html"}
     <div class="row cb-box">
@@ -7,15 +6,14 @@
         </div>
         <div class="col-md-9">
             <div class="marginBottom">
-                {*include file="$style_dir/blocks/manage/account_head.html" user=$user*}
                 <h2>{lang('edit_photo')}</h2>
                 <div>
-                    <a href="{$cbphoto->photo_links($p,'view_item')}" target="_blank" class="btn btn-primary">{lang('watch')}</a>
+                    <a href="{CBPhotos::getInstance()->photo_links($p,'view_item')}" target="_blank" class="btn btn-primary">{lang('watch')}</a>
                     <button class="btn btn-primary" type="button" onClick="viewRatings(this,'{$p.photo_id}');">View Ratings</button>
                     <button class="btn btn-primary" type="button" href="javascript:void(0);" onmousedown="delete_item('delete_icon_a','{$photo.photo_id}','{lang code="confirm_del_photo"}','manage_photos.php?mode=uploaded&amp;delete_photo={$p.photo_id}')"  id="delete_icon_a-{$photo.photo_id}">{lang code='delete'}</button>
                 </div>
-                {assign var='requiredFields' value=$cbphoto->load_required_forms($p)}
-                {assign var='optionFields' value=$cbphoto->load_other_forms($p)}
+                {assign var='requiredFields' value=CBPhotos::getInstance()->load_required_forms($p)}
+                {assign var='optionFields' value=CBPhotos::getInstance()->load_other_forms($p)}
                 <div class="account_form">
                     <form name="edit_photo" id="edit_photo" method="post">
                         <input type="hidden" value="{$p.photo_id}" id="photo_id" name="photo_id" />
@@ -50,8 +48,10 @@
                                 {foreach from=$optionFields item=field}
                                     <div class="form-group">
                                         <label class="show" for="{$field.id}">{$field.title}</label>
-                                        {$field.notShowSeprator = true}
-                                        {$field.label_class = 'radio-inline'}
+                                        {if $field.id != 'category'}
+                                            {$field.notShowSeprator = true}
+                                            {$field.label_class = 'radio-inline'}
+                                        {/if}
                                         {$field.hint_1}
                                         {$formObj->createField($field)}
                                         {$field.hint_2}

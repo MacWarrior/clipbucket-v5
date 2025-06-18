@@ -1,12 +1,9 @@
 <?php
 define('THIS_PAGE', 'manage_playlists');
-
 require_once dirname(__FILE__, 2) . '/includes/admin_config.php';
 
-global $pages, $cbvid, $eh, $Cbucket;
-
 User::getInstance()->hasPermissionOrRedirect('admin_access', true);
-$pages->page_redir();
+pages::getInstance()->page_redir();
 
 /* Generating breadcrumb */
 global $breadcrumb;
@@ -30,7 +27,7 @@ switch ($mode) {
     default:
         //Deleting Playlist
         if (!empty($_GET['delete_pl'])) {
-            $cbvid->action->delete_playlist($_GET['delete_pl']);
+            CBvideo::getInstance()->action->delete_playlist($_GET['delete_pl']);
         }
 
         if (isset($_POST['delete_playlists'])) {
@@ -38,14 +35,14 @@ switch ($mode) {
 
             if (!empty($playlists) && count($playlists) > 0) {
                 foreach ($playlists as $playlist) {
-                    $cbvid->action->delete_playlist($playlist);
+                    CBvideo::getInstance()->action->delete_playlist($playlist);
                 }
 
                 if (!error()) {
-                    $eh->flush();
+                    errorhandler::getInstance()->flush();
                     e(lang('playlists_have_been_removed'), 'm');
                 } else {
-                    $eh->flush();
+                    errorhandler::getInstance()->flush();
                     e(lang('playlist_not_exist'));
                 }
             } else {
@@ -86,7 +83,7 @@ switch ($mode) {
         $pcount['count'] = true;
         $total_rows = Playlist::getInstance()->getAll($pcount);
         $total_pages = count_pages($total_rows, config('admin_pages'));
-        $pages->paginate($total_pages, $page);
+        pages::getInstance()->paginate($total_pages, $page);
 
         assign('playlists', $playlists);
         break;
@@ -98,14 +95,14 @@ switch ($mode) {
             if (!empty($items)) {
                 foreach ($items as $item) {
                     $item = mysql_clean($item);
-                    $cbvid->action->delete_playlist_item($item);
+                    CBvideo::getInstance()->action->delete_playlist_item($item);
                 }
 
                 if (!error()) {
-                    $eh->flush();
+                    errorhandler::getInstance()->flush();
                     e(lang('playlist_items_have_been_removed'), 'm');
                 } else {
-                    $eh->flush();
+                    errorhandler::getInstance()->flush();
                     e(lang('playlist_item_doesnt_exist'));
                 }
             } else {
@@ -118,32 +115,32 @@ switch ($mode) {
 
         if (isset($_POST['edit_playlist'])) {
             $_POST['playlist_id'] = $pid;
-            $cbvid->action->edit_playlist();
+            CBvideo::getInstance()->action->edit_playlist();
         }
 
         //Deleting Item
         if (!empty($_GET['delete_item'])) {
             $delid = mysql_clean($_GET['delete_item']);
-            $cbvid->action->delete_playlist_item($delid);
+            CBvideo::getInstance()->action->delete_playlist_item($delid);
         }
 
         $playlist = Playlist::getInstance()->getOne($pid);
         if ($playlist) {
             assign('playlist', $playlist);
             //Getting Playlist Item
-            $items = $cbvid->get_playlist_items($pid, 'playlist_items.date_added DESC', 0);
+            $items = CBvideo::getInstance()->get_playlist_items($pid, 'playlist_items.date_added DESC', 0);
             assign('items', $items);
             $breadcrumb[2] = [
                 'title' => lang('edit_playlist') . ' ' . display_clean($playlist['playlist_name']) ,
                 'url'   => DirPath::getUrl('admin_area') . 'manage_playlist.php?mode=edit_playlist&pid=' . display_clean($pid)
             ];
         } else {
-            sessionMessageHandler::add_message(lang('playlist_not_exist'), 'e',  DirPath::getUrl('admin_area', true) . 'manage_playlist.php');
+            sessionMessageHandler::add_message(lang('playlist_not_exist'), 'e',  DirPath::getUrl('admin_area') . 'manage_playlist.php');
         }
         break;
 }
 
-$min_suffixe = in_dev() ? '' : '.min';
+$min_suffixe = System::isInDev() ? '' : '.min';
 ClipBucket::getInstance()->addAdminJS([
     'tag-it' . $min_suffixe . '.js'                            => 'admin'
     ,'advanced_search/advanced_search' . $min_suffixe . '.js'   => 'admin'

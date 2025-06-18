@@ -29,7 +29,7 @@
                     <div style="padding: 6px;" ><span id="pourcent-{$admin_tool_list[tool_list].id_tool}">{$admin_tool_list[tool_list].pourcentage_progress|string_format:"%.2f"}</span>%
                         (<span id="done-{$admin_tool_list[tool_list].id_tool}">{$admin_tool_list[tool_list].elements_done}</span> / <span id="total-{$admin_tool_list[tool_list].id_tool}">{$admin_tool_list[tool_list].elements_total}</span>)
                     </div>
-                    <div  class="progress">
+                    <div class="progress">
                         <div class="progress-bar" role="progressbar" id="progress-bar-{$admin_tool_list[tool_list].id_tool}" data-id="{$admin_tool_list[tool_list].id_tool}" aria-valuenow="{$admin_tool_list[tool_list].pourcentage_progress}"
                              aria-valuemin="0" aria-valuemax="100" style="width:{$admin_tool_list[tool_list].pourcentage_progress}%">
                         </div>
@@ -72,7 +72,7 @@
                                 {lang code='force_to_error'}
                             </a>
                         </li>
-                        {if Update::IsCurrentDBVersionIsHigherOrEqualTo(AdminTool::MIN_VERSION_CODE, AdminTool::MIN_REVISION_CODE)}
+                        {if Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.0', '367')}
                         <li role="presentation">
                             <a role="menuitem" class="show_log" data-id="{$admin_tool_list[tool_list].id_tool}" >
                                 {lang code='show_log'}

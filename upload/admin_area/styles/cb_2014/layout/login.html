@@ -3,7 +3,7 @@
         <div class="container">
             <div class="row ">
                 <div class="logo-admin">
-                    <a href="/" class="login-logo">
+                    <a href="{$baseurl}" class="login-logo">
                         <img src="{get_website_logo_path()}" class="img-responsive"/>
                     </a>
                 </div>
@@ -24,7 +24,7 @@
                             </div>
                             {if config('disable_email') == 'no'}
                                 <div align="center">
-                                    <a href="/forgot.php">{lang code='user_forgot_message'}</a>
+                                    <a href="{$baseurl}forgot.php">{lang code='user_forgot_message'}</a>
                                 </div>
                             {/if}
                         </form>
@@ -34,7 +34,7 @@
         
             <div align="center" class="login_footer mrgnt10">
                 <span id="copyright">
-                    <span id="copyright-original" title="{lang|ucfirst code='by'} Arslan Hassan, http://clip-bucket.com">©ClipBucket</span>, {lang code='maintained_by'} <a href='https://clipbucket.fr' target='_blank'>Oxygenz</a>
+                    <span id="copyright-original" title="{lang|ucfirst code='by'} Arslan Hassan">©ClipBucket</span>, {lang code='maintained_by'} <a href='https://clipbucket.fr' target='_blank'>Oxygenz</a>
                 </span>
             </div>
         </div>

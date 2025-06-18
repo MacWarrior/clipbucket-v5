@@ -1,3 +1,3 @@
 $(function () {
-    init_tags('tags', available_tags);
+    init_tags('playlists_tags', available_tags);
 });

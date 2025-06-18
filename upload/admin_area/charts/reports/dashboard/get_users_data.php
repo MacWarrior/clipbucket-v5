@@ -3,9 +3,9 @@
 error_reporting(E_ALL);
 require_once('../../../../includes/admin_config.php');
 
-$todayUsers['signups'] = $userquery->get_users(["count_only" => true, "date_span" => "today"]);
-$todayUsers['inactive'] = $userquery->get_users(["count_only" => true, "date_span" => "today", "status" => 'ToActivate']);
-$todayUsers['active'] = $userquery->get_users(["count_only" => true, "date_span" => "today", "status" => 'Ok']);
+$todayUsers['signups'] = userquery::getInstance()->get_users(["count_only" => true, "date_span" => "today"]);
+$todayUsers['inactive'] = userquery::getInstance()->get_users(["count_only" => true, "date_span" => "today", "status" => 'ToActivate']);
+$todayUsers['active'] = userquery::getInstance()->get_users(["count_only" => true, "date_span" => "today", "status" => 'Ok']);
 
 $userTodayStats = [
     "label" => "User Today Stats",
@@ -17,9 +17,9 @@ $userTodayStats = [
 ];
 
 
-$weekUsers['signups'] = $userquery->get_users(["count_only" => true, "date_span" => "this_week"]);
-$weekUsers['inactive'] = $userquery->get_users(["count_only" => true, "date_span" => "this_week", "status" => 'ToActivate']);
-$weekUsers['active'] = $userquery->get_users(["count_only" => true, "date_span" => "this_week", "status" => 'Ok']);
+$weekUsers['signups'] = userquery::getInstance()->get_users(["count_only" => true, "date_span" => "this_week"]);
+$weekUsers['inactive'] = userquery::getInstance()->get_users(["count_only" => true, "date_span" => "this_week", "status" => 'ToActivate']);
+$weekUsers['active'] = userquery::getInstance()->get_users(["count_only" => true, "date_span" => "this_week", "status" => 'Ok']);
 
 $userWeekStats = [
     "label" => "User month Stats",
@@ -31,9 +31,9 @@ $userWeekStats = [
 ];
 
 
-$monthUsers['signups'] = $userquery->get_users(["count_only" => true, "date_span" => "this_month"]);
-$monthUsers['inactive'] = $userquery->get_users(["count_only" => true, "date_span" => "this_month", "status" => 'ToActivate']);
-$monthUsers['active'] = $userquery->get_users(["count_only" => true, "date_span" => "this_month", "status" => 'Ok']);
+$monthUsers['signups'] = userquery::getInstance()->get_users(["count_only" => true, "date_span" => "this_month"]);
+$monthUsers['inactive'] = userquery::getInstance()->get_users(["count_only" => true, "date_span" => "this_month", "status" => 'ToActivate']);
+$monthUsers['active'] = userquery::getInstance()->get_users(["count_only" => true, "date_span" => "this_month", "status" => 'Ok']);
 
 $userMonthStats = [
     "label" => "User month Stats",

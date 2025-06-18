@@ -3,7 +3,11 @@ define('THIS_PAGE', 'manage_social_networks');
 
 require_once dirname(__FILE__, 2) . '/includes/admin_config.php';
 
-User::getInstance()->hasPermissionOrRedirect('web_config_access', true);
+$permission = 'basic_settings';
+if( !Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '275') ){
+    $permission = 'web_config_access';
+}
+User::getInstance()->hasPermissionOrRedirect($permission,true);
 pages::getInstance()->page_redir();
 
 /* Generating breadcrumb */
@@ -49,7 +53,7 @@ $total_pages = round($total_pages + 0.49, 0);
 //Pagination
 pages::getInstance()->paginate($total_pages, $current_page);
 
-$min_suffixe = in_dev() ? '' : '.min';
+$min_suffixe = System::isInDev() ? '' : '.min';
 ClipBucket::getInstance()->addAdminJS(['pages/manage_social_networks/manage_social_networks'.$min_suffixe.'.js' => 'admin']);
 
 $list_icons = SocialNetworks::getInstance()->getAllIcons() ?? [];

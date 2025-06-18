@@ -76,7 +76,7 @@ $(document).ready(function (){
             var vote = "";
             var likes = parseInt($("#likes").text());
             var totalVotes = parseInt($("#totalVotes").text()) + 1;
-            if(this.id == "channelVoteDown"){
+            if(this.id === "channelVoteDown"){
                 vote  = "no";
                 likes = likes - 1;
             }else{
@@ -85,7 +85,7 @@ $(document).ready(function (){
             }
             $.ajax({
                 type: "POST",
-                url: "/actions/vote_channel.php",
+                url: baseurl+"actions/vote_channel.php",
                 data: { vote: vote, channelId : channelId},
                 success: function(){
                     $("#likes").text(likes);
@@ -98,8 +98,8 @@ $(document).ready(function (){
     $('#container').on("click","#more-view-channel",function(){
         loadHit = $(this).attr('dataHit');
         loadLimit = $(this).attr('dataLimit');
-        totalShown = loadHit * 9 - 9;
-        if (totalVids - totalShown <= 9) {
+        totalShown = loadHit * loadLimit - loadLimit;
+        if (totalVids - totalShown <= loadLimit) {
             loadMore = false;
         } else {
             loadMore = true;
@@ -107,9 +107,9 @@ $(document).ready(function (){
 
         nextHit = parseInt(loadHit) + 1;
         $.ajax({
-            url: "/ajax/view_channel.php",
+            url: baseurl+"ajax/view_channel.php",
             type: "post",
-            dataType: "html",
+            dataType: "json",
             data: {
                 "mode":'channelMore',
                 "loadHit":loadHit,
@@ -121,17 +121,24 @@ $(document).ready(function (){
                 $(document).find('#more-view-channel').text('Loading videos..')
             },
             success: function(data) {
-                $('#more-view-channel').remove();
-                if (data.length > 1) {
-                    $(data).appendTo('#usr-vids').fadeIn('slow');
-                    if (loadMore == true) {
+                $('#more-view-channel').parent().remove();
+                if (data.videos.length >= 1) {
+                    data.videos.forEach(function(elem){
+                        $('#usr-vids').append('<div class="item-video col-lg-4 col-md-4 col-sm-6 col-xs-120" data-id="'+elem.id+'">'+elem.html+'</div>').fadeIn('slow');
+                    });
+                    if (loadMore === true) {
                         $('<div class="clearfix text-center"><button id="more-view-channel" class="btn btn-loadmore" dataLimit="'+loadLimit+'" dataHit="'+nextHit+'">'+loadMoreLang+'</button></div>').appendTo('.user_vids').fadeIn('slow');
                     }
-                    var moveTo = $( ".recentAppending" ).last().offset().top,
-                        currWidth = $(window).width();
-                    moveTo = moveTo - 630;
-                    if (currWidth > 767) {
-                        thakkiLoading(moveTo);
+                    $('#usr-vids').ready(()=> {
+                        var scroll_point = $( ".item-video" ).last().offset().top;
+                        thakkiLoading(scroll_point);
+                    });
+                    ids_to_check_progress = [...new Set([ids_to_check_progress, data.ids_to_check_progress].flat())];
+                    if (ids_to_check_progress.length > 0) {
+                        if (window['channel_video_interval'] !== undefined) {
+                            clearInterval(window['channel_video_interval']);
+                        }
+                        progressVideoCheck(ids_to_check_progress, display_type, 'channel_video_interval');
                     }
                 } else {
                     $('<div class="clearfix text-center"><button id="more-view-channel" class="btn btn-loadmore" disabled="disabled">Unable to fetch more</button></div>').appendTo('.user_vids').fadeIn('slow');
@@ -152,7 +159,7 @@ $(document).ready(function (){
 
         nextHit = parseInt(loadHit) + 1;
         $.ajax({
-            url: "/ajax/view_channel.php",
+            url: baseurl+"ajax/view_channel.php",
             type: "post",
             dataType: "html",
             data: {
@@ -189,7 +196,7 @@ $(document).ready(function (){
     var uploader = new plupload.Uploader({
         browse_button: 'changeCover',
         runtimes : 'html5,silverlight,html4',
-        url : '/edit_account.php?mode=update_cover',
+        url : baseurl+'edit_account.php?mode=update_cover',
         file_data_name : 'Filedata',
         chunk_size: chunk_upload ? max_upload_size : false,
         max_file_size : max_file_size,
@@ -205,7 +212,7 @@ $(document).ready(function (){
 
     uploader.init();
     uploader.bind("FilesAdded", function(up, uploadedFiles){
-        $(".cb-live-background").attr("src",'/images/loading.png');
+        $(".cb-live-background").attr("src",baseurl+'images/loading.png');
         for(let i = 0; i < uploadedFiles.length; i++){
             uploadedFiles[i].data = [];
             uploadedFiles[i].data.unique_id = (Math.random() + 1).toString(36).substring(7);
@@ -227,7 +234,7 @@ $(document).ready(function (){
         var data = $.parseJSON(response.response);
 
         if( data.error ){
-            $('.cb-live-background').attr('src', '/images/background_default.jpg');
+            $('.cb-live-background').attr('src', baseurl+'images/background_default.jpg');
             alert(data.error);
         } else {
             if(data.status === true){
@@ -243,7 +250,44 @@ $(document).ready(function (){
         alert(error.message);
     });
 
-    getAllComments(libelle_type_channel, channelId, '', 1, 0, '');
+    if( $("#userCommentsList").length > 0 ){
+        getAllComments(libelle_type_channel, channelId, '', 1, 0, '');
+    }
 
-    init_readonly_tags('profile_tags', '#list_tags_profile');
+    if( $('#profile_tags').length > 0 ){
+        init_readonly_tags('profile_tags', '#list_tags_profile');
+    }
+
+    progressVideoCheck(ids_to_check_progress, display_type, 'channel_video_interval');
+
+    eventFriendButton();
 });
+
+function eventFriendButton() {
+    $('.friend_button').on('click', function () {
+        var mode = $(this).data('mode');
+        var friend_id = $(this).data('friend-id');
+        var to_sent = true;
+        if (mode == 'unfriend') {
+            to_sent = _cb.confirm_it(lang_confirm_unfriend);
+        }
+        if (to_sent) {
+            $.ajax({
+                url: baseurl + "actions/manage_contacts.php",
+                type: "POST",
+                data: {mode: mode, friend_id: friend_id},
+                dataType: 'json',
+                success: function (result) {
+                    hideSpinner();
+                    $('.friend-block').html(result.template);
+                    $(result.msg).insertAfter('#header').fadeIn('slow').delay(3000).fadeOut();
+                    if (!result.can_subscribe) {
+                        $('.subs_' + friend_id).hide().prop('disabled', true);
+                    }
+                    $('#user_subscribers_' + friend_id).html(result.nb_subscribers);
+                    eventFriendButton();
+                },
+            });
+        }
+    });
+}

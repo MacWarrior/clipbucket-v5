@@ -4,7 +4,7 @@
 		// bootstrapping
 		this.baseurl = baseurl;
 		this.imageurl = '';
-		this.page = '/ajax.php';
+		this.page = baseurl+'ajax.php';
 		this.loading_img = "<img alt='loading' style='vertical-align:middle' src='" + imageurl + "/ajax-loader-big.gif'/>";
 		this.loading = this.loading_img+' Loading...';
 		this.download = 0;
@@ -12,8 +12,8 @@
 		this.cur_speed = 0;
 
 		this.status_refesh = 1 //in seconds
-		this.result_page = '/actions/file_results.php';
-		this.download_page = '/actions/file_downloader.php';
+		this.result_page = baseurl+'actions/file_results.php';
+		this.download_page = baseurl+'actions/file_downloader.php';
 		this.count = 0;
 
 		this.hasLoaded = false;
@@ -154,7 +154,7 @@
 					remoteUploadStop();
 					$('#loading').html('');
 					var vid = data.vid;
-					$.post('/actions/getVideoDetails.php', {
+					$.post(baseurl+'actions/getVideoDetails.php', {
 						'file_name':file_name,
 						'vid' : vid,
 					},function(data){
@@ -185,7 +185,7 @@
 								formData += '&updateVideo=yes';
 
 								$.ajax({
-									url : '/actions/file_uploader.php',
+									url : baseurl+'actions/file_uploader.php',
 									type : 'post',
 									data : formData,
 									success: function(data){
@@ -221,7 +221,7 @@
 								var data = $(this).serialize();
 								data += '&updateVideo=yes';
 								$.ajax({
-									url : '/actions/file_uploader.php',
+									url : baseurl+'actions/file_uploader.php',
 									type : 'post',
 									data : data,
 									dataType: 'json',
@@ -340,7 +340,7 @@
 		};
 
 		this.upload_file = function(Val,file_name){
-			var page ='/actions/file_downloader.php';
+			var page =baseurl+'actions/file_downloader.php';
 			$.post(page, {
 					file_url : Val,
 					file_name : file_name
@@ -1061,7 +1061,7 @@
 		 * Function used to rate object
 		 */
 		this.rate = function(id,rating,type){
-			var page = '/ajax.php';
+			var page = baseurl+'ajax.php';
 			$.post(page,
 				{
 					mode : 'rating',
@@ -1234,7 +1234,7 @@
 
 		this.rateNew = function (id,rating,type) {
 			curObj = this;
-			var page = '/ajax.php';
+			var page = baseurl+'ajax.php';
 			$.post(page, {
 					mode : 'rating',
 					id:id,
@@ -1300,21 +1300,17 @@
 			curObj = this;
 			$('#'+result_cont).css('display','block').html(this.loading);
 
-			$.post(page,
-				{
-					mode : 'add_friend',
-					uid : uid
-				}
-				,function(data)
-				{
+			$.post(page
+				, {mode : 'add_friend', uid : uid}
+				,function(data) {
 					if(!data){
 						alert('No data');
 					} else {
-						$('#'+result_cont).css('display','none');
-						curObj.showMeTheMsg(data);
+						$('#'+result_cont).html(data['html']);
+						curObj.showMeTheMsg(data['msg']);
 					}
 				}
-				,'text'
+				,'json'
 			);
 		};
 
@@ -1359,30 +1355,6 @@
 					}
 				},'text');
 		};
-
-		this.uploadSubtitle = function(videoid, lang, honeyAjax) {
-			if (honeyAjax.length < 5) {
-				return false;
-			}
-
-			//return true;
-			var file_data = $('#captions').prop('files')[0];
-			var form_data = new FormData();
-			form_data.append('subtitle_lang',lang);
-			form_data.append('file', file_data);
-			form_data.append('videoid', videoid);
-			$.ajax({
-				type:'post',
-				cache: false,
-				contentType: false,
-				processData: false,
-				url: honeyAjax,
-				data: form_data,
-
-				beforeSend: function() {},
-				success: function(data) {}
-			});
-		}
 
 		this.addToPlaylist = function (vid,form_id,objtype){
 			curObj = this;
@@ -1454,7 +1426,7 @@
 		this.getModalVideo = function(video_id){
 			$.ajax({
 				type: 'post',
-				url: '/ajax/commonAjax.php',
+				url: baseurl+'ajax/commonAjax.php',
 				data: { videoid : video_id , mode : 'get_video'},
 				dataType: 'json',
 				beforeSend: function (data) {
@@ -1466,6 +1438,7 @@
 
 						$('.my-modal-content').attr('id',vData.videoid).html(data.video).promise().done(function(){
 							let videoplayer = $('.my-modal-content').find('video')[0];
+							$('.cd-popup').addClass('is-visible');
 
 							document.querySelector('.player-holder video').addEventListener( "loadedmetadata", function (e) {
 								adaptRatioPlayer();
@@ -1591,20 +1564,19 @@
 		};
 
 		this.updateSubscribersCount = function(userid){
-			$.post(page,
-				{
+			$.post(page, {
 					mode : 'get_subscribers_count',
 					userid : userid
 				},
-				function(data)
-				{
+				function(data) {
 					if(!data){
 						alert('No data');
 					} else {
 						subsObj = JSON.parse(data);
 						$('#user_subscribers_'+userid).html(subsObj.subscriber_count);
 					}
-				},'text');
+				},'text'
+			);
 		};
 	};
 

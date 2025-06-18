@@ -7,12 +7,10 @@ require 'includes/config.inc.php';
 User::getInstance()->isUserConnectedOrRedirect();
 
 if( config('videosSection') != 'yes' ){
-    redirect_to(get_server_url());
+    redirect_to(DirPath::getUrl('root'));
 }
 
-global $pages, $cbvid, $Upload, $eh;
-
-$pages->page_redir();
+pages::getInstance()->page_redir();
 
 $userid = user_id();
 $udetails = userquery::getInstance()->get_user_details($userid);
@@ -29,10 +27,9 @@ if ($vdetails['userid'] != $userid) {
 } else {
     //Updating Video Details
     if (isset($_POST['update_video'])) {
-        $Upload->validate_video_upload_form();
-        if (empty($eh->get_error())) {
-            $_POST['videoid'] = $vid;
-            $cbvid->update_video();
+        $_POST['videoid'] = $vid;
+        CBvideo::getInstance()->update_video();
+        if (empty(errorhandler::getInstance()->get_error())) {
             Video::getInstance()->setDefautThumb($_POST['default_thumb'], 'thumb', $vid);
             Video::getInstance()->setDefautThumb($_POST['default_poster'], 'poster', $vid);
             Video::getInstance()->setDefautThumb($_POST['default_backdrop'], 'backdrop', $vid);
@@ -53,7 +50,7 @@ if ($vdetails['userid'] != $userid) {
 
 }
 
-$min_suffixe = in_dev() ? '' : '.min';
+$min_suffixe = System::isInDev() ? '' : '.min';
 ClipBucket::getInstance()->addJS([
     'tag-it' . $min_suffixe . '.js'                            => 'admin',
     'init_default_tag/init_default_tag' . $min_suffixe . '.js' => 'admin',

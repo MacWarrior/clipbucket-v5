@@ -1,0 +1,22 @@
+{if Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '329') && !empty($video.aspect_ratio)}
+    {assign var=aspect_ratio value=" style='aspect-ratio:"|cat:$video.aspect_ratio|cat:";max-height:90vh;'"}
+{else}
+    {assign var=aspect_ratio value=''}
+{/if}
+{if $video.status|lower == 'successful'}
+    {if config('bits_color_warning') == '1' && $video.bits_color && $video.bits_color > 8}
+        <span class="label label-warning" style="font-size:1em;">
+        {lang code="bits_color_compatibility"}
+    </span>
+    {/if}
+    <div id="cb_player" class="cb_player no_select"{$aspect_ratio}>
+        {show_player vdetails=$video}
+    </div>
+{else}
+    <div id="cb_player" class="clearfix cb_player"{$aspect_ratio}>
+        <div class="thumb-holder">
+            <img alt="thumbnail" class="img-responsive{if Video::getInstance()->isToBlur($video['videoid'])} blur{/if}" src="{getThumb vdetails=$video size=768x432}"/>
+            {ANCHOR place='in_video_thumb' data=$video}
+        </div>
+    </div>
+{/if}

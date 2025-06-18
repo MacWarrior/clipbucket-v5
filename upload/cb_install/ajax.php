@@ -5,16 +5,8 @@ require_once dirname(__DIR__ ). DIRECTORY_SEPARATOR . 'includes' . DIRECTORY_SEP
 require_once DirPath::get('vendor') . 'autoload.php';
 require_once DirPath::get('classes') . 'DiscordLog.php';
 require_once DirPath::get('classes') . 'update.class.php';
-require_once DirPath::get('includes') . 'clipbucket.php';
 require_once DirPath::get('classes') . 'system.class.php';
 require_once DirPath::get('cb_install') . 'functions_install.php';
-
-if (file_exists(DirPath::get('temp') . 'development.dev')) {
-    define('DEVELOPMENT_MODE', true);
-
-} else {
-    define('DEVELOPMENT_MODE', false);
-}
 
 if (!file_exists(DirPath::get('temp') . 'install.me') && !file_exists(DirPath::get('temp') . 'install.me.not')) {
     return false;
@@ -116,7 +108,7 @@ if ($mode == 'sitesettings') {
 
         if ($current) {
             $res = false;
-            if ($current != 'reset_db' || DEVELOPMENT_MODE) {
+            if ($current != 'reset_db' || System::isInDev()) {
                 $res = install_execute_sql_file($cnnct, DirPath::get('sql') . $files[$current]['file'], $dbprefix, $dbname);
             }
         }
@@ -161,14 +153,10 @@ if ($mode == 'sitesettings') {
             }
         }
         //update database version from last json
-        $versions = json_decode(file_get_contents(DirPath::get('changelog') . 'latest.json', false), true);
-        $state = 'STABLE';
-        if ($versions['stable'] != $versions['dev']) {
-            $state = 'DEV';
-        }
+        $versions = json_decode(file_get_contents(DirPath::get('changelog') . 'latest.json'), true);
         if ($step == 'version') {
-            $last_version = $versions[strtolower($state)];
-            $changelog = json_decode(file_get_contents(DirPath::get('changelog') . $last_version . '.json', false), true);
+            $last_version = $versions['stable'];
+            $changelog = json_decode(file_get_contents(DirPath::get('changelog') . $last_version . '.json'), true);
             $sql = 'INSERT INTO ' . $dbprefix . 'version SET version = \'' . $cnnct->real_escape_string($changelog['version']) . '\' , revision = ' . $cnnct->real_escape_string($changelog['revision']) . ', id = 1
             ON DUPLICATE KEY UPDATE version = \'' . $cnnct->real_escape_string($changelog['version']) . '\' , revision = ' . $cnnct->real_escape_string($changelog['revision']);
             mysqli_query($cnnct, $sql);

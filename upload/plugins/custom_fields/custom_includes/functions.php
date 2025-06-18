@@ -102,7 +102,7 @@ function add_custom_field($array)
             }
         }
 
-        if (!error_list()) {
+        if (empty(errorhandler::getInstance()->get_error())) {
             if (!empty($attr)) {
                 $fields_array[] = 'custom_field_' . $key;
                 $value_array[] = mysql_clean($attr);
@@ -115,7 +115,7 @@ function add_custom_field($array)
 
     }
 
-    if (!error_list()) {
+    if (empty(errorhandler::getInstance()->get_error())) {
         Clipbucket_db::getInstance()->insert(tbl("custom_fields"), $fields_array, $value_array);
     }
 }

@@ -5,7 +5,7 @@ if (!defined('IN_CLIPBUCKET')) {
 }
 
 User::getInstance()->hasPermissionOrRedirect('admin_access', true);
-$pages->page_redir();
+pages::getInstance()->page_redir();
 
 if (!defined('MAIN_PAGE')) {
     define('MAIN_PAGE', 'reCaptcha v2');

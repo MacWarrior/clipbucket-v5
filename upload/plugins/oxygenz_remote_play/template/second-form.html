@@ -1,41 +1,28 @@
-{$videoFields = $Upload->load_video_fields($input)}
+{$videoFields = Upload::getInstance()->load_video_fields()}
 {$requiredFields = $videoFields[0]}
 {$sharingOptions = $videoFields[1]}
 {$dateAndLocation = $videoFields[2]}
 {$custom_fields = $videoFields[4]}
-
 <div class="row">
     <div class="col-md-8">
         <div id="updateVideoInfo">
             {ANCHOR place="before_upload_form_required_fields"}
             <div class="requiredFields">
                 {foreach $requiredFields.fields as $field}
-                <div class="form-group">
-                    {$field.id = ''}
-                    {if $field.type != 'checkbox' && $field.type != 'radiobutton' && $field.type != 'checkbox2'}
-                        {if empty($field.class)}
-                            {$field.class = 'form-control'}
-                        {else}
-                            {$field.class = $field.class|cat:' form-control'}
+                    <div class="form-group">
+                        {$field.class='form-control'}
+                        {$field.notShowSeprator='yes'}
+                        {if $field.type == 'radiobutton'}
+                            {$field.label_class='radio'}
+                            {$field.class=''}
+                            {$formObj->createField($field)}
+                        {elseif $field.type == 'checkbox'}
+                            {$categories = $field}
+                        {elseif !$field.id|strstr:'tags'}
+                            <label for="{$field.id}">{$field.title}</label>
+                            {$formObj->createField($field)}
                         {/if}
-                    {/if}
-                    {$field.notShowSeprator='yes'}
-                    {if $field.type == 'radiobutton'}
-                        {$field.label_class='radio'}
-                        {$field.class=''}
-                        {$formObj->createField($field)}
-                    {elseif $field.type == 'checkbox'}
-                        {$categories = $field}
-                    {elseif $field.name == 'tags_video'}
-                        {$field.id = 'remote_tags_video'}
-                        <label for="{$field.id}">{$field.title}</label>
-                        {$formObj->createField($field)}
-                        <ul id="remote_list_{$field.name}"></ul>
-                    {elseif !$field.name|strstr:'tags'}
-                        <label for="{$field.name}">{$field.title}</label>
-                        {$formObj->createField($field)}
-                    {/if}
-                </div>
+                    </div>
                 {/foreach}
             </div>
             {ANCHOR place="after_upload_form_required_fields"}
@@ -138,7 +125,6 @@
                 <div class="sectionContent hidden">
                     {foreach $sharingOptions.fields as $field}
                     <div class="form-group">
-                        {$field.id = ''}
                         {if $field.type != 'checkbox' && $field.type != 'radiobutton' && $field.type != 'checkbox2'}
                             {if empty($field.class)}
                                 {$field.class = 'form-control'}
@@ -152,7 +138,16 @@
                             {$formObj->createField($field)}
                         {else}
                         <label for="{$field.id}">{$field.title}</label>
+                            {if $field.hint_1}<br/>
+                                {$field.hint_1}
+                            {/if}
                             {$formObj->createField($field)}
+                            {if $field.id == 'video_users'}
+                                <ul id="remote_list_{$field.id}"></ul>
+                            {/if}
+                            {if $field.hint_2}<br/>
+                                {$field.hint_2}
+                            {/if}
                         {/if}
                     </div>
                     {/foreach}
@@ -168,15 +163,17 @@
             {ANCHOR place="after_upload_form_submit"}
         </div>
     </div>
-    <div class="col-md-4 uploadFormSidebarDiv">
-        {ANCHOR place="before_upload_form_categories_field"}
-        <h4>{$categories.title}</h4>
-        <small>{$categories.hint_1}</small>
-        <div class="categoriesContainer">
-            {$categories.label_class='checkbox'}
-            {$categories.class='checkbox'}
-            {$formObj->createField($categories)}
+    {if config('enable_video_categories') != 'no'}
+        <div class="col-md-4 uploadFormSidebarDiv">
+            {ANCHOR place="before_upload_form_categories_field"}
+            <h4>{$categories.title}</h4>
+            <small>{$categories.hint_1}</small>
+            <div class="categoriesContainer">
+                {$categories.label_class='checkbox'}
+                {$categories.class='checkbox'}
+                {$formObj->createField($categories)}
+            </div>
+            {ANCHOR place="after_upload_form_categories_field"}
         </div>
-        {ANCHOR place="after_upload_form_categories_field"}
-    </div>
+    {/if}
 </div>

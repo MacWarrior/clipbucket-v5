@@ -1,4 +1,3 @@
-{$myAccountLinks = $userquery->my_account_links()}
 <div class="container manage-page marginBottom">
   <div class="account_box">
     <div class="row cb-box">
@@ -13,26 +12,26 @@
                   
                   <li class="{if $mode =='inbox'}active {/if}">
 
-                      <a  href="/private_message.php?mode=inbox">
+                      <a  href="{$baseurl}private_message.php?mode=inbox">
                           <h5>{lang code='menu_inbox'}</h5>
                       </a>
                   </li>
                 
                   
                   <li class="{if $mode =='notification'}active{/if}">
-                      <a href="/private_message.php?mode=notification">
+                      <a href="{$baseurl}private_message.php?mode=notification">
                           <h5>{lang code='notifications'}</h5>
                       </a>
                   </li>
 
                   <li class="{if $mode =='sent'}active{/if}">
-                      <a  href="/private_message.php?mode=sent">
+                      <a  href="{$baseurl}private_message.php?mode=sent">
                           <h5>{lang code='sent'}</h5>
                       </a>
                   </li>
 
                  <li class=" {if $mode =='new_msg'}active{/if}">
-                      <a  href="/private_message.php?mode=new_msg">
+                      <a  href="{$baseurl}private_message.php?mode=new_msg">
                           <h5>{lang|ucfirst code='write_msg'}</h5>
                       </a>
                   </li>

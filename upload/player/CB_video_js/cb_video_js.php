@@ -4,8 +4,8 @@
 	Description: Official CBV5 player
 	Author: Oxygenz
     Author Website: https://clipbucket.oxygenz.fr/
-	Version: 2.0.7
-    Released: 2024-12-12
+	Version: 2.1.1
+    Released: 2025-02-24
     Website: https://github.com/MacWarrior/clipbucket-v5
  */
 
@@ -18,7 +18,7 @@ class CB_video_js
     {
         $player_name = self::class;
 
-        $min_suffixe = in_dev() ? '' : '.min';
+        $min_suffixe = System::isInDev() ? '' : '.min';
         ClipBucket::getInstance()->addAllJS([
             $player_name.'/js/video'.$min_suffixe.'.js' => 'player'
             ,$player_name.'/lang/'.get_current_language().'.js' => 'player'
@@ -47,20 +47,11 @@ class CB_video_js
             ClipBucket::getInstance()->addAllCSS([$player_name.'/plugin/thumbnails/videojs-thumbnails'.$min_suffixe.'.css' => 'player']);
         }
 
-        if( config('enable_advertisement') == 'yes' ){
+        if( config('enable_360_video') == 'yes' ){
             ClipBucket::getInstance()->addAllJS([
-                $player_name.'/plugin/ads/videojs-contrib-ads'.$min_suffixe.'.js' => 'player'
-                ,$player_name.'/plugin/ads/videojs.ads'.$min_suffixe.'.js' => 'player'
-                ,$player_name.'/plugin/ads/videojs.ima.js' => 'player'
+                $player_name.'/plugin/vr/videojs-vr'.$min_suffixe.'.js' => 'player'
             ]);
-
-            ClipBucket::getInstance()->addAllCSS([
-                $player_name.'/plugin/ads/videojs.ads'.$min_suffixe.'.css' => 'player'
-                ,$player_name.'/plugin/clipbucket/videojs-clipbucket'.$min_suffixe.'.css' => 'player'
-                ,$player_name.'/plugin/resolution/videojs-resolution'.$min_suffixe.'.css' => 'player'
-                ,$player_name.'/plugin/ads/videojs.ima.css' => 'player'
-            ]);
-
+            ClipBucket::getInstance()->addAllCSS([$player_name.'/plugin/vr/videojs-vr'.$min_suffixe.'.css' => 'player']);
         }
     }
 
@@ -96,9 +87,8 @@ class CB_video_js
      */
     public static function getVideoResolutionTitleFromFilePath($filepath): string
     {
-        global $myquery;
         $quality = self::getVideoQualityFromFilePath($filepath);
-        return $myquery->getVideoResolutionTitleFromHeight($quality);
+        return myquery::getInstance()->getVideoResolutionTitleFromHeight($quality);
     }
 
     /**

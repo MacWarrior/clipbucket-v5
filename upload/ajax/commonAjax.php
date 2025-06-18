@@ -33,9 +33,8 @@ if (isset($_POST['mode'])) {
             {
                 $response = [];
                 try {
-                    global $cbvid;
                     $videoid = (int)$_POST['videoid'];
-                    $videoDetails = $cbvid->get_video($videoid);
+                    $videoDetails = CBvideo::getInstance()->get_video($videoid);
                     if ($videoDetails && video_playable($videoDetails)) {
                         assign('video', $videoDetails);
                         $related_videos = get_videos(['title' => $videoDetails['title'], 'tags' => $videoDetails['tags'], 'exclude' => $videoDetails['videoid'], 'show_related' => 'yes', 'limit' => 12, 'order' => 'date_added DESC']);
@@ -58,10 +57,10 @@ if (isset($_POST['mode'])) {
                         $response['message'] = "success";
                     } else {
                         if (msg()) {
-                            $msg = msg_list();
+                            $msg = errorhandler::getInstance()->get_message();
                         }
                         if (error()) {
-                            $msg = error_list();
+                            $msg = errorhandler::getInstance()->get_error();
                         }
                         if (!$msg) {
                             $msg = "Oops ! Something went worng in Playing this video!";

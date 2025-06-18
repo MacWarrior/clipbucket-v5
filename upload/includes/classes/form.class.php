@@ -39,7 +39,9 @@ class formObj
             case 'dropdown':
                 $fields = $this->createDropDown($field, $multi, $skipall);
                 break;
-
+            case 'dropdown_group':
+                $fields = $this->createDropDownWithOptionGroups($field, $multi, $skipall);
+                break;
             case 'checkboxv2':
                 $fields = $this->createCheckBoxV2($field);
                 break;
@@ -109,6 +111,10 @@ class formObj
             $textField .= ' disabled';
         }
 
+        if (!empty($field['style'])) {
+            $textField .= ' style="' . $field['style'] . '"';
+        }
+
         if (!empty($field['value'])) {
             if ($field['type'] == 'textfield' || $field['type'] == 'password' || $field['type'] == 'hidden' ) {
                 $textField .= ' value="' . display_clean($field['value']) . '" ';
@@ -128,7 +134,7 @@ class formObj
         }
 
         //Checking Label
-        if (!empty($field['label'])) {
+        if (!empty($field['label']) && $field['type'] != 'hidden') {
             $formTextField = '<label>' . $field['label'] . $textField . '</label>';
         } else {
             $formTextField = $textField;
@@ -163,9 +169,7 @@ class formObj
                 $this->multi_cat_id = $this->multi_cat_id + 1;
                 $params['categories'] = $catArray;
                 $params['field'] = $field;
-                if (config('show_collapsed_checkboxes') == 1) {
-                    $params['collapsed'] = true;
-                }
+
                 $this->listCategoryCheckBox($params, $multi);
                 return false;
             }
@@ -235,7 +239,7 @@ class formObj
         }
     }
 
-    function createCheckBoxV2($field)
+    function createCheckBoxV2($field): void
     {
         $field_label = $field['label'];
         $field_name = $field['name'];
@@ -243,55 +247,28 @@ class formObj
         $field_disabled = $field['disabled'];
         $checked = ($field['checked'] == $field_value) ? 'checked' : '';
 
-        echo '
-        <div class="col-md-1">
-            <input value="' . $field_value . '" name="' . $field_name . '" id="' . $field_name . '" ' . $checked . ' '. $field_disabled . 'type="checkbox" class="ace ace-switch ace-switch-5"/>
-            <span class="lbl"></span>
-        </div>
-        <div class="col-md-7">
-            <label class="nowrap" for="' . $field_name . '" title="' . $field_label . '">' . $field_label . '</label>
-        </div>
-        ';
-    }
-
-    function listCategoryCheckBoxCollapsed($in, $multi)
-    {
-        $cats = $in['categories'];
-        $field = $in['field'];
-        $rand = (rand(0, 100000));
-        if ($field['sep'] == '<br/>' || $field['sep'] == '<br>') {
-            $field['sep'] = '';
-        }
-
-        if (!$multi) {
-            $fieldName = $field['name'];
+        if (BACK_END) {
+            echo '
+        <div class="row">
+            <div class="col-md-1">
+                <input value="' . $field_value . '" name="' . $field_name . '" id="' . $field_name . '" ' . $checked . ' ' . $field_disabled . ' type="checkbox" class="ace ace-switch ace-switch-5"/>
+                <span class="lbl"></span>
+            </div>
+            <div class="col-md-7">
+                <label class="nowrap" for="' . $field_name . '" title="' . $field_label . '">' . $field_label . '</label>
+            </div>
+        </div>';
         } else {
-            $fieldName = $field['name'];
-            $fieldName = $this->rmBrackets($fieldName);
-            $fieldName = $fieldName . $this->multi_cat_id . '[]';
-        }
-        $display = 'none';
-
-        if ($cats) {
-            foreach ($cats as $cat) {
-                $checked = '';
-                if( in_array($cat['category_id'], $field['value']) ){
-                    $checked = 'checked';
-                }
-
-                echo "<div style='position:relative;'>";
-                echo $field['sep'];
-                echo '<label><input name="' . $fieldName . '" type="checkbox" value="' . $cat['category_id'] . '" ' . $checked . ' ' . $field['extra_tags'] . '>' . display_clean($cat['category_name']) . '</label>';
-                if ($cat['children']) {
-                    echo "<span id='" . $cat['category_id'] . "_toggler' alt='" . $cat['category_id'] . "_" . $rand . "' class='CategoryToggler CheckBoxCategoryToggler glyphicon glyphicon-chevron-down' style='float:right;margin-left:20px;' onclick='toggleCategory(this);'></span>";
-                    $childField = $field;
-                    $childField['sep'] = $field['sep'] . str_repeat('&nbsp;', 5);
-                    echo "<div id='" . $cat['category_id'] . '_' . $rand . "' class='sub_categories sub_categories_checkbox' style='display:" . $display . "'>";
-                    $this->listCategoryCheckBoxCollapsed(['categories' => $cat['children'], 'field' => $childField, 'children_indent' => true], $multi);
-                    echo '</div>';
-                }
-                echo '</div>';
-            }
+            echo '<div class="row">
+                <div class="col-md-1">
+                    <div class="form-check form-switch" title="' . $field_label . '" >
+                        <input style="margin:0;" name="' . $field_name . '" id="' . $field_name . '" class="form-check-input" type="checkbox" role="switch" value="' . $field_value . '" ' . $checked . ' ' . $field_disabled . '/>
+                    </div>
+                </div>
+                <div class="col-md-7">
+                    <label class="nowrap" for="' . $field_name . '" title="' . $field_label . '">' . $field_label . '</label>
+                </div>
+            </div>';
         }
     }
 
@@ -300,10 +277,11 @@ class formObj
     {
         $cats = $in['categories'];
         $field = $in['field'];
-        $collapsed = $in['collapsed'];
-        if ($collapsed) {
-            $this->listCategoryCheckBoxCollapsed($in, $multi);
-            return;
+       if (config('show_collapsed_checkboxes') == 1) {
+           $rand = (rand(0, 100000));
+           if ($field['sep'] == '<br/>' || $field['sep'] == '<br>') {
+               $field['sep'] = '';
+           }
         }
         //setting up the field name
         if (!$multi) {
@@ -320,7 +298,7 @@ class formObj
             foreach ($cats as $cat) {
                 $checked = '';
                 //checking value
-                if (in_array($cat['category_id'] , $values)) {
+                if (in_array($cat['category_id'], $values) || ($cat['is_default'] == 'yes' && empty($values))) {
                     $checked = 'checked';
                 }
 
@@ -328,14 +306,31 @@ class formObj
                 if ($field['label_class']) {
                     $label_class = 'class="' . $field['label_class'] . '"';
                 }
+                if (config('show_collapsed_checkboxes') == 1) {
+                    echo "<div style='position:relative;'>";
+                }
                 if (!isset($field['notShowSeprator'])) {
                     echo $field['sep'];
                 }
                 echo '<label ' . $label_class . '><input name="' . $field_name . '" type="checkbox" value="' . $cat['category_id'] . '" ' . $checked . ' ' . $field['extra_tags'] . '> ' . display_clean($cat['category_name']) . '</label>';
                 if ($cat['children']) {
+                    if (config('show_collapsed_checkboxes') == 1) {
+                        echo "<span id='" . $cat['category_id'] . "_toggler' alt='" . $cat['category_id'] . "_" . $rand . "' class='CategoryToggler CheckBoxCategoryToggler glyphicon glyphicon-chevron-down' style='float:right;margin-left:20px;' onclick='toggleCategory(this);'></span>";
+                        echo "<div id='" . $cat['category_id'] . '_' . $rand . "' class='sub_categories sub_categories_checkbox' style='display:none;'>";
+                    }
                     $childField = $field;
                     $childField['sep'] = $field['sep'] . str_repeat('&nbsp;', 5);
-                    $this->listCategoryCheckBox(['categories' => $cat['children'], 'field' => $childField, 'children_indent' => true], $multi);
+                    $this->listCategoryCheckBox([
+                        'categories'      => $cat['children'],
+                        'field'           => $childField,
+                        'children_indent' => true
+                    ], $multi);
+                    if (config('show_collapsed_checkboxes') == 1) {
+                        echo '</div>';
+                    }
+                }
+                if (config('show_collapsed_checkboxes') == 1) {
+                    echo '</div>';
                 }
             }
         }
@@ -485,7 +480,7 @@ class formObj
             $hidden = '<input type="hidden" name="' . $field_name . '" value="' . $field['checked'] . '">';
         }
 
-        $ddFieldStart = '<select name=\'' . $field_name . '\'' . $select . '>';
+        $ddFieldStart = '<select name=\'' . $field_name . '\'' . $select . ' ' . $field['extra_tags'] . ' >';
         $arrayName = $this->rmBrackets($field['name']);
         if (is_string($field['value'])) {
             $field['value'] = explode(',', $field['value']);
@@ -507,9 +502,80 @@ class formObj
                     }
                     $count++;
                 }
-                $fieldOpts .= '<option value="' . $key . '" ' . $checked . ' ' . $field['extra_tags'] . '>' . $value . '</option>';
+                $fieldOpts .= '<option value="' . $key . '" ' . $checked . ' ' . $field['extra_option_tags'] . '>' . $value . '</option>';
             }
         }
+        $ddFieldEnd = '</select>';
+        echo $hidden . $ddFieldStart . $fieldOpts . $ddFieldEnd;
+    }
+    function createDropDownWithOptionGroups($field, $multi = false, $skipall = false)
+    {
+        if (!$multi) {
+            $field_name = $field['name'];
+        } else {
+            $field_name = $field['name'] . '[]';
+        }
+
+        $select = '';
+        if (!empty($field['id'])) {
+            $select .= ' id="' . $field['id'] . '"';
+        }
+
+        if (!empty($field['class'])) {
+            $select .= ' class="' . $field['class'] . ' select2"';
+        }
+
+        if (!empty($field['disabled'])) {
+            $select .= ' disabled';
+        }
+
+        $hidden = '';
+        if (!empty($field['input_hidden'])) {
+            $hidden = '<input type="hidden" name="' . $field_name . '" value="' . $field['checked'] . '">';
+        }
+
+        $required = '';
+        if (!empty($field['required']) ) {
+            $required = ' required ';
+        }
+        $ddFieldStart = '<select name=\'' . $field_name . '\'' . $select . ' ' . $field['extra_tags'] . ' '. $required. ' >';
+        $arrayName = $this->rmBrackets($field['name']);
+        if (is_string($field['value'])) {
+            $field['value'] = explode(',', $field['value']);
+        }
+        $fieldOpts = '';
+        $fieldOptsNull= '';
+
+        $is_checked = false;
+        if (is_array($field['value'])) {
+            foreach ($field['value'] as $group => $group_values) {
+                $fieldOpts .= '<optgroup label="' . lang($group) . '">';
+                foreach ($group_values as $key => $value) {
+                    if ((is_array($_REQUEST) && !empty($_REQUEST[$arrayName])) || !empty($field['checked'])) {
+                        if ((is_array($_REQUEST) && $_REQUEST[$arrayName] == $key) || $field['checked'] == $key) {
+                            $checked = ' selected ';
+                            $is_checked = true;
+                        } else {
+                            $checked = '';
+                        }
+                    } else {
+                        if ($count == 0 && empty($field['null_option'])) {
+                            $checked = ' selected ';
+                            $is_checked = true;
+                        } else {
+                            $checked = '';
+                        }
+                        $count++;
+                    }
+                    $fieldOpts .= '<option value="' . $key . '" ' . $checked . ' ' . $field['extra_option_tags'] . '>' . $value . '</option>';
+                }
+                $fieldOpts .= '</optgroup>';
+            }
+        }
+        if (!empty($field['null_option'])) {
+            $fieldOptsNull = '<option value="null" ' . (!$is_checked? ' selected ' : '') . ' '.($field['null_option_disabled'] ? ' disabled="disabled" ':'').' >' . $field['null_option'] . '</option>';
+        }
+        $fieldOpts = $fieldOptsNull . $fieldOpts;
         $ddFieldEnd = '</select>';
         echo $hidden . $ddFieldStart . $fieldOpts . $ddFieldEnd;
     }

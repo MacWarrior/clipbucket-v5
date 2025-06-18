@@ -11,13 +11,14 @@
             readOnly: true,
             singleFieldNode: $('#' + id_input),
             animate: false,
-            caseSensitive: false
+            caseSensitive: false,
+            allowSpaces: allow_tag_space
         });
 
         if (link_type !== undefined && link_type) {
             var labels = $(list_tag + ' .tagit-label');
             labels.each(function () {
-                $(this).parent().first().wrap('<a href="/search_result.php?query=' + $(this).html() + '&type=' + link_type + '"></a>');
+                $(this).parent().first().wrap('<a href="' + baseurl + 'search_result.php?query=' + $(this).html() + '&type=' + link_type + '"></a>');
             });
         }
     }

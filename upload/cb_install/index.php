@@ -5,19 +5,14 @@ require_once dirname(__DIR__) . DIRECTORY_SEPARATOR . 'includes' . DIRECTORY_SEP
 require_once DirPath::get('vendor') . 'autoload.php';
 require_once DirPath::get('classes') . 'DiscordLog.php';
 require_once DirPath::get('classes') . 'update.class.php';
-require_once DirPath::get('includes') . 'clipbucket.php';
 require_once DirPath::get('classes') . 'system.class.php';
 require_once DirPath::get('classes') . 'network.class.php';
 require_once DirPath::get('classes') . 'AIVision.class.php';
-require_once DirPath::get('classes') . DIRECTORY_SEPARATOR . 'migration' . DIRECTORY_SEPARATOR . 'migration.class.php';
+require_once DirPath::get('classes') . 'migration' . DIRECTORY_SEPARATOR . 'migration.class.php';
 
 $whoops = new \Whoops\Run;
-if (file_exists(DirPath::get('temp') . 'development.dev')) {
-    define('DEVELOPMENT_MODE', true);
-
+if( System::isInDev() ){
     $whoops->pushHandler(new \Whoops\Handler\PrettyPageHandler);
-} else {
-    define('DEVELOPMENT_MODE', false);
 }
 $whoops->pushHandler(function($e){
     $message = $e->getMessage().PHP_EOL.$e->getTraceAsString();
@@ -73,6 +68,9 @@ $has_translation = class_exists('Language');
 
 require_once DirPath::get('cb_install') . 'functions_install.php';
 if (!empty($_POST['language'])) {
+    if( isset($_COOKIE['cb_lang']) ){
+        Session::unsetCookie( 'cb_lang');
+    }
     Language::getInstance()->make_default($_POST['language']);
     Language::getInstance()->init();
     $has_translation = true;

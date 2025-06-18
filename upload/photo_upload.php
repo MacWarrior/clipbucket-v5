@@ -1,39 +1,36 @@
 <?php
 define('THIS_PAGE', 'photo_upload');
 define('PARENT_PAGE', 'upload');
-
-global $cbphoto, $Cbucket, $cbcollection;
-
 require 'includes/config.inc.php';
 
 User::getInstance()->hasPermissionOrRedirect('allow_photo_upload', true);
 subtitle(lang('photos_upload'));
 if (isset($_GET['collection'])) {
-    $selected_collection = $cbphoto->decode_key($_GET['collection']);
-    assign('selected_collection', $cbphoto->collection->get_collection($selected_collection));
+    $selected_collection = CBPhotos::getInstance()->decode_key($_GET['collection']);
+    assign('selected_collection', CBPhotos::getInstance()->collection->get_collection($selected_collection));
 }
 
 $collections = Collection::getInstance()->getAllIndent([
-    'type'   => 'photos',
-    'userid' => user_id()
-]);
+    'type'       => 'photos',
+    'can_upload' => true,
+], display_group: true);
 
 assign('collections', $collections);
-assign('reqFields', $cbcollection->load_required_fields(['type'=>'photos']));
+assign('reqFields', Collections::getInstance()->load_required_fields(['type'=>'photos']));
 subtitle(lang('photos_upload'));
 
 //Displaying The Template
 if (!isSectionEnabled('photos')) {
     e('Photos are disabled');
-    $Cbucket->show_page = false;
+    ClipBucket::getInstance()->show_page = false;
 } else {
     if (config('enable_photo_file_upload') == 'no') {
         e('Photo upload is disabled');
-        $Cbucket->show_page = false;
+        ClipBucket::getInstance()->show_page = false;
     }
 }
 
-$min_suffixe = in_dev() ? '' : '.min';
+$min_suffixe = System::isInDev() ? '' : '.min';
 ClipBucket::getInstance()->addJS([
     'tag-it' . $min_suffixe . '.js'                            => 'admin',
     'pages/photo_upload/photo_upload' . $min_suffixe . '.js'   => 'admin',

@@ -7,31 +7,26 @@
                 </button>
                 <ul class="dropdown-menu pull-right" role="menu">
                     <li>
-                        <a href="/view_item.php?item={$data.photo_key}&amp;type=photos&amp;collection={$data.collection_id}" target="_blank">{lang code='watch'}</a>
+                        <a href="{$baseurl}view_item.php?item={$data.photo_key}&amp;type=photos&amp;collection={$data.collection_id}" target="_blank">{lang code='watch'}</a>
                     </li>
                     <li>
                         {if $data.featured!='yes'}
-                            <a  href="edit_photo.php?photo={$data.photo_id}&amp;mode=fp">
-                                Make Featured
+                            <a href="{DirPath::getUrl('admin_area')}edit_photo.php?photo={$data.photo_id}&amp;mode=fp">
+                                {lang code='make_featured'}
                             </a>
                             {else}
-                            <a  href="edit_photo.php?photo={$data.photo_id}&amp;mode=ufp">
-                                Make Unfeatured
+                            <a href="{DirPath::getUrl('admin_area')}edit_photo.php?photo={$data.photo_id}&amp;mode=ufp">
+                                {lang code='make_unfeatured'}
                             </a>
                         {/if}
                     </li>
                     <li>
-                        <a  href="recreate_thumbs.php?mode=single&amp;photo={$data.photo_id}">
-                            Re-create Photo
-                        </a>
-                    </li>
-                    <li>
                         {if $data.active == 'yes'}
-                            <a  href="edit_photo.php?photo={$data.photo_id}&amp;mode=deactivate">
+                            <a href="{DirPath::getUrl('admin_area')}edit_photo.php?photo={$data.photo_id}&amp;mode=deactivate">
                                 {lang code='deactivate'}
                             </a>
                         {else}
-                            <a  href="edit_photo.php?photo={$data.photo_id}&amp;mode=activate">
+                            <a href="{DirPath::getUrl('admin_area')}edit_photo.php?photo={$data.photo_id}&amp;mode=activate">
                                 {lang code='activate'}
                             </a>
                         {/if}
@@ -43,7 +38,7 @@
                     </li>
                     {if $data.collection_id != null}
                     <li>
-                        <a href="edit_collection.php?collection={$data.collection_id}">
+                        <a href="{DirPath::getUrl('admin_area')}edit_collection.php?collection={$data.collection_id}">
                             {lang('edit_collection')} ({$data.collection_id|get_collection_field})
                         </a>
                     </li>
@@ -59,7 +54,7 @@
         <div class="col-md-6">
             <div class="userInformation">
                 <div>
-                    <h4>User : <a href="view_user.php?uid={$data.userid}">{$data.userid|get_username}</a></h4>
+                    <h4>User : <a href="{DirPath::getUrl('admin_area')}view_user.php?uid={$data.userid}">{$data.userid|get_username}</a></h4>
                 </div>
             </div>
             <div class="photoPreview">
@@ -131,6 +126,10 @@
                                 {$field.class = 'form-control'}
                                 <div class="col-md-4">
                                     <label for="{$field.id}">{$field.title}</label>
+                                    {if $field.hint_1}
+                                        {$field.hint_1}
+                                    {/if}
+                                    <br/>
                                     {if $field.id == 'tags'}
                                         <ul id="list_tags"></ul>
                                     {/if}
@@ -190,7 +189,7 @@
                     <ul class="nav nav-tabs" id="otherFieldsTab">
                         {foreach from=$otherFields item=field name=tabs}
                         <li class="{if $smarty.foreach.tabs.first}active{/if}">
-                            <a data-toggle="tab" href="#id_{$field.name}">
+                            <a data-toggle="tab" href="#id_{$field.id}">
                                 {$field.title}
                             </a>
                         </li>
@@ -199,8 +198,9 @@
 
                     <div class="tab-content">
                         {foreach from=$otherFields item=field name=content}
-                        <div id="id_{$field.name}" class="tab-pane {if $smarty.foreach.content.first}active{/if}">
+                        <div id="id_{$field.id}" class="tab-pane {if $smarty.foreach.content.first}active{/if}">
                             <label><strong>{$field.title}</strong></label><br>
+                            {if $field.hint_1}<div class="hint">{$field.hint_1}</div>{/if}
                             {$formObj->createField($field)}
                         </div>
                         {/foreach}

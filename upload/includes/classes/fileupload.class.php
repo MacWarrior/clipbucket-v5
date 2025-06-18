@@ -39,7 +39,7 @@ class FileUpload
             unlink($this->tempFilePath);
         }
 
-        if( in_dev() ){
+        if( System::isInDev() ){
             error_log($error);
             DiscordLog::sendDump($error);
         } else {
@@ -128,7 +128,7 @@ class FileUpload
     /**
      * @throws Exception
      */
-    private function manageChunkedFile()
+    private function manageChunkedFile(): void
     {
         $chunk = $_POST['chunk'] ?? false;
         $chunks = $_POST['chunks'] ?? false;

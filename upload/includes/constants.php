@@ -1,11 +1,10 @@
 <?php
 class DirPath
 {
-    public static function get(string $dir_name, $get_url = false, $full_url = false): string
+    public static function get(string $dir_name, $get_url = false): string
     {
         $root_directory = dirname(__DIR__);
         switch($dir_name){
-            default:
             case 'root':
                 $path = $root_directory;
                 $url = '';
@@ -26,6 +25,7 @@ class DirPath
             case 'plugins':
             case 'styles':
             case 'vendor':
+            default:
                 $path = $root_directory . DIRECTORY_SEPARATOR . $dir_name;
                 $url = $dir_name;
                 break;
@@ -105,22 +105,30 @@ class DirPath
                         break 2;
                 }
 
-
                 break;
         }
 
         if($get_url){
-            if($full_url){
-                return get_server_url() . $url . '/';
+            $final_url = Network::get_server_url();
+            if(empty($url)){
+                return $final_url;
             }
-            return '/' . $url . '/';
+            if(str_contains($final_url . $url, '.php')){
+                return $final_url . $url;
+            }
+            return $final_url . $url . '/';
         }
         return $path . DIRECTORY_SEPARATOR;
     }
 
-    public static function getUrl($dir_name, $full_url = false): string
+    public static function getUrl($dir_name): string
     {
-        return self::get($dir_name, true, $full_url);
+        return self::get($dir_name, true);
+    }
+
+    public static function getFromProjectRoot($dir_name): string
+    {
+        return str_replace(self::get('root'), '', $dir_name);
     }
 }
 
@@ -128,4 +136,3 @@ const IN_CLIPBUCKET = true;
 
 //Setting Cookie Timeout
 const COOKIE_TIMEOUT = 86400 * 1; // 1
-const REMBER_DAYS = 7;

@@ -19,7 +19,6 @@ if (empty($_POST['email_recipient'])) {
     if (filter_var($_POST['email_recipient'], FILTER_VALIDATE_EMAIL) === false) {
         $success = false;
         e(lang('invalid_email_recipient'));
-//        throw new \Exception('Please provide a valid recipient email address');
     }
 }
 if (empty($_POST['recipient'])) {
@@ -38,7 +37,6 @@ if (empty($_POST['email_sender'])) {
     if (filter_var($_POST['email_sender'], FILTER_VALIDATE_EMAIL) === false) {
         $success = false;
         e(lang('invalid_email_sender'));
-//        throw new \Exception('Please provide a valid sender email address');
     }
 }
 if (empty($_POST['sender'])) {
@@ -51,18 +49,22 @@ if (empty($_POST['sender'])) {
 }
 if ($success) {
     //sendMail
-    $success = EmailTemplate::sendMail($email['code'], [
-        'mail' => $_POST['email_recipient'],
-        'name' => $_POST['recipient']
-    ], array_merge(
+    $success = EmailTemplate::sendMail(
+        $email['code'],
+        [
+            'mail' => $_POST['email_recipient'],
+            'name' => $_POST['recipient']
+        ],
+        array_merge(
             ($_POST['variables']['title'] ?? [])
             , ($_POST['variables']['email'] ?? [])
         )
         , $_POST['email_sender']
         , $_POST['sender']
-        , true);
+        , true
+    );
 }
-if ($success) {
+if ($success === true) {
     e(lang('success'), 'm');
 }
 echo json_encode([

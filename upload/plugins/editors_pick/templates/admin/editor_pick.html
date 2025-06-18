@@ -39,13 +39,16 @@
                                 <img src="{getThumb vdetails=$video size=168x105}" width="130" height="80" id="thumbs_{$video.videoid}"/>
                             </div>
                             <div class="col-md-9">
-                                <a href="/admin_area/edit_video.php?video={$video.videoid}">
-                                    {display_clean($video.title)|truncate:80} </a>({if
-                                $video.duration>1}{$video.duration|SetTime}{else}00:00{/if})<br>
-                                <span class="labels1"> <strong>{$video.date_added|niceTime}</strong>
-                            {lang code='views'} : <strong>{$video.views|number_format}</strong></span>
+                                <a href="{DirPath::getUrl('admin_area')}edit_video.php?video={$video.videoid}" title="display_clean($video.title)">
+                                    {display_clean($video.title)|truncate:80}
+                                </a>
+                                {if $video.duration>1}({$video.duration|SetTime}){/if}<br/>
+                                <span>
+                                    <strong>{$video.date_added|niceTime}</strong>
+                                    {lang code='views'} : <strong>{$video.views|number_format}</strong>
+                                </span>
                                 <div class="labels">
-                            {if $video.featured=='yes'}<span class="label label-primary">{lang code='featured'}</span>{/if}
+                                    {if $video.featured=='yes'}<span class="label label-primary">{lang code='featured'}</span>{/if}
                                     <span class="label {if $video.active=='yes'}label-success{else}label-warning{/if}">
                                         {if $video.active=='yes'}{lang code='active'}{else}{lang code='inactive'}{/if}
                                     </span>
@@ -57,7 +60,7 @@
                         </div>
                     </div>
                     <div class="col-md-2">
-                        <a href="/admin_area/view_user.php?uid={$video.userid}">{display_clean($video.user_username)}</a>
+                        <a href="{DirPath::getUrl('admin_area')}view_user.php?uid={$video.userid}">{display_clean($video.user_username)}</a>
                     </div>
                 </div>
             </td>
@@ -67,7 +70,7 @@
                         Actions <i class="caret"></i>
                     </button>
                     <ul role="menu" aria-labelledby="dropdownMenu1" class="dropdown-menu">
-                        <li><a href="/plugins/editors_pick/admin/editor_pick.php?remove={$video.videoid}" tabindex="-1" role="menuitem">{lang code='plugin_editors_picks_remove_from'}</a></li>
+                        <li><a href="{$baseurl}plugins/editors_pick/admin/editor_pick.php?remove={$video.videoid}" tabindex="-1" role="menuitem">{lang code='plugin_editors_picks_remove_from'}</a></li>
                     </ul>
                 </div>
             </td>

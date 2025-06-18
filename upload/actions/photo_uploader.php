@@ -1,5 +1,4 @@
 <?php
-global $cbphoto;
 define('THIS_PAGE', 'photo_uploader');
 include('../includes/config.inc.php');
 
@@ -28,7 +27,7 @@ switch ($mode) {
         $_POST['folder'] = str_replace('..', '', mysql_clean($_POST['folder']));
         $_POST['folder'] = create_dated_folder(DirPath::get('photos'));
         $_POST['filename'] = mysql_clean($_POST['file_name']);
-        $insert_id = $cbphoto->insert_photo();
+        $insert_id = CBPhotos::getInstance()->insert_photo();
 
         if (!empty(errorhandler::getInstance()->get_error())) {
             $response['error'] = error('single');
@@ -37,7 +36,7 @@ switch ($mode) {
         }
 
         $response['photoID'] = $insert_id;
-        $details = $cbphoto->get_photo($insert_id);
+        $details = CBPhotos::getInstance()->get_photo($insert_id);
         $details['filename'] = $_POST['file_name'];
         $response['success'] = msg('single');
         $params = ['details' => $details, 'size' => 'm', 'static' => true];
@@ -73,7 +72,7 @@ switch ($mode) {
                 ];
 
                 if( $ia->is(get_image_file($params), $model) ){
-                    if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', 255)) {
+                    if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '255')) {
                         Flag::flagItem($details['photo_id'], 'photo', array_search('sexual_content',Flag::getFlagTypes()),0);
                     }
                     $nsfw_flag = true;
@@ -91,7 +90,7 @@ switch ($mode) {
     case 'update_photo':
         $_POST['photo_title'] = mysql_clean($_POST['photo_title']);
         $_POST['photo_description'] = mysql_clean($_POST['photo_description']);
-        $cbphoto->update_photo();
+        CBPhotos::getInstance()->update_photo();
 
         if (error()) {
             $error = error('single');
@@ -111,7 +110,7 @@ switch ($mode) {
         $directory = create_dated_folder($targetDir);
         $targetDir .= $directory;
 
-        $filename = $cbphoto->create_filename();
+        $filename = CBPhotos::getInstance()->create_filename();
         $targetFileName = $filename;
         $targetFile = $targetDir . DIRECTORY_SEPARATOR . $targetFileName;
 

@@ -10,7 +10,7 @@
         {section name=l_list loop=$language_list}
         <tr id="showWala">
             <td style="vertical-align: middle;">
-                <input value="{$language_list[l_list].language_id}" {if $language_list[l_list].language_default=='yes'}checked{/if} name="make_default" type="checkbox" class="ace ace-switch ace-switch-5 bootstrap-switch-on"/>
+                <input value="{$language_list[l_list].language_id}" {if $language_list[l_list].language_default=='yes'}checked{/if} name="make_default" type="checkbox" class="ace ace-switch ace-switch-5"/>
                 <span class="lbl"></span>
             </td>
             <td style="vertical-align: middle;">{display_clean($language_list[l_list].language_name)}</td>
@@ -20,7 +20,6 @@
                 <div class="progress">
                     <div class="progress-bar {if $language_list[l_list].pourcentage_traduction == '100' } progress-bar-success {/if}" role="progressbar" aria-valuenow="{$language_list[l_list].pourcentage_traduction}"
                          aria-valuemin="0" aria-valuemax="100" style="width:{$language_list[l_list].pourcentage_traduction}%">
-
                     </div>
                 </div>
             </td>

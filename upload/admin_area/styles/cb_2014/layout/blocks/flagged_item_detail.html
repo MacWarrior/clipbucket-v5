@@ -26,7 +26,7 @@
                         {assign var=link_fo value=''}
                         {assign var=link_bo value=DirPath::getUrl('admin_area')|cat:'edit_playlist.php?playlist=':$flagged_item.id_element}
                     {elseif $type=='user'}
-                        {assign var=link_fo value=$userquery->profile_link($flagged_item.id_element)}
+                        {assign var=link_fo value=userquery::getInstance()->profile_link($flagged_item.id_element)}
                         {assign var=link_bo value=DirPath::getUrl('admin_area')|cat:'view_user.php?uid=':$flagged_item.id_element}
                     {/if}
                     <tr>
@@ -34,7 +34,13 @@
                         <td>
                             {lang($flagged_item.language_key)}
                         </td>
-                        <td><a href="{DirPath::getUrl('admin_area')|cat:'view_user.php?uid=':$flagged_item.userid}">{$flagged_item.username}</a></td>
+                        <td>
+                            {if $flagged_item.userid != userquery::getInstance()->get_anonymous_user()}
+                                <a href="{DirPath::getUrl('admin_area')|cat:'view_user.php?uid=':$flagged_item.userid}">{$flagged_item.username}</a>
+                            {else}
+                                {lang($flagged_item.username)}
+                            {/if}
+                        </td>
                     </tr>
                 {/foreach}
             </table>

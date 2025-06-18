@@ -18,7 +18,7 @@ function clipbucket_header(params)
     var CbVjsHeader = document.createElement("div");
     CbVjsHeader.id = "vjs-cb-header";
     CbVjsHeader.className = "vjs-cb-header-caption";
-    CbVjsHeader.innerHTML = "<div class='captionBlock'><div class='vidTitle col'><a target='_blank' href='"+"/watch_video.php?v="+params.videoid+"'>"+params.videotitle+"</a></div><div class='uploaderName col'>"+ lang_by + ' ' +params.uploader+"</div></div>";
+    CbVjsHeader.innerHTML = "<div class='captionBlock'><div class='vidTitle col'><a target='_blank' href='" + baseurl + "watch_video.php?v="+params.videoid+"'>"+params.videotitle+"</a></div><div class='uploaderName col'>"+ lang_by + ' ' +params.uploader+"</div></div>";
 
     var BigPlayButton =this.getChild('bigPlayButton').el_;
     this.el_.insertBefore(CbVjsHeader, BigPlayButton);

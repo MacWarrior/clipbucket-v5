@@ -5,12 +5,11 @@ require_once 'constants.php';
 require_once DirPath::get('vendor') . 'autoload.php';
 require_once DirPath::get('classes') . 'DiscordLog.php';
 require_once DirPath::get('classes') . 'WhoopsManager.php';
+require_once DirPath::get('classes') . 'system.class.php';
+require_once DirPath::get('classes') . 'my_queries.class.php';
 
 $whoops = \WhoopsManager::getInstance();
-if (file_exists(DirPath::get('temp') . 'development.dev')) {
-    if( !defined('DEVELOPMENT_MODE') ){
-        define('DEVELOPMENT_MODE', true);
-    }
+if( System::isInDev() ){
     $__devmsgs = [
         'insert_queries'        => [],
         'select_queries'        => [],
@@ -34,10 +33,6 @@ if (file_exists(DirPath::get('temp') . 'development.dev')) {
 
     if (php_sapi_name() != 'cli') {
         $whoops->pushHandler(new \Whoops\Handler\PrettyPageHandler);
-    }
-} else {
-    if( !defined('DEVELOPMENT_MODE') ) {
-        define('DEVELOPMENT_MODE', false);
     }
 }
 $whoops->pushHandler(function($e){
@@ -65,6 +60,7 @@ require_once DirPath::get('classes') . 'ClipBucket.class.php';
 require_once DirPath::get('includes') . 'functions.php';
 require_once DirPath::get('classes') . 'db.class.php';
 require_once DirPath::get('classes') . 'rediscache.class.php';
+require_once DirPath::get('classes') . 'network.class.php';
 
 check_install('before');
 if (file_exists(DirPath::get('includes') . 'config.php')) {
@@ -75,10 +71,8 @@ if (file_exists(DirPath::get('includes') . 'config.php')) {
 
 require_once DirPath::get('classes') . 'update.class.php';
 require_once DirPath::get('classes') . 'plugin.class.php';
-require_once DirPath::get('includes') . 'clipbucket.php';
 require_once DirPath::get('classes') . 'cli.class.php';
 require_once DirPath::get('classes') . 'columns.class.php';
-require_once DirPath::get('classes') . 'my_queries.class.php';
 require_once DirPath::get('classes') . 'actions.class.php';
 require_once DirPath::get('classes') . 'category.class.php';
 require_once DirPath::get('classes') . 'user_level.class.php';
@@ -90,18 +84,17 @@ require_once DirPath::get('classes') . 'curl.class.php';
 require_once DirPath::get('classes') . 'tmdb.class.php';
 require_once DirPath::get('classes') . 'admin_tool.class.php';
 require_once DirPath::get('classes') . 'system.class.php';
-require_once DirPath::get('classes') . 'network.class.php';
 require_once DirPath::get('classes') . 'social_networks.class.php';
 require_once DirPath::get('classes') . 'AIVision.class.php';
 require_once DirPath::get('classes') . 'email_template.class.php';
 require_once DirPath::get('classes') . 'ffmpeg.class.php';
 require_once DirPath::get('classes') . 'flag.class.php';
+require_once DirPath::get('classes') . 'sort_type.class.php';
 
 $cb_columns = new cb_columns();
-$myquery = new myquery();
-$row = $myquery->Get_Website_Details();
+$row = myquery::getInstance()->Get_Website_Details();
 
-if (!in_dev()) {
+if (!System::isInDev()) {
     define('DEBUG_LEVEL', 0);
 } else {
     define('DEBUG_LEVEL', 2);
@@ -129,11 +122,9 @@ switch (DEBUG_LEVEL) {
 }
 require_once DirPath::get('classes') . 'errorhandler.class.php';
 require_once DirPath::get('classes') . 'session_message_handler.class.php';
-$pages = new pages();
-$eh = new errorhandler();
 
 foreach (sessionMessageHandler::get_messages() as $message) {
-    $eh->e($message['message'], $message['type']);
+    errorhandler::getInstance()->e($message['message'], $message['type']);
 }
 
 $param_redis = ['host' => $row['cache_host'], 'port' => $row['cache_port']];
@@ -149,15 +140,15 @@ try {
     $error_redis = 'You need to authenticate to Redis server';
 }
 
-Language::getInstance()->init();
-$Cbucket = new ClipBucket();
+ClipBucket::getInstance()->cbinfo = ['version' => Update::getInstance()->getCurrentCoreVersion(), 'rev' => Update::getInstance()->getCurrentCoreRevision()];
 
-ClipBucket::getInstance()->cbinfo = ['version' => VERSION, 'state' => STATE, 'rev' => REV];
+$timezone = config('timezone');
+if(!empty($timezone)) {
+    date_default_timezone_set($timezone);
+}
 
 require_once('classes/session.class.php');
 $sess = new Session();
-$userquery = new userquery();
-$userquery->init();
 
 if (User::getInstance()->hasAdminAccess() && !empty($error_redis)) {
     e($error_redis);
@@ -168,20 +159,20 @@ if (!Update::isVersionSystemInstalled()) {
 
     $request_uri = $_SERVER['REQUEST_URI'];
 
-    if (strpos($request_uri, '/admin_area/upgrade_db.php') === false
-        && strpos($request_uri, '/admin_area/logout.php') === false
-        && strpos($request_uri, 'actions/upgrade_db.php') === false
-        && strpos($request_uri, 'admin_area/sse/upgrade_db_info.php') === false
+    if (!str_contains($request_uri, '/admin_area/upgrade_db.php')
+        && !str_contains($request_uri, '/admin_area/logout.php')
+        && !str_contains($request_uri, 'actions/upgrade_db.php')
+        && !str_contains($request_uri, 'admin_area/sse/upgrade_db_info.php')
         && User::getInstance()->hasAdminAccess()) {
-        header('Location: /admin_area/upgrade_db.php');
+        header('Location: ' . DirPath::getUrl('admin_area') . 'upgrade_db.php');
         die();
     }
 } else {
     define('NEED_UPDATE', false);
 }
 
+require_once DirPath::get('includes') . 'defined_links.php';
 require_once DirPath::get('classes') . 'search.class.php';
-require_once DirPath::get('classes') . 'signup.class.php';
 require_once DirPath::get('classes') . 'image.class.php';
 require_once DirPath::get('classes') . 'fileupload.class.php';
 require_once DirPath::get('classes') . 'upload.class.php';
@@ -202,12 +193,9 @@ require_once DirPath::get('classes') . 'cbfeeds.class.php';
 require_once DirPath::get('classes') . 'resizer.class.php';
 require_once DirPath::get('classes') . 'comments.class.php';
 require_once DirPath::get('classes') . 'gravatar.class.php';
-require_once DirPath::get('includes') . 'defined_links.php';
 require_once DirPath::get('includes') . 'plugin.functions.php';
 require_once DirPath::get('includes') . 'plugins_functions.php';
 
-$signup = new signup();
-$Upload = new Upload();
 $adsObj = new AdsManager();
 $formObj = new formObj();
 
@@ -215,23 +203,12 @@ $cbplugin = new CBPlugin();
 
 $cblog = new CBLogs();
 $imgObj = new ResizeImage();
-$cbvideo = $cbvid = new CBvideo();
 $cbplayer = new CBPlayer();
 $cbemail = new CBEmail();
 $cbpm = new cb_pm();
-$cbpage = new cbpage();
 $cbindex = new CBreindex();
-$cbcollection = new Collections();
-$cbphoto = new CBPhotos();
-
-$cbfeeds = new cbfeeds();
 
 check_install('after');
-
-$timezone = config('timezone');
-if(!empty($timezone) && $timezone !== false) {
-    date_default_timezone_set($timezone);
-}
 
 # Holds Advertisement IDS that are being Viewed
 $ads_array = [];
@@ -245,29 +222,11 @@ if (!defined('SLOGAN')) {
 # Seo URLS
 define('SEO', $row['seo']); //Set yes / no
 
-# Registration & Email Settings
-define('EMAIL_VERIFICATION', $row['email_verification']);
-define('ALLOW_REG', getArrayValue($row, 'allow_registration'));
-define('DATE_FORMAT', config('date_format'));
-
-# Defining Photo Limits
-define('MAINPLIST', $row['photo_main_list']);
-
 # Defining Collection Limits
 define('COLLPP', $row['collection_per_page']);
 define('COLLIP', $row['collection_items_page']);
 
-define('MAX_COMMENT_CHR', $Cbucket->configs['max_comment_chr']);
-
-# SETTING PHOTO SETTING
-$cbphoto->thumb_width = $row['photo_thumb_width'];
-$cbphoto->thumb_height = $row['photo_thumb_height'];
-$cbphoto->mid_width = $row['photo_med_width'];
-$cbphoto->mid_height = $row['photo_med_height'];
-$cbphoto->lar_width = $row['photo_lar_width'];
-$cbphoto->cropping = $row['photo_crop'];
-$cbphoto->position = $row['watermark_placement'];
-
+define('MAX_COMMENT_CHR', ClipBucket::getInstance()->configs['max_comment_chr']);
 define('EMBED_VDO_WIDTH', $row['embed_player_width']);
 define('EMBED_VDO_HEIGHT', $row['embed_player_height']);
 
@@ -277,10 +236,9 @@ $cbtpl = new CBTemplate();
 # STOP CACHING
 $cbtpl->caching = 0;
 
-$cbvideo->init();
-$cbphoto->init_photos();
+CBPhotos::getInstance()->init_photos();
 
-$Cbucket->set_the_template();
+ClipBucket::getInstance()->set_the_template();
 
 $cbtpl->init();
 require DirPath::get('includes') . 'active.php';
@@ -316,31 +274,18 @@ Assign('page', getConstant('PAGE'));
 
 # REGISTER OBJECTS FOR SMARTY
 global $Smarty;
-$Smarty->assign_by_ref('pages', $pages);
-$Smarty->assign_by_ref('myquery', $myquery);
-$Smarty->assign_by_ref('userquery', $userquery);
 $Smarty->assign_by_ref('signup', $signup);
-$Smarty->assign_by_ref('Upload', $Upload);
 $Smarty->assign_by_ref('adsObj', $adsObj);
 $Smarty->assign_by_ref('formObj', $formObj);
-$Smarty->assign_by_ref('Cbucket', $Cbucket);
-$Smarty->assign_by_ref('ClipBucket', $Cbucket);
-$Smarty->assign_by_ref('eh', $eh);
 $Smarty->assign_by_ref('lang_obj', Language::getInstance());
-$Smarty->assign_by_ref('cbvid', $cbvid);
 $Smarty->assign_by_ref('cbtpl', $cbtpl);
 $Smarty->assign_by_ref('cbplayer', $cbplayer);
 $Smarty->assign_by_ref('cbpm', $cbpm);
-$Smarty->assign_by_ref('cbpage', $cbpage);
-$Smarty->assign_by_ref('cbcollection', $cbcollection);
-$Smarty->assign_by_ref('cbphoto', $cbphoto);
-$Smarty->assign_by_ref('cbfeeds', $cbfeeds);
 
 # REGISTERING FUNCTION FOR SMARTY TEMPLATES
 function show_video_rating($params)
 {
-    global $cbvid;
-    return $cbvid->show_video_rating($params);
+    return CBvideo::getInstance()->show_video_rating($params);
 }
 
 $Smarty->register_function('AD', 'getAd');
@@ -373,7 +318,6 @@ $Smarty->register_function('include_template_file', 'include_template_file');
 $Smarty->register_function('include_js', 'include_js');
 $Smarty->register_function('include_css', 'include_css');
 $Smarty->register_function('rss_feeds', 'rss_feeds');
-$Smarty->register_function('website_logo', 'website_logo');
 $Smarty->register_function('get_photo', 'get_image_file');
 $Smarty->register_function('cbCategories', 'getSmartyCategoryList');
 $Smarty->register_modifier('SetTime', 'SetTime');
@@ -382,7 +326,6 @@ $Smarty->register_modifier('getext', 'getext');
 $Smarty->register_modifier('post_form_val', 'post_form_val');
 $Smarty->register_modifier('get_thumb_num', 'get_thumb_num');
 $Smarty->register_modifier('ad', 'ad');
-$Smarty->register_modifier('get_user_level', 'get_user_level');
 $Smarty->register_modifier('nicetime', 'nicetime');
 $Smarty->register_modifier('get_username', 'get_username');
 $Smarty->register_modifier('formatfilesize', 'formatfilesize');
@@ -403,7 +346,7 @@ if(php_sapi_name() !== 'cli' && config('automate_launch_mode') == 'user_activity
 
     $dateTime = new DateTime();
     $dateTime->modify('-1 minutes');
-    if (Update::IsCurrentDBVersionIsHigherOrEqualTo(AdminTool::MIN_VERSION_CODE, AdminTool::MIN_REVISION_CODE)) {
+    if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.0', '367')) {
         if($tool->initByCode('automate') && $tool->getLastStart() <= $dateTime->format('Y-m-d H:i:s')) {
             AdminTool::launchCli($tool->getId());
         }

@@ -13,22 +13,10 @@ function config($input)
         return ClipBucket::getInstance()->configs[$input];
     }
 
-    if (in_dev()) {
+    if (System::isInDev()) {
         error_log('[CONFIG] Missing config : ' . $input . PHP_EOL);
     }
     return false;
-}
-
-/**
- * Function used to get player logo
- */
-function website_logo(): string
-{
-    $logo_file = config('player_logo_file');
-    if ($logo_file && file_exists(DirPath::get('images') . $logo_file)) {
-        return DirPath::getUrl('images') . $logo_file;
-    }
-    return DirPath::getUrl('images') . 'logo.png';
 }
 
 /**

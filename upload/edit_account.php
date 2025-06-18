@@ -90,6 +90,12 @@ switch ($mode) {
         redirect_to(cblink(['name' => 'my_account']));
 
     case 'account':
+        if( $_POST['drop_account'] ?? '' == 'yes' && config('enable_user_self_deletion') == 'yes' ){
+            User::getInstance()->delete();
+            userquery::getInstance()->logout();
+            session_start();
+            sessionMessageHandler::add_message(lang('account_deleted'), 'm', DirPath::getUrl('root'));
+        }
         assign('on', 'account');
         assign('mode', 'account_settings');
         break;
@@ -135,7 +141,7 @@ if (is_array($profile)) {
     $udetails = array_merge($profile, $udetails);
 }
 
-$min_suffixe = in_dev() ? '' : '.min';
+$min_suffixe = System::isInDev() ? '' : '.min';
 ClipBucket::getInstance()->addJS([
     'tag-it' . $min_suffixe . '.js'                            => 'admin',
     'pages/edit_account/edit_account' . $min_suffixe . '.js'   => 'admin',
@@ -158,10 +164,8 @@ $available_tags = Tags::fill_auto_complete_tags('profile');
 assign('available_tags', $available_tags);
 
 assign('user', $udetails);
-
 assign('signup_fields', userquery::getInstance()->load_signup_fields($udetails));
 assign('cust_signup_fields', userquery::getInstance()->load_custom_signup_fields($udetails,false,true));
-assign('myAccountLinks', userquery::getInstance()->my_account_links());
 
 subtitle(lang('user_manage_my_account'));
 template_files('edit_account.html');

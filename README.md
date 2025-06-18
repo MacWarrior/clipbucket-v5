@@ -1,14 +1,26 @@
-# ClipBucket V5 - An updated way to broadcast yourself
+<p align="center">
+  <img src="./upload/images/logo.png" alt="ClipBucket V5 Logo" width="400" alt="ClipBucket V5 - An updated way to broadcast yourself"/><br/>
+</p>
+
+<p align="center">
+  <a href="https://github.com/MacWarrior/clipbucket-v5">
+    <img src="https://img.shields.io/github/stars/MacWarrior/clipbucket-v5?style=for-the-badge&logo=github" alt="GitHub Stars"/>
+  </a>
+  <a href="https://github.com/MacWarrior/clipbucket-v5/releases">
+    <img src="https://img.shields.io/github/v/release/MacWarrior/clipbucket-v5?style=for-the-badge&color=brightgreen" alt="Latest Release"/>
+  </a>
+  <a href="https://hub.docker.com/r/oxygenz/clipbucket-v5">
+    <img src="https://img.shields.io/docker/pulls/oxygenz/clipbucket-v5?style=for-the-badge&logo=docker" alt="Docker Pulls"/>
+  </a>
+</p>
+
+
 <a href="https://github.com/MacWarrior/clipbucket-v5">ClipBucket V5</a> is a __free updated and upgraded__ version of <a href="https://github.com/arslancb/clipbucket">ClipBucket</a>.
 
-ClipBucket is an Open Source and freely downloadable PHP script that will let you start your own Video Sharing website (YouTube/Netflix Clone) in a matter of minutes.
-ClipBucket is the fastest growing video script with the most advanced video sharing and social features.
+ClipBucket is an open source, freely downloadable PHP script that enables you to launch your own video sharing platform (a YouTube/Netflix clone) within minutes.
+<br/>With ClipBucket, users can create playlists, collections, send friend requests, exchange private messages, and much more. You can host a dedicated video or photo sharing site — or even both simultaneously.
 
-With ClipBucket, you will have almost all social media features in your hand. You can let your users create playlists, collections and much more. They can send friend requests and private messages to each other as well.
-You can start a fully dedicated video sharing website or photo sharing websites and also both at the same time as well.
-<br/>
-
-Take a look at our <a href="https://demo.clipbucket.oxygenz.fr/" target="_blank">live demo</a> !
+Check out our <a href="https://demo.clipbucket.oxygenz.fr/" target="_blank">live demo</a> !
 
 <p align="center">
   <img width="750px" src="./upload/images/readme/screenshot-dark-theme.jpg"/>
@@ -21,20 +33,25 @@ Take a look at our <a href="https://demo.clipbucket.oxygenz.fr/" target="_blank"
   </p>
 </details>
 
-# Update 5.5.0
-After more than 370 revisions, we're proud to officialy announce the release of ClipBucketV5 - 5.5.0, the biggest update of ClipBucket to this day, implementing tons of new features and preparing it's future.
+# 🔄 Latest release - 5.5.1
+After more than 340 revisions, over a year of development and countless improvements, we're proud to officially release ClipBucketV5 - 5.5.1, our most feature-packed and polished update yet — pushing the platform to a whole new level and laying the groundwork for continuous delivery.
 <p align="center">
-    <a href="https://github.com/MacWarrior/clipbucket-v5/releases/tag/5.5.0">
-      <img src="./upload/images/readme/release-5.5.0.png" alt="ClipbucketV5 update 5.5.0 features list"/>
+    <a href="https://github.com/MacWarrior/clipbucket-v5/releases/tag/5.5.1">
+      <img src="./upload/images/readme/release-5.5.1.png" alt="ClipbucketV5 update 5.5.1 features list"/>
     </a>
 </p>
+<details>
+  <summary>Release 5.5.0</summary>
+  After more than 370 revisions, we're proud to officially announce the release of ClipBucketV5 - 5.5.0, the biggest update of ClipBucket to this day, implementing tons of new features and preparing it's future.
+    <p align="center">
+        <a href="https://github.com/MacWarrior/clipbucket-v5/releases/tag/5.5.0">
+          <img src="./upload/images/readme/release-5.5.0.png" alt="ClipbucketV5 update 5.5.0 features list"/>
+        </a>
+    </p>
+</details>
 
-# History
-ClipBucket <a href="https://github.com/arslancb/clipbucket">original repository</a> has been slowly dying since the release 4.1 (May 2018) and has been archived on December 2022.<br/>
-<a href="https://github.com/MacWarrior/clipbucket-v5">ClipBucket V5</a> was created on 2016 by <a href="https://github.com/MacWarrior">MacWarrior</a> and is part of <a href="https://clipbucket.oxygenz.fr/en/" target="_blank">Oxygenz</a>'s projects since 2023
-
-# Why <a href="https://github.com/MacWarrior/clipbucket-v5">ClipBucket V5</a>
-| PHP 7.0 - 8.4+ compatibility  | MySQL 9+ & strict mode compatibility                              |
+# 🌟 Why <a href="https://github.com/MacWarrior/clipbucket-v5">ClipBucket V5</a>
+| PHP 8.0 - 8.4+ compatibility  | MySQL 9+ & strict mode compatibility                              |
 |-------------------------------|-------------------------------------------------------------------|
 | UHD video resolutions support | TMDB integration                                                  |
 | Dark & Light theme            | Age restriction                                                   |
@@ -47,11 +64,24 @@ ClipBucket <a href="https://github.com/arslancb/clipbucket">original repository<
 
 And even more !
 
-# Installation
+# ⌛ History
+ClipBucket <a href="https://github.com/arslancb/clipbucket">original repository</a> has been slowly dying since the release 4.1 (May 2018) and has been archived on December 2022.<br/>
+<a href="https://github.com/MacWarrior/clipbucket-v5">ClipBucket V5</a> was created on 2016 by <a href="https://github.com/MacWarrior">MacWarrior</a> and is part of <a href="https://clipbucket.oxygenz.fr/" target="_blank">Oxygenz</a>'s projects since 2023
+
+## 🌐 Star History
+<a href="https://www.star-history.com/#MacWarrior/clipbucket-v5&Date">
+ <picture>
+   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=MacWarrior/clipbucket-v5&type=Date&theme=dark"/>
+   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=MacWarrior/clipbucket-v5&type=Date"/>
+   <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=MacWarrior/clipbucket-v5&type=Date"/>
+ </picture>
+</a>
+
+# 📦 Installation
 ## With Docker
 Installing <a href="https://github.com/MacWarrior/clipbucket-v5">ClipBucket V5</a> using Docker provides a streamlined and isolated environment for running the application.
 
-### Run the ClipBucket Container from DockerHub :
+### Run the ClipBucketV5 Container from DockerHub :
    ```bash
    docker run \
    --restart unless-stopped \
@@ -66,7 +96,6 @@ Installing <a href="https://github.com/MacWarrior/clipbucket-v5">ClipBucket V5</
    --name clipbucket \
    -d oxygenz/clipbucket-v5:latest
    ```
-
 <details>
   <summary>Docker command options explanation</summary>
   <code>docker run</code> options :
@@ -134,45 +163,65 @@ Replace username with the name of the user. For example, for the user john, use 
 ## On dedicated server
 <details>
   <summary>Beginners - Easy installation scripts</summary>
-  Greetings young adventurer ! Don't worry, we've thought about you and created some easy installation scripts !<br/>
+  New to server installation? Don’t worry — we’ve got you covered !<br/>
   All you need is here : <a href="https://github.com/MacWarrior/clipbucket-v5/tree/master/utils">Installation scripts</a><br/>
   <i>It should also be noted that these scripts are meant for testing and development purposes only</i>
 </details>
 <details>
   <summary>Advanced users</summary>
   <i>“Your path you must decide.”</i><br/>
-  Required : MySQL 5.6+ / MariaDB 10.3+ ; PHP-FPM 7.0+ (+ modules : mysqli, curl, xml, mbstring, gd, openssl, fileinfo ; + functions exec, shell_exec) ; FFmpeg 3+ ; mediainfo ; sendmail<br/>
-  Recommended : MariaDB 10.3+ ; PHP 8.3+ ; FFmpeg 4.3+<br/>
+  Required : MySQL 5.6+ / MariaDB 10.3+ ; PHP 8.0+ (+ modules : mysqli, curl, xml, mbstring, gd, openssl, fileinfo ; + functions exec, shell_exec) ; FFmpeg 3+ ; mediainfo ; sendmail<br/>
+  Recommended : MariaDB 10.3+ ; PHP-FPM 8.3+ ; FFmpeg 4.3+<br/>
   Optionnal : Git, PHP module FFI<br/>
   <i>Only stable versions have been tested, mainly on Debian</i>
 </details>
 
-# Continuous integration
-<a href="https://github.com/MacWarrior/clipbucket-v5">ClipBucket V5</a> works on the principle of continuous integration, that is to say that the most stable version with the most features and fixes is the <a href="https://github.com/MacWarrior/clipbucket-v5/commits/master/">master version</a>.
+# ♻ Continuous deployment
+<a href="https://github.com/MacWarrior/clipbucket-v5">ClipBucket V5</a> works on the principle of continuous deployment, that is to say that the most stable version with the most features and fixes is the <a href="https://github.com/MacWarrior/clipbucket-v5/commits/master/">master version</a>.
 <br/>Use GIT to install your copy of <a href="https://github.com/MacWarrior/clipbucket-v5">ClipBucket V5</a> and easily keep it up to date thanks to our integrated systems.
 
-# How to update
+# ↻ How to update
 When installed with git, <a href="https://github.com/MacWarrior/clipbucket-v5">ClipBucket V5</a> can self-update.<br/>
 Simply log in and follow instruction from Admin Area > Dashboard.
 <p align="center">
   <img width="750px" src="./upload/images/readme/update.jpg"/>
 </p>
 
-# Updating from ClipBucket 4.2
+# ↑ Updating from ClipBucket 4.2
 Follow our [quick steps tutorial](https://github.com/MacWarrior/clipbucket-v5/wiki/Upgrade-from-Clipbucket-4.2)
 
-# Issues
-Still reading ? Good !<br/>
-Now your <a href="https://github.com/MacWarrior/clipbucket-v5">ClipBucket V5</a> is installed <i>(or maybe not yet)</i>
-and you request some help ? Or found a bug ? Or have a brilliant idea ?<br/>
-Take a step back, breath slowly, and create an <a href="https://github.com/MacWarrior/clipbucket-v5/issues">issue</a> !<br/>
-Be the more precise you can, add screenshots, give examples... I'm sure we will find a solution !
+# 🛠️ Issues
+Need help or found a bug ? Have an idea ?<br/>
+Create an <a href="https://github.com/MacWarrior/clipbucket-v5/issues">issue</a> and describe it clearly. Add screenshots, steps to reproduce, logs, etc.
 
-# More
-<a href="https://discord.gg/HDm5CjM">!['Discord'](./upload/images/readme/discord.png "Join us on Discord")</a>
+# 🔗 Join the Community
+<p align="center">
+    <a href="https://discord.gg/HDm5CjM">
+      <img src="./upload/images/readme/discord.png" alt="Join us on Discord"/>
+    </a>
+</p>
 
-# How to help us
+# 💼 Services & Professional Support
+Looking for expert support, hosting, or custom development for your <a href="https://github.com/MacWarrior/clipbucket-v5">ClipBucket V5</a> platform ?
+
+🚀 <a href="https://oxygenz.fr/" target="_blank">Oxygenz</a> — the official maintainer of <a href="https://github.com/MacWarrior/clipbucket-v5">ClipBucket V5</a> — offers a full range of professional services to help you get the most out of your video sharing platform:
+- 🔧 Application maintenance & updates
+- ☁️ Managed SaaS hosting — fast, secure and ready to use
+- 🧑‍💻 Custom developments to fit your specific needs
+- 🛡️ Security audits, performance tuning and consulting
+- 🎯 Dedicated support plans for peace of mind
+
+<p align="center"> 
+    <a href="https://clipbucket.oxygenz.fr">
+        <img src="./upload/images/readme/oxygenz.png" alt="Oxygenz - Official ClipBucket V5 Support"/>
+    </a>
+</p>
+
+👉 Discover our full offering at [clipbucket.oxygenz.fr](https://clipbucket.oxygenz.fr) and let us help you bring your project to life!
+
+# ✨ How to help us
 - Report <a href="https://github.com/MacWarrior/clipbucket-v5/issues" target="_blank">issues</a> to help us improve <a href="https://github.com/MacWarrior/clipbucket-v5">ClipBucket V5</a>
-- Star us on <a href="https://github.com/MacWarrior/clipbucket-v5" target="_blank">GitHub</a>
-- Star us on <a href="https://hub.docker.com/r/oxygenz/clipbucket-v5" target="_blank">DockerHub</a>
-- Follow us on <a href="https://www.linkedin.com/company/oxygenz/" target="_blank">Linkedin</a>
+- ⭐ Star us on <a href="https://github.com/MacWarrior/clipbucket-v5" target="_blank">GitHub</a>
+- ⭐ Star us on <a href="https://hub.docker.com/r/oxygenz/clipbucket-v5" target="_blank">DockerHub</a>
+- 👤 Follow us on <a href="https://www.linkedin.com/company/oxygenz/" target="_blank">Linkedin</a>
+- 🔥 Upvote & review us on <a href="https://www.producthunt.com/posts/clipbucketv5" target="_blank">Product Hunt</a>

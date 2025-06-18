@@ -9,6 +9,10 @@ $(document).ready(function () {
         });
     });
 
+    $('.broadcast').on('change', function() {
+        $('select[name="broadcast"]').val($(this).val());
+    });
+
     $('#massUploadSelect').change(function () {
         var to_check = this.checked;
 
@@ -56,7 +60,8 @@ $(document).ready(function () {
             readOnly: false,
             singleFieldNode: $('#tags_video' + id),
             animate: true,
-            caseSensitive:false
+            caseSensitive:false,
+            allowSpaces: allow_tag_space
         });
         setTimeout(function(){
            $('#list_tags'+id).find(':input').prop('disabled', true);

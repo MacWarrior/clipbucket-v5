@@ -3,8 +3,6 @@ define('THIS_PAGE', 'reports');
 
 require_once dirname(__FILE__, 2) . '/includes/admin_config.php';
 
-User::getInstance()->hasPermissionOrRedirect('web_config_access', true);
-
 /* Generating breadcrumb */
 global $breadcrumb;
 $breadcrumb[0] = ['title' => lang('tool_box'), 'url' => ''];
@@ -25,7 +23,7 @@ assign('user_bg', $user_bg);
 assign('cat_thumbs', $cat_thumbs);
 assign('db_size', formatfilesize(get_db_size()));
 
-$min_suffixe = in_dev() ? '' : '.min';
+$min_suffixe = System::isInDev() ? '' : '.min';
 ClipBucket::getInstance()->addAdminJS(['pages/reports/reports'.$min_suffixe.'.js' => 'admin']);
 template_files('reports.html');
 display_it();

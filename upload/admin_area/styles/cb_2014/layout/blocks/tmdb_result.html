@@ -57,7 +57,7 @@
                         {/if}
                     </td>
                     <td>
-                        <button onclick="saveInfoTmdb({display_clean($results[sub].id_tmdb_movie)})">{lang code='import'}</button>
+                        <button onclick="saveInfoTmdb({display_clean($results[sub].id_tmdb_movie)}, '{display_clean($type)}')">{lang code='import'}</button>
                     </td>
                 </tr>
                 {/section}
@@ -71,38 +71,38 @@
     </div>
 </div>
 <script>
-    var selected_year;
-    var videoid;
-    var video_title;
-    var type;
+    var tmdb_selected_year;
+    var tmdb_videoid;
+    var tmdb_video_title;
+    var tmdb_type;
     $(function () {
-        videoid = $('#modal_videoid').val();
-        selected_year = $('#selected_year').val();
-        video_title = $('#search_title').val();
-        type = $('#type_tmdb').val();
+        tmdb_videoid = $('#modal_videoid').val();
+        tmdb_selected_year = $('#selected_year').val();
+        tmdb_video_title = $('#search_title').val();
+        tmdb_type = $('#type_tmdb').val();
         $('#search').on('click', function () {
-            video_title = $('#search_title').val();
-            selected_year = $('#selected_year').val();
-            type = $('#type_tmdb').val();
-            getInfoTmdb(videoid, type, video_title, 1, 'release_date','ASC',selected_year);
+            tmdb_video_title = $('#search_title').val();
+            tmdb_selected_year = $('#selected_year').val();
+            tmdb_type = $('#type_tmdb').val();
+            getInfoTmdb(tmdb_videoid, tmdb_type, tmdb_video_title, 1, 'release_date','ASC',tmdb_selected_year);
         });
         $('.icon-sort').parent().on('click', function () {
-            video_title = $('#search_title').val();
+            tmdb_video_title = $('#search_title').val();
             $(this).children().first().removeClass('icon-sort');
             $(this).children().first().addClass('icon-sort-up');
-            getInfoTmdb(videoid, type, video_title, 1, $(this).children().first().data('type'), 'ASC', selected_year);
+            getInfoTmdb(tmdb_videoid, tmdb_type, tmdb_video_title, 1, $(this).children().first().data('type'), 'ASC', tmdb_selected_year);
         });
         $('.icon-sort-up').parent().on('click', function () {
-            video_title = $('#search_title').val();
+            tmdb_video_title = $('#search_title').val();
             $(this).children().first().removeClass('icon-sort-up');
             $(this).children().first().addClass('icon-sort-down');
-            getInfoTmdb(videoid, type, video_title, 1, $(this).children().first().data('type'), 'DESC',selected_year);
+            getInfoTmdb(tmdb_videoid, tmdb_type, tmdb_video_title, 1, $(this).children().first().data('type'), 'DESC',tmdb_selected_year);
         });
         $('.icon-sort-down').parent().on('click', function () {
-            video_title = $('#search_title').val();
+            tmdb_video_title = $('#search_title').val();
             $(this).children().first().removeClass('icon-sort-down');
             $(this).children().first().addClass('icon-sort-up');
-            getInfoTmdb(videoid, type, video_title, 1, $(this).children().first().data('type'), 'ASC',selected_year);
+            getInfoTmdb(tmdb_videoid, tmdb_type, tmdb_video_title, 1, $(this).children().first().data('type'), 'ASC',tmdb_selected_year);
         });
         $('#search_title').keypress(function(event){
             if(event.keyCode == 13){

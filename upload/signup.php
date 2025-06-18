@@ -1,11 +1,10 @@
 <?php
 define('THIS_PAGE', 'signup');
 define('PARENT_PAGE', 'signup');
-
 require 'includes/config.inc.php';
-global $eh;
+
 if (User::getInstance()->isUserConnected()) {
-    redirect_to(get_server_url());
+    redirect_to(DirPath::getUrl('root'));
 }
 
 /**
@@ -37,12 +36,12 @@ if (isset($_POST['signup'])) {
         if ($signup) {
             // user signed up, lets get his details
             $udetails = userquery::getInstance()->get_user_details($signup);
-            $eh->flush();
+            errorhandler::getInstance()->flush();
             assign('udetails', $udetails);
             if (empty(ClipBucket::getInstance()->configs['email_verification'])) {
                 // login user and redirect to home page
                 userquery::getInstance()->login_as_user($udetails['userid']);
-                header('Location: ' . get_server_url());
+                header('Location: ' . DirPath::getUrl('root'));
             } else {
                 assign('mode', 'signup_success');
             }
@@ -56,13 +55,13 @@ if (isset($_POST['login'])) {
     $password = mysql_clean($_POST['password']);
 
     $remember = false;
-    if ($_POST['rememberme']) {
+    if ($_POST['remember_me']) {
         $remember = true;
     }
 
     if (userquery::getInstance()->login_user($username, $password, $remember)) {
-        if ($_COOKIE['pageredir']) {
-            redirect_to($_COOKIE['pageredir']);
+        if ($_SESSION['pageredir']) {
+            redirect_to($_SESSION['pageredir']);
         } else {
             redirect_to(cblink(['name' => 'my_account']));
         }
@@ -76,13 +75,22 @@ if (!isset($_POST['login']) && !isset($_POST['signup'])) {
     }
 }
 
-$datepicker_js_lang = '';
-if( Language::getInstance()->getLang() != 'en'){
-    $datepicker_js_lang = '_languages/datepicker-'.Language::getInstance()->getLang();
-}
-ClipBucket::getInstance()->addJS(['jquery_plugs/datepicker'.$datepicker_js_lang.'.js' => 'global']);
+if($_GET['mode'] ?? '' == 'login'){
+    subtitle(lang('login'));
+    template_files('pages/login.html');
+} else {
+    subtitle(lang('signup'));
+    $datepicker_js_lang = '';
+    if( Language::getInstance()->getLang() != 'en'){
+        $datepicker_js_lang = '_languages/datepicker-'.Language::getInstance()->getLang();
+    }
 
-subtitle(lang('signup'));
-//Displaying The Template
-template_files('signup.html');
+    $min_suffixe = System::isInDev() ? '' : '.min';
+    ClipBucket::getInstance()->addJS([
+        'jquery_plugs/datepicker'.$datepicker_js_lang.'.js' => 'global',
+        'pages/signup/signup' . $min_suffixe . '.js'        => 'admin'
+    ]);
+    template_files('signup.html');
+}
+
 display_it();

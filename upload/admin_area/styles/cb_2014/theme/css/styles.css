@@ -589,6 +589,13 @@ textarea.form-control{
         transform: rotate(359deg);
     }
 }
+@keyframes progress-bar-stripes {
+    from { background-position: 40px 0; }
+    to { background-position: 0 0; }
+}
+.progress-bar.animate{
+    animation: progress-bar-stripes 1s linear infinite;
+}
 
 .spinner-content {
     width: 400px;
@@ -1010,7 +1017,7 @@ a[role='menuitem'] {
     transform: translate(calc(150% * -.125), calc(150% * -.125));
     filter: blur(8px);
     opacity: .5;
-    background: url('/styles/cb_28/theme/images/favicon.png');
+    background: url('../../../../../styles/cb_28/theme/images/favicon.png');
     background-repeat: no-repeat;
     z-index: -1;
 }
@@ -1115,4 +1122,152 @@ a[role='menuitem'] {
 }
 .ai-powered:hover{
     filter: opacity(0.5) drop-shadow(0 0 0 #1491FF);
+}
+
+/* Video manager progressbar */
+.labels .progress{
+    height: 21px;
+    margin-bottom: 0;
+    width: 40%;
+    border-radius: 3px;
+    position: absolute;
+    margin-left: 2px;
+    display: inline-block;
+}
+
+/* Video edition converting display */
+.thumb-holder{
+    position: relative;
+    color: white;
+    max-width: 695px;
+    border-radius: 5px;
+    overflow: hidden;
+    width: fit-content;
+}
+
+.thumb-holder .thumb_banner{
+    position: absolute;
+    top: 0;
+    width: 100%;
+    text-align: center;
+    z-index: 3;
+}
+
+.thumb-holder .processing{
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    background-color: rgb(0 0 0 / 0.5);
+    text-align: center;
+    line-height: 395px;
+}
+
+.thumb-holder .processing .fa{
+    font-size: 4em;
+}
+
+.thumb-holder .processing span{
+    width: 100%;
+    position: absolute;
+    top: 25px;
+    height: calc(100% - 25px);
+    left: 0;
+}
+
+.restricted {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    z-index: 5;
+    cursor: help;
+    background-color: #000;
+    opacity: 0.9;
+    width: 25px;
+    height: 25px;
+    line-height: 25px;
+    text-align:center;
+    border-radius: 25px;
+}
+
+.invalid-error .form-control,
+.invalid-error .form-control,
+.invalid-error .form-control {
+    border-color: #f44336;
+}
+
+.invalid-error .error-txt,
+.invalid-error .help-block,
+.invalid-error .error-txt,
+.invalid-error .help-block,
+.invalid-error .error-txt,
+.invalid-error .help-block {
+    color: #f44336;
+}
+
+/* Fix menu top */
+.navbar-header .dropdown-menu.dropdown-close.pull-right{
+    right: 0;
+}
+
+/* System Info > Nginx VirtualHost */
+#nginx_vhost .holder{
+    margin: 10px 0;
+    padding: 5px;
+    background-color: #F5F5F5;
+    border: 1px solid #ADADAD;
+    border-radius: 3px;
+    box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.2);
+}
+#nginx_vhost .holder .content{
+    padding: 3px 15px;
+    height: 300px;
+    color: #555;
+    font-size: 14px;
+    text-align: left;
+    overflow: auto;
+}
+#nginx_vhost .holder .content pre{
+    color: inherit;
+    margin: 0;
+    padding: 0;
+    border: none;
+}
+
+textarea[disabled]{
+    cursor: not-allowed;
+    background-color: #eee;
+}
+
+/* Miscellaneous */
+.btn-primary[disabled]{
+    color: white !important;
+}
+
+/* Buttons as dropdown list */
+.dropdown-menu>li>input[type=submit]{
+    font-size: 13px;
+    margin-bottom: 1px;
+    margin-top: 1px;
+    width: 100%;
+    display: block;
+    padding-top: 3px;
+    padding-bottom: 3px;
+    padding-left: 10px;
+    clear: both;
+    font-weight: 400;
+    line-height: 1.42857143;
+    color: #333;
+    white-space: nowrap;
+    background-color: transparent;
+    border: none;
+    text-align: left;
+}
+.dropdown-menu>li>input[type=submit]:hover{
+    background-color: #4f99c6;
+    color: #fff;
+}
+/* Buttons as dropdown list */
+#config_player .col-md-6 .row {
+    height: 31px;
 }

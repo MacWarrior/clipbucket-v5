@@ -1,5 +1,3 @@
-{$myAccountLinks = $userquery->my_account_links()}
-{$leftMenuLinks = array_slice($myAccountLinks, 6)}
 <div id="main" class="clearfix container">
     <div class="clearfix">
         <section id="content" class="clearfix photos">
@@ -8,44 +6,62 @@
                     {AD place='ad_728x90'}
                 </div>
             {/if}
+
             <div class="filter-dropdowns clearfix">
-                <div class="sorting-col clearfix">
-
-                    <div class="dropdown">
-                        {if $smarty.get.sort}
-                            {foreach from=$sort_list item=name key=sort name=sorts}
-                                {if $smarty.get.sort==$sort && isset($smarty.get.sort)}
-                                    <a href="javascript:void(0);" data-toggle="dropdown" class="dropdown-toggle">{$name} <span class="icon-down-arrow"></span></a>
-                                {/if}
-                            {/foreach}
-                        {else}
-                            <a href="javascript:void(0);" data-toggle="dropdown" class="dropdown-toggle">Recent <span class="icon-down-arrow"></span></a>
-                        {/if}
-
-                        <ul class="dropdown-menu">
-                            {foreach from=$sort_list item=name key=sort}
-                                <li>
-                                    <a href="{link name=sort sort=$sort type=photos}&sorting=sort" {if $smarty.get.sort==$sort}class="selected"{/if}>{if $smarty.get.sort==$sort}<i class="icon-tick"></i>{/if}{$name}</a>
-                                </li>
-                            {/foreach}
-                        </ul>
+                {if config('enable_photo_categories') == 'yes'}
+                    <div class="cat-col col-lg-6 col-md-6 col-sm-6 col-xs-12 clearfix">
+                        {$categories = getCategoryList(['type'=>'photo']) }
+                        {include file="$style_dir/blocks/category_list.html" type='photos'}
                     </div>
+                {/if}
+                <div class="sorting-col col-lg-6 col-md-6 col-sm-6 col-xs-12 clearfix pull-right">
+                    {if $sort_list}
+                        <div class="dropdown">
+                            {if $smarty.get.sort}
+                                {$empty = true}
+                                {foreach from=$sort_list item=sort key=key}
+                                    {if $sort_link == $key}
+                                        <a href="javascript:void(0);" data-toggle="dropdown" class="dropdown-toggle">{$sort} <span class="icon-down-arrow"></span></a>
+                                        {$empty = false}
+                                        {break}
+                                    {/if}
+                                {/foreach}
+                                {if $empty}
+                                    <a href="javascript:void(0);" data-toggle="dropdown" class="dropdown-toggle">{lang('sort_by_'|cat:$default_sort.label)}<span class="icon-down-arrow"></span></a>
+                                {/if}
+                            {else}
+                                <a href="javascript:void(0);" data-toggle="dropdown" class="dropdown-toggle">{lang('sort_by_'|cat:$default_sort.label)}<span class="icon-down-arrow"></span></a>
+                            {/if}
 
+                            <ul class="dropdown-menu">
+                                {foreach from=$sort_list item=sort key=key}
+                                    <li>
+                                        <a href="{link name=sort sort=$key type=photos}" {if $smarty.get.sort==$key}class="selected"{/if}>{if $smarty.get.sort == $key}<i class="icon-tick"></i>{/if}{$sort}</a>
+                                    </li>
+                                {/foreach}
+                            </ul>
+                        </div>
+                    {/if}
                     <div class="dropdown">
                         {if $smarty.get.time}
-
+                            {$empty = true}
                             {foreach from=$time_list item=name key=sort name=times}
-                                {if $smarty.get.time==$sort && isset($smarty.get.time)}
+                                {if $smarty.get.time==$sort}
                                     <a href="javascript:void(0);" data-toggle="dropdown" class="dropdown-toggle">{$name} <span class="icon-down-arrow"></span></a>
+                                    {$empty = false}
+                                    {break}
                                 {/if}
                             {/foreach}
+                            {if $empty}
+                                <a href="javascript:void(0);" data-toggle="dropdown" class="dropdown-toggle">{lang code='alltime'}<span class="icon-down-arrow"></span></a>
+                            {/if}
                         {else}
-                            <a href="javascript:void(0);" data-toggle="dropdown" class="dropdown-toggle">all time <span class="icon-down-arrow"></span></a>
+                            <a href="javascript:void(0);" data-toggle="dropdown" class="dropdown-toggle">{lang code='alltime'}<span class="icon-down-arrow"></span></a>
                         {/if}
                         <ul class="dropdown-menu">
                             {foreach from=$time_list item=name key=sort name=times}
                                 <li>
-                                    <a href="{link name=time sort=$sort type=photos}&timing=time" {if $smarty.get.time==$sort}class="selected"{/if}>{if $smarty.get.time==$sort}<i class="icon-tick"></i>{/if}{$name}</a>
+                                    <a href="{link name=time sort=$sort type=photos}" {if $smarty.get.time==$sort}class="selected"{/if}>{if $smarty.get.time==$sort}<i class="icon-tick"></i>{/if}{$name}</a>
                                 </li>
                             {/foreach}
                         </ul>

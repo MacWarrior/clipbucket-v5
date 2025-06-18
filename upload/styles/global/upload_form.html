@@ -1,4 +1,4 @@
-{$videoFields = $Upload->load_video_fields($input)}
+{$videoFields = Upload::getInstance()->load_video_fields($input)}
 {$requiredFields = $videoFields[0]}
 {$sharingOptions = $videoFields[1]}
 {$dateAndLocation = $videoFields[2]}
@@ -18,7 +18,7 @@
                 <span class="upload-logo"></span>
                 <strong class="block-title">{lang code="drag_drop"}</strong>
                 <p>
-                    {lang(page_upload_video_limits, [$Cbucket->configs['max_upload_size'],$Cbucket->configs['max_video_duration']])}
+                    {lang(page_upload_video_limits, [ClipBucket::getInstance()->configs['max_upload_size'],ClipBucket::getInstance()->configs['max_video_duration']])}
                 </p>
             </div>
             <div class="selectButtonContainer">
@@ -50,24 +50,24 @@
                         {$field.class='form-control'}
                         {$field.notShowSeprator='yes'}
                         {if $field.type == 'radiobutton'}
-                    <div class="form-group">
-                            {$field.label_class='radio'}
-                            {$field.class=''}
-                            {$formObj->createField($field)}
-                    </div>
+                            <div class="form-group">
+                                {$field.label_class='radio'}
+                                {$field.class=''}
+                                {$formObj->createField($field)}
+                            </div>
                         {elseif $field.type == 'checkbox'}
                             {$categories = $field}
                         {elseif $field.id == 'tags_video'}
-                    <div class="form-group">
-                            <label for="{$field.id}">{$field.title}</label>
-                            {$formObj->createField($field)}
-                            <ul id="list_{$field.id}"></ul>
-                    </div>
+                            <div class="form-group">
+                                <label for="{$field.id}">{$field.title}{if $field.hint_1}{$field.hint_1}{/if}</label>
+                                {$formObj->createField($field)}
+                                <ul id="list_{$field.id}"></ul>
+                            </div>
                         {elseif !$field.id|strstr:'tags'}
-                    <div class="form-group">
-                            <label for="{$field.id}">{$field.title}</label>
-                            {$formObj->createField($field)}
-                    </div>
+                            <div class="form-group">
+                                <label for="{$field.id}">{$field.title}</label>
+                                {$formObj->createField($field)}
+                            </div>
                         {/if}
 
                     {/foreach}
@@ -126,6 +126,7 @@
                 {/if}
 
                 {ANCHOR place="before_upload_form_location_fields"}
+                {if config('enable_country_video_field') == 'yes' || config('enable_location_video_field') == 'yes' || config('enable_recorded_date_video_field') == 'yes' }
                 <div class="formSection clear">
                     <h4>{$dateAndLocation.group_name} <i class="glyphicon glyphicon-chevron-down pull-right"></i></h4>
                     <div class="sectionContent hidden">
@@ -150,6 +151,7 @@
                         {/foreach}
                     </div>
                 </div>
+                {/if}
                 {ANCHOR place="after_upload_form_location_fields"}
 
                 {ANCHOR place="before_upload_form_sharing_fields"}
@@ -166,7 +168,16 @@
                                 {$formObj->createField($field)}
                             {else}
                                 <label for="{$field.id}">{$field.title}</label>
+                                {if $field.hint_1}
+                                    {$field.hint_1}<br/>
+                                {/if}
                                 {$formObj->createField($field)}
+                                {if $field.id == 'video_users'}
+                                    <ul id="list_{$field.id}"></ul>
+                                {/if}
+                                {if $field.hint_2}<br/>
+                                    {$field.hint_2}
+                                {/if}
                             {/if}
                             </div>
                         {/foreach}
@@ -186,16 +197,18 @@
             <button class="btn btn-primary " tabindex="-1" href="javascript:void(0);" data-id="{$videoFields.videoid}" id="button_info_tmdb">{lang code='get_data_tmdb'}</button>
         {/if}
         </div>
-        <div class="col-md-4 uploadFormSidebarDiv">
-            {ANCHOR place="before_upload_form_categories_field"}
-            <h4>{$categories.title}</h4>
-            <small>{$categories.hint_1}</small>
-            <div class="categoriesContainer">
-                {$categories.label_class='checkbox'}
-                {$categories.class='checkbox'}
-                {$formObj->createField($categories)}
+        {if config('enable_video_categories') != 'no'}
+            <div class="col-md-4 uploadFormSidebarDiv">
+                {ANCHOR place="before_upload_form_categories_field"}
+                <h4>{$categories.title}</h4>
+                <small>{$categories.hint_1}</small>
+                <div class="categoriesContainer">
+                    {$categories.label_class='checkbox'}
+                    {$categories.class='checkbox'}
+                    {$formObj->createField($categories)}
+                </div>
+                {ANCHOR place="after_upload_form_categories_field"}
             </div>
-            {ANCHOR place="after_upload_form_categories_field"}
-        </div>
+        {/if}
     </div>
 </form>

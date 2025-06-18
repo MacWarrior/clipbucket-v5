@@ -13,7 +13,7 @@ echo "| |   | | | '_ \|  _ \| | | |/ __| |/ / _ \ __\ \ / /|___ \\"
 echo "| |___| | | |_) | |_) | |_| | (__|   <  __/ |_ \ V /  ___) |"
 echo " \____|_|_| .__/|____/ \__,_|\___|_|\_\___|\__| \_/  |____/"
 echo "          |_|            Installation script for"
-echo "                    Debian 9-12 & Ubuntu 16.04-24.10"
+echo "                    Debian 10-12 & Ubuntu 22.04-24.10"
 echo ""
 echo "Disclaimer : This easy installation script is only"
 echo "             made to configure local / dev environments."
@@ -33,9 +33,6 @@ echo -ne " OK"
 OS_NAME=$(lsb_release -d | awk -F"\t" '{print $2}')
 case ${OS_NAME} in
 
-    "Debian GNU/Linux 9.13 (stretch)")
-        OS="DEBIAN9"
-        ;;
     "Debian GNU/Linux 10 (buster)")
         OS="DEBIAN10"
         ;;
@@ -46,15 +43,6 @@ case ${OS_NAME} in
         OS="DEBIAN12"
         ;;
 
-    "Ubuntu 16.04.7 LTS"|"Ubuntu 16.04.6 LTS"|"Ubuntu 16.04.5 LTS"|"Ubuntu 16.04.4 LTS"|"Ubuntu 16.04.3 LTS"|"Ubuntu 16.04.2 LTS"|"Ubuntu 16.04.1 LTS"|"Ubuntu 16.04 LTS"|"Ubuntu 16.04")
-        OS="UBUNTU1604"
-        ;;
-    "Ubuntu 18.04.6 LTS"|"Ubuntu 18.04.5 LTS"|"Ubuntu 18.04.4 LTS"|"Ubuntu 18.04.3 LTS"|"Ubuntu 18.04.2 LTS"|"Ubuntu 18.04.1 LTS"|"Ubuntu 18.04 LTS"|"Ubuntu 18.04")
-        OS="UBUNTU1804"
-        ;;
-    "Ubuntu 20.04.6 LTS"|"Ubuntu 20.04.5 LTS"|"Ubuntu 20.04.4 LTS"|"Ubuntu 20.04.3 LTS"|"Ubuntu 20.04.2 LTS"|"Ubuntu 20.04.1 LTS"|"Ubuntu 20.04 LTS"|"Ubuntu 20.04")
-        OS="UBUNTU2004"
-        ;;
     "Ubuntu 22.04.3 LTS"|"Ubuntu 22.04.2 LTS"|"Ubuntu 22.04.1 LTS"|"Ubuntu 22.04 LTS"|"Ubuntu 22.04")
         OS="UBUNTU2204"
         ;;
@@ -75,13 +63,9 @@ case ${OS_NAME} in
         echo ""
         echo "Installation script haven't been able to determine your operating system."
         echo "Please select one : "
-        echo " - Debian 9"
         echo " - Debian 10"
         echo " - Debian 11"
         echo " - Debian 12"
-        echo " - Ubuntu 16.04"
-        echo " - Ubuntu 18.04"
-        echo " - Ubuntu 20.04"
         echo " - Ubuntu 22.04"
         echo " - Ubuntu 23.04"
         echo " - Ubuntu 23.10"
@@ -89,9 +73,6 @@ case ${OS_NAME} in
         echo " - Ubuntu 24.10"
         read -p "Which operating system do you use ? " READ_OS
         case ${READ_OS} in
-            "Debian 9"|"debian 9")
-                OS="DEBIAN9"
-                ;;
             "Debian 10"|"debian 10")
                 OS="DEBIAN10"
                 ;;
@@ -100,15 +81,6 @@ case ${OS_NAME} in
                 ;;
             "Debian"|"debian"|"Debian 12"|"debian 12")
                 OS="DEBIAN12"
-                ;;
-            "Ubuntu 16.04"|"ubuntu 16.04")
-                OS="UBUNTU1604"
-                ;;
-            "Ubuntu 18.04"|"ubuntu 18.04")
-                OS="UBUNTU1804"
-                ;;
-            "Ubuntu 20.04"|"ubuntu 20.04")
-                OS="UBUNTU2004"
                 ;;
             "Ubuntu 22.04"|"ubuntu 22.04")
                 OS="UBUNTU2204"
@@ -156,23 +128,18 @@ esac
 echo -ne " OK"
 
 case ${OS} in
-    "DEBIAN9")
-        PHP_VERSION="7.0"
-        ;;
-
     "DEBIAN10")
         echo ""
         echo ""
         echo "PHP versions availables : "
-        echo " - 7.3 [Default]"
-        echo " - 7.4"
-        echo " - 8.0"
+        echo " - 8.0 [Default]"
         echo " - 8.1"
         echo " - 8.2"
         echo " - 8.3"
-        read -p "Which PHP version do you want to use ? [7.3] " READ_PHP_VERSION
+        echo " - 8.4"
+        read -p "Which PHP version do you want to use ? [8.0] " READ_PHP_VERSION
         case ${READ_PHP_VERSION} in
-            "7.4"|"8.0"|"8.1"|"8.2"|"8.3")
+            "8.0"|"8.1"|"8.2"|"8.3"|"8.4"|*)
                 echo ""
                 echo -ne "Configuring PHP ${READ_PHP_VERSION} repo..."
                 apt install apt-transport-https ca-certificates curl wget gnupg2 --yes > /dev/null 2>&1
@@ -182,9 +149,6 @@ case ${OS} in
                 echo -ne " OK"
                 PHP_VERSION=${READ_PHP_VERSION}
                 ;;
-            "7.3"|*)
-                PHP_VERSION="7.3"
-                ;;
         esac
         ;;
 
@@ -192,14 +156,14 @@ case ${OS} in
         echo ""
         echo ""
         echo "PHP versions availables : "
-        echo " - 7.4 [Default]"
-        echo " - 8.0"
+        echo " - 8.0 [Default]"
         echo " - 8.1"
         echo " - 8.2"
         echo " - 8.3"
-        read -p "Which PHP version do you want to use ? [7.4] " READ_PHP_VERSION
+        echo " - 8.4"
+        read -p "Which PHP version do you want to use ? [8.0] " READ_PHP_VERSION
         case ${READ_PHP_VERSION} in
-            "8.0"|"8.1"|"8.2"|"8.3")
+            "8.0"|"8.1"|"8.2"|"8.3"|"8.4"|*)
                 echo ""
                 echo -ne "Configuring PHP ${READ_PHP_VERSION} repo..."
                 apt install apt-transport-https ca-certificates curl wget gnupg2 --yes > /dev/null 2>&1
@@ -208,9 +172,6 @@ case ${OS} in
                 apt update > /dev/null 2>&1
                 echo -ne " OK"
                 PHP_VERSION=${READ_PHP_VERSION}
-                ;;
-            "7.4"|*)
-                PHP_VERSION="7.4"
                 ;;
         esac
         ;;
@@ -221,9 +182,10 @@ case ${OS} in
         echo "PHP versions availables : "
         echo " - 8.2 [Default]"
         echo " - 8.3"
+        echo " - 8.4"
         read -p "Which PHP version do you want to use ? [8.2] " READ_PHP_VERSION
         case ${READ_PHP_VERSION} in
-            "8.3")
+            "8.3"|"8.4")
                 echo ""
                 echo -ne "Configuring PHP ${READ_PHP_VERSION} repo..."
                 apt install apt-transport-https ca-certificates curl wget gnupg2 --yes > /dev/null 2>&1
@@ -239,15 +201,6 @@ case ${OS} in
         esac
         ;;
 
-    "UBUNTU1604")
-        PHP_VERSION="7.0"
-        ;;
-    "UBUNTU1804")
-        PHP_VERSION="7.2"
-        ;;
-    "UBUNTU2004")
-        PHP_VERSION="7.4"
-        ;;
     "UBUNTU2304"|"UBUNTU2204")
         PHP_VERSION="8.1"
         ;;
@@ -329,16 +282,6 @@ server {
     proxy_buffers 4 256k;
     proxy_busy_buffers_size 256k;
 
-    # set expiration of assets to MAX for caching
-    location ~* \.(ico|css|js)(\?[0-9]+)?$ {
-        expires max;
-        log_not_found off;
-    }
-
-    location ~ \.(git|github|idea|gitignore|htaccess) {
-        return 302 /403;
-    }
-
     location ~* \.php$ {
         fastcgi_pass unix:/var/run/php/phpPHPVERSION-fpm.sock;
         fastcgi_index index.php;
@@ -347,127 +290,114 @@ server {
         fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
     }
 
-    location / {
-        if ($query_string ~ "mosConfig_[a-zA-Z_]{1,21}(=|\%3D)"){
-            rewrite ^/([^.]*)/?$ /index.php last;
-        }
-        rewrite ^/(.*)_v([0-9]+) /watch_video.php?v=$2&$query_string last;
-        rewrite ^/([a-zA-Z0-9-]+)/?$ /view_channel.php?uid=$1&seo_diret=yes last;
-    }
-
     error_page 404 /404;
     error_page 403 /403;
-    location /403 {
-        try_files $uri /403.php;
+    location ~* ^(.*/)?403$ {
+        try_files $uri $1403.php;
     }
-    location /404 {
-        try_files $uri /404.php;
-    }
-
-    location /includes/ {
-        return 302 /404;
+    location ~* ^(.*/)?404$ {
+        try_files $uri $1404.php;
     }
 
-    location /changelog/ {
-        return 302 /404;
+    # Forbidden access
+    location ~ ^(.*/)?.(git|github|idea|gitignore|htaccess) {
+        return 302 $1403;
+    }
+    location ~* ^(.*/)?(includes|changelog)/ {
+        return 302 $1403;
     }
 
-    location /video/ {
-        rewrite ^/video/(.*)/(.*) /watch_video.php?v=$1&$query_string last;
-        rewrite ^/video/([0-9]+)_(.*) /watch_video.php?v=$1&$query_string last;
+    # Direct acces to files
+    location ~* ^(.*/)?files/ {
+        try_files $uri $uri/ =404;
+    }
+    location ~* \.(css|js|jpe?g|png|gif|webp|svg|ico|woff2?|ttf|eot|otf|mp4|m3u8|ts|srt|webm|ogg|mp3)(\?[0-9]+)?$ {
+        access_log off;
+        log_not_found off;
+        expires max;
+        try_files $uri =404;
     }
 
-    location /videos/ {
-        rewrite ^/videos/(.*)/(.*)/(.*)/(.*)/(.*) /videos.php?cat=$1&sort=$3&time=$4&page=$5&seo_cat_name=$2 last;
-        rewrite ^/videos/([0-9]+) /videos.php?page=$1 last;
-        rewrite ^/videos/?$ /videos.php?$query_string last;
+    # External use
+    location ~* ^(.*/)?sitemap.xml$ {
+        rewrite ^(.*/)?sitemap.xml$ $1sitemap.php last;
+    }
+    location ~* ^(.*/)?rss(/([a-zA-Z0-9][^/]*))?$ {
+        rewrite ^(.*/)?rss/?$ $1rss.php?$query_string last;
+        rewrite ^(.*/)?rss/([a-zA-Z0-9][^/]*)$ $1rss.php?mode=$2&$query_string last;
     }
 
-    location /channels/ {
-        rewrite ^/channels/(.*)/(.*)/(.*)/(.*)/(.*) /channels.php?cat=$1&sort=$3&time=$4&page=$5&seo_cat_name=$2 last;
-        rewrite ^/channels/([0-9]+) /channels.php?page=$1 last;
-        rewrite ^/channels/?$ /channels.php last;
+    # Collections
+    location ~* ^(.*/)?collections(/(.*))?$ {
+        rewrite ^(.*/)?collections/(.*)/(.*)/(.*)/(.*) $1collections.php?cat=$2&sort=$3&time=$4&page=$5&$query_string last;
+        rewrite ^(.*/)?collections/(.*)/(.*)/(.*) $1collections.php?sort=$2&time=$3&page=$4&$query_string last;
+        rewrite ^(.*/)?collections/([0-9]+) $1collections.php?page=$2&$query_string last;
+        rewrite ^(.*/)?collections/?$ $1collections.php?$query_string last;
+    }
+    location ~* ^(.*/)?collection(/(.*))?$ {
+        rewrite ^(.*/)?collection/(.*)/(.*)/(.*) $1view_collection.php?cid=$2&type=$3&page=$4&$query_string last;
     }
 
-    location /members/ {
-        rewrite ^/members/?$ /channels.php last;
+    # Videos
+    location ~* ^(.*/)?videos(/(.*))?$ {
+        rewrite ^(.*/)?videos/(.*)/(.*)/(.*)/(.*) $1videos.php?cat=$2&sort=$3&time=$4&page=$5&$query_string last;
+        rewrite ^(.*/)?videos/(.*)/(.*)/(.*) $1videos.php?sort=$2&time=$3&page=$4&$query_string last;
+        rewrite ^(.*/)?videos/([0-9]+) $1videos.php?page=$2&$query_string last;
+        rewrite ^(.*/)?videos/?$ $1videos.php?$query_string last;
+    }
+    location ~* ^(.*/)?video(/(.*))?$ {
+        rewrite ^(.*/)?video/(.*)/(.*) $1watch_video.php?v=$2&$query_string last;
+        rewrite ^(.*/)?video/([0-9]+)_(.*) $1watch_video.php?v=$2&$query_string last;
+    }
+    location ~* ^(/.*/)?(.+)_v([0-9]+)$ {
+        rewrite ^(.*/)?(.*)_v([0-9]+) $1watch_video.php?v=$3&$query_string last;
     }
 
-    location /users/ {
-        rewrite ^/users/?$ /channels.php last;
+    # Photos
+    location ~* ^(.*/)?item(/(.*))?$ {
+        rewrite ^(.*/)?item/(.*)/(.*)/(.*)/(.*) $1view_item.php?item=$4&type=$2&collection=$3&$query_string last;
+    }
+    location ~* ^(.*/)?photos(/(.*))?$ {
+        rewrite ^(.*/)?photos/(.*)/(.*)/(.*)/(.*) $1photos.php?cat=$2&sort=$3&time=$4&page=$5&$query_string last;
+        rewrite ^(.*/)?photos/(.*)/(.*)/(.*) $1photos.php?sort=$2&time=$3&page=$4&$query_string last;
+        rewrite ^(.*/)?photos/([0-9]+) $1photos.php?page=$2&$query_string last;
+        rewrite ^(.*/)?photos/?$ $1photos.php?$query_string last;
     }
 
-    location /user/ {
-        rewrite ^/user/(.*) /view_channel.php?user=$1 last;
+    # Channels
+    location ~* ^(.*/)?channels(/(.*))?$ {
+        rewrite ^(.*/)?channels/(.*)/(.*)/(.*)/(.*) $1channels.php?cat=$2&sort=$3&time=$4&page=$5&$query_string last;
+        rewrite ^(.*/)?channels/(.*)/(.*)/(.*) $1channels.php?sort=$2&time=$3&page=$4&$query_string last;
+        rewrite ^(.*/)?channels/([0-9]+) $1channels.php?page=$2&$query_string last;
+        rewrite ^(.*/)?channels/?$ $1channels.php?$query_string last;
+    }
+    location ~* ^(.*/)?user/(.*)$ {
+        rewrite ^(.*/)?user/(.*) $1view_channel.php?user=$2&$query_string last;
     }
 
-    location /channel/ {
-        rewrite ^/channel/(.*) /view_channel.php?user=$1 last;
+    # Uploads
+    location ~* ^(.*/)?photo_upload(/(.*))?$ {
+        rewrite ^(.*/)?photo_upload/(.*)$ $1photo_upload.php?collection=$2&$query_string last;
+        rewrite ^(.*/)?photo_upload/?$ $1photo_upload.php?$query_string last;
+    }
+    location ~* ^(.*/)?upload/?$ {
+        rewrite ^(.*/)?upload/?$ $1upload.php?$query_string last;
     }
 
-    location /my_account {
-        rewrite ^/my_account /myaccount.php last;
+    # Account
+    location ~* ^(.*/)?my_account$ {
+        rewrite ^(.*/)?my_account$ $1myaccount.php?$query_string last;
+    }
+    location ~* ^(.*/)?signup/?$ {
+        rewrite ^(.*/)?signup/?$ $1signup.php?$query_string last;
+    }
+    location ~* ^(.*/)?signin/?$ {
+        rewrite ^(.*/)?signin/?$ $1signup.php?mode=login&$query_string last;
     }
 
-    location /page/ {
-        rewrite ^/page/([0-9]+)/(.*) /view_page.php?pid=$1 last;
-    }
-
-    location /search/ {
-        rewrite ^/search/result/?$ /search_result.php last;
-    }
-
-    location /upload {
-        rewrite ^/upload/?$ /upload.php last;
-    }
-
-    location /contact/ {
-        rewrite ^/contact/?$ /contact.php last;
-    }
-
-    location /categories/ {
-        rewrite ^/categories/?$ /categories.php last;
-    }
-
-    location /collections/ {
-        rewrite ^/collections/(.*)/(.*)/(.*)/(.*)/(.*) /collections.php?cat=$1&sort=$3&time=$4&page=$5&seo_cat_name=$2 last;
-        rewrite ^/collections/([0-9]+) /collections.php?page=$1 last;
-        rewrite ^/collections/?$ /collections.php last;
-    }
-
-    location /photos/ {
-        rewrite ^/photos/(.*)/(.*)/(.*)/(.*)/(.*) /photos.php?cat=$1&sort=$3&time=$4&page=$5&seo_cat_name=$2 last;
-        rewrite ^/photos/([0-9]+) /photos.php?page=$1 last;
-        rewrite ^/photos/?$ /photos.php last;
-    }
-
-    location /collection/ {
-        rewrite ^/collection/(.*)/(.*)/(.*) /view_collection.php?cid=$1&type=$2&page=$3 last;
-    }
-
-    location /item/ {
-        rewrite ^/item/(.*)/(.*)/(.*)/(.*) /view_item.php?item=$3&type=$1&collection=$2 last;
-    }
-
-    location /photo_upload {
-        rewrite ^/photo_upload/(.*) /photo_upload.php?collection=$1 last;
-        rewrite ^/photo_upload/?$ /photo_upload.php last;
-    }
-
-    location = /sitemap.xml {
-        rewrite ^(.*)$ /sitemap.php last;
-    }
-
-    location /signup {
-        rewrite ^/signup/?$ /signup.php last;
-    }
-
-    location /rss/ {
-        rewrite ^/rss/([a-zA-Z0-9].+)$ /rss.php?mode=$1&$query_string last;
-    }
-
-    location ~ /rss$ {
-        try_files $uri /rss.php;
+    # Custom pages
+    location ~* ^(.*/)?page/([0-9]+)/(.*)$ {
+        rewrite ^(.*/)?page/([0-9]+)/(.*) $1view_page.php?pid=$2&$query_string last;
     }
 }
 EOF

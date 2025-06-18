@@ -3,7 +3,11 @@ define('THIS_PAGE', 'system_info');
 
 require_once dirname(__FILE__, 2) . '/includes/admin_config.php';
 
-User::getInstance()->hasPermissionOrRedirect('admin_access', true);
+$permission = 'advanced_settings';
+if( !Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '275') ){
+    $permission = 'web_config_access';
+}
+User::getInstance()->hasPermissionOrRedirect($permission,true);
 
 /* Generating breadcrumb */
 global $breadcrumb;
@@ -35,9 +39,9 @@ assign('upload_max_filesize', $upload_max_filesize);
 assign('upload_max_filesize_mb', $upload_max_filesize_mb);
 assign('target_upload_size', config('max_upload_size'));
 
-$max_upload_size_ok = (config('max_upload_size') < $post_max_size_mb || ($chunk_upload && $chunk_upload_size_mb < $post_max_size_mb));
+$max_upload_size_ok = (config('max_upload_size') < $post_max_size_mb || ($chunk_upload && $chunk_upload_size_mb <= $post_max_size_mb));
 assign('max_upload_size_ok', $max_upload_size_ok);
-$upload_max_size_ok = $upload_max_filesize_mb >= config('max_upload_size') || ($chunk_upload && $chunk_upload_size_mb < $upload_max_filesize_mb);
+$upload_max_size_ok = $upload_max_filesize_mb >= config('max_upload_size') || ($chunk_upload && $chunk_upload_size_mb <= $upload_max_filesize_mb);
 assign('upload_max_size_ok', $upload_max_size_ok);
 $memory_limit = ini_get('memory_limit');
 assign('memory_limit', $memory_limit);
@@ -53,6 +57,10 @@ $can_access_nginx = false;
 $client_max_body_size = '';
 $client_max_body_size_mb = '';
 if ($isNginx) {
+    if( isset($_POST['update_nginx_vhost']) && $_POST['update_nginx_vhost'] == 'yes' ){
+        myquery::getInstance()->Set_Website_Details('nginx_vhost_version', Update::getInstance()->getCurrentCoreVersion());
+        myquery::getInstance()->Set_Website_Details('nginx_vhost_revision', Update::getInstance()->getCurrentCoreRevision());
+    }
     $client_max_body_size = System::get_nginx_config('client_max_body_size');
     if (empty($client_max_body_size)) {
         $can_access_nginx = false;
@@ -63,8 +71,32 @@ if ($isNginx) {
         $client_max_body_size_ok = ($client_max_body_size_mb <= $post_max_size_mb || ($chunk_upload && $chunk_upload_size_mb <= $client_max_body_size_mb));
         assign('client_max_body_size_ok', $client_max_body_size_ok);
     }
-}
 
+    $nginx_infos = System::getNginxVhostInfos();
+    $nginx_vhost = $nginx_infos['nginx_vhost'];
+    $nginx_vhost_version = $nginx_infos['nginx_vhost_version'];
+    $nginx_vhost_revision = $nginx_infos['nginx_vhost_revision'];
+    $nginx_vhost_update = $nginx_infos['nginx_vhost_update'];
+
+    assign('nginx_vhost', $nginx_vhost);
+
+    if( Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.2', '9') ){
+        if( !empty($nginx_vhost_version) && !empty($nginx_vhost_revision) && !empty($nginx_vhost_update) ){
+            $last_updated = lang('nginx_vhost_last_updated', ['<b>' . $nginx_vhost_version . ' - #' . $nginx_vhost_revision . ' <i>(' . $nginx_vhost_update . ')</i></b>']);
+            assign('nginx_vhost_last_updated', $last_updated);
+        }
+
+        if( empty(config('nginx_vhost_version')) || empty(config('nginx_vhost_revision')) ){
+            assign('nginx_vhost_first_update', lang('nginx_vhost_first_update'));
+        } else if(config('nginx_vhost_version') > $nginx_vhost_version || (config('nginx_vhost_version') == $nginx_vhost_version && config('nginx_vhost_revision') >= $nginx_vhost_revision) ){
+            $nginx_vhost_no_update = lang('nginx_vhost_no_update', ['<b>' . config('nginx_vhost_version') . ' - #' . config('nginx_vhost_revision') . '</b>']);
+            assign('nginx_vhost_no_update', $nginx_vhost_no_update);
+        } else {
+            $nginx_vhost_update = lang('nginx_vhost_update', ['<b>' . config('nginx_vhost_version') . ' - #' . config('nginx_vhost_revision') . '</b>']);
+            assign('nginx_vhost_update', $nginx_vhost_update);
+        }
+    }
+}
 
 $phpWebExec = System::check_php_function('exec', 'web', false);
 assign('phpWebExec',$phpWebExec);
@@ -104,7 +136,7 @@ assign('datetime_datas_cli', $datetime_datas_cli);
 assign('hosting_ok', ($max_upload_size_ok && $upload_max_size_ok && $memory_limit_ok && $max_execution_time_ok && $phpWebExec && $phpWebShellExec && $phpCliExec && $phpCliShellExec && $check_time_cli && $check_ffi_cli && $check_ffi_web));
 
 //SERVICES
-$phpVersionReq = '7.0.0';
+$phpVersionReq = '8.0.0';
 assign('phpVersionReq', $phpVersionReq);
 $php_web_version = System::get_software_version('php_web', false, null, true);
 assign('phpVersionWeb', $php_web_version);
@@ -193,6 +225,12 @@ $permissions = System::getPermissions(false);
 assign('permissions', $permissions);
 assign('permissions_ok', System::checkPermissions($permissions));
 
+Network::check_forbidden_directory();
+
+$min_suffixe = System::isInDev() ? '' : '.min';
+ClipBucket::getInstance()->addAdminJS([
+    'pages/system_info/system_info'.$min_suffixe.'.js' => 'admin'
+]);
 subtitle(lang('system_info'));
 template_files("system_info.html");
 display_it();

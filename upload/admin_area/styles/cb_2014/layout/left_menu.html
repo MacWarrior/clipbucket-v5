@@ -1,5 +1,5 @@
 <ul class="nav nav-list" id="sidebar">
-    {foreach from=$Cbucket->AdminMenu item=menu}
+    {foreach from=ClipBucket::getInstance()->AdminMenu item=menu}
         <li {if $breadcrumb[0]['title'] == $menu['title']}class="active open"{/if}>
             {if isset($menu['url'])}
                 <a href="{$menu['url']}">

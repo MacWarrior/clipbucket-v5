@@ -2,6 +2,20 @@
 
 class Language
 {
+    private static self $instance;
+
+    /**
+     * @throws Exception
+     */
+    public static function getInstance(): self
+    {
+        if( empty(self::$instance) ){
+            self::$instance = new self();
+            self::$instance->init();
+        }
+        return self::$instance;
+    }
+
     public $lang = 'en';
 
     public $lang_id = 1;
@@ -13,9 +27,9 @@ class Language
 
     public $arrayTranslation = [];
 
-    private static $_instance = null;
-
     private $uninstalled = false;
+
+    private static $redis_key = 'languages_keys';
 
     /**
      * __Constructor
@@ -24,15 +38,9 @@ class Language
     {
     }
 
-    /**
-     * @return Language
-     */
-    public static function getInstance()
+    public static function getRedisKey(): string
     {
-        if (is_null(self::$_instance)) {
-            self::$_instance = new Language();
-        }
-        return self::$_instance;
+        return self::$redis_key;
     }
 
     public function getLangISO()
@@ -44,20 +52,21 @@ class Language
      * INIT
      * @throws Exception
      */
-    public function init()
+    public function init(): void
     {
-        $lang = getArrayValue($_COOKIE, 'cb_lang');
+        if( Session::isCookieConsent('cb_lang') ){
+            $lang = getArrayValue($_COOKIE, 'cb_lang');
 
-        //Setting Language
-        if (isset($_GET['set_site_lang'])) {
-            $lang = $_GET['set_site_lang'];
-            if ($this->getLangById($lang)) {
-                set_cookie_secure('cb_lang', $lang);
+            if( isset($_GET['set_site_lang']) ){
+                $lang = $_GET['set_site_lang'];
+                if ($this->getLangById($lang)) {
+                    Session::setCookie('cb_lang', $lang);
+                }
             }
-        }
 
-        if (!empty($lang)) {
-            $lang_details = $this->getLangById($lang);
+            if (!empty($lang)) {
+                $lang_details = $this->getLangById($lang);
+            }
         }
 
         if (isset($lang) && isset($lang_details)) {
@@ -144,7 +153,7 @@ class Language
         LEFT JOIN ' . tbl('languages_translations') . ' AS LT ON LK.id_language_key = LT.id_language_key AND LT.language_id = ' . mysql_clean($language_id);
 
         /** concat aaaaaaa to sort when translation is missing */
-        return Clipbucket_db::getInstance()->select($select, $fields, $extra_param, $limit, ' CASE WHEN LT.translation IS NULL THEN concat(\'aaaaaaaaaaaaaaaaaaaa\',language_key) ELSE LK.language_key END', false, 3600);
+        return Clipbucket_db::getInstance()->select($select, $fields, $extra_param, $limit, ' CASE WHEN LT.translation IS NULL THEN concat(\'aaaaaaaaaaaaaaaaaaaa\',language_key) ELSE LK.language_key END', false, 3600, self::$redis_key);
     }
 
     /**
@@ -211,7 +220,7 @@ class Language
                 $this->uninstalled = true;
                 if (BACK_END) {
                     e('Translation system isn\'t installed, please connect and follow upgrade instructions.');
-                } elseif (in_dev()) {
+                } elseif (System::isInDev()) {
                     e('Translation system isn\'t installed, please contact your administrator.');
                 }
                 return [];
@@ -289,11 +298,10 @@ class Language
      * @param $lid
      * @throws Exception
      */
-    public function make_default($lid)
+    public function make_default($lid): void
     {
         $lang = self::getLangById($lid);
         if ($lang) {
-            set_cookie_secure('cb_lang', $lid);
             Clipbucket_db::getInstance()->update(tbl('languages'), ['language_default'], ['no'], 'language_default=\'yes\'');
             Clipbucket_db::getInstance()->update(tbl('languages'), ['language_default'], ['yes'], ' language_id=\'' . $lid . '\'');
             e($lang['language_name'] . ' has been set as default language', 'm');
@@ -318,7 +326,7 @@ class Language
      * @param $i
      * @throws Exception
      */
-    public static function delete_lang($i)
+    public static function delete_lang($i): void
     {
         $lang = self::getLangById($i);
         if (!$lang) {
@@ -373,17 +381,6 @@ class Language
         }
     }
 
-    /**
-     * @throws Exception
-     */
-    public function set_lang($ClientId, $secertId)
-    {
-        $cl = $ClientId;
-        $sc = $secertId;
-        Clipbucket_db::getInstance()->update(tbl('config'), ['value'], [$cl], ' name=\'clientid\' ');
-        Clipbucket_db::getInstance()->update(tbl('config'), ['value'], [$sc], ' name=\'secretId\' ');
-    }
-
     public function getLang()
     {
         return $this->lang;
@@ -392,10 +389,12 @@ class Language
     /**
      * Function used to update language
      *
-     * @param $array
+     * @param $code
+     * @throws \Predis\Connection\ConnectionException
+     * @throws \Predis\Response\ServerException
      * @throws Exception
      */
-    public static function restore_lang($code)
+    public static function restore_lang($code): void
     {
         if (empty($code)) {
             e(lang('lang_code_empty'));

@@ -31,7 +31,7 @@ class cbactions
      * Class variable ie $somevar = SomeClass;
      * $obj_class = 'somevar';
      */
-    var $obj_class = 'cbvideo';
+    var $obj_class = '';
 
     /**
      * Defines function name that is used to check
@@ -56,7 +56,7 @@ class cbactions
      * initializing
      * @throws Exception
      */
-    function init()
+    function init(): void
     {
         global $cb_columns;
 
@@ -78,7 +78,7 @@ class cbactions
      * Function used to add content to favorites
      * @throws Exception
      */
-    function add_to_fav($id)
+    function add_to_fav($id): void
     {
         $id = mysql_clean($id);
         //First checking weather object exists or not
@@ -139,12 +139,10 @@ class cbactions
      *
      * @return mixed
      */
-    function exists($id)
+    public function exists($id)
     {
         $id = mysql_clean($id);
-        $obj = $this->obj_class;
-        global ${$obj};
-        $obj = ${$obj};
+        $obj = $this->obj_class::getInstance();
         $func = $this->check_func;
         return $obj->{$func}($id);
     }
@@ -272,7 +270,7 @@ class cbactions
      * @param null $uid
      * @throws Exception
      */
-    function remove_favorite($fav_id, $uid = null)
+    function remove_favorite($fav_id, $uid = null): void
     {
         if (!$uid) {
             $uid = user_id();
@@ -294,10 +292,7 @@ class cbactions
             $array = $_POST;
         }
 
-        $title = $array['playlist_name'];
-        $description = $array['description'];
-        $tags = $array['tags'];
-        $privacy = $array['privacy'];
+        $hint_tags = config('allow_tag_space') =='yes' ? '<span class="fa fa-question-circle tips" style="margin-left: 5px;" title=\''.lang('use_tab_tag').'\'></span>' : '';
 
         return [
             'title'       => [
@@ -306,7 +301,7 @@ class cbactions
                 'name'        => 'playlist_name',
                 'id'          => 'playlist_name',
                 'db_field'    => 'playlist_name',
-                'value'       => $title,
+                'value'       => $array['playlist_name'],
                 'required'    => 'yes',
                 'invalid_err' => lang('please_enter_playlist_name')
             ],
@@ -316,16 +311,19 @@ class cbactions
                 'name'     => 'description',
                 'id'       => 'description',
                 'db_field' => 'description',
-                'value'    => $description
+                'value'    => $array['description']
             ],
-            'tags'        => [
-                'title'    => lang('tags'),
-                'type'     => 'hidden',
-                'name'     => 'tags',
-                'id'       => 'tags',
-                'value'    => genTags($tags)
+            'playlists_tags' => [
+                'title'             => lang('tags'),
+                'type'              => 'hidden',
+                'name'              => 'playlists_tags',
+                'id'                => 'playlists_tags',
+                'value'             => genTags($array['playlists_tags']),
+                'hint_1'            => $hint_tags,
+                'required'          => 'no',
+                'validate_function' => 'genTags'
             ],
-            'privacy'     => [
+            'privacy' => [
                 'title'         => lang('playlist_privacy'),
                 'type'          => 'dropdown',
                 'name'          => 'privacy',
@@ -336,7 +334,7 @@ class cbactions
                     'private' => lang('private')
                 ],
                 'default_value' => 'public',
-                'checked'       => $privacy
+                'checked'       => $array['privacy']
             ]
         ];
     }
@@ -399,12 +397,16 @@ class cbactions
      * Function used to check weather playlist already exists or not
      * @throws Exception
      */
-    function playlist_exists($name, $user, $type = null): bool
+    function playlist_exists($name, $user, $type = null, int $playlist_id = 0): bool
     {
         if ($type) {
             $type = $this->type;
         }
-        $count = Clipbucket_db::getInstance()->count(tbl($this->playlist_tbl), 'playlist_id', ' userid=\'' . mysql_clean($user) . '\' AND playlist_name=\'' . mysql_clean($name) . '\' AND playlist_type=\'' . mysql_clean($type) . '\'');
+        $cond = ' userid=' . (int)$user . ' AND playlist_name=\'' . mysql_clean($name) . '\' AND playlist_type=\'' . mysql_clean($type) . '\'';
+        if( !empty($playlist_id) ) {
+            $cond .= ' AND playlist_id !=' . (int)$playlist_id;
+        }
+        $count = Clipbucket_db::getInstance()->count(tbl($this->playlist_tbl), 'playlist_id', $cond);
 
         if ($count) {
             return true;
@@ -603,21 +605,20 @@ class cbactions
      * @param null $array
      * @throws Exception
      */
-    function edit_playlist($array = null)
+    function edit_playlist($array = null): void
     {
         if (is_null($array)) {
             $array = $_POST;
         }
 
-        $name = mysql_clean($array['name']);
         $pdetails = Playlist::getInstance()->getOne($array['playlist_id']);
 
         if (!$pdetails) {
             e(lang('playlist_not_exist'));
         } elseif (!user_id()) {
             e(lang('you_not_logged_in'));
-        } elseif ($this->playlist_exists($name, user_id(), $this->type)) {
-            e(lang('play_list_with_this_name_arlready_exists', $name));
+        } elseif ($this->playlist_exists($array['playlist_name'], user_id(), $this->type, $array['playlist_id'])) {
+            e(lang('play_list_with_this_name_arlready_exists', display_clean($array['playlist_name'])));
         } else {
             $upload_fields = $this->load_playlist_fields($array);
             $fields = [];
@@ -633,8 +634,12 @@ class cbactions
                     $name = formObj::rmBrackets($field['name']);
                     $val = $array[$name];
 
-                    if ($field['use_func_val']) {
-                        $val = $field['validate_function']($val);
+                    if (!empty($field['validate_function'])) {
+                        if (isset($field['second_parameter_validate'])) {
+                            $val = $field['validate_function']($val,$field['second_parameter_validate']);
+                        } else {
+                            $val = $field['validate_function']($val);
+                        }
                     }
 
                     if (is_array($val)) {
@@ -665,7 +670,7 @@ class cbactions
 
                 Clipbucket_db::getInstance()->update(tbl('playlists'), array_keys($query_values), array_values($query_values), ' playlist_id = \'' . mysql_clean($pdetails['playlist_id']) . '\'');
 
-                Tags::saveTags($array['tags'], 'playlist', $pdetails['playlist_id']);
+                Tags::saveTags($array['playlists_tags'], 'playlist', $pdetails['playlist_id']);
 
             }
             e(lang('play_list_updated'), 'm');
@@ -676,7 +681,7 @@ class cbactions
      * Function used to delete playlist
      * @throws Exception
      */
-    function delete_playlist($id)
+    function delete_playlist($id): void
     {
         $playlist = Playlist::getInstance()->getOne($id);
         if (!$playlist) {

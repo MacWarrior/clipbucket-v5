@@ -3,7 +3,8 @@
 /*
  * This file is part of the Predis package.
  *
- * (c) Daniele Alessandri <suppakilla@gmail.com>
+ * (c) 2009-2020 Daniele Alessandri
+ * (c) 2021-2024 Till Krüss
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -11,6 +12,7 @@
 
 namespace Predis\Connection;
 
+use InvalidArgumentException;
 use Predis\Command\CommandInterface;
 use Predis\Protocol\ProtocolProcessorInterface;
 use Predis\Protocol\Text\ProtocolProcessor as TextProtocolProcessor;
@@ -18,20 +20,18 @@ use Predis\Protocol\Text\ProtocolProcessor as TextProtocolProcessor;
 /**
  * Connection abstraction to Redis servers based on PHP's stream that uses an
  * external protocol processor defining the protocol used for the communication.
- *
- * @author Daniele Alessandri <suppakilla@gmail.com>
  */
 class CompositeStreamConnection extends StreamConnection implements CompositeConnectionInterface
 {
     protected $protocol;
 
     /**
-     * @param ParametersInterface        $parameters Initialization parameters for the connection.
-     * @param ProtocolProcessorInterface $protocol   Protocol processor.
+     * @param ParametersInterface             $parameters Initialization parameters for the connection.
+     * @param ProtocolProcessorInterface|null $protocol   Protocol processor.
      */
     public function __construct(
         ParametersInterface $parameters,
-        ProtocolProcessorInterface $protocol = null
+        ?ProtocolProcessorInterface $protocol = null
     ) {
         $this->parameters = $this->assertParameters($parameters);
         $this->protocol = $protocol ?: new TextProtocolProcessor();
@@ -59,7 +59,7 @@ class CompositeStreamConnection extends StreamConnection implements CompositeCon
     public function readBuffer($length)
     {
         if ($length <= 0) {
-            throw new \InvalidArgumentException('Length parameter must be greater than 0.');
+            throw new InvalidArgumentException('Length parameter must be greater than 0.');
         }
 
         $value = '';
@@ -120,6 +120,6 @@ class CompositeStreamConnection extends StreamConnection implements CompositeCon
      */
     public function __sleep()
     {
-        return array_merge(parent::__sleep(), array('protocol'));
+        return array_merge(parent::__sleep(), ['protocol']);
     }
 }

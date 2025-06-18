@@ -31,9 +31,9 @@ for ($i = 0; $i < $days; $i++) {
 $max = 1;
 for ($i = 0; $i < $days; $i++) {
     if ($i == $days - 1) {
-        $signups[] = $userquery->get_users(["count_only" => true, "date_span" => "today"]) + 0;
-        $active[] = $userquery->get_users(["count_only" => true, "date_span" => "today", "status" => 'Ok']) + 0;
-        $inactive[] = $userquery->get_users(["count_only" => true, "date_span" => "today", "status" => 'ToActivate']) + 0;
+        $signups[] = userquery::getInstance()->get_users(["count_only" => true, "date_span" => "today"]) + 0;
+        $active[] = userquery::getInstance()->get_users(["count_only" => true, "date_span" => "today", "status" => 'Ok']) + 0;
+        $inactive[] = userquery::getInstance()->get_users(["count_only" => true, "date_span" => "today", "status" => 'ToActivate']) + 0;
     } else {
         $signups[] = $day[$i]['users']->signups + 0;
         $active[] = $day[$i]['users']->active + 0;

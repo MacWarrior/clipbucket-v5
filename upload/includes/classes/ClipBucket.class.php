@@ -1,11 +1,21 @@
 <?php
 class ClipBucket
 {
+    private static self $instance;
+    public static function getInstance(): self
+    {
+        if( empty(self::$instance) ){
+            self::$instance = new self();
+        }
+        return self::$instance;
+    }
+
+    public $custom_video_file_funcs;
+
     var $JSArray = [];
     var $AdminJSArray = [];
     var $CSSArray = [];
     var $AdminCSSArray = [];
-    var $moduleList = [];
     var $actionList = [];
     var $anchorList = [];
     var $ids = []; //IDS WILL BE USED FOR JS FUNCTIONS
@@ -58,11 +68,6 @@ class ClipBucket
     //This array contains the public pages name for private access to website 
     var $public_pages = ["signup", "view_page"];
 
-    public static function getInstance(){
-        global $Cbucket;
-        return $Cbucket;
-    }
-
     /**
      * @throws Exception
      */
@@ -82,19 +87,6 @@ class ClipBucket
 
         $this->clean_requests();
 
-        if( !isset($_GET['sort']) ){
-            $_GET['sort'] = 'most_recent';
-        }
-
-        if( !isset($_GET['time']) ){
-            $_GET['time'] = 'all_time';
-        } else {
-            $time_array = time_links();
-            if( !isset($time_array[$_GET['time']]) ){
-                $_GET['time'] = 'all_time';
-            }
-        }
-
         if (!isset($_GET['page']) || !is_numeric($_GET['page'])) {
             $_GET['page'] = 1;
         }
@@ -108,7 +100,7 @@ class ClipBucket
     /**
      * @throws Exception
      */
-    function addJS($files)
+    function addJS($files): void
     {
         $this->addFile($this->JSArray, $files);
     }
@@ -116,7 +108,7 @@ class ClipBucket
     /**
      * @throws Exception
      */
-    function addAdminJS($files)
+    function addAdminJS($files): void
     {
         $this->addFile($this->AdminJSArray, $files);
     }
@@ -124,7 +116,7 @@ class ClipBucket
     /**
      * @throws Exception
      */
-    function addAllJS($files)
+    function addAllJS($files): void
     {
         $this->addFile($this->JSArray, $files);
         $this->addFile($this->AdminJSArray, $files);
@@ -133,7 +125,7 @@ class ClipBucket
     /**
      * @throws Exception
      */
-    function addCSS($files)
+    function addCSS($files): void
     {
         $this->addFile($this->CSSArray, $files);
     }
@@ -141,7 +133,7 @@ class ClipBucket
     /**
      * @throws Exception
      */
-    function addAdminCSS($files)
+    function addAdminCSS($files): void
     {
         $this->addFile($this->AdminCSSArray, $files);
     }
@@ -149,7 +141,7 @@ class ClipBucket
     /**
      * @throws Exception
      */
-    function addAllCSS($files)
+    function addAllCSS($files): void
     {
         $this->addFile($this->CSSArray, $files);
         $this->addFile($this->AdminCSSArray, $files);
@@ -158,14 +150,9 @@ class ClipBucket
     /**
      * @throws Exception
      */
-    private function addFile(&$array_var, $files)
+    private function addFile(&$array_var, $files): void
     {
-        if(in_dev()){
-            $cache_key = time();
-        } else {
-            $cache_key = str_replace('.', '', Update::getInstance()->getCurrentCoreVersion()) . Update::getInstance()->getCurrentCoreRevision();
-        }
-
+        $cache_key = $this->getCacheKey();
         if (is_array($files)) {
             foreach ($files as $key => $file) {
                 if (!isset($array_var[$key])) {
@@ -179,6 +166,16 @@ class ClipBucket
         }
     }
 
+    public function getCacheKey()
+    {
+        if(System::isInDev()){
+            $cache_key = time();
+        } else {
+            $cache_key = str_replace('.', '', Update::getInstance()->getCurrentCoreVersion()) . Update::getInstance()->getCurrentCoreRevision();
+        }
+        return $cache_key;
+    }
+
     /**
      * Function add_header()
      * this will be used to add new files in header array
@@ -187,7 +184,7 @@ class ClipBucket
      * @param $file
      * @param string $place
      */
-    function add_header($file, $place = 'global')
+    function add_header($file, $place = 'global'): void
     {
         if (!is_array($place)) {
             $place = [$place];
@@ -203,7 +200,7 @@ class ClipBucket
      * @param $file
      * @param string $place
      */
-    function add_admin_header($file, $place = 'global')
+    function add_admin_header($file, $place = 'global'): void
     {
         if (!is_array($place)) {
             $place = [$place];
@@ -256,26 +253,25 @@ class ClipBucket
         return !empty($funcs) ? $funcs : false;
     }
 
-    function addMenuAdmin($menu_params, $order = null)
+    function addMenuAdmin($menu_params, $order = null): void
     {
-        global $Cbucket;
         $menu_already_exists = false;
 
         if (is_null($order)) {
-            if( empty($Cbucket->AdminMenu) ){
+            if( empty(self::getInstance()->AdminMenu) ){
                 $order = 1;
             } else {
-                $order = max(array_keys($Cbucket->AdminMenu)) + 1;
+                $order = max(array_keys(self::getInstance()->AdminMenu)) + 1;
             }
         } else {
-            if (array_key_exists($order, $Cbucket->AdminMenu)) {
+            if (array_key_exists($order, self::getInstance()->AdminMenu)) {
                 do {
                     $order++;
-                } while (array_key_exists($order, $Cbucket->AdminMenu));
+                } while (array_key_exists($order, self::getInstance()->AdminMenu));
             }
         }
 
-        foreach ($Cbucket->AdminMenu as &$menu) {
+        foreach (self::getInstance()->AdminMenu as &$menu) {
             if ($menu['title'] == $menu_params['title']) {
                 foreach ($menu_params['sub'] as $subMenu) {
                     $submenu_already_exists = false;
@@ -295,17 +291,16 @@ class ClipBucket
             }
         }
         if (!$menu_already_exists) {
-            $Cbucket->AdminMenu[$order] = $menu_params;
+            self::getInstance()->AdminMenu[$order] = $menu_params;
         }
-        ksort($Cbucket->AdminMenu);
+        ksort(self::getInstance()->AdminMenu);
     }
 
     /**
      * @throws Exception
      */
-    function initAdminMenu()
+    function initAdminMenu(): void
     {
-
         $menu_dashboard = [
             'title'   => 'Dashboard'
             , 'class' => 'glyphicon glyphicon-dashboard'
@@ -319,13 +314,12 @@ class ClipBucket
             , 'sub'   => []
         ];
         $menu_configuration['sub'][] = [
-            'title' => lang('website_configuration')
-            , 'url' => DirPath::getUrl('admin_area') . 'main.php'
+            'title' => lang('basic_settings')
+            , 'url' => DirPath::getUrl('admin_area') . 'setting_basic.php'
         ];
-
         $menu_configuration['sub'][] = [
-            'title' => lang('player_settings')
-            , 'url' => DirPath::getUrl('admin_area') . 'manage_players.php?mode=show_settings'
+            'title' => lang('advanced_settings')
+            , 'url' => DirPath::getUrl('admin_area') . 'setting_advanced.php'
         ];
 
         $menu_configuration['sub'][] = [
@@ -364,7 +358,7 @@ class ClipBucket
         $plugins_available = count($cbplugin->getNewPlugins());
         $plugins_installed = count($cbplugin->getInstalledPlugins());
         $plugins_count = $plugins_available + $plugins_installed;
-        if (User::getInstance()->hasPermission('plugins_moderation') && ($plugins_count >= 1 || in_dev())) {
+        if (User::getInstance()->hasPermission('plugins_moderation') && ($plugins_count >= 1 || System::isInDev())) {
             $menu_configuration['sub'][] = [
                 'title' => lang('manage_x', strtolower(lang('plugins'))),
                 'url'   => DirPath::getUrl('admin_area') . 'plugin_manager.php'
@@ -373,14 +367,14 @@ class ClipBucket
 
         if (User::getInstance()->hasPermission('manage_template_access')) {
             global $cbtpl, $cbplayer;
-            if (count($cbtpl->get_templates()) > 1 || in_dev()) {
+            if (count($cbtpl->get_templates()) > 1 || System::isInDev()) {
                 $menu_configuration['sub'][] = [
                     'title' => lang('manage_x', strtolower(lang('templates'))),
                     'url'   => DirPath::getUrl('admin_area') . 'templates.php'
                 ];
             }
 
-            if( count($cbplayer->getPlayers()) > 1 || in_dev() ){
+            if( count($cbplayer->getPlayers()) > 1 || System::isInDev() ){
                 $menu_configuration['sub'][] = [
                     'title' => lang('manage_x', strtolower(lang('players')))
                     , 'url' => DirPath::getUrl('admin_area') . 'manage_players.php'
@@ -399,7 +393,7 @@ class ClipBucket
         if (NEED_UPDATE) {
             return;
         }
-        if (User::getInstance()->hasPermission('web_config_access')) {
+        if (User::getInstance()->hasPermission('admin_access')) {
             $menu_general = [
                 'title'   => lang('general')
                 , 'class' => 'glyphicon glyphicon-stats'
@@ -418,6 +412,18 @@ class ClipBucket
                 , 'url' => DirPath::getUrl('admin_area') . 'manage_tags.php'
             ];
 
+            if (
+                (config('videosSection')=='yes' && User::getInstance()->hasPermission('video_moderation'))
+                || (config('photosSection')=='yes' && User::getInstance()->hasPermission('photos_moderation'))
+                || (config('collectionsSection')=='yes' && User::getInstance()->hasPermission('collection_moderation'))
+                || (config('channelsSection')=='yes' && User::getInstance()->hasPermission('member_moderation'))
+            ) {
+                $menu_general['sub'][] = [
+                    'title' => lang('notifications')
+                    , 'url' => DirPath::getUrl('admin_area') . 'notifications.php'
+                ];
+            }
+
             $this->addMenuAdmin($menu_general, 10);
         }
 
@@ -435,10 +441,6 @@ class ClipBucket
                         , 'url' => DirPath::getUrl('admin_area') . 'add_member.php'
                     ]
                     , [
-                        'title' => lang('manage_x', strtolower(lang('categories')))
-                        , 'url' => DirPath::getUrl('admin_area') . 'category.php?type=user'
-                    ]
-                    , [
                         'title' => 'Inactive Only'
                         , 'url' => DirPath::getUrl('admin_area') . 'members.php?search=yes&status=ToActivate'
                     ]
@@ -452,6 +454,13 @@ class ClipBucket
                     ]
                 ]
             ];
+
+            if( config('enable_user_category') == 'yes' ){
+                $menu_users['sub'][] = [
+                    'title' => lang('manage_x', strtolower(lang('categories')))
+                    , 'url' => DirPath::getUrl('admin_area') . 'category.php?type=user'
+                ];
+            }
 
             $this->addMenuAdmin($menu_users, 20);
         }
@@ -504,6 +513,10 @@ class ClipBucket
                         'title' => lang('system_info')
                         , 'url' => DirPath::getUrl('admin_area') . 'system_info.php'
                     ]
+                    , [
+                        'title' => lang('changelog')
+                        , 'url' => DirPath::getUrl('admin_area') . 'changelog.php'
+                    ]
                 ]
             ];
 
@@ -515,7 +528,7 @@ class ClipBucket
             }
 
 
-            if (User::getInstance()->hasPermission('web_config_access')) {
+            if (User::getInstance()->hasPermission('advanced_settings')) {
                 $menu_tool['sub'][] = [
                     'title' => 'Maintenance'
                     , 'url' => DirPath::getUrl('admin_area') . 'maintenance.php'
@@ -535,10 +548,9 @@ class ClipBucket
      * Function used to assign ClipBucket configurations
      * @throws Exception
      */
-    function get_configs()
+    function get_configs(): array
     {
-        global $myquery;
-        return $myquery->Get_Website_Details();
+        return myquery::getInstance()->Get_Website_Details();
     }
 
     /**
@@ -580,7 +592,7 @@ class ClipBucket
      *
      * @param bool $val
      */
-    function show_page($val = true)
+    function show_page($val = true): void
     {
         $this->show_page = $val;
     }
@@ -638,7 +650,7 @@ class ClipBucket
      */
     function head_menu()
     {
-        $this->head_menu[] = ['name' => lang('menu_home'), 'icon' => '<i class="fa fa-home"></i>', 'link' => get_server_url(), 'this' => 'home', 'section' => 'home', 'extra_attr' => ''];
+        $this->head_menu[] = ['name' => lang('menu_home'), 'icon' => '<i class="fa fa-home"></i>', 'link' => DirPath::getUrl('root'), 'this' => 'home', 'section' => 'home', 'extra_attr' => ''];
 
         if( config('videosSection') == 'yes' ){
             $this->head_menu[] = ['name' => lang('videos'), 'icon' => '<i class="fa fa-video-camera"></i>', 'link' => cblink(['name' => 'videos']), 'this' => 'videos', 'section' => 'home'];
@@ -742,13 +754,11 @@ class ClipBucket
      */
     function foot_menu($params = null)
     {
-        global $cbpage;
-
-        $pages = $cbpage->get_pages(['active' => 'yes', 'display_only' => 'yes', 'order' => 'page_order ASC']);
+        $pages = cbpage::getInstance()->get_pages(['active' => 'yes', 'display_only' => 'yes', 'order' => 'page_order ASC']);
 
         if ($pages) {
             foreach ($pages as $p) {
-                $this->foot_menu[] = ['name' => lang($p['page_name']), 'link' => $cbpage->page_link($p), 'this' => 'home'];
+                $this->foot_menu[] = ['name' => display_clean(lang('page_name_' . $p['page_name'])), 'link' => cbpage::getInstance()->page_link($p), 'this' => 'home'];
             }
         }
 
@@ -762,7 +772,7 @@ class ClipBucket
     /**
      * Function used to clean requests
      */
-    function clean_requests()
+    function clean_requests(): void
     {
         $posts = $_POST;
         $gets = $_GET;

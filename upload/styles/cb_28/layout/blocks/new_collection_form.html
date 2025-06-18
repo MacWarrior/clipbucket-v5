@@ -4,11 +4,8 @@
         {if $field.id != 'type'}
             <div class="form-group">
                 <label for="{$field.id}">{$field.title}</label>
+                {ANCHOR place=$field.anchor_before}
                 {$field.class = 'form-control'}
-                {if $field.type == 'checkbox'}
-                    {$field.label_class = 'checkbox'}
-                    {$field.notShowSeprator = true}
-                {/if}
                 {$formObj->createField($field)}
                 {if $field.id == 'collection_tags'}
                     <ul id="list_tags"></ul>
@@ -16,6 +13,15 @@
             </div>
         {/if}
     {/foreach}
+    {foreach from=$otherFields item=field}
+        <div class="form-group">
+            <label for="{$field.id}">{$field.title}</label>
+            {ANCHOR place=$field.anchor_before}
+            {$field.class = 'form-control'}
+            {$formObj->createField($field)}
+        </div>
+    {/foreach}
+
     <div class="moveR" style="float:left;margin:0 5px 0 5px;">
         <button type="button" id="addNewCollection" class="btn btn-success">{lang('add_collection')}</button>
     </div>

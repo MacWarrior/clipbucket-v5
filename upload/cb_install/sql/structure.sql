@@ -65,7 +65,8 @@ CREATE TABLE `{tbl_prefix}collections` (
   `active` varchar(4) NOT NULL,
   `public_upload` varchar(4) NOT NULL,
   `type` ENUM('photos', 'videos') NOT NULL,
-  `thumb_objectid` BIGINT(20) NULL DEFAULT NULL
+  `thumb_objectid` BIGINT(20) NULL DEFAULT NULL,
+  sort_type INT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_520_ci;
 
 CREATE TABLE `{tbl_prefix}collection_items` (
@@ -134,7 +135,6 @@ CREATE TABLE `{tbl_prefix}counters` (
 CREATE TABLE `{tbl_prefix}countries` (
   `country_id` int(80) NOT NULL,
   `iso2` char(2) NOT NULL,
-  `name` varchar(80) NOT NULL,
   `name_en` varchar(80) NOT NULL,
   `iso3` char(3) DEFAULT NULL,
   `numcode` smallint(6) DEFAULT NULL
@@ -260,7 +260,7 @@ CREATE TABLE `{tbl_prefix}photos` (
   `ext` char(5) NOT NULL,
   `downloaded` bigint(255) NOT NULL DEFAULT 0,
   `server_url` text NULL DEFAULT NULL,
-  `owner_ip` varchar(20) NOT NULL,
+  `owner_ip` varchar(45) NOT NULL DEFAULT '',
   `photo_details` text NULL DEFAULT NULL,
   `age_restriction` INT DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_520_ci;
@@ -271,7 +271,6 @@ CREATE TABLE `{tbl_prefix}playlists` (
   `userid` int(11) NOT NULL DEFAULT 0,
   `playlist_type` varchar(10) NOT NULL DEFAULT '',
   `description` mediumtext NOT NULL,
-  `tags` mediumtext NOT NULL,
   `privacy` enum('public','private','unlisted') NOT NULL DEFAULT 'public',
   `total_items` int(255) NOT NULL DEFAULT 0,
   `last_update` text NULL DEFAULT NULL,
@@ -333,10 +332,11 @@ CREATE TABLE `{tbl_prefix}stats` (
 
 CREATE TABLE `{tbl_prefix}subscriptions` (
   `subscription_id` int(225) NOT NULL,
-  `userid` int(11) NOT NULL,
-  `subscribed_to` mediumtext NOT NULL,
+  `userid` BIGINT NOT NULL,
+  `subscribed_to` BIGINT NOT NULL,
   `date_added` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_520_ci;
+
 
 CREATE TABLE `{tbl_prefix}template` (
   `template_id` int(20) NOT NULL,
@@ -393,7 +393,8 @@ CREATE TABLE `{tbl_prefix}users` (
   `total_downloads` bigint(255) NOT NULL DEFAULT 0,
   `album_privacy` enum('public','private','friends') NOT NULL DEFAULT 'private',
   `likes` int(11) NOT NULL DEFAULT 0,
-  `is_live` enum('yes','no') NOT NULL DEFAULT 'no'
+  `is_live` enum('yes','no') NOT NULL DEFAULT 'no',
+  `active_theme` VARCHAR(15) NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_520_ci;
 
 CREATE TABLE `{tbl_prefix}user_levels` (
@@ -427,7 +428,7 @@ ALTER TABLE `{tbl_prefix}user_levels_permissions_values`
 CREATE TABLE `{tbl_prefix}user_permission_types` (
   `user_permission_type_id` INT(20) NOT NULL AUTO_INCREMENT PRIMARY KEY,
   `user_permission_type_name` varchar(225) NOT NULL,
-  `user_permission_type_desc` mediumtext NOT NULL
+  `user_permission_type_code` varchar(7) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_520_ci;
 
 ALTER TABLE `{tbl_prefix}user_levels_permissions`
@@ -441,7 +442,7 @@ CREATE TABLE `{tbl_prefix}user_profile` (
   `user_profile_id` int(11) NOT NULL,
   `show_my_collections` enum('yes','no') NOT NULL DEFAULT 'yes',
   `userid` bigint(20) NOT NULL UNIQUE,
-  `profile_title` mediumtext NOT NULL,
+  `profile_slogan` mediumtext NOT NULL,
   `profile_desc` mediumtext NOT NULL,
   `featured_video` mediumtext NOT NULL,
   `first_name` varchar(100) NOT NULL DEFAULT '',
@@ -489,7 +490,6 @@ CREATE TABLE `{tbl_prefix}video` (
   `videoid` bigint(20) NOT NULL,
   `videokey` mediumtext NOT NULL,
   `video_password` varchar(255) NOT NULL DEFAULT '',
-  `video_users` text NULL DEFAULT NULL,
   `username` text NULL DEFAULT NULL,
   `userid` int(11) NULL DEFAULT NULL,
   `title` text DEFAULT NULL,
@@ -524,7 +524,7 @@ CREATE TABLE `{tbl_prefix}video` (
   `default_thumb` int(3) NOT NULL DEFAULT 1,
   `embed_code` text NULL DEFAULT NULL,
   `downloads` bigint(255) NOT NULL DEFAULT 0,
-  `uploader_ip` varchar(20) NOT NULL DEFAULT '',
+  `uploader_ip` varchar(45) NOT NULL DEFAULT '',
   `video_files` tinytext NULL DEFAULT NULL,
   `file_server_path` text NULL DEFAULT NULL,
   `video_version` varchar(8) NOT NULL DEFAULT '5.5.1',
@@ -535,7 +535,10 @@ CREATE TABLE `{tbl_prefix}video` (
   `subscription_email` enum('pending','sent') NOT NULL DEFAULT 'pending',
   `age_restriction` INT DEFAULT NULL,
   `default_poster` int(3) NULL DEFAULT NULL,
-  `default_backdrop` int(3) NULL DEFAULT NULL
+  `default_backdrop` int(3) NULL DEFAULT NULL,
+  `fov` varchar(3) NULL DEFAULT NULL,
+  `convert_percent` FLOAT NULL DEFAULT 0,
+  `aspect_ratio` DECIMAL(10,6) NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_520_ci;
 
 CREATE TABLE `{tbl_prefix}video_views` (
@@ -1218,3 +1221,46 @@ ALTER TABLE `{tbl_prefix}flags`
     ADD CONSTRAINT `fk_id_flag_element_type` FOREIGN KEY (`id_flag_element_type`) REFERENCES `{tbl_prefix}flag_element_type` (`id_flag_element_type`) ON DELETE NO ACTION ON UPDATE NO ACTION,
     ADD CONSTRAINT `fk_id_flag_type` FOREIGN KEY (`id_flag_type`) REFERENCES `{tbl_prefix}flag_type` (`id_flag_type`) ON DELETE NO ACTION ON UPDATE NO ACTION,
     ADD CONSTRAINT `fk_flag_userid` FOREIGN KEY (`userid`) REFERENCES `{tbl_prefix}users` (`userid`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+CREATE TABLE IF NOT EXISTS `{tbl_prefix}tools_tasks`
+(
+    `id_histo` INT,
+    `loop_index`    INT,
+    `data`          TEXT,
+    PRIMARY KEY (id_histo, loop_index)
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8mb4
+  COLLATE utf8mb4_unicode_520_ci;
+
+ALTER TABLE `{tbl_prefix}tools_tasks`
+    ADD CONSTRAINT `tools_tasks_id_tool_histo` FOREIGN KEY (`id_histo`) REFERENCES `{tbl_prefix}tools_histo` (`id_histo`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+CREATE TABLE IF NOT EXISTS `{tbl_prefix}sorts`
+(
+    `id`         INT          NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `label`      VARCHAR(255) NOT NULL,
+    `type`       VARCHAR(255) NOT NULL,
+    `is_default` BOOLEAN      NOT NULL DEFAULT FALSE,
+    UNIQUE KEY `uk_label_type` (`label`, `type`),
+    INDEX (`type`)
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8mb4
+  COLLATE utf8mb4_unicode_520_ci;
+
+ALTER TABLE `{tbl_prefix}collections`
+    ADD CONSTRAINT `sort_type_ibfk_1` FOREIGN KEY (`sort_type`) REFERENCES `{tbl_prefix}sorts` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+CREATE TABLE IF NOT EXISTS `{tbl_prefix}video_users`
+(
+    videoid BIGINT(20) NOT NULL,
+    userid  BIGINT(20) NOT NULL,
+    PRIMARY KEY (videoid, userid)
+) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE utf8mb4_unicode_520_ci;
+
+ALTER TABLE `{tbl_prefix}video_users` ADD CONSTRAINT `video_users_ibfk_1` FOREIGN KEY (`videoid`) REFERENCES `{tbl_prefix}video` (`videoid`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+ALTER TABLE `{tbl_prefix}video_users` ADD CONSTRAINT `video_users_ibfk_2` FOREIGN KEY (`userid`) REFERENCES `{tbl_prefix}users` (`userid`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+ALTER TABLE `{tbl_prefix}subscriptions`
+    ADD CONSTRAINT `subscriptions_subscribed_to_fk` FOREIGN KEY (`subscribed_to`) REFERENCES `{tbl_prefix}users` (`userid`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+ALTER TABLE `{tbl_prefix}subscriptions`
+    ADD CONSTRAINT `subscriptions_userid_fk` FOREIGN KEY (`userid`) REFERENCES `{tbl_prefix}users` (`userid`) ON DELETE NO ACTION ON UPDATE NO ACTION;

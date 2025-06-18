@@ -5,92 +5,88 @@
         <i class="glyphicon glyphicon-chevron-up up" style="display:none;"></i>
     </a>
 </div>
-<div class="search_box well" id="collectionsearchdiv" {if $smarty.cookies.show_searchdiv_search!='show'}style="display:none;"{/if}>
-    <br>
-    <form action="collection_manager.php" method="get" name="search_collections">
-        <div class="row">
-            <div class="col-md-4">
-                <div class="form-group">
-                    <label for="title">{lang code='collection_name'}</label>
-                    <input name="title" type="text" class="form-control" id="title" value="{'title'|get_form_val:true}" />
-                </div>
-            </div>
-            <div class="col-md-2">
-                <div class="form-group">
-                    <label for="collectionid">Collection id</label>
-                    <input name="collectionid" type="text" class="form-control" id="collectionid" value="{'collectionid'|get_form_val:true}" />
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="form-group">
-                    <label for="tags">{lang code='collection_tags'}</label>
-                    <input name="tags" type="hidden" class="form-control" id="tags" value="{'tags'|get_form_val:true}" />
-                    <ul id="list_tags"></ul>
-                </div>
-            </div>
-            <div class="col-md-2">
-                <div class="form-group">
-                    <label for="userid">Userid</label>
-                    <input name="userid" type="text" class="form-control" id="userid" value="{'userid'|get_form_val:true}" />
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="form-group">
-                    <label for="active">Active</label>
-                    <select name="active" id="active" class="form-control">
-                        <option value=""></option>
-                        <option value="yes" {if $smarty.get.active=='yes'}selected{/if}>{lang code='yes'}</option>
-                        <option value="no" {if $smarty.get.active=='no'}selected{/if}>{lang code='no'}</option>
-                    </select>
-                </div>
-            </div>
-            <div class="col-md-2">
-                <div class="form-group">
-                    <label for="broadcast">Broadcast</label>
-                    <select name="broadcast" id="broadcast" class="form-control">
-                        <option value=""></option>
-                        <option value="public" {if $smarty.get.broadcast=='public'}selected{/if}>Public</option>
-                        <option value="private" {if $smarty.get.broadcast=='private'}selected{/if}>{lang code='private'}</option>
-                    </select>
-                </div>
-            </div>
-            <div class="col-md-2">
-                <div class="form-group">
-                    <label for="featured">{lang code='featured'}</label>
-                    <select name="featured" id="featured" class="form-control">
-                        <option value=""></option>
-                        <option value="yes" {if $smarty.get.featured=='yes'}selected{/if}>{lang code='yes'}</option>
-                        <option value="no" {if $smarty.get.featured=='no'}selected{/if}>{lang code='no'}</option>
-                    </select>
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="form-group">
-                    <label for="collection_type">Type</label>
-                    <select name="collection_type" id="collection_type" class="form-control">
-                        <option value="" ></option>
-                        {foreach from=$cbcollection->types item=name key=type}
-                        <option value="{$type}" {if $smarty.get.collection_type==$type}selected{/if}>{$name}</option>
-                        {/foreach}
-                    </select>
-                </div>
-            </div>
-            <div class="col-md-2">
-                <div class="form-group">
-                    <label for="order">Order</label>
-                    <select name="order" id="order" class="form-control">
-                        <option value="collection_id" {if $smarty.get.order=='collection_id'}selected{/if}>CID</option>
-                        <option value="total_objects" {if $smarty.get.order=='total_objects'}selected{/if}>Total Items</option>
-                        <option value="collection_name" {if $smarty.get.order=='collection_name'}selected{/if}>Name</option>
-                        <option value="views" {if $smarty.get.order=='views'}selected{/if}>Views</option>
-                    </select>
-                </div>
+<div class="search_box well" id="collectionsearchdiv" {if empty($smarty.post.search)}style="display:none;"{/if}>
+    <div class="row">
+        <div class="col-md-4">
+            <div class="form-group">
+                <label for="collection_name">{lang code='collection_name'}</label>
+                <input name="collection_name" type="text" class="form-control" id="collection_name" value="{display_clean($smarty.post.collection_name)}" />
             </div>
         </div>
+        <div class="col-md-2">
+            <div class="form-group">
+                <label for="collectionid">Collection id</label>
+                <input name="collectionid" type="text" class="form-control" id="collectionid" value="{display_clean($smarty.post.collectionid)}" />
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="form-group">
+                <label for="tags">{lang code='collection_tags'}</label>
+                <input name="tags" type="hidden" class="form-control" id="tags" value="{display_clean($smarty.post.tags)}" />
+                <ul id="list_tags"></ul>
+            </div>
+        </div>
+        <div class="col-md-2">
+            <div class="form-group">
+                <label for="userid">Userid</label>
+                <input name="userid" type="text" class="form-control" id="userid" value="{display_clean($smarty.post.userid)}" />
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="form-group">
+                <label for="active">Active</label>
+                <select name="active" id="active" class="form-control">
+                    <option value=""></option>
+                    <option value="yes" {if $smarty.post.active=='yes'}selected{/if}>{lang code='yes'}</option>
+                    <option value="no" {if $smarty.post.active=='no'}selected{/if}>{lang code='no'}</option>
+                </select>
+            </div>
+        </div>
+        <div class="col-md-2">
+            <div class="form-group">
+                <label for="broadcast">Broadcast</label>
+                <select name="broadcast" id="broadcast" class="form-control">
+                    <option value=""></option>
+                    <option value="public" {if $smarty.post.broadcast=='public'}selected{/if}>Public</option>
+                    <option value="private" {if $smarty.post.broadcast=='private'}selected{/if}>{lang code='private'}</option>
+                </select>
+            </div>
+        </div>
+        <div class="col-md-2">
+            <div class="form-group">
+                <label for="featured">{lang code='featured'}</label>
+                <select name="featured" id="featured" class="form-control">
+                    <option value=""></option>
+                    <option value="yes" {if $smarty.post.featured=='yes'}selected{/if}>{lang code='yes'}</option>
+                    <option value="no" {if $smarty.post.featured=='no'}selected{/if}>{lang code='no'}</option>
+                </select>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="form-group">
+                <label for="collection_type">Type</label>
+                <select name="collection_type" id="collection_type" class="form-control">
+                    <option value=""></option>
+                    {foreach from=Collections::getInstance()->types item=name key=type}
+                    <option value="{$type}" {if $smarty.post.collection_type==$type}selected{/if}>{$name}</option>
+                    {/foreach}
+                </select>
+            </div>
+        </div>
+        <div class="col-md-2">
+            <div class="form-group">
+                <label for="order">Order</label>
+                <select name="order" id="order" class="form-control">
+                    <option value=""></option>
+                    <option value="collection_id" {if $smarty.post.order=='collection_id'}selected{/if}>CID</option>
+                    <option value="total_objects" {if $smarty.post.order=='total_objects'}selected{/if}>Total Items</option>
+                    <option value="collection_name" {if $smarty.post.order=='collection_name'}selected{/if}>Name</option>
+                </select>
+            </div>
+        </div>
+    </div>
 
-        <br/>
-        <div class="button">
-            <input type="submit" name="search" id="search" value='{lang code="search"}' class="btn btn-success btn-sm"/>
-        </div>
-    </form>
+    <div class="button">
+        <input type="submit" name="search" value='{lang code="search"}' class="btn btn-success btn-sm"/>
+    </div>
 </div>

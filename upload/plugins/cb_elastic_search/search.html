@@ -35,7 +35,7 @@
                         </h4>
                         <div class="all-search-holder clearfix">
                         {foreach $videos as $video}
-                            {include file="$style_dir/blocks/video.html" display_type='normal'}
+                            {include file="$style_dir/blocks/videos/video.html" display_type='normal'}
                         {/foreach}
                         </div>
                     </div><!-- videos -->
@@ -63,7 +63,7 @@
                         <div class="row">
                          
                         {foreach $users as $user}
-                            {$user_details = $userquery->get_user_details($user.userid)}
+                            {$user_details = userquery::getInstance()->get_user_details($user.userid)}
                                 {include file="$style_dir/blocks/user.html"}
                         {/foreach}
                          </div><!-- users list -->
@@ -91,7 +91,7 @@
                         <div class="all-search-holder clearfix">
                         	{if $videos}
                             {foreach $videos as $video}
-                                {include file="$style_dir/blocks/video.html" display_type='normal'}
+                                {include file="$style_dir/blocks/videos/video.html" display_type='normal'}
                             {/foreach}
                         	<div class="pagination-holder clearfix">
 								<div class="pagination-holder clearfix">
@@ -141,7 +141,7 @@
                         <div class="row">
                             {if $users}
                             {foreach $users as $user}
-                                {$user_details = $userquery->get_user_details($user.userid)}
+                                {$user_details = userquery::getInstance()->get_user_details($user.userid)}
                                 {include file="$style_dir/blocks/user.html"}
                             {/foreach}
                             <div class="pagination-holder clearfix">

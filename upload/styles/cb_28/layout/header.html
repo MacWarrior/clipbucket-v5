@@ -45,7 +45,7 @@
 
                     {ANCHOR place="before_logo"}
                     <h1 class="logo no_select">
-                        <a href="/">
+                        <a href="{$baseurl}">
                             <img alt="logo" src="{get_website_logo_path()}" class="img-responsive"/>
                         </a>
                     </h1>
@@ -83,7 +83,7 @@
                             </nav>
                         </div>
                         {$types_list = array()}
-                        {foreach from=$Cbucket->search_types item=t key=stypes}
+                        {foreach from=ClipBucket::getInstance()->search_types item=t key=stypes}
                             {if !User::getInstance()->hasPermission('view_'|cat:$menu.this)}
                                 {continue}
                             {/if}
@@ -117,11 +117,11 @@
                             {/if}
                             <ul class="nav navbar-nav navbar-right right-menu">
                                 {if user_id()}
-                                    {if (isSectionEnabled('videos') && !empty($Upload->get_upload_options()) && User::getInstance()->hasPermission('allow_video_upload')) || (isSectionEnabled('photos') && config('enable_photo_file_upload') == 'yes' && User::getInstance()->hasPermission('allow_photo_upload'))}
+                                    {if (isSectionEnabled('videos') && !empty(Upload::getInstance()->get_upload_options()) && User::getInstance()->hasPermission('allow_video_upload')) || (isSectionEnabled('photos') && config('enable_photo_file_upload') == 'yes' && User::getInstance()->hasPermission('allow_photo_upload'))}
                                         <li class="dropdown upload_link">
                                             <a href="{link name='upload'}" class="dropdown-toggle btn-upload btn btn-default" data-toggle="dropdown"><i class="icon-upload"></i><span>{lang code="upload"}</span><b class="icon-down-arrow"></b></a>
                                             <ul role="menu" class="dropdown-menu">
-                                                {if User::getInstance()->hasPermission('allow_video_upload') && isSectionEnabled('videos') && !empty($Upload->get_upload_options())}
+                                                {if User::getInstance()->hasPermission('allow_video_upload') && isSectionEnabled('videos') && !empty(Upload::getInstance()->get_upload_options())}
                                                     <li class="up_vid"><a href="{link name='upload'}">{lang code="upload_video"}<i class="icon-video visible-xs"></i></a></li>
                                                 {/if}
                                                 {if User::getInstance()->hasPermission('allow_photo_upload') && isSectionEnabled('photos') && config('enable_photo_file_upload') == 'yes'}
@@ -134,7 +134,7 @@
 
                                     <li class="dropdown myaccount-dd">
                                         <a href="javascript:void(0);" class="user-area dropdown-toggle" data-toggle="dropdown">
-                                            <img src="{$userquery->getUserThumb('', '',user_id())}" class="no_select" width="35" height="35"/>
+                                            <img src="{userquery::getInstance()->getUserThumb('', '',user_id())}" class="no_select" width="35" height="35"/>
                                             <span>{display_clean(User::getInstance()->get('username')|truncate:15)}</span>
                                         </a>
                                         <ul class="dropdown-menu">
@@ -152,7 +152,7 @@
                                                 <li class="hidden-xs"><a href="{link name='manage_collections'}">{lang('manage_x', lang('collections')|lower)}</a></li>
                                             {/if}
                                             {if isSectionEnabled('playlists') && User::getInstance()->hasPermission('allow_create_playlist')}
-                                                <li><a href="/manage_playlists.php?user={display_clean(User::getInstance()->get('username'))}">{lang('manage_x', lang('playlists')|lower)}</a></li>
+                                                <li><a href="{$baseurl}manage_playlists.php?user={display_clean(User::getInstance()->get('username'))}">{lang('manage_x', lang('playlists')|lower)}</a></li>
                                             {/if}
                                             {if isSectionEnabled('channels') && Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '136') && User::getInstance()->get('is_channel_enable')}
                                                 <li><a href="{User::getInstance()->getLink('channel')}">{lang code="my_channel"}</a></li>
@@ -170,7 +170,7 @@
                                         </li>
                                     {/if}
                                     <li class="navbar-sm-login-links">
-                                        <a class="btn btn-default btn-login" href="{link name='signup'}?mode=login">{lang code='login'}</a>
+                                        <a class="btn btn-default btn-login" href="{link name='signin'}">{lang code='login'}</a>
                                     </li>
 
                                 {/if}
@@ -182,58 +182,4 @@
         </div>
     </nav>
 </header>
-{include file="$style_dir/blocks/spinner.html" }
-<script>
-    $(document).ready(function(){
-        $(".cbsearchtype a").on({
-            click: function(e){
-                e.preventDefault();
-                let prent_li = $(this).parents();
-                let theNewVal = $(this).attr('valNow');
-                $('.type').val(theNewVal);
-                $('.cbsearchtype li').removeClass('active');
-                prent_li.addClass('active');
-            }
-        });
-
-        $('.s-types').on("click", function(){
-            let text = $(this).html();
-            $('.search-type').html(text);
-        });
-
-        $('#cbsearch').on("click", function(e){
-            e.preventDefault();
-            let searchQuery = $('#query').val();
-            let queryLen = searchQuery.length;
-            if (queryLen <= 2) {
-                let msg = '{lang code="search_too_short"}';
-                msg = msg.replace('%s', '<b>'+searchQuery+'</b>');
-                _cb.throwHeadMsg('warning', msg, 3000, true);
-            } else {
-                $('.search-form').submit();
-            }
-        });
-
-        window.addEventListener('resize', adaptRatioPlayer);
-    });
-    function adaptRatioPlayer(){
-        var div = document.querySelector('.player-holder');
-
-        if(div === null){
-            return;
-        }
-
-        const clean_class = div.className.replace(" fix_ratio ", "");
-
-        const ratio_window = window.innerWidth / window.innerHeight;
-        const ratio_div = document.querySelector('.player-holder video').videoWidth / document.querySelector('.player-holder video').videoHeight;
-
-        div.style.aspectRatio = ratio_div;
-
-        if ( ratio_window > ratio_div) {
-            div.className = clean_class+' fix_ratio '
-        } else {
-            div.className = clean_class
-        }
-    }
-</script>
+{include file="$style_dir/blocks/spinner.html"}

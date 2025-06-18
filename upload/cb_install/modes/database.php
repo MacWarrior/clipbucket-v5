@@ -1,7 +1,7 @@
 <?php
-if (file_exists(DirPath::get('includes') . 'config.php') && DEVELOPMENT_MODE) {
+if (file_exists(DirPath::get('includes') . 'config.php') && System::isInDev()) {
     if (!class_exists('Clipbucket_db')) {
-        require_once DirPath::get('classes') . DIRECTORY_SEPARATOR . 'db.class.php';
+        require_once DirPath::get('classes') . 'db.class.php';
         require_once DirPath::get('includes') . 'functions.php';
     }
     require_once DirPath::get('includes') . 'config.php';
@@ -79,7 +79,7 @@ $prefix = defined('TABLE_PREFIX') ? TABLE_PREFIX : 'cb_';
                 </p>
             </div>
 
-            <?php if (DEVELOPMENT_MODE) {?>
+            <?php if (System::isInDev()) {?>
                 <div >
                     <label class="grey-text" for="reset_db">Reset DataBase</label>
                     <input type="checkbox" name="reset_db" id="reset_db" value="1">

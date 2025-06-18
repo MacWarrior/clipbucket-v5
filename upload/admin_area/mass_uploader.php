@@ -1,11 +1,11 @@
 <?php
 define('THIS_PAGE', 'mass_uploader');
-
 require_once dirname(__FILE__, 2) . '/includes/admin_config.php';
+
 require_once DirPath::get('classes') . 'sLog.php';
-global $Cbucket, $userquery, $pages, $cbmass, $Upload, $cbvid, $breadcrumb;
+global $cbmass, $breadcrumb;
 User::getInstance()->hasPermissionOrRedirect('admin_access', true);
-$pages->page_redir();
+pages::getInstance()->page_redir();
 
 $delMassUpload = config('delete_mass_upload');
 
@@ -57,7 +57,7 @@ if (isset($_POST['mass_upload_video'])) {
             , 'allow_embedding' => 'yes'
         ];
 
-        $vid = $Upload->submit_upload($array);
+        $vid = Upload::getInstance()->submit_upload($array);
 
         if (error()) {
             e('Unable to upload "' . $file_arr['title'] . '"', 'e');
@@ -74,9 +74,9 @@ if (isset($_POST['mass_upload_video'])) {
             $log = new SLog($logFile);
 
             $log->newSection('Pre-Check Configurations');
-            $log->writeLine('File to be converted', 'Initializing File <strong>' . $file_name . '</strong> and pre checking configurations...', true);
+            $log->writeLine(date('Y-m-d H:i:s').' - Initializing File <strong>' . $file_name . '</strong> and pre checking configurations...');
 
-            $results = $Upload->add_conversion_queue($file_name);
+            $results = Upload::getInstance()->add_conversion_queue($file_name);
             $str1 = date('Y') . DIRECTORY_SEPARATOR . date('m') . DIRECTORY_SEPARATOR . date('d');
             $str = $str1 . DIRECTORY_SEPARATOR;
             mkdir(DirPath::get('videos') . $str, 0755, true);
@@ -84,11 +84,11 @@ if (isset($_POST['mass_upload_video'])) {
             $fname = explode('.', $file_name);
             $cond = 'file_name=' . '\'' . $fname[0] . '\'';
             $result = Clipbucket_db::getInstance()->db_update(tbl('video'), $fields, $cond);
-            $result = exec(System::get_binaries('php') . ' -q ' . DirPath::get('actions')  . 'video_convert.php ' . $file_name . ' ' . $file_key . ' ' . $file_directory . ' ' . $logFile . ' ' . $file_track . ' > /dev/null &');
+            FFmpeg::launchConversion($file_key, $file_track);
             if (file_exists(DirPath::get('conversion_queue') . $file_name)) {
                 unlink(DirPath::get('conversion_queue') . $file_name);
                 foreach ($vtitle as $title) {
-                    $resul1 = glob(DirPath::get('files') . DIRECTORY_SEPARATOR . 'videos' . DIRECTORY_SEPARATOR . $title . '.*');
+                    $resul1 = glob(DirPath::get('videos') . $title . '.*');
                     unlink($resul1[0]);
                 }
             }
@@ -107,7 +107,7 @@ if (isset($_POST['mass_upload_video'])) {
     }
 }
 
-$min_suffixe = in_dev() ? '' : '.min';
+$min_suffixe = System::isInDev() ? '' : '.min';
 ClipBucket::getInstance()->addAdminJS([
     'jquery-ui-1.13.2.min.js'                               => 'admin'
     ,'tag-it'.$min_suffixe.'.js'                            => 'admin'

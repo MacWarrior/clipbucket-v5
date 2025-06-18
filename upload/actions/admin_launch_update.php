@@ -6,7 +6,7 @@ User::getInstance()->hasPermissionAjax('admin_access');
 $core_tool = new AdminTool();
 
 $error_init = [];
-if (Update::IsCurrentDBVersionIsHigherOrEqualTo(AdminTool::MIN_VERSION_CODE, AdminTool::MIN_REVISION_CODE)) {
+if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.0', '367')) {
     $error_init['core'] = $core_tool->initByCode('update_core');
     $error_init['db'] = AdminTool::getInstance()->initByCode('update_database_version');
 } else {
@@ -17,7 +17,7 @@ if (Update::IsCurrentDBVersionIsHigherOrEqualTo(AdminTool::MIN_VERSION_CODE, Adm
 if(($error_init['core'] === false && $_POST['type'] == 'core' )|| $error_init['db'] === false) {
     echo json_encode([
         'success' => false
-        ,'error_msg' => in_dev() ? 'Failed to find tools for update' : lang('technical_error')
+        ,'error_msg' => System::isInDev() ? 'Failed to find tools for update' : lang('technical_error')
     ]);
     die();
 }

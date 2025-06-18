@@ -1,284 +1,71 @@
-{if $mode =='show_settings'}
-	<div class="heading">
-	  <h2>{lang code='player_settings'}</h2>
-	</div>
+<div class="heading">
+    <h2>Selected Player</h2>
+</div>
+<div>
+    {assign var="player_dir" value=ClipBucket::getInstance()->configs.player_dir}
+    {assign var="player_file" value=ClipBucket::getInstance()->configs.player_file}
+    {assign var="curplayer" value=$cbplayer->getPlayerDetails($player_file,$player_dir)}
 
-	<form action="manage_players.php?mode=show_settings" method="post" enctype="multipart/form-data" name="player_settings">
+    <div class="row">
+        <div class="col-md-4">
+            <div class="row">
+                <div class="col-md-10 col-md-offset-1">
+                    <div class="alignCenter well">
+                        <img src="{$cbplayer->get_preview_thumb($curplayer.folder)}" class="img-thumbnail"/>
+                        <h3>{$curplayer.name}</h3>
+                        <em>
+                            {if $player.author_page}
+                                <a href="{$curplayer.author_page}"><strong>{$curplayer.author}</strong></a>
+                            {else}
+                                <strong>{$curplayer.author}</strong>
+                            {/if}
+                        </em>
+                        <p>{$curplayer.description}</p>
+                        <p>Version : {$curplayer.version}, Released on {$curplayer.released|date_format}</p>
+                        {if $curplayer.website}
+                            <p>Website : <a href="{$curplayer.website}">{$curplayer.website}</a></p>
+                        {/if}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
-		<div class="row">
-			{if config('video_embed') }
-			<div class="col-md-4">
-				<fieldset>
-					<legend>Embed player</legend>
-					<div class="row">
-						<div class="col-md-8">
-							<label for="embed_player_width">
-								Embed Player default Width<br>
-								<small>Embedable player default width in pixels</small>
-							</label>
-						</div>
-						<div class="col-md-4">
-							<input class="form-control" name="embed_player_width" type="text" id="embed_player_width" value="{$row.embed_player_width}" />
-						</div>
-					</div>
-
-					<div class="row">
-						<div class="col-md-8">
-							<label for="embed_player_height">
-								Embed Player default Height<br>
-								<small>Embedable player default height in pixels</small>
-							</label>
-						</div>
-						<div class="col-md-4">
-							<input class="form-control" name="embed_player_height" type="text" id="embed_player_height" value="{$row.embed_player_height}"/>
-						</div>
-					</div>
-
-					<div class="row">
-						<div class="col-md-8">
-							<label for="autoplay_embed">
-								Autoplay Embed<br>
-								<small>Autoplay embeded video by default</small>
-							</label>
-						</div>
-						<div class="col-md-4">
-							<input value="yes" name="autoplay_embed" id="autoplay_embed" {if $row.autoplay_embed=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
-							<span class="lbl"></span>
-						</div>
-					</div>
-				</fieldset>
-			</div>
-			{/if}
-
-			<div class="col-md-4">
-				<fieldset>
-					<legend>Controls bar logo</legend>
-					<div class="row">
-						<div class="col-md-4">
-							<label for="control_bar_logo">
-								Enable Controls bar logo<br>
-								<small>Add a logo in the controls bar</small>
-							</label>
-						</div>
-						<div class="col-md-8">
-							<input value="yes" name="control_bar_logo" id="control_bar_logo" {if $row.control_bar_logo=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
-							<span class="lbl"></span>
-						</div>
-					</div>
-
-					<div class="row">
-						<div class="col-md-4">
-							<label for="control_bar_logo_url">
-								Controls bar logo<br>
-								<small>Maximum 40x30pxl</small>
-							</label>
-						</div>
-						<div class="col-md-8">
-							<input type="file" accept='image/*' name="control_bar_logo_url" id="control_bar_logo_url" style="display:inline-block;" {if $row.control_bar_logo!='yes'}disabled{/if}/>
-							<div style="display:inline-block;width:40px;height:30px;background-color:rgba(43, 51, 63, 0.7);background-image:url({$row.control_bar_logo_url});background-repeat:no-repeat;background-position:center;vertical-align:middle;">
-							</div>
-							<input type="submit" name="reset_control_bar_logo_url" value="Reset" {if $row.control_bar_logo!='yes'}disabled{/if}/>
-						</div>
-					</div>
-
-					<div class="row">
-						<div class="col-md-4">
-							<label for="player_logo_url">
-								Controls bar logo URL<br>
-								<small>Will be opened in a new tab</small>
-							</label>
-						</div>
-						<div class="col-md-8">
-							<input class="form-control" name="player_logo_url" type="text" id="player_logo_url" value="{$row.player_logo_url}" {if $row.control_bar_logo!='yes'}disabled{/if}/>
-						</div>
-					</div>
-				</fieldset>
-			</div>
-
-			<div class="col-md-8">
-				<fieldset>
-					<legend>Other options</legend>
-					<div class="row">
-						<div class="col-md-4">
-							<label for="autoplay_video">
-								Autoplay<br>
-								<small>if yes, all videos will be played automatically</small>
-							</label>
-						</div>
-						<div class="col-md-2">
-							<input value="yes" name="autoplay_video" id="autoplay_video" {if $row.autoplay_video=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
-							<span class="lbl"></span>
-						</div>
-                        <div class="col-md-4">
-                            <label for="contextual_menu_disabled">
-                                Disable contextual menu<br>
-                                <small>Disable right click on video</small>
-                            </label>
-                        </div>
-                        <div class="col-md-2">
-                            <input value="yes" name="contextual_menu_disabled" id="contextual_menu_disabled" {if $row.contextual_menu_disabled=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
-                            <span class="lbl"></span>
-                        </div>
-					</div>
-
-					<hr/>
-					<div class="row">
-						<div class="col-md-4">
-							<label for="chromecast">
-								Enable Chromecast support<br>
-								<small>Allow users to stream videos on Chromecast</small>
-							</label>
-						</div>
-						<div class="col-md-2">
-							<input value="yes" name="chromecast" id="chromecast" {if $row.chromecast=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
-							<span class="lbl"></span>
-						</div>
-                        <div class="col-md-4">
-                            <label for="player_thumbnails">
-                                Thumbnails<br>
-                                <small>Enable player thumbnails</small>
-                            </label>
-                        </div>
-                        <div class="col-md-2">
-                            <input value="yes" name="player_thumbnails" id="player_thumbnails" {if $row.player_thumbnails=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
-                            <span class="lbl"></span>
-                        </div>
-					</div>
-
-					<hr/>
-					<div class="row">
-						<div class="col-md-4">
-							<label for="player_subtitles">
-								Enable subtitles<br>
-								<small>Allow users to select subtitles</small>
-							</label>
-						</div>
-						<div class="col-md-2">
-							<input value="1" name="player_subtitles" id="player_subtitles" {if $row.player_subtitles=='1'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
-							<span class="lbl"></span>
-						</div>
-					</div>
-
-                    <hr/>
-                    <div class="row">
-                        <div class="col-md-3">
-                            <label class="nowrap" for="player_default_resolution" title="Default video resolution">Default video resolution</label>
-                        </div>
-                        <div class="col-md-3">
-                            <select class="form-control" name="player_default_resolution" id="player_default_resolution">
-
-                                {foreach from=$myquery->getVideoResolutions() item=ratio}
-                                {foreach from=$ratio item=resolution}
-                                <option {if $resolution.height==$row.player_default_resolution}selected{/if} value="{$resolution.height}">
-                                    {$resolution.title}
-                                </option>
-                                {/foreach}
-                                {/foreach}
-
-                            </select>
-                        </div>
-                        <div class="col-md-3">
-                            <label class="nowrap" for="player_default_resolution_hls" title="Default HLS video resolution">Default HLS video resolution</label>
-                        </div>
-                        <div class="col-md-3">
-                            <select class="form-control" name="player_default_resolution_hls" id="player_default_resolution_hls">
-                                <option {if $row.player_default_resolution_hls=="auto"}selected{/if} value="auto">
-                                    {lang code='video_resolution_auto'}
-                                </option>
-                                {foreach from=$myquery->getVideoResolutions() item=ratio}
-                                {foreach from=$ratio item=resolution}
-                                <option {if $resolution.height==$row.player_default_resolution_hls}selected{/if} value="{$resolution.height}">
-                                    {$resolution.title}
-                                </option>
-                                {/foreach}
-                                {/foreach}
-
-                            </select>
+<div class="heading">
+    <h2>Available Players</h2>
+</div>
+<div>
+    {assign var='players' value=$cbplayer->getPlayers()}
+    <div class="templates_container">
+        <div class="row">
+            {foreach from=$players item=player}
+                {if $player_file !=$player.file && $player_dir != $player.folder}
+                    <div class="col-md-4">
+                        <div class="row">
+                            <div class="col-md-10 col-md-offset-1">
+                                <div class="well alignCenter">
+                                    <img src="{$cbplayer->get_preview_thumb($player.folder)}" class="img-thumbnail">
+                                    <h2>{$player.name}</h2>
+                                    <em>
+                                        {if $player.author_page}
+                                            <a href="{$player.author_page}"><strong>{$player.author}</strong></a>
+                                        {else}
+                                            <strong>{$player.author}</strong>
+                                        {/if}
+                                    </em>
+                                    <p>{$player.description}</p>
+                                    <p>Version : {$player.version}, Released on {$player.released|date_format}</p>
+                                    {if $player.website}
+                                        <p>Website : <a href="{$player.website}">{$player.website}</a></p>
+                                    {/if}
+                                    <p><a href="{DirPath::getUrl('admin_area')}manage_players.php?set=yes&folder={$player.folder}&file={$player.file}">Activate This Player</a></p>
+                                </div>
+                            </div>
                         </div>
                     </div>
-
-					<hr/>
-				</fieldset>
-			</div>
-		</div>
-
-		<br/>
-		<div class="button">
-			<input type="submit" class="btn btn-primary" value="Update Player Settings" name="update" style="display:block;margin:auto;">
-		</div>
-	</form>
-
-{else}
-	<div class="heading">
-  		<h2>Selected Player</h2>
-	</div>
-	<div>
-		{assign var="player_dir" value=$Cbucket->configs.player_dir}
-		{assign var="player_file" value=$Cbucket->configs.player_file}
-		{assign var="curplayer" value=$cbplayer->getPlayerDetails($player_file,$player_dir)}
-
-		<div class="row">
-			<div class="col-md-4">
-				<div class="row">
-					<div class="col-md-10 col-md-offset-1">
-						<div class="alignCenter well">
-							<img src="{$cbplayer->get_preview_thumb($curplayer.folder)}" class="img-thumbnail"/>
-							<h3>{$curplayer.name}</h3>
-							<em>
-								{if $player.author_page}
-								<a href="{$curplayer.author_page}"><strong>{$curplayer.author}</strong></a>
-								{else}
-								<strong>{$curplayer.author}</strong>
-								{/if}
-							</em>
-							<p>{$curplayer.description}</p>
-							<p>Version : {$curplayer.version}, Released on {$curplayer.released|date_format}</p>
-							{if $curplayer.website}
-							<p>Website : <a href="{$curplayer.website}">{$curplayer.website}</a></p>
-							{/if}
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
-
-	<div class="heading">
-		<h2>Available Players</h2>
-	</div>
-	<div>
-		{assign var='players' value=$cbplayer->getPlayers()}
-
-		<div class="templates_container">
-			<div class="row">
-				{foreach from=$players item=player}
-					{if $player_file !=$player.file && $player_dir != $player.folder}
-						<div class="col-md-4">
-							<div class="row">
-								<div class="col-md-10 col-md-offset-1">
-									<div class="well alignCenter">
-										<img src="{$cbplayer->get_preview_thumb($player.folder)}" class="img-thumbnail" >
-										<h2>{$player.name}</h2>
-										<em>
-											{if $player.author_page}
-											<a href="{$player.author_page}"><strong>{$player.author}</strong></a>
-											{else}
-											<strong>{$player.author}</strong>
-											{/if}
-										</em>
-										<p>{$player.description}</p>
-										<p>Version : {$player.version}, Released on {$player.released|date_format}</p>
-										{if $player.website}
-										<p>Website : <a href="{$player.website}">{$player.website}</a></p>
-										{/if}
-										<p><a href="manage_players.php?set=yes&folder={$player.folder}&file={$player.file}">Activate This Player</a></p>
-									</div>
-								</div>
-							</div>
-						</div>
-					{/if}
-				{/foreach}
-			</div>
-		</div>
-	</div>
-{/if}
+                {/if}
+            {/foreach}
+        </div>
+    </div>
+</div>

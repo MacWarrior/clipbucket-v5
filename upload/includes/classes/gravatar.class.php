@@ -104,7 +104,7 @@ class Gravatar
         $this->extra = $extra;
     }
 
-    public function isValidEmail($email)
+    public function isValidEmail($email): bool
     {
         return is_valid_syntax('email', $email);
     }

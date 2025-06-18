@@ -7,17 +7,18 @@ if (!defined('PARENT_PAGE')) {
 }
 
 require_once 'common.php';
-require_once 'plugins.php';
 
 define('TEMPLATEDIR', DirPath::get('styles') . ClipBucket::getInstance()->template);
 define('TEMPLATEURL', DirPath::getUrl('styles') . ClipBucket::getInstance()->template);
 define('LAYOUT', TEMPLATEDIR . DIRECTORY_SEPARATOR . 'layout');
-Assign('baseurl', get_server_url());
+Assign('baseurl', DirPath::getUrl('root'));
 Assign('imageurl', TEMPLATEURL . '/images');
 Assign('layout', TEMPLATEURL . '/layout');
 Assign('theme', TEMPLATEURL . '/theme');
 Assign('template_dir', TEMPLATEDIR);
 Assign('style_dir', LAYOUT);
+
+require_once 'plugins.php';
 
 //Checking Website is closed or not
 if (config('closed') && THIS_PAGE != 'ajax' && !$in_bg_cron && THIS_PAGE != 'cb_install' && THIS_PAGE != 'signup') {

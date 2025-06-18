@@ -116,7 +116,7 @@ switch ($mode) {
         break;
 }
 
-$min_suffixe = in_dev() ? '' : '.min';
+$min_suffixe = System::isInDev() ? '' : '.min';
 
 $params = [];
 $params['limit'] = 10;
@@ -132,28 +132,14 @@ if (config('enable_comments_video') != 'yes' && config('enable_comments_photo') 
     if( config('enable_visual_editor_comments') == 'yes' ){
         ClipBucket::getInstance()->addAdminJS(['toastui/toastui-editor-all' . $min_suffixe . '.js' => 'libs']);
         ClipBucket::getInstance()->addAdminCSS(['/toastui/toastui-editor' . $min_suffixe . '.css' => 'libs']);
-
-        $filepath = DirPath::get('libs') . 'toastui' . DIRECTORY_SEPARATOR . 'toastui-editor-' . config('default_theme') . $min_suffixe . '.css';
-        if( config('default_theme') != '' && file_exists($filepath) ){
-            ClipBucket::getInstance()->addAdminCSS([
-                'toastui/toastui-editor-' . config('default_theme') . $min_suffixe . '.css' => 'libs'
-            ]);
-        }
     }
 }
 
 $update = Update::getInstance();
 $can_sse = System::can_sse() ? 'true' : 'false';
 assign('can_sse', $can_sse);
-Assign('VERSION', $update->getCurrentCoreVersion());
-Assign('STATE', strtoupper($update->getCurrentCoreState()));
 Assign('comments', $comments);
-Assign('changelog_551', $update->getChangelogHTML('551'));
-Assign('changelog_550', $update->getChangelogHTML('550'));
-Assign('changelog_541', $update->getChangelogHTML('541'));
-Assign('changelog_540', $update->getChangelogHTML('540'));
-Assign('changelog_531', $update->getChangelogHTML('531'));
-Assign('changelog_530', $update->getChangelogHTML('530'));
+assign('changelog_tab', [Update::getInstance()->getCurrentCoreVersionCode() => Update::getInstance()->getCurrentCoreVersion()]);
 Assign('is_update_processing', (Update::IsUpdateProcessing() ? 'true' : 'false'));
 if( config('enable_update_checker') == '1' ){
     Assign('update_checker_status', $update->getCoreUpdateStatus());

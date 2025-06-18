@@ -2,15 +2,17 @@
 	{include file="$style_dir/global_header.html"}
 {/if}
 	<body>
-
-		{assign var=qlist_videos value=get_fast_qlist()}
-		{assign var=litems_count value=$qlist_videos|@count}
-		{if $litems_count >= 1}
-			{assign var=got_qlitems value="yes"}
-		{else}
-			{assign var=got_qlitems value="false"}
+		{if config('enable_quicklist') == 'yes' && Session::isCookieConsent('fast_qlist')}
+			{assign var=qlist_videos value=get_fast_qlist()}
+			{assign var=litems_count value=$qlist_videos|@count}
+			{if $litems_count >= 1}
+				{assign var=got_qlitems value="yes"}
+			{else}
+				{assign var=got_qlitems value="false"}
+			{/if}
+			{include file="$style_dir/blocks/quicklist/qlist_main.html"}
 		{/if}
-		{include file="$style_dir/blocks/quicklist/qlist_main.html"}
+
 		{if must_check_age()}
 			{include file="$style_dir/blocks/popin_age_restrict/popin.html"}
 		{/if}
@@ -30,7 +32,7 @@
 				{include file="$style_dir/footer.html" }
 			{/if}
 		</div>
-		{if in_dev()}
+		{if System::isInDev()}
 			{showDevWitch()}
 		{/if}
     </body>

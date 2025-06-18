@@ -6,17 +6,17 @@
 
 {if $display_type == ""}
 <div class="item-photo col-lg-4 col-md-4 col-sm-6 col-xs-6">
-	<a class="photo-holder" href="{$cbphoto->photo_links($photo,'view_item')}" title="{display_clean($photo.photo_title)}">
+	<a class="photo-holder" href="{CBPhotos::getInstance()->photo_links($photo,'view_item')}" title="{display_clean($photo.photo_title)}">
 		{ANCHOR place='in_photo_thumb' data=$photo}
 		{get_photo details=$photo size='l' class=$photo_class output='html'}
 		<i class="icon-zoom"></i>
 	</a>
 	<div class="photo-info {if config('enable_hide_uploader_name') == 'yes'}nouploader{/if}">
-		<strong><a href="{$cbphoto->photo_links($photo,'view_item')}" title="{display_clean($photo.photo_title)}">{display_clean($photo.photo_title)|truncate:50}</a></strong>
+		<strong><a href="{CBPhotos::getInstance()->photo_links($photo,'view_item')}" title="{display_clean($photo.photo_title)}">{display_clean($photo.photo_title)|truncate:50}</a></strong>
 		{if config('enable_hide_uploader_name') != 'yes'}
 		<span>
 			{if isSectionEnabled('channels') && $photo.userid != $anonymous_id && $photo.disabled_channel !='yes'}
-				{lang code="by"}&nbsp;<a href="{$userquery->profile_link($photo.userid)}">{display_clean($photo.username)}</a>
+				{lang code="by"}&nbsp;<a href="{userquery::getInstance()->profile_link($photo.userid)}">{display_clean($photo.username)}</a>
 			{elseif $anonymous_id != $photo.userid}
 				{lang code="by"} {display_clean($photo.username)}
 			{/if}
@@ -28,17 +28,17 @@
 
 {if $display_type == "default_photo"}
 	<div class="photoAppending">
-		<a class="photo-holder no_overflow" href="{$cbphoto->photo_links($photo,'view_item')}" title="{display_clean($photo.photo_title)}">
+		<a class="photo-holder no_overflow" href="{CBPhotos::getInstance()->photo_links($photo,'view_item')}" title="{display_clean($photo.photo_title)}">
 			{ANCHOR place='in_photo_thumb' data=$photo}
 			{get_photo details=$photo size='l' class=$photo_class output='html'}
 			<i class="icon-zoom"></i>
 		</a>
 		<div class="photo-info {if config('enable_hide_uploader_name') == 'yes'}nouploader{/if}">
-			<strong><a href="{$cbphoto->photo_links($photo,'view_item')}" title="{display_clean($photo.photo_title)}">{display_clean($photo.photo_title)|truncate:30}</a></strong>
+			<strong><a href="{CBPhotos::getInstance()->photo_links($photo,'view_item')}" title="{display_clean($photo.photo_title)}">{display_clean($photo.photo_title)|truncate:30}</a></strong>
 			{if config('enable_hide_uploader_name') != 'yes'}
 			<span>
 				{if isSectionEnabled('channels') && $photo.userid != $anonymous_id && $photo.disabled_channel !='yes'}
-					{lang code="by"}&nbsp;<a href="{$userquery->profile_link($photo.userid)}">{display_clean($photo.username)}</a>
+					{lang code="by"}&nbsp;<a href="{userquery::getInstance()->profile_link($photo.userid)}">{display_clean($photo.username)}</a>
 				{elseif $anonymous_id != $photo.userid}
 					{lang code="by"} {display_clean($photo.username)}
 				{/if}
@@ -51,17 +51,17 @@
 
 {if $display_type == "view_channelAjax"}
 <div style="display: none" class="item-photo col-lg-4 col-md-4 col-sm-6 col-xs-12">
-	<a class="photo-holder" href="{$cbphoto->photo_links($photo,'view_item')}" title="{display_clean($photo.photo_title)}">
+	<a class="photo-holder" href="{CBPhotos::getInstance()->photo_links($photo,'view_item')}" title="{display_clean($photo.photo_title)}">
 		{ANCHOR place='in_photo_thumb' data=$photo}
 		{get_photo details=$photo size='l' class=$photo_class output='html'}
 		<i class="icon-zoom"></i>
 	</a>
 	<div class="photo-info {if config('enable_hide_uploader_name') == 'yes'}nouploader{/if}">
-		<strong><a href="{$cbphoto->photo_links($photo,'view_item')}" title="{display_clean($photo.photo_title)}">{display_clean($photo.photo_title)|truncate:50}</a></strong>
+		<strong><a href="{CBPhotos::getInstance()->photo_links($photo,'view_item')}" title="{display_clean($photo.photo_title)}">{display_clean($photo.photo_title)|truncate:50}</a></strong>
 		{if config('enable_hide_uploader_name') != 'yes'}
 		<span>
 			{if isSectionEnabled('channels') && $photo.userid != $anonymous_id && $photo.disabled_channel !='yes'}
-				{lang code="by"}&nbsp;<a href="{$userquery->profile_link($photo.userid)}">{display_clean($photo.username)}</a>
+				{lang code="by"}&nbsp;<a href="{userquery::getInstance()->profile_link($photo.userid)}">{display_clean($photo.username)}</a>
 			{elseif $anonymous_id != $photo.userid}
 				{lang code="by"} {display_clean($photo.username)}
 			{/if}
@@ -72,17 +72,17 @@
 {/if}
 
 {if $display_type == "user_photos"}
-	<a class="photo-holder" href="{$cbphoto->photo_links($photo,'view_item')}" title="{display_clean($photo.photo_title)}">
+	<a class="photo-holder" href="{CBPhotos::getInstance()->photo_links($photo,'view_item')}" title="{display_clean($photo.photo_title)}">
 		{ANCHOR place='in_photo_thumb' data=$photo}
 		{get_photo details=$photo size='l' class=$photo_class output='html'}
 		<i class="icon-zoom"></i>
 	</a>
 	<div class="photo-info {if config('enable_hide_uploader_name') == 'yes'}nouploader{/if}">
-		<strong><a href="{$cbphoto->photo_links($photo,'view_item')}" title="{display_clean($photo.photo_title)}">{display_clean($photo.photo_title)|truncate:50}</a></strong>
+		<strong><a href="{CBPhotos::getInstance()->photo_links($photo,'view_item')}" title="{display_clean($photo.photo_title)}">{display_clean($photo.photo_title)|truncate:50}</a></strong>
 		{if config('enable_hide_uploader_name') != 'yes'}
 		<span>
 			{if isSectionEnabled('channels') && $photo.userid != $anonymous_id && $photo.disabled_channel !='yes'}
-				{lang code="by"}&nbsp;<a href="{$userquery->profile_link($photo.userid)}">{display_clean($photo.username)}</a>
+				{lang code="by"}&nbsp;<a href="{userquery::getInstance()->profile_link($photo.userid)}">{display_clean($photo.username)}</a>
 			{elseif $anonymous_id != $photo.userid}
 				{lang code="by"} {display_clean($photo.username)}
 			{/if}
@@ -92,7 +92,7 @@
 {/if}
 
 {if $display_type == "featuredPhoto_sidebar"}
-	<a class="photo-holder" href="{$cbphoto->photo_links($photo,'view_item')}" title="{display_clean($photo.photo_title)}">
+	<a class="photo-holder" href="{CBPhotos::getInstance()->photo_links($photo,'view_item')}" title="{display_clean($photo.photo_title)}">
 		{ANCHOR place='in_photo_thumb' data=$photo}
 		{get_photo details=$photo size='l' class=$photo_class output='html'}
 		<i class="icon-zoom"></i>
@@ -100,7 +100,7 @@
 {/if}
 
 {if $display_type == "search_photos"}
-	<a class="searchresult-photo" href="{$cbphoto->photo_links($photo,'view_item')}" title="{display_clean($photo.photo_title)}">
+	<a class="searchresult-photo" href="{CBPhotos::getInstance()->photo_links($photo,'view_item')}" title="{display_clean($photo.photo_title)}">
 		{ANCHOR place='in_photo_thumb' data=$photo}
 		{get_photo details=$photo size='l' class=$photo_class output='html'}
 		<div class="hover hidden-xs hidden-sm">
@@ -108,11 +108,11 @@
 		</div>
 	</a>
 	<div class="photo-info {if config('enable_hide_uploader_name') == 'yes'}nouploader{/if}">
-		<strong><a href="{$cbphoto->photo_links($photo,'view_item')}" title="{display_clean($photo.photo_title)}">{display_clean($photo.photo_title)|truncate:50}</a></strong>
+		<strong><a href="{CBPhotos::getInstance()->photo_links($photo,'view_item')}" title="{display_clean($photo.photo_title)}">{display_clean($photo.photo_title)|truncate:50}</a></strong>
 		{if config('enable_hide_uploader_name') != 'yes'}
 		<span>
 			{if isSectionEnabled('channels') && $photo.userid != $anonymous_id && $photo.disabled_channel !='yes'}
-				{lang code="by"}&nbsp;<a href="{$userquery->profile_link($photo.userid)}">{display_clean($photo.username)}</a>
+				{lang code="by"}&nbsp;<a href="{userquery::getInstance()->profile_link($photo.userid)}">{display_clean($photo.username)}</a>
 			{elseif $anonymous_id != $photo.userid}
 				{lang code="by"} {display_clean($photo.username)}
 			{/if}
@@ -123,12 +123,12 @@
 
 {if $display_type == 'related_photos'}
 	<div class="relatedPhotos clearfix">
-		<a href="{$cbphoto->photo_links($photo,'view_item')}">
+		<a href="{CBPhotos::getInstance()->photo_links($photo,'view_item')}">
 			{ANCHOR place='in_photo_thumb' data=$photo}
 			{get_photo details=$photo output='html' width='120' class='photoThumbBox moveL' style='margin-right:5px;'}
 		</a>
 		<div class="photoTitle" style="margin-bottom:5px;">
-			<a href="{$cbphoto->photo_links($photo,'view_item')}" title="{display_clean($photo.photo_title)}">{display_clean($photo.photo_title)|truncate:15}</a>
+			<a href="{CBPhotos::getInstance()->photo_links($photo,'view_item')}" title="{display_clean($photo.photo_title)}">{display_clean($photo.photo_title)|truncate:15}</a>
 		</div>
 		<span class="photoInfo">{$photo.views|number_format} {lang code="views"} <br/> {$photo.total_comments} {lang code="comments"}</span>
 		{show_rating rating=$photo.rating total='10' class='rating moveL'}
@@ -136,7 +136,7 @@
 {/if}
 
 {if $display_type == "relatedPhoto_sidebar"}
-	<a class="photo-holder" href="{$cbphoto->photo_links($photo,'view_item')}" title="{display_clean($photo.photo_title)}">
+	<a class="photo-holder" href="{CBPhotos::getInstance()->photo_links($photo,'view_item')}" title="{display_clean($photo.photo_title)}">
 		{ANCHOR place='in_photo_thumb' data=$photo}
 		{get_photo details=$photo output='html' size='l' class='img-responsive'}
 		<i class="icon-zoom"></i>
@@ -145,28 +145,28 @@
 
 {if $display_type == 'subscription'}
 	<div class="grid_view clearfix" style="width:auto; margin-right:4px;">
-		<a href="{$cbphoto->photo_links($photo,'view_item')}">{get_photo details=$photo output='html' class='photoThumbBox' width='110'}</a>
+		<a href="{CBPhotos::getInstance()->photo_links($photo,'view_item')}">{get_photo details=$photo output='html' class='photoThumbBox' width='110'}</a>
 		<div class="photoTitle" style="margin:5px 0px; font:bold 11px Arial;">
-			<a href="{$cbphoto->photo_links($photo,'view_item')}" title="{display_clean($photo.photo_title)}">{display_clean($photo.photo_title)|truncate:15}</a>
+			<a href="{CBPhotos::getInstance()->photo_links($photo,'view_item')}" title="{display_clean($photo.photo_title)}">{display_clean($photo.photo_title)|truncate:15}</a>
 		</div>
 		{show_rating rating=$photo.rating total='10' class='rating'}
 		<div style="font-size:10px; margin:2px;">{$photo.views|number_format} {lang code="views"}</div>
-		<a href="{$userquery->profile_link($photo)}" style="font:bold 10px Arial; text-decoration:none;">{display_clean($photo.username)|truncate:20}</a>
+		<a href="{userquery::getInstance()->profile_link($photo)}" style="font:bold 10px Arial; text-decoration:none;">{display_clean($photo.username)|truncate:20}</a>
 	</div>
 {/if}
 
 {if $display_type == "side_photos"}
 	<div style="display:inline-block; *display:inline; vertical-align:middle; padding:0 8px 5px 0px;">
-		<a href="{$cbphoto->photo_links($photo,'view_item')}">
+		<a href="{CBPhotos::getInstance()->photo_links($photo,'view_item')}">
 			{ANCHOR place='in_photo_thumb' data=$photo}
 			{get_photo details=$photo output='html' width='82' class='photoThumbBox'}
 		</a>
 		<div class="photoTitle" style="font:bold 10px Arial; margin:1px 0px;">
-			<a href="{$cbphoto->photo_links($photo,'view_item')}" title="{display_clean($photo.photo_title)}">{display_clean($photo.photo_title)|truncate:15}</a>
+			<a href="{CBPhotos::getInstance()->photo_links($photo,'view_item')}" title="{display_clean($photo.photo_title)}">{display_clean($photo.photo_title)|truncate:15}</a>
 		</div>
 		<div class="watch_video_box_details">
 			<span style="color:#666; font:normal 10px Arial;">{lang code='views'}: {$photo.views|number_format}</span><br>
-			<a style="font:bold 10px Arial; text-decoration:none;" href="{$userquery->profile_link($photo)}" title="{display_clean($photo.username)}" alt="{display_clean($photo.username)}">{display_clean($photo.username)|truncate:12}</a>
+			<a style="font:bold 10px Arial; text-decoration:none;" href="{userquery::getInstance()->profile_link($photo)}" title="{display_clean($photo.username)}" alt="{display_clean($photo.username)}">{display_clean($photo.username)|truncate:12}</a>
 		</div>
 	</div>
 {/if}
@@ -180,17 +180,17 @@
 
 {if $display_type == "collection_item"}
 <div class="photoAppending">
-    <a class="photo-holder no_overflow" href="{$cbphoto->photo_links($photo,'view_item')}" title="{display_clean($photo.photo_title)}">
+    <a class="photo-holder no_overflow" href="{CBPhotos::getInstance()->photo_links($photo,'view_item')}" title="{display_clean($photo.photo_title)}">
 		{ANCHOR place='in_photo_thumb' data=$photo}
         {get_photo details=$photo size='l' class=$photo_class output='html'}
         <i class="icon-zoom"></i>
     </a>
     <div class="photo-info {if config('enable_hide_uploader_name') == 'yes'}nouploader{/if}">
-        <strong><a href="{$cbphoto->photo_links($photo,'view_item')}" title="{display_clean($photo.photo_title)}">{display_clean($photo.photo_title)|truncate:30}</a></strong>
+        <strong><a href="{CBPhotos::getInstance()->photo_links($photo,'view_item')}" title="{display_clean($photo.photo_title)}">{display_clean($photo.photo_title)|truncate:30}</a></strong>
 		{if config('enable_hide_uploader_name') != 'yes'}
         <span>
 			{if isSectionEnabled('channels') && $photo.userid != $anonymous_id && $photo.disabled_channel !='yes'}
-				{lang code="by"}&nbsp;<a href="{$userquery->profile_link($photo.userid)}">{display_clean($photo.username)}</a>
+				{lang code="by"}&nbsp;<a href="{userquery::getInstance()->profile_link($photo.userid)}">{display_clean($photo.username)}</a>
 			{elseif $anonymous_id != $photo.userid}
 				{lang code="by"} {display_clean($photo.username)}
 			{/if}

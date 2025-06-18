@@ -10,18 +10,18 @@
                             <option value="{$col_data['collection_id']}">{$col_data['collection_name']} ({$col_data['total_objects']})</option>
                         {/foreach}
                     {else}
-                        <option>--- {lang code="no_collection_found"} ---</option>
+                        <option value="0">--- {lang code="no_collection_found"} ---</option>
                     {/if}
                 </select>
             </div>
 
             <div class="form-group clearfix">
                 <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                    <input type="button" class="cb_button btn mtm btn-block btn-primary" name="add_to_collection" value="{lang code='add_to_collection'}" onclick="collection_actions('add_collection_form','add_new_item','{$item_id}','#collection_form_result','{$type}');">
+                    <input type="button" class="cb_button btn mtm btn-block btn-primary" name="add_to_collection" value="{lang code='add_to_collection'}" {if count($collections) <= 0}disabled="disabled" {else}onclick="collection_actions('add_collection_form','add_new_item','{$item_id}','#collection_form_result','{$type}');"{/if}>
                 </div>
                 {if User::getInstance()->hasPermission('allow_create_collection') && !$restore_collection}
                     <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 add_collection">
-                        <a class="btn btn-block mtm btn-success" href="/manage_collections.php?mode=add_new">{lang code='create_new_collection_btn'}</a>
+                        <a class="btn btn-block mtm btn-success" href="{$baseurl}manage_collections.php?mode=add_new">{lang code='create_new_collection_btn'}</a>
                     </div>
                 {else}
                     <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 add_collection">

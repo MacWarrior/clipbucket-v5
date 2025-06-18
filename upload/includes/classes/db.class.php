@@ -1,16 +1,17 @@
 <?php
 class Clipbucket_db
 {
-    private $mysqli = '';
-    private $db_name = '';
-    private $db_uname = '';
-    private $db_pwd = '';
-    private $db_host = '';
-    private $db_port = '3306';
-    private $total_queries_sql = [];
-    private $total_queries = 0;
+    private mysqli $mysqli;
+    private string $db_name = '';
+    private string $db_uname = '';
+    private string $db_pwd = '';
+    private string $db_host = '';
+    private string $db_port = '3306';
+    private int $total_queries = 0;
 
-    private static $db;
+    private static bool $available = false;
+
+    private static self $db;
 
     public static function getInstance(): self
     {
@@ -79,16 +80,22 @@ class Clipbucket_db
             }
 
             $this->execute('SET NAMES "utf8mb4"');
+            self::$available = true;
         } catch (\Exception $e) {
             $error = $e->getMessage();
             error_log($error);
-            if (in_dev()) {
+            if (System::isInDev()) {
                 DiscordLog::sendDump($error);
                 throw new Exception($e);
             } else {
-                redirect_to('maintenance.php');
+                redirect_to(DirPath::getUrl('root') . 'maintenance.php');
             }
         }
+    }
+
+    public static function isAvailable(): bool
+    {
+        return self::$available;
     }
 
     /**
@@ -104,7 +111,7 @@ class Clipbucket_db
         try {
             $redis = CacheRedis::getInstance();
             if ($redis->isEnabled() && $cached_time != -1) {
-                if (in_dev()) {
+                if (System::isInDev()) {
                     $start = microtime(true);
                     $return = $redis->get($cached_key . ':' . $query);
                     $end = microtime(true);
@@ -231,7 +238,7 @@ class Clipbucket_db
         $this->ping();
 
         try {
-            if (in_dev()) {
+            if (System::isInDev()) {
                 $start = microtime(true);
                 $data = $this->mysqli->query($query);
                 $end = microtime(true);
@@ -256,13 +263,13 @@ class Clipbucket_db
      * @return void
      * @throws Exception
      */
-    public function executeThrowException($sql)
+    public function executeThrowException($sql): void
     {
         try{
             $this->mysqli->query($sql);
         }
         catch(mysqli_sql_exception $e){
-            if( in_dev() ){
+            if( System::isInDev() ){
                 e('SQL : ' . $sql);
                 DiscordLog::sendDump('SQL : ' . $sql);
             }
@@ -290,7 +297,7 @@ class Clipbucket_db
      * @internal param $ : { string } { $cond } { mysql condition for query }
      * @internal param $ : { string } { $ep } { extra parameter after condition }
      */
-    function update($tbl, $flds, $vls, $cond, $ep = null)
+    function update($tbl, $flds, $vls, $cond, $ep = null): void
     {
         $this->ping();
 
@@ -385,7 +392,7 @@ class Clipbucket_db
      * @internal param $ : { string } { $ep } { extra parameters to consider }
      * @internal param $ : { string } { $tbl } { table to delete value from }
      */
-    function delete(string $tbl, array $flds, array $vls, $ep = null)
+    function delete(string $tbl, array $flds, array $vls, $ep = null): void
     {
         $this->ping();
 
@@ -416,7 +423,6 @@ class Clipbucket_db
         if (isset($this->total_queries)) {
             $this->total_queries++;
         }
-        $this->total_queries_sql[] = $query;
         $this->execute($query, 'delete');
     }
 
@@ -427,7 +433,7 @@ class Clipbucket_db
      * @param array $flds
      * @param array $vls
      * @param null $ep
-     *
+     * @param bool $ignore
      * @return mixed|void : { integer } { $insert_id } { id of inserted element }
      *
      * @throws Exception
@@ -436,7 +442,7 @@ class Clipbucket_db
      * @internal param $ : { array } { $vlds } { array of values to update against fields }
      * @internal param $ : { string } { $ep } { extra parameters to consider }
      */
-    function insert(string $tbl, array $flds, array $vls, $ep = null)
+    function insert(string $tbl, array $flds, array $vls, $ep = null, bool $ignore = false)
     {
         $this->ping();
 
@@ -477,8 +483,11 @@ class Clipbucket_db
                 $values_query .= ',';
             }
         }
-        $query = "INSERT INTO $tbl ($fields_query) VALUES ($values_query) $ep";
-        $this->total_queries_sql[] = $query;
+        $ignore_sql = '';
+        if( $ignore ){
+            $ignore_sql = 'IGNORE';
+        }
+        $query = "INSERT $ignore_sql INTO $tbl ($fields_query) VALUES ($values_query) $ep";
         if (isset($this->total_queries)) {
             $this->total_queries++;
         }
@@ -524,7 +533,7 @@ class Clipbucket_db
      * @return void
      * @throws Exception
      */
-    private function handleError($query)
+    private function handleError($query): void
     {
         if ($this->getError() != '') {
             //customize exceptions
@@ -542,7 +551,7 @@ class Clipbucket_db
                 throw new \Exception('missing_table');
             }
 
-            if (in_dev()) {
+            if (System::isInDev()) {
                 e('SQL : ' . $query);
                 e('ERROR : ' . $this->getError());
                 error_log('SQL : ' . $query);
@@ -557,7 +566,7 @@ class Clipbucket_db
         }
     }
 
-    private function ping()
+    private function ping(): void
     {
         try{
             $this->mysqli->query('DO 1');
@@ -584,7 +593,7 @@ class Clipbucket_db
     /**
      * @return void
      */
-    function rollback()
+    function rollback(): void
     {
         $this->mysqli->rollback();
     }
@@ -592,7 +601,7 @@ class Clipbucket_db
     /**
      * @return void
      */
-    function commit()
+    function commit(): void
     {
         $this->mysqli->commit();
     }
@@ -600,7 +609,7 @@ class Clipbucket_db
     /**
      * @return void
      */
-    function begin_transaction()
+    function begin_transaction(): void
     {
         $this->mysqli->begin_transaction();
     }

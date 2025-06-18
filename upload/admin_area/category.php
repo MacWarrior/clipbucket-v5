@@ -1,13 +1,29 @@
 <?php
 define('THIS_PAGE', 'category');
-
-global $cbvid;
 require_once dirname(__FILE__, 2) . '/includes/admin_config.php';
 
 User::getInstance()->hasPermissionOrRedirect('video_moderation',true);
 pages::getInstance()->page_redir();
 
 $type = $_GET['type'] ?? 'video';
+switch ($type) {
+    case 'video':
+    default:
+        $config = 'enable_video_categories';
+        break;
+    case 'photo':
+        $config = 'enable_photo_categories';
+        break;
+    case 'collection':
+        $config = 'enable_collection_categories';
+        break;
+    case 'user':
+        $config = 'enable_user_category';
+        break;
+}
+if (config($config) != 'yes') {
+    redirect_to(DirPath::getUrl('admin_area'));
+}
 assign('type', $type);
 assign('display_type', $type . 's');
 /* Generating breadcrumb */
@@ -21,9 +37,8 @@ $breadcrumb[1] = [
     'url'   => DirPath::getUrl('admin_area') . 'category.php?type=' . $type
 ];
 
-$version = Update::getInstance()->getDBVersion();
-if (!($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 323))) {
-    e('Your database is not up-to-date. Please update your database via this link : <a href="admin_tool.php?id_tool=5">' . lang('update') . '</a>', 'e', false);
+if( !Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.0', '323') ){
+    e('Your database is not up-to-date. Please update your database via this link : <a href="' . DirPath::getUrl('admin_area') . 'admin_tool.php?id_tool=5">' . lang('update') . '</a>', 'e', false);
 } else {
     //Making Category as Default
     if (isset($_GET['make_default'])) {
@@ -35,7 +50,7 @@ if (!($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $versi
             e(lang('add_cat_no_name_err'));
         } elseif (!empty(Category::getInstance()->getAll([
                 'category_type' => Category::getInstance()->getIdsCategoriesType($type),
-                'condition'     => 'category_name like \'%' . mysql_clean($_POST['category_name']) . '%\'',
+                'condition'     => 'category_name like \'' . mysql_clean($_POST['category_name']) . '\'',
                 'first_only'    => true
             ])) && ($_POST['cur_name'] != $_POST['category_name'])) {
             e(lang('add_cat_erro'));
@@ -43,13 +58,20 @@ if (!($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $versi
             $id_category = $_POST['category_id'];
             if (isset($_POST['update_category'])) {
                 Category::getInstance()->update($_POST);
+                if ($_POST['is_default'] == 'yes') {
+                    Category::getInstance()->makeDefault($type, $_POST['category_id']);
+                }
             }
         } else {
             $params = $_POST;
             $params['id_category_type'] = Category::getInstance()->getIdsCategoriesType($type);
             $next_order_place = Category::getInstance()->getNextOrderForParent($type, $_POST['parent_id']);
             $params['category_order'] = $next_order_place;
-            Category::getInstance()->insert($params);
+            $inserted_id = Category::getInstance()->insert($params);
+            $id_category = $inserted_id;
+            if ($_POST['is_default'] == 'yes') {
+                Category::getInstance()->makeDefault($type, $inserted_id);
+            }
         }
 
         if (!empty($_FILES['category_thumb']['tmp_name'])) {
@@ -96,13 +118,13 @@ if (!($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $versi
 
     //Assign Category Values
     assign('category', $cats);
-    assign('total', $cats = Category::getInstance()->getAll([
+    assign('total', Category::getInstance()->getAll([
         'category_type' => Category::getInstance()->getIdsCategoriesType($type),
         'count'
     ]));
 }
 
-$min_suffixe = in_dev() ? '' : '.min';
+$min_suffixe = System::isInDev() ? '' : '.min';
 ClipBucket::getInstance()->addAdminJS(['pages/category/category'.$min_suffixe.'.js' => 'admin']);
 
 subtitle(lang('manage_categories') . ' - ' . ucfirst(lang($type)));
