@@ -550,7 +550,7 @@
                         {/if}
                         {if config('player_subtitles')  && (!empty($subtitle_list) || config('can_upload_subtitles')=='yes')}
                         <li>
-                            <a data-toggle="tab" href="#subtitiles">
+                            <a data-toggle="tab" href="#subtitles">
                                 <i class="glyphicon glyphicon-subtitles"></i> {lang code='video_subtitle_management'}
                             </a>
                         </li>
@@ -586,7 +586,7 @@
                         </div>
                         {/if}
                         {if config('player_subtitles')  && (!empty($subtitle_list) || config('can_upload_subtitles')=='yes')}
-                            <div id="subtitiles" class="tab-pane">
+                            <div id="subtitles" class="tab-pane">
                                 {include file="$style_dir/blocks/subtitle_list.html" videoid=$data.videoid}
                             </div>
                         {/if}

@@ -342,7 +342,7 @@ function get_video_subtitle_last_num(int $videoid): string|bool
     if (empty($results)) {
         return '00';
     }
-    return $results[0]['number'];
+    return $results[0]['number'] ?? '00';
 }
 
 /**
