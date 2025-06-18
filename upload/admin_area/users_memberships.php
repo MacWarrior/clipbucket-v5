@@ -1,6 +1,5 @@
 <?php
 define('THIS_PAGE', 'membership_user_levels');
-global $pages, $Upload, $eh, $myquery, $cbvid, $breadcrumb;
 require_once dirname(__FILE__, 2) . '/includes/admin_config.php';
 
 User::getInstance()->hasPermissionOrRedirect('admin_access');
@@ -51,9 +50,9 @@ if (empty($users_memberships)) {
     }
 }
 $total_pages = count_pages($total_rows, config('admin_pages'));
-$pages->paginate($total_pages, $page);
+pages::getInstance()->paginate($total_pages, $page);
 
-$min_suffixe = in_dev() ? '' : '.min';
+$min_suffixe = System::isInDev() ? '' : '.min';
 ClipBucket::getInstance()->addAdminJS([
     'pages/membership/users_memberships' . $min_suffixe . '.js' => 'admin',
 ]);

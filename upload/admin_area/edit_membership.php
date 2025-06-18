@@ -1,10 +1,9 @@
 <?php
 define('THIS_PAGE', 'membership_user_levels');
-global $pages, $Upload, $eh, $myquery, $cbvid, $breadcrumb;
 require_once dirname(__FILE__, 2) . '/includes/admin_config.php';
 
 User::getInstance()->hasPermissionOrRedirect('admin_access');
-$pages->page_redir();
+pages::getInstance()->page_redir();
 
 /* Generating breadcrumb */
 
@@ -47,7 +46,7 @@ $breadcrumb[2] = [
     'url'   => DirPath::getUrl('admin_area') . 'edit_membership.php' . (!empty($membership) ? '?id_membership=' . $membership['id_membership'] : '')
 ];
 
-$min_suffixe = in_dev() ? '' : '.min';
+$min_suffixe = System::isInDev() ? '' : '.min';
 ClipBucket::getInstance()->addAdminJS([
     'pages/membership/edit_membership' . $min_suffixe . '.js' => 'admin',
 ]);

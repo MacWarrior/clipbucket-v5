@@ -59,7 +59,7 @@ foreach ($available_memberships as $key => $available_membership) {
     }
 }
 
-$min_suffixe = in_dev() ? '' : '.min';
+$min_suffixe = System::isInDev() ? '' : '.min';
 /** load js from composer vendor
  *
  * @todo corriger le systeme pour supporter le dirpath

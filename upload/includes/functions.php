@@ -1952,9 +1952,14 @@ function sort_link($data, $mode, $type): string
 {
     $config_enable_category = '';
     switch ($type) {
+        case 'videos_public':
+            if (config('enable_public_video_page')=='yes') {
+                $type = 'videos_public';
+                $config_enable_category = 'enable_video_categories';
+                break;
+            }
         case 'video':
         case 'videos':
-        case 'videos_public':
         case 'v':
             $type = 'videos';
             $config_enable_category = 'enable_video_categories';

@@ -11,7 +11,7 @@
             <div class="filter-dropdowns clearfix">
                     <div class="cat-col col-lg-6 col-md-6 col-sm-6 col-xs-12 clearfix">
                         {if config('enable_video_categories')!='no'}
-                            {include file="$style_dir/blocks/category_list.html" type='videos'}
+                            {include file="$style_dir/blocks/category_list.html" type=$type_link}
                         {/if}
                     </div>
                 <div class="sorting-col col-lg-6 col-md-6 col-sm-6 col-xs-12 clearfix">
@@ -36,7 +36,7 @@
                             <ul class="dropdown-menu">
                                 {foreach from=$sort_list item=sort key=key}
                                     <li>
-                                        <a href="{cblink name=sort sort=$key type=videos}" {if $smarty.get.sort==$key}class="selected"{/if}>{if $smarty.get.sort == $key}<i class="icon-tick"></i>{/if}{$sort}</a>
+                                        <a href="{cblink name=sort sort=$key type=$type_link}" {if $smarty.get.sort==$key}class="selected"{/if}>{if $smarty.get.sort == $key}<i class="icon-tick"></i>{/if}{$sort}</a>
                                     </li>
                                 {/foreach}
                             </ul>
