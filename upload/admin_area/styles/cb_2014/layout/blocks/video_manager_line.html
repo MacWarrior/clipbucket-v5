@@ -134,7 +134,9 @@
                     {/if}
                     <li><a href="?update_bits_color={$video.videoid}">{lang code='update_bits_color'}</a></li>
                 {/if}
-
+                {if config('player_subtitles') && config('can_upload_subtitles')=='yes'}
+                    <li><a role="menuitem" tabindex="-1" href="javascript:getModalUploadSubtitle({$video.videoid});">{lang code='upload_subtitles'}</a></li>
+                {/if}
                 <li class="divider"></li>
                 <li><a role="menuitem" tabindex="-1" href="?delete_video={$video.videoid}">{lang code='delete'}</a></li>
                 {foreach from=CBvideo::getInstance()->video_manager_link item=links}

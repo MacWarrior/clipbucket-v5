@@ -1612,4 +1612,12 @@ VALUES ('admin_setting'),
        ('confirm_unfriend'),
        ('my_collections'),
        ('my_friends_collections'),
-       ('public_collections');
+       ('public_collections'),
+       ('file'),
+       ('submit'),
+       ('invalid_subtitle_file'),
+       ('invalid_subtitle_extension'),
+       ('subtitle_uploaded_successfully'),
+       ('file_size_exceeded'),
+       ('option_maximum_allowed_subtitle_size'),
+       ('option_can_upload_subtitles');

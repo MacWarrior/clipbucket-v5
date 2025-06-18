@@ -1,0 +1,54 @@
+<div class="modal-dialog" style="width:80%">
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+            <h4 class="modal-title">{lang code='upload_subtitles'}</h4>
+        </div>
+        <form id="subtitle_form" enctype="multipart/form-data">
+            <div class="modal-body">
+                <div class="input-group">
+                    <label for="title">{lang('title')}</label>
+                    <input type="text" class="form-control" name="title" id="title"/>
+                </div>
+                <div class="input-group">
+                    <label for="title">{lang('file')}</label>
+                    <input type="file" class="form-control" name="subtitles" id="subtitles"/>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">{lang code='cancel'}</button>
+                <input type="submit" class="btn btn-primary" value="{lang code='submit'}"/>
+                <input type="hidden" value="{$videoid}" id="modal_videoid" name="videoid">
+            </div>
+        </form>
+    </div>
+</div>
+<script>
+    $(function () {
+        $('#subtitle_form').on('submit', function (e) {
+            e.preventDefault();
+            showSpinner();
+            var formData = new FormData(this);
+
+            $.ajax({
+                url: baseurl + 'actions/save_subtitle.php',
+                type: 'POST',
+                data: formData,
+                contentType: false,
+                processData: false,
+                dataType: 'json',
+                success: function (result) {
+                    if (result.success == false) {
+                        $('.close').trigger('click');
+                        hideSpinner();
+                        $('.page-content').prepend(result['msg']);
+                    } else {
+                        $('.close').trigger('click');
+                        location.reload();
+                    }
+                }
+            });
+        });
+    });
+
+</script>
