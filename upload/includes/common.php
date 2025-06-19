@@ -90,7 +90,6 @@ require_once DirPath::get('classes') . 'email_template.class.php';
 require_once DirPath::get('classes') . 'ffmpeg.class.php';
 require_once DirPath::get('classes') . 'flag.class.php';
 require_once DirPath::get('classes') . 'sort_type.class.php';
-require_once DirPath::get('classes') . 'membership.class.php';
 require_once DirPath::get('classes') . 'paypal.class.php';
 
 $cb_columns = new cb_columns();

@@ -132,7 +132,7 @@
                                     <li class="dropdown myaccount-dd">
                                         <a href="javascript:void(0);" class="user-area dropdown-toggle" data-toggle="dropdown">
                                             <img src="{userquery::getInstance()->getUserThumb('', '',user_id())}" class="no_select" width="35" height="35"/>
-                                            <span>{display_clean(User::getInstance()->get('username')|truncate:15)} {if User::getInstance()->isUserMustRenewMembership()}<i class="fa fa-bell"></i>{/if}</span>
+                                            <span>{display_clean(User::getInstance()->get('username')|truncate:15)}</span>
                                         </a>
                                         <ul class="dropdown-menu">
                                             {if User::getInstance()->hasAdminAccess()}
@@ -153,9 +153,6 @@
                                             {/if}
                                             {if isSectionEnabled('channels') && Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '136') && User::getInstance()->get('is_channel_enable')}
                                                 <li><a href="{User::getInstance()->getLink('channel')}">{lang code="my_channel"}</a></li>
-                                            {/if}
-                                            {if config('enable_membership') && !User::getInstance()->hasAdminAccess() && User::getInstance()->doesUserHaveAvailableMembership()}
-                                                <li><a href="/manage_membership.php">{lang code="memberships"} {if User::getInstance()->isUserMustRenewMembership()}<i class="fa fa-exclamation-circle"></i>{/if}</a></li>
                                             {/if}
                                             {ANCHOR place="inside_user_menu"}
                                             <li class="divider"></li>

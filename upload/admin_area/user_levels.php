@@ -41,17 +41,7 @@ switch ($mode) {
     case 'edit':
         //Updating Level permissions
         if (!empty($_POST)) {
-            if ( config('enable_membership') == 'yes'
-                && $_POST['user_level_is_default'] == 'yes'
-                && (Membership::getInstance()->getAll([
-                        'user_level_id' => $_POST['user_level_id'],
-                        'count'         => true
-                    ]) > 0)
-            ) {
-                e(lang('default_user_cant_have_membership'));
-            } else {
-                UserLevel::updateUserLevel($user_level_id, $_POST['level_name'], $_POST['permission_value'], $_POST['user_level_is_default']);
-            }
+            UserLevel::updateUserLevel($user_level_id, $_POST['level_name'], $_POST['permission_value'], $_POST['user_level_is_default']);
         }
 
         //Getting Details of $level

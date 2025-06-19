@@ -190,9 +190,16 @@ class UserLevel
      */
     private static function getAllFields(): array
     {
+        $fields = self::$fields;
+        if (!Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '999')) {
+            $key = array_search('user_level_is_origin', $fields);
+            if ($key !== false) {
+                unset($fields[$key]);
+            }
+        }
         return array_map(function ($field) {
             return self::$tableName . '.' . $field;
-        }, self::$fields);
+        }, $fields);
     }
 
     /**

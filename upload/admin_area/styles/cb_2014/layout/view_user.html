@@ -147,16 +147,6 @@
                                                 </td>
                                             </tr>
                                         {/if}
-                                        {if config('enable_membership') == 'yes'}
-                                            <tr>
-                                                <td class="first"><label>{lang code='current_membership'}</label></td>
-                                                <td class="last">
-                                                    <div>
-                                                        <input class="form-control" disabled="disabled" type="text" id="user_membership" value="{if $results[0]}{lang($results[0].user_level_name|strtolower|replace:' ':'_')} - {lang('frequency_'|cat:$results[0].frequency)}{else} {lang('none')} {/if}"/>
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                        {/if}
                                         {if config('enable_user_category')=='yes' && $show_categ}
                                         {$thecats = getCategoryList(['type'=>'user'])}
                                         <tr>
@@ -408,7 +398,7 @@
 
                     </div>
                 </div>
-                {if (config('enable_storage_history') == 'yes' && $storage_history) || config('enable_membership') == 'yes'}
+                {if (config('enable_storage_history') == 'yes' && $storage_history)}
                     <div class="tabbable mt-2">
                         <ul class="nav nav-tabs" id="myTab">
                             {if config('enable_storage_history') == 'yes' && $storage_history}
@@ -416,23 +406,11 @@
                                     <a  data-toggle="tab" href="#storage_history">{lang code='storage_history'}</a>
                                 </li>
                             {/if}
-                            {if config('enable_membership') == 'yes'}
-                                <li  {if config('enable_storage_history') != 'yes' || !$storage_history} class="active"{/if}>
-                                    <a data-toggle="tab" href="#membership_history">{lang code='membership_history'}</a>
-                                </li>
-                            {/if}
                         </ul>
                         <div class="tab-content">
                             {if config('enable_storage_history') == 'yes' && $storage_history}
                                 <div id="storage_history" class="tab-pane active">
                                     <div id="history" style="height:400px ;"></div>
-                                </div>
-                            {/if}
-                            {if config('enable_membership') == 'yes' }
-                                <div id="membership_history" class="tab-pane {if config('enable_storage_history') != 'yes' || !$storage_history}active{/if}">
-                                    <div id="membership" style="height:400px;">
-                                        {include file="$style_dir/blocks/membership_view_history.html"}
-                                    </div>
                                 </div>
                             {/if}
                         </div>

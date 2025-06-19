@@ -156,7 +156,6 @@ if (isset($_POST['update'])) {
         , 'enable_channels_slogan_display'
         , 'enable_user_self_deletion'
         , 'enable_cookie_banner'
-        , 'enable_membership'
         , 'enable_public_video_page'
     ];
 
@@ -425,7 +424,6 @@ if (isset($_POST['update'])) {
         'email_sender_name',
         'number_featured_video',
         'video_list_view_video_history',
-        'enable_membership',
         'enable_public_video_page'
     ];
 

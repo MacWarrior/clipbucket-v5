@@ -928,50 +928,6 @@ class User
     }
 
     /**
-     * @param int|null $user_id
-     * @return bool
-     * @throws Exception
-     */
-    public function isUserMustRenewMembership($user_id = null): bool
-    {
-        if (empty($user_id)) {
-            $user_id = user_id();
-        }
-        if (!isset($this->user_data['need_to_active_membership'])) {
-            $need_to_active_membership = false;
-            if (config('enable_membership') == 'yes' && !empty($user_id) && !User::getInstance()->hasAdminAccess()) {
-                //gettings memberships for current userLevel
-                $memberships = Membership::getInstance()->getAll([
-                    'is_disabled'   => 0
-                ]);
-                if (!empty($memberships)) {
-                    $resutls = Membership::getInstance()->getAll([
-                        'first_only'          => true,
-                        'date_between'        => date('Y-m-d H:i:s'),
-                        'userid'              => $user_id,
-                        'get_user_membership' => true
-                    ]);
-                    $need_to_active_membership = empty($resutls);
-                }
-            }
-            $this->user_data['need_to_active_membership'] = $need_to_active_membership;
-        }
-        return $this->user_data['need_to_active_membership'];
-    }
-
-    public function doesUserHaveAvailableMembership()
-    {
-        if (!isset($this->user_data['does_user_have_available_membership'])) {
-            $available_memberships = Membership::getInstance()->getAll([
-                'is_disabled'       => 0,
-                'not_user_level_id' => UserLevel::getDefaultId()
-            ]);
-            $this->user_data['does_user_have_available_membership'] = !empty($available_memberships);
-        }
-        return $this->user_data['does_user_have_available_membership'];
-    }
-
-    /**
      * @param int $user_level_id
      * @param bool $activate
      * @return bool
@@ -992,9 +948,7 @@ class User
      */
     public static function redirectAfterLogin()
     {
-        if (User::getInstance()->isUserMustRenewMembership(userquery::getInstance()->userid) && !User::getInstance()->hasAdminAccess()) {
-            redirect_to(Network::get_server_url()  . 'manage_membership.php');
-        } elseif ($_COOKIE['pageredir']) {
+        if ($_COOKIE['pageredir']) {
             redirect_to($_COOKIE['pageredir']);
         } else {
             redirect_to(Network::get_server_url()  . User::getInstance()->getDefaultHomepageFromUserLevel());
@@ -3592,9 +3546,6 @@ class userquery extends CBCategory
 
         if( config('channelsSection') == 'yes' && User::getInstance()->hasPermission('view_channel') ){
             $array[lang('account')][lang('com_manage_subs')] = 'edit_account.php?mode=subscriptions';
-        }
-        if( config('enable_membership') == 'yes' && !User::getInstance()->hasPermission('admin_access') && User::getInstance()->doesUserHaveAvailableMembership()){
-            $array[lang('account')][lang('manage_membership')] = 'manage_membership.php';
         }
 
         $check_before_551_136 = (!Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '136') && isSectionEnabled('channels') && User::getInstance()->hasPermission('view_channel'));
