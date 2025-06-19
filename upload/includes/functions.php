@@ -3598,6 +3598,30 @@ function validatePHPDateFormat($format): bool
     return true;
 }
 
+/**
+ * @param string $time
+ * @return int
+ */
+function timeToSeconds(string $time):int
+{
+    $parts = explode(':', $time);
+    $parts = array_reverse($parts); // Pour gérer les formats HH:MM:SS et MM:SS
+
+    $seconds = 0;
+
+    if (isset($parts[0])) {
+        $seconds += (int)$parts[0]; // SS
+    }
+    if (isset($parts[1])) {
+        $seconds += (int)$parts[1] * 60; // MM
+    }
+    if (isset($parts[2])) {
+        $seconds += (int)$parts[2] * 3600; // HH
+    }
+
+    return $seconds;
+}
+
 include('functions_db.php');
 include('functions_filter.php');
 include('functions_player.php');

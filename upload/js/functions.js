@@ -1080,7 +1080,7 @@ function getModalUploadSubtitle(video_id) {
             var modal = $('#myModal');
             modal.html(result['template']);
             modal.modal();
-            $('.page-content').prepend(result['msg']);
+            $('.manage-page').prepend(result['msg']);
         }
     });
 }

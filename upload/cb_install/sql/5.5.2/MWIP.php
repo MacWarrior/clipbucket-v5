@@ -50,8 +50,18 @@ class MWIP extends \Migration
             'en'=>'Maximum allowed subtitles size'
         ]);
         self::generateTranslation('option_can_upload_subtitles', [
-            'fr'=>'Activer le téléversement de sous-titres',
-            'en'=>'Enable subtitles upload'
+            'fr'=>'Activer le téléversement de sous-titres sur le front office',
+            'en'=>'Enable subtitles upload on front end'
+        ]);
+
+        self::generateTranslation('info_upload_subtitle', [
+            'fr'=>'Le fichier doit être de type STR et peser au maximum %s %s',
+            'en'=>'File must be in SRT format and maximum %s %s'
+        ]);
+
+        self::generateTranslation('invalid_subtitle_timer', [
+            'fr'=>'Un timer de sous-titres dépasse la durée de la vidéo',
+            'er'=>'A subtitle timer exceeds video duration'
         ]);
 
         self::generateConfig('maximum_allowed_subtitle_size', 2);

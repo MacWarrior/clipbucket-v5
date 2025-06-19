@@ -1620,4 +1620,6 @@ VALUES ('admin_setting'),
        ('subtitle_uploaded_successfully'),
        ('file_size_exceeded'),
        ('option_maximum_allowed_subtitle_size'),
-       ('option_can_upload_subtitles');
+       ('option_can_upload_subtitles'),
+       ('info_upload_subtitle'),
+       ('invalid_subtitle_timer');

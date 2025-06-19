@@ -86,13 +86,15 @@ function cancelEditTitle(number) {
 }
 
 function saveSubtitle(number) {
+    showSpinner();
     $.ajax({
         url: baseurl+"actions/subtitle_edit.php",
         type: "POST",
         data: {title: $('#edit_sub_' + number).val(), videoid: videoid, number: number},
         dataType: 'json',
         success: function (result) {
-            $('#subtitiles').html(result['template']);
+            $('#subtitles').html(result['template']);
+            hideSpinner();
             $('.close').click();
             $('.page-content').prepend(result['msg']);
         }

@@ -1297,33 +1297,53 @@ class FFMpeg
         return $cmd;
     }
 
-    public static function isValidWebVTT(string $filepath): bool
+    /**
+     * @param string $filepath
+     * @param int $video_duration
+     * @return bool
+     * @throws Exception
+     */
+    public static function isValidWebVTT(string $filepath, int $video_duration): bool
     {
         if (!file_exists($filepath)) {
+            e(lang('invalid_subtitle_file'));
             return false;
         }
 
         $lines = file($filepath, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
         if (count($lines) === 0 || !preg_match('/^WEBVTT(\s|$)/', $lines[0])) {
+            e(lang('invalid_subtitle_file'));
             return false;
         }
 
+        $format = false;
+        $matches = [];
         foreach ($lines as $line) {
-            if (preg_match('/^(\d{2}:)?\d{2}:\d{2}\.\d{3} --> (\d{2}:)?\d{2}:\d{2}\.\d{3}/', $line)) {
-                return true;
+            if (preg_match('/^(\d{2}:)?\d{2}:\d{2}\.\d{3} --> ((\d{2}:)?\d{2}:\d{2})\.\d{3}/', $line, $matches)) {
+                $format = true;
+                if (!empty($matches[2])) {
+                    if (timeToSeconds($matches[2]) > $video_duration) {
+                        e(lang('invalid_subtitle_timer'));
+                        return false;
+                    }
+                }
             }
         }
-
-        return false;
+        if (!$format) {
+            e(lang('invalid_subtitle_file'));
+        }
+        return $format;
     }
 
     /**
      * @param string $filepath
+     * @param int $video_duration
      * @return bool
+     * @throws Exception
      */
-    public static function isValidWebVTTWithFFmpeg(string $filepath): bool
+    public static function isValidWebVTTWithFFmpeg(string $filepath, int $video_duration): bool
     {
-        if (!self::isValidWebVTT($filepath)) {
+        if (!self::isValidWebVTT($filepath,$video_duration)) {
             return false;
         }
 

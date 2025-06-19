@@ -13,6 +13,7 @@
                 <div class="input-group">
                     <label for="title">{lang('file')}</label>
                     <input type="file" class="form-control" name="subtitles" id="subtitles"/>
+                    <span><i>{lang('info_upload_subtitle', [config('maximum_allowed_subtitle_size'), lang('mb')])}</i></span>
                 </div>
             </div>
             <div class="modal-footer">
@@ -41,11 +42,15 @@
                     if (result.success == false) {
                         $('.close').trigger('click');
                         hideSpinner();
-                        $('.page-content').prepend(result['msg']);
+                        $('.manage-page').prepend(result['msg']);
                     } else {
                         $('.close').trigger('click');
                         location.reload();
                     }
+                },
+                error: function () {
+                    hideSpinner();
+                    $('.close').trigger('click');
                 }
             });
         });

@@ -5,7 +5,7 @@ require_once dirname(__FILE__, 2) . '/includes/admin_config.php';
 
 User::getInstance()->hasPermissionAjax('edit_video');
 $response = [];
-if (empty($_POST['videoid']) || empty($_FILES['subtitles'])) {
+if (empty($_POST['videoid']) || empty($_FILES['subtitles']['name'])) {
     e(lang('missing_params'));
     $response['success'] = false;
     $response['msg'] = getTemplateMsg();
@@ -25,8 +25,8 @@ $temp_file_path = $subtitle_dir . $video['file_name'] . '-' . $display_count . '
 if (pathinfo($_FILES['subtitles']['name'])['extension']!= 'srt') {
     e(lang('invalid_subtitle_extension'));
     $success = false;
-} elseif (!FFMpeg::isValidWebVTTWithFFmpeg($_FILES['subtitles']['tmp_name'])) {
-    e(lang('invalid_subtitle_file'));
+} elseif (!FFMpeg::isValidWebVTTWithFFmpeg($_FILES['subtitles']['tmp_name'],$video['duration'])) {
+    //gestion de l'affichage des erreurs dans la fonction
     $success = false;
 } elseif ($_FILES['subtitles']['size'] >= (1024 * 1024 * config('maximum_allowed_subtitle_size')) ) {
     e(lang('file_size_exceeded', config('maximum_allowed_subtitle_size') . lang('mb')));
