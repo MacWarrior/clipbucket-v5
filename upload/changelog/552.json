@@ -1,6 +1,6 @@
 {
   "version":"5.5.2",
-  "revision":"85",
+  "revision":"86",
   "status":"stable",
   "detail":[
     {
@@ -10,6 +10,7 @@
         ,"Implement channel slogan"
         ,"Implement reset logo & favicon"
         ,"Implement collections & photos categories limit"
+        ,"Implement status refresh on conversion queue manager"
         ,"Refactor conversion queue manager"
         ,"Add empty page title error"
         ,"Add collection mass broadcast update"
