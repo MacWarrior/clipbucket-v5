@@ -56,11 +56,13 @@
                 <label for="level_name">Level name</label>
                 <input class="form-control" name="level_name" type="text" id="level_name" value="{$level_details.user_level_name}"/>
             </div>
-            <div class="row">
-                <label for="user_level_is_default">{lang('default')}</label>
-                <input type="checkbox" name="user_level_is_default" id="user_level_is_default" value="yes" {if $level_details.user_level_is_default==yes}checked{/if} class="ace ace-switch ace-switch-5 bootstrap-switch-on"/>
-                <span class="lbl"></span>
-            </div>
+            {if Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.2', '999')}
+                <div class="row">
+                    <label for="user_level_is_default">{lang('default')}</label>
+                    <input type="checkbox" name="user_level_is_default" id="user_level_is_default" value="yes" {if $level_details.user_level_is_default==yes}checked{/if} class="ace ace-switch ace-switch-5 bootstrap-switch-on"/>
+                    <span class="lbl"></span>
+                </div>
+            {/if}
         </div>
         <input type="hidden" name="user_level_id" value="{$level_details.user_level_id}">
         {assign var='types' value=userquery::getInstance()->get_level_types()}

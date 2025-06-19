@@ -260,7 +260,7 @@ class UserLevel
     {
         $fields = ['user_level_name'];
         $values = [$user_level_name];
-        if ($is_default == 'yes') {
+        if ($is_default == 'yes' && Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.2', '999')) {
             $fields[] = 'user_level_is_default';
             $values[] = 'yes';
             Clipbucket_db::getInstance()->update(tbl('user_levels'), ['user_level_is_default'], ['no'], 'user_level_id != ' . $user_level_id);
