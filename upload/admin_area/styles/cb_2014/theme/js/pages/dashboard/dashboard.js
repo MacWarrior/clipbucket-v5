@@ -428,6 +428,20 @@ function update(type){
     $('.launch_wip').off('click').prop('disabled', 'disabled');
     $('.update_db').off('click').prop('disabled', 'disabled');
     $('.update_core').off('click').prop('disabled', 'disabled');
+    var core_checked = false;
+    var db_checked = false;
+    var conversion_checked = false;
+    //check update core
+    $.ajax({
+        url: baseurl+"actions/admin_check_before_launch_update.php",
+        type: "post",
+        data: {
+            type: type
+        },
+    });
+    //check update db
+    //check conversion
+
     $.ajax({
         url: baseurl+"actions/admin_launch_update.php",
         type: "post",
