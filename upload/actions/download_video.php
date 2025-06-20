@@ -2,15 +2,17 @@
 define('THIS_PAGE', 'download_video');
 require_once dirname(__FILE__, 2) . '/includes/config.inc.php';
 
-if( !User::getInstance()->hasPermission('view_video') || config('videosSection') != 'yes' ){
-    redirect_to(get_server_url() . '403.php');
-}
+$mode = $_GET['mode'];
+$videoKey = $_GET['videokey'];
 
-if( empty($_GET['videokey']) || empty($_GET['mode']) ) {
+if( empty($videoKey) || empty($mode) ) {
     redirect_to(get_server_url());
 }
 
-$videoKey = $_GET['videokey'];
+if( config('videosSection') != 'yes' || ($mode != 'cast ' && !User::getInstance()->hasPermission('view_video')) ){
+    redirect_to(get_server_url() . '403.php');
+}
+
 $video = Video::getInstance()->getOne(['videokey' => $videoKey]);
 if( empty($video) ) {
     redirect_to(get_server_url());
@@ -20,13 +22,16 @@ if( $video['file_type'] == 'mp4' && empty($_GET['res']) ) {
     redirect_to(get_server_url());
 }
 
-// TODO : Refactor this checkup
-if( !video_playable($video) ) {
+$video_playable = video_playable($video);
+if( $mode != 'cast' && !$video_playable ) {
     redirect_to(get_server_url());
 }
 
-$mode = $_GET['mode'];
 if( $mode == 'download' && !CbVideo::getInstance()->downloadable($video) ){
+    redirect_to(get_server_url());
+}
+
+if( !$video_playable && $mode == 'cast' && !Video::getInstance($video['videoid'])->isCastAuthed() ){
     redirect_to(get_server_url());
 }
 

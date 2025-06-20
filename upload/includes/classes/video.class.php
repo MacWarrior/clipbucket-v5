@@ -1033,16 +1033,22 @@ class Video
         return $this->video_data[$value];
     }
 
+    /**
+     * @throws Exception
+     */
     public function set(int $id_video, string $field, $value): void
     {
         if( !in_array($field, $this->fields) ){
             return;
         }
 
-        $sql = 'UPDATE ' . tbl($this->tablename) . ' SET ' . $field . ' = ' . $value . ' WHERE ' . $this->field_id . ' = ' . $id_video;
+        $sql = 'UPDATE ' . tbl($this->tablename) . ' SET ' . mysql_clean($field) . ' = \'' . mysql_clean($value) . '\' WHERE ' . $this->field_id . ' = ' . $id_video;
         Clipbucket_db::getInstance()->execute($sql);
     }
 
+    /**
+     * @throws Exception
+     */
     public static function get_thumbs_preview($vdetails, string $size = '416x260'): string
     {
         if( config('enable_video_thumbs_preview') != 'yes'){
@@ -1101,6 +1107,59 @@ class Video
         foreach ($video_users as $user_id) {
             Clipbucket_db::getInstance()->insert(tbl('video_users'), ['videoid', 'userid'], [$video_id, $user_id]);
         }
+        return true;
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function addCastAuth()
+    {
+        if( config('chromecast') != 'yes' ){
+            return false;
+        }
+
+        if( !Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.2', '999') ){
+            return false;
+        }
+
+        $userid = User::getInstance()->getCurrentUserId();
+        $videoid = $this->get('videoid');
+        $ip = Network::get_remote_ip();
+
+        Clipbucket_db::getInstance()->insert(tbl('video_cast_auth'), ['userid', 'videoid', 'ip'], [$userid, $videoid, $ip]);
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function isCastAuthed(): bool
+    {
+        if( config('chromecast') != 'yes' ){
+            return false;
+        }
+
+        if( !Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.2', '999') ){
+            return false;
+        }
+
+        $videoid = $this->get('videoid');
+        $ip = Network::get_remote_ip();
+
+        $sql = 'UPDATE ' . tbl('video_cast_auth') . '
+                SET last_update = CURRENT_TIMESTAMP
+                WHERE 
+                    videoid = ' . (int)$videoid . ' 
+                    AND ip = \'' . mysql_clean($ip) . '\' 
+                    AND last_update >= CURRENT_TIMESTAMP - INTERVAL 1 HOUR
+                    AND start_date >= CURRENT_TIMESTAMP - INTERVAL 1 DAY';
+        Clipbucket_db::getInstance()->execute($sql);
+        $nb_rows = Clipbucket_db::getInstance()->Affected_Rows();
+
+        if( empty($nb_rows) ){
+            return false;
+        }
+
         return true;
     }
 }
