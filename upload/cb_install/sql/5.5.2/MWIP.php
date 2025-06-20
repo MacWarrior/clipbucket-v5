@@ -10,7 +10,6 @@ class MWIP extends \Migration
      */
     public function start()
     {
-
         self::generateTranslation('editing', [
             'fr' => 'Edition',
             'en' => 'Editing'
