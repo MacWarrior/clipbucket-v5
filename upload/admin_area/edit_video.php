@@ -77,7 +77,11 @@ if (myquery::getInstance()->video_exists($video_id)) {
     assign('results', $results['final_results']);
     assign('modal', false);
 } else {
-    sessionMessageHandler::add_message(lang('class_vdo_del_err'), 'e',  DirPath::getUrl('admin_area') . 'video_manager.php');
+    //add parameter to display message after redirect
+    if ($_GET['mode'] == 'delete') {
+        SessionMessageHandler::add_message(lang('video_deleted'), 'm',  get_server_url() . DirPath::getUrl('admin_area') . 'video_manager.php');
+    }
+    SessionMessageHandler::add_message(lang('class_vdo_del_err'), 'e',  get_server_url() . DirPath::getUrl('admin_area') . 'video_manager.php');
 }
 
 $resolution_list = getResolution_list($data);

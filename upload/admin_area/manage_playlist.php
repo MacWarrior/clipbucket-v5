@@ -135,7 +135,7 @@ switch ($mode) {
                 'url'   => DirPath::getUrl('admin_area') . 'manage_playlist.php?mode=edit_playlist&pid=' . display_clean($pid)
             ];
         } else {
-            sessionMessageHandler::add_message(lang('playlist_not_exist'), 'e',  DirPath::getUrl('admin_area') . 'manage_playlist.php');
+            SessionMessageHandler::add_message(lang('playlist_not_exist'), 'e',  DirPath::getUrl('admin_area', true) . 'manage_playlist.php');
         }
         break;
 }

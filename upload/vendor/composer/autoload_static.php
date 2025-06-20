@@ -21,6 +21,7 @@ class ComposerStaticInitc5bfc8e5670876b11014ce9f23d445ff
         ),
         'O' => 
         array (
+            'OxygenzSAS\\Paypal\\' => 18,
             'OxygenzSAS\\Discord\\' => 19,
             'Onnx\\' => 5,
         ),
@@ -56,6 +57,10 @@ class ComposerStaticInitc5bfc8e5670876b11014ce9f23d445ff
         'PHPMailer\\PHPMailer\\' => 
         array (
             0 => __DIR__ . '/..' . '/phpmailer/phpmailer/src',
+        ),
+        'OxygenzSAS\\Paypal\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/oxygenzsas/composer_lib_paypal/src',
         ),
         'OxygenzSAS\\Discord\\' => 
         array (

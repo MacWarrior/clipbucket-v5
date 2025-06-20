@@ -40,7 +40,7 @@
                             <ul class="dropdown-menu">
                                 {foreach from=$sort_list item=sort key=key}
                                     <li>
-                                        <a href="{link name=sort sort=$key type=collections}" {if $smarty.get.sort==$key}class="selected"{/if}>{if $smarty.get.sort == $key}<i class="icon-tick"></i>{/if}{$sort}</a>
+                                        <a href="{cblink name=sort sort=$key type=collections}" {if $smarty.get.sort==$key}class="selected"{/if}>{if $smarty.get.sort == $key}<i class="icon-tick"></i>{/if}{$sort}</a>
                                     </li>
                                 {/foreach}
                             </ul>
@@ -65,7 +65,7 @@
                         <ul class="dropdown-menu">
                             {foreach from=$time_list item=name key=sort name=times}
                                 <li>
-                                    <a href="{link name=time sort=$sort type=collections}" {if $smarty.get.time==$sort}class="selected"{/if}>{if $smarty.get.time==$sort}<i class="icon-tick"></i>{/if}{$name}</a>
+                                    <a href="{cblink name=time sort=$sort type=collections}" {if $smarty.get.time==$sort}class="selected"{/if}>{if $smarty.get.time==$sort}<i class="icon-tick"></i>{/if}{$name}</a>
                                 </li>
                             {/foreach}
                         </ul>

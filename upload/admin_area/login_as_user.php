@@ -17,6 +17,9 @@ if ($userLevel > 1 && $userToLoginAsLevel == 1) {
 }
 
 if (userquery::getInstance()->login_as_user($uid)) {
-    redirect_to(DirPath::getUrl('root'));
+    if ($_COOKIE['pageredir']) {
+        unset($_COOKIE['pageredir']);
+    }
+    User::redirectAfterLogin();
 }
 display_it();
