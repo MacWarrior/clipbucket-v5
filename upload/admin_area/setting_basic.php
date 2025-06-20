@@ -156,6 +156,8 @@ if (isset($_POST['update'])) {
         , 'enable_channels_slogan_display'
         , 'enable_user_self_deletion'
         , 'enable_cookie_banner'
+        , 'enable_membership'
+        , 'enable_public_video_page'
     ];
 
     $config_booleans_to_refactor = [
@@ -416,7 +418,15 @@ if (isset($_POST['update'])) {
 
         'max_photo_categories',
         'max_collection_categories',
-        'channel_video_style'
+        'channel_video_style',
+        'enable_360_video',
+        'video_thumbs_preview_count',
+        'allow_tag_space',
+        'email_sender_name',
+        'number_featured_video',
+        'video_list_view_video_history',
+        'enable_membership',
+        'enable_public_video_page'
     ];
 
     //Numeric Array

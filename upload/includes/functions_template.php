@@ -299,6 +299,18 @@ function display_video_view_history(array $data, int $videoid): void
     assign('videoid', $videoid);
     echo templateWithMsgJson('blocks/video_view_history.html');
 }
+/**
+ * @param array $data
+ * @param int $userid
+ * @return void
+ */
+function display_user_membership_history(array $data, int $userid)
+{
+    assign('results', $data['results']);
+    assign('modal', $data['modal']);
+    assign('userid', $userid);
+    echo templateWithMsgJson('blocks/membership_view_history.html');
+}
 
 //todO séparer en 2 fonctions
 /**

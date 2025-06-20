@@ -1,0 +1,29 @@
+name: Docs
+on:
+  push:
+    branches:
+      - master
+permissions: {}
+jobs:
+  build_and_publish:
+    permissions:
+      contents: write # to push changes in repo (jamesives/github-pages-deploy-action)
+
+    name: Build and publish Docs
+    runs-on: ubuntu-latest
+    if: github.repository == 'PHPMailer/PHPMailer'
+    steps:
+      - name: Checkout sources
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+      - name: Build Docs
+        uses: ./.github/actions/build-docs
+      - name: Publish Docs to gh-pages
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          branch: gh-pages
+          folder: docs
+        env:
+          BUILD_DIR: docs/
+          GH_PAT: ${{ secrets.GH_PAT }}

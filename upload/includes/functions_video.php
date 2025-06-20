@@ -357,12 +357,12 @@ function default_thumb($return_type = 'url'): string
  *
  * @param      $vdetails
  * @param null $type
- *
+ * @param bool $is_public
  * @return string
  * @throws Exception
  * @internal param video $ARRAY details
  */
-function video_link($vdetails, $type = null)
+function video_link($vdetails, $type = null, $is_public = false):string
 {
     $base_url = DirPath::getUrl('root');
     #checking what kind of input we have
@@ -402,6 +402,7 @@ function video_link($vdetails, $type = null)
     if ((strtolower($vdetails['status']) == 'processing' || strtolower($vdetails['status']) == 'waiting') && !User::getInstance()->hasAdminAccess()) {
         return '#';
     }
+    $is_public = config('enable_public_video_page')=='yes' && User::getInstance()->hasPermission('allow_public_video_page') && $vdetails['broadcast'] == 'public';
     //calling for custom video link functions
     $functions = cb_get_functions('video_link');
     if ($functions) {
