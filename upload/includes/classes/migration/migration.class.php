@@ -2,7 +2,7 @@
 /**
  *                                      ,--.""
  *  Come on guys, we're         __,----( o ))
- *  gonna misse the mi...      ,'--.      , (
+ *  gonna miss the mi...       ,'--.      , (
  *  the mi...           -"",:-(    o ),-'/  ;
  *  the migration.        ( o) `o  _,'\ / ;(
  *                         `-;_-<'\_|-'/ '  )

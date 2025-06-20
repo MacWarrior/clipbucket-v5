@@ -10,12 +10,12 @@ class MWIP extends \Migration
      */
     public function start()
     {
-        self::generateTranslation('alert_update_core_alreay_ongoing', [
+        self::generateTranslation('alert_update_core_already_ongoing', [
             'fr'=>'Une mise à jour du coeur est déjà en cours, doit-elle être marquée comme ayant échouée ?',
             'en'=>'A core update is already ongoing, should it be marked as failed ?'
         ]);
 
-        self::generateTranslation('alert_update_db_alreay_ongoing', [
+        self::generateTranslation('alert_update_db_already_ongoing', [
             'fr'=>'Une mise à jour de la base de donnée est en cours, doit-elle être marquée comme ayant échouée ?',
             'en'=>'A database upgrade is ongoing, should it be marked as failed ?'
         ]);

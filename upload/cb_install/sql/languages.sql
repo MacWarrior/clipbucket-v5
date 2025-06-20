@@ -1612,4 +1612,7 @@ VALUES ('admin_setting'),
        ('confirm_unfriend'),
        ('my_collections'),
        ('my_friends_collections'),
-       ('public_collections');
+       ('public_collections'),
+       ('alert_update_core_already_ongoing'),
+       ('alert_update_db_already_ongoing'),
+       ('alert_video_conversion_ongoing');
