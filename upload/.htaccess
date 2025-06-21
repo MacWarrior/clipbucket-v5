@@ -50,9 +50,9 @@ RewriteRule ^(.*/)?(.*)\_v([0-9]+)                  $1watch_video.php?v=$3&%{QUE
 RewriteRule ^(.*/)?videos_public/(.*)/(.*)/(.*)/(.*)       $1videos_public.php?cat=$2&sort=$3&time=$4&page=$5&%{QUERY_STRING} [L]
 RewriteRule ^(.*/)?videos_public/([0-9]+)                  $1videos_public.php?page=$2&%{QUERY_STRING} [L]
 RewriteRule ^(.*/)?videos_public/?$                        $1videos_public.php?%{QUERY_STRING} [L]
-RewriteRule ^(.*/)?video_public/(.*)/(.*)                  $1watch_public_video.php?v=$2&%{QUERY_STRING} [L]
-RewriteRule ^(.*/)?video_public/([0-9]+)_(.*)              $1watch_public_video.php?v=$2&%{QUERY_STRING} [L]
-RewriteRule ^(.*/)?video_public\-(.*)\_v([0-9]+)           $1watch_public_video.php?v=$3&%{QUERY_STRING} [L]
+RewriteRule ^(.*/)?video_public/(.*)/(.*)                  $1watch_video_public.php?v=$2&%{QUERY_STRING} [L]
+RewriteRule ^(.*/)?video_public/([0-9]+)_(.*)              $1watch_video_public.php?v=$2&%{QUERY_STRING} [L]
+RewriteRule ^(.*/)?video_public\-(.*)\_v([0-9]+)           $1watch_video_public.php?v=$3&%{QUERY_STRING} [L]
 
 # Photos
 RewriteRule ^(.*/)?item/(.*)/(.*)/(.*)/(.*)         $1view_item.php?item=$4&type=$2&collection=$3&%{QUERY_STRING} [L]

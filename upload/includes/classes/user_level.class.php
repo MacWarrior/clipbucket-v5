@@ -245,7 +245,7 @@ class UserLevel
     public static function getOne(array $params): array
     {
         $params['first_only'] = true;
-        return self::getAll($params);
+        return self::getAll($params) ?? [];
     }
 
     /**

@@ -175,13 +175,28 @@ class User
 
         $this->default_homepage_list = [
             'homepage'
-            ,'videos'
-            ,'public_videos'
-            ,'photos'
-            ,'collections'
-            ,'channels'
             ,'my_account'
         ];
+
+        if( config('videosSection') == 'yes' ){
+            $this->default_homepage_list[] = 'videos';
+
+            if( config('enable_public_video_page') == 'yes'){
+                $this->default_homepage_list[] = 'public_videos';
+            }
+        }
+
+        if( config('photosSection') == 'yes' ){
+            $this->default_homepage_list[] = 'photos';
+        }
+
+        if( config('collectionsSection') == 'yes' ){
+            $this->default_homepage_list[] = 'collections';
+        }
+
+        if( config('channelsSection') == 'yes' ){
+            $this->default_homepage_list[] = 'channels';
+        }
 
         if( $user_id ){
             $params = [];

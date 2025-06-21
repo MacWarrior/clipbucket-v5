@@ -10,80 +10,9 @@ class MWIP extends \Migration
      */
     public function start()
     {
-        self::generateTranslation('editing', [
-            'fr' => 'Edition',
-            'en' => 'Editing'
-        ]);
-
-        self::generateTranslation('creation', [
-            'fr' => 'Création',
-            'en' => 'Creation'
-        ]);
-
-        self::generateTranslation('must_activate_storage_history', [
-            'fr' => 'Vous devez activer l\'option "Activer l\'historique de stockage" pour éditer ce champs',
-            'en' => 'You must activate option "Activate storage history" to edit this field'
-        ]);
-
-
-        self::generateTranslation('max_period_storage', [
-            'fr' => 'Stockage maximum utilisé durant la période',
-            'en' => 'Maximum storage during period'
-        ]);
-
-        self::generateTranslation('date_start', [
-            'fr' => 'Date de début',
-            'en' => 'Date start'
-        ]);
-
-        self::generateTranslation('date_end', [
-            'fr' => 'Date de fin',
-            'en' => 'Date end'
-        ]);
-
-        self::generateTranslation('price', [
-            'fr' => 'Prix',
-            'en' => 'Price'
-        ]);
-
-        self::generateTranslation('gb', [
-            'fr' => 'Go',
-            'en' => 'GB'
-        ]);
-
-        self::generateTranslation('per_gb', [
-            'fr' => 'par Go',
-            'en' => 'per GB'
-        ]);
-
-        self::generateTranslation('user_level_successfully_saved', [
-            'fr' => 'Le niveau d\'utilisateur a été correctement enregistré',
-            'en' => 'User level has been successfully saved'
-        ]);
-
         self::generateTranslation('confirm_delete_user_level', [
             'fr' => 'Voulez-vous vraiment supprimer ce niveau d\'utilisateur ?',
             'en' => 'Are you sure you want to delete this user level ?'
-        ]);
-
-        self::generateTranslation('none', [
-            'fr' => 'Aucun',
-            'en' => 'None'
-        ]);
-
-        self::generateTranslation('never', [
-            'fr' => 'Jamais',
-            'en' => 'Never'
-        ]);
-
-        self::generateTranslation('status', [
-            'fr' => 'Statut',
-            'en' => 'Status'
-        ]);
-
-        self::generateTranslation('search_results_per_page', [
-            'fr' => 'Résultats de recherche par page',
-            'en' => 'Search results per page'
         ]);
 
         self::generateTranslation('enable_public_video_page', [
@@ -120,18 +49,8 @@ class MWIP extends \Migration
             'en' => 'Public videos'
         ]);
 
-        self::generateTranslation('level_del_sucess_no_user', [
-            'fr' => 'Le niveau d\'utilisateur a été supprimé',
-            'en' => 'User level has been deleted'
-        ]);
-
         self::generateTranslation('level_del_sucess', [
             'fr' => 'Le niveau d\'utilisateur a bien été supprimé, tous les utilisateurs de ce niveau ont été transféré vers %s'
-        ]);
-
-        self::generateTranslation('nb_users', [
-            'fr' => 'Nombres d\'utilisateurs',
-            'en' => 'Number of users'
         ]);
 
         self::generateTranslation('default_homepage', [
@@ -148,25 +67,6 @@ class MWIP extends \Migration
             'en' => 'Homepage'
         ]);
 
-        self::generateTranslation('allowed_emails', [
-            'fr' => 'Emails autorisés',
-            'en' => 'Allowed emails'
-        ]);
-
-        self::generateTranslation('allowed_emails_tips', [
-            'fr' => 'Emails séparés par des virgules',
-            'en' => 'Emails separated by commas'
-        ]);
-
-        self::generateTranslation('only_visible_eligible', [
-            'fr' => 'Seulement visible si éligible',
-            'en' => 'Only visible if eligible'
-        ]);
-
-        self::generateTranslation('email_is_not_valid', [
-            'fr' => '%s n\'est pas un email valide',
-            'en' => '%s is not a valid email'
-        ]);
         self::generateTranslation('allow_public_video_page', [
             'fr' => 'Autoriser la page de vidéos publiques',
             'en' => 'Enable public video'
@@ -174,16 +74,6 @@ class MWIP extends \Migration
         self::generateTranslation('allow_public_video_page_desc', [
             'fr' => 'L\'utilisateur peut voir la page de vidéo publique',
             'en' => 'Allow user to view public videos page'
-        ]);
-
-        self::generateTranslation('bouton_souscrire_abonnement', [
-            'fr' => 'Souscrire',
-            'en' => 'Subscription'
-        ]);
-
-        self::generateTranslation('plans_features_title', [
-            'fr' => 'Détails',
-            'en' => 'Details'
         ]);
 
         self::alterTable('ALTER TABLE ' . tbl('user_levels') . ' CHANGE `user_level_is_default` `user_level_is_origin` ENUM(\'yes\',\'no\') CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_520_ci NOT NULL DEFAULT \'no\';', [
@@ -201,7 +91,7 @@ class MWIP extends \Migration
             'column' => 'user_level_is_default'
         ]);
 
-        self::query('UPDATE ' . tbl('user_levels') . ' SET user_level_is_default = true WHERE user_level_name LIKE \'Registered User\' ');
+        self::query('UPDATE ' . tbl('user_levels') . ' SET user_level_is_default = true WHERE user_level_id = 2');
 
     }
 }
