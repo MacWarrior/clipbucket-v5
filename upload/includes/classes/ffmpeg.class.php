@@ -1347,9 +1347,14 @@ class FFMpeg
             return false;
         }
 
-        $cmd = escapeshellcmd(config('ffmpegpath') ." -v error -i " . escapeshellarg($filepath) . " -f " . config('subtitle_format')." - 2>&1");
+        $cmd = config('ffmpegpath') .' -v error -i ' . escapeshellarg($filepath) . ' -f ' . config('subtitle_format').' 2>&1';
         $output = shell_exec($cmd);
 
-        return empty($output);
+        if (!empty($output)) {
+            e(lang('invalid_subtitle_file'));
+            return false;
+        }
+
+        return true;
     }
 }

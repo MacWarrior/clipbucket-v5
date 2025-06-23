@@ -1622,4 +1622,5 @@ VALUES ('admin_setting'),
        ('option_maximum_allowed_subtitle_size'),
        ('option_can_upload_subtitles'),
        ('info_upload_subtitle'),
-       ('invalid_subtitle_timer');
+       ('invalid_subtitle_timer'),
+       ('upload_subtitles');

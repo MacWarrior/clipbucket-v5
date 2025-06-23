@@ -1,4 +1,9 @@
 <?php
+if( !defined('THIS_PAGE') ){
+    define('THIS_PAGE', 'popin_upload_subtitle_core');
+    require 'includes/config.inc.php';
+    redirect_to(cblink(['name' => 'error_403']));
+}
 
 $response=[];
 if (empty($_POST['videoid'])) {
