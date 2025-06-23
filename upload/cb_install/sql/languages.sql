@@ -1621,4 +1621,7 @@ VALUES ('admin_setting'),
        ('default_homepage'),
        ('homepage'),
        ('allow_public_video_page'),
-       ('allow_public_video_page_desc');
+       ('allow_public_video_page_desc'),
+       ('userlevel_cannot_be_default'),
+       ('default_userlevel_cannot_be_disabled'),
+       ('userlevel_cannot_be_disabled');

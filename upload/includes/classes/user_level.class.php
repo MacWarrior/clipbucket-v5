@@ -167,7 +167,7 @@ class UserLevel
      * @return void
      * @throws Exception
      */
-    public static function updateUserPermissionValue(int $user_level_id, int $id_user_levels_permission, $permission_value)
+    public static function updateUserPermissionValue(int $user_level_id, int $id_user_levels_permission, $permission_value): void
     {
         Clipbucket_db::getInstance()->update(tbl(self::getTableNameLevelPermissionValue()), ['permission_value'], [$permission_value], 'user_level_id = ' . mysql_clean($user_level_id) . ' AND id_user_levels_permission = ' . mysql_clean($id_user_levels_permission));
     }
@@ -179,7 +179,7 @@ class UserLevel
      * @return void
      * @throws Exception
      */
-    public static function insertUserPermissionValue(int $user_level_id, int $id_user_levels_permission, $permission_value)
+    public static function insertUserPermissionValue(int $user_level_id, int $id_user_levels_permission, $permission_value): void
     {
         $sql = 'INSERT IGNORE INTO '.tbl('user_levels_permissions_values').' (user_level_id,id_user_levels_permission,permission_value) VALUES ('.mysql_clean($user_level_id).','.mysql_clean($id_user_levels_permission).',\''.mysql_clean($permission_value).'\')';
         Clipbucket_db::getInstance()->execute($sql);
@@ -256,7 +256,7 @@ class UserLevel
      * @return void
      * @throws Exception
      */
-    public static function updateUserLevel(int $user_level_id, string $user_level_name, $permissions, $is_default = null)
+    public static function updateUserLevel(int $user_level_id, string $user_level_name, $permissions, $is_default = null): void
     {
         $fields = ['user_level_name'];
         $values = [$user_level_name];
@@ -284,7 +284,7 @@ class UserLevel
     /**
      * @throws Exception
      */
-    public static function addUserLevel(string $user_level_name, $permissions, $is_default = null)
+    public static function addUserLevel(string $user_level_name, $permissions, $is_default = null): void
     {
         $fields = ['user_level_name'];
         $values = [$user_level_name];
@@ -322,15 +322,15 @@ class UserLevel
     {
         $user_level = self::getOne(['user_level_id' => $user_level_id]);
         if (!empty($user_level)) {
-            if ($user_level['user_level_is_origin'] == 'yes') {
+            if( $user_level['user_level_is_origin'] == 'yes' || $user_level['user_level_is_default'] == 'yes'){
                 e(lang('level_not_deleteable'));
                 return false;
             }
+            Clipbucket_db::getInstance()->update(tbl('users'), ['level'], [3], ' level=' . mysql_clean($user_level_id));
             Clipbucket_db::getInstance()->delete(tbl(self::$tableNamePermissionValue), ['user_level_id'], [$user_level_id]);
             Clipbucket_db::getInstance()->delete(tbl(self::$tableName), ['user_level_id'], [$user_level_id]);
             $inactive_user = self::getOne(['user_level_id' => 3]);
             e(lang('level_del_sucess', $inactive_user['user_level_name']), 'm');
-            Clipbucket_db::getInstance()->update(tbl('users'), ['level'], [3], ' level=' . mysql_clean($user_level_id));
             return true;
         }
         return false;
@@ -354,13 +354,31 @@ class UserLevel
         return self::getDefault()['user_level_id'] ?? 0;
     }
 
-    public static function setDefault($user_level_id)
+    /**
+     * @throws Exception
+     */
+    public static function setDefault($user_level_id): bool
     {
         if (empty($user_level_id)) {
             return false;
         }
-        Clipbucket_db::getInstance()->update(tbl(self::$tableName), ['user_level_is_default'], ['yes'], ' user_level_id =' . mysql_clean($user_level_id));
-        Clipbucket_db::getInstance()->update(tbl(self::$tableName), ['user_level_is_default'], ['no'], ' user_level_id !=' . mysql_clean($user_level_id));
+
+        // Prevent default on inactive user & guest
+        if( in_array($user_level_id, [3,4]) ){
+            return false;
+        }
+
+        $levelDetails = userquery::getInstance()->get_level_details($user_level_id);
+        if( empty($levelDetails) ){
+            return false;
+        }
+
+        if( $levelDetails['user_level_active'] != 'yes' ){
+            return false;
+        }
+
+        Clipbucket_db::getInstance()->update(tbl(self::$tableName), ['user_level_is_default'], ['yes'], ' user_level_id =' . (int)$user_level_id);
+        Clipbucket_db::getInstance()->update(tbl(self::$tableName), ['user_level_is_default'], ['no'], ' user_level_id !=' . (int)$user_level_id);
         return true;
     }
 

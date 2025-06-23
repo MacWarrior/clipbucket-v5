@@ -14,7 +14,6 @@ class MWIP extends \Migration
             'fr' => 'Voulez-vous vraiment supprimer ce niveau d\'utilisateur ?',
             'en' => 'Are you sure you want to delete this user level ?'
         ]);
-
         self::generateTranslation('enable_public_video_page', [
             'fr' => 'Activer la page de vidéos publiques',
             'en' => 'Enable public video page'
@@ -48,11 +47,9 @@ class MWIP extends \Migration
             'fr' => 'Vidéos publiques',
             'en' => 'Public videos'
         ]);
-
         self::generateTranslation('level_del_sucess', [
             'fr' => 'Le niveau d\'utilisateur a bien été supprimé, tous les utilisateurs de ce niveau ont été transféré vers %s'
         ]);
-
         self::generateTranslation('default_homepage', [
             'fr' => 'Page d\'accueil par défaut',
             'en' => 'Default homepage'
@@ -61,12 +58,10 @@ class MWIP extends \Migration
             'fr' => 'Défini la page sur laquelle est redirigé l\'utilisateur à la connexion et au clique sur le logo',
             'en' => 'Set the page where user is redirect on login and click on logo'
         ]);
-
         self::generateTranslation('homepage', [
             'fr' => 'Page d\'accueil',
             'en' => 'Homepage'
         ]);
-
         self::generateTranslation('allow_public_video_page', [
             'fr' => 'Autoriser la page de vidéos publiques',
             'en' => 'Enable public video'
@@ -74,6 +69,18 @@ class MWIP extends \Migration
         self::generateTranslation('allow_public_video_page_desc', [
             'fr' => 'L\'utilisateur peut voir la page de vidéo publique',
             'en' => 'Allow user to view public videos page'
+        ]);
+        self::generateTranslation('userlevel_cannot_be_default', [
+            'fr' => 'Ce niveau d\'utilisateur ne peut être mis par défaut',
+            'en' => 'This user level cannot be set as default'
+        ]);
+        self::generateTranslation('default_userlevel_cannot_be_disabled', [
+            'fr' => 'Le niveau d\'utilisateur par défaut ne peut être désactivé',
+            'en' => 'Default user level cannot be disabled'
+        ]);
+        self::generateTranslation('userlevel_cannot_be_disabled', [
+            'fr' => 'Ce niveau d\'utilisateur ne peut être désactivé',
+            'en' => 'This user level cannot be disabled'
         ]);
 
         self::alterTable('ALTER TABLE ' . tbl('user_levels') . ' CHANGE `user_level_is_default` `user_level_is_origin` ENUM(\'yes\',\'no\') CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_520_ci NOT NULL DEFAULT \'no\';', [
@@ -92,6 +99,5 @@ class MWIP extends \Migration
         ]);
 
         self::query('UPDATE ' . tbl('user_levels') . ' SET user_level_is_default = true WHERE user_level_id = 2');
-
     }
 }

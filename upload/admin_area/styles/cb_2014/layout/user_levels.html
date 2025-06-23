@@ -13,16 +13,15 @@
             <th>Users</th>
             <th>Actions</th>
         </tr>
-        {assign var=levels value=userquery::getInstance()->get_levels()}
         {section name=l loop=$levels}
             <tr>
                 <td>{$levels[l].user_level_name}</td>
                 <td>
-                    <input name="user_level_active" data-id="{$levels[l].user_level_id}" {if $levels[l].user_level_active == 'yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5 user_level_active"/>
+                    <input name="user_level_active" data-id="{$levels[l].user_level_id}"{if $levels[l].user_level_active == 'yes'} checked{/if}{if $levels[l].user_level_is_default == 'yes'} disabled title="{lang('default_userlevel_cannot_be_disabled')}"{elseif in_array($levels[l].user_level_id, [3,4])} disabled="disabled" title="{lang('userlevel_cannot_be_disabled')}"{/if} type="checkbox" class="ace ace-switch ace-switch-5 user_level_active"/>
                     <span class="lbl"></span>
                 </td>
                 <td>
-                    <input name="user_level_is_default" data-id="{$levels[l].user_level_id}" {if $levels[l].user_level_is_default == 'yes'}checked disabled="disabled" title="{lang('cannot_remove_default_have_to_add_one')}"{/if} type="checkbox" class="ace ace-switch ace-switch-5 user_level_is_default"/>
+                    <input name="user_level_is_default" data-id="{$levels[l].user_level_id}"{if $levels[l].user_level_active != 'yes'} disabled title="lang('cannot_be_default_until_activated')"{elseif $levels[l].user_level_is_default == 'yes'} checked disabled="disabled" title="{lang('cannot_remove_default_have_to_add_one')}"{elseif in_array($levels[l].user_level_id, [3,4])} disabled="disabled" title="{lang('userlevel_cannot_be_default')}"{/if} type="checkbox" class="ace ace-switch ace-switch-5 user_level_is_default"/>
                     <span class="lbl"></span>
                 </td>
                 <td>{userquery::getInstance()->get_level_users($levels[l].user_level_id,true)}</td>
@@ -33,7 +32,7 @@
                         </button>
                         <ul class="dropdown-menu pull-right" aria-labelledby="dropdownMenu1" role="menu">
                             <li><a role="menuitem" tabindex="-1" href="?mode=edit&lid={$levels[l].user_level_id}">{lang code='edit'}</a></li>
-                            {if  (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.2', '999') && $levels[l].user_level_is_origin !=yes) || ( $levels[l].user_level_is_default !=yes )}
+                            {if  (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.2', '999') && $levels[l].user_level_is_origin != 'yes' && $levels[l].user_level_is_default != 'yes')}
                                 <li><a class="delete pointer" data-id="{$levels[l].user_level_id}" data-confirm="{if $levels[l].has_users}1{else}0{/if}">{lang code='delete'}</a></li>
                             {/if}
                         </ul>

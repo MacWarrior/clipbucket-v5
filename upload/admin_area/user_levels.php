@@ -55,7 +55,6 @@ switch ($mode) {
         //Getting Level Permission
         $level_perms = UserLevel::getAllPermissions(['user_level_id' => $user_level_id]);
 
-
         $breadcrumb[] = [
             'title' => 'Editing : ' . display_clean(display_clean($levelDetails['user_level_name'])),
             'url'   => DirPath::getUrl('admin_area') . 'user_levels.php?mode=edit&lid=' . display_clean($user_level_id)
@@ -64,6 +63,7 @@ switch ($mode) {
         Assign('level_perms', $level_perms);
         Assign('view', 'edit');
         break;
+
     case 'add':
         $level_perms = UserLevel::getAllPermissions(['no_values' => true]);
 
@@ -80,6 +80,10 @@ switch ($mode) {
         Assign('view', 'add');
         break;
 }
+
+// All except Anonymous user level
+$levels = userquery::getInstance()->get_levels('user_level_id != 6');
+assign('levels', $levels);
 
 subtitle('User levels');
 template_files('user_levels.html');

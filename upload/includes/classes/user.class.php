@@ -953,6 +953,16 @@ class User
         if(empty($user_level_id)) {
             return false;
         }
+
+        // Prevent disabling inactive user & guest
+        if( in_array($user_level_id, [3,4]) ){
+            return false;
+        }
+
+        $levelDetails = userquery::getInstance()->get_level_details($user_level_id);
+        if( empty($levelDetails) ){
+            return false;
+        }
         $sql = 'UPDATE ' . cb_sql_table('user_levels') . ' SET user_level_active = ' . ($activate ? '\'yes\'' : '\'no\'' ) . ' WHERE user_level_id = ' . mysql_clean($user_level_id) ;
         return (bool)Clipbucket_db::getInstance()->execute($sql);
     }
@@ -2544,15 +2554,16 @@ class userquery extends CBCategory
     /**
      * Function used to get all levels
      *
-     * @param : filter
-     *
+     * @param string $cond
      * @return array|bool
      * @throws Exception
      */
-    function get_levels($filter = null)
+    function get_levels(string $cond = '')
     {
-        if( !empty($filter)) $filter = ' AND ' . $filter;
-        $results = Clipbucket_db::getInstance()->select(tbl('user_levels'), '*', 'user_level_active = \'yes\'  ' . $filter, null, ' user_level_id ASC');
+        if( empty($cond) ){
+            $cond = ' user_level_active = \'yes\'';
+        }
+        $results = Clipbucket_db::getInstance()->select(tbl('user_levels'), '*', $cond, null, ' user_level_id ASC');
 
         if (count($results) > 0) {
             return $results;
@@ -2565,7 +2576,7 @@ class userquery extends CBCategory
      *
      * @param : level_id INT
      *
-     * @return bool|int
+     * @return bool|array
      * @throws Exception
      */
     function get_level_details($lid)
