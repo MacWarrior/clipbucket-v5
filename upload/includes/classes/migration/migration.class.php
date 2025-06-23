@@ -60,7 +60,7 @@ class Migration
             $this->start();
         } catch (mysqli_sql_exception $e) {
             Clipbucket_db::getInstance()->rollback();
-            if( System::isInDev() ){
+            if (System::isInDev()) {
                 e('ERROR : ' . $e->getMessage());
                 DiscordLog::sendDump('ERROR : ' . $e->getMessage());
             }

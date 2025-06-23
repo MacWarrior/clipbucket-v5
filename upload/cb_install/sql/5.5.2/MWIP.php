@@ -24,6 +24,11 @@ class MWIP extends \Migration
             'fr'=>'Une conversion vidéo est en cours, voulez-vous continuer la mise à jour ?',
             'en'=>'A video conversion is ongoing, do you want to continue update ?'
         ]);
+
+        self::alterTable('ALTER TABLE `{tbl_prefix}tools_histo_log` CHANGE `message` `message` TEXT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_520_ci NOT NULL;',[
+            'table'=>'tools_histo_log',
+            'column'=>'message'
+        ]);
     }
 
 }

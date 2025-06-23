@@ -538,6 +538,9 @@ function connectSSE() {
         var data = JSON.parse(e.data);
         $('#update_div').html(data.html);
         updateListeners();
+        if (data.msg_template) {
+            $(".page-content").prepend(data.msg_template)
+        }
         if (data.is_updating === 'false') {
             eventSource.close();
             checkStatus();

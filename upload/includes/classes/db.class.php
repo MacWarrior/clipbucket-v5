@@ -272,6 +272,7 @@ class Clipbucket_db
             if( System::isInDev() ){
                 e('SQL : ' . $sql);
                 DiscordLog::sendDump('SQL : ' . $sql);
+                throw new Exception($e->getMessage().PHP_EOL. 'SQL : ' . $sql , 0 ,$e);
             }
             throw $e;
         }
