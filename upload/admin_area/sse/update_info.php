@@ -11,13 +11,13 @@ SSE::processSSE(function () {
         $column = 'code';
         $core = 'update_core';
         $db = AdminTool::CODE_UPDATE_DATABASE_VERSION;
-        $where = ' tools_histo.id_tools_histo_status IN (SELECT id_tools_histo_status FROM '.tbl('tools_histo_status').' WHERE language_key_title = \'in_progress\')  AND code IN (\'update_core\', \''.AdminTool::CODE_UPDATE_DATABASE_VERSION.'\')';
+        $where = ' tools_histo.id_tools_histo_status IN (SELECT id_tools_histo_status FROM '.tbl('tools_histo_status').' WHERE language_key_title IN(\'in_progress\',\'stopping\'))  AND code IN (\'update_core\', \''.AdminTool::CODE_UPDATE_DATABASE_VERSION.'\')';
         $where_error = ' tools_histo.id_tools_histo_status IN (SELECT id_tools_histo_status FROM '.tbl('tools_histo_status').' WHERE language_key_title = \'on_error\')  AND code IN (\'update_core\', \''.AdminTool::CODE_UPDATE_DATABASE_VERSION.'\')';
     } else {
         $column = 'id_tool';
         $core = '11';
         $db = '5';
-        $where = ' tools.id_tools_status IN (SELECT id_tools_status FROM '.tbl('tools_status').' WHERE language_key_title = \'in_progress\')  AND id_tool IN (11, 5)';
+        $where = ' tools.id_tools_status IN (SELECT id_tools_status FROM '.tbl('tools_status').' WHERE language_key_title IN(\'in_progress\',\'stopping\'))  AND id_tool IN (11, 5)';
         $where_error = ' tools.id_tools_status IN (SELECT id_tools_status FROM '.tbl('tools_status').' WHERE language_key_title = \'on_error\')  AND id_tool IN (11, 5)';
     }
     try {

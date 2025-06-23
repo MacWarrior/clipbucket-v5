@@ -780,10 +780,11 @@ class Update
     public static function IsUpdateProcessing(): bool
     {
         if (self::IsCurrentDBVersionIsHigherOrEqualTo('5.5.0', '367')) {
-            $where = ' tools_histo.id_tools_histo_status IN (SELECT id_tools_histo_status FROM '.tbl('tools_histo_status').' WHERE language_key_title = \'in_progress\')  AND code IN (\'update_core\', \''.AdminTool::CODE_UPDATE_DATABASE_VERSION.'\') ';
+            $where = ' tools_histo.id_tools_histo_status IN (SELECT id_tools_histo_status FROM '.tbl('tools_histo_status').' WHERE language_key_title IN(\'in_progress\',\'stopping\')) AND code IN (\'update_core\', \''.AdminTool::CODE_UPDATE_DATABASE_VERSION.'\') ';
         } else {
-            $where = ' tools.id_tools_status IN (SELECT id_tools_status FROM '.tbl('tools_status').' WHERE language_key_title = \'in_progress\')   AND id_tool IN (11, 5)  ';
+            $where = ' tools.id_tools_status IN (SELECT id_tools_status FROM '.tbl('tools_status').' WHERE language_key_title IN(\'in_progress\',\'stopping\')) AND id_tool IN (11, 5)';
         }
+
         $tools = AdminTool::getTools([
             $where
         ]);
