@@ -21,7 +21,7 @@
                     <span class="lbl"></span>
                 </td>
                 <td>
-                    <input name="user_level_is_default" data-id="{$levels[l].user_level_id}"{if $levels[l].user_level_active != 'yes'} disabled title="lang('cannot_be_default_until_activated')"{elseif $levels[l].user_level_is_default == 'yes'} checked disabled="disabled" title="{lang('cannot_remove_default_have_to_add_one')}"{elseif in_array($levels[l].user_level_id, [3,4])} disabled="disabled" title="{lang('userlevel_cannot_be_default')}"{/if} type="checkbox" class="ace ace-switch ace-switch-5 user_level_is_default"/>
+                    <input name="user_level_is_default" data-id="{$levels[l].user_level_id}"{if $levels[l].user_level_active != 'yes'} disabled title="{lang('cannot_be_default_until_activated')}"{elseif $levels[l].user_level_is_default == 'yes'} checked disabled="disabled" title="{lang('cannot_remove_default_have_to_add_one')}"{elseif in_array($levels[l].user_level_id, [3,4])} disabled="disabled" title="{lang('userlevel_cannot_be_default')}"{/if} type="checkbox" class="ace ace-switch ace-switch-5 user_level_is_default"/>
                     <span class="lbl"></span>
                 </td>
                 <td>{userquery::getInstance()->get_level_users($levels[l].user_level_id,true)}</td>
@@ -112,46 +112,7 @@
 {/if}
 
 <script>
-    $(function () {
-        $('.delete').on('click', function () {
-            if ($(this).data('confirm')) {
-                if (confirm("{lang('confirm_delete_user_level')}")) {
-                    document.location="?action=delete&lid=" + $(this).data('id');
-                }
-            } else {
-                document.location="?action=delete&lid=" + $(this).data('id');
-            }
-        });
-
-        $('.user_level_active').on('change', function () {
-            var id = $(this).data('id');
-            var checked = $(this).prop('checked');
-            $.post({
-                url: '/actions/admin_activate_user_level.php',
-                data: {
-                    user_level_id: id, active: checked
-                },
-                dataType: "json",
-                success: response => {
-
-                }
-            })
-        });
-        $('.user_level_is_default').on('change', function () {
-            var id = $(this).data('id');
-            showSpinner();
-            $.post({
-                url: '/actions/admin_set_default_user_level.php',
-                data: {
-                    user_level_id: id
-                },
-                dataType: "json",
-                success: response => {
-                    if(response.success) {
-                        window.location.reload();
-                    }
-                }
-            })
-        });
-    });
+    var lang=[];
+    lang['confirm_delete_user_level'] = "{lang('confirm_delete_user_level')}";
+    lang['cannot_be_default_until_activated'] = "{lang('cannot_be_default_until_activated')}";
 </script>

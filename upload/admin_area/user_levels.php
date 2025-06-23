@@ -81,6 +81,11 @@ switch ($mode) {
         break;
 }
 
+$min_suffixe = System::isInDev() ? '' : '.min';
+ClipBucket::getInstance()->addAdminJS([
+    'pages/user_levels/user_levels' . $min_suffixe . '.js' => 'admin'
+]);
+
 // All except Anonymous user level
 $levels = userquery::getInstance()->get_levels('user_level_id != 6');
 assign('levels', $levels);

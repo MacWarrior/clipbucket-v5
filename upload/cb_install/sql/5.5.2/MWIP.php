@@ -99,5 +99,10 @@ class MWIP extends \Migration
         ]);
 
         self::query('UPDATE ' . tbl('user_levels') . ' SET user_level_is_default = true WHERE user_level_id = 2');
+        self::generateTranslation('cannot_be_default_until_activated', [
+            'fr'=>'Le niveau d\'utilisateur ne pas être par défaut s\'il n\'est pas activé',
+            'en'=>'User level cannot be default until activated'
+        ]);
+
     }
 }
