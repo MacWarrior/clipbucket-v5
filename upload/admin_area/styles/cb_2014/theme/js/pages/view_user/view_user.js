@@ -56,7 +56,7 @@ $(document).ready(function(){
         "valueAxes": [
             {
                 "id": "ValueAxis-1",
-                "title": "{lang('storage_use')}",
+                "title": lang_storage_use,
                 "labelFunction": function(value) {
                     return get_readable_filesize(value);
                 }
