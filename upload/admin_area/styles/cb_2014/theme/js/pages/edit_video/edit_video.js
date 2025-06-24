@@ -89,7 +89,7 @@ function saveSubtitle(number) {
 
     showSpinner();
     $.ajax({
-        url: baseurl+"actions/subtitle_edit.php",
+        url: baseurl+"actions/admin_subtitle_edit.php",
         type: "POST",
         data: {title: $('#edit_sub_' + number).val(), videoid: videoid, number: number},
         dataType: 'json',
