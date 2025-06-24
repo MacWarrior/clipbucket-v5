@@ -1,6 +1,6 @@
 {
   "version":"5.5.2",
-  "revision":"86",
+  "revision":"87",
   "status":"stable",
   "detail":[
     {
@@ -11,7 +11,10 @@
         ,"Implement reset logo & favicon"
         ,"Implement collections & photos categories limit"
         ,"Implement status refresh on conversion queue manager"
+        ,"Implement default homepage config per user level"
+        ,"Implement public videos page"
         ,"Refactor conversion queue manager"
+        ,"Refactor user levels management"
         ,"Add empty page title error"
         ,"Add collection mass broadcast update"
         ,"Add users and collections to dashboard flagged objects chart <i>(#74)</i>"

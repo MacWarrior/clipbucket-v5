@@ -32,7 +32,7 @@
                         </button>
                         <ul class="dropdown-menu pull-right" aria-labelledby="dropdownMenu1" role="menu">
                             <li><a role="menuitem" tabindex="-1" href="?mode=edit&lid={$levels[l].user_level_id}">{lang code='edit'}</a></li>
-                            {if  (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.2', '999') && $levels[l].user_level_is_origin != 'yes' && $levels[l].user_level_is_default != 'yes')}
+                            {if  (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.2', '87') && $levels[l].user_level_is_origin != 'yes' && $levels[l].user_level_is_default != 'yes')}
                                 <li><a class="delete pointer" data-id="{$levels[l].user_level_id}" data-confirm="{if $levels[l].has_users}1{else}0{/if}">{lang code='delete'}</a></li>
                             {/if}
                         </ul>
@@ -53,7 +53,7 @@
                 <label for="level_name">Level name</label>
                 <input class="form-control" name="level_name" type="text" id="level_name" value="{$level_details.user_level_name}"/>
             </div>
-            {if Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.2', '999')}
+            {if Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.2', '87')}
                 <div class="row">
                     <label for="user_level_is_default">{lang('default')}</label>
                     <input type="checkbox" name="user_level_is_default" id="user_level_is_default" value="yes" {if $level_details.user_level_is_default==yes}checked{/if} class="ace ace-switch ace-switch-5 bootstrap-switch-on"/>

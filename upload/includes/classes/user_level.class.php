@@ -191,7 +191,7 @@ class UserLevel
     private static function getAllFields(): array
     {
         $fields = self::$fields;
-        if (!Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '999')) {
+        if (!Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '87')) {
             $key = array_search('user_level_is_origin', $fields);
             if ($key !== false) {
                 unset($fields[$key]);
@@ -260,7 +260,7 @@ class UserLevel
     {
         $fields = ['user_level_name'];
         $values = [$user_level_name];
-        if ($is_default == 'yes' && Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.2', '999')) {
+        if ($is_default == 'yes' && Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.2', '87')) {
             $fields[] = 'user_level_is_default';
             $values[] = 'yes';
             Clipbucket_db::getInstance()->update(tbl('user_levels'), ['user_level_is_default'], ['no'], 'user_level_id != ' . $user_level_id);
