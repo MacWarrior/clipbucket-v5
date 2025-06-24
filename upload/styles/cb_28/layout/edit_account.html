@@ -7,7 +7,6 @@
             <div class="tabbable">
                 <ul class="nav nav-tabs" id="myTab">
 
-
     {if in_array($mode, ['profile_settings', 'block_users'])}
                     {if config('channelsSection') == 'yes' && User::getInstance()->hasPermission('enable_channel_page')}
                         <li class="{if $mode=='profile_settings'}active{/if}">
@@ -33,10 +32,7 @@
                         </div>
                     </div>
                 </form>
-            </div>
-        </div>
-    </div>
-    {else if in_array($mode, ['account_settings', 'avatar_bg', 'change_email', 'change_password', 'subs'])}
+    {else}
                     <li class="{if $mode=='account_settings'}active{/if}">
                         <a href="{$baseurl}edit_account.php?mode=account">
                             <h5>{lang code='account_settings'}</h5>
@@ -90,12 +86,11 @@
                         {include file="$style_dir/blocks/my_account/account_manage_subscriptions.html"}
                     </div>
                     {/if}
-
                 </div>
+    {/if}
             </div>
         </div>
     </div>
-    {/if}
 </div>
 
 <script>

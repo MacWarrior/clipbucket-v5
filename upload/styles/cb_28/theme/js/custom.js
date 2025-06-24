@@ -134,7 +134,7 @@ function responsiveFixes()
         var length3 = $('.menu-holder').find('.newuser-links').length;
         if(length3==0) {
             var rightLinkHtml = $('.navbar-right').html();
-            $('.menu-holder').prepend("<ul class='newuser-links'>"+rightLinkHtml+"</ul>");
+            $('.menu-holder').prepend("<div class='col'><nav class='main-links'><ul class='newuser-links'>"+rightLinkHtml+"</ul></nav></div>");
             $('.navbar-right').remove();
         }
     } else {
@@ -145,6 +145,12 @@ function responsiveFixes()
             $('.newuser-links').remove();
         }
     }
+    if ($('.menu-holder').find('.main-links>ul:not(.newuser-links)>li').length == 0) {
+        $('i.icon-search').parent().removeClass('visible-xs').hide();
+    } else {
+        $('i.icon-search').parent().addClass('visible-xs').show();
+    }
+
 }
 
 // automatically scrolls to new loaded videos

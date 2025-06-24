@@ -1,6 +1,7 @@
 <?php
 define('THIS_PAGE', 'user_levels');
 require_once dirname(__FILE__, 2) . '/includes/admin_config.php';
+require_once DirPath::get('classes') . 'migration' . DIRECTORY_SEPARATOR . 'migration.class.php';
 
 User::getInstance()->hasPermissionOrRedirect('admin_access', true);
 pages::getInstance()->page_redir();
@@ -27,19 +28,20 @@ $action = mysql_clean($_GET['action']);
 
 //Deleting Level
 if ($action == 'delete') {
-   UserLevel::deleteUserLevel($user_level_id);
+    UserLevel::deleteUserLevel($user_level_id);
 }
 
 switch ($mode) {
     case 'view':
     default:
         Assign('view', 'view');
+        assign('levels', User::getInstance()->getUserLevels());
         break;
 
     case 'edit':
         //Updating Level permissions
         if (!empty($_POST)) {
-            UserLevel::updateUserLevel($user_level_id, $_POST['level_name'], $_POST['permission_value']);
+            UserLevel::updateUserLevel($user_level_id, $_POST['level_name'], $_POST['permission_value'], $_POST['user_level_is_default']);
         }
 
         //Getting Details of $level
@@ -52,7 +54,6 @@ switch ($mode) {
 
         //Getting Level Permission
         $level_perms = UserLevel::getAllPermissions(['user_level_id' => $user_level_id]);
-
 
         $breadcrumb[] = [
             'title' => 'Editing : ' . display_clean(display_clean($levelDetails['user_level_name'])),
@@ -71,7 +72,7 @@ switch ($mode) {
             if (empty($level_name)) {
                 e(lang('please_enter_level_name'));
             } else {
-                UserLevel::addUserLevel($level_name, $_POST['permission_value']);
+                UserLevel::addUserLevel($level_name, $_POST['permission_value'], $_POST['user_level_is_default']);
                 redirect_to('user_levels.php?added=true');
             }
         }
@@ -79,6 +80,15 @@ switch ($mode) {
         Assign('view', 'add');
         break;
 }
+
+$min_suffixe = System::isInDev() ? '' : '.min';
+ClipBucket::getInstance()->addAdminJS([
+    'pages/user_levels/user_levels' . $min_suffixe . '.js' => 'admin'
+]);
+
+// All except Anonymous user level
+$levels = userquery::getInstance()->get_levels('user_level_id != 6');
+assign('levels', $levels);
 
 subtitle('User levels');
 template_files('user_levels.html');
