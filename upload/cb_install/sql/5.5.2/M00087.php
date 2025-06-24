@@ -104,5 +104,13 @@ class M00087 extends \Migration
             'en'=>'User level cannot be default until activated'
         ]);
 
+        self::updateTranslation('com_manage_subs', [
+            'en' => 'Manage channels subscriptions',
+            'fr' => 'Gestion des abonnements de chaîne'
+        ]);
+
+        self::updateTranslation('assign_default_thumb_description', [
+            'fr' => 'Assigne aux collection la vignette par défaut du premier élément de la collection'
+        ]);
     }
 }
