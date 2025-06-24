@@ -87,7 +87,7 @@ assign('mode', $mode);
 
 $params = [
     'userid' => user_id(),
-    'limit'   => $sql_limit ?? '',
+    'limit'  => $sql_limit ?? '',
     'order'  => ' date_start DESC '
 ];
 
