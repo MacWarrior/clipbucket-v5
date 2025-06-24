@@ -201,3 +201,21 @@ function saveSubtitle(number) {
         }
     });
 }
+
+function deleteSubtitle(number) {
+    showSpinner();
+    if (confirm_it(text_confirm_sub_file.replace('%s', number))) {
+        $.ajax({
+            url: baseurl+"actions/subtitle_delete.php",
+            type: "POST",
+            data: {number: number, videoid: videoid},
+            dataType: 'json',
+            success: function (result) {
+                $('#subtitles').html(result['template']);
+                $('.close').click();
+                $('.manage-page').prepend(result['msg']);
+                hideSpinner();
+            }
+        });
+    }
+}
