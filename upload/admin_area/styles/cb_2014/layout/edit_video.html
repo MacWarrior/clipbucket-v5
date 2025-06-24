@@ -587,7 +587,7 @@
                         {/if}
                         {if config('player_subtitles') && (!empty($subtitle_list) || config('can_upload_subtitles')=='yes')}
                             <div id="subtitles" class="tab-pane">
-                                {include file="$style_dir/blocks/subtitle_list.html" videoid=$data.videoid}
+                                {include file="$style_dir/blocks/subtitle_list.html" videoid=$data.videoid vstatus=$data.status}
                             </div>
                         {/if}
                         {if config('enable_video_view_history')=='yes'}

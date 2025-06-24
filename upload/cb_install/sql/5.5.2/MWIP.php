@@ -66,5 +66,10 @@ class MWIP extends \Migration
 
         self::generateConfig('maximum_allowed_subtitle_size', 2);
         self::generateConfig('can_upload_subtitles', 'no');
+
+        self::generateTranslation('subtitle_already_exists' , [
+            'fr'=>'Ce nom existe déjà pour un autre sous-titre',
+            'en'=>'This name already exists for another subtitle'
+        ]);
     }
 }

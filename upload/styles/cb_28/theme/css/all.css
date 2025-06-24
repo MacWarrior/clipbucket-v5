@@ -7040,3 +7040,7 @@ div.show-cookie-list i{
   opacity: .5;
 }
 /* Bootstrap 5 switch */
+
+.alert img {
+  display: inline;
+}

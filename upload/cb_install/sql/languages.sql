@@ -1623,4 +1623,5 @@ VALUES ('admin_setting'),
        ('option_can_upload_subtitles'),
        ('info_upload_subtitle'),
        ('invalid_subtitle_timer'),
-       ('upload_subtitles');
+       ('upload_subtitles'),
+       ('subtitle_already_exists');

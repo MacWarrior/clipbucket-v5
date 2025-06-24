@@ -6,14 +6,16 @@
         </div>
         <form id="subtitle_form" enctype="multipart/form-data">
             <div class="modal-body">
-                <div class="input-group">
-                    <label for="title">{lang('title')}</label>
-                    <input type="text" class="form-control" name="title" id="title"/>
-                </div>
-                <div class="input-group">
-                    <label for="title">{lang('file')}</label>
-                    <input type="file" class="form-control" name="subtitles" id="subtitles"/><br>
-                    <span><i>{lang('info_upload_subtitle', [config('maximum_allowed_subtitle_size'), lang('mb')])}</i></span>
+                <div class="row">
+                    <div class="col-md-5">
+                        <label for="title">{lang('title')}</label>
+                        <input type="text" class="form-control" name="title" id="title"/>
+                    </div>
+                    <div class="col-md-5">
+                        <label for="title">{lang('file')}</label>
+                        <input type="file" class="form-control" name="subtitles" id="subtitles"/><br>
+                        <span><i>{lang('info_upload_subtitle', [config('maximum_allowed_subtitle_size'), lang('mb')])}</i></span>
+                    </div>
                 </div>
             </div>
             <div class="modal-footer">
