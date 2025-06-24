@@ -87,11 +87,6 @@
                             <a data-toggle="tab" href="#education">{display_clean($education_interests_fields.group_name)}</a>
                         </li>
                         {/if}
-                        {if config('enable_storage_history') == 'yes' && $storage_use != 0}
-                            <li>
-                                <a data-toggle="tab" href="#storage_history">{lang code='storage_history'}</a>
-                            </li>
-                        {/if}
                     </ul>
                     <div class="tab-content">
                         <div id="userinfo" class="tab-pane active">
@@ -142,15 +137,15 @@
                                                 </div>
                                             </td>
                                         </tr>
-                                        {if config('enable_storage_history') == 'yes' && $storage_use != 0}
-                                        <tr>
-                                            <td class="first"><label >{lang code='user_current_storage'}</label></td>
-                                            <td class="last">
-                                                <div>
-                                                    <input class="form-control" disabled="disabled" type="text" id="user_storage" value="{$storage_use}"/>
-                                                </div>
-                                            </td>
-                                        </tr>
+                                        {if config('enable_storage_history') == 'yes' && $storage_history}
+                                            <tr>
+                                                <td class="first"><label>{lang code='user_current_storage'}</label></td>
+                                                <td class="last">
+                                                    <div>
+                                                        <input class="form-control" disabled="disabled" type="text" id="user_storage" value="{$storage_use}"/>
+                                                    </div>
+                                                </td>
+                                            </tr>
                                         {/if}
                                         {if config('enable_user_category')=='yes' && $show_categ}
                                         {$thecats = getCategoryList(['type'=>'user'])}
@@ -400,14 +395,24 @@
                             </div>
                         </div>
                         {/if}
-                        {if config('enable_storage_history') == 'yes' && $storage_use != 0}
-                            <div id="storage_history" class="tab-pane">
-                                <div id="history" style="height:400px;"></div>
-                            </div>
-                        {/if}
 
                     </div>
                 </div>
+                {if (config('enable_storage_history') == 'yes' && $storage_history)}
+                    <br/>
+                    <div class="tabbable mt-2">
+                        <ul class="nav nav-tabs" id="myTab">
+                            <li class="active">
+                                <a data-toggle="tab" href="#storage_history">{lang code='storage_history'}</a>
+                            </li>
+                        </ul>
+                        <div class="tab-content">
+                            <div id="storage_history" class="tab-pane active">
+                                <div id="history" style="height:400px;"></div>
+                            </div>
+                        </div>
+                    </div>
+                {/if}
             </div>
 
             <div class="col-md-6">
@@ -546,8 +551,9 @@
                 </div>
             </div>
         </div>
+
         {if $u.userid != $anonymous_id}
-            <div style="text-align:center;margin-top:10px;">
+            <div class="row" style="text-align:center;margin-top:10px;">
                 <input class="btn btn-primary btn-lg" type="submit" name="update_user" id="update_user" value="{lang code='update'}"/>
             </div>
         {/if}
@@ -558,5 +564,6 @@
     let available_tags = JSON.parse('{$available_tags|json_encode|replace:"'": "\'"}');
     let visual_editor_comments_enabled = "{config('enable_visual_editor_comments') == 'yes'}";
     let lang_storage_history = "{lang('storage_history')}";
+    let lang_storage_use = "{lang('storage_use')}";
     let storage_history = {json_encode($storage_history)};
 </script>

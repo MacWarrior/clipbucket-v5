@@ -48,7 +48,7 @@ define('TEMPLATE', config('template_dir'));
 
 require_once TEMPLATEDIR . DIRECTORY_SEPARATOR . 'header.php';
 
-if( !in_array(THIS_PAGE, ['system_info', 'update_info', 'admin_launch_update']) && php_sapi_name() != 'cli' ){
+if( !in_array(THIS_PAGE, ['system_info', 'update_info', 'admin_launch_update', 'admin_set_default_user_level', 'admin_activate_user_level']) && php_sapi_name() != 'cli' ){
     $check_global = System::check_global_configs();
     if( $check_global !== 1 ){
         if ($check_global === -1 ) {

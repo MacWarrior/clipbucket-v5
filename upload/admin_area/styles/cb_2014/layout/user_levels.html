@@ -7,20 +7,37 @@
     <br>
     <table class="table table-bordered table-striped">
         <tr>
-            <td>ID</td>
-            <td>Name</td>
-            <td>Active</td>
-            <td>Users</td>
-            <td>Actions</td>
+            <th>Name</th>
+            <th>{lang('active')}</th>
+            <th>{lang('default')}</th>
+            <th>Users</th>
+            <th>Actions</th>
         </tr>
-        {assign var=levels value=userquery::getInstance()->get_levels()}
         {section name=l loop=$levels}
             <tr>
-                <td>{$levels[l].user_level_id}</td>
                 <td>{$levels[l].user_level_name}</td>
-                <td>{$levels[l].user_level_active}</td>
+                <td>
+                    <input name="user_level_active" data-id="{$levels[l].user_level_id}"{if $levels[l].user_level_active == 'yes'} checked{/if}{if $levels[l].user_level_is_default == 'yes'} disabled title="{lang('default_userlevel_cannot_be_disabled')}"{elseif in_array($levels[l].user_level_id, [3,4])} disabled="disabled" title="{lang('userlevel_cannot_be_disabled')}"{/if} type="checkbox" class="ace ace-switch ace-switch-5 user_level_active"/>
+                    <span class="lbl"></span>
+                </td>
+                <td>
+                    <input name="user_level_is_default" data-id="{$levels[l].user_level_id}"{if $levels[l].user_level_active != 'yes'} disabled title="{lang('cannot_be_default_until_activated')}"{elseif $levels[l].user_level_is_default == 'yes'} checked disabled="disabled" title="{lang('cannot_remove_default_have_to_add_one')}"{elseif in_array($levels[l].user_level_id, [3,4])} disabled="disabled" title="{lang('userlevel_cannot_be_default')}"{/if} type="checkbox" class="ace ace-switch ace-switch-5 user_level_is_default"/>
+                    <span class="lbl"></span>
+                </td>
                 <td>{userquery::getInstance()->get_level_users($levels[l].user_level_id,true)}</td>
-                <td><a href="?mode=edit&lid={$levels[l].user_level_id}">{lang code='edit'}</a>{if $levels[l].user_level_is_default !=yes} | <a href="?action=delete&lid={$levels[l].user_level_id}">{lang code='remove'}</a>{/if}</td>
+                <td>
+                    <div class="dropdown align-center" >
+                        <button id="dropdownMenu1" class="btn btn-primary btn-xs dropdown-toggle" data-toggle="dropdown">
+                            {lang('action')} <i class="caret"></i>
+                        </button>
+                        <ul class="dropdown-menu pull-right" aria-labelledby="dropdownMenu1" role="menu">
+                            <li><a role="menuitem" tabindex="-1" href="?mode=edit&lid={$levels[l].user_level_id}">{lang code='edit'}</a></li>
+                            {if  (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.2', '87') && $levels[l].user_level_is_origin != 'yes' && $levels[l].user_level_is_default != 'yes')}
+                                <li><a class="delete pointer" data-id="{$levels[l].user_level_id}" data-confirm="{if $levels[l].has_users}1{else}0{/if}">{lang code='delete'}</a></li>
+                            {/if}
+                        </ul>
+                    </div>
+                </td>
             </tr>
             {sectionelse}
             <tr>
@@ -32,16 +49,25 @@
     <form method="post">
         <h3>User Level Details</h3>
         <div class="form-group">
-            <label for="level_name2">Level name</label>
-            <input class="form-control" name="level_name" type="text" id="level_name2" value="{$level_details.user_level_name}"/>
-            <input type="hidden" name="user_level_id" value="{$level_details.user_level_id}">
+            <div class="row">
+                <label for="level_name">Level name</label>
+                <input class="form-control" name="level_name" type="text" id="level_name" value="{$level_details.user_level_name}"/>
+            </div>
+            {if Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.2', '87')}
+                <div class="row">
+                    <label for="user_level_is_default">{lang('default')}</label>
+                    <input type="checkbox" name="user_level_is_default" id="user_level_is_default" value="yes" {if $level_details.user_level_is_default==yes}checked{/if} class="ace ace-switch ace-switch-5 bootstrap-switch-on"/>
+                    <span class="lbl"></span>
+                </div>
+            {/if}
         </div>
+        <input type="hidden" name="user_level_id" value="{$level_details.user_level_id}">
         {assign var='types' value=userquery::getInstance()->get_level_types()}
         {section name=t loop=$types}
             <h3>{lang($types[t].user_permission_type_name)}</h3>
             <div class="row">
                 {foreach from=$level_perms item=perm}
-                    {if $perm.id_user_levels_permission !="" && $types[t].user_permission_type_id == $perm.id_user_permission_types }
+                    {if $perm.id_user_levels_permission !="" && $types[t].user_permission_type_id == $perm.id_user_permission_types}
                         <div class="col-md-4">
                             <div class="row">
                                 <div class="col-md-10 col-md-offset-1 myWell">
@@ -49,7 +75,16 @@
                                         <strong>{lang($perm.permission_name)}</strong><br/>
                                         <small><em>{lang($perm.permission_description)}</em></small>
                                     </div>
-                                    <div class="col-md-{if $perm.permission_name == 'download_speed_limit'}5{else}4{/if}">
+                                    {if $perm.permission_name == 'default_homepage'}
+                                        <div class="col-md-4 paddingTop">
+                                            <select name="permission_value[{$perm.id_user_levels_permission}]" >
+                                                {foreach from=User::getInstance()->getDefaultHomepageList() item=page}
+                                                    <option value="{$page}" {if $page== $perm.permission_value}selected="selected"{/if}>{lang($page)}</option>
+                                                {/foreach}
+                                            </select>
+                                        </div>
+                                    {else}
+                                        <div class="col-md-{if $perm.permission_name == 'download_speed_limit'}5{else}4{/if}">
                                         {if $perm.permission_name == 'download_speed_limit'}
                                             <div class="input-group" style="padding-top: 10px;">
                                                 <input class="form-control" value="{$perm.permission_value}" name="permission_value[{$perm.id_user_levels_permission}]">
@@ -64,7 +99,8 @@
                                             {/if}
                                             <span class="lbl"></span>
                                         {/if}
-                                    </div>
+                                        </div>
+                                    {/if}
                                 </div>
                             </div>
                         </div>
@@ -82,3 +118,8 @@
     </form>
 {/if}
 
+<script>
+    var lang=[];
+    lang['confirm_delete_user_level'] = "{lang('confirm_delete_user_level')}";
+    lang['cannot_be_default_until_activated'] = "{lang('cannot_be_default_until_activated')}";
+</script>

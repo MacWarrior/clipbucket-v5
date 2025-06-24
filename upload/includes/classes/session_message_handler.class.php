@@ -1,6 +1,6 @@
 <?php
 
-class sessionMessageHandler
+class SessionMessageHandler
 {
     private static array $type = ['m', 'w', 'e'];
 

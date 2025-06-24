@@ -194,9 +194,9 @@ class Language
     {
         //First checking if phrase already exists or not
         if ($this->getTranslationByIdKey($id_language_key, $language_id)) {
-            Clipbucket_db::getInstance()->update(tbl('languages_translations'), ['translation'], [mysql_clean($translation)], ' id_language_key = ' . mysql_clean($id_language_key) . ' AND language_id = ' . mysql_clean($language_id));
+            Clipbucket_db::getInstance()->update(tbl('languages_translations'), ['translation'], [stripslashes(mysql_clean($translation))], ' id_language_key = ' . mysql_clean($id_language_key) . ' AND language_id = ' . mysql_clean($language_id));
         } else {
-            Clipbucket_db::getInstance()->insert(tbl('languages_translations'), ['translation,id_language_key,language_id'], [mysql_clean($translation), mysql_clean($id_language_key), mysql_clean($language_id)]);
+            Clipbucket_db::getInstance()->insert(tbl('languages_translations'), ['translation,id_language_key,language_id'], [stripslashes(mysql_clean($translation)), mysql_clean($id_language_key), mysql_clean($language_id)]);
         }
         CacheRedis::flushAll();
     }

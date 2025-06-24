@@ -156,6 +156,7 @@ if (isset($_POST['update'])) {
         , 'enable_channels_slogan_display'
         , 'enable_user_self_deletion'
         , 'enable_cookie_banner'
+        , 'enable_public_video_page'
     ];
 
     $config_booleans_to_refactor = [
@@ -416,7 +417,8 @@ if (isset($_POST['update'])) {
 
         'max_photo_categories',
         'max_collection_categories',
-        'channel_video_style'
+        'channel_video_style',
+        'enable_public_video_page'
     ];
 
     //Numeric Array
