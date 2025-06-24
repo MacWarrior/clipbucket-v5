@@ -1,18 +1,16 @@
-INSERT INTO `{tbl_prefix}user_levels` (`user_level_id`, `user_level_active`, `user_level_name`, `user_level_is_default`)
-VALUES (1, 'yes', 'Administrator', 'yes'),
-       (2, 'yes', 'Registered User', 'yes'),
-       (3, 'yes', 'Inactive User', 'yes'),
-       (4, 'yes', 'Guest', 'yes'),
-       (5, 'yes', 'Global Moderator', 'yes'),
-       (6, 'no', 'Anonymous', 'yes');
-
+INSERT INTO `{tbl_prefix}user_levels` (`user_level_id`, `user_level_active`, `user_level_name`, `user_level_is_origin`, `user_level_is_default`)
+VALUES (1, 'yes', 'Administrator', 'yes', 'no'),
+       (2, 'yes', 'Registered User', 'yes', 'yes'),
+       (3, 'yes', 'Inactive User', 'yes', 'no'),
+       (4, 'yes', 'Guest', 'yes', 'no'),
+       (5, 'yes', 'Global Moderator', 'yes', 'no'),
+       (6, 'no', 'Anonymous', 'yes', 'no');
 
 INSERT INTO `{tbl_prefix}user_permission_types` (`user_permission_type_id`, `user_permission_type_name`, `user_permission_type_code`)
 VALUES (1, 'viewing_permission', 'VIEW'),
        (2, 'uploading_permission', 'UPLOAD'),
        (3, 'administration_permission', 'ADMIN'),
        (4, 'general_permission', 'GENERAL');
-
 
 INSERT INTO `{tbl_prefix}user_levels_permissions` (`id_user_levels_permission`, `id_user_permission_types`, `permission_name`, `permission_description`)
 VALUES (1, 3, 'admin_access', 'admin_access_desc'),
@@ -46,7 +44,9 @@ VALUES (1, 3, 'admin_access', 'admin_access_desc'),
        (29, 2, 'allow_create_playlist', 'allow_create_playlist_desc'),
        (30, 4, 'enable_channel_page', 'enable_channel_page_desc'),
        (31, 3, 'email_template_management', 'email_template_management_desc'),
-       (32, 3, 'advanced_settings', 'advanced_settings_desc');
+       (32, 3, 'advanced_settings', 'advanced_settings_desc'),
+       (33, 1, 'allow_public_video_page', 'allow_public_video_page'),
+       (34, 4, 'default_homepage', 'default_homepage_desc');
 
 INSERT INTO `{tbl_prefix}user_levels_permissions_values` (`user_level_id`, `id_user_levels_permission`, `permission_value`)
 VALUES (1, 1, 'yes'),
@@ -81,6 +81,9 @@ VALUES (1, 1, 'yes'),
        (1, 30, 'yes'),
        (1, 31, 'yes'),
        (1, 32, 'yes'),
+       (1, 33, 'no'),
+       (1, 34, 'homepage'),
+
        (2, 1, 'no'),
        (2, 2, 'yes'),
        (2, 3, 'yes'),
@@ -113,6 +116,9 @@ VALUES (1, 1, 'yes'),
        (2, 30, 'yes'),
        (2, 31, 'no'),
        (2, 32, 'no'),
+       (2, 33, 'no'),
+       (2, 34, 'homepage'),
+
        (3, 1, 'no'),
        (3, 2, 'no'),
        (3, 3, 'yes'),
@@ -145,6 +151,9 @@ VALUES (1, 1, 'yes'),
        (3, 30, 'yes'),
        (3, 31, 'no'),
        (3, 32, 'no'),
+       (3, 33, 'no'),
+       (3, 34, 'homepage'),
+
        (4, 1, 'no'),
        (4, 2, 'no'),
        (4, 3, 'no'),
@@ -177,6 +186,9 @@ VALUES (1, 1, 'yes'),
        (4, 30, 'no'),
        (4, 31, 'no'),
        (4, 32, 'no'),
+       (4, 33, 'no'),
+       (4, 34, 'homepage'),
+
        (5, 1, 'yes'),
        (5, 2, 'yes'),
        (5, 3, 'yes'),
@@ -209,6 +221,9 @@ VALUES (1, 1, 'yes'),
        (5, 30, 'yes'),
        (5, 31, 'no'),
        (5, 32, 'no'),
+       (5, 33, 'no'),
+       (5, 34, 'homepage'),
+
        (6, 1, 'no'),
        (6, 2, 'yes'),
        (6, 3, 'yes'),
@@ -240,4 +255,6 @@ VALUES (1, 1, 'yes'),
        (6, 29, 'yes'),
        (6, 30, 'yes'),
        (6, 31, 'no'),
-       (6, 32, 'no');
+       (6, 32, 'no'),
+       (6, 33, 'no'),
+       (6, 34, 'homepage');

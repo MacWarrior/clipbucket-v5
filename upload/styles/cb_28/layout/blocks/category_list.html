@@ -1,69 +1,69 @@
 {$category = $smarty.get.cat}
 {if $category != {lang code='cat_all'} && is_numeric($category)}
-	{$category = Category::getInstance()->getById($category)}
-	{$category_name = $category.category_name}
+    {$category = Category::getInstance()->getById($category)}
+    {$category_name = $category.category_name}
 {else}
-	{$category_name = {lang code='cat_all'}}
+    {$category_name = {lang code='cat_all'}}
 {/if}
 <span class="lastclicked" style="display:none;"></span>
 <span class="lastlevel" style="display:none;"></span>
 <div class="dropdown">
-	<a href="#" class="dropdown-toggle" data-toggle="dropdown">{display_clean($category_name)}<span class="icon-down-arrow"></span></a>
-	<ul class="dropdown-menu">
-	<li>
-        <a href="{cblink(['name'=>'category','data'=>['category_id'=>'all'],'type'=>$type])}">{lang code='cat_all'}</a>
-	</li>
-		{$level = '1'}
-		{foreach from=$categories item=maincat}
-			<li>
-				<a href="{cblink(['name'=>'category','data'=>$maincat,'type'=>$type])}">{display_clean($maincat.category_name)}</a>
-				{if $maincat.children}<i class="icon-right-arrow trigger" data-level="1"></i>{/if}
-				{if $maincat.children}
-					<ul class="dropdown-menu sub-menu">
-					{$level = '2'}
-					{foreach from=$maincat.children item=sub1}
-						<li>
-							<a href="{cblink(['name'=>'category','data'=>$sub1,'type'=>$type])}">{display_clean($sub1.category_name)} </a>
-							{if $sub1.children}<i class="icon-right-arrow trigger" data-level="2"></i>{/if}
-							{if $sub1.children}
-								<ul class="dropdown-menu sub-menu">
-								{$level = '3'}
-								{foreach from=$sub1.children item=sub2}
-								<li>
-									<a href="{cblink(['name'=>'category','data'=>$sub2,'type'=>$type])}">{display_clean($sub2.category_name)} </a>
-									{if $sub2.children}<i class="icon-right-arrow trigger" data-level="3"></i>{/if}
-									{if $sub2.children}
-										<ul class="dropdown-menu sub-menu">
-										{$level = '4'}
-										{foreach from=$sub2.children item=sub3}
-										<li>
-											<a href="{cblink(['name'=>'category','data'=>$sub3,'type'=>$type])}">{display_clean($sub3.category_name)} </a>
-											{if $sub3.children}<i class="icon-right-arrow trigger" data-level="4"></i>{/if}
+    <a href="#" class="dropdown-toggle" data-toggle="dropdown">{display_clean($category_name)}<span class="icon-down-arrow"></span></a>
+    <ul class="dropdown-menu">
+        <li>
+            <a href="{cblink(['name'=>'category','data'=>['category_id'=>'all'],'type'=>$type])}">{lang code='cat_all'}</a>
+        </li>
+        {$level = '1'}
+        {foreach from=$categories item=maincat}
+            <li>
+                <a href="{cblink(['name'=>'category','data'=>$maincat,'type'=>$type])}">{display_clean($maincat.category_name)}</a>
+                {if $maincat.children}<i class="icon-right-arrow trigger" data-level="1"></i>{/if}
+                {if $maincat.children}
+                    <ul class="dropdown-menu sub-menu">
+                        {$level = '2'}
+                        {foreach from=$maincat.children item=sub1}
+                            <li>
+                                <a href="{cblink(['name'=>'category','data'=>$sub1,'type'=>$type])}">{display_clean($sub1.category_name)} </a>
+                                {if $sub1.children}<i class="icon-right-arrow trigger" data-level="2"></i>{/if}
+                                {if $sub1.children}
+                                    <ul class="dropdown-menu sub-menu">
+                                        {$level = '3'}
+                                        {foreach from=$sub1.children item=sub2}
+                                            <li>
+                                                <a href="{cblink(['name'=>'category','data'=>$sub2,'type'=>$type])}">{display_clean($sub2.category_name)} </a>
+                                                {if $sub2.children}<i class="icon-right-arrow trigger" data-level="3"></i>{/if}
+                                                {if $sub2.children}
+                                                    <ul class="dropdown-menu sub-menu">
+                                                        {$level = '4'}
+                                                        {foreach from=$sub2.children item=sub3}
+                                                            <li>
+                                                                <a href="{cblink(['name'=>'category','data'=>$sub3,'type'=>$type])}">{display_clean($sub3.category_name)} </a>
+                                                                {if $sub3.children}<i class="icon-right-arrow trigger" data-level="4"></i>{/if}
 
-											{if $sub3.children}
-												<ul class="dropdown-menu sub-menu">
-													{$level = '5'}
-													{foreach from=$sub3.children item=sub4}
-														<li>
-															<a href="{cblink(['name'=>'category','data'=>$sub4,'type'=>$type])}">{display_clean($sub4.category_name)}</a>
-															{if $sub4.children}<i class="icon-right-arrow trigger" data-level="5"></i>{/if}
-														</li>
-													{/foreach}
-												</ul>
-											{/if}
-											</li>
-										{/foreach}
-										</ul>
-									{/if}
-									</li>
-								{/foreach}
-								</ul>
-							{/if}
-						</li>
-					{/foreach}
-					</ul>
-				{/if}
-			</li>
-		{/foreach}
-	</ul>
+                                                                {if $sub3.children}
+                                                                    <ul class="dropdown-menu sub-menu">
+                                                                        {$level = '5'}
+                                                                        {foreach from=$sub3.children item=sub4}
+                                                                            <li>
+                                                                                <a href="{cblink(['name'=>'category','data'=>$sub4,'type'=>$type])}">{display_clean($sub4.category_name)}</a>
+                                                                                {if $sub4.children}<i class="icon-right-arrow trigger" data-level="5"></i>{/if}
+                                                                            </li>
+                                                                        {/foreach}
+                                                                    </ul>
+                                                                {/if}
+                                                            </li>
+                                                        {/foreach}
+                                                    </ul>
+                                                {/if}
+                                            </li>
+                                        {/foreach}
+                                    </ul>
+                                {/if}
+                            </li>
+                        {/foreach}
+                    </ul>
+                {/if}
+            </li>
+        {/foreach}
+    </ul>
 </div>

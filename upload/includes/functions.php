@@ -1952,6 +1952,12 @@ function sort_link($data, $mode, $type): string
 {
     $config_enable_category = '';
     switch ($type) {
+        case 'videos_public':
+            if (config('enable_public_video_page')=='yes') {
+                $type = 'videos_public';
+                $config_enable_category = 'enable_video_categories';
+                break;
+            }
         case 'video':
         case 'videos':
         case 'v':
@@ -3620,6 +3626,18 @@ function timeToSeconds(string $time):int
     }
 
     return $seconds;
+}
+
+/**
+ * @param string $string
+ * @return string
+ */
+function string_to_snake_case(string $string):string {
+//    $string = preg_replace('/[\p{L}\p{N}\s]/u', '', strtolower($string));
+    $string =  iconv('UTF-8', 'ASCII//TRANSLIT', $string);
+    $string = preg_replace('/[^\p{L}\p{N}\s]/u', '', strtolower($string));
+    $string = preg_replace('/\s/','_', trim($string));
+    return $string;
 }
 
 include('functions_db.php');

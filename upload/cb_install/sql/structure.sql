@@ -401,7 +401,8 @@ CREATE TABLE `{tbl_prefix}user_levels` (
   `user_level_id` int(20) NOT NULL,
   `user_level_active` enum('yes','no') NOT NULL DEFAULT 'yes',
   `user_level_name` varchar(100) NOT NULL,
-  `user_level_is_default` enum('yes','no') NOT NULL DEFAULT 'no'
+  `user_level_is_origin` ENUM('yes','no') NOT NULL DEFAULT 'no',
+  `user_level_is_default` ENUM('yes','no') NOT NULL DEFAULT 'no'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_520_ci;
 ALTER TABLE `{tbl_prefix}user_levels`
     ADD PRIMARY KEY (`user_level_id`);
@@ -1157,7 +1158,6 @@ ALTER TABLE `{tbl_prefix}social_networks_links`
 
 ALTER TABLE `{tbl_prefix}sessions`
     ADD INDEX(`session_date`);
-
 CREATE TABLE IF NOT EXISTS `{tbl_prefix}email_template`
 (
     id_email_template      INT PRIMARY KEY AUTO_INCREMENT,

@@ -317,6 +317,7 @@ INSERT INTO `{tbl_prefix}config` (`configid`, `name`, `value`) VALUES
     (NULL, 'max_photo_categories', 0),
     (NULL, 'max_collection_categories', 0),
     (NULL, 'channel_video_style', 'modern'),
+    (NULL, 'enable_public_video_page', 'no'),
     (NULL, 'maximum_allowed_subtitle_size', '2'),
     (NULL, 'can_upload_subtitles', 'yes');
 
