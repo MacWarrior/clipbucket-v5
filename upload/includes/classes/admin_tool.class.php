@@ -938,6 +938,7 @@ class AdminTool
 
     /**
      * Tools for start automate if necessary
+     * @param array $tool
      * @return void
      * @throws Exception
      */
