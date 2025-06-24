@@ -1347,11 +1347,15 @@ class FFMpeg
             return false;
         }
 
-        $cmd = config('ffmpegpath') .' -v error -i ' . escapeshellarg($filepath) . ' -f ' . config('subtitle_format').' 2>&1';
+        $cmd = config('ffmpegpath') .' -v error -i ' . escapeshellarg($filepath) . ' -f ' . config('subtitle_format').' - 1>/dev/null';
         $output = shell_exec($cmd);
 
         if (!empty($output)) {
             e(lang('invalid_subtitle_file'));
+            if( System::isInDev() ){
+                discordLog::sendDump($cmd);
+                discordLog::sendDump($output);
+            }
             return false;
         }
 
