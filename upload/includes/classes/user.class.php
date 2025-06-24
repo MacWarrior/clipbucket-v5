@@ -976,7 +976,7 @@ class User
         if ($_COOKIE['pageredir']) {
             redirect_to($_COOKIE['pageredir']);
         } else {
-            redirect_to(Network::get_server_url()  . User::getInstance()->getDefaultHomepageFromUserLevel());
+            redirect_to(User::getInstance()->getDefaultHomepageFromUserLevel());
         }
     }
 
@@ -986,8 +986,10 @@ class User
      */
     public function getDefaultHomepageFromUserLevel(): string
     {
-        $default_hompepage = UserLevel::getPermission('default_homepage',$this->getCurrentUserLevelID());
-        if (empty($default_hompepage)) return '';
+        $default_hompepage = UserLevel::getPermission('default_homepage', $this->getCurrentUserLevelID());
+        if (empty($default_hompepage)) {
+            return '';
+        }
 
         switch ($default_hompepage) {
             case 'homepage':
@@ -1002,7 +1004,7 @@ class User
             default:
                 $link = $default_hompepage . '.php';
         }
-        return $link;
+        return Network::get_server_url() . $link;
     }
 
     public function getDefaultHomepageList()
