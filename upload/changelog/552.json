@@ -1,6 +1,6 @@
 {
   "version":"5.5.2",
-  "revision":"86",
+  "revision":"87",
   "status":"stable",
   "detail":[
     {
@@ -11,7 +11,10 @@
         ,"Implement reset logo & favicon"
         ,"Implement collections & photos categories limit"
         ,"Implement status refresh on conversion queue manager"
+        ,"Implement default homepage config per user level"
+        ,"Implement public videos page"
         ,"Refactor conversion queue manager"
+        ,"Refactor user levels management"
         ,"Add empty page title error"
         ,"Add collection mass broadcast update"
         ,"Add users and collections to dashboard flagged objects chart <i>(#74)</i>"
@@ -47,6 +50,7 @@
         ,"Implement cookies banner <i>(#312, #151)</i>"
         ,"Implement modern video style on channel page"
         ,"Implement meta tags for social networks"
+        ,"Implement public videos page"
         ,"Refactor friends requests & management"
         ,"Refactor collection selections"
         ,"Update video & photos management pages display"
@@ -146,9 +150,11 @@
       "title": "External components",
       "description": [
         "Update psr/log to 3.0.2"
-        ,"Update filp/whoops to 2.18.0"
+        ,"Update filp/whoops to 2.18.3"
         ,"Update oxygenzsas/composer_lib_discord to 0.3.5"
-        ,"Update predis/predis to 2.3.0"
+        ,"Update predis/predis to 3.0.1"
+        ,"Update phpmailer/phpmailer to 6.10.0"
+        ,"Update psr/http-message to 1.1"
         ,"Update VideoJS to version 8.23.3"
         ,"Update summernote to version 0.9.1"
       ]

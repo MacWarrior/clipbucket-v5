@@ -671,10 +671,15 @@ class Migration
         Clipbucket_db::getInstance()->executeThrowException($sql);
         $inserted_id = Clipbucket_db::getInstance()->insert_id();
 
+        if( empty($inserted_id) ){
+            return;
+        }
+
         foreach ($array_values as $user_level_id => $value) {
             UserLevel::insertUserPermissionValue($user_level_id, $inserted_id, $value);
         }
     }
+
     public function start(){}
 
 }

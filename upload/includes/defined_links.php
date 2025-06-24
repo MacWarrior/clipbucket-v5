@@ -7,6 +7,7 @@ $cbLinks = [
     'rss'                     => ['rss.php?mode=', 'rss/'],
 
     'videos'                  => ['videos.php', 'videos/'],
+    'videos_public'           => ['videos_public.php', 'videos_public/'],
     'channels'                => ['channels.php', 'channels/'],
 
     'upload'                  => ['upload.php', 'upload'],

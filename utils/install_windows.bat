@@ -367,9 +367,22 @@ echo        rewrite ^(.*/)?videos/([0-9]+) $1videos.php?page=$2&$query_string la
 echo        rewrite ^(.*/)?videos/?$ $1videos.php?$query_string last;>> %NGINX_CONF%
 echo        break;>> %NGINX_CONF%
 echo    }>> %NGINX_CONF%
+echo    # Videos>> %NGINX_CONF%
+echo    location ~* ^(.*/)?videos_public(/(.*))?$ {>> %NGINX_CONF%
+echo        rewrite ^(.*/)?videos_public/(.*)/(.*)/(.*)/(.*) $1videos_public.php?cat=$1&sort=$2&time=$3&page=$4&$query_string last;>> %NGINX_CONF%
+echo        rewrite ^(.*/)?videos_public/(.*)/(.*)/(.*) $1videos_public.php?sort=$1&time=$2&page=$3&$query_string last;>> %NGINX_CONF%
+echo        rewrite ^(.*/)?videos_public/([0-9]+) $1videos_public.php?page=$2&$query_string last;>> %NGINX_CONF%
+echo        rewrite ^(.*/)?videos_public/?$ $1videos_public.php?$query_string last;>> %NGINX_CONF%
+echo        break;>> %NGINX_CONF%
+echo    }>> %NGINX_CONF%
 echo    location ~* ^(.*/)?video(/(.*))?$ {>> %NGINX_CONF%
 echo        rewrite ^(.*/)?video/(.*)/(.*) $1watch_video.php?v=$2&$query_string last;>> %NGINX_CONF%
 echo        rewrite ^(.*/)?video/([0-9]+)_(.*) $1watch_video.php?v=$2&$query_string last;>> %NGINX_CONF%
+echo        break;>> %NGINX_CONF%
+echo    }>> %NGINX_CONF%
+echo    location ~* ^(.*/)?video_public(/(.*))?$ {>> %NGINX_CONF%
+echo        rewrite ^(.*/)?video_public/(.*)/(.*) $1watch_video_public.php?v=$2&$query_string last;>> %NGINX_CONF%
+echo        rewrite ^(.*/)?video_public/([0-9]+)_(.*) $1watch_video_public.php?v=$2&$query_string last;>> %NGINX_CONF%
 echo        break;>> %NGINX_CONF%
 echo    }>> %NGINX_CONF%
 echo    location ~* ^(/.*/)?(.+)_v([0-9]+)$ {>> %NGINX_CONF%

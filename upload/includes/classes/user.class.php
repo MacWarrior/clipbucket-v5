@@ -12,6 +12,8 @@ class User
     private $display_var_name = '';
     private $user_data = [];
 
+    private $default_homepage_list = [];
+
     /**
      * @throws Exception
      */
@@ -170,6 +172,31 @@ class User
         $this->display_block = '/blocks/user.html';
         $this->display_var_name = 'user';
         $this->search_limit = (int)config('users_items_search_page');
+
+        $this->default_homepage_list = [
+            'homepage'
+            ,'my_account'
+        ];
+
+        if( config('videosSection') == 'yes' ){
+            $this->default_homepage_list[] = 'videos';
+
+            if( config('enable_public_video_page') == 'yes'){
+                $this->default_homepage_list[] = 'public_videos';
+            }
+        }
+
+        if( config('photosSection') == 'yes' ){
+            $this->default_homepage_list[] = 'photos';
+        }
+
+        if( config('collectionsSection') == 'yes' ){
+            $this->default_homepage_list[] = 'collections';
+        }
+
+        if( config('channelsSection') == 'yes' ){
+            $this->default_homepage_list[] = 'channels';
+        }
 
         if( $user_id ){
             $params = [];
@@ -769,13 +796,31 @@ class User
     public function getLastStorageUseByUser(): int
     {
         $uid = $this->get('userid');
-        $sql = 'SELECT storage_used
-                FROM ' . tbl('users_storage_histo') . '
-                WHERE id_user = ' . (int)$uid . ' AND datetime = (
+        $sql = 'SELECT storage_used FROM ' . tbl('users_storage_histo') . ' WHERE id_user = ' . (int)$uid . ' AND datetime = (
                     SELECT MAX(datetime)
                     FROM ' . tbl('users_storage_histo') . '
                     WHERE id_user = ' . (int)$uid . '
-                )';
+                ) ';
+        $results = Clipbucket_db::getInstance()->_select($sql);
+        if (empty($results)) {
+            return 0;
+        }
+        return $results[0]['storage_used'];
+    }
+
+    /**
+     * @param int|string $userid
+     * @param string $date_start
+     * @param string $date_end
+     * @return int
+     * @throws Exception
+     */
+    public function getPeriodMaxStorageUseByUser(int $userid, string $date_start, string $date_end): int
+    {
+        $sql = 'SELECT MAX(storage_used) AS storage_used FROM ' . tbl('users_storage_histo') . ' 
+        WHERE id_user = ' . mysql_clean($userid) . ' 
+        AND datetime BETWEEN \'' . mysql_clean($date_start) . '\' AND \'' . mysql_clean($date_end) . '\' 
+        GROUP BY id_user ';
         $results = Clipbucket_db::getInstance()->_select($sql);
         if (empty($results)) {
             return 0;
@@ -879,6 +924,92 @@ class User
         }
 
         return $_COOKIE['user_theme'] ?? $this->getActiveTheme();
+    }
+    /**
+     * @throws Exception
+     */
+    public function getUserLevels(): array
+    {
+        $sql = ' SELECT user_levels.*, IF(users.userid IS NULL, FALSE, TRUE) AS has_users FROM ' . cb_sql_table('user_levels') . ' 
+            LEFT JOIN '.cb_sql_table('users').' ON users.level = user_level_id 
+                WHERE user_level_name != \'anonymous\' 
+                GROUP BY user_level_id, has_users
+                ORDER BY  user_level_id ';
+        $results = Clipbucket_db::getInstance()->_select($sql);
+        if ( empty($results)) {
+            return [];
+        }
+        return $results;
+    }
+
+    /**
+     * @param int $user_level_id
+     * @param bool $activate
+     * @return bool
+     * @throws Exception
+     */
+    public function toggleUserLevelActivation(int $user_level_id, bool $activate): bool
+    {
+        if(empty($user_level_id)) {
+            return false;
+        }
+
+        // Prevent disabling inactive user & guest
+        if( in_array($user_level_id, [3,4]) ){
+            return false;
+        }
+
+        $levelDetails = userquery::getInstance()->get_level_details($user_level_id);
+        if( empty($levelDetails) ){
+            return false;
+        }
+        $sql = 'UPDATE ' . cb_sql_table('user_levels') . ' SET user_level_active = ' . ($activate ? '\'yes\'' : '\'no\'' ) . ' WHERE user_level_id = ' . mysql_clean($user_level_id) ;
+        return (bool)Clipbucket_db::getInstance()->execute($sql);
+    }
+
+    /**
+     * @return void
+     * @throws Exception
+     */
+    public static function redirectAfterLogin()
+    {
+        if ($_COOKIE['pageredir']) {
+            redirect_to($_COOKIE['pageredir']);
+        } else {
+            redirect_to(User::getInstance()->getDefaultHomepageFromUserLevel());
+        }
+    }
+
+    /**
+     * @return string
+     * @throws Exception
+     */
+    public function getDefaultHomepageFromUserLevel(): string
+    {
+        $default_hompepage = UserLevel::getPermission('default_homepage', $this->getCurrentUserLevelID());
+        if (empty($default_hompepage)) {
+            return '';
+        }
+
+        switch ($default_hompepage) {
+            case 'homepage':
+                $link = '';
+                break;
+            case 'public_videos':
+                $link = 'videos_public.php';
+                break;
+            case 'my_account':
+                $link = 'myaccount.php';
+                break;
+            default:
+                $link = $default_hompepage . '.php';
+        }
+        return Network::get_server_url() . $link;
+    }
+
+    public function getDefaultHomepageList()
+    {
+        return $this->default_homepage_list;
     }
 
     /**
@@ -1063,12 +1194,13 @@ class userquery extends CBCategory
 
         if ($this->sessions['smart_sess']) {
             $this->userid = $this->sessions['smart_sess']['session_user'];
+            $this->is_login = !empty($this->userid);
         }
 
         $udetails = '';
 
         if ($this->userid) {
-            $udetails = $this->get_user_details($this->userid, true);
+            $udetails = $this->get_user_details($this->userid );
             $user_profile = $this->get_user_profile($this->userid);
             if ($udetails && $user_profile) {
                 $udetails['profile'] = $user_profile;
@@ -1228,74 +1360,18 @@ class userquery extends CBCategory
         if (User::getInstance()->isUserConnected()) {
             $msg[] = e(lang('you_already_logged'));
         } else {
-            $user = $this->get_user_id($username);
-            if (!$user) {
-                $msg[] = e(lang('usr_login_err'));
+            $udetails = $this->authenticate($username, $password);
+            if (!$udetails) {
+                $msg = e(lang('usr_login_err'));
+            } elseif (strtolower($udetails['usr_status']) != 'ok') {
+                $msg = e(lang('user_inactive_msg'), 'e', false);
+            } elseif ($udetails['ban_status'] == 'yes') {
+                $msg = e(lang('usr_ban_err'));
             } else {
-                $uid = $user['userid'];
-                $pass = pass_code($password, $uid);
-                $udetails = $this->get_user_with_pass($username, $pass);
-
-                // This code is used to update user password hash, may be deleted someday
-                if (!$udetails) // Let's try old password method
-                {
-                    $oldpass = pass_code_unsecure($password);
-                    $udetails = $this->get_user_with_pass($username, $oldpass);
-
-                    // This account still use old password method, let's update it
-                    if ($udetails){
-                        if( Update::IsCurrentDBVersionIsHigherOrEqualTo('5.0.0', '1') ){
-                            Clipbucket_db::getInstance()->update(tbl('users'), ['password'], [$pass], ' userid=\'' . (int)$uid . '\'');
-                        }
-                    }
+                if ($remember) {
+                    $sess->timeout = 86400 * REMBER_DAYS;
                 }
-
-                if (!$udetails) {
-                    $msg[] = e(lang('usr_login_err'));
-                } elseif (strtolower($udetails['usr_status']) != 'ok') {
-                    $msg[] = e(lang('user_inactive_msg'), 'e', false);
-                } elseif ($udetails['ban_status'] == 'yes') {
-                    $msg[] = e(lang('usr_ban_err'));
-                } else {
-                    if ($remember) {
-                        $sess->timeout = 3600 * 24 * 7;
-                    }
-
-                    //Starting special sessions for security
-                    $session_salt = RandomString(5);
-                    $_SESSION['sess_salt'] = $session_salt;
-                    $sess->set('PHPSESSID', $sess->id);
-
-                    $smart_sess = md5($udetails['user_session_key'] . $session_salt);
-
-                    Clipbucket_db::getInstance()->delete(tbl('sessions'), ['session', 'session_string'], [$sess->id, 'guest']);
-                    $sess->add_session($udetails['userid'], 'smart_sess', $smart_sess);
-
-                    //Setting Vars
-                    $this->userid = $udetails['userid'];
-                    $this->username = $udetails['username'];
-                    $this->level = $udetails['level'];
-
-                    //Updating User last login , num of visits and ip
-                    Clipbucket_db::getInstance()->update(tbl('users'),
-                        ['num_visits', 'last_logged', 'ip'],
-                        ['|f|num_visits+1', now(), Network::get_remote_ip()],
-                        'userid=\'' . $udetails['userid'] . '\''
-                    );
-
-                    $this->init();
-
-                    //Logging Action
-                    $log_array = [
-                        'username'  => $username,
-                        'userid'    => $udetails['userid'],
-                        'useremail' => $udetails['email'],
-                        'success'   => 'yes',
-                        'level'     => $udetails['level']
-                    ];
-                    insert_log('Login', $log_array);
-                    return true;
-                }
+                return $this->init_session($udetails);
             }
         }
 
@@ -1303,11 +1379,85 @@ class userquery extends CBCategory
         if (!empty($msg)) {
             //Logging Action
             $log_array['success'] = 'no';
-            $log_array['details'] = $msg[0]['val'];
+            $log_array['details'] = $msg['val'];
             $log_array['username'] = $username;
             insert_log('Login', $log_array);
         }
         return false;
+    }
+
+    /**
+     * @param $username
+     * @param $password
+     * @throws Exception
+     */
+    function authenticate($username, $password)
+    {
+        $user = $this->get_user_id($username);
+        if (!$user) {
+            return false;
+        } else {
+            $uid = $user['userid'];
+            $pass = pass_code($password, $uid);
+            $udetails = $this->get_user_with_pass($username, $pass);
+
+            // This code is used to update user password hash, may be deleted someday
+            if (!$udetails) // Let's try old password method
+            {
+                $oldpass = pass_code_unsecure($password);
+                $udetails = $this->get_user_with_pass($username, $oldpass);
+
+                // This account still use old password method, let's update it
+                if ($udetails) {
+                        if( Update::IsCurrentDBVersionIsHigherOrEqualTo('5.0.0', '1') ){
+                            Clipbucket_db::getInstance()->update(tbl('users'), ['password'], [$pass], ' userid=\'' . (int)$uid . '\'');
+                    }
+                }
+            }
+
+        }
+        return $udetails ?? false;
+    }
+
+    function init_session($udetails)
+    {
+        global $sess;
+        //Starting special sessions for security
+        $session_salt = RandomString(5);
+                    $_SESSION['sess_salt'] = $session_salt;
+        $sess->set('PHPSESSID', $sess->id);
+
+        $smart_sess = md5($udetails['user_session_key'] . $session_salt);
+
+        Clipbucket_db::getInstance()->delete(tbl('sessions'), ['session', 'session_string'], [$sess->id, 'guest']);
+        $sess->add_session($udetails['userid'], 'smart_sess', $smart_sess);
+
+        //Setting Vars
+        $this->userid = $udetails['userid'];
+        $this->username = $udetails['username'];
+        $this->level = $udetails['level'];
+        $this->is_login = true;
+        //reset permission
+        $this->permission = null;
+        //Updating User last login , num of visits and ip
+        Clipbucket_db::getInstance()->update(tbl('users'),
+            ['num_visits', 'last_logged', 'ip'],
+                        ['|f|num_visits+1', now(), Network::get_remote_ip()],
+            'userid=\'' . $udetails['userid'] . '\''
+        );
+
+        $this->init();
+
+        //Logging Action
+        $log_array = [
+            'username'  => $username,
+            'userid'    => $udetails['userid'],
+            'useremail' => $udetails['email'],
+            'success'   => 'yes',
+            'level'     => $udetails['level']
+        ];
+        insert_log('Login', $log_array);
+        return true;
     }
 
     /**
@@ -2406,15 +2556,16 @@ class userquery extends CBCategory
     /**
      * Function used to get all levels
      *
-     * @param : filter
-     *
+     * @param string $cond
      * @return array|bool
      * @throws Exception
      */
-    function get_levels($filter = null)
+    function get_levels(string $cond = '')
     {
-        if( !empty($filter)) $filter = ' AND ' . $filter;
-        $results = Clipbucket_db::getInstance()->select(tbl('user_levels'), '*', 'user_level_active = \'yes\'  ' . $filter, null, ' user_level_id ASC');
+        if( empty($cond) ){
+            $cond = ' user_level_active = \'yes\'';
+        }
+        $results = Clipbucket_db::getInstance()->select(tbl('user_levels'), '*', $cond, null, ' user_level_id ASC');
 
         if (count($results) > 0) {
             return $results;
@@ -2427,7 +2578,7 @@ class userquery extends CBCategory
      *
      * @param : level_id INT
      *
-     * @return bool|int
+     * @return bool|array
      * @throws Exception
      */
     function get_level_details($lid)
@@ -2495,6 +2646,11 @@ class userquery extends CBCategory
                 $value_array[] = 'no';
             }
             Clipbucket_db::getInstance()->insert(tbl('user_levels_permissions'), $fields_array, $value_array);
+            $trad_key = string_to_snake_case($array['level_name']);
+            Migration::generateTranslation($trad_key, [
+                 Language::getInstance()->getLang() => $array['level_name']
+            ]);
+
             return true;
         }
     }
@@ -4383,20 +4539,25 @@ class userquery extends CBCategory
      */
     function login_as_user($id): bool
     {
-        global $sess;
         $udetails = $this->get_user_details($id);
         if ($udetails) {
-            $userid = $udetails['userid'];
-            $session_salt = RandomString(5);
+            if (!$this->user_exists($udetails['username'])) {
+                $msg[] = e(lang('user_doesnt_exist'));
+            } elseif (strtolower($udetails['usr_status']) != 'ok') {
+                $msg[] = e(lang('user_inactive_msg'), 'e', false);
+            } elseif ($udetails['ban_status'] == 'yes') {
+                $msg[] = e(lang('usr_ban_err'));
+            } else {
+                return $this->init_session($udetails);
+            }
 
-            $_SESSION['sess_salt'] = $session_salt;
-            $sess->set('PHPSESSID', $sess->id);
-
-            $smart_sess = md5($udetails['user_session_key'] . $session_salt);
-
-            Clipbucket_db::getInstance()->delete(tbl('sessions'), ['session'], [$sess->id]);
-            $sess->add_session($userid, 'smart_sess', $smart_sess);
-            return true;
+            //Error Logging
+            if (!empty($msg)) {
+                //Logging Action
+                $log_array['success'] = 'no';
+                $log_array['details'] = $msg[0]['val'];
+                insert_log('Login as', $log_array);
+            }
         }
 
         e(lang('usr_exist_err'));
