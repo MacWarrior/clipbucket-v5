@@ -61,7 +61,7 @@ class MWIP extends \Migration
 
         self::generateTranslation('invalid_subtitle_timer', [
             'fr'=>'Un timer de sous-titres dépasse la durée de la vidéo',
-            'er'=>'A subtitle timer exceeds video duration'
+            'en'=>'A subtitle timer exceeds video duration'
         ]);
 
         self::generateConfig('maximum_allowed_subtitle_size', 2);
