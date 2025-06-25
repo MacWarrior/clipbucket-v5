@@ -1,6 +1,6 @@
 {
   "version":"5.5.2",
-  "revision":"89",
+  "revision":"90",
   "status":"stable",
   "detail":[
     {
@@ -13,6 +13,7 @@
         ,"Implement status refresh on conversion queue manager"
         ,"Implement default homepage config per user level"
         ,"Implement public videos page"
+        ,"Implement subtitle upload"
         ,"Refactor conversion queue manager"
         ,"Refactor user levels management"
         ,"Add empty page title error"
@@ -51,6 +52,7 @@
         ,"Implement modern video style on channel page"
         ,"Implement meta tags for social networks"
         ,"Implement public videos page"
+        ,"Implement subtitle upload"
         ,"Refactor friends requests & management"
         ,"Refactor collection selections"
         ,"Update video & photos management pages display"
@@ -90,6 +92,7 @@
         ,"Fix filter error on outdated DB"
         ,"Fix orphan photo saving"
         ,"Fix undefined constant <i>(#633)</i>"
+        ,"Fix TMDB search"
       ]
     },
     {
