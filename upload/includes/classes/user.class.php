@@ -1369,7 +1369,7 @@ class userquery extends CBCategory
                 $msg = e(lang('usr_ban_err'));
             } else {
                 if ($remember) {
-                    $sess->timeout = 86400 * REMBER_DAYS;
+                    $sess->timeout = 86400 * 7;
                 }
                 return $this->init_session($udetails);
             }
