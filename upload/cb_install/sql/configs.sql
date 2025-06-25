@@ -317,7 +317,9 @@ INSERT INTO `{tbl_prefix}config` (`configid`, `name`, `value`) VALUES
     (NULL, 'max_photo_categories', 0),
     (NULL, 'max_collection_categories', 0),
     (NULL, 'channel_video_style', 'modern'),
-    (NULL, 'enable_public_video_page', 'no');
+    (NULL, 'enable_public_video_page', 'no'),
+    (NULL, 'maximum_allowed_subtitle_size', '2'),
+    (NULL, 'can_upload_subtitles', 'yes');
 
 INSERT INTO `{tbl_prefix}video_resolution` (`title`, `ratio`, `enabled`, `width`, `height`, `video_bitrate`) VALUES
 	('240p', '16/9', 1, 426, 240, 240000),
