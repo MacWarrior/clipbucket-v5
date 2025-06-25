@@ -471,7 +471,7 @@ class AdminTool
             unset($thumbs);
 
             //SUBTITLES
-            $subtitles = new GlobIterator(DirPath::get('subtitles') . '[0-9]*' . DIRECTORY_SEPARATOR . '*.srt');
+            $subtitles = new GlobIterator(DirPath::get('subtitles')  . '[0-9]*' . DIRECTORY_SEPARATOR . '[0-9]*' . DIRECTORY_SEPARATOR . '[0-9]*' . DIRECTORY_SEPARATOR . '*.srt');
             foreach ($subtitles as $subtitle) {
                 $vid_file_name = explode('-', basename($subtitle, '.srt'))[0];
                 $insert_values = [

@@ -1067,3 +1067,20 @@ function addErrClass(obj, msg, override = false, scroll = true, tclass = false) 
         $("html, body").animate({ scrollTop: 0 }, "slow");
     }
 }
+
+function getModalUploadSubtitle(video_id) {
+    showSpinner();
+    $.ajax({
+        url: baseurl+"actions/popin_upload_subtitle.php",
+        type: "POST",
+        data: {videoid: video_id },
+        dataType: 'json',
+        success: function (result) {
+            hideSpinner();
+            var modal = $('#myModal');
+            modal.html(result['template']);
+            modal.modal();
+            $('.manage-page').prepend(result['msg']);
+        }
+    });
+}
