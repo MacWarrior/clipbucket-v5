@@ -1,6 +1,6 @@
 {
   "version":"5.5.2",
-  "revision":"92",
+  "revision":"93",
   "status":"stable",
   "detail":[
     {
@@ -130,6 +130,7 @@
         ,"Fix new installation errors <i>(#592)</i>"
         ,"Fix revision 5.5.1 - #334 DB upgrade"
         ,"Fix possible discord error during installation process"
+        ,"Fix docker setup with root user"
       ]
     },
     {
