@@ -1,6 +1,6 @@
 {
   "version":"5.5.2",
-  "revision":"90",
+  "revision":"91",
   "status":"stable",
   "detail":[
     {
@@ -40,6 +40,7 @@
         ,"Fix server configuration warning when using Apache"
         ,"Fix pages acces when updating from before 5.5.1 - #275"
         ,"Fix TMDB import"
+        ,"Fix code & database update status on dashboard"
       ]
     },
     {

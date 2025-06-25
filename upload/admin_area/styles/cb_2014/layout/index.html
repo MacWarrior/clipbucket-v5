@@ -104,7 +104,7 @@
     <div class="col-md-6">
         <div id="changelog_display">{include file="$style_dir/changelog.html"}</div>
         <div class="row" style="margin-top:5px;" id="update_div">
-            {Update::getInstance()->displayGlobalSQLUpdateAlert()}
+            {Update::getInstance()->displayGlobalSQLUpdateAlert(Update::IsUpdateProcessing())}
         </div>
     </div>
 </div>
