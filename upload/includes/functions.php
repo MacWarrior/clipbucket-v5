@@ -1833,7 +1833,6 @@ function format_duration($seconds): string
     $period_plur = [lang('seconds'), lang('minutes'), lang('hours'), lang('days'), lang('weeks'), lang('months'), lang('years'), lang('decades')];
     $lengths = [60, 60, 24, 7, 4.35, 12, 10]; // divisions successives
 
-    $result = [];
     $diff = (int)$seconds;
     if ($diff < 1) {
         return "0 " . $period_plur[0];
@@ -2174,72 +2173,6 @@ function get_collection_field($cid, $field = 'collection_name')
 function foot_menu($params = null)
 {
     return Clipbucket::getInstance()->foot_menu($params);
-}
-
-/**
- * Converts given array into valid XML
- *
- * @param : { array } { $array } { array to be converted into XML }
- * @param int $level
- *
- * @return string : { string } { $xml } { array converted into XML }
- */
-function array2xml($array, $level = 1): string
-{
-    $xml = '';
-    foreach ($array as $key => $value) {
-        $key = strtolower($key);
-        if (is_object($value)) // convert object to array
-        {
-            $value = get_object_vars($value);
-        }
-
-        if (is_array($value)) {
-            $multi_tags = false;
-            foreach ($value as $key2 => $value2) {
-                if (is_object($value2)) // convert object to array
-                {
-                    $value2 = get_object_vars($value2);
-                }
-                if (is_array($value2)) {
-                    $xml .= str_repeat("\t", $level) . "<$key>\n";
-                    $xml .= array2xml($value2, $level + 1);
-                    $xml .= str_repeat("\t", $level) . "</$key>\n";
-                    $multi_tags = true;
-                } else {
-                    if (trim($value2) != '') {
-                        if (htmlspecialchars($value2) != $value2) {
-                            $xml .= str_repeat("\t", $level) .
-                                "<$key2><![CDATA[$value2]]>" . // changed $key to $key2... didn't work otherwise.
-                                "</$key2>\n";
-                        } else {
-                            $xml .= str_repeat("\t", $level) .
-                                "<$key2>$value2</$key2>\n"; // changed $key to $key2
-                        }
-                    }
-                    $multi_tags = true;
-                }
-            }
-            if (!$multi_tags and count($value) > 0) {
-                $xml .= str_repeat("\t", $level) . "<$key>\n";
-                $xml .= array2xml($value, $level + 1);
-                $xml .= str_repeat("\t", $level) . "</$key>\n";
-            }
-
-        } else {
-            if (trim($value) != '') {
-                echo "value=$value<br>";
-                if (htmlspecialchars($value) != $value) {
-                    $xml .= str_repeat("\t", $level) . "<$key>" .
-                        "<![CDATA[$value]]></$key>\n";
-                } else {
-                    $xml .= str_repeat("\t", $level) .
-                        "<$key>$value</$key>\n";
-                }
-            }
-        }
-    }
-    return $xml;
 }
 
 /**
@@ -3636,10 +3569,12 @@ function string_to_snake_case(string $string):string {
 //    $string = preg_replace('/[\p{L}\p{N}\s]/u', '', strtolower($string));
     $string =  iconv('UTF-8', 'ASCII//TRANSLIT', $string);
     $string = preg_replace('/[^\p{L}\p{N}\s]/u', '', strtolower($string));
-    $string = preg_replace('/\s/','_', trim($string));
-    return $string;
+    return preg_replace('/\s/','_', trim($string));
 }
 
+/**
+ * @throws Exception
+ */
 function save_subtitle_ajax()
 {
     User::getInstance()->hasPermissionAjax('edit_video');
