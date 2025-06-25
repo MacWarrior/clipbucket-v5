@@ -174,3 +174,48 @@ function showSpinner() {
 function hideSpinner() {
     $('.taskHandler').hide();
 }
+
+function editTitle(number) {
+    $('#buttons-' + number).css('display', 'inline');
+    $('#edit_sub_' + number).css('display', 'inline');
+    $('#span_sub_' + number).hide();
+}
+
+function cancelEditTitle(number) {
+    $('#buttons-' + number).hide();
+    $('#edit_sub_' + number).hide();
+    $('#span_sub_' + number).show();
+}
+function saveSubtitle(number) {
+    showSpinner();
+    $.ajax({
+        url: baseurl+"actions/subtitle_edit.php",
+        type: "POST",
+        data: {title: $('#edit_sub_' + number).val(), videoid: videoid, number: number},
+        dataType: 'json',
+        success: function (result) {
+            $('#subtitles').html(result['template']);
+            hideSpinner();
+            $('.close').click();
+            $('.manage-page').prepend(result['msg']);
+        }
+    });
+}
+
+function deleteSubtitle(number) {
+    showSpinner();
+    if (confirm_it(text_confirm_sub_file.replace('%s', number))) {
+        $.ajax({
+            url: baseurl+"actions/subtitle_delete.php",
+            type: "POST",
+            data: {number: number, videoid: videoid},
+            dataType: 'json',
+            success: function (result) {
+                $('#subtitles').html(result['template']);
+                $('.close').click();
+                $('.manage-page').prepend(result['msg']);
+                hideSpinner();
+            }
+        });
+    }
+}

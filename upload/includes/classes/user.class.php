@@ -1211,8 +1211,6 @@ class userquery extends CBCategory
             $this->username = $udetails['username'];
             $this->level = $this->udetails['level'];
             $this->email = $this->udetails['email'];
-            //TODO check if $this->permission is steel needed
-            $this->permission =  UserLevel::getPermissions(User::getInstance()->getCurrentUserLevelID());
 
             //Calling Logout Functions
             $funcs = $this->init_login_functions ?? false;
@@ -1227,8 +1225,6 @@ class userquery extends CBCategory
             if ($sess->get('dummy_username') == '') {
                 $this->UpdateLastActive(user_id());
             }
-        } else {
-            $this->permission = UserLevel::getPermissions();
         }
 
         //Adding Actions such Report, share,fav etc
@@ -1368,7 +1364,7 @@ class userquery extends CBCategory
                 $msg = e(lang('usr_ban_err'));
             } else {
                 if ($remember) {
-                    $sess->timeout = 86400 * REMBER_DAYS;
+                    $sess->timeout = 86400 * 7;
                 }
                 return $this->init_session($udetails);
             }
@@ -1388,6 +1384,7 @@ class userquery extends CBCategory
     /**
      * @param $username
      * @param $password
+     * @return array|bool
      * @throws Exception
      */
     function authenticate($username, $password)
@@ -1418,6 +1415,9 @@ class userquery extends CBCategory
         return $udetails ?? false;
     }
 
+    /**
+     * @throws Exception
+     */
     function init_session($udetails)
     {
         global $sess;
@@ -1436,8 +1436,7 @@ class userquery extends CBCategory
         $this->username = $udetails['username'];
         $this->level = $udetails['level'];
         $this->is_login = true;
-        //reset permission
-        $this->permission = null;
+
         //Updating User last login , num of visits and ip
         Clipbucket_db::getInstance()->update(tbl('users'),
             ['num_visits', 'last_logged', 'ip'],
@@ -1449,7 +1448,7 @@ class userquery extends CBCategory
 
         //Logging Action
         $log_array = [
-            'username'  => $username,
+            'username'  => $udetails['username'],
             'userid'    => $udetails['userid'],
             'useremail' => $udetails['email'],
             'success'   => 'yes',

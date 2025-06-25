@@ -1,10 +1,10 @@
 <?php
 define('THIS_PAGE', 'upgrade_db');
-require_once dirname(__FILE__, 2).'/includes/admin_config.php';
+require_once dirname(__FILE__, 2) . '/includes/admin_config.php';
 
 $need_to_create_version_table = true;
 errorhandler::getInstance()->flush_error();
-$error=false;
+$error = false;
 $array_42 = ['4.2-RC1-free', '4.2-RC1-premium'];
 if (php_sapi_name() == 'cli') {
     $update = Update::getInstance();
@@ -47,8 +47,58 @@ if (php_sapi_name() == 'cli') {
             }
         } else {
             $need_to_create_version_table = false;
-            if (!empty($argv[1]) || !empty($argv[2]) ) {
+            if (!empty($argv[1]) || !empty($argv[2])) {
                 echo 'Upgrade system is already installed, parameters so are ignored' . PHP_EOL;
+            }
+        }
+        //add verification
+        if (!$need_to_create_version_table && Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.0', 165)) {
+            $core_tool = new AdminTool();
+            if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.0', '367')) {
+                $core_tool->initByCode('update_core');
+            } else {
+                $core_tool->initById('11');
+            }
+            if ($core_tool->isAlreadyLaunch()) {
+                echo 'A core update is already ongoing, should it be marked as failed ? (Y/N)';
+                ob_flush();
+                $stdin = fopen('php://stdin', 'r');
+                $response = fgetc($stdin);
+                if (strtolower($response) != 'y') {
+                    echo "Aborted.\n";
+                    die;
+                } else {
+                    $core_tool->setToolError($core_tool->getId(),true);
+                }
+            }
+            $db_tool = new AdminTool();
+            if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.0', '367')) {
+                $db_tool->initByCode(AdminTool::CODE_UPDATE_DATABASE_VERSION);
+            } else {
+                $db_tool->initById('5');
+            }
+            if ($db_tool->isAlreadyLaunch()) {
+                echo 'A database upgrade is ongoing, should it be marked as failed ? (Y/N)';
+                ob_flush();
+                $stdin = fopen('php://stdin', 'r');
+                $response = fgetc($stdin);
+                if (strtolower($response) != 'y') {
+                    echo "Aborted.\n";
+                    die;
+                } else {
+                    $db_tool->setToolError($db_tool->getId(),true);
+                }
+            }
+            /** @var AdminTool $core_tool */
+            if (!empty(myquery::getInstance()->get_conversion_queue(' time_completed is null or time_completed = \'\' or time_completed = 0'))) {
+                echo 'A video conversion is ongoing, do you want to continue update ? (Y/N)';
+                ob_flush();
+                $stdin = fopen('php://stdin', 'r');
+                $response = fgetc($stdin);
+                if (strtolower($response) != 'y') {
+                    echo "Aborted.\n";
+                    die;
+                }
             }
         }
     } catch (\Exception $e) {
@@ -67,40 +117,40 @@ if (php_sapi_name() == 'cli') {
 }
 
 $regex_version = '(\d+\.\d+\.\d+)';
-$mysqlReq='5.6.0';
+$mysqlReq = '5.6.0';
 assign('mysqlReq', $mysqlReq);
 $cmd = 'mysql --version';
 exec($cmd, $mysql_client_output);
 $match_mysql = [];
 preg_match($regex_version, $mysql_client_output[0], $match_mysql);
 $clientMySqlVersion = $match_mysql[0] ?? false;
-if(version_compare($clientMySqlVersion, $mysqlReq) < 0) {
-    error_lang_cli(sprintf('Current version of MySQL Client is %s, minimal version %s is required. Please update'. PHP_EOL, $clientMySqlVersion, $mysqlReq));
-    $error=true;
+if (version_compare($clientMySqlVersion, $mysqlReq) < 0) {
+    error_lang_cli(sprintf('Current version of MySQL Client is %s, minimal version %s is required. Please update' . PHP_EOL, $clientMySqlVersion, $mysqlReq));
+    $error = true;
 }
 
 $serverMySqlVersion = getMysqlServerVersion()[0]['@@version'];
 preg_match($regex_version, $serverMySqlVersion, $match_mysql);
 $serverMySqlVersion = $match_mysql[0] ?? false;
-if(version_compare($serverMySqlVersion, $mysqlReq) < 0) {
-    error_lang_cli(sprintf('Current version of MySQL Server is %s, minimal version %s is required. Please update'. PHP_EOL, $serverMySqlVersion, $mysqlReq));
-    $error=true;
+if (version_compare($serverMySqlVersion, $mysqlReq) < 0) {
+    error_lang_cli(sprintf('Current version of MySQL Server is %s, minimal version %s is required. Please update' . PHP_EOL, $serverMySqlVersion, $mysqlReq));
+    $error = true;
 }
 
 if ($need_to_create_version_table) {
     $revisions = getRevisions();
     if (!array_key_exists($version, $revisions) || ($revisions[$version]) < $revision) {
         error_lang_cli('Revision provided is incorrect');
-        $error=true;
+        $error = true;
     }
     $table_version_path = DirPath::get('sql') . 'table_version.sql';
     $lines = file($table_version_path);
     if (empty($lines)) {
         error_lang_cli('Version system initialisation failed because table_version.sql is missing or empty ; please make sure your code is up-to-date and table_version.sql file is correct.');
-        $error=true;
+        $error = true;
     }
 }
-if( $error ) {
+if ($error) {
     if (php_sapi_name() != 'cli') {
         echo json_encode([
             'success' => false
@@ -142,18 +192,27 @@ try {
     $match = [];
     $nb_files = count($files);
     foreach ($files as $i => $file) {
-        /** @var Migration $instance  */
+        /** @var Migration $instance */
         $instance = execute_migration_file($file);
         if ($file_OK) {
-            file_put_contents($path_file_temp, json_encode(['elements_total'=> $nb_files, 'elements_done'=>$i+1, 'current_file'=>$file]));
+            file_put_contents($path_file_temp, json_encode([
+                'elements_total' => $nb_files,
+                'elements_done'  => $i + 1,
+                'current_file'   => $file
+            ]));
         }
     }
+    $version_final = $instance ? $instance->getVersion() : Update::getInstance()->getCurrentDBVersion();
+    $revision_final = $instance ? $instance->getRevision() : Update::getInstance()->getCurrentDBRevision();
+    $msg = 'Your database has been successfully updated to version ' . htmlentities($version_final . ' - revision ' . (int)$revision_final);
     if (php_sapi_name() != 'cli') {
         echo json_encode([
             'success' => true
         ]);
+        sessionMessageHandler::add_message($msg, 'm');
+    } else {
+        echo $msg . PHP_EOL;
     }
-    sessionMessageHandler::add_message('Your database has been successfuly updated to version ' . htmlentities($instance->getVersion() . ' - revision ' . (int)$instance->getRevision()), 'm');
     if ($file_OK) {
         unlink($path_file_temp);
     }
