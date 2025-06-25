@@ -1,6 +1,6 @@
 {
   "version":"5.5.2",
-  "revision":"87",
+  "revision":"89",
   "status":"stable",
   "detail":[
     {
@@ -89,6 +89,7 @@
         ,"Fix pop-in closing with escape"
         ,"Fix filter error on outdated DB"
         ,"Fix orphan photo saving"
+        ,"Fix undefined constant <i>(#633)</i>"
       ]
     },
     {
