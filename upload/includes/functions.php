@@ -3619,7 +3619,7 @@ function save_subtitle_ajax()
     } else {
         rename($_FILES['subtitles']['tmp_name'], $temp_file_path);
         Clipbucket_db::getInstance()->insert(tbl('video_subtitle'), ['videoid', 'number', 'title'], [$video['videoid'], $display_count, mysql_clean($_POST['title'])], null, true);
-        e(lang('subtitle_uploaded_successfully'), 'm');
+        sessionMessageHandler::add_message(lang('subtitle_uploaded_successfully'), 'm');
         $success = true;
     }
 
