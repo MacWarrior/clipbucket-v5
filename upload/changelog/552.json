@@ -1,6 +1,6 @@
 {
   "version":"5.5.2",
-  "revision":"91",
+  "revision":"92",
   "status":"stable",
   "detail":[
     {
@@ -146,9 +146,16 @@
       ]
     },
     {
+      "title": "Player",
+      "description": [
+        "Fix ChromeCast button"
+      ]
+    },
+    {
       "title": "Internal components",
       "description": [
         "Update Global Announcement to version 2.0.6"
+        ,"Update VideoJS player to version 2.1.2"
       ]
     },
     {
