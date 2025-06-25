@@ -1625,4 +1625,5 @@ VALUES ('admin_setting'),
        ('userlevel_cannot_be_default'),
        ('default_userlevel_cannot_be_disabled'),
        ('userlevel_cannot_be_disabled'),
-       ('cannot_be_default_until_activated');
+       ('cannot_be_default_until_activated'),
+       ('miscellaneous_options');

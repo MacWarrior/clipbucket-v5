@@ -187,22 +187,37 @@
                 <h3>Other fields</h3>
                 <div class="tabbable">
                     <ul class="nav nav-tabs" id="otherFieldsTab">
-                        {foreach from=$otherFields item=field name=tabs}
-                        <li class="{if $smarty.foreach.tabs.first}active{/if}">
-                            <a data-toggle="tab" href="#id_{$field.id}">
-                                {$field.title}
-                            </a>
+                        <li class="active">
+                            <a data-toggle="tab" href="#miscellaneous">{lang('miscellaneous_options')}</a>
                         </li>
+                        {foreach from=$otherFields item=field name=tabs}
+                            {if !in_array($field.id, ['allow_rating', 'allow_embedding', 'allow_comments']) }
+                                <li>
+                                    <a data-toggle="tab" href="#id_{$field.id}">
+                                        {$field.title}
+                                    </a>
+                                </li>
+                            {/if}
                         {/foreach}
                     </ul>
 
                     <div class="tab-content">
-                        {foreach from=$otherFields item=field name=content}
-                        <div id="id_{$field.id}" class="tab-pane {if $smarty.foreach.content.first}active{/if}">
-                            <label><strong>{$field.title}</strong></label><br>
-                            {if $field.hint_1}<div class="hint">{$field.hint_1}</div>{/if}
-                            {$formObj->createField($field)}
+                        <div id="miscellaneous" class="tab-pane active">
+                            {foreach from=$otherFields item=field name=content}
+                                {if in_array($field.id, ['allow_rating', 'allow_embedding', 'allow_comments']) }
+                                    {$formObj->createField($field)}
+                                {/if}
+                            {/foreach}
                         </div>
+                        {foreach from=$otherFields item=field name=content}
+                            {if !in_array($field.id, ['allow_rating', 'allow_embedding', 'allow_comments']) }
+                                <div id="id_{$field.id}" class="tab-pane ">
+                                    <label><strong>{$field.title}</strong></label><br>
+                                    {if $field.hint_1}
+                                        <div class="hint">{$field.hint_1}</div>{/if}
+                                    {$formObj->createField($field)}
+                                </div>
+                            {/if}
                         {/foreach}
                     </div>
                 </div>
