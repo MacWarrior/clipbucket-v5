@@ -16,6 +16,7 @@ foreach ($subtitle_list as $subtitle) {
     if ($subtitle['title'] == $title) {
         $can_update = false;
         e(lang('subtitle_already_exists'));
+        break;
     }
 }
 if ($can_update) {
