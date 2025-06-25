@@ -3,15 +3,10 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/MacWarrior/clipbucket-v5">
-    <img src="https://img.shields.io/github/stars/MacWarrior/clipbucket-v5?style=for-the-badge&logo=github" alt="GitHub Stars"/>
-  </a>
-  <a href="https://github.com/MacWarrior/clipbucket-v5/releases">
-    <img src="https://img.shields.io/github/v/release/MacWarrior/clipbucket-v5?style=for-the-badge&color=brightgreen" alt="Latest Release"/>
-  </a>
-  <a href="https://hub.docker.com/r/oxygenz/clipbucket-v5">
-    <img src="https://img.shields.io/docker/pulls/oxygenz/clipbucket-v5?style=for-the-badge&logo=docker" alt="Docker Pulls"/>
-  </a>
+  <a href="https://github.com/MacWarrior/clipbucket-v5"><img src="https://img.shields.io/github/stars/MacWarrior/clipbucket-v5?style=for-the-badge&logo=github" alt="GitHub Stars"/></a>
+  <a href="https://github.com/MacWarrior/clipbucket-v5/releases"><img src="https://img.shields.io/github/v/release/MacWarrior/clipbucket-v5?style=for-the-badge&color=brightgreen" alt="Latest Release"/></a>
+  <a href="https://hub.docker.com/r/oxygenz/clipbucket-v5"><img src="https://img.shields.io/docker/pulls/oxygenz/clipbucket-v5?style=for-the-badge&logo=docker" alt="Docker Pulls"/></a>
+  <a href="https://discord.gg/HDm5CjM"><img src="https://img.shields.io/discord/715313510929793145?style=for-the-badge&logo=discord&logoColor=ffffff&label=Discord&color=7489d5" alt="Discord"/></a>
 </p>
 
 
