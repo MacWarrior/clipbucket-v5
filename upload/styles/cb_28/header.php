@@ -1,7 +1,7 @@
 <?php
 $min_suffixe = System::isInDev() ? '' : '.min';
 ClipBucket::getInstance()->addCSS([
-    'bootstrap.min.css'                                 => 'admin',
+    'bootstrap/css/bootstrap.min.css'                   => 'libs',
     'fortawesome/font-awesome/css/font-awesome.min.css' => 'vendor',
     'icon-font.css'                                     => 'admin',
     'all' . $min_suffixe . '.css'                       => 'admin',
@@ -27,7 +27,7 @@ ClipBucket::getInstance()->addJS([
     'clipbucket' . $min_suffixe . '.js'          => 'admin',
     'jquery_plugs/cookie' . $min_suffixe . '.js' => 'global',
     'functions' . $min_suffixe . '.js'           => 'global',
-    'bootstrap' . $min_suffixe . '.js'           => 'admin',
+    'bootstrap/js/bootstrap.bundle.min.js'       => 'libs',
     'custom' . $min_suffixe . '.js'              => 'admin',
     'fast_qlist' . $min_suffixe . '.js'          => 'admin',
     'select2/select2/dist/js/select2.min.js'     => 'vendor'

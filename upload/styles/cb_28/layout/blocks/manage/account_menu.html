@@ -22,7 +22,7 @@
             {$topMenuLinks = array_slice($myAccountLinks, 0, 6)}
             {foreach $topMenuLinks as $key => $value}
                 <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">{$key}<b class="caret"></b></a>
+                    <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown" data-bs-display="static">{$key}<b class="caret"></b></a>
                     <ul class="dropdown-menu">
                         {foreach $value as $subKey => $subValue}
                             <li><a href="{$subValue}">{$subKey}</a></li>

@@ -4,7 +4,7 @@
             <h3 class="paddingLeftLarge pull-left">Editing <small>&gt; {display_clean($u.username)}</small>
                 <div class="actionBox clearfix">
                     {if $u.userid != $anonymous_id}
-                        <a class="btn btn-primary btn-sm dropdown-toggle pull-left" data-toggle="dropdown" href="">Actions <i class="caret"></i></a>
+                        <a class="btn btn-primary btn-sm dropdown-toggle pull-left" data-bs-toggle="dropdown" data-bs-display="static" href="">Actions <i class="caret"></i></a>
                         <ul class="dropdown-menu pull-left actionDropmenu" role="menu" aria-labelledby="dropdownMenu1">
                             {if isSectionEnabled('channels') && $u.is_channel_enable}
                                 <li><a role="menuitem" tabindex="-1" href="{userquery::getInstance()->profile_link($u)}">View {display_clean($u.username)} channel</a></li>

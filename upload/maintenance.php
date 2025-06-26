@@ -12,14 +12,14 @@
     <body>
     <div style="overflow:hidden;background:url('./styles/cb_28/theme/images/clouds.jpg') 0% 0% / 100% no-repeat rgb(247, 249, 251);height:100%;" class="page-error">
         <div class="fog">
-            <img src="./styles/cb_28/theme/images/fog-cloud.png" alt="cloud" class="img-responsive"/>
+            <img src="./styles/cb_28/theme/images/fog-cloud.png" alt="cloud" class="img-fluid"/>
         </div>
         <div class="monster">
-            <img src="./styles/cb_28/theme/images/monster.png" alt="monster" class="img-responsive"/>
+            <img src="./styles/cb_28/theme/images/monster.png" alt="monster" class="img-fluid"/>
         </div>
         <div class="content-txt">
             <div class="clearfix error-img">
-                <img src="./styles/cb_28/images/500.png" alt="error 500" class="img-responsive"/>
+                <img src="./styles/cb_28/images/500.png" alt="error 500" class="img-fluid"/>
             </div>
             <div class="alert-text clearfix">
                 <p><strong>OOPS...</strong><span>Server is under technical maintenance !</span></p>

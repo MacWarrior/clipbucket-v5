@@ -818,7 +818,6 @@ h1 {
   margin: 0 0 4px;
 }
 
-.videos .row,
 .featured-videos .row {
   margin: 0 -8px;
 }
@@ -827,6 +826,7 @@ h1 {
 .featured-videos .item-video {
   padding: 0 8px;
   margin: 0 0 16px;
+  position: relative;
 }
 
 .videos .item-video:has(.slider-video-container) {
@@ -1356,13 +1356,6 @@ h1 {
   padding: 0 10px 0 0;
 }
 
-.filter-dropdowns .dropdown-menu>li>a {
-  display: block;
-  text-decoration: none;
-  font-family: "source_sans_proregular", sans-serif;
-  padding: 6px 20px 6px 12px;
-}
-
 .filter-dropdowns .dropdown-menu>li>i{
   position: absolute;
   top: 8px;
@@ -1460,12 +1453,19 @@ h1 {
   margin: 0 0 0 3px;
 }
 
+.dropup .dropdown-toggle::after,
+.dropdown-toggle::after{
+  font-size: 25px;
+  vertical-align: middle;
+}
+
 .filter-dropdowns .dropdown-menu {
   box-shadow: none;
   padding: 0;
   margin: 0;
   border-radius: 0 0 4px 4px;
   border: none;
+  min-width: 160px;
 }
 
 .filter-dropdowns .dropdown-menu>li {
@@ -1480,6 +1480,15 @@ h1 {
   -o-user-select: none;
   user-select: none;
   cursor: pointer;
+}
+
+.filter-dropdowns .dropdown-menu>li>a,
+#footer .langdrop .dropdown-menu li a{
+  display: block;
+  text-decoration: none;
+  font-family: "source_sans_proregular", sans-serif;
+  padding: 6px 20px 6px 12px;
+  font-size: 14px;
 }
 
 .filter-dropdowns .dropdown-menu li:last-child>a,
@@ -5332,53 +5341,39 @@ textarea#comment_box {
   text-decoration: none;
 }
 
+#footer .langdrop{
+  width: fit-content;
+  margin: auto;
+}
+
+#footer .langdrop .dropdown-menu{
+  padding: 0;
+  margin: 0;
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+#footer .langdrop .dropdown-menu li{
+  min-width: 160px;
+}
 
 #footer .langdrop .dropdown-menu li:first-child a {
   border-radius: 2px 2px 0 0;
 }
 
 #footer .langdrop .dropdown-menu li:last-child a {
-  border-radius: 0 0 2px 2px;
+  border-radius: 0;
 }
 
 #footer .langdrop button {
   font-size: 16px;
-  line-height: 18px;
-  padding: 4px 30px 6px 10px;
   border: none;
   height: 28px;
-  width: 100%;
-  text-align: left;
-  overflow: hidden;
-  position: relative;
 }
 
 #footer .langdrop button span {
   display: inline-block;
   vertical-align: middle;
-}
-
-#footer .langdrop button i {
-  position: absolute;
-  font-size: 16px;
-  line-height: 16px;
-  width: 16px;
-  height: 16px;
-  top: 50%;
-  right: 10px;
-  margin: -8px 0 0;
-  z-index: 2;
-  -webkit-transform: rotate(-180deg);
-  -moz-transform: rotate(-180deg);
-  -ms-transform: rotate(-180deg);
-  -o-transform: rotate(-180deg);
-}
-
-#footer .langdrop.open button i {
-  -webkit-transform: rotate(-90deg);
-  -moz-transform: rotate(-90deg);
-  -ms-transform: rotate(-90deg);
-  -o-transform: rotate(-90deg);
 }
 
 #footer .icon-holder {
@@ -6229,7 +6224,7 @@ textarea#comment_box {
   }
 }
 #main.fullwidth{
-  width: 100%;
+  max-width: 100%;
   padding-left: 20px;
   padding-right: 20px;
 }

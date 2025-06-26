@@ -40,7 +40,7 @@
                     || (config('channelsSection')=='yes' && User::getInstance()->hasPermission('member_moderation'))
                     }
                     <li class="purple">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                        <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown" data-bs-display="static">
                             <i class="glyphicon glyphicon-bell"></i>
                             <span class="badge badge-important">{$nb_notif}</span>
                         </a>
@@ -111,7 +111,7 @@
                     </li>
                     {/if}
                     <li class="dropdown blue">
-                        <a data-toggle="dropdown" class="dropdown-toggle clickable" href="#">
+                        <a data-bs-toggle="dropdown" data-bs-display="static" class="dropdown-toggle clickable" href="#">
                             <i class="glyphicon glyphicon-arrow-down"></i>
                             <span class="badge badge-important">Display Option</span>
                         </a>
@@ -133,7 +133,7 @@
                     </li>
                 {/if}
                 <li class="blue">
-                    <a data-toggle="dropdown" href="#" class="dropdown-toggle">
+                    <a data-bs-toggle="dropdown" data-bs-display="static" href="#" class="dropdown-toggle">
                         <img src="{userquery::getInstance()->getUserThumb('', '',user_id())}" class="img-circle" width="25" height="25"/>
                         <span class="user-info">
                          {display_clean(User::getInstance()->get('username'))|ucfirst}<br/>

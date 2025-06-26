@@ -71,14 +71,14 @@
                             {if $photo.userid != $anonymous_id && config('enable_hide_uploader_name') != 'yes'}
                                 {if $photo.disabled_channel =='yes'}
                                     <div class="avatar">
-                                        <img src="{userquery::getInstance()->getUserThumb(null,'m',$photo.userid)}" class="img-responsive"/>
+                                        <img src="{userquery::getInstance()->getUserThumb(null,'m',$photo.userid)}" class="img-fluid"/>
                                     </div>
                                     <h2 class="user-title">
                                         <span >{display_clean($user.username)}</span>
                                     </h2>
                                 {else}
                                     <a href="{userquery::getInstance()->profile_link($user)}" class="avatar">
-                                        <img src="{userquery::getInstance()->getUserThumb(null,'m',$photo.userid)}" class="img-responsive"/>
+                                        <img src="{userquery::getInstance()->getUserThumb(null,'m',$photo.userid)}" class="img-fluid"/>
                                     </a>
                                     <h2 class="user-title">
                                         <a href="{userquery::getInstance()->profile_link($user)}">{display_clean($user.username)}</a>
@@ -114,7 +114,7 @@
                                         {if User::getInstance()->hasPermission('admin_access')}
                                             {if $photo.userid == user_id()}
                                                 <div class="dropdown">
-                                                    <button class="btn btn-success dropdown-toggle" type="button" id="dropdownEdit" data-toggle="dropdown" aria-expanded="true">
+                                                    <button class="btn btn-success dropdown-toggle" type="button" id="dropdownEdit" data-bs-toggle="dropdown" data-bs-display="static" aria-expanded="true">
                                                         {lang code='edit'}
                                                         <span class="caret"></span>
                                                     </button>

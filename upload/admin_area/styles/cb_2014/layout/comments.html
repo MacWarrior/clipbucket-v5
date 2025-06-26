@@ -2,7 +2,7 @@
     <h2>{lang('manage_x', strtolower(lang('comments')))}</h2>
 </div>
 <div id="vid_opt-{$groups[gp_list].group_id}" class="dropdown">
-    <button id="dropdownMenu" class="btn btn-primary btn-xs dropdown-toggle pull-right" data-toggle="dropdown">View Comments <i class="caret"></i></button>
+    <button id="dropdownMenu" class="btn btn-primary btn-xs dropdown-toggle pull-right" data-bs-toggle="dropdown" data-bs-display="static">View Comments <i class="caret"></i></button>
     <ul class="dropdown-menu pull-right" aria-labelledby="dropdownMenu1" role="menu">
         <li role="presentation"><a role="menuitem" tabindex="-1" href="?">View all Comments</a></li>
         <li role="presentation"><a role="menuitem" tabindex="-1" href="?type=v">View Video Comments</a></li>
@@ -61,7 +61,7 @@
             </td>
             <td>
                 <div class="dropdown" style="text-align:center;">
-                    <button class="btn btn-primary btn-xs dropdown-toggle" data-toggle="dropdown">Actions <i class="caret"></i></button>
+                    <button class="btn btn-primary btn-xs dropdown-toggle" data-bs-toggle="dropdown" data-bs-display="static">Actions <i class="caret"></i></button>
                     <ul class="dropdown-menu" aria-labelledby="dropdownMenu1" role="menu">
                         <li role="presentation">
                             <a role="menuitem" tabindex="-1" href="{$comment_obj_baseurl|cat:$comment.type_id}" target="_blank">{lang code='watch'}</a>

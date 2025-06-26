@@ -2,7 +2,7 @@
     <div class="item-video col-lg-3 col-md-3 col-sm-4 col-xs-6">
         <div class="clearfix thumb-holder">
             <a class="video-link" href="{video_link($video)}" title="{display_clean($video.title)|title}">
-                <img class="img-responsive" src="{getThumb vdetails=$video size=416x260}" loading="lazy"/>
+                <img class="img-fluid" src="{getThumb vdetails=$video size=416x260}" loading="lazy"/>
             </a>
             <div class="item-footer">
                 {ANCHOR place='in_video_thumb' data=$video}
@@ -47,7 +47,7 @@
                         <span class="duration" title="Video duration : {$video.duration|SetTime}">{$video.duration|SetTime}</span>
                     {/if}
                     <i class="icon-playweb play-icon"></i>
-                    <img class="img-responsive" src="{getThumb vdetails=$video size=300x169}" border="1" loading="lazy"/>
+                    <img class="img-fluid" src="{getThumb vdetails=$video size=300x169}" border="1" loading="lazy"/>
                 </a>
                 {ANCHOR place='in_video_thumb' data=$video}
 
@@ -58,7 +58,7 @@
         </div>
         <div class="col-xs-6">
             <h5 class="dropdown hide_btn">
-                <a data-hover="dropdown" data-toggle="dropdown" class="dropdown-toggle" data-delay="1000" data-close-others="false" onClick="location.href='{video_link($video)}'" href="{video_link($video)}">{display_clean($video.title|truncate:15)}</a>
+                <a data-hover="dropdown" data-bs-toggle="dropdown" data-bs-display="static" class="dropdown-toggle" data-delay="1000" data-close-others="false" onClick="location.href='{video_link($video)}'" href="{video_link($video)}">{display_clean($video.title|truncate:15)}</a>
             </h5>
 
             <h5>{lang code="by"}
@@ -84,7 +84,7 @@
                         <span class="duration" title="Video duration : {$video.duration|SetTime}">{$video.duration|SetTime}</span>
                     {/if}
                     <i class="icon-playweb play-icon"></i>
-                    <img class="img-responsive" src="{getThumb vdetails=$video size=300x169}" border="1" loading="lazy"/>
+                    <img class="img-fluid" src="{getThumb vdetails=$video size=300x169}" border="1" loading="lazy"/>
                 </a>
                 {ANCHOR place='in_video_thumb' data=$video}
 
@@ -95,7 +95,7 @@
         </div>
         <div class="clearfix">
             <h5 class="dropdown hide_btn">
-                <a data-hover="dropdown" data-toggle="dropdown" class="dropdown-toggle" data-delay="1000" data-close-others="false" onClick="location.href='{video_link($video)}'" href="{video_link($video)}">{display_clean($video.title|truncate:15)} </a>
+                <a data-hover="dropdown" data-bs-toggle="dropdown" data-bs-display="static" class="dropdown-toggle" data-delay="1000" data-close-others="false" onClick="location.href='{video_link($video)}'" href="{video_link($video)}">{display_clean($video.title|truncate:15)} </a>
             </h5>
         </div>
     </div>

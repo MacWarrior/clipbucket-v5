@@ -8,35 +8,35 @@
             {/if}
             {$categories = getCategoryList(['type'=>'video']) }
 
-            <div class="filter-dropdowns clearfix">
-                    <div class="cat-col col-lg-6 col-md-6 col-sm-6 col-xs-12 clearfix">
-                        {if config('enable_video_categories')!='no'}
-                            {include file="$style_dir/blocks/category_list.html" type=$type_link}
-                        {/if}
-                    </div>
-                <div class="sorting-col col-lg-6 col-md-6 col-sm-6 col-xs-12 clearfix">
+            <div class="filter-dropdowns clearfix row">
+                <div class="cat-col col-lg-6 col-md-6 col-sm-12 col-xs-12 clearfix">
+                    {if config('enable_video_categories')!='no'}
+                        {include file="$style_dir/blocks/category_list.html" type=$type_link}
+                    {/if}
+                </div>
+                <div class="sorting-col col-lg-6 col-md-6 col-sm-12 col-xs-12 clearfix">
                     {if !empty($sort_list)}
                         <div class="dropdown">
                             {if $sort_link}
                                 {$empty = true}
                                 {foreach from=$sort_list item=sort key=key}
                                     {if $sort_link == $key}
-                                        <a href="javascript:void(0);" data-toggle="dropdown" class="dropdown-toggle">{$sort} <span class="icon-down-arrow"></span></a>
+                                        <a href="javascript:void(0);" data-bs-toggle="dropdown" data-bs-display="static" class="dropdown-toggle">{$sort}</a>
                                         {$empty = false}
                                         {break}
                                     {/if}
                                 {/foreach}
                                 {if $empty}
-                                    <a href="javascript:void(0);" data-toggle="dropdown" class="dropdown-toggle">{lang('sort_by_'|cat:$default_sort.label)}<span class="icon-down-arrow"></span></a>
+                                    <a href="javascript:void(0);" data-bs-toggle="dropdown" data-bs-display="static" class="dropdown-toggle">{lang('sort_by_'|cat:$default_sort.label)}</a>
                                 {/if}
                             {else}
-                                <a href="javascript:void(0);" data-toggle="dropdown" class="dropdown-toggle">{lang('sort_by_'|cat:$default_sort.label)}<span class="icon-down-arrow"></span></a>
+                                <a href="javascript:void(0);" data-bs-toggle="dropdown" data-bs-display="static" class="dropdown-toggle">{lang('sort_by_'|cat:$default_sort.label)}</a>
                             {/if}
 
                             <ul class="dropdown-menu">
                                 {foreach from=$sort_list item=sort key=key}
                                     <li>
-                                        <a href="{cblink name=sort sort=$key type=$type_link}" {if $smarty.get.sort==$key}class="selected"{/if}>{if $smarty.get.sort == $key}<i class="icon-tick"></i>{/if}{$sort}</a>
+                                        <a class="dropdown-item" href="{cblink name=sort sort=$key type=$type_link}" {if $smarty.get.sort==$key}class="selected"{/if}>{if $smarty.get.sort == $key}<i class="icon-tick"></i>{/if}{$sort}</a>
                                     </li>
                                 {/foreach}
                             </ul>
@@ -47,21 +47,21 @@
                             {$empty = true}
                             {foreach from=$time_list item=name key=sort name=times}
                                 {if $smarty.get.time==$sort}
-                                    <a href="javascript:void(0);" data-toggle="dropdown" class="dropdown-toggle">{$name} <span class="icon-down-arrow"></span></a>
+                                    <a href="javascript:void(0);" data-bs-toggle="dropdown" data-bs-display="static" class="dropdown-toggle">{$name}</a>
                                     {$empty = false}
                                     {break}
                                 {/if}
                             {/foreach}
                             {if $empty}
-                                <a href="javascript:void(0);" data-toggle="dropdown" class="dropdown-toggle">{lang code='alltime'}<span class="icon-down-arrow"></span></a>
+                                <a href="javascript:void(0);" data-bs-toggle="dropdown" data-bs-display="static" class="dropdown-toggle">{lang code='alltime'}</a>
                             {/if}
                         {else}
-                            <a href="javascript:void(0);" data-toggle="dropdown" class="dropdown-toggle">{lang code='alltime'}<span class="icon-down-arrow"></span></a>
+                            <a href="javascript:void(0);" data-bs-toggle="dropdown" data-bs-display="static" class="dropdown-toggle">{lang code='alltime'}</a>
                         {/if}
                         <ul class="dropdown-menu">
                             {foreach from=$time_list item=name key=sort name=times}
                                 <li>
-									<a href="{cblink name=time sort=$sort type=$type_link}" {if $smarty.get.time==$sort}class="selected"{/if}>{if $smarty.get.time==$sort}<i class="icon-tick"></i>{/if}{$name}</a>
+									<a class="dropdown-item" href="{cblink name=time sort=$sort type=$type_link}" {if $smarty.get.time==$sort}class="selected"{/if}>{if $smarty.get.time==$sort}<i class="icon-tick"></i>{/if}{$name}</a>
                                 </li>
                             {/foreach}
                         </ul>

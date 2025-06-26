@@ -57,8 +57,8 @@
 	                                    <div class="col-lg-4 col-md-4 col-sm-6 col-xs-6 category-col">
 	                                        <div class="category-box">
 	                                            <a href="{$video.video_link}"> 
-													<!-- <img src="{get_thumb vdetails=$video size='320x200'}" alt="" class="img-responsive"> -->
-													<img src="{get_thumb vdetails=$video.videoid size='320x200'}" alt="" class="img-responsive">
+													<!-- <img src="{get_thumb vdetails=$video size='320x200'}" alt="" class="img-fluid"> -->
+													<img src="{get_thumb vdetails=$video.videoid size='320x200'}" alt="" class="img-fluid">
 	                                                <div class="like-comments">
 	                                                    <span><i class="like"></i>{$video.likes}</span>
 	                                                    <span><i class="comments"></i>{$video.comments_count}</span>
@@ -90,7 +90,7 @@
                                     	<div class="col-lg-3 col-md-3 col-sm-6 col-xs-6 category-col">
 	                                            <div class="category-box">
 	                                                <a href="{$group.group_url}">    
-	                                                    <img src="{$cbgroup->get_group_thumb($group,'110')}" alt="" class="img-responsive">
+	                                                    <img src="{$cbgroup->get_group_thumb($group,'110')}" alt="" class="img-fluid">
 	                                                    <div class="search-group-circle">{$group.total_videos}<span>Videos</span></div>
 	                                                </a>
 	                                            </div>
@@ -112,7 +112,7 @@
                                     	<div class="col-lg-3 col-md-3 col-sm-6 col-xs-6 category-col">
 	                                            <div class="category-box">
 	                                                <a href="{$collection.U}">    
-	                                                    <img src="{$cbgroup->get_group_thumb($collection,'110')}" alt="" class="img-responsive">
+	                                                    <img src="{$cbgroup->get_group_thumb($collection,'110')}" alt="" class="img-fluid">
 	                                                    <div class="search-group-circle">{$collection.total_videos}<span>Videos</span></div>
 	                                                </a>
 	                                            </div>
@@ -135,11 +135,11 @@
 	                                    {$user_details = userquery::getInstance()->get_user_details($user.userid)}
 	                                        <div class="user-col">
 	                                            <a href="{userquery::getInstance()->profile_link($user_details)}">
-	                                                <img src="{avatar details=$user_details}" alt="" class="img-responsive">
+	                                                <img src="{avatar details=$user_details}" alt="" class="img-fluid">
 	                                            </a>
 	                                            <div class="popper-content clearfix hide">
 	                                                <div class="img-holder">
-	                                                    <img src="{avatar details=$user_details}" alt="" class="img-responsive">
+	                                                    <img src="{avatar details=$user_details}" alt="" class="img-fluid">
 	                                                </div>
 	                                                <div class="content-user">
 	                                                    <h4>{name($user_details)}</h4>
@@ -181,8 +181,8 @@
 	                                        <div class="col-lg-4 col-md-4 col-sm-6 col-xs-6 category-col">
 	                                            <div class="category-box">
 	                                                <a href="{$video.video_link}"> 
-														<!-- <img src="{get_thumb vdetails=$video size='320x200'}" alt="" class="img-responsive"> -->
-														<img src="{get_thumb vdetails=$video.videoid size='320x200'}" alt="" class="img-responsive">
+														<!-- <img src="{get_thumb vdetails=$video size='320x200'}" alt="" class="img-fluid"> -->
+														<img src="{get_thumb vdetails=$video.videoid size='320x200'}" alt="" class="img-fluid">
 	                                                    <div class="like-comments">
 	                                                        <span><i class="like"></i>{$video.likes}</span>
 	                                                        <span><i class="comments"></i>{$video.comments_count}</span>
@@ -226,7 +226,7 @@
                                     	<div class="col-lg-3 col-md-3 col-sm-6 col-xs-6 category-col">
 	                                            <div class="category-box">
 	                                                <a href="{$group.group_url}">    
-	                                                    <img src="{$cbgroup->get_group_thumb($group,'110')}" alt="" class="img-responsive">
+	                                                    <img src="{$cbgroup->get_group_thumb($group,'110')}" alt="" class="img-fluid">
 	                                                    <div class="search-group-circle">{$group.total_videos}<span>Videos</span></div>
 	                                                </a>
 	                                            </div>
@@ -260,7 +260,7 @@
                          				<div class="col-lg-3 col-md-3 col-sm-6 col-xs-6 category-col">
 	                                            <div class="category-box">
 	                                                <a href="{$collection.U}">    
-	                                                    <img src="{$cbgroup->get_group_thumb($collection,'110')}" alt="" class="img-responsive">
+	                                                    <img src="{$cbgroup->get_group_thumb($collection,'110')}" alt="" class="img-fluid">
 	                                                    <div class="search-group-circle">{$collection.total_videos}<span>Videos</span></div>
 	                                                </a>
 	                                            </div>
@@ -294,11 +294,11 @@
 	                                    {$user_details = userquery::getInstance()->get_user_details($user.userid)}
 	                                        <div class="user-col">
 	                                            <a href="{userquery::getInstance()->profile_link($user_details)}">
-	                                                <img src="{avatar details=$user_details}" alt="" class="img-responsive">
+	                                                <img src="{avatar details=$user_details}" alt="" class="img-fluid">
 	                                            </a>
 	                                            <div class="popper-content clearfix hide">
 	                                                <div class="img-holder">
-	                                                    <img src="{avatar details=$user_details}" alt="" class="img-responsive">
+	                                                    <img src="{avatar details=$user_details}" alt="" class="img-fluid">
 	                                                </div>
 	                                                <div class="content-user">
 	                                                    <h4>{name($user_details)}</h4>
@@ -329,7 +329,7 @@
 							<div class="sortby-holder">
 								<span>Sort by:</span>
 								<div class="dropdown">
-									<button aria-expanded="true" data-toggle="dropdown" id="dropdownMenu1" type="button" class="btn btn-default dropdown-toggle">
+									<button aria-expanded="true" data-bs-toggle="dropdown" data-bs-display="static" id="dropdownMenu1" type="button" class="btn btn-default dropdown-toggle">
 										{if $smarty.get.search_by=='rel'} 
 											Relevance
 										{elseif $smarty.get.search_by=='date'}

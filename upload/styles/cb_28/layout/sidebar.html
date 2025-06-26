@@ -51,7 +51,7 @@
 				{if !$_is_parent}
 					<li>
 						<a {if $smarty.get.cat==$category.category_id } class="active" {/if} href="{cblink(['name'=>'category','data'=>$category,'type'=>'v'])}">
-							<img src="{CBvideo::getInstance()->get_category_thumb($category,'video')}" class="img-responsive" alt="">
+							<img src="{CBvideo::getInstance()->get_category_thumb($category,'video')}" class="img-fluid" alt="">
 							<span>{$category.category_name}</span>
 						</a>
 					</li>

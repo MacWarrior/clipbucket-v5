@@ -79,7 +79,7 @@
                                 {if User::getInstance()->hasPermission('admin_access', true)}
                                     {if $video.userid == user_id()}
                                         <div class="dropdown">
-                                            <button class="btn btn-success dropdown-toggle" type="button" id="dropdownEdit" data-toggle="dropdown" aria-expanded="true">
+                                            <button class="btn btn-success dropdown-toggle" type="button" id="dropdownEdit" data-bs-toggle="dropdown" data-bs-display="static" aria-expanded="true">
                                                 {lang code='edit'}
                                                 <span class="caret"></span>
                                             </button>
@@ -98,7 +98,7 @@
 
                             {if config('video_download') == 1 && CbVideo::getInstance()->downloadable($vdo)}
                                 <div class="dropdown">
-                                    <button class="btn btn-success dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-expanded="true">
+                                    <button class="btn btn-success dropdown-toggle" type="button" id="dropdownMenu1" data-bs-toggle="dropdown" data-bs-display="static" aria-expanded="true">
                                         {lang code='download'}
                                         <span class="caret"></span>
                                     </button>

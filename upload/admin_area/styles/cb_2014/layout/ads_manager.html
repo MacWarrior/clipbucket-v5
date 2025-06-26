@@ -115,7 +115,7 @@
     <td>{$adsObj->get_placement_name($ad.ad_placement)}</td>
     <td>
       <div class="dropdown">
-        <button id="dropdownMenu1" class="btn btn-primary btn-xs dropdown-toggle" data-toggle="dropdown">Actions <i class="caret"></i></button>
+        <button id="dropdownMenu1" class="btn btn-primary btn-xs dropdown-toggle" data-bs-toggle="dropdown" data-bs-display="static">Actions <i class="caret"></i></button>
         <ul class="dropdown-menu" aria-labelledby="dropdownMenu1" role="menu">
           <li role="presentation">
             <a role="menuitem" tabindex="-1" href="{DirPath::getUrl('admin_area')}ads_manager.php?ad_id={$ad.ad_id}">{lang code='edit'}</a>

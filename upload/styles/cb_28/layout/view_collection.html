@@ -35,11 +35,11 @@
                             {if $sort_link}
                                 {foreach from=$sort_list item=sort key=key}
                                     {if $sort_link == $key}
-                                        <a href="javascript:void(0);" data-toggle="dropdown" class="dropdown-toggle">{$sort} <span class="icon-down-arrow"></span></a>
+                                        <a href="javascript:void(0);" data-bs-toggle="dropdown" data-bs-display="static" class="dropdown-toggle">{$sort} </a>
                                     {/if}
                                 {/foreach}
                             {else}
-                                <a href="javascript:void(0);" data-toggle="dropdown" class="dropdown-toggle">{lang('sort_by_'|cat:$default_sort.label)}<span class="icon-down-arrow"></span></a>
+                                <a href="javascript:void(0);" data-bs-toggle="dropdown" data-bs-display="static" class="dropdown-toggle">{lang('sort_by_'|cat:$default_sort.label)}</a>
                             {/if}
 
                             {if $sort_link}
@@ -116,7 +116,7 @@
                         {if User::getInstance()->hasPermission('admin_access')}
                             {if user_id() && $c.userid == user_id()}
                                 <div class="dropdown" style="float: right">
-                                    <button class="btn btn-success dropdown-toggle" type="button" id="dropdownEdit" data-toggle="dropdown" aria-expanded="true">
+                                    <button class="btn btn-success dropdown-toggle" type="button" id="dropdownEdit" data-bs-toggle="dropdown" data-bs-display="static" aria-expanded="true">
                                         {lang code='edit'}
                                         <span class="caret"></span>
                                     </button>
