@@ -1,6 +1,6 @@
 {
   "version":"5.5.2",
-  "revision":"93",
+  "revision":"94",
   "status":"stable",
   "detail":[
     {
@@ -94,6 +94,7 @@
         ,"Fix orphan photo saving"
         ,"Fix undefined constant <i>(#633)</i>"
         ,"Fix TMDB search"
+        ,"Fix processing videos display"
       ]
     },
     {
