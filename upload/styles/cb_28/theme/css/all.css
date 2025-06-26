@@ -4113,7 +4113,7 @@ textarea#comment_box {
   margin: 0 0 0 6px;
 }
 
-#header .navbar-toggle .icon-down-arrow {
+#header .navbar-toggler .icon-down-arrow {
   line-height: 20px;
 }
 
@@ -4405,7 +4405,7 @@ textarea#comment_box {
   float: none !important;
 }
 
-.navbar-default .navbar-toggle {
+.navbar-default .navbar-toggler {
   width: 70px;
   height: 34px;
   font-size: 16px;
@@ -4415,10 +4415,11 @@ textarea#comment_box {
   border: none;
   background: none;
   box-shadow: none;
+  color: inherit;
 }
 
-.navbar-default .navbar-toggle:hover,
-.navbar-default .navbar-toggle:focus {
+.navbar-default .navbar-toggler:hover,
+.navbar-default .navbar-toggler:focus {
   background: none;
   box-shadow: none;
 }
@@ -4844,11 +4845,11 @@ textarea#comment_box {
   }
 
   .navbar-header .collapse,
-  .navbar-toggle {
+  .navbar-toggler {
     display: block !important;
   }
 
-  .navbar-toggle {
+  .navbar-toggler {
     float: left;
   }
 
@@ -5104,7 +5105,7 @@ textarea#comment_box {
     display: inline-block;
   }
 
-  #header .navbar-default .navbar-toggle {
+  #header .navbar-default .navbar-toggler {
     margin: 0 14px 0 0;
     width: 40px;
     height: 40px;
@@ -5113,9 +5114,9 @@ textarea#comment_box {
     padding: 3px 8px;
   }
 
-  #header .navbar-default .navbar-toggle:after,
-  #header .navbar-default .navbar-toggle:before,
-  #header .navbar-default .navbar-toggle .icon-down-arrow {
+  #header .navbar-default .navbar-toggler:after,
+  #header .navbar-default .navbar-toggler:before,
+  #header .navbar-default .navbar-toggler .icon-down-arrow {
     content: "";
     font-size: 0;
     line-height: 0;
@@ -5127,11 +5128,11 @@ textarea#comment_box {
     top: 8px;
   }
 
-  #header .navbar-default .navbar-toggle:after {
+  #header .navbar-default .navbar-toggler:after {
     top: 18px;
   }
 
-  #header .navbar-default .navbar-toggle:before {
+  #header .navbar-default .navbar-toggler:before {
     top: 29px;
   }
 

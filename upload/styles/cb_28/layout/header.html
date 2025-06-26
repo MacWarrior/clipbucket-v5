@@ -41,7 +41,10 @@
             <div class="header-holder">
                 <div class="navbar-header clearfix">
 
-                    <button class="navbar-toggle" data-toggle="collapse" data-target="#bs-collapse">Menu</button>
+                    <button class="navbar-toggler d-lg-none" type="button" data-bs-toggle="collapse" data-bs-target="#bs-collapse" aria-controls="bs-collapse">
+                        Menu
+                        <span class="icon-down-arrow"></span>
+                    </button>
 
                     {ANCHOR place="before_logo"}
                     <h1 class="logo no_select">
@@ -51,14 +54,14 @@
                     </h1>
                     {ANCHOR place="after_logo"}
 
-                    <a href="javascript:void(0);" class="btn-search-toggle btn visible-xs">
+                    <a href="javascript:void(0);" class="btn-search-toggle btn d-block d-sm-none">
                         <i class="icon-search"></i>
                     </a>
                 </div>
 
-                <div class="collapse navbar-collapse" id="bs-collapse">
+                <div class="" >
                     <div class="menu-holder">
-                        <div class="col">
+                        <div class="col collapse" id="bs-collapse">
                             <nav class="main-links">
                                 {$head_menu=cb_menu()}
                                 <ul>
@@ -119,10 +122,10 @@
                                             <a href="{cblink name='upload'}" class="dropdown-toggle btn-upload btn btn-default" data-bs-toggle="dropdown" data-bs-display="static"><i class="icon-upload"></i><span>{lang code="upload"}</span></a>
                                             <ul role="menu" class="dropdown-menu">
                                                 {if User::getInstance()->hasPermission('allow_video_upload') && isSectionEnabled('videos') && !empty(Upload::getInstance()->get_upload_options())}
-                                                    <li class="up_vid"><a href="{cblink name='upload'}">{lang code="upload_video"}<i class="icon-video visible-xs"></i></a></li>
+                                                    <li class="up_vid"><a href="{cblink name='upload'}">{lang code="upload_video"}<i class="icon-video d-block d-sm-none"></i></a></li>
                                                 {/if}
                                                 {if User::getInstance()->hasPermission('allow_photo_upload') && isSectionEnabled('photos') && config('enable_photo_file_upload') == 'yes'}
-                                                    <li class="up_img"><a href="{cblink name='photo_upload'}">{lang code="upload_photo"}<i class="icon-photo visible-xs"></i></a></li>
+                                                    <li class="up_img"><a href="{cblink name='photo_upload'}">{lang code="upload_photo"}<i class="icon-photo d-block d-sm-none"></i></a></li>
                                                 {/if}
                                                 {ANCHOR place="inside_upload"}
                                             </ul>
