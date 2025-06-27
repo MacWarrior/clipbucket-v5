@@ -1833,7 +1833,6 @@ function format_duration($seconds): string
     $period_plur = [lang('seconds'), lang('minutes'), lang('hours'), lang('days'), lang('weeks'), lang('months'), lang('years'), lang('decades')];
     $lengths = [60, 60, 24, 7, 4.35, 12, 10]; // divisions successives
 
-    $result = [];
     $diff = (int)$seconds;
     if ($diff < 1) {
         return "0 " . $period_plur[0];
@@ -2174,72 +2173,6 @@ function get_collection_field($cid, $field = 'collection_name')
 function foot_menu($params = null)
 {
     return Clipbucket::getInstance()->foot_menu($params);
-}
-
-/**
- * Converts given array into valid XML
- *
- * @param : { array } { $array } { array to be converted into XML }
- * @param int $level
- *
- * @return string : { string } { $xml } { array converted into XML }
- */
-function array2xml($array, $level = 1): string
-{
-    $xml = '';
-    foreach ($array as $key => $value) {
-        $key = strtolower($key);
-        if (is_object($value)) // convert object to array
-        {
-            $value = get_object_vars($value);
-        }
-
-        if (is_array($value)) {
-            $multi_tags = false;
-            foreach ($value as $key2 => $value2) {
-                if (is_object($value2)) // convert object to array
-                {
-                    $value2 = get_object_vars($value2);
-                }
-                if (is_array($value2)) {
-                    $xml .= str_repeat("\t", $level) . "<$key>\n";
-                    $xml .= array2xml($value2, $level + 1);
-                    $xml .= str_repeat("\t", $level) . "</$key>\n";
-                    $multi_tags = true;
-                } else {
-                    if (trim($value2) != '') {
-                        if (htmlspecialchars($value2) != $value2) {
-                            $xml .= str_repeat("\t", $level) .
-                                "<$key2><![CDATA[$value2]]>" . // changed $key to $key2... didn't work otherwise.
-                                "</$key2>\n";
-                        } else {
-                            $xml .= str_repeat("\t", $level) .
-                                "<$key2>$value2</$key2>\n"; // changed $key to $key2
-                        }
-                    }
-                    $multi_tags = true;
-                }
-            }
-            if (!$multi_tags and count($value) > 0) {
-                $xml .= str_repeat("\t", $level) . "<$key>\n";
-                $xml .= array2xml($value, $level + 1);
-                $xml .= str_repeat("\t", $level) . "</$key>\n";
-            }
-
-        } else {
-            if (trim($value) != '') {
-                echo "value=$value<br>";
-                if (htmlspecialchars($value) != $value) {
-                    $xml .= str_repeat("\t", $level) . "<$key>" .
-                        "<![CDATA[$value]]></$key>\n";
-                } else {
-                    $xml .= str_repeat("\t", $level) .
-                        "<$key>$value</$key>\n";
-                }
-            }
-        }
-    }
-    return $xml;
 }
 
 /**
@@ -3605,17 +3538,95 @@ function validatePHPDateFormat($format): bool
 }
 
 /**
+ * @param string $time
+ * @return int
+ */
+function timeToSeconds(string $time):int
+{
+    $parts = explode(':', $time);
+    $parts = array_reverse($parts); // Pour gérer les formats HH:MM:SS et MM:SS
+
+    $seconds = 0;
+
+    if (isset($parts[0])) {
+        $seconds += (int)$parts[0]; // SS
+    }
+    if (isset($parts[1])) {
+        $seconds += (int)$parts[1] * 60; // MM
+    }
+    if (isset($parts[2])) {
+        $seconds += (int)$parts[2] * 3600; // HH
+    }
+
+    return $seconds;
+}
+
+/**
  * @param string $string
- * @return array|string|string[]|null
+ * @return string
  */
 function string_to_snake_case(string $string):string {
 //    $string = preg_replace('/[\p{L}\p{N}\s]/u', '', strtolower($string));
     $string =  iconv('UTF-8', 'ASCII//TRANSLIT', $string);
     $string = preg_replace('/[^\p{L}\p{N}\s]/u', '', strtolower($string));
-    $string = preg_replace('/\s/','_', trim($string));
-    return $string;
+    return preg_replace('/\s/','_', trim($string));
 }
 
+/**
+ * @throws Exception
+ */
+function save_subtitle_ajax()
+{
+    User::getInstance()->hasPermissionAjax('edit_video');
+    $response = [];
+    if (empty($_POST['videoid']) || empty($_FILES['subtitles']['name']) || empty($_POST['title'])) {
+        e(lang('missing_params'));
+        $response['success'] = false;
+        $response['msg'] = getTemplateMsg();
+        echo json_encode($response);
+        die;
+    }
+
+    $video = Video::getInstance()->getOne(['videoid' => mysql_clean($_POST['videoid'])]);
+    $subtitle_list = get_video_subtitles($video);
+    foreach ($subtitle_list as $subtitle) {
+        if ($subtitle['title'] == $_POST['title']) {
+            e(lang('subtitle_already_exists'));
+            $response['success'] = false;
+            $response['msg'] = getTemplateMsg();
+            echo json_encode($response);
+            die;
+        }
+    }
+
+    $subtitle_dir = DirPath::get('subtitles') . $video['file_directory'] . DIRECTORY_SEPARATOR;
+    if (!is_dir($subtitle_dir)) {
+        mkdir($subtitle_dir, 0755, true);
+    }
+    $num = (int)get_video_subtitle_last_num($video['videoid']);
+    $display_count = str_pad((string)($num + 1), 2, '0', STR_PAD_LEFT);
+    $temp_file_path = $subtitle_dir . $video['file_name'] . '-' . $display_count . '.srt';
+
+    if (pathinfo($_FILES['subtitles']['name'])['extension']!= 'srt') {
+        e(lang('invalid_subtitle_extension'));
+        $success = false;
+    } elseif (!FFMpeg::isValidWebVTTWithFFmpeg($_FILES['subtitles']['tmp_name'], $video['duration'])) {
+        //gestion de l'affichage des erreurs dans la fonction
+        $success = false;
+    } elseif ($_FILES['subtitles']['size'] >= (1024 * 1024 * config('maximum_allowed_subtitle_size')) ) {
+        e(lang('file_size_exceeded', config('maximum_allowed_subtitle_size') . lang('mb')));
+        $success = false;
+    } else {
+        rename($_FILES['subtitles']['tmp_name'], $temp_file_path);
+        Clipbucket_db::getInstance()->insert(tbl('video_subtitle'), ['videoid', 'number', 'title'], [$video['videoid'], $display_count, mysql_clean($_POST['title'])], null, true);
+        sessionMessageHandler::add_message(lang('subtitle_uploaded_successfully'), 'm');
+        $success = true;
+    }
+
+    $response['success'] = $success;
+    $response['msg'] = getTemplateMsg();
+    echo json_encode($response);
+}
 include('functions_db.php');
 include('functions_filter.php');
 include('functions_player.php');

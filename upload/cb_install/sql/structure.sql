@@ -1073,7 +1073,7 @@ CREATE TABLE IF NOT EXISTS `{tbl_prefix}tools_histo_log`
     `id_log`   INT          NOT NULL AUTO_INCREMENT,
     `id_histo` INT          NOT NULL,
     `datetime` DATETIME     NOT NULL,
-    `message`  VARCHAR(256) NOT NULL,
+    `message`  TEXT         NOT NULL,
     PRIMARY KEY (`id_log`)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4

@@ -44,7 +44,7 @@ function deleteSubtitle(number) {
             data: {number: number, videoid: videoid},
             dataType: 'json',
             success: function (result) {
-                $('#subtitiles').html(result['template']);
+                $('#subtitles').html(result['template']);
                 $('.close').click();
                 $('.page-content').prepend(result['msg']);
             }
@@ -86,13 +86,16 @@ function cancelEditTitle(number) {
 }
 
 function saveSubtitle(number) {
+
+    showSpinner();
     $.ajax({
-        url: baseurl+"actions/subtitle_edit.php",
+        url: baseurl+"actions/admin_subtitle_edit.php",
         type: "POST",
         data: {title: $('#edit_sub_' + number).val(), videoid: videoid, number: number},
         dataType: 'json',
         success: function (result) {
-            $('#subtitiles').html(result['template']);
+            $('#subtitles').html(result['template']);
+            hideSpinner();
             $('.close').click();
             $('.page-content').prepend(result['msg']);
         }

@@ -1,6 +1,6 @@
 {
   "version":"5.5.2",
-  "revision":"89",
+  "revision":"94",
   "status":"stable",
   "detail":[
     {
@@ -13,6 +13,7 @@
         ,"Implement status refresh on conversion queue manager"
         ,"Implement default homepage config per user level"
         ,"Implement public videos page"
+        ,"Implement subtitle upload"
         ,"Refactor conversion queue manager"
         ,"Refactor user levels management"
         ,"Add empty page title error"
@@ -39,6 +40,7 @@
         ,"Fix server configuration warning when using Apache"
         ,"Fix pages acces when updating from before 5.5.1 - #275"
         ,"Fix TMDB import"
+        ,"Fix code & database update status on dashboard"
       ]
     },
     {
@@ -51,6 +53,7 @@
         ,"Implement modern video style on channel page"
         ,"Implement meta tags for social networks"
         ,"Implement public videos page"
+        ,"Implement subtitle upload"
         ,"Refactor friends requests & management"
         ,"Refactor collection selections"
         ,"Update video & photos management pages display"
@@ -90,6 +93,8 @@
         ,"Fix filter error on outdated DB"
         ,"Fix orphan photo saving"
         ,"Fix undefined constant <i>(#633)</i>"
+        ,"Fix TMDB search"
+        ,"Fix processing videos display"
       ]
     },
     {
@@ -126,6 +131,7 @@
         ,"Fix new installation errors <i>(#592)</i>"
         ,"Fix revision 5.5.1 - #334 DB upgrade"
         ,"Fix possible discord error during installation process"
+        ,"Fix docker setup with root user"
       ]
     },
     {
@@ -142,9 +148,16 @@
       ]
     },
     {
+      "title": "Player",
+      "description": [
+        "Fix ChromeCast button"
+      ]
+    },
+    {
       "title": "Internal components",
       "description": [
         "Update Global Announcement to version 2.0.6"
+        ,"Update VideoJS player to version 2.1.2"
       ]
     },
     {

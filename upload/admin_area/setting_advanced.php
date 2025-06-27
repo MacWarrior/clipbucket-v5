@@ -43,8 +43,7 @@ if (isset($_POST['update'])) {
         'enable_chunk_upload',
         'photo_enable_nsfw_check',
         'video_enable_nsfw_check',
-        'store_guest_session',
-
+        'store_guest_session'
     ];
 
     $config_booleans_to_refactor = [
@@ -146,7 +145,9 @@ if (isset($_POST['update'])) {
         'photo_thumb_width',
         'photo_thumb_height',
         'photo_med_width',
-        'photo_med_height'
+        'photo_med_height',
+
+        'maximum_allowed_subtitle_size'
     ];
 
     foreach (Upload::getInstance()->get_upload_options() as $optl) {
@@ -161,6 +162,7 @@ if (isset($_POST['update'])) {
         'max_photo_size',
         'chunk_upload_size',
         'cloudflare_upload_limit',
+        'option_maximum_allowed_subtitle_size'
     ];
 
     foreach ($rows as $field) {

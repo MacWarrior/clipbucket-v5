@@ -2,7 +2,7 @@
 /**
  *                                      ,--.""
  *  Come on guys, we're         __,----( o ))
- *  gonna misse the mi...      ,'--.      , (
+ *  gonna miss the mi...       ,'--.      , (
  *  the mi...           -"",:-(    o ),-'/  ;
  *  the migration.        ( o) `o  _,'\ / ;(
  *                         `-;_-<'\_|-'/ '  )
@@ -60,7 +60,7 @@ class Migration
             $this->start();
         } catch (mysqli_sql_exception $e) {
             Clipbucket_db::getInstance()->rollback();
-            if( System::isInDev() ){
+            if (System::isInDev()) {
                 e('ERROR : ' . $e->getMessage());
                 DiscordLog::sendDump('ERROR : ' . $e->getMessage());
             }
