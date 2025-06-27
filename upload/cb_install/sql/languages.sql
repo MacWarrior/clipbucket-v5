@@ -1640,4 +1640,5 @@ VALUES ('admin_setting'),
        ('subtitle_already_exists'),
        ('alert_update_core_already_ongoing'),
        ('alert_update_db_already_ongoing'),
-       ('alert_video_conversion_ongoing');
+       ('alert_video_conversion_ongoing'),
+       ('miscellaneous_options');
