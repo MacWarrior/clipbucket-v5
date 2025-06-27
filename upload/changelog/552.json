@@ -1,6 +1,6 @@
 {
   "version":"5.5.2",
-  "revision":"94",
+  "revision":"95",
   "status":"stable",
   "detail":[
     {
@@ -58,6 +58,7 @@
         ,"Refactor collection selections"
         ,"Update video & photos management pages display"
         ,"Update video edition display"
+        ,"Update photo upload & edition display"
         ,"Hide banned users from channels page, search results & popular user"
         ,"Fix collection privacy on photos page"
         ,"Fix visual editor theme change <i>(#590)</i>"
