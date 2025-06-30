@@ -59,7 +59,7 @@ function get_readable_filesize(bytes) {
 function getModalUploadSubtitle(video_id) {
     showSpinner();
     $.ajax({
-        url: baseurl + "actions/admin_popin_upload_subtitle.php",
+        url: "actions/subtitle_popin_upload.php",
         type: "POST",
         data: {videoid: video_id},
         dataType: 'json',

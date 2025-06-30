@@ -29,7 +29,7 @@ $(function () {
         if (!elem.parent().hasClass('disabled')) {
             var id_tool = $(this).data('id');
             $.ajax({
-                url: baseurl+"actions/launch_tool.php",
+                url: "actions/tool_launch.php",
                 type: "POST",
                 data: {id_tool: id_tool},
                 dataType: 'json',
@@ -56,7 +56,7 @@ $(function () {
         if (!$(this).parent().hasClass('disabled')) {
             var id_tool = elem.data('id');
             $.ajax({
-                url: baseurl+"actions/stop_tool.php",
+                url: "actions/tool_stop.php",
                 type: "POST",
                 data: {id_tool: id_tool},
                 dataType: 'json',
@@ -74,7 +74,7 @@ $(function () {
         if (!$(this).parent().hasClass('disabled')) {
             var id_tool = elem.data('id');
             $.ajax({
-                url: baseurl+"actions/force_tool_to_error.php",
+                url: "actions/tool_force_to_error.php",
                 type: "POST",
                 data: {id_tool: id_tool},
                 dataType: 'json',
@@ -94,7 +94,7 @@ $(function () {
         if (!$(this).parent().hasClass('disabled')) {
             var id_tool = elem.data('id');
             $.ajax({
-                url: baseurl+"actions/show_tool_log.php",
+                url: "actions/tool_show_log.php",
                 type: "POST",
                 data: {id_tool: id_tool},
                 dataType: 'json',

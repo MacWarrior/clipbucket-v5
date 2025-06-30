@@ -1071,7 +1071,7 @@ function addErrClass(obj, msg, override = false, scroll = true, tclass = false) 
 function getModalUploadSubtitle(video_id) {
     showSpinner();
     $.ajax({
-        url: baseurl+"actions/popin_upload_subtitle.php",
+        url: "actions/subtitle_popin_upload.php",
         type: "POST",
         data: {videoid: video_id },
         dataType: 'json',
