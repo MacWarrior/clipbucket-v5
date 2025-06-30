@@ -1641,4 +1641,6 @@ VALUES ('admin_setting'),
        ('alert_update_core_already_ongoing'),
        ('alert_update_db_already_ongoing'),
        ('alert_video_conversion_ongoing'),
-       ('miscellaneous_options');
+       ('miscellaneous_options'),
+       ('tools_seems_stuck_since_mark_as_failed'),
+       ('confirm_mark_as_failed');

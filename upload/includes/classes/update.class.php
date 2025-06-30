@@ -394,6 +394,15 @@ class Update
         }
 
         assign('current_updating', $current_updating);
+        $lastStart = 0;
+        assign('id', null);
+        if ($current_updating== 'db') {
+            //getting current execution time
+            $db_tool = AdminTool::getUpdateDbTool();
+            $lastStart = $db_tool->getLastStart();
+            assign('id', $db_tool->getId());
+        }
+        assign('lastStart', $lastStart);
         assign('launch_wip', $this->isWIPFile());
 
         assign('need_core_update', false);
