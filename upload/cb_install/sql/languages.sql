@@ -1641,4 +1641,5 @@ VALUES ('admin_setting'),
        ('alert_update_core_already_ongoing'),
        ('alert_update_db_already_ongoing'),
        ('alert_video_conversion_ongoing'),
-       ('miscellaneous_options');
+       ('miscellaneous_options'),
+       ('add_member');

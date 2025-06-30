@@ -2509,3 +2509,7 @@ INSERT INTO `{tbl_prefix}languages_translations` (`id_language_key`, `translatio
 VALUES ((SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE `language_key` = 'alert_video_conversion_ongoing'), 'Une conversion vidéo est en cours, voulez-vous continuer la mise à jour ?', @language_id);
 INSERT INTO `{tbl_prefix}languages_translations` (`id_language_key`, `translation`, `language_id`)
 VALUES ((SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE `language_key` = 'miscellaneous_options'), 'Options diverses', @language_id);
+INSERT INTO `{tbl_prefix}languages_translations` (`id_language_key`, `translation`, `language_id`)
+VALUES ((SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE `language_key` = 'add_member'), 'Créer un nouvel utilisateur', @language_id);
+INSERT INTO `{tbl_prefix}languages_translations` (`id_language_key`, `translation`, `language_id`)
+VALUES ((SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE `language_key` = 'new_mem_added'), 'Le nouvel utilisateur a été correctement ajouté', @language_id);
