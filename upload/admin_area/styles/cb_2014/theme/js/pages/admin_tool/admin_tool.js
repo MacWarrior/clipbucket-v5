@@ -124,7 +124,7 @@ $(function () {
 
         e.preventDefault();
         $.ajax({
-            url: baseurl+"actions/update_frequency_tool.php",
+            url: "actions/tool_update_frequency.php",
             type: "POST",
             data: {id_tool: $(input).attr('data-id'), frequency: value},
             dataType: 'json',
@@ -159,7 +159,7 @@ $(function () {
 
         e.preventDefault();
         $.ajax({
-            url: baseurl+"actions/update_frequency_disabled_tool.php",
+            url: "actions/tool_update_frequency_disabled.php",
             type: "POST",
             data: {id_tool: $(input).attr('data-id'), is_disabled: !value},
             dataType: 'json',

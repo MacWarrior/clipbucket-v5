@@ -23,7 +23,7 @@ function regenerateThumbs(videoid) {
 function deleteResolution(resolution) {
     if (confirm_it(text_confirm_vid_file.replace('%s', resolution))) {
         $.ajax({
-            url: baseurl+"actions/resolution_delete.php",
+            url: "actions/resolution_delete.php",
             type: "POST",
             data: {resolution: resolution, videoid: videoid},
             dataType: 'json',
@@ -39,7 +39,7 @@ function deleteResolution(resolution) {
 function deleteSubtitle(number) {
     if (confirm_it(text_confirm_sub_file.replace('%s', number))) {
         $.ajax({
-            url: baseurl+"actions/subtitle_delete.php",
+            url: "actions/subtitle_delete.php",
             type: "POST",
             data: {number: number, videoid: videoid},
             dataType: 'json',
