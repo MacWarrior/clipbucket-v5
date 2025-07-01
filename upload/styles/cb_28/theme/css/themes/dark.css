@@ -204,7 +204,7 @@ html.dark {
     }
 
     /* Shadows */
-    .item-video:after,
+    .item-video:not(:has(.slider-video-container)):after,
     .item-photo:after,
     .item-channel:after,
     .collection-item:after,

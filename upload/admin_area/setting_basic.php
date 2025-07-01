@@ -420,7 +420,8 @@ if (isset($_POST['update'])) {
         'max_collection_categories',
         'channel_video_style',
         'enable_public_video_page',
-        'can_upload_subtitles'
+        'can_upload_subtitles',
+        'videos_video_style'
     ];
 
     //Numeric Array

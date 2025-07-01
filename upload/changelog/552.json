@@ -1,6 +1,6 @@
 {
   "version":"5.5.2",
-  "revision":"95",
+  "revision":"97",
   "status":"stable",
   "detail":[
     {
@@ -54,6 +54,7 @@
         ,"Implement meta tags for social networks"
         ,"Implement public videos page"
         ,"Implement subtitle upload"
+        ,"Implement video bloc style on videos page"
         ,"Refactor friends requests & management"
         ,"Refactor collection selections"
         ,"Update video & photos management pages display"
