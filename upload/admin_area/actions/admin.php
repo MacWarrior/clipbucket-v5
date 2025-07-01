@@ -2,12 +2,6 @@
 define('THIS_PAGE', 'ajax');
 require_once dirname(__FILE__, 3) . '/includes/admin_config.php';
 
-if (!User::getInstance()->hasAdminAccess()) {
-    e(lang('insufisant_privilege'));
-    echo json_encode(['err'=>errorhandler::getInstance()->get_error()]);
-    die;
-}
-
 $mode = $_POST['mode'];
 switch ($mode) {
     case 'add_sticky':
