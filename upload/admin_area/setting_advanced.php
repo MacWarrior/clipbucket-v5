@@ -247,7 +247,7 @@ if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.0', '367', true)) {
 }
 if (!empty($tool)) {
     $id_tool_automate = $tool['id_tool'];
-    $cron_line = '* * * * * ' . System::get_binaries('php_cli') . ' -q ' . DirPath::get('actions') . 'launch_tool.php id_tool=' . (int)$id_tool_automate;
+    $cron_line = '* * * * * ' . System::get_binaries('php_cli') . ' -q ' . DirPath::get('admin_actions') . 'tool_launch.php id_tool=' . (int)$id_tool_automate;
 }
 assign('cron_copy_paste', $cron_line ?? '');
 

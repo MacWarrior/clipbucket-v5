@@ -57,7 +57,9 @@
                 {/if}
                 commented on a {$comment_type} named <a href="{$comment_obj_baseurl|cat:$comment.type_id}" title="{display_clean($comment.title)}">{display_clean($comment.title)|truncate:40}</a>
                 on {$comment.date_added|date_format} ({$comment.date_added|niceTime})
-                <div class="alert alert-info" style="padding:3px;margin-bottom:0;margin-top:3px;">{Comments::getClean($comment.comment)}</div>
+                <div class="alert {if $comment.spam_votes==0}alert-info{else}alert-danger{/if}" id="comment_{$comment.comment_id}" style="padding:3px;margin-bottom:0;margin-top:3px; ">
+                    {Comments::getClean($comment.comment)}
+                </div>
             </td>
             <td>
                 <div class="dropdown" style="text-align:center;">
@@ -67,13 +69,10 @@
                             <a role="menuitem" tabindex="-1" href="{$comment_obj_baseurl|cat:$comment.type_id}" target="_blank">{lang code='watch'}</a>
                         </li>
                         {if $comment.userid != user_id()}
-                        <li role="presentation">
-                        {if $comment.spam_votes==0}
-                            <a role="menuitem" tabindex="-1" href="#" onclick='admin_spam_comment({$comment.comment_id});'>Mark {lang code='spam'}</a>
-                        {else}
-                            <a role="menuitem" tabindex="-1" href="#" onclick='admin_remove_spam({$comment.comment_id});'>{lang code='remove'} {lang code='spam'}</a>
-                        {/if}
-                        </li>
+                            <li role="presentation">
+                                <a role="menuitem" style="{if $comment.spam_votes!=0}display: none;{/if}" id="spam_comment_{$comment.comment_id}" tabindex="-1" href="#" onclick='admin_spam_comment({$comment.comment_id});'>Mark {lang code='spam'}</a>
+                                <a role="menuitem" style="{if $comment.spam_votes==0}display: none;{/if}" id="remove_spam_comment_{$comment.comment_id}" tabindex="-1" href="#" onclick='admin_remove_spam({$comment.comment_id});'>{lang code='remove'} {lang code='spam'}</a>
+                            </li>
                         {/if}
 
                         <li role="presentation"><a role="menuitem" tabindex="-1" href="#" onclick="delete_comment('{$comment.comment_id}'); window.location.reload(); return false;">{lang code='delete'}</a></li>

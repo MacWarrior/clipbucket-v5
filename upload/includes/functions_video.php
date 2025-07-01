@@ -741,6 +741,7 @@ function update_video_by_filename($file_name, $fields, $values)
  */
 function activate_video_with_file($vid): void
 {
+    DiscordLog::sendDump('fjneziofhoize');
     $vdetails = get_video_basic_details($vid);
     $file_name = $vdetails['file_name'];
     $results = Clipbucket_db::getInstance()->select(tbl('conversion_queue'), '*', " cqueue_name='$file_name' AND cqueue_conversion='yes'");

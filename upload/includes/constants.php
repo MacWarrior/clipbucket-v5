@@ -70,6 +70,14 @@ class DirPath
                 $url = 'includes/' . $dir_name;
                 break;
 
+            case 'core':
+                $path = $root_directory . DIRECTORY_SEPARATOR . 'includes' . DIRECTORY_SEPARATOR . 'controller'. DIRECTORY_SEPARATOR .$dir_name;
+                $url = 'includes/controller/' . $dir_name;
+                break;
+            case 'admin_actions':
+                $path = $root_directory . DIRECTORY_SEPARATOR . 'admin_area' . DIRECTORY_SEPARATOR . 'actions';
+                break;
+
             case 'theme_css':
             case 'theme_js':
             case 'theme_image':

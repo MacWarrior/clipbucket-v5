@@ -220,7 +220,7 @@ class AdminTool
      */
     public static function launchCli(int $id_tool): void
     {
-        $cmd = System::get_binaries('php_cli').' -q '.DirPath::get('actions') . 'launch_tool.php id_tool='.$id_tool;
+        $cmd = System::get_binaries('php_cli').' -q '.DirPath::get('admin_actions') . 'tool_launch.php id_tool='.$id_tool;
         if (stristr(PHP_OS, 'WIN')) {
             $complement = '';
         } elseif (stristr(PHP_OS, 'darwin')) {

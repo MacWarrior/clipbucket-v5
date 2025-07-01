@@ -285,13 +285,13 @@ class Comments
             return false;
         }
 
-        if( $comment['userid'] == $user_id || (Network::get_remote_ip() == $comment['comment_ip']) ){
+        if( $comment['userid'] == $user_id || ( empty($comment['userid']) && config('anonym_comments') && Network::get_remote_ip() == $comment['comment_ip']) ){
             e(lang('no_own_commen_spam'));
             return false;
         }
 
         $spam_voters = $comment['spam_voters'];
-        $already_voted = strpos('|'.$user_id.'|', $spam_voters) !== false;
+        $already_voted = str_contains($spam_voters??'','|' . $user_id . '|');
         if( $already_voted ){
             e(lang('already_spammed_comment'));
             return false;

@@ -3,7 +3,7 @@ var max_try = 2;
 
 function regenerateThumbs(videoid) {
     $.ajax({
-        url: baseurl+"actions/regenerate_thumbs.php",
+        url: "actions/thumbs_regenerate.php",
         type: "post",
         data: {videoid: videoid},
         dataType: 'json',
@@ -22,7 +22,7 @@ function regenerateThumbs(videoid) {
 
 function delete_thumb(videoid, num, type) {
     $.ajax({
-        url: baseurl+"actions/delete_thumbs.php",
+        url: "actions/thumbs_delete.php",
         type: "post",
         dataType: 'json',
         data: {videoid: videoid, num: num, type: type}
