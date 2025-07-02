@@ -80,7 +80,7 @@
 
                 <div class="formSection clear">
                     <h4>{lang code='movie_infos'} <i class="glyphicon glyphicon-chevron-down pull-right"></i></h4>
-                    <div class="sectionContent hidden">
+                    <div class="sectionContent " style="display: none;">
                         {foreach $requiredFields.fields as $field}
                             {$field.class='form-control'}
                             {$field.notShowSeprator='yes'}
@@ -98,9 +98,9 @@
 
                 {if $custom_flag && $custom_fields!=""}
                     {ANCHOR place="before_upload_form_custom_fields"}
-                    <div class="formSection clear">
+                    <div class="formSection clear" style="display: none;">
                         <h4>{$custom_fields.group_name} <i class="glyphicon glyphicon-chevron-down pull-right"></i></h4>
-                        <div class="sectionContent hidden">
+                        <div class="sectionContent ">
                             {foreach $custom_fields.fields as $field}
                             <div class="form-group">
                             {$field.class='form-control'}
@@ -129,7 +129,7 @@
                 {if config('enable_country_video_field') == 'yes' || config('enable_location_video_field') == 'yes' || config('enable_recorded_date_video_field') == 'yes' }
                 <div class="formSection clear">
                     <h4>{$dateAndLocation.group_name} <i class="glyphicon glyphicon-chevron-down pull-right"></i></h4>
-                    <div class="sectionContent hidden">
+                    <div class="sectionContent " style="display: none;">
                         {foreach $dateAndLocation.fields as $field}
                         <div class="form-group">
                         {$field.class='form-control'}
@@ -157,7 +157,7 @@
                 {ANCHOR place="before_upload_form_sharing_fields"}
                 <div class="formSection clear">
                     <h4>{$sharingOptions.group_name}<i class="glyphicon glyphicon-chevron-down pull-right"></i></h4>
-                    <div class="sectionContent hidden">
+                    <div class="sectionContent " style="display: none;">
                         {foreach $sharingOptions.fields as $field}
                             <div class="form-group">
                             {$field.class='form-control'}
@@ -199,6 +199,8 @@
         </div>
         {if config('enable_video_categories') != 'no'}
             <div class="col-md-4 uploadFormSidebarDiv">
+                <div class="clearfix player-holder">
+                </div>
                 {ANCHOR place="before_upload_form_categories_field"}
                 <h4>{$categories.title}</h4>
                 <small>{$categories.hint_1}</small>

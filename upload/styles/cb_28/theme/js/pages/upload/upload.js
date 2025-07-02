@@ -1,5 +1,6 @@
 var uploader;
-
+var ids_to_check_progress = [];
+var intervalId;
 $(document).ready(function(){
     var uploadurl = baseurl+'actions/file_uploader.php';
     if(uploadScriptPath !== ''){
@@ -278,10 +279,10 @@ $(document).ready(function(){
                 e.preventDefault();
                 if($(this).find('i').hasClass('glyphicon-chevron-down')){
                     $(this).find('i').removeClass('glyphicon-chevron-down').addClass('glyphicon-chevron-up');
-                    $(this).next().toggleClass('hidden');
+                    $(this).next().slideDown('slow');
                 }else{
                     $(this).find('i').removeClass('glyphicon-chevron-up').addClass('glyphicon-chevron-down');
-                    $(this).next().toggleClass('hidden');
+                    $(this).next().slideUp('slow');
                 }
             }
         });
@@ -352,7 +353,7 @@ $(document).ready(function(){
                     hiddenField_videoId.id = 'videoid_' + index;
                     hiddenField_videoId.type = 'hidden';
                     hiddenField_videoId.value = serverResponse.videoid;
-
+                    ids_to_check_progress.push(serverResponse.videoid);
                     if ($('#' + hiddenField_videoId.id).length === 0) {
                         $('#tab' + index + ' form').append(hiddenField_videoId);
                     }
@@ -365,6 +366,7 @@ $(document).ready(function(){
                     }
 
                     $('#tab'+index+' .saveVideoDetails').removeAttr('disabled');
+                    getUpdate();
                 }
             }
             index++
@@ -543,6 +545,46 @@ function saveInfoTmdb(tmdb_video_id) {
         },
     });
 }
+
+function getUpdate() {
+    clearInterval(intervalId);
+    if (ids_to_check_progress.length > 0) {
+        intervalId = setInterval(function () {
+            $.post({
+                url: baseurl+'actions/progress_video.php',
+                dataType: 'json',
+                data: {
+                    ids: ids_to_check_progress,
+                    output: 'watch_video'
+                },
+                success: function (response) {
+                    var data = response.data;
+
+                    data.videos.forEach(function (video) {
+                        if (video.status.toLowerCase() === 'processing') {
+                            //update %
+                            var process_div = $('.processing[data-id="' + video.videoid + '"]');
+                            //if process don't exist : get thumb + process div
+                            if (process_div.length === 0) {
+                                // $('.player-holder').html(video.html);
+                                $('input[id^="videoid_"][value="'+video.videoid+'"]').parents('.tab-pane.uploadFormContainer').find('.player-holder').html(video.html);
+                            } else {
+                                process_div.find('span').html(video.percent + '%');
+                            }
+                        } else {
+                            $('input[id^="videoid_"][value="'+video.videoid+'"]').parents('.tab-pane.uploadFormContainer').find('.player-holder').html(video.html);
+                        }
+                    });
+
+                    if (response.all_complete) {
+                        clearInterval(intervalId);
+                    }
+                }
+            })
+        }, 30000);
+    }
+}
+
 
 function pageInfoTmdb(page, videoid) {
     let sort_type;

@@ -53,7 +53,7 @@
                             {ANCHOR place="before_edit_video_form_thumbs"}
                             <div class="formSection clear">
                                 <h4>{lang code='thumbs'} <i class="glyphicon glyphicon-chevron-down pull-right"></i></h4>
-                                <div class="sectionContent hidden">
+                                <div class="sectionContent " style="display: none;">
                                     <div class="row">
                                         <h5>{lang code="extracted_thumbs"}</h5>
                                         {foreach from=$vidthumbs item=vid_thumb}
@@ -97,7 +97,7 @@
                             {if config('enable_video_poster') == 'yes'}
                                 <div class="formSection clear">
                                     <h4>{lang('posters')|ucfirst} <i class="glyphicon glyphicon-chevron-down pull-right"></i></h4>
-                                    <div class="sectionContent hidden">
+                                    <div class="sectionContent " style="display: none;">
                                         <div class="row">
                                             {foreach from=$vidthumbs_poster item=vid_thumb}
                                                 <div class="col-md-3">
@@ -126,7 +126,7 @@
                             {if config('enable_video_backdrop') == 'yes'}
                                 <div class="formSection clear">
                                     <h4>{lang('backdrop')|ucfirst} <i class="glyphicon glyphicon-chevron-down pull-right"></i></h4>
-                                    <div class="sectionContent hidden">
+                                    <div class="sectionContent " style="display: none;">
                                         <div class="row">
                                             {foreach from=$vidthumbs_backdrop item=vid_thumb}
                                                 <div class="col-md-3">
@@ -159,7 +159,7 @@
                                 {if config('enable_video_categories') != 'no'}
                                     {ANCHOR place="before_upload_form_categories_field"}
                                     <h4>{$categories.title}<i class="glyphicon glyphicon-chevron-down pull-right"></i></h4>
-                                    <div class="sectionContent hidden">
+                                    <div class="sectionContent " style="display: none;">
                                         <small>{$categories.hint_1}</small>
                                         <div class="categoriesContainer">
                                             {$categories.label_class='checkbox'}
@@ -172,7 +172,7 @@
                             </div>
                             <div class="formSection clear">
                                 <h4>{lang code='movie_infos'} <i class="glyphicon glyphicon-chevron-down pull-right"></i></h4>
-                                <div class="sectionContent hidden">
+                                <div class="sectionContent " style="display: none;">
                                     {foreach $requiredFields.fields as $field}
                                         <div class="form-group">
                                             {$field.class='form-control'}
@@ -192,7 +192,7 @@
                                 {ANCHOR place="before_upload_form_custom_fields"}
                                 <div class="formSection clear">
                                     <h4>{$custom_fields.group_name} <i class="glyphicon glyphicon-chevron-down pull-right"></i></h4>
-                                    <div class="sectionContent hidden">
+                                    <div class="sectionContent " style="display: none;">
                                         {foreach $custom_fields.fields as $field}
                                             <div class="form-group">
                                                 {$field.class='form-control'}
@@ -221,7 +221,7 @@
                             {if config('enable_country_video_field') == 'yes' || config('enable_location_video_field') == 'yes' || config('enable_recorded_date_video_field') == 'yes' }
                                 <div class="formSection clear">
                                     <h4>{$dateAndLocation.group_name} <i class="glyphicon glyphicon-chevron-down pull-right"></i></h4>
-                                    <div class="sectionContent hidden">
+                                    <div class="sectionContent " style="display: none;">
                                         {foreach $dateAndLocation.fields as $field}
                                             <div class="form-group">
                                                 {$field.class='form-control'}
@@ -249,7 +249,7 @@
                             {ANCHOR place="before_upload_form_sharing_fields"}
                             <div class="formSection clear">
                                 <h4>{$sharingOptions.group_name}<i class="glyphicon glyphicon-chevron-down pull-right"></i></h4>
-                                <div class="sectionContent hidden">
+                                <div class="sectionContent " style="display: none;">
                                     {foreach $sharingOptions.fields as $field}
                                         {if $field.type == 'hidden' && $field.id != 'video_users'}
                                             {$formObj->createField($field)}
@@ -283,7 +283,7 @@
                             {if config('player_subtitles') && (!empty($subtitle_list) || config('can_upload_subtitles')=='yes')}
                                 <div class="formSection clear">
                                     <h4>{lang code='video_subtitle_management'}<i class="glyphicon glyphicon-chevron-down pull-right"></i></h4>
-                                    <div class="sectionContent hidden" id="subtitles">
+                                    <div class="sectionContent " style="display: none;" id="subtitles">
                                         {include file="$style_dir/blocks/subtitle_list.html" videoid=$v.videoid vstatus=$v.status}
                                     </div>
                                 </div>
