@@ -200,6 +200,7 @@
         {if config('enable_video_categories') != 'no'}
             <div class="col-md-4 uploadFormSidebarDiv">
                 <div class="clearfix player-holder">
+                    <img src="{default_thumb('url')}" />
                 </div>
                 {ANCHOR place="before_upload_form_categories_field"}
                 <h4>{$categories.title}</h4>

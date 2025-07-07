@@ -274,18 +274,7 @@ $(document).ready(function(){
             index++;
         }
 
-        $('.formSection h4').off('click').on({
-            click: function(e){
-                e.preventDefault();
-                if($(this).find('i').hasClass('glyphicon-chevron-down')){
-                    $(this).find('i').removeClass('glyphicon-chevron-down').addClass('glyphicon-chevron-up');
-                    $(this).next().slideDown('slow');
-                }else{
-                    $(this).find('i').removeClass('glyphicon-chevron-up').addClass('glyphicon-chevron-down');
-                    $(this).next().slideUp('slow');
-                }
-            }
-        });
+        slideFormSection();
 
         $(".cancel_button").on('click',function(e) {
             e.preventDefault();
@@ -505,7 +494,7 @@ function getInfoTmdb(videoid, type, video_title, page,sort, sort_order) {
     });
 }
 
-function saveInfoTmdb(tmdb_video_id) {
+function saveInfoTmdb(tmdb_video_id, type, videoid) {
     showSpinner();
     $.ajax({
         url: baseurl+"actions/import_tmdb.php",
@@ -526,7 +515,7 @@ function saveInfoTmdb(tmdb_video_id) {
                             file.data[key] = value;
                             var input = $('#tab' + index).find('[name="' + key + '"]').first();
                             if (input.length > 0) {
-                                if (key.includes('tag')) {
+                                if (key.includes('tag') && typeof value === 'string') {
                                     var tags = value.split(',');
                                     $.each(tags, function (key, value) {
                                         if (value !== '') {
@@ -555,7 +544,9 @@ function getUpdate() {
                 dataType: 'json',
                 data: {
                     ids: ids_to_check_progress,
-                    output: 'watch_video'
+                    output: 'watch_video',
+                    display_thumbs: true,
+                    display_subtitles: true
                 },
                 success: function (response) {
                     var data = response.data;
@@ -566,8 +557,15 @@ function getUpdate() {
                             var process_div = $('.processing[data-id="' + video.videoid + '"]');
                             //if process don't exist : get thumb + process div
                             if (process_div.length === 0) {
-                                // $('.player-holder').html(video.html);
                                 $('input[id^="videoid_"][value="'+video.videoid+'"]').parents('.tab-pane.uploadFormContainer').find('.player-holder').html(video.html);
+                                if (typeof video.thumbs !== 'undefined' && video.thumbs.length > 0) {
+                                    $(video.thumbs).insertBefore($('input[id^="videoid_"][value="'+video.videoid+'"]').parent().find('.pad-bottom-sm.text-right'));
+                                }
+                                if (typeof video.subtitles !== 'undefined' && video.subtitles.length > 0) {
+                                    $(video.subtitles).insertBefore($('input[id^="videoid_"][value="'+video.videoid+'"]').parent().find('.pad-bottom-sm.text-right'));
+                                }
+                                slideFormSection();
+
                             } else {
                                 process_div.find('span').html(video.percent + '%');
                             }
@@ -605,4 +603,19 @@ function showSpinner() {
 
 function hideSpinner() {
     $('.taskHandler').hide();
+}
+
+function slideFormSection(){
+    $('.formSection h4').off('click').on({
+        click: function(e){
+            e.preventDefault();
+            if($(this).find('i').hasClass('glyphicon-chevron-down')){
+                $(this).find('i').removeClass('glyphicon-chevron-down').addClass('glyphicon-chevron-up');
+                $(this).next().slideDown('slow');
+            }else{
+                $(this).find('i').removeClass('glyphicon-chevron-up').addClass('glyphicon-chevron-down');
+                $(this).next().slideUp('slow');
+            }
+        }
+    });
 }
