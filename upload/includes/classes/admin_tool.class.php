@@ -1331,5 +1331,19 @@ class AdminTool
         }
         return $core_tool;
     }
+
+    /**
+     * @return AdminTool
+     * @throws Exception
+     */
+    public static function getLastestToolUpdate()
+    {
+        $core_tool = self::getUpdateCoreTool();
+        $db_toool = self::getUpdateDbTool();
+        if ( $core_tool->getLastStart() > $db_toool->getLastStart() ) {
+            return $core_tool;
+        }
+        return $db_toool;
+    }
 }
 
