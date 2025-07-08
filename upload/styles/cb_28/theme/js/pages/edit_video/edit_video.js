@@ -43,10 +43,10 @@ $(function () {
             e.preventDefault();
             if($(this).find('i').hasClass('glyphicon-chevron-down')){
                 $(this).find('i').removeClass('glyphicon-chevron-down').addClass('glyphicon-chevron-up');
-                $(this).next().toggleClass('hidden');
+                $(this).next().slideDown('slow');
             }else{
                 $(this).find('i').removeClass('glyphicon-chevron-up').addClass('glyphicon-chevron-down');
-                $(this).next().toggleClass('hidden');
+                $(this).next().slideUp('slow');
             }
         }
     });
@@ -134,7 +134,7 @@ function getInfoTmdb(video_id, type, video_title, page,sort, sort_order,selected
     });
 }
 
-function saveInfoTmdb(tmdb_video_id, type) {
+function saveInfoTmdb(tmdb_video_id, type, videoid) {
     showSpinner();
     $.ajax({
         url: baseurl+"actions/import_tmdb.php",

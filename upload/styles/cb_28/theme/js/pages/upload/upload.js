@@ -1,5 +1,6 @@
 var uploader;
-
+var ids_to_check_progress = [];
+var intervalId;
 $(document).ready(function(){
     var uploadurl = baseurl+'actions/file_uploader.php';
     if(uploadScriptPath !== ''){
@@ -273,18 +274,7 @@ $(document).ready(function(){
             index++;
         }
 
-        $('.formSection h4').off('click').on({
-            click: function(e){
-                e.preventDefault();
-                if($(this).find('i').hasClass('glyphicon-chevron-down')){
-                    $(this).find('i').removeClass('glyphicon-chevron-down').addClass('glyphicon-chevron-up');
-                    $(this).next().toggleClass('hidden');
-                }else{
-                    $(this).find('i').removeClass('glyphicon-chevron-up').addClass('glyphicon-chevron-down');
-                    $(this).next().toggleClass('hidden');
-                }
-            }
-        });
+        slideFormSection();
 
         $(".cancel_button").on('click',function(e) {
             e.preventDefault();
@@ -352,7 +342,7 @@ $(document).ready(function(){
                     hiddenField_videoId.id = 'videoid_' + index;
                     hiddenField_videoId.type = 'hidden';
                     hiddenField_videoId.value = serverResponse.videoid;
-
+                    ids_to_check_progress.push(serverResponse.videoid);
                     if ($('#' + hiddenField_videoId.id).length === 0) {
                         $('#tab' + index + ' form').append(hiddenField_videoId);
                     }
@@ -365,6 +355,7 @@ $(document).ready(function(){
                     }
 
                     $('#tab'+index+' .saveVideoDetails').removeAttr('disabled');
+                    getUpdate();
                 }
             }
             index++
@@ -503,7 +494,7 @@ function getInfoTmdb(videoid, type, video_title, page,sort, sort_order) {
     });
 }
 
-function saveInfoTmdb(tmdb_video_id) {
+function saveInfoTmdb(tmdb_video_id, type, videoid) {
     showSpinner();
     $.ajax({
         url: baseurl+"actions/import_tmdb.php",
@@ -524,7 +515,7 @@ function saveInfoTmdb(tmdb_video_id) {
                             file.data[key] = value;
                             var input = $('#tab' + index).find('[name="' + key + '"]').first();
                             if (input.length > 0) {
-                                if (key.includes('tag')) {
+                                if (key.includes('tag') && typeof value === 'string') {
                                     var tags = value.split(',');
                                     $.each(tags, function (key, value) {
                                         if (value !== '') {
@@ -543,6 +534,60 @@ function saveInfoTmdb(tmdb_video_id) {
         },
     });
 }
+
+function getUpdate() {
+    clearInterval(intervalId);
+    if (ids_to_check_progress.length > 0) {
+        intervalId = setInterval(function () {
+            $.post({
+                url: baseurl+'actions/progress_video.php',
+                dataType: 'json',
+                data: {
+                    ids: ids_to_check_progress,
+                    output: 'watch_video',
+                    display_thumbs: true,
+                    display_subtitles: true
+                },
+                success: function (response) {
+                    var data = response.data;
+
+                    data.videos.forEach(function (video) {
+                        if ( video.percent > 0 || typeof video.percent === "undefined") {
+                            if ($('input[id^="videoid_"][value="' + video.videoid + '"]').parent().find('[name="default_thumb"]').length === 0 &&  typeof video.thumbs !== 'undefined' && video.thumbs.length > 0) {
+                                const thumbs = $(video.thumbs).hide();
+                                thumbs.insertBefore($('input[id^="videoid_"][value="' + video.videoid + '"]').parent().find('.pad-bottom-sm.text-right'));
+                                thumbs.slideDown('slow');
+                            }
+                            if ($('input[id^="videoid_"][value="' + video.videoid + '"]').parent().find('#subtitles').length === 0 && typeof video.subtitles !== 'undefined' && video.subtitles.length > 0) {
+                                const subtitles = $(video.subtitles).hide();
+                                subtitles.insertBefore($('input[id^="videoid_"][value="' + video.videoid + '"]').parent().find('.pad-bottom-sm.text-right'));
+                                subtitles.slideDown('slow');
+                            }
+                            slideFormSection();
+                        }
+                        if (video.status.toLowerCase() === 'processing') {
+                            //update %
+                            var process_div = $('.processing[data-id="' + video.videoid + '"]');
+                            //if process don't exist : get thumb + process div
+                            if (process_div.length === 0) {
+                                $('input[id^="videoid_"][value="'+video.videoid+'"]').parents('.tab-pane.uploadFormContainer').find('.player-holder').html(video.html);
+                            } else {
+                                process_div.find('span').html(video.percent + '%');
+                            }
+                        } else {
+                            $('input[id^="videoid_"][value="'+video.videoid+'"]').parents('.tab-pane.uploadFormContainer').find('.player-holder').html(video.html);
+                        }
+                    });
+
+                    if (response.all_complete) {
+                        clearInterval(intervalId);
+                    }
+                }
+            })
+        }, 30000);
+    }
+}
+
 
 function pageInfoTmdb(page, videoid) {
     let sort_type;
@@ -563,4 +608,19 @@ function showSpinner() {
 
 function hideSpinner() {
     $('.taskHandler').hide();
+}
+
+function slideFormSection(){
+    $('.formSection h4').off('click').on({
+        click: function(e){
+            e.preventDefault();
+            if($(this).find('i').hasClass('glyphicon-chevron-down')){
+                $(this).find('i').removeClass('glyphicon-chevron-down').addClass('glyphicon-chevron-up');
+                $(this).next().slideDown('slow');
+            }else{
+                $(this).find('i').removeClass('glyphicon-chevron-up').addClass('glyphicon-chevron-down');
+                $(this).next().slideUp('slow');
+            }
+        }
+    });
 }
