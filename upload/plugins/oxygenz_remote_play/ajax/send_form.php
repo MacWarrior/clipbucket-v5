@@ -76,6 +76,11 @@ switch($step){
         $video_id = Upload::getInstance()->submit_upload();
 
         $errors = errorhandler::getInstance()->get_error();
+        if (empty($errors)) {
+            Video::getInstance()->setDefautThumb($_POST['default_thumb'], 'thumb', $video_id);
+            Video::getInstance()->setDefautThumb($_POST['default_poster'], 'poster', $video_id);
+            Video::getInstance()->setDefautThumb($_POST['default_backdrop'], 'backdrop', $video_id);
+        }
         $response = [];
         if( empty($errors) ) {
             e(lang('plugin_oxygenz_remote_play_video_saved'), 'm');
@@ -89,6 +94,7 @@ switch($step){
         sendClientResponseAndContinue(function () use($video_id, $response) {
             $vdetails = get_video_details($video_id);
             $response['videokey'] = $vdetails['videokey'];
+            $response['videoid'] = $video_id;
             echo json_encode($response);
         });
 

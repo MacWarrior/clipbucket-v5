@@ -23,6 +23,11 @@ if ($_POST['getForm']) {
 switch ($mode) {
     case 'update_video':
         CBvideo::getInstance()->update_video();
+        if (empty(errorhandler::getInstance()->get_error()) && !empty($_POST['videoid'])) {
+            Video::getInstance()->setDefautThumb($_POST['default_thumb'], 'thumb', $_POST['videoid']);
+            Video::getInstance()->setDefautThumb($_POST['default_poster'], 'poster', $_POST['videoid']);
+            Video::getInstance()->setDefautThumb($_POST['default_backdrop'], 'backdrop', $_POST['videoid']);
+        }
 
         if (error()) {
             echo json_encode(['error' => error('single')]);
