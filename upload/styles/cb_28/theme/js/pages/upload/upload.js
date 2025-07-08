@@ -556,13 +556,18 @@ function getUpdate() {
                             //update %
                             var process_div = $('.processing[data-id="' + video.videoid + '"]');
                             //if process don't exist : get thumb + process div
+                                debugger;
                             if (process_div.length === 0) {
                                 $('input[id^="videoid_"][value="'+video.videoid+'"]').parents('.tab-pane.uploadFormContainer').find('.player-holder').html(video.html);
                                 if (typeof video.thumbs !== 'undefined' && video.thumbs.length > 0) {
-                                    $(video.thumbs).insertBefore($('input[id^="videoid_"][value="'+video.videoid+'"]').parent().find('.pad-bottom-sm.text-right'));
+                                    const thumbs = $(video.thumbs).hide();
+                                    thumbs.insertBefore($('input[id^="videoid_"][value="'+video.videoid+'"]').parent().find('.pad-bottom-sm.text-right'));
+                                    thumbs.slideDown('slow');
                                 }
                                 if (typeof video.subtitles !== 'undefined' && video.subtitles.length > 0) {
-                                    $(video.subtitles).insertBefore($('input[id^="videoid_"][value="'+video.videoid+'"]').parent().find('.pad-bottom-sm.text-right'));
+                                    const subtitles = $(video.subtitles).hide();
+                                    subtitles.insertBefore($('input[id^="videoid_"][value="'+video.videoid+'"]').parent().find('.pad-bottom-sm.text-right'));
+                                    subtitles.slideDown('slow');
                                 }
                                 slideFormSection();
 
@@ -579,7 +584,7 @@ function getUpdate() {
                     }
                 }
             })
-        }, 30000);
+        }, 5000);
     }
 }
 
