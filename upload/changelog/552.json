@@ -1,6 +1,6 @@
 {
   "version":"5.5.2",
-  "revision":"98",
+  "revision":"99",
   "status":"stable",
   "detail":[
     {
@@ -14,6 +14,7 @@
         ,"Implement default homepage config per user level"
         ,"Implement public videos page"
         ,"Implement subtitle upload"
+        ,"Implement photo comments management from photo edition"
         ,"Refactor conversion queue manager"
         ,"Refactor user levels management"
         ,"Add empty page title error"

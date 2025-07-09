@@ -199,6 +199,13 @@
                                 </li>
                             {/if}
                         {/foreach}
+                        {if config('enable_comments_photo') == 'yes'}
+                            <li>
+                                <a data-toggle="tab" href="#comments">
+                                    <i class="fa fa-comments"></i> {lang('comments')}
+                                </a>
+                            </li>
+                        {/if}
                     </ul>
 
                     <div class="tab-content">
@@ -219,6 +226,13 @@
                                 </div>
                             {/if}
                         {/foreach}
+                        {if config('enable_comments_photo') == 'yes'}
+                            <div id="comments" class="tab-pane">
+                                <div class="form-group">
+                                    {include file="$style_dir/blocks/comments.html" comment_type='photo'}
+                                </div>
+                            </div>
+                        {/if}
                     </div>
                 </div>
             </div>
@@ -234,4 +248,5 @@
 </form>
 <script>
     var available_tags = JSON.parse('{$available_tags|json_encode|replace:"'": "\'"}');
+    let text_confirm_comment = '{lang('text_confirm_comment')}';
 </script>
