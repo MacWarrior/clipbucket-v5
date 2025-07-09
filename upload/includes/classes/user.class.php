@@ -3579,7 +3579,7 @@ class userquery extends CBCategory
         $check_after_551_136 = (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '136') && isSectionEnabled('channels') && (User::getInstance()->hasPermission('view_channel') || (User::getInstance()->hasPermission('enable_channel_page') && User::getInstance()->get('disabled_channel') != 'yes')));
         if( $check_before_551_136 || $check_after_551_136 ){
             $counter = $this->get_pending_contacts(User::getInstance()->getCurrentUserID(), count_only: true);
-            $array[lang('account')][lang('contacts_manager'). ($counter > 0 ? '&nbsp;<i class="glyphicon glyphicon-bell"></i>('.$counter.')' : '')] = 'manage_contacts.php';
+            $array[lang('account')][lang('contacts_manager'). ($counter > 0 ? '&nbsp;<div class="pull-right"><i class="glyphicon glyphicon-bell"></i>('.$counter.')</div>' : '')] = 'manage_contacts.php';
         }
 
         if (User::getInstance()->hasPermission('private_msg_access')) {

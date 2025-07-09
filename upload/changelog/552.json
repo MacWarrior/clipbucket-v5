@@ -1,6 +1,6 @@
 {
   "version":"5.5.2",
-  "revision":"100",
+  "revision":"101",
   "status":"stable",
   "detail":[
     {
@@ -57,6 +57,7 @@
         ,"Implement public videos page"
         ,"Implement subtitle upload"
         ,"Implement video bloc style on videos page"
+        ,"Implement friend request notification in my account area"
         ,"Refactor friends requests & management"
         ,"Refactor collection selections"
         ,"Update video & photos management pages display"
