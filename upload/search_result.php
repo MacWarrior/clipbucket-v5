@@ -51,7 +51,6 @@ switch($type) {
         break;
 }
 
-$params = [];
 if ($access_public_video && !$access_video) {
     $params['public'] = true;
 }
