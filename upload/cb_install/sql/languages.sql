@@ -1641,4 +1641,5 @@ VALUES ('admin_setting'),
        ('alert_update_db_already_ongoing'),
        ('alert_video_conversion_ongoing'),
        ('miscellaneous_options'),
-       ('option_video_bloc_style');
+       ('option_video_bloc_style'),
+       ('add_member');
