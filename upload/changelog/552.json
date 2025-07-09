@@ -1,6 +1,6 @@
 {
   "version":"5.5.2",
-  "revision":"99",
+  "revision":"100",
   "status":"stable",
   "detail":[
     {
@@ -24,6 +24,7 @@
         ,"Update collection management display"
         ,"Update data refresh after core update"
         ,"Update core update error handling"
+        ,"Update new member form access"
         ,"Fix code mode on page edition <i>(#595)</i>"
         ,"Fix email sending error catching <i>(#587)</i>"
         ,"Fix incorrect frontend URL <i>(#529)</i>"
