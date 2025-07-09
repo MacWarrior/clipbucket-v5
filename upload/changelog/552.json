@@ -1,6 +1,6 @@
 {
   "version":"5.5.2",
-  "revision":"95",
+  "revision":"100",
   "status":"stable",
   "detail":[
     {
@@ -14,6 +14,7 @@
         ,"Implement default homepage config per user level"
         ,"Implement public videos page"
         ,"Implement subtitle upload"
+        ,"Implement photo comments management from photo edition"
         ,"Refactor conversion queue manager"
         ,"Refactor user levels management"
         ,"Add empty page title error"
@@ -23,6 +24,7 @@
         ,"Update collection management display"
         ,"Update data refresh after core update"
         ,"Update core update error handling"
+        ,"Update new member form access"
         ,"Fix code mode on page edition <i>(#595)</i>"
         ,"Fix email sending error catching <i>(#587)</i>"
         ,"Fix incorrect frontend URL <i>(#529)</i>"
@@ -54,6 +56,7 @@
         ,"Implement meta tags for social networks"
         ,"Implement public videos page"
         ,"Implement subtitle upload"
+        ,"Implement video bloc style on videos page"
         ,"Refactor friends requests & management"
         ,"Refactor collection selections"
         ,"Update video & photos management pages display"
@@ -96,6 +99,7 @@
         ,"Fix undefined constant <i>(#633)</i>"
         ,"Fix TMDB search"
         ,"Fix processing videos display"
+        ,"Fix search engine"
       ]
     },
     {
