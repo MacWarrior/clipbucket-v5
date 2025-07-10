@@ -44,7 +44,7 @@ $requiredFields = CBPhotos::getInstance()->load_required_forms($p);
 $otherFields = CBPhotos::getInstance()->load_other_forms($p);
 assign('requiredFields', $requiredFields);
 assign('otherFields', $otherFields);
-
+assign('comments', Comments::getAll(['type' => 'p', 'type_id' => $id, 'order' => ' comment_id DESC']));
 $min_suffixe = System::isInDev() ? '' : '.min';
 ClipBucket::getInstance()->addAdminJS([
     'tag-it' . $min_suffixe . '.js'                            => 'admin',

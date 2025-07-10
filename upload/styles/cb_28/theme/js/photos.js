@@ -57,7 +57,7 @@ $(document).on("click", "#mainNextBtn,#mainPrevBtn", function () {
 	}
 
 	$.ajax({
-		url: baseurl+'ajax.php'+'?moto=ajax',
+		url: baseurl+'actions/ajax.php'+'?moto=ajax',
 		type: "post",
 		data: data,
 		dataType: 'json',
@@ -106,7 +106,7 @@ $(document).on("click", ".en-large", function () {
 	}
 
 	$.ajax({
-		url: baseurl+'ajax.php',
+		url: baseurl+'actions/ajax.php',
 		type: "post",
 		data: data,
 		dataType: 'json',
