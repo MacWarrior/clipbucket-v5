@@ -1,5 +1,6 @@
 <?php
 define('THIS_PAGE', 'admin_activate_user_level');
+const IS_AJAX = true;
 require_once dirname(__FILE__, 2) . '/includes/admin_config.php';
 
 User::getInstance()->hasPermissionAjax('admin_access');

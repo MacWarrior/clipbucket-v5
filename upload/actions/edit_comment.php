@@ -1,5 +1,6 @@
 <?php
 define('THIS_PAGE', 'edit_comment');
+const IS_AJAX = true;
 require_once dirname(__FILE__, 2) . '/includes/admin_config.php';
 
 if (!User::getInstance()->hasAdminAccess()) {

@@ -1,5 +1,6 @@
 <?php
 define('THIS_PAGE', 'import_tmdb');
+const IS_AJAX = true;
 require_once dirname(__FILE__, 2) . '/includes/config.inc.php';
 
 if (config('tmdb_enable_on_front_end') != 'yes' || config('enable_tmdb') != 'yes' || config('tmdb_token') == '') {

@@ -1,5 +1,6 @@
 <?php
 define('THIS_PAGE', 'admin_get_detail_flagged_item');
+const IS_AJAX = true;
 require_once dirname(__FILE__, 2) . '/includes/admin_config.php';
 
 if (empty($_POST['type'])) {
