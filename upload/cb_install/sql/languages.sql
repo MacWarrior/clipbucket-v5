@@ -1642,5 +1642,6 @@ VALUES ('admin_setting'),
        ('alert_video_conversion_ongoing'),
        ('miscellaneous_options'),
        ('option_video_bloc_style'),
+       ('add_member'),
        ('tools_seems_stuck_since_mark_as_failed'),
        ('confirm_mark_as_failed');

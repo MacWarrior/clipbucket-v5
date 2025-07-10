@@ -24,6 +24,7 @@ $(document).ready(function(){
         }
     });
 
+
     $('#add_new_note').on({
         click: function(e){
             e.preventDefault();
@@ -391,7 +392,7 @@ function updateListeners () {
         if (interrupt) {
             showSpinner();
             $.ajax({
-                url: baseurl+'actions/admin_launch_wip.php',
+                url: 'actions/update_launch_wip.php',
                 type: "post",
                 dataType: "json",
                 success: function (data) {
@@ -456,7 +457,7 @@ async function update(type){
         return;
     }
     $.ajax({
-        url: baseurl+"actions/admin_launch_update.php",
+        url: "actions/update_launch.php",
         type: "post",
         data: {
             type: type
@@ -489,7 +490,7 @@ async function check_before_launch_update() {
     var conversion_checked = false;
     var interrupt = false;
     const data = await $.ajax({
-        url: baseurl + "actions/admin_check_before_launch_update.php",
+        url: "actions/update_check_before_launch.php",
         type: "post",
         dataType: "json",
         processData: false,
@@ -502,7 +503,7 @@ async function check_before_launch_update() {
         if (typeof data.confirm_message_core === 'string' && data.confirm_message_core !== '') {
             if (confirm(data.confirm_message_core)) {
                 await $.ajax({
-                    url: baseurl + "actions/force_tool_to_error.php",
+                    url: "actions/tool_force_to_error.php",
                     type: "POST",
                     data: {id_tool: data.id_tool},
                     dataType: 'json',
@@ -520,7 +521,7 @@ async function check_before_launch_update() {
         if (typeof data.confirm_message_db === 'string' && data.confirm_message_db !== '') {
             if (confirm(data.confirm_message_db)) {
                 await $.ajax({
-                    url: baseurl + "actions/force_tool_to_error.php",
+                    url: "actions/tool_force_to_error.php",
                     type: "POST",
                     data: {id_tool: data.id_tool},
                     dataType: 'json',
@@ -590,7 +591,7 @@ function connectSSE() {
 
 function checkStatus() {
     $.ajax({
-        url: baseurl+"actions/admin_check_update.php",
+        url: "actions/update_check.php",
         type: "post",
         dataType: "json",
         success: function (data) {

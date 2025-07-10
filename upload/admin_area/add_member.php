@@ -13,8 +13,7 @@ $breadcrumb[1] = ['title' => 'Add Member', 'url' => DirPath::getUrl('admin_area'
 
 if (isset($_POST['add_member'])) {
     if (userquery::getInstance()->signup_user($_POST)) {
-        e(lang('new_mem_added'), 'm');
-        $_POST = '';
+        sessionMessageHandler::add_message(lang('new_mem_added'), 'm',  DirPath::getUrl('admin_area') . 'members.php');
     }
 }
 

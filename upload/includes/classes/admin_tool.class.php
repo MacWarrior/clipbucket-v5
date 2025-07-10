@@ -137,15 +137,7 @@ class AdminTool
      */
     public function setToolInProgressNew(): bool
     {
-        Clipbucket_db::getInstance()->insert(tbl('tools_histo'), [
-            'id_tool',
-            'id_tools_histo_status',
-            'date_start'
-        ], [
-            $this->id_tool,
-            '|no_mc||f|(SELECT id_tools_histo_status FROM ' . tbl('tools_histo_status') . ' WHERE language_key_title like \'in_progress\')',
-            '|no_mc||f|NOW()'
-        ]);
+        Clipbucket_db::getInstance()->insert(tbl('tools_histo'), ['id_tool', 'id_tools_histo_status', 'date_start'], [$this->id_tool, '|no_mc||f|(SELECT id_tools_histo_status FROM ' . tbl('tools_histo_status') . ' WHERE language_key_title like \'in_progress\')', '|no_mc||f|NOW()']);
         $this->id_histo = Clipbucket_db::getInstance()->insert_id();
         return true;
     }
@@ -174,13 +166,7 @@ class AdminTool
             throw new Exception('Format cron invalid');
         }
 
-        Clipbucket_db::getInstance()->update(tbl('tools'), [
-            'frequency',
-            'previous_calculated_datetime'
-        ], [
-            $frequency,
-            date('Y-m-d H:i:s')
-        ], 'id_tool = ' . mysql_clean($this->id_tool));
+        Clipbucket_db::getInstance()->update(tbl('tools'), ['frequency', 'previous_calculated_datetime'], [$frequency, date('Y-m-d H:i:s')], 'id_tool = ' . mysql_clean($this->id_tool));
     }
 
     /**
@@ -201,10 +187,7 @@ class AdminTool
     public function launch()
     {
         $whoops = WhoopsManager::getInstance();
-        $whoops->pushHandler([
-            $this,
-            'toolErrorHandler'
-        ]);
+        $whoops->pushHandler([$this, 'toolErrorHandler']);
 
         $whoops->register();
         if (empty($this->tool)) {
@@ -225,10 +208,7 @@ class AdminTool
         if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.0', '367')) {
             $this->addLog(lang('tool_started'));
         }
-        call_user_func_array([
-            $this,
-            $this->tool['function_name']
-        ], []);
+        call_user_func_array([$this, $this->tool['function_name']], []);
         if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.0', '367')) {
             $this->addLog(lang('tool_ended'));
         }
@@ -241,7 +221,7 @@ class AdminTool
      */
     public static function launchCli(int $id_tool): void
     {
-        $cmd = System::get_binaries('php_cli') . ' -q ' . DirPath::get('actions') . 'launch_tool.php id_tool=' . $id_tool;
+        $cmd = System::get_binaries('php_cli').' -q '.DirPath::get('admin_actions') . 'tool_launch.php id_tool='.$id_tool;
         if (stristr(PHP_OS, 'WIN')) {
             $complement = '';
         } elseif (stristr(PHP_OS, 'darwin')) {
@@ -645,21 +625,9 @@ class AdminTool
             $element_totals = empty($this->tasks) ? $this->tasks_total : count($this->tasks);
             //update nb_elements of tools
             if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.0', '367')) {
-                $this->updateToolHisto([
-                    'elements_total',
-                    'elements_done'
-                ], [
-                    $element_totals,
-                    0
-                ]);
+                $this->updateToolHisto(['elements_total', 'elements_done'], [$element_totals, 0]);
             } else {
-                Clipbucket_db::getInstance()->update(tbl('tools'), [
-                    'elements_total',
-                    'elements_done'
-                ], [
-                    $element_totals,
-                    0
-                ], ' id_tool = ' . $secureIdTool);
+                Clipbucket_db::getInstance()->update(tbl('tools'), ['elements_total', 'elements_done'], [$element_totals, 0], ' id_tool = ' . $secureIdTool);
             }
             $break = false;
             //if db
@@ -708,23 +676,9 @@ class AdminTool
             } while (empty($has_to_stop) && !empty($tasks) && $this->tasks_index < $element_totals);
         }
         if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.0', '367')) {
-            $this->updateToolHisto([
-                'id_tools_histo_status',
-                'date_end'
-            ], [
-                '|no_mc||f|(SELECT id_tools_histo_status FROM ' . tbl('tools_histo_status') . ' WHERE language_key_title like \'ready\')',
-                '|f|NOW()'
-            ]);
+            $this->updateToolHisto(['id_tools_histo_status', 'date_end'], ['|no_mc||f|(SELECT id_tools_histo_status FROM ' . tbl('tools_histo_status') . ' WHERE language_key_title like \'ready\')', '|f|NOW()']);
         } else {
-            Clipbucket_db::getInstance()->update(tbl('tools'), [
-                'id_tools_status',
-                'elements_total',
-                'elements_done'
-            ], [
-                1,
-                '|f|null',
-                '|f|null'
-            ], 'id_tool = ' . $secureIdTool);
+            Clipbucket_db::getInstance()->update(tbl('tools'), ['id_tools_status', 'elements_total', 'elements_done'], [1, '|f|null', '|f|null'], 'id_tool = ' . $secureIdTool);
         }
     }
 
@@ -740,13 +694,7 @@ class AdminTool
         }
 
         if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.0', '367')) {
-            $this->updateToolHisto([
-                'id_tools_histo_status',
-                'date_end'
-            ], [
-                '|no_mc||f|(SELECT id_tools_histo_status FROM ' . tbl('tools_histo_status') . ' WHERE language_key_title like \'stopping\')',
-                '|f|NOW()'
-            ]);
+            $this->updateToolHisto(['id_tools_histo_status', 'date_end'], ['|no_mc||f|(SELECT id_tools_histo_status FROM ' . tbl('tools_histo_status') . ' WHERE language_key_title like \'stopping\')', '|f|NOW()']);
         } else {
             Clipbucket_db::getInstance()->update(tbl('tools'), ['id_tools_status'], ['|no_mc||f|(SELECT id_tools_status FROM ' . tbl('tools_status') . ' WHERE language_key_title like \'stopping\')'], ' id_tool = ' . mysql_clean($this->id_tool));
         }
@@ -768,15 +716,7 @@ class AdminTool
     public function addLog(string $msg): void
     {
         if (!empty($this->id_histo)) {
-            Clipbucket_db::getInstance()->insert(tbl('tools_histo_log'), [
-                'id_histo',
-                'datetime',
-                'message'
-            ], [
-                mysql_clean($this->id_histo),
-                '|f|NOW()',
-                $msg
-            ]);
+            Clipbucket_db::getInstance()->insert(tbl('tools_histo_log'), ['id_histo', 'datetime', 'message'], [mysql_clean($this->id_histo), '|f|NOW()', $msg]);
         }
     }
 
@@ -850,9 +790,8 @@ class AdminTool
     public function correctVideoCategorie(): void
     {
         $videos = Video::getInstance()->getAll([
-            'condition'  => 'videos_categories.id_video IS NULL'
-            ,
-            'get_detail' => true
+            'condition'   => 'videos_categories.id_video IS NULL'
+            ,'get_detail' => true
         ]);
 
         if (!empty($videos)) {
@@ -887,28 +826,14 @@ class AdminTool
     public function setToolError($id_tool, $force = false): void
     {
         if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.0', '367')) {
-            $this->updateToolHisto([
-                'id_tools_histo_status',
-                'date_end'
-            ], [
-                '|no_mc||f|(SELECT id_tools_histo_status FROM ' . tbl('tools_histo_status') . ' WHERE language_key_title like \'on_error\')',
-                '|f|NOW()'
-            ]);
+            $this->updateToolHisto(['id_tools_histo_status', 'date_end'], ['|no_mc||f|(SELECT id_tools_histo_status FROM ' . tbl('tools_histo_status') . ' WHERE language_key_title like \'on_error\')', '|f|NOW()']);
             if ($force) {
                 $this->addLog(lang('tool_forced_to_error'));
             } else {
                 $this->addLog(lang('tool_ended'));
             }
         } else {
-            Clipbucket_db::getInstance()->update(tbl('tools'), [
-                'id_tools_status',
-                'elements_total',
-                'elements_done'
-            ], [
-                1,
-                '|f|null',
-                '|f|null'
-            ], 'id_tool = ' . mysql_clean($id_tool));
+            Clipbucket_db::getInstance()->update(tbl('tools'), ['id_tools_status', 'elements_total', 'elements_done'], [1, '|f|null', '|f|null'], 'id_tool = ' . mysql_clean($id_tool));
         }
     }
 
@@ -1086,11 +1011,9 @@ class AdminTool
         }
 
         return [
-            'date_execution_precedente'    => $last_date_start
-            ,
-            'date_previsionnel_precedente' => $date_previsionnel_precedente
-            ,
-            'next_date'                    => $next_date
+            'date_execution_precedente' => $last_date_start
+            ,'date_previsionnel_precedente' => $date_previsionnel_precedente
+            ,'next_date' => $next_date
         ];
     }
 
@@ -1262,13 +1185,7 @@ class AdminTool
      */
     public function cleanTaskData(): void
     {
-        Clipbucket_db::getInstance()->delete(tbl('tools_tasks'), [
-            'id_histo',
-            'loop_index'
-        ], [
-            $this->id_histo,
-            $this->tasks_index
-        ]);
+        Clipbucket_db::getInstance()->delete(tbl('tools_tasks'), ['id_histo', 'loop_index'], [$this->id_histo, $this->tasks_index]);
     }
 
     /**

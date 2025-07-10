@@ -21,7 +21,7 @@ $(document).ready(function(){
 function deleteComment(comment_id) {
     if (confirm_it(text_confirm_comment)) {
         $.ajax({
-            url: baseurl+"actions/admin_comment_delete.php",
+            url: "actions/comment_delete.php",
             type: "POST",
             data: {comment_id: comment_id},
             dataType: 'json',

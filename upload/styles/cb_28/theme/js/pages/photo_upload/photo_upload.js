@@ -407,7 +407,7 @@ $(document).ready(function(){
                             formData += "&mode=add_collection";
                             $.ajax({
                                 type: "post",
-                                url: baseurl+"ajax.php",
+                                url: baseurl+"actions/ajax.php",
                                 data: formData,
                                 success: function(response){
                                     response = $.parseJSON(response);
