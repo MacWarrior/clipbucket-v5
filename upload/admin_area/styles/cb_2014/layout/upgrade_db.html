@@ -91,7 +91,7 @@
                 $('#submit_version').hide();
                 $('#progress_div').show();
                 $.ajax({
-                    url: baseurl+"actions/upgrade_db.php",
+                    url: "actions/upgrade_db.php",
                     type: "post",
                     data: $('#versionInfo').serialize(),
                     dataType: 'json'

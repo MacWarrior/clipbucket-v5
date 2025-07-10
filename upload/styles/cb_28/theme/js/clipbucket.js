@@ -4,7 +4,7 @@
 		// bootstrapping
 		this.baseurl = baseurl;
 		this.imageurl = '';
-		this.page = baseurl+'ajax.php';
+		this.page = baseurl+'actions/ajax.php';
 		this.loading_img = "<img alt='loading' style='vertical-align:middle' src='" + imageurl + "/ajax-loader-big.gif'/>";
 		this.loading = this.loading_img+' Loading...';
 		this.download = 0;
@@ -1061,7 +1061,7 @@
 		 * Function used to rate object
 		 */
 		this.rate = function(id,rating,type){
-			var page = baseurl+'ajax.php';
+			var page = baseurl+'actions/ajax.php';
 			$.post(page,
 				{
 					mode : 'rating',
@@ -1234,7 +1234,7 @@
 
 		this.rateNew = function (id,rating,type) {
 			curObj = this;
-			var page = baseurl+'ajax.php';
+			var page = baseurl+'actions/ajax.php';
 			$.post(page, {
 					mode : 'rating',
 					id:id,
@@ -1426,7 +1426,7 @@
 		this.getModalVideo = function(video_id){
 			$.ajax({
 				type: 'post',
-				url: baseurl+'ajax/commonAjax.php',
+				url: baseurl+'actions/commonAjax.php',
 				data: { videoid : video_id , mode : 'get_video'},
 				dataType: 'json',
 				beforeSend: function (data) {
