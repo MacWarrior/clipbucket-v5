@@ -1,5 +1,5 @@
 <?php
-define('THIS_PAGE', 'admin_email_make_default');
+const THIS_PAGE = 'admin_email_make_default';
 const IS_AJAX = true;
 require_once dirname(__FILE__, 3) . '/includes/admin_config.php';
 

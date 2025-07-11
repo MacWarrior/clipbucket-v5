@@ -1,5 +1,5 @@
 <?php
-define('THIS_PAGE', 'file_downloader');
+const THIS_PAGE = 'file_downloader';
 include('../includes/config.inc.php');
 
 include(DirPath::get('classes').'curl/class.curl.php');

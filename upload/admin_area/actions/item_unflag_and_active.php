@@ -1,5 +1,5 @@
 <?php
-define('THIS_PAGE', 'admin_unflag_and_active_item');
+const THIS_PAGE = 'admin_unflag_and_active_item';
 const IS_AJAX = true;
 require_once dirname(__FILE__, 3) . '/includes/admin_config.php';
 

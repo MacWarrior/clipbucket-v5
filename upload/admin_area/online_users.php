@@ -1,5 +1,5 @@
 <?php
-define('THIS_PAGE', 'online_users');
+const THIS_PAGE = 'online_users';
 
 require_once dirname(__FILE__, 2) . '/includes/admin_config.php';
 

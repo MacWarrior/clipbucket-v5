@@ -1,5 +1,5 @@
 <?php
-define('THIS_PAGE', 'admin_email_tester_send');
+const THIS_PAGE = 'admin_email_tester_send';
 const IS_AJAX = true;
 require_once dirname(__FILE__, 3) . '/includes/admin_config.php';
 

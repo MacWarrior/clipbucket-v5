@@ -1,5 +1,5 @@
 <?php
-define('THIS_PAGE', 'comments');
+const THIS_PAGE = 'comments';
 require_once dirname(__FILE__, 2) . '/includes/admin_config.php';
 
 

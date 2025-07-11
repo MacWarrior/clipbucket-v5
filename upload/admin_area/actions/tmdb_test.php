@@ -1,5 +1,5 @@
 <?php
-define('THIS_PAGE', 'test_tmdb');
+const THIS_PAGE = 'test_tmdb';
 const IS_AJAX = true;
 require_once dirname(__FILE__, 3) . '/includes/admin_config.php';
 

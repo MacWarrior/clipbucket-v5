@@ -1,5 +1,5 @@
 <?php
-define('THIS_PAGE', 'item_get_detail_flagged');
+const THIS_PAGE = 'item_get_detail_flagged';
 const IS_AJAX = true;
 require_once dirname(__FILE__, 3) . '/includes/admin_config.php';
 

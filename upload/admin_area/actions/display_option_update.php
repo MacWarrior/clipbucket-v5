@@ -1,5 +1,4 @@
 <?php
-
 const THIS_PAGE = 'display_option_update';
 const IS_AJAX = true;
 require_once dirname(__FILE__, 3) . '/includes/admin_config.php';

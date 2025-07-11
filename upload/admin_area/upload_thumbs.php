@@ -1,5 +1,5 @@
 <?php
-define('THIS_PAGE', 'upload_thumb');
+const THIS_PAGE = 'upload_thumb';
 require_once dirname(__FILE__, 2) . '/includes/admin_config.php';
 
 User::getInstance()->hasPermissionOrRedirect('video_moderation', true);

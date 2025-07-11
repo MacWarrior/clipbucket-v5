@@ -1,5 +1,5 @@
 <?php
-define('THIS_PAGE', 'launch_tool');
+const THIS_PAGE = 'launch_tool';
 const IS_AJAX = true;
 if (php_sapi_name() === 'cli') {
     $in_bg_cron = true;

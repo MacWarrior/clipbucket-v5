@@ -1,5 +1,5 @@
 <?php
-define('THIS_PAGE', 'save_subtitle');
+const THIS_PAGE = 'save_subtitle';
 
 require_once dirname(__FILE__, 2) . '/includes/config.inc.php';
 

@@ -1,5 +1,5 @@
 <?php
-define('THIS_PAGE', 'popin_upload_subtitle');
+const THIS_PAGE = 'popin_upload_subtitle';
 
 require_once dirname(__FILE__, 2) . '/includes/config.inc.php';
 

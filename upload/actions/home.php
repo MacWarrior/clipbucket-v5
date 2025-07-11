@@ -1,5 +1,5 @@
 <?php
-define('THIS_PAGE', 'ajax');
+const THIS_PAGE = 'ajax';
 require_once dirname(__FILE__, 2) . '/includes/config.inc.php';
 $params = [];
 if (isset($_POST['load_type'])) {

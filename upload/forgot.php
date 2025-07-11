@@ -1,5 +1,5 @@
 <?php
-define('THIS_PAGE', 'forgot');
+const THIS_PAGE = 'forgot';
 
 require 'includes/config.inc.php';
 

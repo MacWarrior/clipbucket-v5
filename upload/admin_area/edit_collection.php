@@ -1,5 +1,5 @@
 <?php
-define('THIS_PAGE', 'edit_collection');
+const THIS_PAGE = 'edit_collection';
 require_once dirname(__FILE__, 2) . '/includes/admin_config.php';
 
 User::getInstance()->hasPermissionOrRedirect('collection_moderation', true);

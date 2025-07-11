@@ -1,5 +1,5 @@
 <?php
-define('THIS_PAGE', 'admin_activate_user_level');
+const THIS_PAGE = 'admin_activate_user_level';
 const IS_AJAX = true;
 require_once dirname(__FILE__, 3) . '/includes/admin_config.php';
 

@@ -1,5 +1,5 @@
 <?php
-define('THIS_PAGE', 'add_to_collection');
+const THIS_PAGE = 'add_to_collection';
 const IS_AJAX = true;
 require_once dirname(__FILE__, 2) . '/includes/config.inc.php';
 

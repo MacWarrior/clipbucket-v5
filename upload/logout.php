@@ -1,5 +1,5 @@
 <?php
-define('THIS_PAGE', 'logout');
+const THIS_PAGE = 'logout';
 require_once 'includes/config.inc.php';
 
 userquery::getInstance()->logout();

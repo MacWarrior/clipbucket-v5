@@ -1,5 +1,5 @@
 <?php
-define('THIS_PAGE', 'edit_account');
+const THIS_PAGE = 'edit_account';
 
 require 'includes/config.inc.php';
 User::getInstance()->isUserConnectedOrRedirect();

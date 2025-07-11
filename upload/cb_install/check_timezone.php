@@ -1,5 +1,5 @@
 <?php
-define('THIS_PAGE', 'check_timezone');
+const THIS_PAGE = 'check_timezone';
 
 require_once dirname(__DIR__ ). DIRECTORY_SEPARATOR . 'includes' . DIRECTORY_SEPARATOR . 'constants.php';
 require_once DirPath::get('vendor') . 'autoload.php';

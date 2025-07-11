@@ -1,5 +1,5 @@
 <?php
-define('THIS_PAGE', 'changelog');
+const THIS_PAGE = 'changelog';
 
 require_once dirname(__FILE__, 2) . '/includes/admin_config.php';
 
