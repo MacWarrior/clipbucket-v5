@@ -1,6 +1,7 @@
 var uploader;
 var ids_to_check_progress = [];
 var intervalId;
+var players = [];
 $(document).ready(function(){
     var uploadurl = baseurl+'actions/file_uploader.php';
     if(uploadScriptPath !== ''){
@@ -354,6 +355,15 @@ $(document).ready(function(){
                         file.show_duration = false;
                     }
 
+                    $('#' + index + ' a').on('click', function () {
+                        $('.player-holder video').each(function (index, element) {
+                            videojs(element).dispose();
+                        });
+                        $('.player-holder').html('');
+                        const index = $(this).parent().attr('id');
+                        const video_id = $('#videoid_' + index).val();
+                        $('#tab' + index).find('.player-holder').html(players[video_id]);
+                    });
                     $('#tab'+index+' .saveVideoDetails').removeAttr('disabled');
                     getUpdate();
                 }
@@ -570,11 +580,14 @@ function getUpdate() {
                             var process_div = $('.processing[data-id="' + video.videoid + '"]');
                             //if process don't exist : get thumb + process div
                             if (process_div.length === 0) {
+                                //if player already initialised, dispose it before initialize it again
+                                players[video.videoid] = video.html;
                                 $('input[id^="videoid_"][value="'+video.videoid+'"]').parents('.tab-pane.uploadFormContainer').find('.player-holder').html(video.html);
                             } else {
                                 process_div.find('span').html(video.percent + '%');
                             }
                         } else {
+                            players[video.videoid] = video.html;
                             $('input[id^="videoid_"][value="'+video.videoid+'"]').parents('.tab-pane.uploadFormContainer').find('.player-holder').html(video.html);
                         }
                     });
@@ -584,7 +597,7 @@ function getUpdate() {
                     }
                 }
             })
-        }, 30000);
+        }, 5000);
     }
 }
 
