@@ -315,7 +315,7 @@ $(document).ready(function(){
                 "column-1": ubarchart_users_inactive
             }
         ]
-    });
+    }); 
     AmCharts.makeChart("vbarchart", {
         "type": "serial",
         "pathToImages": "https://www.amcharts.com/lib/3/images/",
@@ -377,6 +377,18 @@ $(document).ready(function(){
         ]
     });
 
+    $('#update_dp_options').on('click', function () {
+        var val = $(this).parent().find('input').val();
+       $.ajax({
+           url: 'actions/display_option_update.php',
+           type: 'post',
+           dataType: 'json',
+           data: {admin_pages: val},
+           success: function (data) {
+               $(".page-content").prepend(data.msg);
+           }
+       })
+    });
 });
 
 function updateListeners () {

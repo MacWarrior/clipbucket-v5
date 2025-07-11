@@ -1,5 +1,5 @@
 <?php
-define('THIS_PAGE', 'watch');
+const THIS_PAGE = 'watch';
 require '../includes/config.inc.php';
 
 if (isset($_POST['mode'])) {

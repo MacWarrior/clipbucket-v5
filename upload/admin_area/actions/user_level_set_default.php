@@ -1,5 +1,6 @@
 <?php
-define('THIS_PAGE', 'admin_set_default_user_level');
+const THIS_PAGE = 'admin_set_default_user_level';
+const IS_AJAX = true;
 require_once dirname(__FILE__, 3) . '/includes/admin_config.php';
 
 User::getInstance()->hasPermissionAjax('admin_access');

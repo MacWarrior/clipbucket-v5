@@ -1,6 +1,6 @@
 <?php
-define('THIS_PAGE', 'manage_playlists');
-define('PARENT_PAGE', 'videos');
+const THIS_PAGE = 'manage_playlists';
+const PARENT_PAGE = 'videos';
 require 'includes/config.inc.php';
 
 User::getInstance()->isUserConnectedOrRedirect();

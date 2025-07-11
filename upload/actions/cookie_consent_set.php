@@ -1,5 +1,5 @@
 <?php
-define('THIS_PAGE', 'cookie_consent_set');
+const THIS_PAGE = 'cookie_consent_set';
 require_once dirname(__FILE__, 2) . '/includes/config.inc.php';
 
 if( config('enable_cookie_banner') != 'yes' ){

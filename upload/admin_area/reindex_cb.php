@@ -1,5 +1,5 @@
 <?php
-define('THIS_PAGE', 'reindex_cb');
+const THIS_PAGE = 'reindex_cb';
 
 require_once dirname(__FILE__, 2) . '/includes/admin_config.php';
 

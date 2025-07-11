@@ -1,5 +1,5 @@
 <?php
-define('THIS_PAGE', 'language_setting');
+const THIS_PAGE = 'language_setting';
 
 require_once dirname(__FILE__, 2) . '/includes/admin_config.php';
 

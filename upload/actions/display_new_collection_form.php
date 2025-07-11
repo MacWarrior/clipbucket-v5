@@ -1,5 +1,5 @@
 <?php
-define('THIS_PAGE', 'info_tmdb');
+const THIS_PAGE = 'info_tmdb';
 require_once dirname(__FILE__, 2) . DIRECTORY_SEPARATOR .'includes'.DIRECTORY_SEPARATOR.'config.inc.php';
 
 assign('reqFields', Collections::getInstance()->load_required_fields(['type'=>'photos']));

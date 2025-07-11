@@ -1,5 +1,5 @@
 <?php
-define('THIS_PAGE', 'manage_playlists');
+const THIS_PAGE = 'manage_playlists';
 require_once dirname(__FILE__, 2) . '/includes/admin_config.php';
 
 User::getInstance()->hasPermissionOrRedirect('admin_access', true);

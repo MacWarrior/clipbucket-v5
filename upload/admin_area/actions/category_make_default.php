@@ -1,5 +1,5 @@
 <?php
-define('THIS_PAGE', 'category_make_default');
+const THIS_PAGE = 'category_make_default';
 require_once dirname(__FILE__, 3) . '/includes/admin_config.php';
 
 User::getInstance()->hasPermissionAjax('admin_access');

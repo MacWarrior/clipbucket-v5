@@ -1,6 +1,6 @@
 <?php
-define('THIS_PAGE', 'download');
-define('PARENT_PAGE', 'videos');
+const THIS_PAGE = 'download';
+const PARENT_PAGE = 'videos';
 require 'includes/config.inc.php';
 
 User::getInstance()->hasPermissionOrRedirect('download_video');
