@@ -585,7 +585,7 @@
                             {include file="$style_dir/blocks/resolution_list.html"}
                         </div>
                         {/if}
-                        {if config('player_subtitles') && (!empty($subtitle_list) || config('can_upload_subtitles')=='yes')}
+                        {if config('player_subtitles')}
                             <div id="subtitles" class="tab-pane fade">
                                 {include file="$style_dir/blocks/subtitle_list.html" videoid=$data.videoid vstatus=$data.status}
                             </div>

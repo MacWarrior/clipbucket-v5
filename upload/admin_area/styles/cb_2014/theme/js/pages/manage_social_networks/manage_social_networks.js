@@ -39,7 +39,7 @@ $(document).ready(function() {
         var order = $('#input_order-' + id).val();
         var id_font_awesome = $('#input_id_fontawesome_icon-' + id).val();
         $.ajax({
-            url: baseurl+"actions/admin_update_social_network.php",
+            url: "actions/social_network_update.php",
             type: "post",
             dataType: 'json',
             data: {id_social_networks_link : id, title: title, url: url, social_network_link_order: order, id_fontawesome_icon: id_font_awesome},
@@ -66,7 +66,7 @@ $(document).ready(function() {
         if (confirm(lang_confirm_delete)) {
             var id  = _this.data('id');
             $.ajax({
-                url: baseurl+"actions/admin_delete_social_network.php",
+                url: "actions/social_network_delete.php",
                 type: "post",
                 dataType: 'json',
                 data: {id_social_networks_link : id},

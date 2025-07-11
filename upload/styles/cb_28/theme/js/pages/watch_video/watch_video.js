@@ -15,7 +15,7 @@ $(document).ready(function () {
 
         var typed = $(this).val();
         $.ajax({
-            url: baseurl+'ajax.php',
+            url: baseurl+'actions/ajax.php',
             type: 'post',
             dataType: 'html',
             data: {
@@ -69,7 +69,7 @@ $(document).ready(function () {
         playlist = $(this).attr('dataList');
 
         $.ajax({
-            url: baseurl+'ajax/watch.php',
+            url: baseurl+'actions/watch.php',
             type: 'post',
             dataType: 'html',
             data: {
