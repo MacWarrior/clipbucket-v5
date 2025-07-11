@@ -1,6 +1,6 @@
 <?php
-define('THIS_PAGE', 'edit_video');
-define('PARENT_PAGE', 'videos');
+const THIS_PAGE = 'edit_video';
+const PARENT_PAGE = 'videos';
 
 require 'includes/config.inc.php';
 

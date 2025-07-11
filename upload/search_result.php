@@ -1,5 +1,5 @@
 <?php
-define('THIS_PAGE', 'search_result');
+const THIS_PAGE = 'search_result';
 require_once 'includes/config.inc.php';
 
 pages::getInstance()->page_redir();

@@ -1,6 +1,6 @@
 <?php
-define('THIS_PAGE', 'view_collection');
-define('PARENT_PAGE', 'collections');
+const THIS_PAGE = 'view_collection';
+const PARENT_PAGE = 'collections';
 require 'includes/config.inc.php';
 
 pages::getInstance()->page_redir();

@@ -1,5 +1,5 @@
 <?php
-define('THIS_PAGE', 'admin_tool');
+const THIS_PAGE = 'admin_tool';
 
 require_once dirname(__FILE__, 2) . '/includes/admin_config.php';
 

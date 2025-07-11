@@ -1,5 +1,5 @@
 <?php
-define('THIS_PAGE', 'basic_settings');
+const THIS_PAGE = 'basic_settings';
 require_once dirname(__FILE__, 2) . '/includes/admin_config.php';
 
 $permission = 'basic_settings';

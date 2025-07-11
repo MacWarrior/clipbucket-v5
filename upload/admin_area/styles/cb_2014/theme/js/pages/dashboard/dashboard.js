@@ -376,6 +376,18 @@ $(document).ready(function(){
         ]
     });
 
+    $('#update_dp_options').on('click', function () {
+        var val = $(this).parent().find('input').val();
+       $.ajax({
+           url: 'actions/display_option_update.php',
+           type: 'post',
+           dataType: 'json',
+           data: {admin_pages: val},
+           success: function (data) {
+               $(".page-content").prepend(data.msg);
+           }
+       })
+    });
 });
 
 function updateListeners () {

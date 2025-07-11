@@ -1,5 +1,5 @@
 <?php
-define('THIS_PAGE', 'ajax');
+const THIS_PAGE = 'ajax';
 require_once dirname(__DIR__, 3) . '/includes/config.inc.php';
 
 if( !User::getInstance()->hasPermission('allow_video_upload') ){

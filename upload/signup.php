@@ -1,6 +1,6 @@
 <?php
-define('THIS_PAGE', 'signup');
-define('PARENT_PAGE', 'signup');
+const THIS_PAGE = 'signup';
+const PARENT_PAGE = 'signup';
 require 'includes/config.inc.php';
 
 if (User::getInstance()->isUserConnected()) {

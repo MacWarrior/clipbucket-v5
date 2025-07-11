@@ -1,5 +1,5 @@
 <?php
-define('THIS_PAGE', 'cb_conversion_queue');
+const THIS_PAGE = 'cb_conversion_queue';
 require_once dirname(__FILE__, 2) . '/includes/admin_config.php';
 
 $permission = 'advanced_settings';

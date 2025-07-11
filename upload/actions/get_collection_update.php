@@ -1,5 +1,5 @@
 <?php
-define('THIS_PAGE', 'get_collection_update');
+const THIS_PAGE = 'get_collection_update';
 require_once dirname(__FILE__, 2) . '/includes/config.inc.php';
 
 User::getInstance()->hasPermissionAjax('allow_create_collection');

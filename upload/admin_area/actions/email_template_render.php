@@ -1,5 +1,6 @@
 <?php
-define('THIS_PAGE', 'admin_email_template_render');
+const THIS_PAGE = 'admin_email_template_render';
+const IS_AJAX = true;
 require_once dirname(__FILE__, 3) . '/includes/admin_config.php';
 
 User::getInstance()->hasPermissionOrRedirect('email_template_management');

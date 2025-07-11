@@ -1,5 +1,5 @@
 <?php
-define('THIS_PAGE', 'cb_install');
+const THIS_PAGE = 'cb_install';
 
 require_once dirname(__DIR__ ). DIRECTORY_SEPARATOR . 'includes' . DIRECTORY_SEPARATOR . 'constants.php';
 require_once DirPath::get('vendor') . 'autoload.php';

@@ -1,5 +1,5 @@
 <?php
-define('THIS_PAGE', 'rss');
+const THIS_PAGE = 'rss';
 require 'includes/config.inc.php';
 
 if( config('enable_rss_feeds') != 'yes' || !isSectionEnabled('videos') || !User::getInstance()->hasPermission('view_videos')){

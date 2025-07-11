@@ -1,6 +1,6 @@
 <?php
-define('THIS_PAGE', 'view_item');
-define('PARENT_PAGE', 'collections');
+const THIS_PAGE = 'view_item';
+const PARENT_PAGE = 'collections';
 
 require 'includes/config.inc.php';
 

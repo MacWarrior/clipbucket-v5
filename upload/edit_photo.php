@@ -1,6 +1,6 @@
 <?php
-define('THIS_PAGE', 'edit_photo');
-define('PARENT_PAGE', 'photos');
+const THIS_PAGE = 'edit_photo';
+const PARENT_PAGE = 'photos';
 require 'includes/config.inc.php';
 
 User::getInstance()->isUserConnectedOrRedirect();
