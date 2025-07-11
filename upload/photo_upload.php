@@ -1,6 +1,6 @@
 <?php
-define('THIS_PAGE', 'photo_upload');
-define('PARENT_PAGE', 'upload');
+const THIS_PAGE = 'photo_upload';
+const PARENT_PAGE = 'upload';
 require 'includes/config.inc.php';
 
 User::getInstance()->hasPermissionOrRedirect('allow_photo_upload', true);

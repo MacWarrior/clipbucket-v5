@@ -1,5 +1,5 @@
 <?php
-define('THIS_PAGE', 'action_logs');
+const THIS_PAGE = 'action_logs';
 
 require_once dirname(__FILE__, 2) . '/includes/admin_config.php';
 

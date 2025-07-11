@@ -1,5 +1,5 @@
 <?php
-define('THIS_PAGE', 'getVideoDetails');
+const THIS_PAGE = 'getVideoDetails';
 include(dirname(__FILE__, 2) . '/includes/config.inc.php');
 
 if(empty($_POST['vid'])){

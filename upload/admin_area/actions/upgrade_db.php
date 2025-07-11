@@ -1,5 +1,6 @@
 <?php
-define('THIS_PAGE', 'upgrade_db');
+const THIS_PAGE = 'upgrade_db';
+const IS_AJAX = true;
 require_once dirname(__FILE__, 3) . '/includes/admin_config.php';
 
 $need_to_create_version_table = true;

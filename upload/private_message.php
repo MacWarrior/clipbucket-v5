@@ -1,6 +1,5 @@
 <?php
-define('THIS_PAGE', 'private_message');
-
+const THIS_PAGE = 'private_message';
 require 'includes/config.inc.php';
 
 User::getInstance()->isUserConnectedOrRedirect();

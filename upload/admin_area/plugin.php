@@ -1,5 +1,5 @@
 <?php
-define('THIS_PAGE', 'plugin');
+const THIS_PAGE = 'plugin';
 require_once dirname(__FILE__, 2) . '/includes/admin_config.php';
 
 User::getInstance()->hasPermissionOrRedirect('plugins_moderation', true);

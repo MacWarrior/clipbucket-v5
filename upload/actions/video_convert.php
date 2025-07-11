@@ -1,7 +1,7 @@
 <?php
 // This script runs only via command line
 ini_set('max_execution_time', '0');
-define('THIS_PAGE', 'video_convert');
+const THIS_PAGE = 'video_convert';
 
 include(dirname(__FILE__) . '/../includes/config.inc.php');
 require_once DirPath::get('classes') . 'sLog.php';

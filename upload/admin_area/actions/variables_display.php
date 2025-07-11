@@ -1,5 +1,6 @@
 <?php
-define('THIS_PAGE', 'variables_display');
+const THIS_PAGE = 'variables_display';
+const IS_AJAX = true;
 require_once dirname(__FILE__, 3) . '/includes/admin_config.php';
 
 User::getInstance()->hasPermissionOrRedirect('email_template_management');

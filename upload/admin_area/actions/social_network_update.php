@@ -1,5 +1,6 @@
 <?php
-define('THIS_PAGE', 'social_network_update');
+const THIS_PAGE = 'social_network_update';
+const IS_AJAX = true;
 require_once dirname(__FILE__, 3) . '/includes/admin_config.php';
 
 User::getInstance()->hasPermissionAjax('admin_access');

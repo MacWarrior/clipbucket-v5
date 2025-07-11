@@ -1,5 +1,6 @@
 <?php
-define('THIS_PAGE', 'video_view_history');
+const THIS_PAGE = 'video_view_history';
+const IS_AJAX = true;
 require_once dirname(__FILE__, 3) . '/includes/admin_config.php';
 
 if (config('enable_access_view_video_history') != 'yes' && config('enable_video_view_history') != 'yes') {

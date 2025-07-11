@@ -1,5 +1,5 @@
 <?php
-define('THIS_PAGE', 'edit_announcement');
+const THIS_PAGE = 'edit_announcement';
 require_once dirname(__DIR__, 3) . '/includes/admin_config.php';
 
 $breadcrumb[0] = ['title' => lang('configurations'), 'url' => ''];

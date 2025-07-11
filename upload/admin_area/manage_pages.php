@@ -1,5 +1,5 @@
 <?php
-define('THIS_PAGE', 'manage_pages');
+const THIS_PAGE = 'manage_pages';
 require_once dirname(__FILE__, 2) . '/includes/admin_config.php';
 pages::getInstance()->page_redir();
 

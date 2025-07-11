@@ -1,6 +1,6 @@
 <?php
-define('THIS_PAGE', 'manage_collections');
-define('PARENT_PAGE', 'collections');
+const THIS_PAGE = 'manage_collections';
+const PARENT_PAGE = 'collections';
 require 'includes/config.inc.php';
 
 User::getInstance()->isUserConnectedOrRedirect();

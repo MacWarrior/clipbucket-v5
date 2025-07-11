@@ -1,5 +1,5 @@
 <?php
-define('THIS_PAGE', 'progress_video');
+const THIS_PAGE = 'progress_video';
 require_once dirname(__FILE__, 2) . '/includes/config.inc.php';
 
 $return = [];
