@@ -1,6 +1,6 @@
 <?php
 global $breadcrumb;
-define('THIS_PAGE', 'edit_photo');
+const THIS_PAGE = 'edit_photo';
 require_once dirname(__FILE__, 2) . '/includes/admin_config.php';
 
 User::getInstance()->hasPermissionOrRedirect('video_moderation');

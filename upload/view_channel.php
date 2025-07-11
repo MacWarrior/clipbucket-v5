@@ -1,6 +1,6 @@
 <?php
-define('THIS_PAGE', 'view_channel');
-define('PARENT_PAGE', 'channels');
+const THIS_PAGE = 'view_channel';
+const PARENT_PAGE = 'channels';
 
 require 'includes/config.inc.php';
 

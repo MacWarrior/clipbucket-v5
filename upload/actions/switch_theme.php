@@ -1,5 +1,5 @@
 <?php
-define('THIS_PAGE', 'switch_theme');
+const THIS_PAGE = 'switch_theme';
 require_once dirname(__FILE__, 2) . '/includes/config.inc.php';
 
 if( config('enable_theme_change') != 'yes' || !in_array(config('default_theme'), ['light','dark']) ){

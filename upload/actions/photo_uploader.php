@@ -1,5 +1,5 @@
 <?php
-define('THIS_PAGE', 'photo_uploader');
+const THIS_PAGE = 'photo_uploader';
 include('../includes/config.inc.php');
 
 if( !User::getInstance()->hasPermission('allow_photo_upload') ){

@@ -1,5 +1,6 @@
 <?php
-define('THIS_PAGE', 'subtitle_edit');
+const THIS_PAGE = 'subtitle_edit';
+const IS_AJAX = true;
 
 require_once dirname(__FILE__, 3) . '/includes/admin_config.php';
 

@@ -1,5 +1,5 @@
 <?php
-define('THIS_PAGE', 'photo_settings');
+const THIS_PAGE = 'photo_settings';
 require_once dirname(__FILE__, 2) . '/includes/admin_config.php';
 
 User::getInstance()->hasPermissionOrRedirect('photos_moderation', true);

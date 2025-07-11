@@ -1,6 +1,6 @@
 <?php
-define('THIS_PAGE', 'manage_photos');
-define('PARENT_PAGE', 'photos');
+const THIS_PAGE = 'manage_photos';
+const PARENT_PAGE = 'photos';
 
 require 'includes/config.inc.php';
 

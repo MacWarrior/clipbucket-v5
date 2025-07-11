@@ -1,5 +1,5 @@
 <?php
-define('THIS_PAGE', 'file_results');
+const THIS_PAGE = 'file_results';
 include(dirname(__FILE__, 2) . '/includes/config.inc.php');
 
 if(empty($_POST['file_name'])){

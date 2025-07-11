@@ -1,6 +1,6 @@
 <?php
 $in_bg_cron = true;
-define('THIS_PAGE', 'send_subscription_email');
+const THIS_PAGE = 'send_subscription_email';
 include(dirname(__FILE__, 2) . '/includes/config.inc.php');
 
 $videoid = $argv[1];

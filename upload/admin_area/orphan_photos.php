@@ -1,5 +1,5 @@
 <?php
-define('THIS_PAGE', 'orphan_photos');
+const THIS_PAGE = 'orphan_photos';
 
 require_once dirname(__FILE__, 2) . '/includes/admin_config.php';
 

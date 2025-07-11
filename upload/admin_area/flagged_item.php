@@ -1,5 +1,5 @@
 <?php
-define('THIS_PAGE', 'flagged_item');
+const THIS_PAGE = 'flagged_item';
 require_once dirname(__FILE__, 2) . '/includes/admin_config.php';
 
 $right = 'admin_access';

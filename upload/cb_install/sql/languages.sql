@@ -1642,4 +1642,6 @@ VALUES ('admin_setting'),
        ('alert_video_conversion_ongoing'),
        ('miscellaneous_options'),
        ('option_video_bloc_style'),
-       ('add_member');
+       ('add_member'),
+       ('max_option_display'),
+       ('display_option');

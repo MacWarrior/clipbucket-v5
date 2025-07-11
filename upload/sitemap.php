@@ -1,5 +1,5 @@
 <?php
-define('THIS_PAGE', 'sitemap');
+const THIS_PAGE = 'sitemap';
 require 'includes/config.inc.php';
 
 if( config('enable_sitemap') != 'yes' ){
