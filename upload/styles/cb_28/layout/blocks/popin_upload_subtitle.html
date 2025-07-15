@@ -32,7 +32,8 @@
             e.preventDefault();
             showSpinner();
             var formData = new FormData(this);
-
+            var is_for_upload = ($('#uploadMessage').length > 0)
+            formData.append('is_for_upload', is_for_upload);
             $.ajax({
                 url: baseurl + 'actions/subtitle_save.php',
                 type: 'POST',
@@ -45,9 +46,15 @@
                         $('.close').trigger('click');
                         hideSpinner();
                         $('.manage-page').prepend(result['msg']);
+                        $('#uploadMessage').parent().prepend(result['msg']);
                     } else {
                         $('.close').trigger('click');
-                        location.reload();
+                        if (is_for_upload) {
+                            hideSpinner();
+                            $('input[id^="videoid_"][value="{$videoid}"]').parents('.tab-pane.uploadFormContainer').find('[id^=subtitles]').html(result.html_list);
+                        } else {
+                            location.reload();
+                        }
                     }
                 },
                 error: function () {

@@ -568,7 +568,7 @@ function getUpdate() {
                                 thumbs.insertBefore($('input[id^="videoid_"][value="' + video.videoid + '"]').parent().find('.pad-bottom-sm.text-right'));
                                 thumbs.slideDown('slow');
                             }
-                            if ($('input[id^="videoid_"][value="' + video.videoid + '"]').parent().find('#subtitles').length === 0 && typeof video.subtitles !== 'undefined' && video.subtitles.length > 0) {
+                            if (video.status.toLowerCase() == 'successful' && $('input[id^="videoid_"][value="' + video.videoid + '"]').parent().find('#subtitles_'+video.videoid).length === 0 && typeof video.subtitles !== 'undefined' && video.subtitles.length > 0) {
                                 const subtitles = $(video.subtitles).hide();
                                 subtitles.insertBefore($('input[id^="videoid_"][value="' + video.videoid + '"]').parent().find('.pad-bottom-sm.text-right'));
                                 subtitles.slideDown('slow');
@@ -636,4 +636,63 @@ function slideFormSection(){
             }
         }
     });
+}
+
+function getSubtitleList(video_id) {
+    var result = '';
+    $.post({
+        url: baseurl + 'actions/subtitle_get_list.php',
+        dataType: 'json',
+        data: {
+            video_id: video_id,
+        },
+        success: function (response) {
+            result = response.data;
+        }
+    });
+}
+
+function editTitle(number, videoid) {
+    $('table[data-id="'+videoid+'"]').find('.buttons-' + number).css('display', 'inline');
+    $('table[data-id="'+videoid+'"]').find('.edit_sub_' + number).css('display', 'inline');
+    $('table[data-id="'+videoid+'"]').find('.span_sub_' + number).hide();
+}
+
+function cancelEditTitle(number, videoid) {
+    $('.buttons-' + number).hide();
+    $('.edit_sub_' + number).hide();
+    $('.span_sub_' + number).show();
+}
+function saveSubtitle(number, videoid) {
+    showSpinner();
+    $.ajax({
+        url: baseurl+"actions/subtitle_edit.php",
+        type: "POST",
+        data: {title: $('table[data-id="'+videoid+'"]').find('.edit_sub_' + number).val(), videoid: videoid, number: number},
+        dataType: 'json',
+        success: function (result) {
+            $('#subtitles_' + videoid).html(result['template']);
+            hideSpinner();
+            $('.close').click();
+            $('#uploadMessage').parent().prepend(result['msg']);
+        }
+    });
+}
+
+function deleteSubtitle(number, videoid) {
+    showSpinner();
+    if (confirm_it(text_confirm_sub_file.replace('%s', number))) {
+        $.ajax({
+            url: baseurl+"actions/subtitle_delete.php",
+            type: "POST",
+            data: {number: number, videoid: videoid},
+            dataType: 'json',
+            success: function (result) {
+                $('#subtitles_' + videoid).html(result['template']);
+                $('.close').click();
+                $('#uploadMessage').parent().prepend(result['msg']);
+                hideSpinner();
+            }
+        });
+    }
 }
