@@ -50,8 +50,12 @@
                     } else {
                         $('.close').trigger('click');
                         if (is_for_upload) {
+                            var div_sub = $('input[id^="videoid_"][value="{$videoid}"]').parents('.tab-pane.uploadFormContainer').find('[id^=subtitles]');
                             hideSpinner();
-                            $('input[id^="videoid_"][value="{$videoid}"]').parents('.tab-pane.uploadFormContainer').find('[id^=subtitles]').html(result.html_list);
+                            if (div_sub.length === 0) {
+                                div_sub = $('#subtitles_{$videoid}' );
+                            }
+                            div_sub.html(result.html_list);
                         } else {
                             location.reload();
                         }

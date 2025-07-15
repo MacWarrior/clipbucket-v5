@@ -148,7 +148,7 @@ $(function() {
                                                 thumbs.slideDown('slow');
 
                                             }
-                                            if ($('#oxygenz_remote_play_form').find('#subtitles').length === 0 && typeof video.subtitles !== 'undefined' && video.subtitles.length > 0) {
+                                            if ($('#oxygenz_remote_play_form').find('#subtitles_'+video.videoid).length === 0 && typeof video.subtitles !== 'undefined' && video.subtitles.length > 0) {
                                                 const subtitles = $(video.subtitles).hide();
                                                 subtitles.insertBefore($('#oxygenz_remote_play_form').find('.pad-bottom-sm.text-right'));
                                                 subtitles.slideDown('slow');
