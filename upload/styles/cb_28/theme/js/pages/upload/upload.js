@@ -575,20 +575,25 @@ function getUpdate() {
                             }
                             slideFormSection();
                         }
+                        const parent = $('input[id^="videoid_"][value="'+video.videoid+'"]').parents('.tab-pane.uploadFormContainer');
                         if (video.status.toLowerCase() === 'processing') {
                             //update %
                             var process_div = $('.processing[data-id="' + video.videoid + '"]');
                             //if process don't exist : get thumb + process div
                             if (process_div.length === 0) {
-                                //if player already initialised, dispose it before initialize it again
                                 players[video.videoid] = video.html;
-                                $('input[id^="videoid_"][value="'+video.videoid+'"]').parents('.tab-pane.uploadFormContainer').find('.player-holder').html(video.html);
+                                if (parent.hasClass('active')) {
+                                    parent.find('.player-holder').html(video.html);
+                                }
                             } else {
                                 process_div.find('span').html(video.percent + '%');
                             }
                         } else {
                             players[video.videoid] = video.html;
-                            $('input[id^="videoid_"][value="'+video.videoid+'"]').parents('.tab-pane.uploadFormContainer').find('.player-holder').html(video.html);
+                            //reset html only if tab is active and player not already initialized
+                            if (parent.hasClass('active') && parent.find('.player-holder video').length <= 0) {
+                                parent.find('.player-holder').html(video.html);
+                            }
                         }
                     });
 
@@ -597,7 +602,7 @@ function getUpdate() {
                     }
                 }
             })
-        }, 5000);
+        }, 30000);
     }
 }
 
