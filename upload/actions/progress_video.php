@@ -9,9 +9,11 @@ $videos = Video::getInstance()->getAll([
 $all_complete = true;
 
 switch ($_POST['output']) {
+    case 'videos':
     case 'home':
+        $config = $_POST['output'] == 'home' ? config('homepage_recent_video_style') : config('videos_video_style');
         assign('popup_video', config('popup_video') == 'yes');
-        if (config('homepage_recent_video_style') == 'modern') {
+        if (config($config) == 'modern') {
             assign('width', 270);
             $template = "blocks/videos/video-modern.html";
         } else {
