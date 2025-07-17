@@ -16,6 +16,5 @@ if (empty($_POST['videoid'])) {
 
 $response['success'] = true;
 assign('videoid', mysql_clean($_POST['videoid']));
-assign('vstatus', mysql_clean($_POST['videoid']));
 $response += templateWithMsgJson('blocks/popin_upload_subtitle.html',false);
 echo json_encode($response);
