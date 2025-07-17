@@ -7,6 +7,9 @@ require_once DirPath::get('classes') . 'DiscordLog.php';
 require_once DirPath::get('classes') . 'WhoopsManager.php';
 require_once DirPath::get('classes') . 'system.class.php';
 require_once DirPath::get('classes') . 'my_queries.class.php';
+require_once DirPath::get('classes') . 'network.class.php';
+require_once DirPath::get('classes') . 'session.class.php';
+$sess = new Session();
 
 $whoops = \WhoopsManager::getInstance();
 if( System::isInDev() ){
@@ -50,17 +53,14 @@ $whoops->pushHandler(function($e){
 $whoops->register();
 
 if (!@$in_bg_cron) {
-    //Setting Session Max Life
-    ini_set('session.gc_maxlifetime', COOKIE_TIMEOUT);
-    session_set_cookie_params(COOKIE_TIMEOUT, '/');
-    session_start();
+    Session::start();
 }
 
 require_once DirPath::get('classes') . 'ClipBucket.class.php';
 require_once DirPath::get('includes') . 'functions.php';
 require_once DirPath::get('classes') . 'db.class.php';
 require_once DirPath::get('classes') . 'rediscache.class.php';
-require_once DirPath::get('classes') . 'network.class.php';
+
 
 check_install('before');
 if (file_exists(DirPath::get('includes') . 'config.php')) {
@@ -146,9 +146,6 @@ $timezone = config('timezone');
 if(!empty($timezone)) {
     date_default_timezone_set($timezone);
 }
-
-require_once('classes/session.class.php');
-$sess = new Session();
 
 if (User::getInstance()->hasAdminAccess() && !empty($error_redis)) {
     e($error_redis);

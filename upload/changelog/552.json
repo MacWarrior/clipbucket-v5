@@ -1,6 +1,6 @@
 {
   "version":"5.5.2",
-  "revision":"107",
+  "revision":"108",
   "status":"stable",
   "detail":[
     {
@@ -116,6 +116,7 @@
         ,"Cleanup ajax calls and separate back & front calls"
         ,"Delete conversion queue entry when deleting a video"
         ,"Drop support for PHP 7.0 to 7.4"
+        ,"Increase session security"
         ,"Update Readme"
         ,"Reduce cookies usage"
         ,"Remove unused configs"
