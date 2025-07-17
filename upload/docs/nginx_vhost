@@ -1,6 +1,6 @@
-## Latest update : 2025-06-24
+## Latest update : 2025-07-17
 ## Latest version : 5.5.2
-## Latest revision : 87
+## Latest revision : 107
 server {
     listen 80;
     server_name DOMAINNAME;
@@ -45,6 +45,9 @@ server {
         return 302 $1403;
     }
     location ~* ^(.*/)?(includes|changelog)/ {
+        return 302 $1403;
+    }
+    location ~* ^(.*/)?files/temp/ {
         return 302 $1403;
     }
 

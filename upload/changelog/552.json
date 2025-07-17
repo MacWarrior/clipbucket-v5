@@ -1,6 +1,6 @@
 {
   "version":"5.5.2",
-  "revision":"106",
+  "revision":"107",
   "status":"stable",
   "detail":[
     {
@@ -125,6 +125,7 @@
         ,"Fix typo <i>(#596)</i>"
         ,"Fix Nginx vhost <i>(#604)</i>"
         ,"Fix possible SQL injection"
+        ,"Fix access to temp files"
       ]
     },
     {
