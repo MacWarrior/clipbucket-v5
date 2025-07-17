@@ -1,6 +1,6 @@
 {
   "version":"5.5.2",
-  "revision":"103",
+  "revision":"105",
   "status":"stable",
   "detail":[
     {
@@ -43,6 +43,7 @@
         ,"Fix pages acces when updating from before 5.5.1 - #275"
         ,"Fix TMDB import"
         ,"Fix code & database update status on dashboard"
+        ,"Fix conversion bitrates display"
       ]
     },
     {
@@ -58,6 +59,7 @@
         ,"Implement subtitle upload"
         ,"Implement video bloc style on videos page"
         ,"Implement friend request notification in my account area"
+        ,"Implement notification bell <i>(#615)</i>"
         ,"Refactor friends requests & management"
         ,"Refactor collection selections"
         ,"Update video & photos management pages display"
