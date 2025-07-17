@@ -24,6 +24,7 @@ $(document).ready(function(){
         }
     });
 
+
     $('#add_new_note').on({
         click: function(e){
             e.preventDefault();
@@ -314,7 +315,7 @@ $(document).ready(function(){
                 "column-1": ubarchart_users_inactive
             }
         ]
-    });
+    }); 
     AmCharts.makeChart("vbarchart", {
         "type": "serial",
         "pathToImages": "https://www.amcharts.com/lib/3/images/",
@@ -420,6 +421,23 @@ function updateListeners () {
             });
         }
     });
+
+    $('.mark_as_failed').off('click').on('click', function () {
+        var id = $(this).data('id');
+        if (confirm(lang.confirm_mark_as_failed)) {
+            $.ajax({
+                url: baseurl + "actions/force_tool_to_error.php",
+                type: "POST",
+                data: {id_tool: id},
+                dataType: 'json',
+                success: function (result) {
+                    showSpinner();
+                }
+            });
+        } else {
+            return false;
+        }
+    })
 }
 
 let showMsg = function(msg, type, autoDismiss){
@@ -550,6 +568,7 @@ function connectSSE() {
         var data = JSON.parse(e.data);
         $('#update_div').html(data.html);
         updateListeners();
+        hideSpinner();
         if (data.msg_template) {
             $(".page-content").prepend(data.msg_template)
         }
