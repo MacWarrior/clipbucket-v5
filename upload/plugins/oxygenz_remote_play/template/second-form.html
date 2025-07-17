@@ -28,7 +28,7 @@
             {ANCHOR place="after_upload_form_required_fields"}
             <div class="formSection clear">
                 <h4>{lang code='movie_infos'} <i class="glyphicon glyphicon-chevron-down pull-right"></i></h4>
-                <div class="sectionContent hidden">
+                <div class="sectionContent" style="display: none;">
                     {foreach $requiredFields.fields as $field}
                     <div class="form-group">
                         {$field.id = 'remote_'|cat: $field.name}
@@ -47,7 +47,7 @@
                 {ANCHOR place="before_upload_form_custom_fields"}
             <div class="formSection clear">
                 <h4>{$custom_fields.group_name} <i class="glyphicon glyphicon-chevron-down pull-right"></i></h4>
-                <div class="sectionContent hidden">
+                <div class="sectionContent" style="display: none;">
                     {foreach $custom_fields.fields as $field}
                     <div class="form-group">
                         {$field.id = ''}
@@ -85,7 +85,7 @@
             {ANCHOR place="before_upload_form_location_fields"}
             <div class="formSection clear">
                 <h4>{$dateAndLocation.group_name} <i class="glyphicon glyphicon-chevron-down pull-right"></i></h4>
-                <div class="sectionContent hidden">
+                <div class="sectionContent" style="display: none;">
                     {foreach $dateAndLocation.fields as $field}
                     <div class="form-group">
                         {$field.id = ''}
@@ -122,7 +122,7 @@
             {ANCHOR place="before_upload_form_sharing_fields"}
             <div class="formSection clear">
                 <h4>{$sharingOptions.group_name}<i class="glyphicon glyphicon-chevron-down pull-right"></i></h4>
-                <div class="sectionContent hidden">
+                <div class="sectionContent" style="display: none;">
                     {foreach $sharingOptions.fields as $field}
                     <div class="form-group">
                         {if $field.type != 'checkbox' && $field.type != 'radiobutton' && $field.type != 'checkbox2'}
@@ -163,17 +163,23 @@
             {ANCHOR place="after_upload_form_submit"}
         </div>
     </div>
-    {if config('enable_video_categories') != 'no'}
         <div class="col-md-4 uploadFormSidebarDiv">
-            {ANCHOR place="before_upload_form_categories_field"}
-            <h4>{$categories.title}</h4>
-            <small>{$categories.hint_1}</small>
-            <div class="categoriesContainer">
-                {$categories.label_class='checkbox'}
-                {$categories.class='checkbox'}
-                {$formObj->createField($categories)}
+            {if config('enable_tmdb') == 'yes' && config('tmdb_token') != '' && config('tmdb_enable_on_front_end') == 'yes'}
+                <button class="btn btn-primary " tabindex="-1" href="javascript:void(0);" data-id="{$videoFields.videoid}" id="button_info_tmdb">{lang code='get_data_tmdb'}</button>
+            {/if}
+            <div class="clearfix player-holder">
+                <img src="{default_thumb('url')}" />
             </div>
-            {ANCHOR place="after_upload_form_categories_field"}
+            {if config('enable_video_categories') != 'no'}
+                    {ANCHOR place="before_upload_form_categories_field"}
+                    <h4>{$categories.title}</h4>
+                    <small>{$categories.hint_1}</small>
+                    <div class="categoriesContainer">
+                        {$categories.label_class='checkbox'}
+                        {$categories.class='checkbox'}
+                        {$formObj->createField($categories)}
+                    </div>
+                    {ANCHOR place="after_upload_form_categories_field"}
+            {/if}
         </div>
-    {/if}
 </div>
