@@ -130,7 +130,7 @@
                         {/if}
                     </ul>
                     <div class="tab-content">
-                        <div id="videodetail" class="tab-pane active">
+                        <div id="videodetail" class="tab-pane fade active in">
                             <div class="row">
                                 <div class="col-md-12">
                                     <table class="myTable" style="width:100%;">
@@ -193,7 +193,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div id="uinformation" class="tab-pane">
+                        <div id="uinformation" class="tab-pane fade">
                             <div class="row">
                                 <div class="col-md-10">
                                     <table class="myTable" style="width:100%;">
@@ -246,7 +246,7 @@
                                 {/if}
                             </div>
                         </div>
-                        <div id="privacyoption" class="tab-pane">
+                        <div id="privacyoption" class="tab-pane fade">
                             {foreach from=$video_privacyoption item=field}
                                 {if $field.type == 'hidden' &&  $field.id != 'video_users'}
                                     {$formObj->createField($field)}
@@ -284,7 +284,7 @@
                             {/foreach}
                         </div>
                         {if config('enable_country_video_field') == 'yes' || config('enable_location_video_field') == 'yes' || config('enable_recorded_date_video_field') == 'yes' }
-                            <div id="datelocation" class="tab-pane">
+                            <div id="datelocation" class="tab-pane fade">
                                 {foreach from=$video_datelocation item=field}
                                 <div class="table">
                                     {if $field.type != 'checkbox' && $field.type != 'radiobutton' && $field.type != 'checkbox2'}
@@ -345,7 +345,7 @@
                         {/if}
                     </ul>
                     <div class="tab-content">
-                        <div id="videoinfos" class="tab-pane active">
+                        <div id="videoinfos" class="tab-pane fade active in">
                             {foreach from=$video_fields item=field}
                                 {if in_array($field.id, ['tags_genre','tags_actors','tags_executive_producer','tags_producer','tags_director','tags_crew','category'])}
                                     {continue}
@@ -368,7 +368,7 @@
                             {/foreach}
                         </div>
                         {if config('enable_video_categories')=='yes'}
-                            <div id="category" class="tab-pane">
+                            <div id="category" class="tab-pane fade">
                                 <div>
                                     {if $video_fields.cat.type != 'checkbox' && $video_fields.cat.type != 'radiobutton' && $video_fields.cat.type != 'checkbox2'}
                                         {if empty($video_fields.cat.class)}
@@ -393,7 +393,7 @@
                                 <br/>
                             {/if}
                         </div>
-                        <div id="miscellaneous" class="tab-pane">
+                        <div id="miscellaneous" class="tab-pane fade">
                             <div class="row">
                                 <div class="col-md-2">
                                     <label for="status"><strong>{lang code='vdo_status'}</strong></label>
@@ -476,7 +476,7 @@
                         {if config('enable_video_genre') == 'yes' || config('enable_video_actor') == 'yes' || config('enable_video_producer') == 'yes'
                         || config('enable_video_executive_producer') == 'yes' || config('enable_video_director') == 'yes' || config('enable_video_crew') == 'yes'
                         }
-                            <div id="movie_infos" class="tab-pane">
+                            <div id="movie_infos" class="tab-pane fade">
                                 {foreach from=$video_fields item=field}
                                     {if !in_array($field.id, ['tags_genre','tags_actors','tags_executive_producer','tags_producer','tags_director','tags_crew'])}
                                         {continue}
@@ -501,7 +501,7 @@
                             </div>
                         {/if}
                         {if config('enable_comments_video') == 'yes'}
-                            <div id="comments" class="tab-pane">
+                            <div id="comments" class="tab-pane fade">
                                 <div class="form-group">
                                     {include file="$style_dir/blocks/comments.html" comment_type='video'}
                                 </div>
@@ -564,34 +564,34 @@
                         {/if}
                     </ul>
                     <div class="tab-content">
-                        <div id="videoplayer" class="tab-pane active">
+                        <div id="videoplayer" class="tab-pane active fade in">
                             {include file="$style_dir/blocks/video_player.html"}
                         </div>
-                        <div id="thumbnails" class="tab-pane">
+                        <div id="thumbnails" class="tab-pane fade">
                             {include file="$style_dir/blocks/thumb_mini_list.html"}
                         </div>
                         {if config('enable_video_poster') == 'yes'}
-                        <div id="posters" class="tab-pane">
+                        <div id="posters" class="tab-pane fade">
                             {include file="$style_dir/blocks/poster_mini_list.html"}
                         </div>
                         {/if}
                         {if config('enable_video_backdrop') == 'yes'}
-                        <div id="backdrops" class="tab-pane">
+                        <div id="backdrops" class="tab-pane fade">
                             {include file="$style_dir/blocks/backdrop_mini_list.html"}
                         </div>
                         {/if}
                         {if !empty($resolution_list)}
-                        <div id="resolutions" class="tab-pane">
+                        <div id="resolutions" class="tab-pane fade">
                             {include file="$style_dir/blocks/resolution_list.html"}
                         </div>
                         {/if}
                         {if config('player_subtitles')}
-                            <div id="subtitles" class="tab-pane">
+                            <div id="subtitles" class="tab-pane fade">
                                 {include file="$style_dir/blocks/subtitle_list.html" videoid=$data.videoid vstatus=$data.status}
                             </div>
                         {/if}
                         {if config('enable_video_view_history')=='yes'}
-                            <div id="view_history" class="tab-pane">
+                            <div id="view_history" class="tab-pane fade">
                                 <legend>{lang('video_list_view_video_history')}</legend>
                                 <div class="form-group" id="view_history_div">
                                     {include file="$style_dir/blocks/video_view_history.html"}

@@ -4,10 +4,10 @@ $(function() {
             e.preventDefault();
             if($(this).find('i').hasClass('glyphicon-chevron-down')){
                 $(this).find('i').removeClass('glyphicon-chevron-down').addClass('glyphicon-chevron-up');
-                $(this).next().toggleClass('hidden');
+                $(this).next().slideDown('slow');
             }else{
                 $(this).find('i').removeClass('glyphicon-chevron-up').addClass('glyphicon-chevron-down');
-                $(this).next().toggleClass('hidden');
+                $(this).next().slideUp('slow');
             }
         }
     });
@@ -126,6 +126,55 @@ $(function() {
                         $('#oxygenz_remote_play_form').find('input[name="videokey"]').attr('disabled', false).val(data.videokey);
                         $('#oxygenz_remote_play_form').find('input[name="oxygenz_remote_play_file_url"]').attr('readonly', true);
                         step='update';
+                        //call progress video
+                        intervalId = setInterval(function () {
+                            $.post({
+                                url: baseurl+'actions/progress_video.php',
+                                dataType: 'json',
+                                data: {
+                                    ids: [data.videoid],
+                                    output: 'watch_video',
+                                    display_thumbs: true,
+                                    display_subtitles: true
+                                },
+                                success: function (response) {
+                                    var data = response.data;
+
+                                    data.videos.forEach(function (video) {
+                                        if ( video.percent > 0 || typeof video.percent === "undefined") {
+                                            if ($('#oxygenz_remote_play_form').find('[name="default_thumb"]').length === 0 && typeof video.thumbs !== 'undefined' && video.thumbs.length > 0) {
+                                                const thumbs = $(video.thumbs).hide();
+                                                thumbs.insertBefore($('#oxygenz_remote_play_form').find('.pad-bottom-sm.text-right'));
+                                                thumbs.slideDown('slow');
+
+                                            }
+                                            if ($('#oxygenz_remote_play_form').find('#subtitles_'+video.videoid).length === 0 && typeof video.subtitles !== 'undefined' && video.subtitles.length > 0) {
+                                                const subtitles = $(video.subtitles).hide();
+                                                subtitles.insertBefore($('#oxygenz_remote_play_form').find('.pad-bottom-sm.text-right'));
+                                                subtitles.slideDown('slow');
+                                            }
+                                            slideFormSection();
+                                        }
+                                        if (video.status.toLowerCase() === 'processing') {
+                                            //update %
+                                            var process_div = $('.processing[data-id="' + video.videoid + '"]');
+                                            //if process don't exist : get thumb + process div
+                                            if (process_div.length === 0) {
+                                                $('#oxygenz_remote_play_form').find('.player-holder').html(video.html);
+                                            } else {
+                                                process_div.find('span').html(video.percent + '%');
+                                            }
+                                        } else {
+                                            $('#oxygenz_remote_play_form').find('.player-holder').html(video.html);
+                                        }
+                                    });
+
+                                    if (response.all_complete) {
+                                        clearInterval(intervalId);
+                                    }
+                                }
+                            })
+                        }, 30000);
                     }
                     $('#oxygenz_remote_play_submit_form2').attr('disabled', false).html(oxygenz_remote_play_lang_submit_now);
                 }

@@ -7,6 +7,8 @@ $title = $_POST['title'];
 if (empty($title)) {
     $can_update = false;
     e(lang('missing_params'));
+    echo json_encode(['success' => false, 'msg'=>getTemplateMsg()]);
+    die();
 }
 $video = $_POST['videoid'];
 $number = $_POST['number'];

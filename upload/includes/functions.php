@@ -3625,6 +3625,13 @@ function save_subtitle_ajax()
 
     $response['success'] = $success;
     $response['msg'] = getTemplateMsg();
+    if (!empty($_POST['is_for_upload'])) {
+        $subtitle_list = get_video_subtitles($video);
+        assign('videoid', $video['videoid']);
+        assign('vstatus', $video['status']);
+        assign('subtitle_list', $subtitle_list);
+        $response['html_list'] = getTemplate('blocks/subtitle_list.html');
+    }
     echo json_encode($response);
 }
 include('functions_db.php');

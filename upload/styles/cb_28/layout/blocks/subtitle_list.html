@@ -1,5 +1,5 @@
 {if  !empty($subtitle_list)}
-    <table class="table table-bordered table-striped manageUsersTable">
+    <table class="table table-bordered table-striped manageUsersTable" data-id="{$videoid}">
         <tr>
             <th class="col-md-1">{lang code='number'}</th>
             <th class="col-md-10">{lang code='title'}</th>
@@ -9,11 +9,11 @@
             <tr>
                 <td>{$subtitle_list[sub].number}</td>
                 <td>
-                    <span style="display: block;" id="span_sub_{$subtitle_list[sub].number}">{display_clean($subtitle_list[sub].title)}</span>
-                    <input type="text" class="form-control" value="{display_clean($subtitle_list[sub].title)}" id="edit_sub_{$subtitle_list[sub].number}" style="display:none; width: 80%;">
-                    <div style="text-align: center; vertical-align: middle;display: none;" id="buttons-{$subtitle_list[sub].number}">
-                        <span class="glyphicon glyphicon-ok-circle confirm_update_translation" title="{lang code='confirm'}" style="color:#87b87f;font-size:1.5em;cursor:pointer;" onclick="saveSubtitle('{$subtitle_list[sub].number}');"></span>
-                        <span class="glyphicon glyphicon-remove-circle cancel_translation" title="{lang code='cancel'}" style="color:#d15b47;font-size:1.5em;cursor:pointer; margin-left: 15px;" onclick="cancelEditTitle('{$subtitle_list[sub].number}');"></span>
+                    <span style="display: block;" class="span_sub_{$subtitle_list[sub].number}">{display_clean($subtitle_list[sub].title)}</span>
+                    <input type="text" class="form-control edit_sub_{$subtitle_list[sub].number}" value="{display_clean($subtitle_list[sub].title)}" style="display:none; width: 80%;">
+                    <div style="text-align: center; vertical-align: middle;display: none;" class="buttons-{$subtitle_list[sub].number}">
+                        <span class="glyphicon glyphicon-ok-circle confirm_update_translation" title="{lang code='confirm'}" style="color:#87b87f;font-size:1.5em;cursor:pointer;" onclick="saveSubtitle('{$subtitle_list[sub].number}',{$videoid});"></span>
+                        <span class="glyphicon glyphicon-remove-circle cancel_translation" title="{lang code='cancel'}" style="color:#d15b47;font-size:1.5em;cursor:pointer; margin-left: 15px;" onclick="cancelEditTitle('{$subtitle_list[sub].number}',{$videoid});"></span>
                     </div>
                 </td>
                 <td>
@@ -22,12 +22,12 @@
                             Actions <i class="caret"></i></button>
                         <ul class="dropdown-menu pull-right" aria-labelledby="dropdownMenu1" role="menu">
                             <li role="presentation">
-                                <a role="menuitem" tabindex="-1" style="cursor:pointer;" onclick="editTitle('{$subtitle_list[sub].number}')">
+                                <a role="menuitem" tabindex="-1" style="cursor:pointer;" onclick="editTitle('{$subtitle_list[sub].number}',{$videoid})">
                                     {lang code='edit'}
                                 </a>
                             </li>
                             <li role="presentation">
-                                <a role="menuitem" tabindex="-1" style="cursor:pointer;" onclick="deleteSubtitle('{$subtitle_list[sub].number}')">
+                                <a role="menuitem" tabindex="-1" style="cursor:pointer;" onclick="deleteSubtitle('{$subtitle_list[sub].number}',{$videoid})">
                                     {lang code='delete'}
                                 </a>
                             </li>
