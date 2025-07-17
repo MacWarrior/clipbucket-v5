@@ -11,7 +11,7 @@ $all_complete = true;
 switch ($_POST['output']) {
     case 'videos':
     case 'home':
-        $config = $_POST['output'] == 'home' ? config('homepage_recent_video_style') : config('videos_video_style');
+        $config = $_POST['output'] == 'home' ?'homepage_recent_video_style' : 'videos_video_style';
         assign('popup_video', config('popup_video') == 'yes');
         if (config($config) == 'modern') {
             assign('width', 270);
