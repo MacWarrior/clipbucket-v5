@@ -78,8 +78,12 @@ switch($step){
         $errors = errorhandler::getInstance()->get_error();
         if (empty($errors)) {
             Video::getInstance()->setDefautThumb($_POST['default_thumb'], 'thumb', $video_id);
-            Video::getInstance()->setDefautThumb($_POST['default_poster'], 'poster', $video_id);
-            Video::getInstance()->setDefautThumb($_POST['default_backdrop'], 'backdrop', $video_id);
+            if (config('enable_video_poster') == 'yes' && !empty($_POST['default_poster'])) {
+                Video::getInstance()->setDefautThumb($_POST['default_poster'], 'poster', $video_id);
+            }
+            if (config('enable_video_backdrop') == 'yes' && !empty($_POST['default_backdrop'])) {
+                Video::getInstance()->setDefautThumb($_POST['default_backdrop'], 'backdrop', $video_id);
+            }
         }
         $response = [];
         if( empty($errors) ) {
