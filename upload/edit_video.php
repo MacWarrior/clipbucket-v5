@@ -31,9 +31,13 @@ if ($vdetails['userid'] != $userid) {
         CBvideo::getInstance()->update_video();
         if (empty(errorhandler::getInstance()->get_error())) {
             Video::getInstance()->setDefautThumb($_POST['default_thumb'], 'thumb', $vid);
-            Video::getInstance()->setDefautThumb($_POST['default_poster'], 'poster', $vid);
-            Video::getInstance()->setDefautThumb($_POST['default_backdrop'], 'backdrop', $vid);
-            $vdetails = Video::getInstance()->getOne(['videoid'=>$vid]);
+            if (config('enable_video_poster') == 'yes' && !empty($_POST['default_poster'])) {
+                Video::getInstance()->setDefautThumb($_POST['default_poster'], 'poster', $vid);
+            }
+            if (config('enable_video_backdrop') == 'yes' && !empty($_POST['default_backdrop'])) {
+                Video::getInstance()->setDefautThumb($_POST['default_backdrop'], 'backdrop', $vid);
+            }
+            $vdetails = Video::getInstance()->getOne(['videoid' => $vid]);
         }
     }
 

@@ -95,6 +95,23 @@ foreach ($videos as $video) {
         $return['player']['html'] = ob_get_clean();
         $return['player']['id'] = $video['videoid'];
     }
+    if (!empty($_POST['display_thumbs'])) {
+        assign('vidthumbs', get_thumb($video,TRUE,'168x105','auto'));
+        assign('vidthumbs_custom', get_thumb($video,TRUE,'168x105','custom'));
+        $data['thumbs'] = getTemplate('blocks/videos/thumb_form.html');
+    }
+    if (!empty($_POST['display_subtitles'])) {
+        //TODO check config
+        assign('videoid', $video['videoid']);
+        assign('vstatus', $video['status'] );
+        assign('subtitle_list',get_video_subtitles($video) ?: []);
+        $data['subtitles'] = '<div class="formSection clear">
+                                    <h4>'.lang('video_subtitle_management').'<i class="glyphicon glyphicon-chevron-down pull-right"></i></h4>
+                                    <div class="sectionContent" style="display: none;" id="subtitles_'.$video['videoid'].'">
+                                        '.getTemplate('blocks/subtitle_list.html').'
+                                    </div>
+                                </div>';
+    }
     $data['html'] = getTemplate($template);
     $return['videos'][] = $data;
 }
