@@ -1,5 +1,5 @@
 <?php
-define('THIS_PAGE', 'editor_pick');
+const THIS_PAGE = 'editor_pick';
 require_once dirname(__DIR__, 3) . '/includes/admin_config.php';
 
 User::getInstance()->hasPermissionOrRedirect('video_moderation', true);

@@ -1,4 +1,4 @@
-var page = baseurl+'ajax.php';
+var page = baseurl+'actions/ajax.php';
 var loading_img = "<img style='vertical-align:middle' src='"+imageurl+"/ajax-loader.gif'>";
 var loading = loading_img+" Loading...";
 
@@ -32,7 +32,7 @@ function load_more(limit,mode,inner_mode,append_id,attrb,cat_id,total)
             $('#'+inner_mode).html('loading');
         },
         type: 'POST',
-        url: baseurl+'ajax.php',
+        url: baseurl+'actions/ajax.php',
         data: {
             limit : limit,
             mode : mode,
@@ -923,7 +923,7 @@ function checkUncheckAll(theElement) {
  */
 function rate(id,rating,type)
 {
-    var page = baseurl+'ajax.php';
+    var page = baseurl+'actions/ajax.php';
     $.post(page, {
         mode : 'rating',
         id:id,
@@ -1066,4 +1066,21 @@ function addErrClass(obj, msg, override = false, scroll = true, tclass = false) 
     if (scroll === true) {
         $("html, body").animate({ scrollTop: 0 }, "slow");
     }
+}
+
+function getModalUploadSubtitle(video_id) {
+    showSpinner();
+    $.ajax({
+        url: "actions/subtitle_popin_upload.php",
+        type: "POST",
+        data: {videoid: video_id },
+        dataType: 'json',
+        success: function (result) {
+            hideSpinner();
+            var modal = $('#myModal');
+            modal.html(result['template']);
+            modal.modal();
+            $('.manage-page').prepend(result['msg']);
+        }
+    });
 }

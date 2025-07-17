@@ -1,8 +1,8 @@
 <?php
-define('THIS_PAGE', 'file_downloader');
+const THIS_PAGE = 'file_downloader';
 include('../includes/config.inc.php');
 
-include('../includes/classes/curl/class.curl.php');
+include(DirPath::get('classes').'curl/class.curl.php');
 ini_set('max_execution_time', 3000);
 
 if (isset($_POST['check_url'])) {

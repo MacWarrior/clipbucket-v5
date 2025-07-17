@@ -1,5 +1,5 @@
 <?php
-define('THIS_PAGE', 'upload_thumb');
+const THIS_PAGE = 'upload_thumb';
 require 'includes/config.inc.php';
 
 User::getInstance()->hasPermissionOrRedirect('allow_video_upload', true);

@@ -40,7 +40,7 @@ $(document).ready(function(){
             addErrClass(userSect, errors["name_invalid_chars"], true, false);
         } else {
             $.ajax({
-                url: baseurl+"ajax/commonAjax.php",
+                url: baseurl+"actions/commonAjax.php",
                 type: "post",
                 dataType: "html",
                 data: {
@@ -73,7 +73,7 @@ $(document).ready(function(){
             addErrClass(emailSec, errors["invalid_email"], true, false);
         } else {
             $.ajax({
-                url: baseurl+"ajax/commonAjax.php",
+                url: baseurl+"actions/commonAjax.php",
                 type: "post",
                 dataType: "html",
                 data: {

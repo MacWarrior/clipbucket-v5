@@ -1,19 +1,23 @@
 #!/bin/bash
 set -e
 
-# Vérifier si le groupe existe déjà, sinon le créer
-if ! getent group ${GID} > /dev/null; then
-  groupadd -g ${GID} containeruser
-fi
+if [ "${UID}" = "0" ]; then
+    USER_NAME=root
+else
+    USER_NAME=containeruser
 
-# Vérifier si l'utilisateur existe déjà, sinon le créer
-if ! getent passwd ${UID} > /dev/null; then
-  useradd -m -u ${UID} -g ${GID} containeruser
+    if ! getent group ${GID} > /dev/null; then
+      groupadd -g ${GID} ${USER_NAME}
+    fi
+
+    if ! getent passwd ${UID} > /dev/null; then
+      useradd -m -u ${UID} -g ${GID} ${USER_NAME}
+    fi
 fi
 
 # adapter les permission pour le nouvel user
 mkdir -p /var/lib/mysql /srv/http/clipbucket /run/mysqld /var/lib/nginx && \
-chown -R containeruser:containeruser /var/lib/mysql /run/mysqld /usr/lib/mysql /srv/http/clipbucket /run/php
+chown -R ${USER_NAME}:${USER_NAME} /var/lib/mysql /run/mysqld /usr/lib/mysql /srv/http/clipbucket /run/php
 
 # Fonction pour terminer correctement les processus enfants
 terminate_processes() {
@@ -30,14 +34,14 @@ trap terminate_processes SIGTERM SIGINT
 # Vérifier si mysql a deja était installé
 if [ ! -d "/var/lib/mysql/clipbucket" ]; then
     echo "install mariadb ..."
-    mariadb-install-db --user=containeruser --basedir=/usr --datadir=/var/lib/mysql || true
+    mariadb-install-db --user=${USER_NAME} --basedir=/usr --datadir=/var/lib/mysql || true
 else
     echo "mariadb already installed."
 fi
 
 # Démarrer MariaDB
 echo "Starting MariaDB..."
-mariadbd --user=containeruser --datadir=/var/lib/mysql &
+mariadbd --user=${USER_NAME} --datadir=/var/lib/mysql &
 mariadb_pid=$!
 
 # Initialiser le compteur de temps d'attente
@@ -89,7 +93,7 @@ if [ ! -e /run/php/php8.2-fpm.sock ]; then
 fi
 
 # Changer le propriétaire du fichier de socket une fois qu'il est disponible
-chown containeruser:containeruser /run/php/php8.2-fpm.sock
+chown ${USER_NAME}:${USER_NAME} /run/php/php8.2-fpm.sock
 
 # Vérifier si les sources existent
 if [ ! "$(ls -A /srv/http/clipbucket)" ]; then
@@ -98,7 +102,7 @@ if [ ! "$(ls -A /srv/http/clipbucket)" ]; then
     git clone https://github.com/MacWarrior/clipbucket-v5.git /srv/http/clipbucket;
     git config --global core.fileMode false ;
     git config --global --add safe.directory /srv/http/clipbucket ;
-    chown -R containeruser:containeruser /srv/http/clipbucket ;
+    chown -R ${USER_NAME}:${USER_NAME} /srv/http/clipbucket ;
     chmod 755 -R /srv/http/clipbucket ;
 else
     echo "Sources already exist. No init required."

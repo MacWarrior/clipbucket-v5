@@ -1,6 +1,6 @@
 <?php
-define('THIS_PAGE', 'edit_video');
-define('PARENT_PAGE', 'videos');
+const THIS_PAGE = 'edit_video';
+const PARENT_PAGE = 'videos';
 
 require 'includes/config.inc.php';
 
@@ -62,6 +62,8 @@ ClipBucket::getInstance()->addCSS([
 ]);
 $available_tags = Tags::fill_auto_complete_tags('video');
 assign('available_tags', $available_tags);
+$subtitle_list = get_video_subtitles($vdetails) ?: [];
+assign('subtitle_list', $subtitle_list);
 
 subtitle(lang('vdo_edit_vdo'));
 template_files('edit_video.html');

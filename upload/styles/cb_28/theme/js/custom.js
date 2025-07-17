@@ -309,7 +309,7 @@ function homePageVideos(qlist_items)
 {
     $('#container').on("click","#recent_load_more, #featured_load_more",function()
     {
-        var loadLink = baseurl+'ajax/home.php',
+        var loadLink = baseurl+'actions/home.php',
             main_object = $(this),
             sendType = 'post',
             dataType = 'json',

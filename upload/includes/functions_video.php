@@ -329,6 +329,23 @@ function get_video_subtitles($vdetails)
 }
 
 /**
+ * @param int $videoid
+ * @return string|bool
+ * @throws Exception
+ */
+function get_video_subtitle_last_num(int $videoid): string|bool
+{
+    if (empty($videoid)) {
+        return false;
+    }
+    $results = Clipbucket_db::getInstance()->select(tbl('video_subtitle'), 'MAX(number) as number', 'videoid=' . $videoid);
+    if (empty($results)) {
+        return '00';
+    }
+    return $results[0]['number'] ?? '00';
+}
+
+/**
  * function used to get default thumb of ClipBucket
  */
 function default_thumb($return_type = 'url'): string
@@ -724,6 +741,7 @@ function update_video_by_filename($file_name, $fields, $values)
  */
 function activate_video_with_file($vid): void
 {
+    DiscordLog::sendDump('fjneziofhoize');
     $vdetails = get_video_basic_details($vid);
     $file_name = $vdetails['file_name'];
     $results = Clipbucket_db::getInstance()->select(tbl('conversion_queue'), '*', " cqueue_name='$file_name' AND cqueue_conversion='yes'");

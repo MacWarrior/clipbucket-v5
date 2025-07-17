@@ -1,5 +1,5 @@
 <?php
-define('THIS_PAGE', 'login_as_user');
+const THIS_PAGE = 'login_as_user';
 
 require_once dirname(__FILE__, 2) . '/includes/admin_config.php';
 User::getInstance()->hasPermissionOrRedirect('member_moderation',true);

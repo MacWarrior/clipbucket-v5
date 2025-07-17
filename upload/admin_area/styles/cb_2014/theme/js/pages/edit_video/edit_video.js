@@ -1,6 +1,6 @@
 function regenerateThumbs(videoid) {
     $.ajax({
-        url: baseurl+"actions/regenerate_thumbs.php",
+        url: "actions/thumbs_regenerate.php",
         type: "post",
         data: {videoid: videoid, origin: 'edit_video'},
         dataType: 'json',
@@ -23,7 +23,7 @@ function regenerateThumbs(videoid) {
 function deleteResolution(resolution) {
     if (confirm_it(text_confirm_vid_file.replace('%s', resolution))) {
         $.ajax({
-            url: baseurl+"actions/resolution_delete.php",
+            url: "actions/resolution_delete.php",
             type: "POST",
             data: {resolution: resolution, videoid: videoid},
             dataType: 'json',
@@ -39,12 +39,12 @@ function deleteResolution(resolution) {
 function deleteSubtitle(number) {
     if (confirm_it(text_confirm_sub_file.replace('%s', number))) {
         $.ajax({
-            url: baseurl+"actions/subtitle_delete.php",
+            url: "actions/subtitle_delete.php",
             type: "POST",
             data: {number: number, videoid: videoid},
             dataType: 'json',
             success: function (result) {
-                $('#subtitiles').html(result['template']);
+                $('#subtitles').html(result['template']);
                 $('.close').click();
                 $('.page-content').prepend(result['msg']);
             }
@@ -55,7 +55,7 @@ function deleteSubtitle(number) {
 function deleteComment(comment_id) {
     if (confirm_it(text_confirm_comment)) {
         $.ajax({
-            url: baseurl+"actions/admin_comment_delete.php",
+            url: "actions/comment_delete.php",
             type: "POST",
             data: {comment_id: comment_id},
             dataType: 'json',
@@ -86,13 +86,16 @@ function cancelEditTitle(number) {
 }
 
 function saveSubtitle(number) {
+
+    showSpinner();
     $.ajax({
-        url: baseurl+"actions/subtitle_edit.php",
+        url: "actions/subtitle_edit.php",
         type: "POST",
         data: {title: $('#edit_sub_' + number).val(), videoid: videoid, number: number},
         dataType: 'json',
         success: function (result) {
-            $('#subtitiles').html(result['template']);
+            $('#subtitles').html(result['template']);
+            hideSpinner();
             $('.close').click();
             $('.page-content').prepend(result['msg']);
         }
@@ -102,7 +105,7 @@ function saveSubtitle(number) {
 function getInfoTmdb(video_id, type, video_title, page,sort, sort_order, selected_year) {
     showSpinner();
     $.ajax({
-        url: baseurl+"actions/admin_info_tmdb.php",
+        url:"actions/tmdb_info.php",
         type: "POST",
         data: {videoid: video_id, video_title: video_title, type: type, page: page,sort: sort, sort_order: sort_order, selected_year: selected_year },
         dataType: 'json',
@@ -119,7 +122,7 @@ function getInfoTmdb(video_id, type, video_title, page,sort, sort_order, selecte
 function saveInfoTmdb(tmdb_video_id, type) {
     showSpinner();
     $.ajax({
-        url: baseurl+"actions/admin_import_tmdb.php",
+        url: "actions/tmdb_import.php",
         type: "POST",
         data: {tmdb_video_id: tmdb_video_id, videoid: videoid, type: type},
         dataType: 'json',
@@ -153,7 +156,7 @@ function pageInfoTmdb(page) {
 function getViewHistory(video_id, page) {
     showSpinner();
     $.ajax({
-        url: baseurl+"actions/video_view_history.php",
+        url: "actions/video_view_history.php",
         type: "POST",
         data: {videoid: video_id, page: page, modal: false },
         dataType: 'json',
@@ -247,7 +250,7 @@ $( document ).ready(function() {
     if (ids_to_check_progress.length > 0) {
         intervalId = setInterval(function () {
             $.post({
-                url: baseurl+'actions/admin_progress_video.php',
+                url: 'actions/video_progress.php',
                 dataType: 'json',
                 data: {
                     ids: ids_to_check_progress,

@@ -1,5 +1,5 @@
 <?php
-define('THIS_PAGE', 'basic_settings');
+const THIS_PAGE = 'basic_settings';
 require_once dirname(__FILE__, 2) . '/includes/admin_config.php';
 
 $permission = 'basic_settings';
@@ -156,6 +156,8 @@ if (isset($_POST['update'])) {
         , 'enable_channels_slogan_display'
         , 'enable_user_self_deletion'
         , 'enable_cookie_banner'
+        , 'enable_public_video_page'
+        , 'can_upload_subtitles'
         , 'enable_membership'
         , 'enable_public_video_page'
     ];
@@ -419,6 +421,9 @@ if (isset($_POST['update'])) {
         'max_photo_categories',
         'max_collection_categories',
         'channel_video_style',
+        'enable_public_video_page',
+        'can_upload_subtitles',
+        'videos_video_style',
         'enable_360_video',
         'video_thumbs_preview_count',
         'allow_tag_space',

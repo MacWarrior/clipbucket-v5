@@ -1,11 +1,18 @@
 <?php
+if( !defined('THIS_PAGE') ){
+    define('THIS_PAGE', 'videos_core');
+}
 require 'includes/config.inc.php';
+
+if( THIS_PAGE == 'videos_core' ){
+    redirect_to(cblink(['name' => 'error_403']));
+}
 
 pages::getInstance()->page_redir();
 if (PARENT_PAGE == 'videos_public') {
-    User::getInstance()->hasPermission('allow_public_video_page');
+    User::getInstance()->hasPermissionOrRedirect('allow_public_video_page');
 } else {
-    User::getInstance()->hasPermission('view_videos');
+    User::getInstance()->hasPermissionOrRedirect('view_videos');
 }
 
 if( !isSectionEnabled('videos') ){
@@ -34,7 +41,7 @@ if (config('enable_public_video_page') == 'yes') {
     if (User::getInstance()->hasPermission('view_videos') && User::getInstance()->hasPermission('allow_public_video_page')) {
         $params['public'] = false;
     }
-    //hide public videos, they are listed ind public video menu
+    //hide public videos, they are listed in public video menu
     if (!empty($public)) {
         $params['public'] = true;
     }

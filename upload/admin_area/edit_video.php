@@ -1,5 +1,5 @@
 <?php
-define('THIS_PAGE', 'edit_video');
+const THIS_PAGE = 'edit_video';
 require_once dirname(__FILE__, 2) . '/includes/admin_config.php';
 
 User::getInstance()->hasPermissionOrRedirect('video_moderation',true);

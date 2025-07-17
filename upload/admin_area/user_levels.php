@@ -1,5 +1,5 @@
 <?php
-define('THIS_PAGE', 'user_levels');
+const THIS_PAGE = 'user_levels';
 require_once dirname(__FILE__, 2) . '/includes/admin_config.php';
 require_once DirPath::get('classes') . 'migration' . DIRECTORY_SEPARATOR . 'migration.class.php';
 
@@ -65,7 +65,6 @@ switch ($mode) {
         //Getting Level Permission
         $level_perms = UserLevel::getAllPermissions(['user_level_id' => $user_level_id]);
 
-
         $breadcrumb[] = [
             'title' => 'Editing : ' . display_clean(display_clean($levelDetails['user_level_name'])),
             'url'   => DirPath::getUrl('admin_area') . 'user_levels.php?mode=edit&lid=' . display_clean($user_level_id)
@@ -90,6 +89,15 @@ switch ($mode) {
         Assign('view', 'add');
         break;
 }
+
+$min_suffixe = System::isInDev() ? '' : '.min';
+ClipBucket::getInstance()->addAdminJS([
+    'pages/user_levels/user_levels' . $min_suffixe . '.js' => 'admin'
+]);
+
+// All except Anonymous user level
+$levels = userquery::getInstance()->get_levels('user_level_id != 6');
+assign('levels', $levels);
 
 subtitle('User levels');
 template_files('user_levels.html');

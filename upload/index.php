@@ -2,7 +2,7 @@
 error_reporting(-1);
 ini_set('display_errors', 1);
 
-define('THIS_PAGE', 'index');
+const THIS_PAGE = 'index';
 require 'includes/config.inc.php';
 pages::getInstance()->page_redir();
 

@@ -454,10 +454,6 @@ class ClipBucket
                         , 'url' => DirPath::getUrl('admin_area') . 'members.php'
                     ]
                     , [
-                        'title' => 'Add Member'
-                        , 'url' => DirPath::getUrl('admin_area') . 'add_member.php'
-                    ]
-                    , [
                         'title' => 'Inactive Only'
                         , 'url' => DirPath::getUrl('admin_area') . 'members.php?search=yes&status=ToActivate'
                     ]

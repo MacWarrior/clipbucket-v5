@@ -11,6 +11,8 @@ class User
     private $search_limit = 0;
     private $display_var_name = '';
     private $user_data = [];
+    private $user_notification_inbox;
+    private $user_notification_contact;
 
     private $default_homepage_list = [];
 
@@ -182,6 +184,26 @@ class User
             ,'channels'
             ,'my_account'
         ];
+
+        if( config('videosSection') == 'yes' ){
+            $this->default_homepage_list[] = 'videos';
+
+            if( config('enable_public_video_page') == 'yes'){
+                $this->default_homepage_list[] = 'public_videos';
+            }
+        }
+
+        if( config('photosSection') == 'yes' ){
+            $this->default_homepage_list[] = 'photos';
+        }
+
+        if( config('collectionsSection') == 'yes' ){
+            $this->default_homepage_list[] = 'collections';
+        }
+
+        if( config('channelsSection') == 'yes' ){
+            $this->default_homepage_list[] = 'channels';
+        }
 
         if( $user_id ){
             $params = [];
@@ -928,10 +950,77 @@ class User
     }
 
     /**
-     * @param int|null $user_id
+     * @param int $user_level_id
+     * @param bool $activate
      * @return bool
      * @throws Exception
      */
+    public function toggleUserLevelActivation(int $user_level_id, bool $activate): bool
+    {
+        if(empty($user_level_id)) {
+            return false;
+        }
+
+        // Prevent disabling inactive user & guest
+        if( in_array($user_level_id, [3,4]) ){
+            return false;
+        }
+
+        $levelDetails = userquery::getInstance()->get_level_details($user_level_id);
+        if( empty($levelDetails) ){
+            return false;
+        }
+        $sql = 'UPDATE ' . cb_sql_table('user_levels') . ' SET user_level_active = ' . ($activate ? '\'yes\'' : '\'no\'' ) . ' WHERE user_level_id = ' . mysql_clean($user_level_id) ;
+        return (bool)Clipbucket_db::getInstance()->execute($sql);
+    }
+
+    /**
+     * @return void
+     * @throws Exception
+     */
+    public static function redirectAfterLogin()
+    {
+        if (User::getInstance()->isUserMustRenewMembership(userquery::getInstance()->userid) && !User::getInstance()->hasAdminAccess()) {
+            redirect_to(Network::get_server_url()  . 'manage_membership.php');
+        } elseif ($_COOKIE['pageredir']) {
+            redirect_to($_COOKIE['pageredir']);
+        } else {
+            redirect_to(User::getInstance()->getDefaultHomepageFromUserLevel());
+        }
+    }
+
+    /**
+     * @return string
+     * @throws Exception
+     */
+    public function getDefaultHomepageFromUserLevel(): string
+    {
+        $default_hompepage = UserLevel::getPermission('default_homepage', $this->getCurrentUserLevelID());
+        if (empty($default_hompepage)) {
+            return '';
+        }
+
+        switch ($default_hompepage) {
+            case 'homepage':
+                $link = '';
+                break;
+            case 'public_videos':
+                $link = 'videos_public.php';
+                break;
+            case 'my_account':
+                $link = 'myaccount.php';
+                break;
+            default:
+                $link = $default_hompepage . '.php';
+        }
+        return Network::get_server_url() . $link;
+    }
+
+    public function getDefaultHomepageList()
+    {
+        return $this->default_homepage_list;
+    }
+
     public function isUserMustRenewMembership($user_id = null): bool
     {
         if (empty($user_id)) {
@@ -971,65 +1060,6 @@ class User
         return $this->user_data['does_user_have_available_membership'];
     }
 
-    /**
-     * @param int $user_level_id
-     * @param bool $activate
-     * @return bool
-     * @throws Exception
-     */
-    public function toggleUserLevelActivation(int $user_level_id, bool $activate): bool
-    {
-        if(empty($user_level_id)) {
-            return false;
-        }
-        $sql = 'UPDATE ' . cb_sql_table('user_levels') . ' SET user_level_active = ' . ($activate ? '\'yes\'' : '\'no\'' ) . ' WHERE user_level_id = ' . mysql_clean($user_level_id) ;
-        return (bool)Clipbucket_db::getInstance()->execute($sql);
-    }
-
-    /**
-     * @return void
-     * @throws Exception
-     */
-    public static function redirectAfterLogin()
-    {
-        if (User::getInstance()->isUserMustRenewMembership(userquery::getInstance()->userid) && !User::getInstance()->hasAdminAccess()) {
-            redirect_to(Network::get_server_url()  . 'manage_membership.php');
-        } elseif ($_COOKIE['pageredir']) {
-            redirect_to($_COOKIE['pageredir']);
-        } else {
-            redirect_to(Network::get_server_url()  . User::getInstance()->getDefaultHomepageFromUserLevel());
-        }
-    }
-
-    /**
-     * @return string
-     * @throws Exception
-     */
-    public function getDefaultHomepageFromUserLevel(): string
-    {
-        $default_hompepage = UserLevel::getPermission('default_homepage',$this->getCurrentUserLevelID());
-        if (empty($default_hompepage)) return '';
-
-        switch ($default_hompepage) {
-            case 'homepage':
-                $link = '';
-                break;
-            case 'public_videos':
-                $link = 'videos_public.php';
-                break;
-            case 'my_account':
-                $link = 'myaccount.php';
-                break;
-            default:
-                $link = $default_hompepage . '.php';
-        }
-        return $link;
-    }
-
-    public function getDefaultHomepageList()
-    {
-        return $this->default_homepage_list;
-    }
 
     /**
      * @throws Exception
@@ -1138,6 +1168,22 @@ class User
         Clipbucket_db::getInstance()->execute('DELETE FROM ' . tbl('users') . ' WHERE userid =' . (int)$uid);
     }
 
+    public function getNotificationInbox()
+    {
+        if (empty($this->user_notification_inbox)) {
+            $this->user_notification_inbox = userquery::getInstance()->get_unread_msgs($this->getCurrentUserID());
+        }
+        return $this->user_notification_inbox;
+    }
+
+    public function getNotificationContact()
+    {
+        if (empty($this->user_notification_contact)) {
+            $this->user_notification_contact = userquery::getInstance()->get_pending_contacts($this->getCurrentUserID(), count_only: true);
+        }
+        return $this->user_notification_contact;
+    }
+
 }
 
 class userquery extends CBCategory
@@ -1231,8 +1277,6 @@ class userquery extends CBCategory
             $this->username = $udetails['username'];
             $this->level = $this->udetails['level'];
             $this->email = $this->udetails['email'];
-            //TODO check if $this->permission is steel needed
-            $this->permission =  UserLevel::getPermissions(User::getInstance()->getCurrentUserLevelID());
 
             //Calling Logout Functions
             $funcs = $this->init_login_functions ?? false;
@@ -1247,8 +1291,6 @@ class userquery extends CBCategory
             if ($sess->get('dummy_username') == '') {
                 $this->UpdateLastActive(user_id());
             }
-        } else {
-            $this->permission = UserLevel::getPermissions();
         }
 
         //Adding Actions such Report, share,fav etc
@@ -1388,7 +1430,7 @@ class userquery extends CBCategory
                 $msg = e(lang('usr_ban_err'));
             } else {
                 if ($remember) {
-                    $sess->timeout = 86400 * REMBER_DAYS;
+                    $sess->timeout = 86400 * 7;
                 }
                 return $this->init_session($udetails);
             }
@@ -1408,6 +1450,7 @@ class userquery extends CBCategory
     /**
      * @param $username
      * @param $password
+     * @return array|bool
      * @throws Exception
      */
     function authenticate($username, $password)
@@ -1438,6 +1481,9 @@ class userquery extends CBCategory
         return $udetails ?? false;
     }
 
+    /**
+     * @throws Exception
+     */
     function init_session($udetails)
     {
         global $sess;
@@ -1456,8 +1502,7 @@ class userquery extends CBCategory
         $this->username = $udetails['username'];
         $this->level = $udetails['level'];
         $this->is_login = true;
-        //reset permission
-        $this->permission = null;
+
         //Updating User last login , num of visits and ip
         Clipbucket_db::getInstance()->update(tbl('users'),
             ['num_visits', 'last_logged', 'ip'],
@@ -1469,7 +1514,7 @@ class userquery extends CBCategory
 
         //Logging Action
         $log_array = [
-            'username'  => $username,
+            'username'  => $udetails['username'],
             'userid'    => $udetails['userid'],
             'useremail' => $udetails['email'],
             'success'   => 'yes',
@@ -2575,15 +2620,16 @@ class userquery extends CBCategory
     /**
      * Function used to get all levels
      *
-     * @param : filter
-     *
+     * @param string $cond
      * @return array|bool
      * @throws Exception
      */
-    function get_levels($filter = null)
+    function get_levels(string $cond = '')
     {
-        if( !empty($filter)) $filter = ' AND ' . $filter;
-        $results = Clipbucket_db::getInstance()->select(tbl('user_levels'), '*', 'user_level_active = \'yes\'  ' . $filter, null, ' user_level_id ASC');
+        if( empty($cond) ){
+            $cond = ' user_level_active = \'yes\'';
+        }
+        $results = Clipbucket_db::getInstance()->select(tbl('user_levels'), '*', $cond, null, ' user_level_id ASC');
 
         if (count($results) > 0) {
             return $results;
@@ -2596,7 +2642,7 @@ class userquery extends CBCategory
      *
      * @param : level_id INT
      *
-     * @return bool|int
+     * @return bool|array
      * @throws Exception
      */
     function get_level_details($lid)
@@ -3600,15 +3646,19 @@ class userquery extends CBCategory
         $check_before_551_136 = (!Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '136') && isSectionEnabled('channels') && User::getInstance()->hasPermission('view_channel'));
         $check_after_551_136 = (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '136') && isSectionEnabled('channels') && (User::getInstance()->hasPermission('view_channel') || (User::getInstance()->hasPermission('enable_channel_page') && User::getInstance()->get('disabled_channel') != 'yes')));
         if( $check_before_551_136 || $check_after_551_136 ){
-            $array[lang('account')][lang('contacts_manager')] = 'manage_contacts.php';
+            $counter = User::getInstance()->getNotificationContact();
+            $array[lang('account')][lang('contacts_manager'). ($counter > 0 ? '&nbsp;<div class="pull-right"><i class="glyphicon glyphicon-bell"></i>('.$counter.')</div>' : '')] = 'manage_contacts.php';
         }
 
         if (User::getInstance()->hasPermission('private_msg_access')) {
+            $counter_inbox = User::getInstance()->getNotificationInbox();
             $array[lang('messages')] = [
-                lang('inbox') . '(' . $this->get_unread_msgs($this->userid) . ')' => 'private_message.php?mode=inbox',
-                lang('notifications')                                             => 'private_message.php?mode=notification',
-                lang('sent')                                                      => 'private_message.php?mode=sent',
-                lang('title_crt_new_msg')                                         => cblink(['name' => 'compose_new'])
+                lang('inbox') . ($counter_inbox > 0 ?
+                    '&nbsp;<div class="pull-right"><i class="glyphicon glyphicon-bell"></i>(' . $counter_inbox . ')</div>'
+                    : '')                     => 'private_message.php?mode=inbox',
+                lang('notifications')     => 'private_message.php?mode=notification',
+                lang('sent')              => 'private_message.php?mode=sent',
+                lang('title_crt_new_msg') => cblink(['name' => 'compose_new'])
             ];
         }
         if (isSectionEnabled('channels') && User::getInstance()->hasPermission('enable_channel_page')) {

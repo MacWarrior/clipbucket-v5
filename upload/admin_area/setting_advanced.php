@@ -1,5 +1,5 @@
 <?php
-define('THIS_PAGE', 'advanced_settings');
+const THIS_PAGE = 'advanced_settings';
 require_once dirname(__FILE__, 2) . '/includes/admin_config.php';
 
 $permission = 'advanced_settings';
@@ -43,8 +43,7 @@ if (isset($_POST['update'])) {
         'enable_chunk_upload',
         'photo_enable_nsfw_check',
         'video_enable_nsfw_check',
-        'store_guest_session',
-
+        'store_guest_session'
     ];
 
     $config_booleans_to_refactor = [
@@ -146,7 +145,9 @@ if (isset($_POST['update'])) {
         'photo_thumb_width',
         'photo_thumb_height',
         'photo_med_width',
-        'photo_med_height'
+        'photo_med_height',
+
+        'maximum_allowed_subtitle_size'
     ];
 
     foreach (Upload::getInstance()->get_upload_options() as $optl) {
@@ -161,6 +162,7 @@ if (isset($_POST['update'])) {
         'max_photo_size',
         'chunk_upload_size',
         'cloudflare_upload_limit',
+        'option_maximum_allowed_subtitle_size'
     ];
 
     foreach ($rows as $field) {
@@ -245,7 +247,7 @@ if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.0', '367', true)) {
 }
 if (!empty($tool)) {
     $id_tool_automate = $tool['id_tool'];
-    $cron_line = '* * * * * ' . System::get_binaries('php_cli') . ' -q ' . DirPath::get('actions') . 'launch_tool.php id_tool=' . (int)$id_tool_automate;
+    $cron_line = '* * * * * ' . System::get_binaries('php_cli') . ' -q ' . DirPath::get('admin_actions') . 'tool_launch.php id_tool=' . (int)$id_tool_automate;
 }
 assign('cron_copy_paste', $cron_line ?? '');
 

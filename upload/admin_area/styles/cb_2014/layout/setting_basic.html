@@ -280,6 +280,7 @@
                                 <li><a data-toggle="tab" href="interfaces_photo">{lang('photo')|ucfirst}</a></li>
                                 <li><a data-toggle="tab" href="interfaces_collection">{lang('collection')|ucfirst}</a></li>
                                 <li><a data-toggle="tab" href="interfaces_channels">{lang('channels')|ucfirst}</a></li>
+                                <li><a data-toggle="tab" href="interfaces_videos">{lang('videos')|ucfirst}</a></li>
                             </ul>
                         </div>
                         <div class="col-md-10 tab-content">
@@ -795,12 +796,30 @@
                                     <div class="col-md-6">
                                         <div class="row">
                                             <div class="col-md-8">
-                                                <label class="nowrap" for="channel_video_style" title="{lang('channel_video_style')}">{lang('channel_video_style')}</label>
+                                                <label class="nowrap" for="channel_video_style" title="{lang('option_video_bloc_style')}">{lang('option_video_bloc_style')}</label>
                                             </div>
                                             <div class="col-md-4 row-size">
                                                 <select class='form-control' name="channel_video_style" id="channel_video_style">
                                                     <option value="classic" {if $row.channel_video_style=='classic'}selected{/if}>{lang('classic')}</option>
                                                     <option value="modern" {if $row.channel_video_style=='modern'}selected{/if}>{lang('modern')}</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <hr/>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="tab-pane interfaces" id="interfaces_videos">
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <div class="row">
+                                            <div class="col-md-8">
+                                                <label class="nowrap" for="videos_video_style" title="{lang('option_video_bloc_style')}">{lang('option_video_bloc_style')}</label>
+                                            </div>
+                                            <div class="col-md-4 row-size">
+                                                <select class='form-control' name="videos_video_style" id="videos_video_style">
+                                                    <option value="classic" {if $row.videos_video_style=='classic'}selected{/if}>{lang('classic')}</option>
+                                                    <option value="modern" {if $row.videos_video_style=='modern'}selected{/if}>{lang('modern')}</option>
                                                 </select>
                                             </div>
                                         </div>
@@ -1729,7 +1748,16 @@
                                 </div>
                             </div>
                             <hr/>
-
+                            <div class="row">
+                                <div class="col-md-10">
+                                    <label class="nowrap" for="can_upload_subtitles" title="{lang('option_can_upload_subtitles')}">{lang('option_can_upload_subtitles')}</label>
+                                </div>
+                                <div class="col-md-2">
+                                    <input value="yes" name="can_upload_subtitles" id="can_upload_subtitles" {if $row.can_upload_subtitles=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+                                    <span class="lbl"></span>
+                                </div>
+                            </div>
+                            <hr/>
                         </div>
                     </div>
                 </div>

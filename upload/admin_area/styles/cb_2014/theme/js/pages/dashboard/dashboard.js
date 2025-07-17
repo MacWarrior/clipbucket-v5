@@ -376,6 +376,18 @@ $(document).ready(function(){
         ]
     });
 
+    $('#update_dp_options').on('click', function () {
+        var val = $(this).parent().find('input').val();
+       $.ajax({
+           url: 'actions/display_option_update.php',
+           type: 'post',
+           dataType: 'json',
+           data: {admin_pages: val},
+           success: function (data) {
+               $(".page-content").prepend(data.msg);
+           }
+       })
+    });
 });
 
 function updateListeners () {
@@ -386,24 +398,27 @@ function updateListeners () {
         update('db')
     });
 
-    $('.launch_wip').on('click', function () {
-        showSpinner();
-        $.ajax({
-            url: baseurl+'actions/admin_launch_wip.php',
-            type: "post",
-            dataType: "json",
-            success: function (data) {
-                hideSpinner();
-                if (data.success == false) {
-                    $(".page-content").prepend(data.msg)
+    $('.launch_wip').on('click', async function () {
+        var interrupt = await check_before_launch_update();
+        if (interrupt) {
+            showSpinner();
+            $.ajax({
+                url: 'actions/update_launch_wip.php',
+                type: "post",
+                dataType: "json",
+                success: function (data) {
+                    hideSpinner();
+                    if (data.success == false) {
+                        $(".page-content").prepend(data.msg)
+                    }
+                    var wip_div = $('.launch_wip').parents('.alert');
+                    var parent = wip_div.parent();
+                    wip_div.remove();
+                    parent.append(data.template)
+                    updateListeners();
                 }
-                var wip_div = $('.launch_wip').parents('.alert');
-                var parent = wip_div.parent();
-                wip_div.remove();
-                parent.append(data.template)
-                updateListeners();
-            }
-        });
+            });
+        }
     });
 }
 
@@ -424,12 +439,19 @@ let showMsg = function(msg, type, autoDismiss){
 
 }
 
-function update(type){
+async function update(type){
     $('.launch_wip').off('click').prop('disabled', 'disabled');
     $('.update_db').off('click').prop('disabled', 'disabled');
     $('.update_core').off('click').prop('disabled', 'disabled');
+
+    //check update db
+    //check conversion
+    var is_checked = await check_before_launch_update();
+    if (!is_checked) {
+        return;
+    }
     $.ajax({
-        url: baseurl+"actions/admin_launch_update.php",
+        url: "actions/update_launch.php",
         type: "post",
         data: {
             type: type
@@ -447,7 +469,6 @@ function update(type){
                 if(response.error_msg !== undefined && response.error_msg != null && response.error_msg != '') {
                     error_msg = response.error_msg;
                 }
-
                 showMsg(error_msg, 'danger');
                 return ;
             }
@@ -455,6 +476,69 @@ function update(type){
             connectSSE();
         }
     });
+}
+
+async function check_before_launch_update() {
+    var core_checked = false;
+    var db_checked = false;
+    var conversion_checked = false;
+    var interrupt = false;
+    const data = await $.ajax({
+        url: "actions/update_check_before_launch.php",
+        type: "post",
+        dataType: "json",
+        processData: false,
+        data: {
+            core_checked: core_checked, db_checked: db_checked, conversion_checked: conversion_checked
+        }
+    });
+    if (!data.core_checked) {
+        //put tool on error
+        if (typeof data.confirm_message_core === 'string' && data.confirm_message_core !== '') {
+            if (confirm(data.confirm_message_core)) {
+                await $.ajax({
+                    url: "actions/tool_force_to_error.php",
+                    type: "POST",
+                    data: {id_tool: data.id_tool},
+                    dataType: 'json',
+                    success: function (result) {
+                        core_checked = true
+                    }
+                });
+            } else {
+                return false;
+            }
+        }
+    }
+    if (!data.db_checked) {
+        //put tool on error
+        if (typeof data.confirm_message_db === 'string' && data.confirm_message_db !== '') {
+            if (confirm(data.confirm_message_db)) {
+                await $.ajax({
+                    url: "actions/tool_force_to_error.php",
+                    type: "POST",
+                    data: {id_tool: data.id_tool},
+                    dataType: 'json',
+                    success: function (result) {
+                        console.log('ajax success')
+                        db_checked = true;
+                    }
+                });
+            } else {
+                return false;
+            }
+        }
+    }
+    if (!data.conversion_checked && !interrupt) {
+        if (typeof data.confirm_message_conv === 'string' && data.confirm_message_conv !== '') {
+            if (confirm(data.confirm_message_conv)) {
+                conversion_checked = true;
+            } else {
+                return false;
+            }
+        }
+    }
+    return true;
 }
 
 function connectSSE() {
@@ -466,6 +550,9 @@ function connectSSE() {
         var data = JSON.parse(e.data);
         $('#update_div').html(data.html);
         updateListeners();
+        if (data.msg_template) {
+            $(".page-content").prepend(data.msg_template)
+        }
         if (data.is_updating === 'false') {
             eventSource.close();
             checkStatus();
@@ -497,7 +584,7 @@ function connectSSE() {
 
 function checkStatus() {
     $.ajax({
-        url: baseurl+"actions/admin_check_update.php",
+        url: "actions/update_check.php",
         type: "post",
         dataType: "json",
         success: function (data) {

@@ -220,7 +220,7 @@ class AdminTool
      */
     public static function launchCli(int $id_tool): void
     {
-        $cmd = System::get_binaries('php_cli').' -q '.DirPath::get('actions') . 'launch_tool.php id_tool='.$id_tool;
+        $cmd = System::get_binaries('php_cli').' -q '.DirPath::get('admin_actions') . 'tool_launch.php id_tool='.$id_tool;
         if (stristr(PHP_OS, 'WIN')) {
             $complement = '';
         } elseif (stristr(PHP_OS, 'darwin')) {
@@ -471,7 +471,7 @@ class AdminTool
             unset($thumbs);
 
             //SUBTITLES
-            $subtitles = new GlobIterator(DirPath::get('subtitles') . '[0-9]*' . DIRECTORY_SEPARATOR . '*.srt');
+            $subtitles = new GlobIterator(DirPath::get('subtitles')  . '[0-9]*' . DIRECTORY_SEPARATOR . '[0-9]*' . DIRECTORY_SEPARATOR . '[0-9]*' . DIRECTORY_SEPARATOR . '*.srt');
             foreach ($subtitles as $subtitle) {
                 $vid_file_name = explode('-', basename($subtitle, '.srt'))[0];
                 $insert_values = [
@@ -628,8 +628,8 @@ class AdminTool
             } else {
                 Clipbucket_db::getInstance()->update(tbl('tools'), ['elements_total', 'elements_done'], [$element_totals, 0], ' id_tool = ' . $secureIdTool);
             }
+            $break = false;
             //if db
-
             do {
                 $tasks = (empty($this->tasks) ? $this->getTaskData(10) : $this->tasks);
                 foreach ($tasks as $item) {
@@ -653,12 +653,13 @@ class AdminTool
                             $this->addLog($result);
                         }
                     } catch (\Exception $e) {
-                        e(lang($e->getMessage()));
-                        $this->addLog($e->getMessage());
+                        e($e->getMessage());
                         if ($stop_on_error) {
-                            $this->addLog(lang('tool_stopped'));
-                            break;
+//                            $this->addLog(lang('tool_stopped'));
+                            //trigger error handler
+                            throw new Exception($e->getMessage());
                         }
+                        $this->addLog($e->getMessage());
                     }
                     //update nb_done of tools
                     if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '271')) {
@@ -937,6 +938,7 @@ class AdminTool
 
     /**
      * Tools for start automate if necessary
+     * @param array $tool
      * @return void
      * @throws Exception
      */

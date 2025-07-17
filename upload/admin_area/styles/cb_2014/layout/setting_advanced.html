@@ -146,6 +146,19 @@
                             </div>
                             <hr/>
 
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <label class="nowrap" for="maximum_allowed_subtitle_size" title="{lang('option_maximum_allowed_subtitle_size')}">{lang('option_maximum_allowed_subtitle_size')}</label>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="input-group">
+                                        <input value="{$row.maximum_allowed_subtitle_size}" name="maximum_allowed_subtitle_size" id="maximum_allowed_subtitle_size" class="form-control" size="45"/>
+                                        <span class="input-group-addon" title="{lang('in_x',lang('mb'))}">{lang code='mb'}</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <hr/>
+
                         </div>
                         <div class="col-md-4">
                             <div class="row">
@@ -530,19 +543,22 @@
                                     {$first = true}
                                     {foreach from=$video_resolutions key=key item=ratio}
                                         <div id="bitrates_{str_replace('/','_',$key)}" class="tab-pane resolutions {if $first}active{/if}">
-                                            {$count = 1}
+                                            {$count = 0}
                                             {foreach from=$ratio item=resolution}
-                                                {if $count%2 == 1}
+                                                {if $count == 0}
                                                     <div class="row">
                                                 {/if}
-                                                <div class="col-md-3">
-                                                    <label class="nowrap" for="vbrate_{$resolution.title}" title="{$resolution.title}">{$resolution.title}</label>
-                                                </div>
-                                                <div class="col-md-3">
-                                                    <input class="form-control" name="vbrate_{$resolution.title}" id="vbrate_{$resolution.title}" value="{$resolution.video_bitrate}"/>
-                                                </div>
+                                                    <div class="col-md-3">
+                                                        <label class="nowrap" for="vbrate_{$resolution.title}" title="{$resolution.title}">{$resolution.title}</label>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <input class="form-control" name="vbrate_{$resolution.title}" id="vbrate_{$resolution.title}" value="{$resolution.video_bitrate}"/>
+                                                    </div>
                                                 {$count = $count+1}
-                                                {if $count%2 == 0 || $count == count($ratio)}
+                                                {if $count == 2 }
+                                                    {$count = 0}
+                                                {/if}
+                                                {if $count == 0}
                                                     </div>
                                                     <hr/>
                                                 {/if}

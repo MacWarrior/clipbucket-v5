@@ -1,5 +1,5 @@
 <?php
-define('THIS_PAGE', 'file_uploader');
+const THIS_PAGE = 'file_uploader';
 include('../includes/config.inc.php');
 
 require_once DirPath::get('classes') . 'sLog.php';

@@ -1,5 +1,5 @@
 <?php
-define('THIS_PAGE', 'search_result');
+const THIS_PAGE = 'search_result';
 require_once 'includes/config.inc.php';
 
 pages::getInstance()->page_redir();
@@ -14,7 +14,7 @@ switch($type){
         $access_public_video = (User::getInstance()->hasPermission('allow_public_video_page') && config('enable_public_video_page') == 'yes');
         $access_video = (User::getInstance()->hasPermission('view_' . $type) && isSectionEnabled($type));
         if (!$access_video && !$access_public_video) {
-            redirect_to(BASEURL);
+            redirect_to(Network::get_server_url());
         }
         break;
     case 'photos':
@@ -51,7 +51,6 @@ switch($type) {
         break;
 }
 
-$params = [];
 if ($access_public_video && !$access_video) {
     $params['public'] = true;
 }

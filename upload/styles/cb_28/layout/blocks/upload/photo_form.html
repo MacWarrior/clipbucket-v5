@@ -16,20 +16,6 @@
                     </div>
                 {/foreach}
             </div>
-            <div>
-                <div class="photoOptionalSettings">
-                    <div>
-                        {foreach from=$otherFields item=field}
-                            <div class="form-group">
-                            <label class="show">{$field.title}</label>
-                            {if $field.hint_1}<div class="hint">{$field.hint_1}</div>{/if}
-                            {$field.label_class='radio-inline'}
-                            {$formObj->createField($field)}
-                            </div>
-                        {/foreach}
-                    </div>
-                </div>
-            </div>   
             <div class="form-group">
                 <button disabled class="btn btn-primary savePhotoDetails">
                     {lang code="save_details"}
@@ -37,13 +23,26 @@
             </div>  
             </div>
             <div class="col-md-4">
-                <div class="edit-img-thumbnail">
+                <div class="edit-img-thumbnail"
+                     style="padding-bottom: 25px;">
                     <div class="spinner-content" id="spinner-content">
                         <p class="fa-spinner fa animate-spin"></p>
                         <br/>
                         <p>{lang code='loading'}</p>
                     </div>
                      <img src="{get_photo details=$photoArray size='m'}" class="no_select" style="max-width:100%;" />
+                </div>
+                <div class="photoOptionalSettings" >
+                    <div>
+                        {foreach from=$otherFields item=field}
+                            <div class="form-group">
+                                <label class="show">{$field.title}</label>
+                                {if $field.hint_1}<div class="hint">{$field.hint_1}</div>{/if}
+                                {$field.label_class='radio-inline'}
+                                {$formObj->createField($field)}
+                            </div>
+                        {/foreach}
+                    </div>
                 </div>
             </div>
         </div>

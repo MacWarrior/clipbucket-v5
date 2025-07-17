@@ -55,7 +55,8 @@
                 "subsCapsButton", // Sous-titres
                 "audioTrackButton", //Pistes audio
                 "PictureInPictureToggle", // PictureInPicture
-                "FullscreenToggle" // Plein écran
+                "FullscreenToggle", // Plein écran
+                {if config('chromecast')=='yes' && Network::is_ssl()}"ChromeCastButton",{/if}
             ]
         }
     };

@@ -1,6 +1,6 @@
 <?php
-define('THIS_PAGE', 'myaccount');
-define('PARENT_PAGE', 'home');
+const THIS_PAGE = 'myaccount';
+const PARENT_PAGE = 'home';
 require 'includes/config.inc.php';
 
 User::getInstance()->isUserConnectedOrRedirect();

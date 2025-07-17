@@ -4,7 +4,7 @@
  * This file is part of the Predis package.
  *
  * (c) 2009-2020 Daniele Alessandri
- * (c) 2021-2024 Till Krüss
+ * (c) 2021-2025 Till Krüss
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -38,13 +38,15 @@ use Predis\Command\Argument\TimeSeries\MGetArguments;
 use Predis\Command\Argument\TimeSeries\MRangeArguments;
 use Predis\Command\Argument\TimeSeries\RangeArguments;
 use Predis\Command\CommandInterface;
+use Predis\Command\Container\ACL;
+use Predis\Command\Container\CLIENT;
+use Predis\Command\Container\FUNCTIONS;
+use Predis\Command\Container\Json\JSONDEBUG;
+use Predis\Command\Container\Search\FTCONFIG;
+use Predis\Command\Container\Search\FTCURSOR;
+use Predis\Command\Container\XGROUP;
+use Predis\Command\Container\XINFO;
 use Predis\Command\FactoryInterface;
-use Predis\Command\Redis\Container\ACL;
-use Predis\Command\Redis\Container\CLUSTER;
-use Predis\Command\Redis\Container\FunctionContainer;
-use Predis\Command\Redis\Container\Json\JSONDEBUG;
-use Predis\Command\Redis\Container\Search\FTCONFIG;
-use Predis\Command\Redis\Container\Search\FTCURSOR;
 use Predis\Configuration\OptionsInterface;
 use Predis\Connection\ConnectionInterface;
 use Predis\Response\Status;
@@ -68,8 +70,8 @@ use Predis\Response\Status;
  * @method int               move(string $key, int $db)
  * @method mixed             object($subcommand, string $key)
  * @method int               persist(string $key)
- * @method int               pexpire(string $key, int $milliseconds)
- * @method int               pexpireat(string $key, int $timestamp)
+ * @method int               pexpire(string $key, int $milliseconds, string $option = null)
+ * @method int               pexpireat(string $key, int $timestamp, string $option = null)
  * @method int               pttl(string $key)
  * @method string|null       randomkey()
  * @method mixed             rename(string $key, string $target)
@@ -80,8 +82,8 @@ use Predis\Response\Status;
  * @method int               ttl(string $key)
  * @method mixed             type(string $key)
  * @method int               append(string $key, $value)
- * @method int               bfadd(string $key, $item)
- * @method int               bfexists(string $key, $item)
+ * @method mixed             bfadd(string $key, $item)
+ * @method mixed             bfexists(string $key, $item)
  * @method array             bfinfo(string $key, string $modifier = '')
  * @method array             bfinsert(string $key, int $capacity = -1, float $error = -1, int $expansion = -1, bool $noCreate = false, bool $nonScaling = false, string ...$item)
  * @method Status            bfloadchunk(string $key, int $iterator, $data)
@@ -92,16 +94,17 @@ use Predis\Response\Status;
  * @method int               bitcount(string $key, $start = null, $end = null, string $index = 'byte')
  * @method int               bitop($operation, $destkey, $key)
  * @method array|null        bitfield(string $key, $subcommand, ...$subcommandArg)
+ * @method array|null        bitfield_ro(string $key, ?array $encodingOffsetMap = null)
  * @method int               bitpos(string $key, $bit, $start = null, $end = null, string $index = 'byte')
  * @method array             blmpop(int $timeout, array $keys, string $modifier = 'left', int $count = 1)
  * @method array             bzpopmax(array $keys, int $timeout)
  * @method array             bzpopmin(array $keys, int $timeout)
  * @method array             bzmpop(int $timeout, array $keys, string $modifier = 'min', int $count = 1)
- * @method int               cfadd(string $key, $item)
- * @method int               cfaddnx(string $key, $item)
+ * @method mixed             cfadd(string $key, $item)
+ * @method mixed             cfaddnx(string $key, $item)
  * @method int               cfcount(string $key, $item)
- * @method int               cfdel(string $key, $item)
- * @method int               cfexists(string $key, $item)
+ * @method mixed             cfdel(string $key, $item)
+ * @method mixed             cfexists(string $key, $item)
  * @method Status            cfloadchunk(string $key, int $iterator, $data)
  * @method int               cfmexists(string $key, ...$item)
  * @method array             cfinfo(string $key)
@@ -120,6 +123,7 @@ use Predis\Response\Status;
  * @method Status            failover(?To $to = null, bool $abort = false, int $timeout = -1)
  * @method mixed             fcall(string $function, array $keys, ...$args)
  * @method mixed             fcall_ro(string $function, array $keys, ...$args)
+ * @method array             ft_list()
  * @method array             ftaggregate(string $index, string $query, ?AggregateArguments $arguments = null)
  * @method Status            ftaliasadd(string $alias, string $index)
  * @method Status            ftaliasdel(string $alias)
@@ -171,7 +175,9 @@ use Predis\Response\Status;
  * @method array|null        hpexpireat(string $key, int $unixTimeMilliseconds, array $fields, string $flag = null)
  * @method array|null        hpexpiretime(string $key, array $fields)
  * @method string|null       hget(string $key, string $field)
+ * @method array|null        hgetex(string $key, array $fields, string $modifier = HGETEX::NULL, int|bool $modifierValue = false)
  * @method array             hgetall(string $key)
+ * @method array             hgetdel(string $key, array $fields)
  * @method int               hincrby(string $key, string $field, int $increment)
  * @method string            hincrbyfloat(string $key, string $field, int|float $increment)
  * @method array             hkeys(string $key)
@@ -181,6 +187,7 @@ use Predis\Response\Status;
  * @method array             hrandfield(string $key, int $count = 1, bool $withValues = false)
  * @method array             hscan(string $key, $cursor, ?array $options = null)
  * @method int               hset(string $key, string $field, string $value)
+ * @method int               hsetex(string $key, array $fieldValueMap, string $setModifier = HSETEX::SET_NULL, string $ttlModifier = HSETEX::TTL_NULL, int|bool $ttlModifierValue = false)
  * @method int               hsetnx(string $key, string $field, string $value)
  * @method array|null        httl(string $key, array $fields)
  * @method array|null        hpttl(string $key, array $fields)
@@ -195,8 +202,8 @@ use Predis\Response\Status;
  * @method array             jsonarrtrim(string $key, string $path, int $start, int $stop)
  * @method int               jsondel(string $key, string $path = '$')
  * @method int               jsonforget(string $key, string $path = '$')
- * @method string            jsonget(string $key, string $indent = '', string $newline = '', string $space = '', string ...$paths)
- * @method string            jsonnumincrby(string $key, string $path, int $value)
+ * @method mixed             jsonget(string $key, string $indent = '', string $newline = '', string $space = '', string ...$paths)
+ * @method mixed             jsonnumincrby(string $key, string $path, int $value)
  * @method Status            jsonmerge(string $key, string $path, string $value)
  * @method array             jsonmget(array $keys, string $path)
  * @method Status            jsonmset(string ...$keyPathValue)
@@ -243,9 +250,12 @@ use Predis\Response\Status;
  * @method string|array|null spop(string $key, ?int $count = null)
  * @method string|null       srandmember(string $key, ?int $count = null)
  * @method int               srem(string $key, array|string $member)
- * @method array             sscan(string $key, int $cursor, ?array $options = null)
+ * @method array             sscan(string $key, int $cursor, array $options = null)
+ * @method array             ssubscribe(string ...$shardChannels)
+ * @method array             subscribe(string ...$channels)
  * @method string[]          sunion(array|string $keys)
  * @method int               sunionstore(string $destination, array|string $keys)
+ * @method array             sunsubscribe(?string ...$shardChannels = null)
  * @method int               touch(string[]|string $keyOrKeys, string ...$keys = null)
  * @method Status            tdigestadd(string $key, float ...$value)
  * @method array             tdigestbyrank(string $key, int ...$rank)
@@ -253,10 +263,10 @@ use Predis\Response\Status;
  * @method array             tdigestcdf(string $key, int ...$value)
  * @method Status            tdigestcreate(string $key, int $compression = 0)
  * @method array             tdigestinfo(string $key)
- * @method string            tdigestmax(string $key)
+ * @method mixed             tdigestmax(string $key)
  * @method Status            tdigestmerge(string $destinationKey, array $sourceKeys, int $compression = 0, bool $override = false)
  * @method string[]          tdigestquantile(string $key, float ...$quantile)
- * @method string            tdigestmin(string $key)
+ * @method mixed             tdigestmin(string $key)
  * @method array             tdigestrank(string $key, float ...$value)
  * @method Status            tdigestreset(string $key)
  * @method array             tdigestrevrank(string $key, float ...$value)
@@ -284,13 +294,15 @@ use Predis\Response\Status;
  * @method array             tsqueryindex(string ...$filterExpression)
  * @method array             tsrange(string $key, $fromTimestamp, $toTimestamp, ?RangeArguments $arguments = null)
  * @method array             tsrevrange(string $key, $fromTimestamp, $toTimestamp, ?RangeArguments $arguments = null)
- * @method string            xadd(string $key, array $dictionary, string $id = '*', ?array $options = null)
+ * @method string            xadd(string $key, array $dictionary, string $id = '*', array $options = null)
+ * @method array             xautoclaim(string $key, string $group, string $consumer, int $minIdleTime, string $start, ?int $count = null, bool $justId = false)
  * @method int               xdel(string $key, string ...$id)
  * @method int               xlen(string $key)
  * @method array             xrevrange(string $key, string $end, string $start, ?int $count = null)
  * @method array             xrange(string $key, string $start, string $end, ?int $count = null)
- * @method string            xtrim(string $key, array|string $strategy, string $threshold, ?array $options = null)
  * @method array|null        xread(int $count = null, int $block = null, array $streams = null, string ...$id)
+ * @method array             xreadgroup(string $group, string $consumer, ?int $count = null, ?int $blockMs = null, bool $noAck = false, string ...$keyOrId)
+ * @method string            xtrim(string $key, array|string $strategy, string $threshold, array $options = null)
  * @method int               zadd(string $key, array $membersAndScoresDictionary)
  * @method int               zcard(string $key)
  * @method string            zcount(string $key, int|string $min, int|string $max)
@@ -333,8 +345,9 @@ use Predis\Response\Status;
  * @method array|null        exec()
  * @method mixed             multi()
  * @method mixed             unwatch()
+ * @method array             unsubscribe(string ...$channels)
  * @method array             waitaof(int $numLocal, int $numReplicas, int $timeout)
- * @method mixed             watch(string $key)
+ * @method mixed             watch(string[]|string $keyOrKeys)
  * @method mixed             eval(string $script, int $numkeys, string ...$keyOrArg = null)
  * @method mixed             eval_ro(string $script, array $keys, ...$argument)
  * @method mixed             evalsha(string $script, int $numkeys, string ...$keyOrArg = null)
@@ -347,18 +360,18 @@ use Predis\Response\Status;
  * @method mixed             select(int $database)
  * @method mixed             bgrewriteaof()
  * @method mixed             bgsave()
- * @method mixed             client($subcommand, $argument = null)
  * @method mixed             config($subcommand, $argument = null)
  * @method int               dbsize()
  * @method mixed             flushall()
  * @method mixed             flushdb()
- * @method array             info($section = null)
+ * @method array             info(string ...$section = null)
  * @method int               lastsave()
  * @method mixed             save()
  * @method mixed             slaveof(string $host, int $port)
  * @method mixed             slowlog($subcommand, $argument = null)
+ * @method int               spublish(string $shardChannel, string $message)
  * @method array             time()
- * @method array             command()
+ * @method array             command($subcommand, $argument = null)
  * @method int               geoadd(string $key, $longitude, $latitude, $member)
  * @method array             geohash(string $key, array $members)
  * @method array             geopos(string $key, array $members)
@@ -369,12 +382,14 @@ use Predis\Response\Status;
  * @method int               geosearchstore(string $destination, string $source, FromInterface $from, ByInterface $by, ?string $sorting = null, int $count = -1, bool $any = false, bool $storeDist = false)
  *
  * Container commands
- * @property CLUSTER           $cluster
- * @property FunctionContainer $function
- * @property FTCONFIG          $ftconfig
- * @property FTCURSOR          $ftcursor
- * @property JSONDEBUG         $jsondebug
- * @property ACL               $acl
+ * @property CLIENT    $client
+ * @property FUNCTIONS $function
+ * @property FTCONFIG  $ftconfig
+ * @property FTCURSOR  $ftcursor
+ * @property JSONDEBUG $jsondebug
+ * @property ACL       $acl
+ * @property XGROUP    $xgroup
+ * @property XINFO     $xinfo
  */
 interface ClientInterface
 {

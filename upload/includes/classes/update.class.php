@@ -777,17 +777,36 @@ class Update
     /**
      * @throws Exception
      */
-    public static function IsUpdateProcessing(): bool
+    public static function IsUpdateProcessing(): string|bool
     {
         if (self::IsCurrentDBVersionIsHigherOrEqualTo('5.5.0', '367')) {
-            $where = ' tools_histo.id_tools_histo_status IN (SELECT id_tools_histo_status FROM '.tbl('tools_histo_status').' WHERE language_key_title = \'in_progress\')  AND code IN (\'update_core\', \''.AdminTool::CODE_UPDATE_DATABASE_VERSION.'\') ';
+            $where = ' tools_histo.id_tools_histo_status IN (SELECT id_tools_histo_status FROM '.tbl('tools_histo_status').' WHERE language_key_title IN(\'in_progress\',\'stopping\')) AND code IN (\'update_core\', \''.AdminTool::CODE_UPDATE_DATABASE_VERSION.'\') ';
         } else {
-            $where = ' tools.id_tools_status IN (SELECT id_tools_status FROM '.tbl('tools_status').' WHERE language_key_title = \'in_progress\')   AND id_tool IN (11, 5)  ';
+            $where = ' tools.id_tools_status IN (SELECT id_tools_status FROM '.tbl('tools_status').' WHERE language_key_title IN(\'in_progress\',\'stopping\')) AND id_tool IN (11, 5)';
         }
-        $tools = AdminTool::getTools([
-            $where
-        ]);
-        return !empty($tools);
+
+        $tools = AdminTool::getTools([$where]);
+        if (self::IsCurrentDBVersionIsHigherOrEqualTo('5.5.0', '367')) {
+            if ($tools[0]['code'] =='update_core') {
+                return 'core';
+            } elseif ($tools[0]['code'] == AdminTool::CODE_UPDATE_DATABASE_VERSION) {
+                return 'db';
+            } else {
+                return false;
+            }
+        } else {
+            if (empty($tools)) {
+                return false;
+            } else {
+                if ($tools[0]['id_tools_status'] == 11) {
+                    return 'core';
+                } elseif ($tools[0]['id_tools_status'] == 5) {
+                    return 'db';
+                } else {
+                    return false;
+                }
+            }
+        }
     }
 
     /**

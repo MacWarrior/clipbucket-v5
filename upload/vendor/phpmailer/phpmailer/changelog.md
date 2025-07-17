@@ -1,5 +1,9 @@
 # PHPMailer Change Log
 
+## Version 6.10.0 (April 24th, 2025)
+* Add support for [RFC 6530 SMTPUTF8](https://www.rfc-editor.org/rfc/rfc6530), permitting use of UTF-8 Unicode characters everywhere, thanks to @arnt and ICANN. See `SMTPUTF8.md` for details.
+* More reliable checking for multibyte support.
+
 ## Version 6.9.3 (November 22nd, 2024)
 * Add support for the release version of PHP 8.4
 * Add experimental support for PHP 8.5
