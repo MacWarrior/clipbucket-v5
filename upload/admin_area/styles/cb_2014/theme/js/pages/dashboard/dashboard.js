@@ -152,7 +152,10 @@ $(document).ready(function(){
     });
 
     if (can_sse === 'true' && is_update_processing === 'true') {
-        connectSSE();
+        // connectSSE();
+    }
+    if (is_update_processing === 'true') {
+        refreshUpdateProgression();
     }
     updateListeners();
 
@@ -491,7 +494,8 @@ async function update(type){
                 return ;
             }
 
-            connectSSE();
+            // connectSSE();
+            refreshUpdateProgression();
         }
     });
 }
@@ -559,46 +563,37 @@ async function check_before_launch_update() {
     return true;
 }
 
-function connectSSE() {
-    var tries = 0;
-    // Create new event, the server script is sse.php
-    eventSource = new EventSource(admin_url + 'sse/update_info.php');
-    // Event when receiving a message from the server
-    eventSource.addEventListener("message", function (e) {
-        var data = JSON.parse(e.data);
-        $('#update_div').html(data.html);
-        updateListeners();
-        hideSpinner();
-        if (data.msg_template) {
-            $(".page-content").prepend(data.msg_template)
-        }
-        if (data.is_updating === 'false') {
-            eventSource.close();
-            checkStatus();
-        } else {
-            var tool = data.update_info;
-            $('.launch_wip').off('click');
+function refreshUpdateProgression() {
+    var interval = setInterval(function () {
+        $.ajax({
+            url: "actions/update_info.php",
+            type: "post",
+            dataType: "json",
+            success: function (data) {
+                $('#update_div').html(data.html);
+                updateListeners();
+                hideSpinner();
+                if (data.msg_template) {
+                    $(".page-content").prepend(data.msg_template)
+                }
+                if (data.is_updating === 'false') {
+                    clearInterval(interval);
+                    checkStatus();
+                } else {
+                    var tool = data.update_info;
+                    $('.launch_wip').off('click');
 
-            if (tool && tool.elements_done > 0) {
-                $('#progress_div').show();
+                    if (tool && tool.elements_done > 0) {
+                        $('#progress_div').show();
+                    }
+                    $('#progress-bar').attr('aria-valuenow', tool.pourcent).width(tool.pourcent + '%');
+                    $('#pourcent').html(tool.pourcent);
+                    $('#done').html(tool.elements_done);
+                    $('#total').html(tool.elements_total);
+                }
             }
-            $('#progress-bar').attr('aria-valuenow',tool.pourcent).width(tool.pourcent + '%');
-            $('#pourcent' ).html(tool.pourcent);
-            $('#done').html(tool.elements_done);
-            $('#total').html(tool.elements_total);
-        }
-
-    });
-    eventSource.addEventListener('open', function (e) {
-        tries++
-        if (tries > max_try) {
-            eventSource.close();
-        }
-    }, false);
-
-    eventSource.addEventListener('error', function (e) {
-        eventSource.close();
-    }, false);
+        });
+    }, 5000);
 }
 
 function checkStatus() {
