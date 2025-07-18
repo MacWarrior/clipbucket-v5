@@ -1,6 +1,6 @@
 {
   "version":"5.5.2",
-  "revision":"108",
+  "revision":"109",
   "status":"stable",
   "detail":[
     {
@@ -44,6 +44,7 @@
         ,"Fix TMDB import"
         ,"Fix code & database update status on dashboard"
         ,"Fix conversion bitrates display"
+        ,"Fix advanced settings display"
       ]
     },
     {
