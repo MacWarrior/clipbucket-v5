@@ -189,6 +189,23 @@ class Session
         return $this->get_session($name);
     }
 
+    public static function start(): void
+    {
+        ini_set('session.gc_maxlifetime', COOKIE_TIMEOUT);
+        session_set_cookie_params([
+            'lifetime' => COOKIE_TIMEOUT
+            ,'path' => '/'
+            ,'httponly' => true
+            ,'secure' => Network::is_ssl()
+        ]);
+        try {
+            session_start();
+        } catch(Exception $e) {
+            session_regenerate_id();
+            session_start();
+        }
+    }
+
     /**
      * Destroy Session
      * @throws Exception

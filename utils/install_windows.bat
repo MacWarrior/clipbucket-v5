@@ -329,6 +329,9 @@ echo    }>> %NGINX_CONF%
 echo    location ~* ^(.*/)?(includes^|changelog)/ {>> %NGINX_CONF%
 echo        return 302 $1403;>> %NGINX_CONF%
 echo    }>> %NGINX_CONF%
+echo    location ~* ^(.*/)?/files/temp/ {>> %NGINX_CONF%
+echo        return 302 $1403;>> %NGINX_CONF%
+echo    }>> %NGINX_CONF%
 echo. >> %NGINX_CONF%
 echo    # Direct acces to files>> %NGINX_CONF%
 echo    location ~* ^(.*/)?files/ {>> %NGINX_CONF%
