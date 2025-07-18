@@ -44,6 +44,7 @@
         ,"Fix TMDB import"
         ,"Fix code & database update status on dashboard"
         ,"Fix conversion bitrates display"
+        ,"Fix advanced settings display"
       ]
     },
     {
