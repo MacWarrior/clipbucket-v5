@@ -1031,11 +1031,15 @@ function progressVideoCheck(ids_to_check_progress, displayType, intervalName) {
                             if (displayType === 'view_channel_player' && data.player !== undefined && data.player.id === video.videoid) {
                                 $('#cb_player').html(data.player.html);
                             }
+                            //init listeners
+                            AddingListenerModernThumbVideo();
+                            AddingListenerModernThumbVideoPopinView();
                         }
                     });
 
                     if (response.all_complete) {
                         clearInterval(window[intervalName]);
+
                     }
                 }
             })
