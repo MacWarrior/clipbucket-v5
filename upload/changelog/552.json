@@ -1,6 +1,6 @@
 {
   "version":"5.5.2",
-  "revision":"108",
+  "revision":"109",
   "status":"stable",
   "detail":[
     {
@@ -127,6 +127,7 @@
         ,"Fix Nginx vhost <i>(#604)</i>"
         ,"Fix possible SQL injection"
         ,"Fix access to temp files"
+        ,"Fix sessions"
       ]
     },
     {
