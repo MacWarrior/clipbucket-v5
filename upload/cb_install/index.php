@@ -9,6 +9,7 @@ require_once DirPath::get('classes') . 'system.class.php';
 require_once DirPath::get('classes') . 'network.class.php';
 require_once DirPath::get('classes') . 'AIVision.class.php';
 require_once DirPath::get('classes') . 'migration' . DIRECTORY_SEPARATOR . 'migration.class.php';
+require_once DirPath::get('cb_install') . 'functions_install.php';
 
 $whoops = new \Whoops\Run;
 if( System::isInDev() ){
@@ -66,7 +67,6 @@ if (in_array($mode, $cbarray)) {
 
 $has_translation = class_exists('Language');
 
-require_once DirPath::get('cb_install') . 'functions_install.php';
 if (!empty($_POST['language'])) {
     if( isset($_COOKIE['cb_lang']) ){
         Session::unsetCookie( 'cb_lang');

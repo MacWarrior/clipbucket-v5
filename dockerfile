@@ -78,6 +78,9 @@ RUN rm -f /etc/nginx/sites-enabled/default && \
         location ~* ^(.*/)?(includes|changelog)/ { \
             return 302 $1403; \
         } \
+        location ~* ^(.*/)?files/temp/ { \
+            return 302 $1403; \
+        } \
         # Direct acces to files \
         location ~* ^(.*/)?files/ { \
             try_files $uri $uri/ =404; \
