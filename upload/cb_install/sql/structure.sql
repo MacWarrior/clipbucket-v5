@@ -99,7 +99,8 @@ CREATE TABLE `{tbl_prefix}comments` (
 CREATE TABLE `{tbl_prefix}config` (
   `configid` int(20) NOT NULL,
   `name` varchar(100) NOT NULL DEFAULT '',
-  `value` mediumtext NOT NULL
+  `value` mediumtext NOT NULL,
+  `allow_stat` BOOL DEFAULT TRUE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_520_ci;
 
 CREATE TABLE `{tbl_prefix}contacts` (
