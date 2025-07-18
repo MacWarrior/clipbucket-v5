@@ -17,7 +17,8 @@ $logs = $last_tool->getLastLogs();
 foreach ($logs['logs'] as $log) {
     if ($log['message'] != lang('tool_started') && $log['message'] != lang('tool_ended')) {
         e($log['message'], 'w');
-        $return['msg']= getTemplateMsg();
+
     }
 }
+$return['msg']= getTemplateMsg();
 echo json_encode($return);
