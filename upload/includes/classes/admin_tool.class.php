@@ -607,7 +607,7 @@ class AdminTool
     private function updateCore(): void
     {
         $this->tasks = ['updateGit'];
-        $this->executeTool('Update::updateGitSources');
+        $this->executeTool('Update::updateGitSources', true);
     }
 
     /**
