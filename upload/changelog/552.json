@@ -1,6 +1,6 @@
 {
   "version":"5.5.2",
-  "revision":"106",
+  "revision":"111",
   "status":"stable",
   "detail":[
     {
@@ -44,6 +44,7 @@
         ,"Fix TMDB import"
         ,"Fix code & database update status on dashboard"
         ,"Fix conversion bitrates display"
+        ,"Fix advanced settings display"
       ]
     },
     {
@@ -105,6 +106,7 @@
         ,"Fix processing videos display"
         ,"Fix search engine"
         ,"Fix default theme CSS"
+        ,"Fix video thumb saving from video upload form"
       ]
     },
     {
@@ -116,6 +118,7 @@
         ,"Cleanup ajax calls and separate back & front calls"
         ,"Delete conversion queue entry when deleting a video"
         ,"Drop support for PHP 7.0 to 7.4"
+        ,"Increase session security"
         ,"Update Readme"
         ,"Reduce cookies usage"
         ,"Remove unused configs"
@@ -125,6 +128,8 @@
         ,"Fix typo <i>(#596)</i>"
         ,"Fix Nginx vhost <i>(#604)</i>"
         ,"Fix possible SQL injection"
+        ,"Fix access to temp files"
+        ,"Fix sessions"
       ]
     },
     {

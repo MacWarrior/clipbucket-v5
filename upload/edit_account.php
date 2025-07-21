@@ -99,7 +99,7 @@ switch ($mode) {
         if( $_POST['drop_account'] ?? '' == 'yes' && config('enable_user_self_deletion') == 'yes' ){
             User::getInstance()->delete();
             userquery::getInstance()->logout();
-            session_start();
+            Session::start();
             sessionMessageHandler::add_message(lang('account_deleted'), 'm', DirPath::getUrl('root'));
         }
         assign('on', 'account');
