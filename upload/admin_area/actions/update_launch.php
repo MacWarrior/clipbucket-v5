@@ -39,7 +39,7 @@ $data = /** @lang PHP */
     '<?php
             const THIS_PAGE = \'update_core_tmp\';
             include_once dirname(__FILE__, 3) .DIRECTORY_SEPARATOR . \'includes\'.DIRECTORY_SEPARATOR . \'admin_config.php\';
-            $type = \'' . $_POST['type'] . '\'
+            $type = \'' . $_POST['type'] . '\';
             $core_tool = AdminTool::getUpdateCoreTool();
             if (empty($core_tool)) {
                 echo  \'false\';
