@@ -43,8 +43,8 @@ function parse_and_attach_video($att): void
  */
 function video_attachment_form(): array
 {
-    $vid_array = ['user' => user_id(), 'order' => 'date_added DESC', 'limit' => 15];
-    $videos = CBvideo::getInstance()->get_videos($vid_array);
+    $params = ['userid' => user_id(), 'order' => 'date_added DESC', 'limit' => 15];
+    $videos = Video::getInstance()->getAll($params);
     $vids_array = ['' => lang('no_video')];
 
     if ($videos) {
