@@ -69,5 +69,5 @@ $data = /** @lang PHP */
 fwrite($tmp_file, $data);
 fclose($tmp_file);
 chdir(DirPath::get('root'));
-shell_exec(System::get_binaries('php') . ' ' . DirPath::get('temp') . 'update_core_tmp.php &');
+shell_exec('nohup ' . System::get_binaries('php') . ' ' . DirPath::get('temp') . 'update_core_tmp.php > /dev/null 2>&1 &');
 die;
