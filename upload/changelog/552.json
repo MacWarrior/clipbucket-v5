@@ -1,6 +1,6 @@
 {
   "version":"5.5.2",
-  "revision":"109",
+  "revision":"111",
   "status":"stable",
   "detail":[
     {
@@ -106,6 +106,7 @@
         ,"Fix processing videos display"
         ,"Fix search engine"
         ,"Fix default theme CSS"
+        ,"Fix video thumb saving from video upload form"
       ]
     },
     {
@@ -128,6 +129,7 @@
         ,"Fix Nginx vhost <i>(#604)</i>"
         ,"Fix possible SQL injection"
         ,"Fix access to temp files"
+        ,"Fix sessions"
       ]
     },
     {

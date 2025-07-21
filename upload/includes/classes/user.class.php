@@ -1206,8 +1206,6 @@ class userquery extends CBCategory
      */
     function init(): void
     {
-        global $sess;
-
         $this->sessions = $this->get_sessions();
 
         if ($this->sessions['smart_sess']) {
@@ -1241,7 +1239,7 @@ class userquery extends CBCategory
                 }
             }
 
-            if ($sess->get('dummy_username') == '') {
+            if (Session::getInstance()->get('dummy_username') == '') {
                 $this->UpdateLastActive(user_id());
             }
         }
@@ -1368,8 +1366,6 @@ class userquery extends CBCategory
      */
     function login_user($username, $password, $remember = false): bool
     {
-        global $sess;
-
         //First we will check weather user is already logged in or not
         if (User::getInstance()->isUserConnected()) {
             $msg[] = e(lang('you_already_logged'));
@@ -1383,7 +1379,7 @@ class userquery extends CBCategory
                 $msg = e(lang('usr_ban_err'));
             } else {
                 if ($remember) {
-                    $sess->timeout = 86400 * 7;
+                    Session::getInstance()->timeout = 86400 * 7;
                 }
                 return $this->init_session($udetails);
             }
@@ -1439,16 +1435,15 @@ class userquery extends CBCategory
      */
     function init_session($udetails)
     {
-        global $sess;
         //Starting special sessions for security
         $session_salt = RandomString(5);
                     $_SESSION['sess_salt'] = $session_salt;
-        $sess->set('PHPSESSID', $sess->id);
+        Session::getInstance()->set('PHPSESSID',  Session::getInstance()->id);
 
         $smart_sess = md5($udetails['user_session_key'] . $session_salt);
 
-        Clipbucket_db::getInstance()->delete(tbl('sessions'), ['session', 'session_string'], [$sess->id, 'guest']);
-        $sess->add_session($udetails['userid'], 'smart_sess', $smart_sess);
+        Clipbucket_db::getInstance()->delete(tbl('sessions'), ['session', 'session_string'], [ Session::getInstance()->id, 'guest']);
+        Session::getInstance()->add_session($udetails['userid'], 'smart_sess', $smart_sess);
 
         //Setting Vars
         $this->userid = $udetails['userid'];
@@ -5513,15 +5508,14 @@ class userquery extends CBCategory
      */
     function get_sessions(): array
     {
-        global $sess;
-        $sessions = $sess->get_sessions();
+        $sessions =  Session::getInstance()->get_sessions();
         $new_sessions = [];
         if ($sessions) {
             foreach ($sessions as $session) {
                 $new_sessions[$session['session_string']] = $session;
             }
         } else {
-            $sess->add_session(0, 'guest', 'guest');
+            Session::getInstance()->add_session(0, 'guest', 'guest');
         }
 
         return $new_sessions;

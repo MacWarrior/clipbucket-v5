@@ -24,7 +24,9 @@ switch ($mode) {
     case 'update_video':
         CBvideo::getInstance()->update_video();
         if (empty(errorhandler::getInstance()->get_error()) && !empty($_POST['videoid'])) {
-            Video::getInstance()->setDefautThumb($_POST['default_thumb'], 'thumb', $_POST['videoid']);
+            if( !empty($_POST['default_thumb']) ){
+                Video::getInstance()->setDefautThumb($_POST['default_thumb'], 'thumb', $_POST['videoid']);
+            }
             if (config('enable_video_poster') == 'yes' && !empty($_POST['default_poster'])) {
                 Video::getInstance()->setDefautThumb($_POST['default_poster'], 'poster', $_POST['videoid']);
             }
