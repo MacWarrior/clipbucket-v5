@@ -100,6 +100,7 @@ foreach ($videos as $video) {
         $return['player']['id'] = $video['videoid'];
     }
     if (!empty($_POST['display_thumbs'])) {
+        assign('v', $video);
         assign('vidthumbs', get_thumb($video,TRUE,'168x105','auto'));
         assign('vidthumbs_custom', get_thumb($video,TRUE,'168x105','custom'));
         $data['thumbs'] = getTemplate('blocks/videos/thumb_form.html');

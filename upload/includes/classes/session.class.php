@@ -9,6 +9,8 @@ class Session
     var $cookie = true;
     var $timeout = 3600; //1 hour
 
+    private static $session;
+
     /**
      * offcourse, its a constructor
      */
@@ -20,8 +22,10 @@ class Session
 
     public static function getInstance(): Session
     {
-        global $sess;
-        return $sess;
+        if( empty(self::$session) ){
+            self::$session = new self();
+        }
+        return self::$session;
     }
 
     /**

@@ -9,7 +9,6 @@ require_once DirPath::get('classes') . 'system.class.php';
 require_once DirPath::get('classes') . 'my_queries.class.php';
 require_once DirPath::get('classes') . 'network.class.php';
 require_once DirPath::get('classes') . 'session.class.php';
-$sess = new Session();
 
 $whoops = \WhoopsManager::getInstance();
 if( System::isInDev() ){
