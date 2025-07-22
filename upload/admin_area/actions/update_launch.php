@@ -24,9 +24,12 @@ if (($error_init['core'] === false && $_POST['type'] == 'core') || $error_init['
     die();
 }
 
-sendClientResponseAndContinue(function () use ($core_tool) {
+sendClientResponseAndContinue(function () {
+    ob_start();
+    Update::getInstance()->displayGlobalSQLUpdateAlert($_POST['type']);
     echo json_encode([
-        'success' => true
+        'success' => true,
+        'html'=>ob_get_clean()
     ]);
 });
 

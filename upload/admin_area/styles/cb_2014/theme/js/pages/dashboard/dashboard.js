@@ -492,6 +492,8 @@ async function update(type){
                 }
                 showMsg(error_msg, 'danger');
                 return ;
+            } else {
+                $('#update_div').html(data.html);
             }
 
             // connectSSE();
