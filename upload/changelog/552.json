@@ -1,6 +1,6 @@
 {
   "version":"5.5.2",
-  "revision":"112",
+  "revision":"113",
   "status":"stable",
   "detail":[
     {
@@ -108,6 +108,7 @@
         ,"Fix default theme CSS"
         ,"Fix video thumb saving from video upload form"
         ,"Fix internal messaging reply action"
+        ,"Fix default thumb selection on video upload form"
       ]
     },
     {
