@@ -619,6 +619,6 @@ function progressVideoCheckHome(ids_to_check_progress, displayType, interval_nam
                     AddingListenerModernThumbVideoPopinView();
                 }
             })
-        }, 5000);
+        }, 60000);
     }
 }
