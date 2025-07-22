@@ -54,9 +54,9 @@
                     <select class="form-control check_timezone has-error" name="timezone" id="timezone" style="display:inline-block;">
                         <option value=""></option>
                         <?php foreach ($allTimezone as $timezone) { ?>
-                            <eoption value="<?php echo $timezone; ?>">
+                            <option value="<?php echo $timezone; ?>">
                                 <?php echo $timezone; ?>
-                            </eoption>
+                            </option>
                       <?php  } ?>
                     </select>
                     <div class="spinner-content" id="spinner-content" style="display: none;">

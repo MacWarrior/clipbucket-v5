@@ -1,3 +1,4 @@
+INSERT INTO `{tbl_prefix}config` (`configid`, `name`, `value`, allow_stat) VALUE (NULL, 'base_url', '', FALSE) ;
 INSERT INTO `{tbl_prefix}config` (`configid`, `name`, `value`) VALUES
 	(NULL, 'clientid', ''),
 	(NULL, 'secretId', ''),
@@ -293,7 +294,6 @@ INSERT INTO `{tbl_prefix}config` (`configid`, `name`, `value`) VALUES
     (NULL, 'email_sender_name', 'no-reply'),
     (NULL, 'enable_collection_link_sharing', 'yes'),
     (NULL, 'enable_collection_internal_sharing', 'yes'),
-    (NULL, 'base_url', ''),
     (NULL, 'thumb_background_color', '#000000'),
     (NULL, 'enable_country_video_field', 'yes'),
     (NULL, 'enable_location_video_field', 'yes'),
@@ -352,7 +352,8 @@ INSERT INTO `{tbl_prefix}tools` (`language_key_label`, `language_key_description
     ('automate_label', 'automate_description', 'AdminTool::checkAndStartToolsByFrequency', 'automate', NULL, NULL, '0', '0'),
     ('calc_user_storage_label', 'calc_user_storage_description', 'AdminTool::calcUserStorage', 'calc_user_storage', '0 1 * * *', CURRENT_TIMESTAMP, '1', '0'),
     ('assign_default_thumb_label', 'assign_default_thumb_description', 'AdminTool::assignDefaultThumbForCollections', 'assign_default_thumb', NULL, CURRENT_TIMESTAMP, '0', '0'),
-    ('update_aspect_ratio_label', 'update_aspect_ratio_description', 'AdminTool::updateAspectRatio', 'update_aspect_ratio', NULL, NULL, '1', '1');
+    ('update_aspect_ratio_label', 'update_aspect_ratio_description', 'AdminTool::updateAspectRatio', 'update_aspect_ratio', NULL, NULL, '1', '1'),
+    ('anonymous_stats_label', 'anonymous_stats_description', 'AdminTool::anonymousStats', 'anonymous_stats', '* * * * 1', CURRENT_TIMESTAMP, '1', '1');
 
 INSERT INTO `{tbl_prefix}tags_type` (`name`) VALUES ('video'), ('photo'), ('collection'), ('profile'), ('playlist'), ('actors'), ('producer'), ('executive_producer'), ('director'), ('crew'), ('genre');
 
