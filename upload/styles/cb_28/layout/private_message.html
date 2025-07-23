@@ -13,7 +13,7 @@
                   <li class="{if $mode =='inbox'}active {/if}">
 
                       <a  href="{$baseurl}private_message.php?mode=inbox">
-                          <h5>{lang code='menu_inbox'}</h5>
+                          <h5>{lang code='inbox'}</h5>
                       </a>
                   </li>
                 
@@ -40,17 +40,17 @@
               <div class="tab-content">
                  {if $mode =='new_msg'}
                  <div id="wmessage" class="tab-pane active">
-                      <h2>{lang code='private_messages'} &raquo; {lang code='title_crt_new_msg'}</h2>
                       {assign var='form_fields' value=$cbpm->load_compose_form()}
-                      <div class="account_form">
+                      <div class="account_form pt" style="padding-top: 15px;">
                           <form id="pm_msg" name="pm_msg" method="post">
-
-                              <h3>{lang code='new_private_msg'}</h3>
                               {foreach from=$form_fields item=field}
                               <div class="form-group">
                                   <label for="{$field.id}">{$field.title}</label>
                                   {$field.hint_1}
                                   {$field.class='form-control'}
+                                  {if $field.id == 'to'}
+                                      <ul id="list_tags"></ul>
+                                  {/if}
                                   {$formObj->createField($field)}
                                   {$field.hint_2}
                               </div>
@@ -63,19 +63,19 @@
 
                   {if $mode =='inbox'}
                   <div id="inbox" class="tab-pane active">
-                      <h2>{lang code='private_messages'} &raquo; {lang code='inbox'}</h2>
+                      <h2>{lang code='inbox'}</h2>
                       {include file="$style_dir/blocks/pm/messages.html" show_from='true'}
                       </div>{/if}
 
                  {if $mode =='notification'}
                   <div id="notifications" class="tab-pane active">
-                      <h2>{lang code='private_messages'} &raquo; {lang code='notifications'}</h2>
+                      <h2>{lang code='notifications'}</h2>
                       {include file="$style_dir/blocks/pm/messages.html" show_from='true'}
                   </div>{/if}
 
                   {if $mode =='sent'}
                   <div id="msend" class="tab-pane active">
-                      <h2>{lang code='private_messages'} &raquo; {lang code='sent'}</h2>
+                      <h2>{lang code='sent'}</h2>
                       {include file="$style_dir/blocks/pm/messages.html" show_to='true'}
                   </div>{/if}
                  

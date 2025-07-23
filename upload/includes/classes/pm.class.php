@@ -459,7 +459,7 @@ class cb_pm
         $array = [
             'to'      => [
                 'title'    => lang('to'),
-                'type'     => 'textfield',
+                'type'     => 'hidden',
                 'name'     => 'to',
                 'id'       => 'to',
                 'value'    => $to,
