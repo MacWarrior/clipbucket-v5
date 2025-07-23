@@ -75,5 +75,15 @@ $data = /** @lang PHP */
 fwrite($tmp_file, $data);
 fclose($tmp_file);
 chdir(DirPath::get('root'));
-shell_exec('nohup ' . System::get_binaries('php') . ' ' . DirPath::get('temp') . 'update_core_tmp.php > /dev/null 2>&1 &');
+$cmd = System::get_binaries('php') . ' -q ' . DirPath::get('temp') . 'update_core_tmp.php';
+if (stristr(PHP_OS, 'WIN')) {
+    $complement = '';
+} elseif (stristr(PHP_OS, 'darwin')) {
+    $complement = ' </dev/null >/dev/null &';
+} else { // for ubuntu or linux
+    $complement = ' > /dev/null &';
+}
+
+$cmd .= $complement;
+shell_exec($cmd);
 die;
