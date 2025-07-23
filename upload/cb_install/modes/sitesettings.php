@@ -66,6 +66,13 @@
             <?php } ?>
             <br/>
             <input type="hidden" name="mode" value="adminsettings"/>
+            <div class="field">
+                <label for="anonymous_stats"><?php echo lang('anonymous_stats'); ?><span class="fa fa-question-circle tips" title="<?php echo lang('anonymous_stats_hint'); ?>"></span></label>
+                <div class="form-check form-switch" >
+                    <input name="anonymous_stats" class="form-check-input" type="checkbox" role="switch" id="anonymous_stats" value="yes">
+                </div>
+            </div>
+
             <button class="btn btn-primary" onclick="$('#installation').submit()"><?php echo lang('save_continue'); ?></button>
         </form>
     </div>
