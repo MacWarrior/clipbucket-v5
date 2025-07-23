@@ -1286,7 +1286,7 @@ class AdminTool
 
         }
         $this->executeTool('AdminTool::fill_json_stats');
-        //generate json
+
         //send json
     }
 
@@ -1430,7 +1430,7 @@ class AdminTool
                 break;
             case 'count_3d_videos':
                 //Le nombre de vidéo 3D
-                $value = [$task => 1561];
+                $value = [$task => Video::getInstance()->getAll(['count'=>true, 'condition'=>' fov IS NOT NULL'])];
                 break;
             case 'count_age_restricted_videos':
                 //Le nombre de vidéo avec une restriction d'âge
@@ -1479,7 +1479,10 @@ class AdminTool
                 break;
             case 'count_not_default_pages':
                 //Le nombre de pages qui ne sont pas des pages par défaut
-                $value = [$task => 1561];
+                $sql = 'SELECT count(DISTINCT (page_id)) as count FROM  ' . tbl('pages') . ' where delete_able != \'no\'';
+                $res = Clipbucket_db::getInstance()->_select($sql);
+                $total = $res[0]['count'] ?? 0;
+                $value = [$task => $total];
                 break;
             case 'count_not_default_user_profil':
                 //Le nombre de profils utilisateurs qui ne sont pas par défaut (hors anonyme quoi)
@@ -1493,7 +1496,7 @@ class AdminTool
                 break;
             case 'count_users_per_user_profil':
                 //Le nombre d'utilisateur PAR profil utilisateur
-                $sql = 'SELECT ul.user_level_name, COUNT(u.userid) AS nombre_utilisateurs
+                $sql = 'SELECT ul.user_level_name, COUNT(u.userid) AS count
                     FROM ' . tbl('user_levels') . ' ul
                              LEFT JOIN ' . tbl('users') . ' u ON u.level = ul.user_level_id
                     GROUP BY ul.user_level_id';
@@ -1502,7 +1505,7 @@ class AdminTool
                 break;
             case 'count_categories_per_types':
                 //Le nombre de catégories par type
-                $sql = 'SELECT ct.name, COUNT(c.category_id) AS nombre_categ
+                $sql = 'SELECT ct.name, COUNT(c.category_id) AS count
                     FROM ' . tbl('categories_type') . ' ct
                              LEFT JOIN ' . tbl('categories') . ' c ON ct.id_category_type = c.id_category_type
                     GROUP BY c.id_category_type';
@@ -1521,7 +1524,7 @@ class AdminTool
                             when type = \'cl\' then \'collection\'
                             ELSE type
                         END as type
-                        , count(DISTINCT comment_id) FROM ' . tbl('comments') . ' 
+                        , count(DISTINCT comment_id) FROM ' . tbl('comments') . ' as count
                         GROUP BY type';
                 $res = Clipbucket_db::getInstance()->_select($sql);
                 $value = [$task => $res ?: []];
@@ -1539,12 +1542,31 @@ class AdminTool
                 $value = [$task => $res[0]['count'] ?? 0];
                 break;
             default:
-                //TODO gérer
-                $value = '';
-                break;
+                throw new Exception(lang('unknown_task'));
         }
         $this->addLog(json_encode($value));
-        file_put_contents(DirPath::get('temp') . 'stats.json', json_encode($value), FILE_APPEND);
+        $json_file = DirPath::get('temp') . 'stats.json';
+        $encoded   = json_encode($value);
+
+        $is_first = ($this->tasks_index == 0);
+        $is_last  = (($this->tasks_index + 1) == $this->tasks_total);
+
+        $content = '';
+
+        if ($is_first) {
+            // Start the JSON object
+            $content .= '{' . substr($encoded, 1, -1);
+        } else {
+            // Prefix with comma for subsequent items
+            $content .= ',' . substr($encoded, 1, -1);
+        }
+
+        if ($is_last) {
+            // Close the JSON object on last item
+            $content .= '}';
+        }
+
+        file_put_contents($json_file, $content, FILE_APPEND);
     }
 }
 

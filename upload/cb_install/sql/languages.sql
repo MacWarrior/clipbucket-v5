@@ -1644,4 +1644,7 @@ VALUES ('admin_setting'),
        ('option_video_bloc_style'),
        ('add_member'),
        ('max_option_display'),
-       ('display_option');
+       ('display_option'),
+       ('anonymous_stats'),
+       ('anonymous_stats_hint'),
+       ('unknown_task');
