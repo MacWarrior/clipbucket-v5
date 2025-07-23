@@ -40,6 +40,9 @@ if (file_exists(DirPath::get('temp') . 'update_core_tmp.php')) {
 $tmp_file = fopen(DirPath::get('temp') . 'update_core_tmp.php', 'w');
 $data = /** @lang PHP */
     '<?php
+             if (php_sapi_name() != \'cli\') {
+                die;
+            }
             const THIS_PAGE = \'update_core_tmp\';
             include_once dirname(__FILE__, 3) .DIRECTORY_SEPARATOR . \'includes\'.DIRECTORY_SEPARATOR . \'admin_config.php\';
             $type = \'' . $_POST['type'] . '\';
