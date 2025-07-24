@@ -9,9 +9,15 @@ $videos = Video::getInstance()->getAll([
 $all_complete = true;
 
 switch ($_POST['output']) {
+    case 'videos':
     case 'home':
-        assign('popup_video', config('popup_video') == 'yes');
-        if (config('homepage_recent_video_style') == 'modern') {
+        if ( $_POST['output'] == 'home') {
+            $config = 'homepage_recent_video_style';
+            assign('popup_video', config('popup_video') == 'yes');
+        } else {
+            $config = 'videos_video_style';
+        }
+        if (config($config) == 'modern') {
             assign('width', 270);
             $template = "blocks/videos/video-modern.html";
         } else {
@@ -94,6 +100,7 @@ foreach ($videos as $video) {
         $return['player']['id'] = $video['videoid'];
     }
     if (!empty($_POST['display_thumbs'])) {
+        assign('v', $video);
         assign('vidthumbs', get_thumb($video,TRUE,'168x105','auto'));
         assign('vidthumbs_custom', get_thumb($video,TRUE,'168x105','custom'));
         $data['thumbs'] = getTemplate('blocks/videos/thumb_form.html');
