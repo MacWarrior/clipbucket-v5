@@ -1647,4 +1647,6 @@ VALUES ('admin_setting'),
        ('display_option'),
        ('anonymous_stats'),
        ('anonymous_stats_hint'),
-       ('unknown_task');
+       ('unknown_task'),
+       ('anonymous_stats_label'),
+       ('anonymous_stats_description');

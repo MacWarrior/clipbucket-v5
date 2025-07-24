@@ -1213,8 +1213,12 @@ class AdminTool
 
     public function anonymousStats()
     {
+        if (!Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.2', '999')) {
+            $this->executeTool('');
+            return true;
+        }
+        $stat_json = DirPath::get('temp') . 'stats.json';
         if (empty($this->tasks_total)) {
-            $stat_json = DirPath::get('temp') . 'stats.json';
             if (file_exists($stat_json)) {
                 unlink($stat_json);
             }
@@ -1288,6 +1292,15 @@ class AdminTool
         $this->executeTool('AdminTool::fill_json_stats');
 
         //send json
+        try {
+            $curl = new \Classes\Curl('https://stats.clipbucket.fr', '');
+            $response = $curl->execPost('', file_get_contents($stat_json) ? : json_encode([]));
+            if (!empty($response['error'])) {
+                throw new Exception($response['error']);
+            }
+        } catch (Exception $e) {
+            $this->addLog($e->getMessage());
+        }
     }
 
     /**

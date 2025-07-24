@@ -45,6 +45,23 @@ class Curl
         $err = curl_error($this->curl);
         return ['error'=>$err, 'response'=> json_decode($response,true)];
     }
+    /**
+     * @param $action
+     * @param $param
+     * @return array
+     */
+    public function execPost($action, $param=[]): array
+    {
+        curl_setopt_array($this->curl, [
+            CURLOPT_URL => $this->base_url . $action,
+            CURLOPT_CUSTOMREQUEST => 'POST',
+            CURLOPT_POSTFIELDS => $param,
+            CURLOPT_USERAGENT => 'CB ' . \Update::getInstance()->getCurrentDBVersion() . ' - #' . \Update::getInstance()->getCurrentDBRevision()
+        ]);
+        $response = curl_exec($this->curl);
+        $err = curl_error($this->curl);
+        return ['error'=>$err, 'response'=> json_decode($response,true)];
+    }
 
     /**
      * Upload a file using POST request
