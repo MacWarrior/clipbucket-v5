@@ -398,10 +398,12 @@ class Update
         assign('id', null);
         if ($current_updating== 'db') {
             //getting current execution time
-            $db_tool = AdminTool::getUpdateDbTool();
-            $lastStart = $db_tool->getLastStart();
-            assign('id', $db_tool->getId());
+            $tool = AdminTool::getUpdateDbTool();
+         } else {
+            $tool = AdminTool::getUpdateCoreTool();
         }
+        $lastStart = $tool->getLastStart();
+        assign('id', $tool->getId());
         assign('lastStart', $lastStart);
         assign('launch_wip', $this->isWIPFile());
 

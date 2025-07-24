@@ -607,8 +607,7 @@ class AdminTool
     private function updateCore(): void
     {
         $this->tasks = ['updateGit'];
-        //TODO set stop at true
-        $this->executeTool('Update::updateGitSources', false);
+        $this->executeTool('Update::updateGitSources', true);
     }
 
     /**

@@ -6,6 +6,9 @@
                     <img alt='warning' src="{$imageurl}/error.png"/>
                     {if $current_updating == 'core'}
                         {lang code='core_updating'}
+                        {if time() - strtotime($lastStart) > 3600}
+                            <span class="fa fa-question-circle tips mark_as_failed" data-id="{$id}" title="{lang('tools_seems_stuck_since_mark_as_failed', $lastStart|niceTime)}" style="cursor:pointer !important;"></span>
+                        {/if}
                     {else}
                         {lang code='db_updating'}
                         {if time() - strtotime($lastStart) > 3600}

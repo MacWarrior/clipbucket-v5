@@ -429,7 +429,7 @@ function updateListeners () {
         var id = $(this).data('id');
         if (confirm(lang.confirm_mark_as_failed)) {
             $.ajax({
-                url: adminurl + "actions/tool_force_to_error.php",
+                url: admin_url + "actions/tool_force_to_error.php",
                 type: "POST",
                 data: {id_tool: id},
                 dataType: 'json',
