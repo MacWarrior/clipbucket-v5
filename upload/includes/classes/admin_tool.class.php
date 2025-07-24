@@ -607,7 +607,8 @@ class AdminTool
     private function updateCore(): void
     {
         $this->tasks = ['updateGit'];
-        $this->executeTool('Update::updateGitSources', true);
+        //TODO set stop at true
+        $this->executeTool('Update::updateGitSources', false);
     }
 
     /**
@@ -1261,6 +1262,18 @@ class AdminTool
             return $core_tool;
         }
         return $db_toool;
+    }
+
+    /**
+     * @return bool
+     * @throws Exception
+     */
+    public function isToolInError()
+    {
+        return !empty(Clipbucket_db::getInstance()->_select(
+            'SELECT id_tool FROM ' . tbl('tools_histo') . ' 
+        WHERE id_tools_histo_status = (SELECT id_tools_histo_status FROM ' . tbl('tools_histo_status') . ' WHERE language_key_title like \'on_error\') 
+        AND id_tool = ' .mysql_clean($this->id_tool)));
     }
 }
 
