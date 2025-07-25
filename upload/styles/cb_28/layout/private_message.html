@@ -63,19 +63,16 @@
 
                   {if $mode =='inbox'}
                   <div id="inbox" class="tab-pane active">
-                      <h2>{lang code='inbox'}</h2>
                       {include file="$style_dir/blocks/pm/messages.html" show_from='true'}
                       </div>{/if}
 
                  {if $mode =='notification'}
                   <div id="notifications" class="tab-pane active">
-                      <h2>{lang code='notifications'}</h2>
                       {include file="$style_dir/blocks/pm/messages.html" show_from='true'}
                   </div>{/if}
 
                   {if $mode =='sent'}
                   <div id="msend" class="tab-pane active">
-                      <h2>{lang code='sent'}</h2>
                       {include file="$style_dir/blocks/pm/messages.html" show_to='true'}
                   </div>{/if}
                  
@@ -86,3 +83,8 @@
     </div>
   </div>
 </div>
+<script>
+    var lang;
+    lang['running_verification'] = '{lang('running_verification')}';
+    lang['checked_user'] = '{lang('checked_user')}';
+</script>

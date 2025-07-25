@@ -1,8 +1,27 @@
 var alert_shown = false;
-var skipBeforeTagAdded = false;
-var alert_user_tested = '';
 document.addEventListener("DOMContentLoaded", function () {
     init_tags_to('to');
+
+    const managePages = document.querySelectorAll('.manage-page');
+// Pour chaque div, on installe un observer
+    managePages.forEach((targetNode) => {
+        const config = {childList: true, subtree: true};
+
+        const observer = new MutationObserver((mutationsList) => {
+            for (const mutation of mutationsList) {
+                // On vérifie les nouveaux éléments ajoutés
+                mutation.addedNodes.forEach((node) => {
+                    if (node.nodeType === 1 && node.classList.contains('alert')) {
+                        $(node).fadeOut(5000, function () {
+                            $(this).remove();
+                        });
+                    }
+                });
+            }
+        });
+
+        observer.observe(targetNode, config);
+    });
 
 });
 
@@ -28,33 +47,55 @@ function init_tags_to(id_input, available_tags, list_tag) {
                 return false;
             }
             alert_shown = false;
-            debugger
-            if (skipBeforeTagAdded) {
-                return true;
-            }
-            showSpinner();
-            addUsernameTag(info.tagLabel);
-            return false;
+        },
+        afterTagAdded: function (event, info) {
+            const params = new URLSearchParams();
+            var value = info.tagLabel;
+            params.append('username', info.tagLabel);
+            putSpinnerOnTag(info.tag);
+            fetch('actions/user_check.php', {
+                method: 'POST', headers: {'Accept': 'application/json'}, body: params
+            })
+                .then(response => response.json())
+                .then((data) => {
+                    if (!data.success) {
+                        document.querySelector('.manage-page').insertAdjacentHTML('afterbegin', data.msg);
+                        info.tag.addClass('danger-important');
+                        info.tag.find('span.tagit-label').append('<i class="fa fa-warning" aria-hidden="true"></i>');
+                        info.tag.prop('title', data.text_msg);
+                        setTimeout(function () {
+                            info.tag.fadeOut(500, function () {
+                                info.tag.find('a').trigger('click');
+                            })
+                        }, 5000)
+                    } else if (data.success) {
+                        info.tag.addClass('success-important');
+                        info.tag.find('span.tagit-label').append('<i class="fa fa-check"  aria-hidden="true"></i>');
+                        info.tag.find('a').show();
+                        info.tag.prop('title', lang['checked_user']);
+                    }
+                    removeSpinnerOnTag(info.tag);
+                })
         }
     });
+
 }
-async function addUsernameTag(value) {
-    const params = new URLSearchParams();
-    params.append('username', value);
-    const response = await fetch('actions/user_check.php', {
-        method: 'POST', headers: { 'Accept': 'application/json' }, body: params
-    });
-    const data = await response.json();
-    hideSpinner();
-    debugger;
-    if (!data.success && (alert_user_tested === '' || alert_user_tested !== value)) {
-        alert_user_tested = value;
-        document.querySelector('.manage-page').insertAdjacentHTML('afterbegin', data.msg);
-        skipBeforeTagAdded = false;
-    } else if(data.success) {
-        alert_user_tested = '';
-        skipBeforeTagAdded = true;
-        $('#list_tags').tagit('createTag', value); // ajout manuel
-        skipBeforeTagAdded = false;
-    }
+
+function putSpinnerOnTag(tag) {
+    tag.append('<p class="spinner" style="position: absolute;\n' +
+        '  inset: 0;\n' +
+        '  display: flex;\n' +
+        '  align-items: center;\n' +
+        '  justify-content: center;\n' +
+        '  pointer-events: none;\n' +
+        '  z-index: 2;"><i class="fa fa-spinner fa-spin"></i></p>');
+    tag.find('span').css('filter', 'blur(0.8px)');
+    tag.find('a').hide();
+    tag.prop('title',lang['running_verification']);
 }
+
+function removeSpinnerOnTag(tag) {
+    tag.find('p').remove();
+    tag.find('span').css('filter', 'blur(0px)');
+}
+

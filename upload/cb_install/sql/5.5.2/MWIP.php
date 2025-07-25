@@ -25,6 +25,20 @@ class MWIP extends \Migration
         self::generateTranslation('write_msg', [
             'fr'=>'Écrire un message'
         ]);
+
+        self::generateTranslation('you_cant_send_pm_yourself', [
+            'fr'=>'Vous ne pouvez pas vous envoyer de message à vous même.'
+        ]);
+
+        self::generateTranslation('running_verification', [
+            'fr'=>'Vérification en cours',
+            'en'=>'Running verification'
+        ]);
+
+        self::generateTranslation('checked_user', [
+            'fr'=>'Utilisateur vérifié',
+            'en'=>'Checked user'
+        ]);
     }
 
 }

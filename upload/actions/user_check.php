@@ -3,16 +3,21 @@ const THIS_PAGE = 'cookie_consent_get';
 const IS_AJAX = true;
 
 require_once dirname(__FILE__, 2) . '/includes/config.inc.php';
-
+$msg ='';
 $success = false;
 if (empty($_POST['username'])) {
-    e(lang('missing_params'));
+    $msg = lang('missing_params');
+    e($msg);
 } else {
     $res = User::getInstance()->getOne(['username_strict' => $_POST['username']]);
     if (empty($res)) {
-        e(lang('user_no_exist_wid_username', $_POST['username']));
+        $msg = lang('user_no_exist_wid_username', $_POST['username']);
+        e($msg);
+    } elseif($res['userid'] == User::getInstance()->getCurrentUserID()) {
+        $msg = lang('you_cant_send_pm_yourself');
+        e($msg, 'w');
     } else {
         $success = true;
     }
 }
-echo json_encode(['msg' => getTemplateMsg(), 'success' => $success]);
+echo json_encode(['msg' => getTemplateMsg(), 'success' => $success, 'text_msg' => $msg]);

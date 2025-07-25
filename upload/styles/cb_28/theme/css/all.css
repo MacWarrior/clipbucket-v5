@@ -7046,3 +7046,14 @@ div.show-cookie-list i{
 .newuser-links>li>a {
   color:var(--color-02);
 }
+
+.danger-important {
+  color: #a94442 !important;
+  background-color: #f2dede !important;
+  border-color: #ebccd1 !important;
+}
+.success-important {
+  color: #3c763d !important;
+  background-color: #dff0d8 !important;
+  border-color: #d6e9c6 !important;
+}
