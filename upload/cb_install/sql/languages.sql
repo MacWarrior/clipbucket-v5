@@ -1646,4 +1646,6 @@ VALUES ('admin_setting'),
        ('max_option_display'),
        ('display_option'),
        ('tools_seems_stuck_since_mark_as_failed'),
-       ('confirm_mark_as_failed');
+       ('confirm_mark_as_failed'),
+       ('running_verification'),
+       ('checked_user');

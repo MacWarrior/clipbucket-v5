@@ -2523,3 +2523,17 @@ INSERT INTO `{tbl_prefix}languages_translations` (`id_language_key`, `translatio
 VALUES ((SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE `language_key` = 'tools_seems_stuck_since_mark_as_failed'), 'L\'outil semble coincé depuis %s, marquer comme échoué ?', @language_id);
 INSERT INTO `{tbl_prefix}languages_translations` (`id_language_key`, `translation`, `language_id`)
 VALUES ((SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE `language_key` = 'confirm_mark_as_failed'), 'Voulez-vous vraiment marquer cet outil comme échoué ?', @language_id);
+INSERT INTO `{tbl_prefix}languages_translations` (`id_language_key`, `translation`, `language_id`)
+VALUES ((SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE `language_key` = 'usr_attach_video'), 'Joindre une vidéo', @language_id);
+INSERT INTO `{tbl_prefix}languages_translations` (`id_language_key`, `translation`, `language_id`)
+VALUES ((SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE `language_key` = 'no_video'), 'Pas de vidéo', @language_id);
+INSERT INTO `{tbl_prefix}languages_translations` (`id_language_key`, `translation`, `language_id`)
+VALUES ((SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE `language_key` = 'user_send_message'), 'Envoyer un message', @language_id);
+INSERT INTO `{tbl_prefix}languages_translations` (`id_language_key`, `translation`, `language_id`)
+VALUES ((SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE `language_key` = 'write_msg'), 'Écrire un message', @language_id);
+INSERT INTO `{tbl_prefix}languages_translations` (`id_language_key`, `translation`, `language_id`)
+VALUES ((SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE `language_key` = 'you_cant_send_pm_yourself'), 'Vous ne pouvez pas vous envoyer de message à vous même.', @language_id);
+INSERT INTO `{tbl_prefix}languages_translations` (`id_language_key`, `translation`, `language_id`)
+VALUES ((SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE `language_key` = 'running_verification'), 'Vérification en cours', @language_id);
+INSERT INTO `{tbl_prefix}languages_translations` (`id_language_key`, `translation`, `language_id`)
+VALUES ((SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE `language_key` = 'checked_user'), 'Utilisateur vérifié', @language_id);
