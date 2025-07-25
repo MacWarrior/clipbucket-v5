@@ -1,6 +1,6 @@
 {
   "version":"5.5.2",
-  "revision":"114",
+  "revision":"115",
   "status":"stable",
   "detail":[
     {
@@ -15,6 +15,7 @@
         ,"Implement public videos page"
         ,"Implement subtitle upload"
         ,"Implement photo comments management from photo edition"
+        ,"Implement stucked update detection"
         ,"Refactor conversion queue manager"
         ,"Refactor user levels management"
         ,"Add empty page title error"
