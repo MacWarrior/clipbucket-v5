@@ -1,8 +1,11 @@
 <?php
-const THIS_PAGE = 'cookie_consent_get';
+const THIS_PAGE = 'user_check';
 const IS_AJAX = true;
 
 require_once dirname(__FILE__, 2) . '/includes/config.inc.php';
+
+User::getInstance()->hasPermissionAjax('private_msg_access');
+
 $msg ='';
 $success = false;
 if (empty($_POST['username'])) {
