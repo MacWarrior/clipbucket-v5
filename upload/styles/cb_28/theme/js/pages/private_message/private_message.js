@@ -12,9 +12,11 @@ document.addEventListener("DOMContentLoaded", function () {
                 // On vérifie les nouveaux éléments ajoutés
                 mutation.addedNodes.forEach((node) => {
                     if (node.nodeType === 1 && node.classList.contains('alert')) {
-                        $(node).fadeOut(5000, function () {
-                            $(this).remove();
-                        });
+                        setTimeout(function () {
+                            $(node).slideUp(500, function () {
+                                $(this).remove();
+                            });
+                        }, 5000);
                     }
                 });
             }
@@ -82,20 +84,12 @@ function init_tags_to(id_input, available_tags, list_tag) {
 }
 
 function putSpinnerOnTag(tag) {
-    tag.append('<p class="spinner" style="position: absolute;\n' +
-        '  inset: 0;\n' +
-        '  display: flex;\n' +
-        '  align-items: center;\n' +
-        '  justify-content: center;\n' +
-        '  pointer-events: none;\n' +
-        '  z-index: 2;"><i class="fa fa-spinner fa-spin"></i></p>');
-    tag.find('span').css('filter', 'blur(0.8px)');
+    tag.append('<i class="fa fa-spinner fa-spin"></i>');
     tag.find('a').hide();
     tag.prop('title',lang['running_verification']);
 }
 
 function removeSpinnerOnTag(tag) {
-    tag.find('p').remove();
-    tag.find('span').css('filter', 'blur(0px)');
+    tag.find('i.fa-spinner').remove();
 }
 
