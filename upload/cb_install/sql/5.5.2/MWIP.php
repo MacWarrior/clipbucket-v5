@@ -39,6 +39,13 @@ class MWIP extends \Migration
             'fr'=>'Utilisateur vérifié',
             'en'=>'Checked user'
         ]);
+
+        self::generateTranslation('user_no_exist_wid_username', [
+            'fr'=>'L\'utilisateur %s n\'existe pas'
+        ]);
+        self::updateTranslation('user_no_exist_wid_username', [
+            'en'=>'User %s does not exist'
+        ]);
     }
 
 }
