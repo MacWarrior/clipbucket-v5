@@ -51,7 +51,7 @@
                 $allTimezone = array_column($rs, 'timezone');?>
                 <div class="field">
                     <label  for="timezone"><?php echo lang('option_timezone'); ?></label>
-                    <select class="form-control check_timezone has-error" name="timezone" id="timezone" style="display:inline-block;">
+                    <select class="form-control check_timezone has-error"  required name="timezone" id="timezone" style="display:inline-block;">
                         <option value=""></option>
                         <?php foreach ($allTimezone as $timezone) { ?>
                             <option value="<?php echo $timezone; ?>">
@@ -64,14 +64,14 @@
                     </div>
                 </div>
             <?php } ?>
-            <br/>
             <input type="hidden" name="mode" value="adminsettings"/>
             <div class="field">
-                <label for="anonymous_stats"><?php echo lang('anonymous_stats'); ?><span class="fa fa-question-circle tips" title="<?php echo lang('anonymous_stats_hint'); ?>"></span></label>
+                <label for="anonymous_stats"><?php echo lang('anonymous_stats'); ?><span class="fa fa-question-circle tips" style="padding-left: 5px;" title="<?php echo lang('anonymous_stats_hint'); ?>"></span></label>
                 <div class="form-check form-switch" >
                     <input name="anonymous_stats" class="form-check-input" type="checkbox" role="switch" id="anonymous_stats" value="yes">
                 </div>
             </div>
+            <br/>
 
             <button class="btn btn-primary" onclick="$('#installation').submit()"><?php echo lang('save_continue'); ?></button>
         </form>

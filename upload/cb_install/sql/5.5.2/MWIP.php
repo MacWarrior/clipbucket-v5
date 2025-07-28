@@ -12,12 +12,12 @@ class MWIP extends \Migration
     {
 
         self::generateTranslation('anonymous_stats', [
-            'fr' => 'Envoyer des statistiques d\'utilisation anonymes',
-            'en' => 'Send anonymous usage statistics'
+            'fr' => 'Activer l\'envoi de statistiques d\'utilisation',
+            'en' => 'Enable usage statistics reporting'
         ]);
 
         self::generateTranslation('anonymous_stats_hint', [
-            'fr' => 'Avec votre autorisation, enverra régulièrement des statistiques anonymes, telles que la version de PHP utilisée, le nombre d\'éléments gérés et les configurations, à Oxygenz afin de nous aider à améliorer nos services. Aucune information personnelle, y compris les détails liés à vos comptes utilisateurs, ne sera transmise.',
+            'fr' => 'Avec votre autorisation, des statistiques anonymes, telles que la version de PHP utilisée, le nombre d\'éléments gérés et les configurations, seront périodiquement envoyées à Oxygenz afin de nous aider à améliorer nos services. Aucune information personnelle, y compris les détails liés à vos comptes utilisateurs, ne seront transmises.',
             'en' => 'With your permission, anonymous statistics, such as the PHP version used, the number of items managed, and configuration details, will be sent periodically to Oxygenz to help us improve our services. No personal information, including user account details, will be shared.'
         ]);
 
@@ -37,7 +37,7 @@ class MWIP extends \Migration
         ]);
 
         $sql = ' INSERT IGNORE INTO `{tbl_prefix}tools` (`language_key_label`, `language_key_description`, `function_name`, `code`, `frequency`, `previous_calculated_datetime`, `is_automatable`, `is_disabled`) VALUE
-                 (\'anonymous_stats_label\', \'anonymous_stats_description\', \'AdminTool::anonymousStats\', \'anonymous_stats\', \'* * * * 1\', CURRENT_TIMESTAMP, \'1\', \'1\');';
+                 (\'anonymous_stats_label\', \'anonymous_stats_description\', \'AdminTool::anonymousStats\', \'anonymous_stats\', \'0 1 * * 7\', CURRENT_TIMESTAMP, \'1\', \'0\');';
         self::query($sql);
 
         self::alterTable('ALTER TABLE `{tbl_prefix}config` ADD COLUMN `allow_stat` BOOL DEFAULT TRUE',
@@ -48,6 +48,8 @@ class MWIP extends \Migration
                 'column' => 'allow_stat',
             ]
         );
+
+        self::generateConfig('enable_anonymous_stats','no');
 
         $sql = 'UPDATE `' . tbl('config') . '` SET allow_stat = FALSE WHERE name IN 
         (\'base_url\'
@@ -64,6 +66,12 @@ class MWIP extends \Migration
         , \'cache_password\'
         , \'cache_port\')
         ;';
+        self::query($sql);
+
+        $sql = 'CREATE TABLE IF NOT EXISTS `{tbl_prefix}temp_stats_data` (
+            key_name VARCHAR(255) NOT NULL PRIMARY KEY ,
+            value TEXT not null
+        )';
         self::query($sql);
     }
 

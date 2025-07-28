@@ -5,7 +5,7 @@ Migration::updateConfig('site_slogan', post('slogan'));
 Migration::updateConfig('timezone', post('timezone'));
 Migration::updateConfig('nginx_vhost_version', Update::getInstance()->getCurrentCoreVersion());
 Migration::updateConfig('nginx_vhost_revision', Update::getInstance()->getCurrentCoreRevision());
-Clipbucket_db::getInstance()->update(tbl('tools'), ['is_disabled'], [ post('anonymous_stats') ? 0 : 1 ], 'id_tool = (select id_tool from '.tbl('tools').' where code = "anonymous_stats" limit 1)');
+Migration::updateConfig('enable_anonymous_stats', post('anonymous_stats') ? 'yes' : 'no' );
 ?>
 
 <div class="nav_des clearfix">
