@@ -928,10 +928,10 @@
                             </div>
                             <hr/>
                             <div class="row">
-                                <div class="col-md-4">
+                                <div class="col-md-8">
                                     <label class="nowrap" for="enable_multi_factor_authentification" title="{lang code="option_enable_multi_factor_authentification"}">{lang code="option_enable_multi_factor_authentification"}</label>
                                 </div>
-                                <div class="col-md-8 row-size">
+                                <div class="col-md-4 row-size">
                                     <select class="form-control" name="enable_multi_factor_authentification" id="enable_multi_factor_authentification">
                                         <option value="allowed" {if $row.enable_multi_factor_authentification == 'allowed' } selected {/if} >{lang('allow')}</option>
                                         <option value="disabled" {if $row.enable_multi_factor_authentification == 'disabled'} selected {/if} >{lang('disabled')}</option>

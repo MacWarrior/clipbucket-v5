@@ -122,6 +122,7 @@ switch ($mode) {
     case 'block_users':
     case 'change_password':
     case 'change_email':
+    case 'mfa':
         assign('mode', $mode);
         break;
 
