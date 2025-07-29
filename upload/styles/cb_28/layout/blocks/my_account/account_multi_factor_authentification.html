@@ -1,0 +1,13 @@
+<form method="post" name="edit_profile">
+    <div class="form-group">
+        <label for="curemail">{lang code="option_enable_multi_factor_authentification"}</label>
+        <select>
+            <option value="disabled" {if $user.}></option>
+        </select>
+    </div>
+    <div class="form-group">
+        <button name="change_email" value="submit" class="btn btn-primary">
+            {lang code='save'}
+        </button>
+    </div>
+</form>

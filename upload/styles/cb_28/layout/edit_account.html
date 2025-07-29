@@ -62,6 +62,13 @@
                         </a>
                     </li>
                     {/if}
+                    {if config('enable_multi_factor_authentification') == 'allowed' }
+                    <li class="{if $mode =='mfa'}active{/if}">
+                        <a href="{$baseurl}edit_account.php?mode=mfa">
+                            <h5>{lang code='option_enable_multi_factor_authentification'}</h5>
+                        </a>
+                    </li>
+                    {/if}
                 </ul>
                 <br/>
                 <div class="tab-content clearfix">
@@ -83,6 +90,11 @@
 
                     {if config('channelsSection') == 'yes' && User::getInstance()->hasPermission('view_channels')}
                     <div id="msubscription" class="tab-pane {if $mode =='subs'}active{/if}">
+                        {include file="$style_dir/blocks/my_account/account_manage_subscriptions.html"}
+                    </div>
+                    {/if}
+                    {if config('enable_multi_factor_authentification') == 'allowed' }
+                    <div id="mmfa" class="tab-pane {if $mode =='mfa'}active{/if}">
                         {include file="$style_dir/blocks/my_account/account_manage_subscriptions.html"}
                     </div>
                     {/if}

@@ -421,7 +421,8 @@ if (isset($_POST['update'])) {
         'channel_video_style',
         'enable_public_video_page',
         'can_upload_subtitles',
-        'videos_video_style'
+        'videos_video_style',
+        'enable_multi_factor_authentification'
     ];
 
     //Numeric Array
