@@ -12,7 +12,7 @@ if (empty($_POST['username'])) {
     $msg = lang('missing_params');
     e($msg);
 } else {
-    $res = User::getInstance()->getOne(['username_strict' => $_POST['username']]);
+    $res = User::getInstance()->getOne(['username_strict' => $_POST['username'], 'not_userid'=>userquery::getInstance()->get_anonymous_user()]);
     if (empty($res)) {
         $msg = lang('user_no_exist_wid_username', $_POST['username']);
         e($msg);
