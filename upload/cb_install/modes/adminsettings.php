@@ -5,6 +5,7 @@ Migration::updateConfig('site_slogan', post('slogan'));
 Migration::updateConfig('timezone', post('timezone'));
 Migration::updateConfig('nginx_vhost_version', Update::getInstance()->getCurrentCoreVersion());
 Migration::updateConfig('nginx_vhost_revision', Update::getInstance()->getCurrentCoreRevision());
+Migration::updateConfig('enable_anonymous_stats', post('anonymous_stats') ? 'yes' : 'no' );
 ?>
 
 <div class="nav_des clearfix">

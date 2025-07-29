@@ -1646,4 +1646,9 @@ VALUES ('admin_setting'),
        ('max_option_display'),
        ('display_option'),
        ('tools_seems_stuck_since_mark_as_failed'),
-       ('confirm_mark_as_failed');
+       ('confirm_mark_as_failed'),
+       ('anonymous_stats'),
+       ('anonymous_stats_hint'),
+       ('unknown_task_x'),
+       ('anonymous_stats_label'),
+       ('anonymous_stats_description');
