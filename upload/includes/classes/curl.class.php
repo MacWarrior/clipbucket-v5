@@ -4,7 +4,6 @@ namespace Classes;
 class Curl
 {
     private $base_url;
-
     private $curl;
     private $headers;
 
@@ -14,7 +13,7 @@ class Curl
      */
     public function __construct($base_url, $beared_token)
     {
-        $this->base_url = $base_url . (substr($base_url, -1) != '/' ? '/' : '');
+        $this->base_url = $base_url . (!str_ends_with($base_url, '/') ? '/' : '');
         $this->curl = curl_init();
         $this->headers = [
             'Authorization: Bearer ' . $beared_token,
@@ -45,10 +44,12 @@ class Curl
         $err = curl_error($this->curl);
         return ['error'=>$err, 'response'=> json_decode($response,true)];
     }
+
     /**
      * @param $action
      * @param $param
      * @return array
+     * @throws \Exception
      */
     public function execPost($action, $param=[]): array
     {
@@ -56,7 +57,8 @@ class Curl
             CURLOPT_URL => $this->base_url . $action,
             CURLOPT_CUSTOMREQUEST => 'POST',
             CURLOPT_POSTFIELDS => $param,
-            CURLOPT_USERAGENT => 'CB ' . \Update::getInstance()->getCurrentDBVersion() . ' - #' . \Update::getInstance()->getCurrentDBRevision()
+            CURLOPT_USERAGENT => 'CB ' . \Update::getInstance()->getCurrentDBVersion() . ' - #' . \Update::getInstance()->getCurrentDBRevision(),
+            CURLOPT_REFERER => config('base_url')
         ]);
         $response = curl_exec($this->curl);
         $err = curl_error($this->curl);
@@ -86,9 +88,6 @@ class Curl
         return ['error'=>$err, 'response'=> json_decode($response,true)];
     }
 
-    /**
-     *
-     */
     public function __destruct()
     {
         curl_close($this->curl);

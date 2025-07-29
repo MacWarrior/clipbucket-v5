@@ -1,6 +1,6 @@
 {
   "version":"5.5.2",
-  "revision":"115",
+  "revision":"116",
   "status":"stable",
   "detail":[
     {
@@ -16,6 +16,7 @@
         ,"Implement subtitle upload"
         ,"Implement photo comments management from photo edition"
         ,"Implement stucked update detection"
+        ,"Implement anonymous statistics"
         ,"Refactor conversion queue manager"
         ,"Refactor user levels management"
         ,"Add empty page title error"

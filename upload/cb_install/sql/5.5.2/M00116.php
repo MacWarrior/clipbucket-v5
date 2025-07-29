@@ -3,14 +3,13 @@
 namespace V5_5_2;
 require_once \DirPath::get('classes') . DIRECTORY_SEPARATOR . 'migration' . DIRECTORY_SEPARATOR . 'migration.class.php';
 
-class MWIP extends \Migration
+class M00116 extends \Migration
 {
     /**
      * @throws \Exception
      */
     public function start()
     {
-
         self::generateTranslation('anonymous_stats', [
             'fr' => 'Activer l\'envoi de statistiques d\'utilisation',
             'en' => 'Enable usage statistics reporting'
@@ -21,9 +20,9 @@ class MWIP extends \Migration
             'en' => 'With your permission, anonymous statistics, such as the PHP version used, the number of items managed, and configuration details, will be sent periodically to Oxygenz to help us improve our services. No personal information, including user account details, will be shared.'
         ]);
 
-        self::generateTranslation('unknown_task', [
-            'fr' => 'Tâche inconnue',
-            'en' => 'Unknown task'
+        self::generateTranslation('unknown_task_x', [
+            'fr' => 'Tâche inconnue : %s',
+            'en' => 'Unknown task : %s'
         ]);
 
         self::generateTranslation('anonymous_stats_label', [
@@ -50,22 +49,22 @@ class MWIP extends \Migration
         );
 
         self::generateConfig('enable_anonymous_stats','no');
+        self::generateConfig('unique_random', bin2hex(random_bytes(16)));
 
         $sql = 'UPDATE `' . tbl('config') . '` SET allow_stat = FALSE WHERE name IN 
-        (\'base_url\'
-        , \'tmdb_token\'
-        , \'smtp_host\'
-        , \'smtp_user\'
-        , \'smtp_pass\'
-        , \'smtp_port\'
-        , \'proxy_url\'
-        , \'proxy_port\'
-        , \'proxy_username\'
-        , \'proxy_password\'
-        , \'cache_host\'
-        , \'cache_password\'
-        , \'cache_port\')
-        ;';
+            (\'base_url\'
+            , \'tmdb_token\'
+            , \'smtp_host\'
+            , \'smtp_user\'
+            , \'smtp_pass\'
+            , \'smtp_port\'
+            , \'proxy_url\'
+            , \'proxy_port\'
+            , \'proxy_username\'
+            , \'proxy_password\'
+            , \'cache_host\'
+            , \'cache_password\'
+            , \'cache_port\');';
         self::query($sql);
 
         $sql = 'CREATE TABLE IF NOT EXISTS `{tbl_prefix}temp_stats_data` (

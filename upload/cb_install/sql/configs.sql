@@ -1,20 +1,20 @@
 INSERT INTO `{tbl_prefix}config` (`configid`, `name`, `value`, allow_stat)
-VALUES (NULL, 'base_url', '', FALSE),
-(NULL, 'password_salt', SUBSTRING(HEX(SHA2(CONCAT(NOW(), RAND(), UUID()), 512)),1, 32), FALSE) ,
-(NULL, 'tmdb_token', '', FALSE),
-(NULL, 'smtp_host', '', FALSE),
-(NULL, 'smtp_user', '', FALSE),
-(NULL, 'smtp_pass', '', FALSE),
-(NULL, 'smtp_port', '', FALSE),
-(NULL, 'proxy_url', '',FALSE),
-(NULL, 'proxy_port', '',FALSE),
-(NULL, 'proxy_username', '',FALSE),
-(NULL, 'proxy_password', '',FALSE),
-(NULL, 'cache_host', '',FALSE),
-(NULL, 'cache_password', '',FALSE),
-(NULL, 'cache_port', '',FALSE),
-(NULL, 'enable_anonymous_stats', 'no',FALSE)
- ;
+    VALUES (NULL, 'base_url', '', FALSE),
+    (NULL, 'password_salt', SUBSTRING(HEX(SHA2(CONCAT(NOW(), RAND(), UUID()), 512)),1, 32), FALSE) ,
+    (NULL, 'tmdb_token', '', FALSE),
+    (NULL, 'smtp_host', '', FALSE),
+    (NULL, 'smtp_user', '', FALSE),
+    (NULL, 'smtp_pass', '', FALSE),
+    (NULL, 'smtp_port', '', FALSE),
+    (NULL, 'proxy_url', '',FALSE),
+    (NULL, 'proxy_port', '',FALSE),
+    (NULL, 'proxy_username', '',FALSE),
+    (NULL, 'proxy_password', '',FALSE),
+    (NULL, 'cache_host', '',FALSE),
+    (NULL, 'cache_password', '',FALSE),
+    (NULL, 'cache_port', '',FALSE),
+    (NULL, 'enable_anonymous_stats', 'no',FALSE)
+;
 
 INSERT INTO `{tbl_prefix}config` (`configid`, `name`, `value`) VALUES
 	(NULL, 'clientid', ''),
@@ -324,7 +324,9 @@ INSERT INTO `{tbl_prefix}config` (`configid`, `name`, `value`) VALUES
     (NULL, 'enable_public_video_page', 'no'),
     (NULL, 'maximum_allowed_subtitle_size', '2'),
     (NULL, 'can_upload_subtitles', 'yes'),
-    (NULL, 'videos_video_style', 'modern');
+    (NULL, 'videos_video_style', 'modern'),
+    (NULL, 'unique_random', HEX(RANDOM_BYTES(16)))
+;
 
 INSERT INTO `{tbl_prefix}video_resolution` (`title`, `ratio`, `enabled`, `width`, `height`, `video_bitrate`) VALUES
 	('240p', '16/9', 1, 426, 240, 240000),

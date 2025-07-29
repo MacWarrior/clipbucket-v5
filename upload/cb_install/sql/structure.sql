@@ -551,6 +551,11 @@ CREATE TABLE `{tbl_prefix}video_views` (
     PRIMARY KEY (`id_video_view`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_520_ci;
 
+CREATE TABLE IF NOT EXISTS `{tbl_prefix}temp_stats_data` (
+    key_name VARCHAR(255) NOT NULL PRIMARY KEY ,
+    value TEXT not null
+);
+
 ALTER TABLE `{tbl_prefix}action_log`
   ADD PRIMARY KEY (`action_id`);
 

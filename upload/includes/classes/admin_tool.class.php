@@ -1275,9 +1275,12 @@ class AdminTool
         AND id_tool = ' .mysql_clean($this->id_tool)));
     }
 
+    /**
+     * @throws Exception
+     */
     public function anonymousStats()
     {
-        if (!Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.2', '999') || config('enable_anonymous_stats') != 'yes') {
+        if (!Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.2', '100') || config('enable_anonymous_stats') != 'yes') {
             $this->executeTool('');
             return true;
         }
@@ -1293,7 +1296,7 @@ class AdminTool
                 'count_photos',
                 'count_users',
                 'count_collections',
-                'count_playlist',
+                'count_playlists',
                 'count_thumbs_auto',
                 'count_thumbs_manual',
                 'count_posters',
@@ -1359,7 +1362,6 @@ class AdminTool
                 }
             }
             $response = $curl->execPost('', $content );
-            DiscordLog::sendDump($content);
             if (!empty($response['error'])) {
                 throw new Exception($response['error']);
             }
@@ -1378,7 +1380,14 @@ class AdminTool
                 //all configs with allow_stat TRUE
                 $sql = 'SELECT name, value FROM ' . tbl('config') . ' WHERE allow_stat = 1';
                 $res = Clipbucket_db::getInstance()->_select($sql);
-                $value = [$task => $res ?: []];
+                $flatConfig = [];
+                foreach ($res ?: [] as $row) {
+                    if (isset($row['name'], $row['value'])) {
+                        $flatConfig[$row['name']] = $row['value'];
+                    }
+                }
+
+                $value = [$task => $flatConfig];
                 break;
             case 'count_videos':
                 $total = Video::getInstance()->getAll(['count' => true]);
@@ -1650,7 +1659,7 @@ class AdminTool
                 $value = [$task => $res[0]['count'] ?? 0];
                 break;
             default:
-                throw new Exception(lang('unknown_task'));
+                throw new Exception(lang('unknown_task_x', [$task]));
         }
         $encoded = json_encode($value);
         $this->addLog($encoded);

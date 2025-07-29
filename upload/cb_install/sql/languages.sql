@@ -1649,6 +1649,6 @@ VALUES ('admin_setting'),
        ('confirm_mark_as_failed'),
        ('anonymous_stats'),
        ('anonymous_stats_hint'),
-       ('unknown_task'),
+       ('unknown_task_x'),
        ('anonymous_stats_label'),
        ('anonymous_stats_description');
