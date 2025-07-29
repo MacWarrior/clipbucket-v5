@@ -55,28 +55,31 @@
                                   {$field.hint_2}
                               </div>
                               {/foreach}
-                              <button name="send_message" id="send_message" value="submit" class="btn btn-primary">{lang code='com_send_message'}</button>
+                              <button name="send_message" id="send_message" value="submit" class="btn btn-primary">{lang code='user_send_message'}</button>
                           </form>
                       </div>
                   </div>{/if}
 
 
                   {if $mode =='inbox'}
-                  <div id="inbox" class="tab-pane active">
+                      <div id="inbox" class="tab-pane active">
                       {include file="$style_dir/blocks/pm/messages.html" show_from='true'}
-                      </div>{/if}
+                      </div>
+                  {/if}
 
-                 {if $mode =='notification'}
-                  <div id="notifications" class="tab-pane active">
+                  {if $mode =='notification'}
+                      <div id="notifications" class="tab-pane active">
                       {include file="$style_dir/blocks/pm/messages.html" show_from='true'}
-                  </div>{/if}
+                      </div>
+                  {/if}
 
                   {if $mode =='sent'}
-                  <div id="msend" class="tab-pane active">
+                      <div id="msend" class="tab-pane active">
                       {include file="$style_dir/blocks/pm/messages.html" show_to='true'}
-                  </div>{/if}
-                 
-                  </div>
+                      </div>
+                  {/if}
+
+              </div>
               </div>
 
       </div>
@@ -87,4 +90,5 @@
     var lang;
     lang['running_verification'] = '{lang('running_verification')}';
     lang['checked_user'] = '{lang('checked_user')}';
+    var is_space_in_username = {(config('allow_username_spaces')== 'yes')?'true' : 'false'};
 </script>
