@@ -1,3 +1,21 @@
+INSERT INTO `{tbl_prefix}config` (`configid`, `name`, `value`, allow_stat)
+    VALUES (NULL, 'base_url', '', FALSE),
+    (NULL, 'password_salt', SUBSTRING(HEX(SHA2(CONCAT(NOW(), RAND(), UUID()), 512)),1, 32), FALSE) ,
+    (NULL, 'tmdb_token', '', FALSE),
+    (NULL, 'smtp_host', '', FALSE),
+    (NULL, 'smtp_user', '', FALSE),
+    (NULL, 'smtp_pass', '', FALSE),
+    (NULL, 'smtp_port', '', FALSE),
+    (NULL, 'proxy_url', '',FALSE),
+    (NULL, 'proxy_port', '',FALSE),
+    (NULL, 'proxy_username', '',FALSE),
+    (NULL, 'proxy_password', '',FALSE),
+    (NULL, 'cache_host', '',FALSE),
+    (NULL, 'cache_password', '',FALSE),
+    (NULL, 'cache_port', '',FALSE),
+    (NULL, 'enable_anonymous_stats', 'no',FALSE)
+;
+
 INSERT INTO `{tbl_prefix}config` (`configid`, `name`, `value`) VALUES
 	(NULL, 'clientid', ''),
 	(NULL, 'secretId', ''),
@@ -75,11 +93,7 @@ INSERT INTO `{tbl_prefix}config` (`configid`, `name`, `value`) VALUES
 	(NULL, 'comments_captcha', 'guests'),
 	(NULL, 'own_photo_rating', 'no'),
 	(NULL, 'mail_type', 'mail'),
-	(NULL, 'smtp_host', ''),
-	(NULL, 'smtp_user', ''),
-	(NULL, 'smtp_pass', ''),
-	(NULL, 'smtp_auth', 'no'),
-	(NULL, 'smtp_port', ''),
+    (NULL, 'smtp_auth', 'no'),
 	(NULL, 'use_subs', '1'),
 	(NULL, 'photo_ratio', '16:10'),
 	(NULL, 'photo_thumb_width', '600'),
@@ -142,7 +156,6 @@ INSERT INTO `{tbl_prefix}config` (`configid`, `name`, `value`) VALUES
 	(NULL, 'video_round_views', 'yes'),
 	(NULL, 'access_to_logged_in', 'no'),
 	(NULL, 'pick_geo_country', 'yes'),
-	(NULL, 'password_salt', SUBSTRING(HEX(SHA2(CONCAT(NOW(), RAND(), UUID()), 512)),1, 32)),
 	(NULL, 'show_collapsed_checkboxes', '0'),
 	(NULL, 'enable_advertisement', 'no'),
 	(NULL, 'chromecast', 'yes'),
@@ -164,11 +177,7 @@ INSERT INTO `{tbl_prefix}config` (`configid`, `name`, `value`) VALUES
 	(NULL, 'enable_update_checker', '1'),
 	(NULL, 'email_domain_restriction', ''),
 	(NULL, 'proxy_enable', 'no'),
-	(NULL, 'proxy_auth', 'no'),
-	(NULL, 'proxy_url', ''),
-	(NULL, 'proxy_port', ''),
-	(NULL, 'proxy_username', ''),
-	(NULL, 'proxy_password', ''),
+    (NULL, 'proxy_auth', 'no'),
 	(NULL, 'player_default_resolution', '1080'),
 	(NULL, 'keep_audio_tracks', '1'),
 	(NULL, 'keep_subtitles', '1'),
@@ -180,9 +189,6 @@ INSERT INTO `{tbl_prefix}config` (`configid`, `name`, `value`) VALUES
 	(NULL, 'player_default_resolution_hls', 'auto'),
     (NULL, 'cache_enable', 'no'),
     (NULL, 'cache_auth', 'no'),
-    (NULL, 'cache_host', ''),
-    (NULL, 'cache_password', ''),
-    (NULL, 'cache_port', ''),
     (NULL, 'disable_email', 'no'),
     (NULL, 'enable_country', 'no'),
     (NULL, 'enable_gender', 'no'),
@@ -207,7 +213,6 @@ INSERT INTO `{tbl_prefix}config` (`configid`, `name`, `value`) VALUES
     (NULL, 'enable_video_social_sharing', 'yes'),
     (NULL, 'enable_video_internal_sharing', 'yes'),
     (NULL, 'enable_video_link_sharing', 'yes'),
-    (NULL, 'tmdb_token', ''),
     (NULL, 'enable_tmdb', 'no'),
     (NULL, 'enable_user_dob_edition', 'yes'),
     (NULL, 'enable_age_restriction', 'yes'),
@@ -293,7 +298,6 @@ INSERT INTO `{tbl_prefix}config` (`configid`, `name`, `value`) VALUES
     (NULL, 'email_sender_name', 'no-reply'),
     (NULL, 'enable_collection_link_sharing', 'yes'),
     (NULL, 'enable_collection_internal_sharing', 'yes'),
-    (NULL, 'base_url', ''),
     (NULL, 'thumb_background_color', '#000000'),
     (NULL, 'enable_country_video_field', 'yes'),
     (NULL, 'enable_location_video_field', 'yes'),
@@ -320,7 +324,9 @@ INSERT INTO `{tbl_prefix}config` (`configid`, `name`, `value`) VALUES
     (NULL, 'enable_public_video_page', 'no'),
     (NULL, 'maximum_allowed_subtitle_size', '2'),
     (NULL, 'can_upload_subtitles', 'yes'),
-    (NULL, 'videos_video_style', 'modern');
+    (NULL, 'videos_video_style', 'modern'),
+    (NULL, 'unique_random', HEX(RANDOM_BYTES(16)))
+;
 
 INSERT INTO `{tbl_prefix}video_resolution` (`title`, `ratio`, `enabled`, `width`, `height`, `video_bitrate`) VALUES
 	('240p', '16/9', 1, 426, 240, 240000),
@@ -352,7 +358,8 @@ INSERT INTO `{tbl_prefix}tools` (`language_key_label`, `language_key_description
     ('automate_label', 'automate_description', 'AdminTool::checkAndStartToolsByFrequency', 'automate', NULL, NULL, '0', '0'),
     ('calc_user_storage_label', 'calc_user_storage_description', 'AdminTool::calcUserStorage', 'calc_user_storage', '0 1 * * *', CURRENT_TIMESTAMP, '1', '0'),
     ('assign_default_thumb_label', 'assign_default_thumb_description', 'AdminTool::assignDefaultThumbForCollections', 'assign_default_thumb', NULL, CURRENT_TIMESTAMP, '0', '0'),
-    ('update_aspect_ratio_label', 'update_aspect_ratio_description', 'AdminTool::updateAspectRatio', 'update_aspect_ratio', NULL, NULL, '1', '1');
+    ('update_aspect_ratio_label', 'update_aspect_ratio_description', 'AdminTool::updateAspectRatio', 'update_aspect_ratio', NULL, NULL, '1', '1'),
+    ('anonymous_stats_label', 'anonymous_stats_description', 'AdminTool::anonymousStats', 'anonymous_stats', '0 1 * * 7', CURRENT_TIMESTAMP, '1', '0');
 
 INSERT INTO `{tbl_prefix}tags_type` (`name`) VALUES ('video'), ('photo'), ('collection'), ('profile'), ('playlist'), ('actors'), ('producer'), ('executive_producer'), ('director'), ('crew'), ('genre');
 
