@@ -455,15 +455,16 @@ class cb_pm
     {
         $to = post('to');
         $to = $to ? $to : get('to');
-
+        $hint_tags = config('allow_username_spaces') =='yes' ? '<span class="fa fa-question-circle tips" style="margin-left: 5px;" title=\''.lang('use_tab_tag').'\'></span>' : '';
         $array = [
             'to'      => [
                 'title'    => lang('to'),
-                'type'     => 'textfield',
+                'type'     => 'hidden',
                 'name'     => 'to',
                 'id'       => 'to',
                 'value'    => $to,
-                'required' => 'yes'
+                'required' => 'yes',
+                'hint_1' => $hint_tags
             ],
             'subj'    => [
                 'title'    => lang('subject'),

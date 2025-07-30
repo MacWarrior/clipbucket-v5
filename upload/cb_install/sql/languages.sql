@@ -1651,4 +1651,6 @@ VALUES ('admin_setting'),
        ('anonymous_stats_hint'),
        ('unknown_task_x'),
        ('anonymous_stats_label'),
-       ('anonymous_stats_description');
+       ('anonymous_stats_description'),
+       ('running_verification'),
+       ('checked_user');

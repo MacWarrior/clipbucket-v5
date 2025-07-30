@@ -7046,3 +7046,18 @@ div.show-cookie-list i{
 .newuser-links>li>a {
   color:var(--color-02);
 }
+
+ul.tagit li.tagit-choice.danger-important {
+  color: #a94442;
+  background-color: #f2dede;
+  border-color: #ebccd1;
+}
+ul.tagit li.tagit-choice.success-important {
+  color: #3c763d;
+  background-color: #dff0d8;
+  border-color: #d6e9c6;
+}
+
+span.tagit-label i.fa {
+  padding-left: 5px;
+}
