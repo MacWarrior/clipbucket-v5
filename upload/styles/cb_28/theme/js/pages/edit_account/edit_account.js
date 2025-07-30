@@ -96,4 +96,23 @@ $(document).ready(function(){
             backdrop.remove();
         }
     }
+
+    document.getElementById('confirmEmailBtn').addEventListener('click', function (e) {
+        e.preventDefault();
+        fetch(baseurl + 'actions/user_confirm_email.php', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.msg) {
+                    const pageContent = document.querySelector('.manage-page');
+                    if (pageContent) {
+                        pageContent.insertAdjacentHTML('afterbegin', data.msg);
+                    }
+                }
+            })
+            .catch(error => console.error(error))
+            .finally(hideSpinner);
+    })
 });

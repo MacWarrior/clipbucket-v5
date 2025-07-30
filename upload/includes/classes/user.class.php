@@ -82,6 +82,10 @@ class User
         if( Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '313') ){
             $this->fields[] = 'active_theme';
         }
+        if( Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.2', '999') ){
+            $this->fields[] = 'email_confirmed';
+            $this->fields[] = 'multi_factor_auth';
+        }
 
         $this->tablename_profile = 'user_profile';
         $this->fields_profile = [
@@ -1137,6 +1141,14 @@ class User
         return $this->user_notification_contact;
     }
 
+    public static function checkAndSendMFAmail($username) {
+        if (config('enable_multi_factor_authentification') == 'yes') {
+            $user = User::getInstance()->getOne(['username' => $username]);
+            if (!empty($user) && $user['email_confirmed'] && $user['multi_factor_auth']) {
+
+            }
+        }
+    }
 }
 
 class userquery extends CBCategory
@@ -1712,9 +1724,11 @@ class userquery extends CBCategory
     /**
      * @throws Exception
      */
-    function activate_user_with_avcode($user, $avcode): void
+    function activate_user_with_avcode($user, $avcode, $only_confirm = false): void
     {
-        $data = $this->get_user_details($user);
+        
+        $select_field = (!is_numeric($user) ? 'username' : 'userid');
+        $data = User::getInstance()->getOne([$select_field => $user]);
         if (!$data || !$user) {
             e(lang("usr_exist_err"));
         } elseif ($data['usr_status'] == 'Ok') {
@@ -1728,7 +1742,18 @@ class userquery extends CBCategory
             errorhandler::getInstance()->flush();
             e(lang("usr_activation_msg"), "m");
 
-            if ($data['welcome_email_sent'] == 'no') {
+            $field = ['email_confirmed'];
+            $value = ['|f|true'];
+            if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.2', '999')) {
+                if (!empty($data['email_temp'])) {
+                    $field[] = 'email';
+                    $value[] = $data['email_temp'];
+                    $field[] = 'email_temp';
+                    $value[] = 'null';
+                }
+            }
+            Clipbucket_db::getInstance()->update(tbl('users'), $field, $value, ' userid=' . $data['userid'] );
+            if ($data['welcome_email_sent'] == 'no' && !$only_confirm) {
                 $this->send_welcome_email($data, true);
             }
         }
@@ -3659,7 +3684,29 @@ class userquery extends CBCategory
         } elseif ($this->email_exists($array['new_email'])) {
             e(lang('usr_email_err3'));
         } else {
-            Clipbucket_db::getInstance()->update(tbl($this->dbtbl['users']), ['email'], [$array['new_email']], " userid='" . $array['userid'] . "'");
+            if (config('email_verification') == 'yes') {
+                $fields = ['email_temp'];
+                if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.2', '999')) {
+                    EmailTemplate::sendMail('verify_email', [
+                        'mail' => $array['new_email'],
+                        'name' => User::getInstance()->get('username')
+                    ], $array['new_email'], $fields, [
+                        'user_email' => $array['new_email'],
+                        'user_username' => User::getInstance()->get('username'),
+                        'user_avatar' => User::getInstance()->get('avatar_url')
+                    ]);
+                }
+            } else {
+                $fields = ['email'];
+            }
+            $values = [$array['new_email']];
+            if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.2', '999')) {
+                $fields[] = 'email_confirm';
+                $values[] = 0;
+            }
+
+            Clipbucket_db::getInstance()->update(tbl($this->dbtbl['users']), $fields, $values, " userid='" . $array['userid'] . "'");
+
             e(lang('email_change_msg'), 'm');
         }
     }

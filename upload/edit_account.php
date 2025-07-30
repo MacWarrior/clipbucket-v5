@@ -141,7 +141,7 @@ switch ($mode) {
         break;
 }
 
-$udetails = userquery::getInstance()->get_user_details(user_id());
+$udetails = User::getInstance()->getOne(['userid'=>User::getInstance()->getCurrentUserID()]);
 $profile = userquery::getInstance()->get_user_profile($udetails['userid']);
 if (is_array($profile)) {
     $udetails = array_merge($profile, $udetails);

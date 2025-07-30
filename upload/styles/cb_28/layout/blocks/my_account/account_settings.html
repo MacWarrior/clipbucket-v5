@@ -58,7 +58,26 @@
                 </div>
             {/foreach}
         {/if}
-
+        <div class="form-group">
+            <div class="row">
+                {if config('enable_multi_factor_authentification') == 'allowed' }
+                <div class="col-md-6">
+                    <label for="enable_mfa">{lang code="option_enable_multi_factor_authentification"}</label>
+                </div>
+                <div class="col-md-4">
+                    <select name="enable_mfa" id="enable_mfa" class="form-control">
+                        <option value="disabled" {if $user.enable_mfa == 'disabled'}selected{/if}>{lang('disabled')|ucfirst}</option>
+                        <option value="allowed" {if $user.enable_mfa == 'allowed_email'}selected{/if} {if !$user.email_confirmed}disabled="disabled" title="{lang('tips_need_confirm_email')}" {/if} >{lang('allowed_by_email')}</option>
+                    </select>
+                </div>
+                {/if}
+                {if !$user.email_confirmed}
+                    <div class="col-md-2">
+                        <button type="button" class="btn btn-success" id="confirmEmailBtn">{lang code='confirm_email'}</button>
+                    </div>
+                {/if}
+            </div>
+        </div>
         <div class="form-group">
             <button name="update_profile" value="submit" class="btn btn-primary"> {lang code='update'}</button>
             {if config('enable_user_self_deletion')=='yes'}
