@@ -1,6 +1,6 @@
 {
   "version":"5.5.2",
-  "revision":"116",
+  "revision":"117",
   "status":"stable",
   "detail":[
     {
@@ -64,6 +64,7 @@
         ,"Implement friend request notification in my account area"
         ,"Implement notification bell <i>(#615)</i>"
         ,"Implement default thumb selection and subtitle upload on video upload form"
+        ,"Implement user check on internal messaging"
         ,"Refactor friends requests & management"
         ,"Refactor collection selections"
         ,"Update video & photos management pages display"
