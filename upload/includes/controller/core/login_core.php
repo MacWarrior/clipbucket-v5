@@ -12,6 +12,7 @@ if (empty($_POST['username']) || empty($_POST['password'])) {
 } else {
     $username = mysql_clean($_POST['username']);
     $password = mysql_clean($_POST['password']);
+    $remember_me = mysql_clean($_POST['remember_me'] ?? false);
 //check MFA
     $code_mfa_ok = true;
      if (config('enable_multi_factor_authentification') != 'disabled' && userquery::getInstance()->authenticate($username, $password)) {
@@ -34,7 +35,7 @@ if (empty($_POST['username']) || empty($_POST['password'])) {
         }
     }
 //Logging User
-    if ($code_mfa_ok && userquery::getInstance()->login_user($username, $password)) {
+    if ($code_mfa_ok && userquery::getInstance()->login_user($username, $password, $remember_me)) {
         if (empty($redirect)) {
             $redirect = User::getInstance()->getDefaultHomepageFromUserLevel();
         }
