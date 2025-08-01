@@ -1653,4 +1653,5 @@ VALUES ('admin_setting'),
        ('anonymous_stats_label'),
        ('anonymous_stats_description'),
        ('running_verification'),
-       ('checked_user');
+       ('checked_user'),
+       ('player_replay');

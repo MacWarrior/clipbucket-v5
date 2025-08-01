@@ -1441,65 +1441,89 @@ function call_view_collection_functions($cdetails): void
  * @param      $id
  * @param null $type
  *
+ * @return bool
  * @throws Exception
  * @internal param $ : { string } { $type } { type of object e.g video, user } { $type } { type of object e.g video, user }
  * @action : database updating
  * @internal param $ : { integer } { $id } { id of element to update views for } { $id } { id of element to update views for }
  */
-function increment_views($id, $type = null): void
+function increment_views($id, $type = null): bool
 {
-    $userid = user_id();
+    $session_key = $type . '_' . $id;
 
     switch ($type) {
         case 'video':
         default:
-            $vdetails = get_video_details($id);
-            $sessionTime =  ($vdetails['duration'] ?? 3600);
-            if (!isset($_SESSION[$type . '_' . $id]) || ( time() - $_SESSION[$type . '_' . $id]  > $sessionTime) && $vdetails['status'] == 'Successful') {
-                Clipbucket_db::getInstance()->update(tbl('video'), ['views', 'last_viewed'], ['|f|views+1', '|f|NOW()'], " videokey='$id'");
-                if (config('enable_video_view_history') == 'yes') {
-                    Clipbucket_db::getInstance()->insert(tbl('video_views'), ['id_video', 'id_user', 'view_date'], [$id, ($userid ?: 0), '|f|NOW()']);
-                }
-                $_SESSION[$type . '_' . $id] = time();
+            if( is_numeric($id) ) {
+                $video = Video::getInstance()->getOne(['videoid' => $id]);
+            } else if( is_array($id) ){
+                $video = $id;
+            }
 
+            if( empty($video) ) {
+                $return = false;
+                break;
+            }
+
+            $sessionTime = (int) (($video['duration'] ?? 3600) * 0.9);
+            if (!isset($_SESSION[$session_key]) || ( time() - $_SESSION[$session_key] > $sessionTime) && $video['status'] == 'Successful') {
+                $userid = user_id();
+                Clipbucket_db::getInstance()->update(tbl('video'), ['views', 'last_viewed'], ['|f|views+1', '|f|NOW()'], ' videoid='. (int)$video['videoid']);
+                if (config('enable_video_view_history') == 'yes') {
+                    Clipbucket_db::getInstance()->insert(tbl('video_views'), ['id_video', 'id_user', 'view_date'], [(int)$video['videoid'], ($userid ?: 0), '|f|NOW()']);
+                }
 
                 if ($userid) {
                     $log_array = [
                         'success'       => 'NULL',
-                        'action_obj_id' => $id,
+                        'action_obj_id' => $video['videoid'],
                         'userid'        => $userid,
-                        'details'       => $vdetails['title']
+                        'details'       => $video['title']
                     ];
                     insert_log('Watch a video', $log_array);
                 }
+                $return = true;
+            } else {
+                $return = false;
             }
             break;
 
         case 'channel':
             $sessionTime = 3600;
-            if( !isset($_SESSION[$type . '_' . $id]) || ( time() - $_SESSION[$type . '_' . $id]  > $sessionTime) ){
+            if( !isset($_SESSION[$session_key]) || ( time() - $_SESSION[$session_key]  > $sessionTime) ){
                 Clipbucket_db::getInstance()->update(tbl('users'), ['profile_hits'], ['|f|profile_hits+1'], ' userid= ' . (int)$id);
-                $_SESSION[$type . '_' . $id] = time();
+                $return = true;
+            } else {
+                $return = false;
             }
             break;
 
         case 'photo':
             $sessionTime = 3600;
-            if( !isset($_SESSION[$type . '_' . $id]) || ( time() - $_SESSION[$type . '_' . $id]  > $sessionTime) ){
+            if( !isset($_SESSION[$session_key]) || ( time() - $_SESSION[$session_key]  > $sessionTime) ){
                 Clipbucket_db::getInstance()->update(tbl('photos'), ['views', 'last_viewed'], ['|f|views+1', NOW()], ' photo_id = ' . (int)$id);
-                $_SESSION[$type . '_' . $id] = time();
+                $return = true;
+            } else {
+                $return = false;
             }
             break;
 
         case 'playlist':
             $sessionTime = 3600;
-            if( !isset($_SESSION[$type . '_' . $id]) || ( time() - $_SESSION[$type . '_' . $id]  > $sessionTime) ){
+            if( !isset($_SESSION[$session_key]) || ( time() - $_SESSION[$session_key]  > $sessionTime) ){
                 Clipbucket_db::getInstance()->update(tbl('playlists'), ['played'], ['|f|played+1'], ' playlist_id = ' . (int)$id);
-                $_SESSION[$type . '_' . $id] = time();
+                $return = true;
+            } else {
+                $return = false;
             }
             break;
     }
 
+    if( $return ){
+        $_SESSION[$session_key] = time();
+    }
+
+    return $return;
 }
 
 /**

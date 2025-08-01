@@ -1,6 +1,6 @@
 {
   "version":"5.5.2",
-  "revision":"117",
+  "revision":"118",
   "status":"stable",
   "detail":[
     {
@@ -126,6 +126,7 @@
         ,"Drop support for PHP 7.0 to 7.4"
         ,"Increase session security"
         ,"Update Readme"
+        ,"Update videos views counter"
         ,"Reduce cookies usage"
         ,"Remove unused configs"
         ,"Fix PHP8.X compatibility"
@@ -172,6 +173,7 @@
     {
       "title": "Player",
       "description": [
+        "Implement replay button",
         "Fix ChromeCast button"
       ]
     },
