@@ -939,7 +939,7 @@ function call_watch_video_function($vdo): void
         }
     }
 
-    increment_views($vdo['videokey'], 'video');
+    increment_views($vdo, 'video');
 
     $userid = user_id();
     if ($userid) {

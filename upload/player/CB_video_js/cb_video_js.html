@@ -1,7 +1,9 @@
 <script type="text/javascript">
     var lang_by = "{if $vdata.userid != $anonymous_id && config('enable_hide_uploader_name') != 'yes'}{lang code='by'}{/if}";
     var lang_quality = "{lang code='quality'}";
+    var lang_player_replay = "{lang code='player_replay'}";
     var video_id = "{$vdata.videoid}";
+    var video_key = "{$vdata.videokey}";
     var autoplay = "{$player_params.autoplay}" === 'yes';
     var video_uploader = "{if config('enable_hide_uploader_name') != 'yes'}{if $vdata.userid == $anonymous_id}{elseif !empty($vdata.user_username)}{display_clean($vdata.user_username)}{else}{display_clean($vdata.username)}{/if}{/if}";
     var video_title = "{display_clean($vdata.title)}";
@@ -106,6 +108,27 @@
         {if config('player_thumbnails') === 'yes'}
         this.thumbnails({get_player_thumbs_json($vdata)});
         {/if}
+
+        {literal}
+        this.on('ended', function() {
+            let player_tmp = this;
+            this.bigPlayButton.hide();
+            //let replay = $('<button class="vjs-replay-button vjs-icon-replay" title="' + lang_player_replay + '" aria-label="replay"></button>');
+            let replay = $('<button class="vjs-replay-button" type="button" title="' + lang_player_replay + '" aria-disabled="false"><span class="vjs-icon-placeholder" aria-hidden="true"></span><span class="vjs-control-text" aria-live="polite">' + lang_player_replay + '</span></button>');
+            $(this.el()).append(replay);
+            this.one('play', function() {
+                replay.remove();
+                player_tmp.bigPlayButton.show();
+            });
+            replay.on('click', function() {
+                $.post(baseurl + 'actions/increment_video_view.php', {video_key: video_key});
+                player_tmp.currentTime(0);
+                player_tmp.play();
+                replay.remove();
+                player_tmp.bigPlayButton.show();
+            });
+        });
+        {/literal}
     }
 
     //Initializing
