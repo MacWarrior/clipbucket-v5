@@ -2185,6 +2185,9 @@ class userquery extends CBCategory
         }
     }
 
+    /**
+     * @throws Exception
+     */
     function unsubscrib_no_friends($user_id)
     {
 
