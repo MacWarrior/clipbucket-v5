@@ -365,6 +365,7 @@ class User
         $param_channel_enable = $params['channel_enable'] ?? false;
         $param_email = $params['email'] ?? false;
         $param_username = $params['username'] ?? false;
+        $param_username_strict = $params['username_strict'] ?? false;
         $param_status = $params['status'] ?? false;
         $param_ban_status = $params['ban_status'] ?? false;
         $param_featured = $params['featured'] ?? false;
@@ -402,7 +403,9 @@ class User
         if( $param_username ){
             $conditions[] = 'users.username LIKE \'%' . mysql_clean($param_username) . '%\'';
         }
-
+        if( $param_username_strict ){
+            $conditions[] = 'users.username LIKE \'' . mysql_clean( $param_username_strict) . '\'';
+        }
         if( $param_status ){
             $conditions[] = 'users.usr_status = \'' . mysql_clean($param_status) . '\'';
         }

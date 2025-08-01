@@ -656,7 +656,7 @@ class AdminTool
                     } catch (\Exception $e) {
                         e($e->getMessage());
                         if ($stop_on_error) {
-//                            $this->addLog(lang('tool_stopped'));
+//                        $this->addLog(lang('tool_stopped'));
                             //trigger error handler
                             throw new Exception($e->getMessage());
                         }
@@ -1273,6 +1273,398 @@ class AdminTool
             'SELECT id_tool FROM ' . tbl('tools_histo') . ' 
         WHERE id_tools_histo_status = (SELECT id_tools_histo_status FROM ' . tbl('tools_histo_status') . ' WHERE language_key_title like \'on_error\') 
         AND id_tool = ' .mysql_clean($this->id_tool)));
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function anonymousStats()
+    {
+        if (!Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.2', '100') || config('enable_anonymous_stats') != 'yes') {
+            $this->executeTool('');
+            return true;
+        }
+        if (empty($this->tasks_total)) {
+            Clipbucket_db::getInstance()->execute('TRUNCATE TABLE '.  tbl('temp_stats_data') );
+            $this->tasks_total = 0;
+            $this->tasks_processed = 0;
+            $this->tasks = [];
+            //Toutes les configurations allow_stat TRUE
+            $this->insertTaskData([
+                'configs',
+                'count_videos',
+                'count_photos',
+                'count_users',
+                'count_collections',
+                'count_playlists',
+                'count_thumbs_auto',
+                'count_thumbs_manual',
+                'count_posters',
+                'count_backdrop',
+                'count_subtitles',
+                'sum_duration',
+                'average_duration',
+                'sum_videos_views',
+                'average_videos_views',
+                'sum_photos_views',
+                'average_photos_views',
+                'sum_channel_views',
+                'average_channel_views',
+                'max_video_duration',
+                'max_video_views',
+                'max_photo_views',
+                'max_channel_views',
+                'count_uploaders',
+                'average_uploaders_uploads',
+                'count_3d_videos',
+                'count_age_restricted_videos',
+                'count_age_restricted_photos',
+                'count_active_plugins',
+                'get_php_mysql_version',
+                'get_CB_version',
+                'actives_tools',
+                'count_not_default_pages',
+                'count_not_default_user_profil',
+                'count_users_per_user_profil',
+                'count_categories_per_types',
+                'count_comments',
+                'count_comments_per_type',
+                'average_comments_per_type',
+                'count_social_networks',
+                'count_private_messages'
+            ]);
+
+        }
+        $this->executeTool('AdminTool::fill_json_stats');
+
+        //send json
+        try {
+            $curl = new \Classes\Curl('https://stats.clipbucket.fr', '');
+            //get data from table
+            $data =  Clipbucket_db::getInstance()->_select('SELECT value FROM '.  tbl('temp_stats_data') ) ?? [];
+            $content = '';
+            foreach ($data as $key => $value) {
+                $is_first = ($key == 0);
+                $is_last  = (($key + 1) == count($data));;
+
+
+                if ($is_first) {
+                    // Start the JSON object
+                    $content .= '{' . substr($value['value'], 1, -1);
+                } else {
+                    // Prefix with comma for subsequent items
+                    $content .= ',' . substr($value['value'], 1, -1);
+                }
+
+                if ($is_last) {
+                    // Close the JSON object on last item
+                    $content .= '}';
+                }
+            }
+            $response = $curl->execPost('', $content );
+            if (!empty($response['error'])) {
+                throw new Exception($response['error']);
+            }
+        } catch (Exception $e) {
+            $this->addLog($e->getMessage());
+        }
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function fill_json_stats($task)
+    {
+        switch ($task) {
+            case 'configs':
+                //all configs with allow_stat TRUE
+                $sql = 'SELECT name, value FROM ' . tbl('config') . ' WHERE allow_stat = 1';
+                $res = Clipbucket_db::getInstance()->_select($sql);
+                $flatConfig = [];
+                foreach ($res ?: [] as $row) {
+                    if (isset($row['name'], $row['value'])) {
+                        $flatConfig[$row['name']] = $row['value'];
+                    }
+                }
+
+                $value = [$task => $flatConfig];
+                break;
+            case 'count_videos':
+                $total = Video::getInstance()->getAll(['count' => true]);
+                $value = [$task => $total];
+                break;
+            case 'count_photos':
+                $total = Photo::getInstance()->getAll(['count' => true]);
+                $value = [$task => $total];
+                break;
+            case 'count_users':
+                $total = User::getInstance()->getAll(['count' => true]);
+                $value = [$task => $total];
+                break;
+            case 'count_collections':
+                $total = Collection::getInstance()->getAll(['count' => true]);
+                $value = [$task => $total];
+                break;
+            case 'count_playlists':
+                $total = Playlist::getInstance()->getAll(['count' => true]);
+                $value = [$task => $total];
+                break;
+            case 'count_thumbs_auto':
+                $sql = 'SELECT count(DISTINCT(CONCAT( videoid, \'-\', num))) as count FROM ' . tbl('video_thumbs') . ' WHERE type = \'auto\' AND resolution = \'original\'';
+                $res = Clipbucket_db::getInstance()->_select($sql);
+                $total = $res[0]['count'] ?? 0;
+                $value = [$task => $total];
+                break;
+            case 'count_thumbs_manual':
+                $sql = 'SELECT count(DISTINCT(CONCAT( videoid, \'-\', num))) as count FROM ' . tbl('video_thumbs') . ' WHERE type = \'custom\' AND resolution = \'original\'';
+                $res = Clipbucket_db::getInstance()->_select($sql);
+                $total = $res[0]['count'] ?? 0;
+                $value = [$task => $total];
+                break;
+            case 'count_posters':
+                $sql = 'SELECT count(DISTINCT(CONCAT( videoid, \'-\', num))) as count FROM ' . tbl('video_thumbs') . ' WHERE type = \'poster\' AND resolution = \'original\'';
+                $res = Clipbucket_db::getInstance()->_select($sql);
+                $total = $res[0]['count'] ?? 0;
+                $value = [$task => $total];
+                break;
+            case 'count_backdrop':
+                $sql = 'SELECT count(DISTINCT(CONCAT( videoid, \'-\', num))) as count FROM ' . tbl('video_thumbs') . ' WHERE type = \'backdrop\' AND resolution = \'original\'';
+                $res = Clipbucket_db::getInstance()->_select($sql);
+                $total = $res[0]['count'] ?? 0;
+                $value = [$task => $total];
+                break;
+            case 'count_subtitles':
+                $sql = 'SELECT count(*) as count FROM ' . tbl('video_subtitle') . ' ';
+                $res = Clipbucket_db::getInstance()->_select($sql);
+                $total = $res[0]['count'] ?? 0;
+                $value = [$task => $total];
+                break;
+            case 'sum_duration':
+                //Sum video duration
+                $sql = 'SELECT SUM(duration) as sum FROM ' . tbl('video') . ' WHERE status = \'Successful\'';
+                $res = Clipbucket_db::getInstance()->_select($sql);
+                $total = $res[0]['sum'] ?? 0;
+                $value = [$task => $total];
+                break;
+            case 'average_duration':
+                //average video duration (Sum duration / nb videos)
+                $sql = 'SELECT SUM(duration) / count(videoid) as average FROM ' . tbl('video') . ' WHERE status = \'Successful\'';
+                $res = Clipbucket_db::getInstance()->_select($sql);
+                $total = $res[0]['average'] ?? 0;
+                $value = [$task => $total];
+                break;
+            case 'sum_videos_views':
+                //total video views
+                $sql = 'SELECT SUM(views) as sum FROM ' . tbl('video') . ' WHERE status = \'Successful\'';
+                $res = Clipbucket_db::getInstance()->_select($sql);
+                $total = $res[0]['sum'] ?? 0;
+                $value = [$task => $total];
+                break;
+            case 'average_videos_views':
+                //average views per video
+                $sql = 'SELECT SUM(views) / count(videoid) as average FROM ' . tbl('video') . ' WHERE status = \'Successful\'';
+                $res = Clipbucket_db::getInstance()->_select($sql);
+                $total = $res[0]['average'] ?? 0;
+                $value = [$task => $total];
+                break;
+            case 'sum_photos_views':
+                //total photo views
+                $sql = 'SELECT SUM(views) as sum FROM ' . tbl('photos');
+                $res = Clipbucket_db::getInstance()->_select($sql);
+                $total = $res[0]['sum'] ?? 0;
+                $value = [$task => $total];
+                break;
+            case 'average_photos_views':
+                //average views per photo
+                $sql = 'SELECT SUM(views) / count(photo_id) as average FROM ' . tbl('photos');
+                $res = Clipbucket_db::getInstance()->_select($sql);
+                $total = $res[0]['average'] ?? 0;
+                $value = [$task => $total];
+                break;
+            case 'sum_channel_views':
+                //total channel views
+                $sql = 'SELECT SUM(profile_hits ) as sum FROM ' . tbl('users');
+                $res = Clipbucket_db::getInstance()->_select($sql);
+                $total = $res[0]['sum'] ?? 0;
+                $value = [$task => $total];
+                break;
+            case 'average_channel_views':
+                //average views per channel
+                $sql = 'SELECT SUM(profile_hits) / count(userid) as average FROM ' . tbl('users');
+                $res = Clipbucket_db::getInstance()->_select($sql);
+                $total = $res[0]['average'] ?? 0;
+                $value = [$task => $total];
+                break;
+            case 'max_video_duration':
+                //Max video duration
+                $sql = 'SELECT MAX(duration) as max FROM ' . tbl('video') . ' WHERE status = \'Successful\'';
+                $res = Clipbucket_db::getInstance()->_select($sql);
+                $total = $res[0]['max'] ?? 0;
+                $value = [$task => $total];
+                break;
+            case 'max_video_views':
+                //Max views for a video
+                $sql = 'SELECT MAX(views) as max FROM ' . tbl('video') . ' WHERE status = \'Successful\'';
+                $res = Clipbucket_db::getInstance()->_select($sql);
+                $total = $res[0]['max'] ?? 0;
+                $value = [$task => $total];
+                break;
+            case 'max_photo_views':
+                //Max views for a photo
+                $sql = 'SELECT MAX(views) as max FROM ' . tbl('photos');
+                $res = Clipbucket_db::getInstance()->_select($sql);
+                $total = $res[0]['max'] ?? 0;
+                $value = [$task => $total];
+                break;
+            case 'max_channel_views':
+                //Max views for a channel
+                $sql = 'SELECT MAX(profile_hits ) as max FROM ' . tbl('users');
+                $res = Clipbucket_db::getInstance()->_select($sql);
+                $total = $res[0]['max'] ?? 0;
+                $value = [$task => $total];
+                break;
+            case 'count_uploaders':
+                //number of user with at least one uploaded video
+                $sql = 'SELECT count(DISTINCT (U.userid)) as count FROM  ' . tbl('video') . ' V
+                INNER JOIN ' . tbl('users') . ' U ON U.userid = V.userid';
+                $res = Clipbucket_db::getInstance()->_select($sql);
+                $total = $res[0]['count'] ?? 0;
+                $value = [$task => $total];
+                break;
+            case 'average_uploaders_uploads':
+                //average number of user with at least one uploaded video
+                $sql = 'SELECT count(DISTINCT (V.videoid)) / count(DISTINCT (U.userid)) as average FROM  ' . tbl('video') . ' V
+                INNER JOIN ' . tbl('users') . ' U ON U.userid = V.userid';
+                $res = Clipbucket_db::getInstance()->_select($sql);
+                $total = $res[0]['average'] ?? 0;
+                $value = [$task => $total];
+                break;
+            case 'count_3d_videos':
+                //number 3D videos
+                $value = [$task => Video::getInstance()->getAll(['count'=>true, 'condition'=>' fov IS NOT NULL'])];
+                break;
+            case 'count_age_restricted_videos':
+                //count age restricted videos
+                $sql = 'SELECT count(DISTINCT (videoid)) as count FROM  ' . tbl('video') . ' where age_restriction IS NOT NULL OR age_restriction != \'\'';
+                $res = Clipbucket_db::getInstance()->_select($sql);
+                $total = $res[0]['count'] ?? 0;
+                $value = [$task => $total];
+                break;
+            case 'count_age_restricted_photos':
+                //count age restricted photos
+                $sql = 'SELECT count(DISTINCT (photo_id)) as count FROM  ' . tbl('photos') . ' where age_restriction IS NOT NULL OR age_restriction != \'\'';
+                $res = Clipbucket_db::getInstance()->_select($sql);
+                $total = $res[0]['count'] ?? 0;
+                $value = [$task => $total];
+                break;
+            case 'count_active_plugins':
+                //count acitves plugins
+                $sql = 'SELECT count(DISTINCT (plugin_id)) as count FROM  ' . tbl('plugins') . ' where plugin_active = \'yes\'';
+                $res = Clipbucket_db::getInstance()->_select($sql);
+                $total = $res[0]['count'] ?? 0;
+                $value = [$task => $total];
+                break;
+            case 'get_php_mysql_version':
+                //version of PHP web, PHP CLI, MySQL
+                $serverMySqlVersion = getMysqlServerVersion()[0]['@@version'];
+                $regex_version = '(\d+\.\d+\.\d+)';
+                preg_match($regex_version, $serverMySqlVersion, $match_mysql);
+                $serverMySqlVersion = $match_mysql[0] ?? false;
+                $value = [
+                    $task => [
+                        'php_web'       => System::get_software_version('php_web', false, null, true),
+                        'php_cli'       => System::get_software_version('php_cli'),
+                        'mysql_version' => $serverMySqlVersion
+                    ]
+                ];
+                break;
+            case 'get_CB_version':
+                //CB version & revision
+                $value = [$task => Update::getInstance()->getDBVersion()];
+                break;
+            case 'actives_tools':
+                //list of active tools with their frequency
+                $sql = 'SELECT code, frequency FROM ' . tbl('tools') . ' WHERE is_disabled != TRUE';
+                $res = Clipbucket_db::getInstance()->_select($sql);
+                $value = [$task => $res ?: []];
+                break;
+            case 'count_not_default_pages':
+                //count not default pages
+                $sql = 'SELECT count(DISTINCT (page_id)) as count FROM  ' . tbl('pages') . ' where delete_able != \'no\'';
+                $res = Clipbucket_db::getInstance()->_select($sql);
+                $total = $res[0]['count'] ?? 0;
+                $value = [$task => $total];
+                break;
+            case 'count_not_default_user_profil':
+                //Le nombre de profils utilisateurs qui ne sont pas par défaut (hors anonyme quoi)
+                $value = [
+                    $task => UserLevel::getAll([
+                        'count'        => true,
+                        'is_origine'   => 'no',
+                        'no_anonymous' => true
+                    ])
+                ];
+                break;
+            case 'count_users_per_user_profil':
+                //count users per user profil
+                $sql = 'SELECT ul.user_level_name, COUNT(u.userid) AS count
+                    FROM ' . tbl('user_levels') . ' ul
+                             LEFT JOIN ' . tbl('users') . ' u ON u.level = ul.user_level_id
+                             where ul.user_level_name not like \'%Anonymous%\'
+                    GROUP BY ul.user_level_id';
+                $res = Clipbucket_db::getInstance()->_select($sql);
+                $value = [$task => $res ?: []];
+                break;
+            case 'count_categories_per_types':
+                //count categories per types
+                $sql = 'SELECT ct.name, COUNT(c.category_id) AS count
+                    FROM ' . tbl('categories_type') . ' ct
+                             LEFT JOIN ' . tbl('categories') . ' c ON ct.id_category_type = c.id_category_type
+                    GROUP BY c.id_category_type';
+                $res = Clipbucket_db::getInstance()->_select($sql);
+                $value = [$task => $res ?: []];
+                break;
+            case 'count_comments':
+                //count comments
+                $value = [$task => Comments::getAll(['count'=>true])];
+                break;
+            case 'count_comments_per_type':
+                //count comments per type
+                $sql = 'SELECT case 
+                            when type = \'v\' then \'video\'
+                            when type = \'p\' then \'photo\'
+                            when type = \'cl\' then \'collection\'
+                            ELSE type
+                        END as type
+                        , count(DISTINCT comment_id) FROM ' . tbl('comments') . ' as count
+                        GROUP BY type';
+                $res = Clipbucket_db::getInstance()->_select($sql);
+                $value = [$task => $res ?: []];
+                break;
+            case 'average_comments_per_type':
+                //average comments per type
+                $sql = 'SELECT count(DISTINCT comment_id)/count( distinct(type)) AS average FROM ' . tbl('comments') ;
+                $res = Clipbucket_db::getInstance()->_select($sql);
+                $value = [$task => $res[0]['average'] ?? 0];
+                break;
+            case 'count_social_networks':
+                //count social networks links
+                $sql = 'SELECT count(DISTINCT(id_social_networks_link )) as count FROM ' . tbl('social_networks_links') ;
+                $res = Clipbucket_db::getInstance()->_select($sql);
+                $value = [$task => $res[0]['count'] ?? 0];
+                break;
+            case 'count_private_messages':
+                $sql = 'SELECT count(DISTINCT(message_id )) as count FROM ' . tbl('messages') . ' WHERE message_box = \'out\'' ;
+                $res = Clipbucket_db::getInstance()->_select($sql);
+                $value = [$task => $res[0]['count'] ?? 0];
+                break;
+            default:
+                throw new Exception(lang('unknown_task_x', [$task]));
+        }
+        $encoded = json_encode($value);
+        $this->addLog($encoded);
+        $sql = 'INSERT INTO ' . tbl('temp_stats_data') . ' (key_name, value) VALUES (\''.$task.'\',\''.$encoded.'\' )';
+        Clipbucket_db::getInstance()->execute($sql);
     }
 }
 

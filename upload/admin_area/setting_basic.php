@@ -158,6 +158,7 @@ if (isset($_POST['update'])) {
         , 'enable_cookie_banner'
         , 'enable_public_video_page'
         , 'can_upload_subtitles'
+        , 'enable_anonymous_stats'
     ];
 
     $config_booleans_to_refactor = [
@@ -422,6 +423,7 @@ if (isset($_POST['update'])) {
         'enable_public_video_page',
         'can_upload_subtitles',
         'videos_video_style',
+        'enable_anonymous_stats',
         'enable_multi_factor_authentification'
     ];
 
