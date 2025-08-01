@@ -4,6 +4,12 @@ const THIS_PAGE = 'edit_account';
 require 'includes/config.inc.php';
 User::getInstance()->isUserConnectedOrRedirect();
 
+$only_admin = (User::getInstance()->getAll([
+        'count' => true,
+        'level' => 1
+    ]) == 1 );
+assign('only_admin', $only_admin);
+
 //Updating Profile
 if (isset($_POST['update_profile'])) {
     $array = $_POST;
@@ -13,6 +19,7 @@ if (isset($_POST['update_profile'])) {
     if ($post_clean) {
         userquery::getInstance()->update_user($array);
     }
+
 }
 
 //Updating Avatar
@@ -96,7 +103,9 @@ switch ($mode) {
         redirect_to(cblink(['name' => 'my_account']));
 
     case 'account':
-        if( $_POST['drop_account'] ?? '' == 'yes' && config('enable_user_self_deletion') == 'yes' ){
+        if ($only_admin) {
+            e(lang('cant_delete_only_admin'));
+        } elseif( $_POST['drop_account'] ?? '' == 'yes' && config('enable_user_self_deletion') == 'yes' ){
             User::getInstance()->delete();
             userquery::getInstance()->logout();
             Session::start();
@@ -142,6 +151,7 @@ switch ($mode) {
 }
 
 $udetails = User::getInstance()->getOne(['userid'=>User::getInstance()->getCurrentUserID()]);
+
 $profile = userquery::getInstance()->get_user_profile($udetails['userid']);
 if (is_array($profile)) {
     $udetails = array_merge($profile, $udetails);

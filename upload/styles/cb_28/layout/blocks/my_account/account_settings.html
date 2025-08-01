@@ -1,48 +1,56 @@
-<div class="accountSettings col-md-6">
+<div class="accountSettings">
     <form method="post" name="edit_profile">
         <h2>{lang code='account_details'}</h2>
         {if config('enable_country')=='yes'}
-            <div class="form-group">
-                <label for="country">{lang code='country'}</label>
-                <select class="form-control" name="country" id="country">
-                    {assign var='countries' value=ClipBucket::getInstance()->get_countries(iso2)}
-                    {foreach from=$countries item=country key=code}
-                        <option value="{$code}" {if $user.country==$code}selected{/if}>{$country}</option>
-                    {/foreach}
-                </select>
+            <div class="row">
+                <div class="form-group">
+                    <label for="country">{lang code='country'}</label>
+                    <select class="form-control" name="country" id="country">
+                        {assign var='countries' value=ClipBucket::getInstance()->get_countries(iso2)}
+                        {foreach from=$countries item=country key=code}
+                            <option value="{$code}" {if $user.country==$code}selected{/if}>{$country}</option>
+                        {/foreach}
+                    </select>
+                </div>
             </div>
         {/if}
         {if config('enable_gender')=='yes'}
-            <div class="form-group">
-                <label for="country" class="show">{lang code='gender'}</label>
-                <label class="radio-inline">
-                    <input type="radio" name="sex" value="male" id="sex_0" {if $user.sex==male}checked{/if}/>
-                    {lang code='male'}
-                </label>
-                <label class="radio-inline">
-                    <input type="radio" name="sex" value="female" id="sex_1" {if $user.sex==female}checked{/if}/>
-                    {lang code='female'}
-                </label>
+            <div class="row">
+                <div class="form-group">
+                    <label for="country" class="show">{lang code='gender'}</label>
+                    <label class="radio-inline">
+                        <input type="radio" name="sex" value="male" id="sex_0" {if $user.sex==male}checked{/if}/>
+                        {lang code='male'}
+                    </label>
+                    <label class="radio-inline">
+                        <input type="radio" name="sex" value="female" id="sex_1" {if $user.sex==female}checked{/if}/>
+                        {lang code='female'}
+                    </label>
+                </div>
             </div>
         {/if}
         {if config('enable_user_category')=='yes'}
-            <div class="form-group">
-                <label for="category">{lang code='category'}</label>
-                {ANCHOR place=$signup_fields.cat.anchor_before}
-                {$signup_fields.cat.class='form-control'}
-                {$formObj->createField($signup_fields.cat)}
-                {ANCHOR place=$signup_fields.cat.anchor_after}
+            <div class="row">
+                <div class="form-group">
+                    <label for="category">{lang code='category'}</label>
+                    {ANCHOR place=$signup_fields.cat.anchor_before}
+                    {$signup_fields.cat.class='form-control'}
+                    {$formObj->createField($signup_fields.cat)}
+                    {ANCHOR place=$signup_fields.cat.anchor_after}
+                </div>
             </div>
         {/if}
-        <div class="form-group">
-            <label for="dob">{lang code='user_date_of_birth'}</label>
-            {ANCHOR place=$signup_fields.dob.anchor_before}
-            {$signup_fields.dob.class='form-control'}
-            {if config('enable_user_dob_edition') != 'yes'}
-                {$signup_fields.dob['disabled'] = true}
-            {/if}
-            {$formObj->createField($signup_fields.dob)}
-            {ANCHOR place=$signup_fields.dob.anchor_after}
+        <div class="row">
+            <div class="form-group col-md-6">
+                <label for="dob">{lang code='user_date_of_birth'}</label>
+                {ANCHOR place=$signup_fields.dob.anchor_before}
+                {$signup_fields.dob.class='form-control'}
+                {if config('enable_user_dob_edition') != 'yes'}
+                    {$signup_fields.dob['disabled'] = true}
+                {/if}
+                {$formObj->createField($signup_fields.dob)}
+                {ANCHOR place=$signup_fields.dob.anchor_after}
+            </div>
         </div>
         {if $cust_signup_fields}
             {foreach from=$cust_signup_fields item=field}
@@ -58,51 +66,52 @@
                 </div>
             {/foreach}
         {/if}
-        <div class="form-group">
-            <div class="row">
+        <div class="row">
+            <div class="form-group">
                 {if config('enable_multi_factor_authentification') == 'allowed' }
-                <div class="col-md-6">
-                    <label for="enable_mfa">{lang code="option_enable_multi_factor_authentification"}</label>
-                </div>
-                <div class="col-md-4">
-                    <select name="enable_mfa" id="enable_mfa" class="form-control">
-                        <option value="disabled" {if $user.enable_mfa == 'disabled'}selected{/if}>{lang('disabled')|ucfirst}</option>
-                        <option value="allowed" {if $user.enable_mfa == 'allowed_email'}selected{/if} {if !$user.email_confirmed}disabled="disabled" title="{lang('tips_need_confirm_email')}" {/if} >{lang('allowed_by_email')}</option>
-                    </select>
-                </div>
+                    <div class="col-md-6">
+                        <label for="enable_mfa">{lang code="option_enable_multi_factor_authentification"}</label>
+                        <select name="multi_factor_auth" id="multi_factor_auth" class="form-control">
+                            <option value="disabled" {if $user.multi_factor_auth == 'disabled'}selected{/if}>{lang('disabled')|ucfirst}</option>
+                            <option value="allowed_email" {if $user.multi_factor_auth == 'allowed_email'}selected{/if} {if !$user.email_confirmed}disabled="disabled" title="{lang('tips_need_confirm_email')}" {/if} >{lang('allowed_by_email')}</option>
+                        </select>
+                    </div>
                 {/if}
-                {if !$user.email_confirmed}
+                {if !$user.email_confirmed && Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.2', '999')}
                     <div class="col-md-2">
                         <button type="button" class="btn btn-success" id="confirmEmailBtn">{lang code='confirm_email'}</button>
                     </div>
                 {/if}
             </div>
         </div>
-        <div class="form-group">
-            <button name="update_profile" value="submit" class="btn btn-primary"> {lang code='update'}</button>
-            {if config('enable_user_self_deletion')=='yes'}
-                <input type="hidden" name="drop_account" value="yes" disabled/>
-                <input type="button" id="drop_account" class="btn btn-danger" value="{lang code='drop_my_account'}"/>
-
-                <div class="modal fade" id="confirmDropAccountModal" tabindex="-1" role="dialog" aria-labelledby="confirmModalLabel">
-                    <div class="modal-dialog" role="document">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                                <h4 class="modal-title" id="confirmModalLabel">{lang code="account_deletion"}</h4>
-                            </div>
-                            <div class="modal-body">
-                                {lang code="account_deletion_confirmation_info"}<br/>
-                                {lang code="account_deletion_confirmation"}
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-default" data-dismiss="modal">{lang code="cancel"}</button>
-                                <button type="button" class="btn btn-danger" id="confirmDropAccountBtn">{lang code="account_deletion_yes"}</button>
+        <br/>
+        <hr/>
+        <div class="row">
+            <div class="form-group">
+                <button name="update_profile" value="submit" class="btn btn-primary"> {lang code='update'}</button>
+                {if config('enable_user_self_deletion')=='yes'}
+                    <input type="hidden" name="drop_account" value="yes" disabled/>
+                    <input type="button" id="drop_account" class="btn btn-danger {if $only_admin} disabled" title="{lang('cant_delete_only_admin')}" {/if} value="{lang code='drop_my_account'}"/>
+                    <div class="modal fade" id="confirmDropAccountModal" tabindex="-1" role="dialog" aria-labelledby="confirmModalLabel">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                    <h4 class="modal-title" id="confirmModalLabel">{lang code="account_deletion"}</h4>
+                                </div>
+                                <div class="modal-body">
+                                    {lang code="account_deletion_confirmation_info"}<br/>
+                                    {lang code="account_deletion_confirmation"}
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-default" data-dismiss="modal">{lang code="cancel"}</button>
+                                    <button type="button" class="btn btn-danger" id="confirmDropAccountBtn">{lang code="account_deletion_yes"}</button>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
-            {/if}
+                {/if}
+            </div>
         </div>
     </form>
 </div>
