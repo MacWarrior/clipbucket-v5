@@ -1667,4 +1667,6 @@ VALUES ('admin_setting'),
        ('disable'),
        ('cant_delete_only_admin'),
        ('email_variable_mfa_code'),
-       ('email_confirm_last_sent_under_15_min');
+       ('email_confirm_last_sent_under_15_min'),
+       ('multi_factor_auth_err'),
+       ('cant_activate_multi_factor_auth_with_no_confirmed_email');

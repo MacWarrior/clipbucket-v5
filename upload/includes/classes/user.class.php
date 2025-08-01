@@ -3243,9 +3243,18 @@ class userquery extends CBCategory
             }
         }
 
-        if ($array['multi_factor_auth']) {
-            $uquery_field[] = 'multi_factor_auth';
-            $uquery_val[] = $array['multi_factor_auth'];
+        if ($array['multi_factor_auth'] ) {
+            if (!in_array($array['multi_factor_auth'], ['allowed_email', 'disabled'])) {
+                e(lang('multi_factor_auth_err'));
+            } else {
+                $user = User::getInstance()->getOne(['userid' => $array['userid']]);
+                if ($array['multi_factor_auth'] == 'allowed_email' && !$user['email_confirmed']) {
+                    e(lang('cant_activate_multi_factor_auth_with_no_confirmed_email'));
+                } else {
+                    $uquery_field[] = 'multi_factor_auth';
+                    $uquery_val[] = $array['multi_factor_auth'];
+                }
+            }
         }
         //Adding Custom Field
         if (is_array($custom_signup_fields)) {

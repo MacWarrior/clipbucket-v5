@@ -103,7 +103,7 @@ switch ($mode) {
         redirect_to(cblink(['name' => 'my_account']));
 
     case 'account':
-        if ($only_admin) {
+        if (!empty($_POST['drop_account']) && $only_admin) {
             e(lang('cant_delete_only_admin'));
         } elseif( $_POST['drop_account'] ?? '' == 'yes' && config('enable_user_self_deletion') == 'yes' ){
             User::getInstance()->delete();

@@ -2575,3 +2575,7 @@ INSERT INTO `{tbl_prefix}languages_translations` (`id_language_key`, `translatio
 VALUES ((SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE `language_key` = 'email_variable_mfa_code'), 'Code d\'authentification', @language_id);
 INSERT INTO `{tbl_prefix}languages_translations` (`id_language_key`, `translation`, `language_id`)
 VALUES ((SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE `language_key` = 'email_confirm_last_sent_under_15_min'), 'Un email vous a déjà été envoyé, merci d\'attendre 15 minutes avant d\'en demander un nouveau', @language_id);
+INSERT INTO `{tbl_prefix}languages_translations` (`id_language_key`, `translation`, `language_id`)
+VALUES ((SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE `language_key` = 'multi_factor_auth_err'), 'La type d\'authentification multifacteur est inconnu', @language_id);
+INSERT INTO `{tbl_prefix}languages_translations` (`id_language_key`, `translation`, `language_id`)
+VALUES ((SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE `language_key` = 'cant_activate_multi_factor_auth_with_no_confirmed_email'), 'Vous ne pouvez pas activer l\'authentication multifacteur tant que votre adresse mail n\'est pas validée', @language_id);

@@ -78,7 +78,7 @@
                     </div>
                 {/if}
                 {if !$user.email_confirmed && Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.2', '999')}
-                    <div class="col-md-2">
+                    <div class="col-md-2" style="padding-top: 29px;">
                         <button type="button" class="btn btn-success" id="confirmEmailBtn">{lang code='confirm_email'}</button>
                     </div>
                 {/if}

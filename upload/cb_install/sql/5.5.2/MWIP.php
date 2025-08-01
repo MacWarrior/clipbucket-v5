@@ -74,6 +74,16 @@ class MWIP extends \Migration
             'en'=>'Authentification code'
         ]);
 
+        self::generateTranslation('multi_factor_auth_err', [
+            'fr'=>'La type d\'authentification multifacteur est inconnu',
+            'en'=>'Unknown multi factor authentication type'
+        ]);
+
+        self::generateTranslation('cant_activate_multi_factor_auth_with_no_confirmed_email', [
+            'fr'=>'Vous ne pouvez pas activer l\'authentication multifacteur tant que votre adresse mail n\'est pas validée',
+            'en'=>'You can\'t activate multi factor authentication until your email address is confirmed'
+        ]);
+
         self::alterTable('ALTER TABLE `{tbl_prefix}users` ADD `email_confirmed` BOOL DEFAULT FALSE', [
             'table' => 'users'
         ], [
