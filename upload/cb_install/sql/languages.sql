@@ -1012,6 +1012,7 @@ VALUES ('change_style_of_listing'),
        ('discord_webhook_url'),
        ('discord_webhook_url_invalid'),
        ('option_enable_sitemap');
+
 INSERT INTO `{tbl_prefix}languages_keys` (language_key)
 VALUES ('admin_setting'),
        ('site_setting'),
@@ -1495,8 +1496,10 @@ VALUES ('admin_setting'),
        ('advanced_settings_desc'),
        ('option_enable_video_thumbs_preview'),
        ('option_video_thumbs_preview_count'),
-       ('uploaded_by_x'),
-       ('ongoing_conversion'),
+       ('uploaded_by_x');
+
+INSERT INTO `{tbl_prefix}languages_keys` (language_key)
+VALUES ('ongoing_conversion'),
        ('mass_category_selection'),
        ('mass_broadcast_selection'),
        ('cannot_delete_not_empty_category'),
@@ -1669,4 +1672,12 @@ VALUES ('admin_setting'),
        ('email_variable_mfa_code'),
        ('email_confirm_last_sent_under_15_min'),
        ('multi_factor_auth_err'),
-       ('cant_activate_multi_factor_auth_with_no_confirmed_email');
+       ('cant_activate_multi_factor_auth_with_no_confirmed_email'),
+       ('email_confirmation'),
+       ('email_confirmation_tips'),
+       ('activate_my_account'),
+       ('request_activation_code'),
+       ('email_confirmed'),
+       ('email_already_confirmed'),
+       ('email_forgot_password_sended'),
+       ('forgot_password_tips');

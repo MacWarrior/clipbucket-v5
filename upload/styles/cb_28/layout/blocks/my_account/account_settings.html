@@ -70,7 +70,7 @@
             <div class="form-group">
                 {if config('enable_multi_factor_authentification') == 'allowed' }
                     <div class="col-md-6">
-                        <label for="enable_mfa">{lang code="option_enable_multi_factor_authentification"}</label>
+                        <label for="multi_factor_auth">{lang code="option_enable_multi_factor_authentification"}</label>
                         <select name="multi_factor_auth" id="multi_factor_auth" class="form-control">
                             <option value="disabled" {if $user.multi_factor_auth == 'disabled'}selected{/if}>{lang('disabled')|ucfirst}</option>
                             <option value="allowed_email" {if $user.multi_factor_auth == 'allowed_email'}selected{/if} {if !$user.email_confirmed}disabled="disabled" title="{lang('tips_need_confirm_email')}" {/if} >{lang('allowed_by_email')}</option>

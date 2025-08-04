@@ -20,7 +20,7 @@ if (empty($_POST['username']) || empty($_POST['password'])) {
             $need_mfa = User::checkAndSendMFAmail($username);
             $code_mfa_ok = !$need_mfa;
         } else {
-            $user = User::getInstance()->getOne(['username' => $username]);
+            $user = User::getInstance()->getOne(['username_strict' => $username]);
             if (time() - strtotime($user['mfa_date']) > 900) {
                 $success = false;
                 $code_mfa_ok = false;

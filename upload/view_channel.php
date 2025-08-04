@@ -18,7 +18,7 @@ if( empty($u) ){
 
 $params_user = [
     'channel_enable' => true
-    ,'username' => $u
+    ,'username_strict' => $u
 ];
 
 $udetails = User::getInstance()->getOne($params_user);

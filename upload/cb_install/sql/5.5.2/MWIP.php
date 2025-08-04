@@ -117,9 +117,9 @@ class MWIP extends \Migration
 
         $sql = 'INSERT IGNORE INTO `{tbl_prefix}email` (code, id_email_template, is_deletable, title, content, disabled) VALUES (\'verify_email\',1,0,\'[{{website_title}}] Email address verification\',\'Hello <b>{{user_username}}</b>,
 <br/><br/>
-In order to verify your email address, please validate your account by <a href="{{baseurl}}email_confirm.php?av_username={{user_username}}&avcode={{avcode}}">clicking here !</a>
+In order to verify your email address, please validate your account by <a href="{{baseurl}}email_confirm.php?mode=email_confirm&av_username={{user_username}}&avcode={{avcode}}">clicking here !</a>
 <br/><br/>
-If somehow above link isn\\\'t working, please go to : <a href="{{baseurl}}email_confirm.php">{{baseurl}}email_confirm.php</a><br/>
+If somehow above link isn\\\'t working, please go to : <a href="{{baseurl}}email_confirm.php?mode=email_confirm">{{baseurl}}email_confirm.php?mode=email_confirm</a><br/>
 And use your activation code : <b>{{avcode}}</b>
 <br/><br/>
 Have a nice day !\', 0)';
@@ -143,7 +143,64 @@ Have a nice day !\', 0)';
             VALUES ((SELECT id_email FROM `{tbl_prefix}email` WHERE code = \'mfa_code\' LIMIT 1), (SELECT id_email_variable FROM `{tbl_prefix}email_variable` WHERE code = \'mfa_code\' LIMIT 1)); ';
         self::query($sql);
 
+        self::generateTranslation('usr_actiavation_msg1', [
+            'fr'=>'Demander un code d\'activation'
+        ]);
 
+        self::generateTranslation('email_confirmation', [
+            'fr'=>'Confirmation d\'adresse email',
+            'en'=>'Email address confirmation'
+        ]);
+
+        self::generateTranslation('email_confirmation_tips', [
+            'fr'=>'Veuillez renseigner votre code d\'activation envoyé par email pour confirmer votre adresse email.',
+            'en'=>'Please enter your activation code sended by email to confirm your email address.'
+        ]);
+
+        self::updateTranslation('acitvation_html_message', [
+            'en' => 'Please enter your username and activation code sended by email in order to activate your account.'
+        ]);
+        self::generateTranslation('acitvation_html_message', [
+            'fr' => 'Veuillez renseigner votre code d\'activation envoyé par email pour activer votre compte.'
+        ]);
+
+        self::generateTranslation('activate_my_account', [
+            'en' => 'Activate my account',
+            'fr' => 'Activer mon compte'
+        ]);
+
+        self::generateTranslation('request_activation_code', [
+            'en' => 'Request activation code',
+            'fr' => 'Demander un code d\'activation'
+        ]);
+
+        self::generateTranslation('email_confirmed', [
+            'en' => 'Your email address has been confirmed',
+            'fr' => 'Votre adresse email a été confirmée'
+        ]);
+
+        self::generateTranslation('email_already_confirmed', [
+            'en' => 'Your email address has already been confirmed',
+            'fr' => 'Votre adresse email a déjà été confirmée'
+        ]);
+
+        self::generateTranslation('acitvation_html_message2', [
+            'fr' => 'Veuillez renseigner votre adresse email pour demander un code d\'activation.'
+        ]);
+
+        self::generateTranslation('avcode_incorrect', [
+            'fr' => 'Le code d\'activation est incorrect'
+        ]);
+
+        self::generateTranslation('email_forgot_password_sended', [
+            'en' => 'If this email addresse is associated with a user acount, reset instructions has been sent to it',
+            'fr' => 'Si cette adresse email est bien associée à un compte utilisateur, les instructions de réinitialisation y ont été envoyées'
+        ]);
+
+        self::generateTranslation('forgot_password_tips', [
+            'en' => 'Please enter email address attached to your account ; password reset instructions will be sent to you',
+            'fr' => 'Veuillez renseigner l\'adresse email rattachée à votre compte ; les instructions de réinitialisation vous seront envoyées'
+        ]);
     }
 
 }
