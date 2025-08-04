@@ -201,6 +201,11 @@ Have a nice day !\', 0)';
             'en' => 'Please enter email address attached to your account ; password reset instructions will be sent to you',
             'fr' => 'Veuillez renseigner l\'adresse email rattachée à votre compte ; les instructions de réinitialisation vous seront envoyées'
         ]);
+
+        self::generateTranslation('invalid_mfa_code', [
+            'fr'=>'Code d\'authentification invalide',
+            'en'=>'Invalid authentification code'
+        ]);
     }
 
 }

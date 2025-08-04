@@ -7067,11 +7067,9 @@ span.tagit-label i.fa {
 }
 
 #mfa_code input {
-  width: 26px;
-  padding-left: 4px;
-  float: left;
+  width: 35px;
   margin-left: 5px;
-  margin-bottom: 10px;
+  display: inline;
 }
 #enterMFACodeModal > div > div > div.modal-body {
   min-height: 80px;

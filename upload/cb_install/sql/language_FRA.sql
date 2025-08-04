@@ -2603,3 +2603,5 @@ INSERT INTO `{tbl_prefix}languages_translations` (`id_language_key`, `translatio
 VALUES ((SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE `language_key` = 'email_forgot_password_sended'),  'Si cette adresse email est bien associée à un compte utilisateur, les instructions de réinitialisation y ont été envoyées', @language_id);
 INSERT INTO `{tbl_prefix}languages_translations` (`id_language_key`, `translation`, `language_id`)
 VALUES ((SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE `language_key` = 'forgot_password_tips'),  'Veuillez renseigner l\'adresse email rattachée à votre compte ; les instructions de réinitialisation vous seront envoyées', @language_id);
+INSERT INTO `{tbl_prefix}languages_translations` (`id_language_key`, `translation`, `language_id`)
+VALUES ((SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE `language_key` = 'invalid_mfa_code'),  'Code d\'authentification invalide', @language_id);

@@ -13,9 +13,9 @@ if (empty($_POST['username']) || empty($_POST['password'])) {
     $username = mysql_clean($_POST['username']);
     $password = mysql_clean($_POST['password']);
     $remember_me = mysql_clean($_POST['remember_me'] ?? false);
-//check MFA
+    //check MFA
     $code_mfa_ok = true;
-     if (config('enable_multi_factor_authentification') != 'disabled' && userquery::getInstance()->authenticate($username, $password)) {
+    if (config('enable_multi_factor_authentification') != 'disabled' && userquery::getInstance()->authenticate($username, $password)) {
         if (empty($_POST['mfa_code'])) {
             $need_mfa = User::checkAndSendMFAmail($username);
             $code_mfa_ok = !$need_mfa;
@@ -34,7 +34,8 @@ if (empty($_POST['username']) || empty($_POST['password'])) {
             }
         }
     }
-//Logging User
+
+    //Logging User
     if ($code_mfa_ok && userquery::getInstance()->login_user($username, $password, $remember_me)) {
         if (empty($redirect)) {
             $redirect = User::getInstance()->getDefaultHomepageFromUserLevel();

@@ -1680,4 +1680,5 @@ VALUES ('ongoing_conversion'),
        ('email_confirmed'),
        ('email_already_confirmed'),
        ('email_forgot_password_sended'),
-       ('forgot_password_tips');
+       ('forgot_password_tips'),
+       ('invalid_mfa_code');
