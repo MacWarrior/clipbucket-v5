@@ -7061,3 +7061,18 @@ ul.tagit li.tagit-choice.success-important {
 span.tagit-label i.fa {
   padding-left: 5px;
 }
+
+#mfa_code {
+  text-align: center;
+}
+
+#mfa_code input {
+  width: 26px;
+  padding-left: 4px;
+  float: left;
+  margin-left: 5px;
+  margin-bottom: 10px;
+}
+#enterMFACodeModal > div > div > div.modal-body {
+  min-height: 80px;
+}

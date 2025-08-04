@@ -395,7 +395,12 @@ CREATE TABLE `{tbl_prefix}users` (
   `album_privacy` enum('public','private','friends') NOT NULL DEFAULT 'private',
   `likes` int(11) NOT NULL DEFAULT 0,
   `is_live` enum('yes','no') NOT NULL DEFAULT 'no',
-  `active_theme` VARCHAR(15) NULL
+  `active_theme` VARCHAR(15) NULL,
+  `email_confirmed` BOOL DEFAULT FALSE,
+  `email_temp` VARCHAR( 255 ) ,
+  `multi_factor_auth` ENUM('allowed_email','disabled') NOT NULL DEFAULT 'disabled' ,
+  `mfa_code` VARCHAR( 255 ) NULL ,
+  `mfa_date` DATETIME NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_520_ci;
 
 CREATE TABLE `{tbl_prefix}user_levels` (

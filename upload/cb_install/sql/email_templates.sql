@@ -35,7 +35,8 @@ INSERT INTO `{tbl_prefix}email_variable` (code, type, language_key) VALUES
     ('password','email', 'email_variable_password'),
     ('reset_password_link','email', 'email_variable_reset_password_link'),
     ('comment_link','email', 'email_variable_comment_link'),
-    ('object','email', 'email_variable_object');
+    ('object','email', 'email_variable_object'),
+    ('mfa_code','email', 'email_variable_mfa_code');
 
 INSERT INTO `{tbl_prefix}email_template` (`code`, `is_default`, `is_deletable`, `content`, `disabled`) VALUES
     ('main', TRUE, FALSE, '<!DOCTYPE html>\\r\\n<html>\\r\\n<body style=\\\"margin:0; padding:0; background-color:#EEEEEE; font-family:\\\'Open Sans\\\', sans-serif;\\\">\\r\\n  <table width=\\\"100%\\\" cellpadding=\\\"0\\\" cellspacing=\\\"0\\\" border=\\\"0\\\" style=\\\"border-collapse:collapse; min-width:320px; font-family:\\\'Open Sans\\\', sans-serif;\\\">\\r\\n    <tr>\\r\\n      <td style=\\\"padding:0; margin:0;\\\">\\r\\n\\r\\n        <table width=\\\"100%\\\" cellpadding=\\\"0\\\" cellspacing=\\\"0\\\" border=\\\"0\\\" bgcolor=\\\"#0080B4\\\" style=\\\"background-color:#0080B4;\\\">\\r\\n          <tr>\\r\\n            <td align=\\\"center\\\" style=\\\"padding-top:20px; padding-bottom:10px;\\\">\\r\\n              <table cellpadding=\\\"0\\\" cellspacing=\\\"0\\\" border=\\\"0\\\" style=\\\"background-color:#FFFFFF; border-radius:10px;\\\">\\r\\n                <tr>\\r\\n                  <td align=\\\"center\\\" style=\\\"padding:5px;\\\">\\r\\n                    <a href=\\\"{{baseurl}}\\\">\\r\\n                      <img src=\\\"{{logo_url}}\\\" alt=\\\"{{website_title}}\\\" title=\\\"{{website_title}}\\\" style=\\\"border-radius:10px; display:block; max-width:100%; height:auto;\\\">\\r\\n                    </a>\\r\\n                  </td>\\r\\n                </tr>\\r\\n              </table>\\r\\n            </td>\\r\\n          </tr>\\r\\n          <tr>\\r\\n            <td align=\\\"center\\\" style=\\\"color:white; font-size:22px; font-family:\\\'Open Sans\\\', sans-serif; padding-bottom:40px;\\\">\\r\\n              {{website_title}}\\r\\n            </td>\\r\\n          </tr>\\r\\n        </table>\\r\\n\\r\\n        <table width=\\\"100%\\\" cellpadding=\\\"0\\\" cellspacing=\\\"0\\\" border=\\\"0\\\" bgcolor=\\\"#EEEEEE\\\" style=\\\"background-color:#EEEEEE;\\\">\\r\\n          <tr>\\r\\n            <td align=\\\"center\\\">\\r\\n              <table cellpadding=\\\"0\\\" cellspacing=\\\"0\\\" border=\\\"0\\\" style=\\\"width:90%; max-width:90%; background-color:#FFFFFF; border-radius:10px; min-width:320px;min-height:100px;margin-top:-20px;\\\">\\r\\n                <tr>\\r\\n                  <td style=\\\"padding:20px; font-family:\\\'Open Sans\\\', sans-serif; font-size:13px; color:#000000; min-height:100px;\\\">\\r\\n                    {{email_content}}\\r\\n                  </td>\\r\\n                </tr>\\r\\n              </table>\\r\\n            </td>\\r\\n          </tr>\\r\\n\\r\\n          <tr>\\r\\n            <td align=\\\"center\\\" style=\\\"padding-bottom:20px;\\\">\\r\\n              <table cellpadding=\\\"0\\\" cellspacing=\\\"0\\\" border=\\\"0\\\" style=\\\"width:90%; max-width:90%; background-color:#0080B4; border-radius:10px; margin-top:20px; min-width:320px;\\\">\\r\\n                <tr>\\r\\n                  <td style=\\\"padding:10px;\\\">\\r\\n                    <table width=\\\"100%\\\" cellpadding=\\\"0\\\" cellspacing=\\\"0\\\" border=\\\"0\\\">\\r\\n                      <tr>\\r\\n                        <td width=\\\"60\\\" align=\\\"left\\\" valign=\\\"middle\\\">\\r\\n                          <table cellpadding=\\\"0\\\" cellspacing=\\\"0\\\" border=\\\"0\\\" style=\\\"background-color:#FFFFFF; border-radius:10px;\\\">\\r\\n                            <tr>\\r\\n                              <td align=\\\"center\\\" style=\\\"padding:0;\\\">\\r\\n                                <a href=\\\"{{baseurl}}\\\">\\r\\n                                  <img\\r\\n                                    src=\\\"{{favicon_url}}\\\"\\r\\n                                    alt=\\\"{{website_title}}\\\"\\r\\n                                    title=\\\"{{website_title}}\\\"\\r\\n                                    width=\\\"50\\\"\\r\\n                                    height=\\\"50\\\"\\r\\n                                    style=\\\"width:50px; height:50px; border-radius:10px; display:block;\\\">\\r\\n                                </a>\\r\\n                              </td>\\r\\n                            </tr>\\r\\n                          </table>\\r\\n                        </td>\\r\\n                        <td align=\\\"center\\\" valign=\\\"middle\\\" style=\\\"font-family:\\\'Open Sans\\\', sans-serif; font-size:14px; color:#FFFFFF;\\\">\\r\\n                          &copy;ClipBucketV5, maintained by <a href=\\\"https://oxygenz.fr\\\" style=\\\"color:#FFFFFF; text-decoration:none;\\\">Oxygenz</a>\\r\\n                        </td>\\r\\n                      </tr>\\r\\n                    </table>\\r\\n                  </td>\\r\\n                </tr>\\r\\n              </table>\\r\\n            </td>\\r\\n          </tr>\\r\\n\\r\\n        </table>\\r\\n\\r\\n      </td>\\r\\n    </tr>\\r\\n  </table>\\r\\n</body>\\r\\n</html>\\r\\n', FALSE);
@@ -201,7 +202,21 @@ INSERT INTO `{tbl_prefix}email` (`code`, `id_email_template`, `is_deletable`, `t
     If somehow above link isn''t working, please go to : <a href="{{baseurl}}activation.php">{{baseurl}}activation.php</a><br/>
     And use your activation code : <b>{{avcode}}</b>
     <br/><br/>
-    Welcome aboard !', 0);
+    Welcome aboard !', 0),
+    ('verify_email',1,0,'[{{website_title}}] Email address verification','Hello <b>{{user_username}}</b>,
+    <br/><br/>
+    In order to verify your email address, please validate your account by <a href="{{baseurl}}email_confirm.php?av_username={{user_username}}&avcode={{avcode}}">clicking here !</a>
+    <br/><br/>
+    If somehow above link isn\'t working, please go to : <a href="{{baseurl}}email_confirm.php">{{baseurl}}email_confirm.php</a><br/>
+And use your activation code : <b>{{avcode}}</b>
+<br/><br/>
+Have a nice day !', 0),
+    ('mfa_code',1,0,'[{{website_title}}] Authentification','Hello <b>{{user_username}}</b>,
+    <br/><br/>
+    Here is your authentification code : <b>{{mfa_code}}</b>
+
+    <br/><br/>
+    Have a nice day !', 0);
 
 
 INSERT IGNORE INTO `{tbl_prefix}email_variable_link` (`id_email`, `id_email_variable`)
@@ -269,4 +284,8 @@ VALUES ((SELECT id_email FROM `{tbl_prefix}email` WHERE code = 'share_video' LIM
        ((SELECT id_email FROM `{tbl_prefix}email` WHERE code = 'video_subscription' LIMIT 1), (SELECT id_email_variable FROM `{tbl_prefix}email_variable` WHERE code = 'video_description' LIMIT 1)),
        ((SELECT id_email FROM `{tbl_prefix}email` WHERE code = 'video_subscription' LIMIT 1), (SELECT id_email_variable FROM `{tbl_prefix}email_variable` WHERE code = 'video_link' LIMIT 1)),
        ((SELECT id_email FROM `{tbl_prefix}email` WHERE code = 'video_subscription' LIMIT 1), (SELECT id_email_variable FROM `{tbl_prefix}email_variable` WHERE code = 'video_thumb' LIMIT 1)),
-       ((SELECT id_email FROM `{tbl_prefix}email` WHERE code = 'video_subscription' LIMIT 1), (SELECT id_email_variable FROM `{tbl_prefix}email_variable` WHERE code = 'sender_username' LIMIT 1));
+       ((SELECT id_email FROM `{tbl_prefix}email` WHERE code = 'video_subscription' LIMIT 1), (SELECT id_email_variable FROM `{tbl_prefix}email_variable` WHERE code = 'sender_username' LIMIT 1)),
+
+       ((SELECT id_email FROM `{tbl_prefix}email` WHERE code = 'verify_email' LIMIT 1), (SELECT id_email_variable FROM `{tbl_prefix}email_variable` WHERE code = 'avcode' LIMIT 1)),
+
+       ((SELECT id_email FROM `{tbl_prefix}email` WHERE code = 'mfa_code' LIMIT 1), (SELECT id_email_variable FROM `{tbl_prefix}email_variable` WHERE code = 'mfa_code' LIMIT 1));

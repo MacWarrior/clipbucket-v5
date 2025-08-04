@@ -6,16 +6,6 @@ if (User::getInstance()->hasAdminAccess()) {
     redirect_to(DirPath::getUrl('admin_area') . 'index.php');
 }
 
-if (isset($_POST['login'])) {
-    $username = mysql_clean($_POST['username']);
-    $password = mysql_clean($_POST['password']);
-
-    //Logging User
-    if (userquery::getInstance()->login_user($username, $password)) {
-        redirect_to(DirPath::getUrl('admin_area') . 'index.php');
-    }
-}
-
 if (user_id() && !User::getInstance()->hasAdminAccess()) {
     e(lang('you_dont_hv_perms'));
 }
