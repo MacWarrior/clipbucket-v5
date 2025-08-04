@@ -35,14 +35,14 @@ document.addEventListener('DOMContentLoaded', function () {
                 mfa_code += input.value;
             });
 
-            if (mfa_code.length !== 6) {
-                alert('Please enter 6 digits');
+            if (mfa_code.trim() === '') {
+                alert('Please enter MFA code');
                 hideSpinner();
                 return false;
             }
 
-            if (mfa_code.trim() === '') {
-                alert('Please enter MFA code');
+            if (mfa_code.length !== 6) {
+                alert('Please enter 6 digits');
                 hideSpinner();
                 return false;
             }
