@@ -443,21 +443,3 @@ function register_embed_function(string $name): void
 {
     CBvideo::getInstance()->embed_func_list [] = $name;
 }
-
-/**
- * function used to get remote url function
- */
-function get_remote_url_function(): string
-{
-    $funcs = cb_get_functions('remote_url_function');
-
-    if ($funcs) {
-        foreach ($funcs as $func) {
-            $val = $func['func']();
-            if ($val) {
-                return $val;
-            }
-        }
-    }
-    return 'check_remote_url()';
-}

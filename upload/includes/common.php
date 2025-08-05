@@ -253,13 +253,6 @@ if (config('enable_video_file_upload') == 'yes') {
     ];
 }
 
-if (config('enable_video_remote_upload') == 'yes') {
-    ClipBucket::getInstance()->upload_opt_list['remote_upload_div'] = [
-        'title'    => lang('remote_upload'),
-        'function' => 'enable_video_remote_upload'
-    ];
-}
-
 # Configuration of time format
 $config['date'] = '%I:%M %p';
 $config['time'] = '%H:%M';

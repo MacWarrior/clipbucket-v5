@@ -29,7 +29,6 @@ if (isset($_POST['update'])) {
         'stay_mp4',
         'delete_mass_upload',
         'enable_video_file_upload',
-        'enable_video_remote_upload',
         'enable_photo_file_upload',
         'send_comment_notification',
         'approve_video_notification',
@@ -97,7 +96,6 @@ if (isset($_POST['update'])) {
         'delete_mass_upload',
         'stay_mp4',
         'enable_video_file_upload',
-        'enable_video_remote_upload',
         'enable_photo_file_upload',
 
         'allow_conversion_1_percent',
