@@ -3,7 +3,7 @@
 namespace V5_5_2;
 require_once \DirPath::get('classes') . DIRECTORY_SEPARATOR . 'migration' . DIRECTORY_SEPARATOR . 'migration.class.php';
 
-class MWIP extends \Migration
+class M00120 extends \Migration
 {
     /**
      * @throws \Exception
@@ -70,8 +70,8 @@ class MWIP extends \Migration
         ]);
 
         self::generateTranslation('remote_play_form_description', [
-            'fr' => 'Ajoutez une vidéo par son URL ; le fichier vidéo ne sera pas télécharger mais juste lié',
-            'en' => 'Add a video by it\'s URL ; video file won\'t be uploaded but just linked'
+            'fr' => 'Ajoutez une vidéo par son URL de fichier ; le fichier vidéo ne sera pas télécharger mais juste lié',
+            'en' => 'Add a video by it\'s file URL ; video file won\'t be uploaded but just linked'
         ]);
 
         self::generateTranslation('remote_play_checking', [
