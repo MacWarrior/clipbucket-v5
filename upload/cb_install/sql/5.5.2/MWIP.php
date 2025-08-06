@@ -39,7 +39,13 @@ class MWIP extends \Migration
             self::deleteTranslation($key);
         }
 
-        self::generateConfig('enable_video_remote_play', 'no');
+        $sql_select = 'SELECT CASE WHEN plugin_active IS NULL OR plugin_active NOT IN(\'yes\',\'no\') THEN \'no\' ELSE plugin_active END AS plugin_active FROM ' . tbl('plugins') . ' WHERE plugin_folder = \'oxygenz_remote_play\'';
+        $rs = self::req($sql_select);
+
+        self::generateConfig('enable_video_remote_play', $rs[0]['plugin_active'] ?? 'no');
+
+        $sql_delete = 'DELETE FROM ' . tbl('plugins') . ' WHERE plugin_folder = \'oxygenz_remote_play\'';
+        self::query($sql_delete);
 
         self::generateTranslation('option_enable_video_remote_play', [
             'fr' => 'Activer la lecture à distance',
