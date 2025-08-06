@@ -617,8 +617,6 @@ function apply_func($func, $val)
  *
  * @param : { string } { $input } { field to be checked }
  *
- * @param $return
- *
  * @return string
  */
 function yes_or_no($input): string

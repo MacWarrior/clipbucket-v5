@@ -1085,31 +1085,9 @@ function get_vid_extensions(): array
     return explode(',', $exts);
 }
 
-function register_custom_video_file_func($method, $class = null): bool
-{
-    if (empty($method)) {
-        return false;
-    }
-
-    if (empty($class)) {
-        ClipBucket::getInstance()->custom_video_file_funcs[] = $method;
-    } else {
-        ClipBucket::getInstance()->custom_video_file_funcs[] = [
-            'class'    => $class
-            , 'method' => $method
-        ];
-    }
-    return true;
-}
-
-function get_custom_video_file_funcs()
-{
-    return ClipBucket::getInstance()->custom_video_file_funcs;
-}
-
 function exec_custom_video_file_funcs($vdetails, $hq = false)
 {
-    $custom_video_file_funcs = get_custom_video_file_funcs();
+    $custom_video_file_funcs = ClipBucket::getInstance()->get_custom_video_file_funcs();
     if (!empty($custom_video_file_funcs)) {
         foreach ($custom_video_file_funcs as $func) {
             if (is_array($func)) {

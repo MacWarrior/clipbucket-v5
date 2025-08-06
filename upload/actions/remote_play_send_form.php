@@ -1,6 +1,6 @@
 <?php
-const THIS_PAGE = 'ajax';
-require_once dirname(__DIR__, 3) . '/includes/config.inc.php';
+const THIS_PAGE = 'remote_play_send_form';
+require_once dirname(__FILE__, 2) . '/includes/config.inc.php';
 
 if( !User::getInstance()->hasPermission('allow_video_upload') ){
     echo json_encode(['error'=>lang('insufficient_privileges')]);
@@ -14,7 +14,7 @@ if( empty(Upload::getInstance()->get_upload_options()) ) {
 
 $step = $_POST['step'];
 if( empty($step) || !in_array($step, ['check_link', 'save', 'update']) ){
-    echo json_encode(['error'=>lang('plugin_oxygenz_remote_play_invalid_step')]);
+    echo json_encode(['error'=>lang('remote_play_invalid_step')]);
     die();
 }
 
@@ -24,28 +24,28 @@ if( !empty($_POST['form_data']) ){
     $_POST = array_merge($_POST, $form_data);
 }
 
-$video_url = $_POST['remote_play_url'] = $_POST['oxygenz_remote_play_file_url'];
-unset($_POST['oxygenz_remote_play_file_url']);
+$video_url = $_POST['remote_play_url'] = $_POST['remote_play_file_url'];
+unset($_POST['remote_play_file_url']);
 if (filter_var($video_url, FILTER_VALIDATE_URL) === FALSE) {
-    echo json_encode(['error'=>lang('plugin_oxygenz_remote_play_invalid_url')]);
+    echo json_encode(['error'=>lang('remote_play_invalid_url')]);
     die();
 }
 
 $extension = strtolower(getExt($video_url));
 $allowed_extensions = ['mp4','m3u8'];
 if( !in_array($extension, $allowed_extensions) ){
-    echo json_encode(['error'=>lang('plugin_oxygenz_remote_play_invalid_extension')]);
+    echo json_encode(['error'=>lang('remote_play_invalid_extension')]);
     die();
 }
 
 $check_url = get_headers($video_url);
 if( !isset($check_url[0]) ){
-    echo json_encode(['error'=>lang('plugin_oxygenz_remote_play_website_not_responding')]);
+    echo json_encode(['error'=>lang('remote_play_website_not_responding')]);
     die();
 }
 
-if( strpos($check_url[0], '200') === false ){
-    echo json_encode(['error'=>lang('plugin_oxygenz_remote_play_url_not_working')]);
+if(!str_contains($check_url[0], '200')){
+    echo json_encode(['error'=>lang('remote_play_url_not_working')]);
     die();
 }
 
@@ -58,7 +58,7 @@ switch($step){
         $video_infos = $ffmpeg->get_file_info($video_url);
 
         if( empty($video_infos['format']) ){
-            $not_valid_format = lang('plugin_oxygenz_remote_play_not_valid_video');
+            $not_valid_format = lang('remote_play_not_valid_video');
             if ($step == 'check_link') {
                 echo json_encode(['error'=>$not_valid_format]);
                 die();
@@ -87,7 +87,7 @@ switch($step){
         }
         $response = [];
         if( empty($errors) ) {
-            e(lang('plugin_oxygenz_remote_play_video_saved'), 'm');
+            e(lang('remote_play_video_saved'), 'm');
             update_video_status($_POST['file_name'], 'Waiting');
         } else {
             $response['error'] = 1;
@@ -96,13 +96,13 @@ switch($step){
 
 
         sendClientResponseAndContinue(function () use($video_id, $response) {
-            $vdetails = get_video_details($video_id);
-            $response['videokey'] = $vdetails['videokey'];
+            $video = Video::getInstance()->getOne(['video_id' => $video_id]);
+            $response['videokey'] = $video['videokey'];
             $response['videoid'] = $video_id;
             echo json_encode($response);
         });
 
-        oxygenz_remote_play::process_file($video_url, $video_id);
+        remote_play::process_file($video_url, $video_id);
         die();
 
     case 'update':
@@ -114,7 +114,7 @@ switch($step){
         $vdetails = get_video_details($_POST['videokey']);
 
         if( $vdetails['userid'] != user_id() ){
-            echo json_encode(['error'=>lang('plugin_oxygenz_remote_play_saving_error')]);
+            echo json_encode(['error'=>lang('remote_play_saving_error')]);
             die();
         }
 

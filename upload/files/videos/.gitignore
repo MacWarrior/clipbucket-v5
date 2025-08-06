@@ -2,3 +2,4 @@
 # But not these files...
 !.gitignore
 !no_video.mp4
+!example.mp4

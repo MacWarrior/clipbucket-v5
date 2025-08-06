@@ -1,6 +1,6 @@
 {
   "version":"5.5.2",
-  "revision":"119",
+  "revision":"120",
   "status":"stable",
   "detail":[
     {
@@ -65,12 +65,14 @@
         ,"Implement notification bell <i>(#615)</i>"
         ,"Implement default thumb selection and subtitle upload on video upload form"
         ,"Implement user check on internal messaging"
+        ,"Implement remote play"
         ,"Refactor friends requests & management"
         ,"Refactor collection selections"
         ,"Update video & photos management pages display"
         ,"Update video edition display"
         ,"Update photo upload & edition display"
         ,"Hide banned users from channels page, search results & popular user"
+        ,"Drop remote upload"
         ,"Fix collection privacy on photos page"
         ,"Fix visual editor theme change <i>(#590)</i>"
         ,"Fix manage collection list"
@@ -137,6 +139,7 @@
         ,"Fix possible SQL injection"
         ,"Fix access to temp files"
         ,"Fix sessions"
+        ,"Fix sub-directory links"
       ]
     },
     {
@@ -168,6 +171,7 @@
       "title": "Plugins",
       "description": [
         "Update compatibility notice to 5.5.2"
+        ,"Drop remote play"
       ]
     },
     {

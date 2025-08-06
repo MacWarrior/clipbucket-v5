@@ -9,16 +9,6 @@ $(document).ready(function () {
         $('#edit-' + id).hide();
     });
 
-/*    $('.input_tag').on('input', function () {
-        if ($(this).val().length <= 2) {
-            $('#ok-' + $(this).data('id')).prop('disabled',true).removeClass('text-success').addClass('text-muted');
-            $(this).addClass('error');
-        } else {
-            $('#ok-' + $(this).data('id')).prop('disabled',false).removeClass('text-muted').addClass('text-success');
-            $(this).removeClass('error');
-        }
-    });*/
-
     $('.delete_tag').on("click", function () {
             var _this = $(this);
             if (_this.hasClass('disabled')) {
@@ -28,7 +18,7 @@ $(document).ready(function () {
             var value = $('#input-' + id).val();
         if (confirm_it(text_confirm_delete_tag.replace('%s', value))) {
             $.ajax({
-                url: "actions/tag_delete.php",
+                url: admin_url + 'actions/tag_delete.php',
                 type: "POST",
                 data: {id_tag: id},
                 dataType: 'json',
@@ -59,7 +49,7 @@ $(document).ready(function () {
         var id = _this.data('id');
         var value = $('#input-' + id).val();
         $.ajax({
-            url: "actions/tag_update.php",
+            url: admin_url + 'actions/tag_update.php',
             type: "post",
             dataType: 'json',
             data: {id_tag: id, tag: value},

@@ -383,7 +383,7 @@ $(document).ready(function(){
     $('#update_dp_options').on('click', function () {
         var val = $(this).parent().find('input').val();
        $.ajax({
-           url: 'actions/display_option_update.php',
+           url: admin_url + 'actions/display_option_update.php',
            type: 'post',
            dataType: 'json',
            data: {admin_pages: val},
@@ -407,7 +407,7 @@ function updateListeners () {
         if (interrupt) {
             showSpinner();
             $.ajax({
-                url: 'actions/update_launch_wip.php',
+                url: admin_url + 'actions/update_launch_wip.php',
                 type: "post",
                 dataType: "json",
                 success: function (data) {
@@ -472,7 +472,7 @@ async function update(type){
         return;
     }
     $.ajax({
-        url: "actions/update_launch.php",
+        url: admin_url + "actions/update_launch.php",
         type: "post",
         data: {
             type: type
@@ -508,7 +508,7 @@ async function check_before_launch_update() {
     var conversion_checked = false;
     var interrupt = false;
     const data = await $.ajax({
-        url: "actions/update_check_before_launch.php",
+        url: admin_url + "actions/update_check_before_launch.php",
         type: "post",
         dataType: "json",
         processData: false,
@@ -521,7 +521,7 @@ async function check_before_launch_update() {
         if (typeof data.confirm_message_core === 'string' && data.confirm_message_core !== '') {
             if (confirm(data.confirm_message_core)) {
                 await $.ajax({
-                    url: "actions/tool_force_to_error.php",
+                    url: admin_url + "actions/tool_force_to_error.php",
                     type: "POST",
                     data: {id_tool: data.id_tool},
                     dataType: 'json',
@@ -539,7 +539,7 @@ async function check_before_launch_update() {
         if (typeof data.confirm_message_db === 'string' && data.confirm_message_db !== '') {
             if (confirm(data.confirm_message_db)) {
                 await $.ajax({
-                    url: "actions/tool_force_to_error.php",
+                    url: admin_url + "actions/tool_force_to_error.php",
                     type: "POST",
                     data: {id_tool: data.id_tool},
                     dataType: 'json',
@@ -568,7 +568,7 @@ async function check_before_launch_update() {
 function refreshUpdateProgression() {
     var interval = setInterval(function () {
         $.ajax({
-            url: "actions/update_info.php",
+            url: admin_url + "actions/update_info.php",
             type: "post",
             dataType: "json",
             success: function (data) {
@@ -600,7 +600,7 @@ function refreshUpdateProgression() {
 
 function checkStatus() {
     $.ajax({
-        url: "actions/update_check.php",
+        url: admin_url + "actions/update_check.php",
         type: "post",
         dataType: "json",
         success: function (data) {

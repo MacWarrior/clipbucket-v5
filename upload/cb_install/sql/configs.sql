@@ -108,7 +108,6 @@ INSERT INTO `{tbl_prefix}config` (`configid`, `name`, `value`) VALUES
 	(NULL, 'watermark_max_width', '120'),
 	(NULL, 'watermark_placement', 'left:top'),
 	(NULL, 'enable_video_file_upload', 'yes'),
-	(NULL, 'enable_video_remote_upload', 'yes'),
 	(NULL, 'enable_photo_file_upload', 'yes'),
 	(NULL, 'load_embed_form', 'yes'),
 	(NULL, 'load_link_video_form', 'yes'),
@@ -325,8 +324,8 @@ INSERT INTO `{tbl_prefix}config` (`configid`, `name`, `value`) VALUES
     (NULL, 'maximum_allowed_subtitle_size', '2'),
     (NULL, 'can_upload_subtitles', 'yes'),
     (NULL, 'videos_video_style', 'modern'),
-    (NULL, 'unique_random', HEX(RANDOM_BYTES(16)))
-;
+    (NULL, 'unique_random', HEX(RANDOM_BYTES(16))),
+    (NULL, 'enable_video_remote_play', 'yes');
 
 INSERT INTO `{tbl_prefix}video_resolution` (`title`, `ratio`, `enabled`, `width`, `height`, `video_bitrate`) VALUES
 	('240p', '16/9', 1, 426, 240, 240000),
