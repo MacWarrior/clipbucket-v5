@@ -1486,8 +1486,9 @@ class CBvideo extends CBCategory
             $required_fields = Upload::getInstance()->loadRequiredFields($array);
             $location_fields = Upload::getInstance()->loadLocationFields($array);
             $option_fields = Upload::getInstance()->loadOptionFields($array);
+            $custom_upload_fields = Upload::getInstance()->load_custom_upload_fields($array, true);
 
-            $upload_fields = array_merge($required_fields, $location_fields, $option_fields);
+            $upload_fields = array_merge($required_fields, $location_fields, $option_fields, $custom_upload_fields);
 
             //Adding Custom Upload Fields
             if (function_exists('custom_fields_list')) {
@@ -1522,6 +1523,9 @@ class CBvideo extends CBCategory
                             $val = $field['validate_function']($val,$field['second_parameter_validate']);
                         } else {
                             $val = $field['validate_function']($val);
+                        }
+                        if( isset($field['keep_original_on_error']) && $field['keep_original_on_error'] && $val == false ){
+                            continue;
                         }
                     }
 

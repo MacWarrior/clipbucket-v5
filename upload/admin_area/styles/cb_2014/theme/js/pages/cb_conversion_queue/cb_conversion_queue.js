@@ -3,7 +3,7 @@ $(function () {
     if (ids_to_check_progress !== undefined && ids_to_check_progress.length > 0) {
         intervalId = setInterval(function () {
             $.post({
-                url: 'actions/progress_conversion_queue.php',
+                url: admin_url + 'actions/progress_conversion_queue.php',
                 dataType: 'json',
                 data: {
                     ids: ids_to_check_progress

@@ -7,7 +7,7 @@ $(function () {
 function editEmailTemplate(id_email_template) {
     showSpinner();
     $.post({
-        url: 'actions/email_template_edit.php',
+        url: admin_url + 'actions/email_template_edit.php',
         data: {id_email_template: id_email_template},
         dataType: "json",
         success: (response) => {
@@ -21,7 +21,7 @@ function editEmailTemplate(id_email_template) {
 function editEmail(id_email) {
     showSpinner();
     $.post({
-        url: 'actions/email_edit.php',
+        url: admin_url + 'actions/email_edit.php',
         data: {id_email: id_email},
         dataType: "json",
         success: (response) => {
@@ -35,7 +35,7 @@ function editEmail(id_email) {
 function saveEmailTemplate(form) {
     showSpinner();
     $.post({
-        url: 'actions/email_template_save.php',
+        url: admin_url + 'actions/email_template_save.php',
         data: form.serialize(),
         dataType: "json",
         success: (response) => {
@@ -50,7 +50,7 @@ function saveEmailTemplate(form) {
 function saveEmail(form) {
     showSpinner();
     $.post({
-        url: 'actions/email_save.php',
+        url: admin_url + 'actions/email_save.php',
         data: form.serialize(),
         dataType: "json",
         success: (response) => {
@@ -66,7 +66,7 @@ function saveEmail(form) {
 function deleteEmailTemplate(id_email_template) {
     showSpinner();
     $.post({
-        url: 'actions/email_template_delete.php',
+        url: admin_url + 'actions/email_template_delete.php',
         data: {id_email_template: id_email_template},
         dataType: "json",
         success: (response) => {
@@ -80,7 +80,7 @@ function deleteEmailTemplate(id_email_template) {
 function deleteEmail(id_email) {
     showSpinner();
     $.post({
-        url: 'actions/email_delete.php',
+        url: admin_url + 'actions/email_delete.php',
         data: {id_email: id_email},
         dataType: "json",
         success: (response) => {
@@ -95,7 +95,7 @@ function deleteEmail(id_email) {
 function listEmailTemplate() {
     showSpinner();
     $.post({
-        url: 'actions/email_template_list.php',
+        url: admin_url + 'actions/email_template_list.php',
         dataType: "json",
         success: (response) => {
             $('#email_template > .row').html(response.template);
@@ -108,7 +108,7 @@ function listEmailTemplate() {
 function listEmail(search) {
     showSpinner();
     $.post({
-        url: 'actions/email_list.php',
+        url: admin_url + 'actions/email_list.php',
         dataType: "json",
         data: {search: search},
         success: (response) => {
@@ -128,7 +128,7 @@ function initListenerEmailTemplateEdit() {
         clearTimeout(timeout);
         timeout = setTimeout(() => {
             $.post({
-                url: 'actions/email_template_render.php',
+                url: admin_url + 'actions/email_template_render.php',
                 data: {
                     email_content: email_content
                 },
@@ -171,7 +171,7 @@ function initListenerEmailTemplateList() {
         var data = $('#default_template').serializeArray();
         data.push({name:'default_all', value:change_all});
         $.post({
-            url: "actions/email_make_default.php",
+            url: admin_url + 'actions/email_make_default.php',
             data: data,
             dataType: 'json',
             success: function (result) {
@@ -212,7 +212,7 @@ function refreshRenderEmail()
     clearTimeout(timeout);
     timeout = setTimeout(() => {
         $.post({
-            url: 'actions/email_render.php',
+            url: admin_url + 'actions/email_render.php',
             data: {
                 email_content: email_content
                 ,id_email_template: id_email_template
@@ -239,7 +239,7 @@ function initListenerEmailList() {
 function displayVariable(id_email) {
     showSpinner();
     $.post({
-        url: 'actions/variables_display.php',
+        url: admin_url + 'actions/variables_display.php',
         dataType: 'json',
         data: {id_email: id_email},
         success: function (response) {
@@ -258,7 +258,7 @@ function initListenerEmailTester() {
         e.preventDefault();
         showSpinner();
         $.post({
-            url: 'actions/email_tester_send.php',
+            url: admin_url + 'actions/email_tester_send.php',
             dataType: 'json',
             data: $('#email_tester_form').serialize(),
             success: function (response) {

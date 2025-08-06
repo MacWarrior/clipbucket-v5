@@ -5,11 +5,15 @@ require_once dirname(__FILE__, 2) . '/includes/admin_config.php';
 User::getInstance()->hasPermissionOrRedirect('video_moderation',true);
 pages::getInstance()->page_redir();
 
+if( config('enable_video_remote_play') == 'yes' ){
+    new remote_play();
+}
+
 $video_id = $_GET['video'];
 
 //Updating Video Details
 if (isset($_POST['update'])) {
-    myquery::getInstance()->update_video();
+    CBvideo::getInstance()->update_video();
     if (empty(errorhandler::getInstance()->get_error())) {
         Video::getInstance()->setDefaultPicture($video_id, $_POST['default_thumb']?? '');
 
@@ -79,9 +83,9 @@ if (myquery::getInstance()->video_exists($video_id)) {
 } else {
     //add parameter to display message after redirect
     if ($_GET['mode'] == 'delete') {
-        SessionMessageHandler::add_message(lang('video_deleted'), 'm',  get_server_url() . DirPath::getUrl('admin_area') . 'video_manager.php');
+        SessionMessageHandler::add_message(lang('video_deleted'), 'm',  DirPath::getUrl('admin_area') . 'video_manager.php');
     }
-    SessionMessageHandler::add_message(lang('class_vdo_del_err'), 'e',  get_server_url() . DirPath::getUrl('admin_area') . 'video_manager.php');
+    SessionMessageHandler::add_message(lang('class_vdo_del_err'), 'e',  DirPath::getUrl('admin_area') . 'video_manager.php');
 }
 
 $resolution_list = getResolution_list($data);
@@ -101,7 +105,6 @@ if (in_array($data['status'], ['Processing', 'Waiting'])) {
     $ids_to_check_progress[] = $data['videoid'];
 }
 Assign('ids_to_check_progress', json_encode($ids_to_check_progress??[]));
-
 
 $params = [];
 $params['type'] = 'v';
