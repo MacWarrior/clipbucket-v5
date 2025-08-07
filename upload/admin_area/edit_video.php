@@ -98,8 +98,8 @@ if( config('enable_video_embed_players') == 'yes' ){
     $list_icons = SocialNetworks::getInstance()->getAllIcons();
     assign('list_icons', $list_icons);
 
-    $embed_players = Video::getInstance()->getEmbedPlayers(['videoid' => $video_id]);
-    assign('embed_players', $embed_players);
+    $embed_players_list = Video::getInstance()->getEmbedPlayers(['videoid' => $video_id]);
+    assign('embed_players_list', $embed_players_list);
 }
 
 //Deleting comment
