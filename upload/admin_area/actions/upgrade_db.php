@@ -107,7 +107,6 @@ if (php_sapi_name() == 'cli') {
     }
 
 } else {
-    User::getInstance()->hasPermissionAjax('admin_access');
     if (empty($_REQUEST['version']) || empty($_REQUEST['revision'])) {
         error_lang_cli('Version or revision is missing');
         $error = true;

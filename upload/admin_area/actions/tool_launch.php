@@ -44,8 +44,6 @@ if (php_sapi_name() === 'cli') {
 
     $tool->setToolInProgress();
 } else {
-    User::getInstance()->hasPermissionAjax('admin_access');
-
     if($tool->initById($_POST['id_tool']) === false) {
         e(lang('tool_not_found'));
         echo json_encode([

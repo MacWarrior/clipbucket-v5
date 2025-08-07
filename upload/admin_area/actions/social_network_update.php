@@ -3,8 +3,6 @@ const THIS_PAGE = 'social_network_update';
 const IS_AJAX = true;
 require_once dirname(__FILE__, 3) . '/includes/admin_config.php';
 
-User::getInstance()->hasPermissionAjax('admin_access');
-
 $success = true;
 if (!isset($_POST['id_social_networks_link']) || !isset($_POST['title']) || !isset($_POST['url']) || !isset($_POST['social_network_link_order']) || !isset($_POST['id_fontawesome_icon'])) {
     e(lang('missing_params'));
