@@ -10,8 +10,8 @@
 </script>
 
 {if !empty($embed_players)}
-<ul class="nav nav-tabs">
-    <li class="active"><a data-toggle="tab" href="#default_player"><img alt="favicon" src="{get_website_favicon_path()}" style="width:22px;display:inline;margin-right:5px;"/>{config('site_title')}</a></li>
+<ul class="default_bootstrap nav nav-tabs">
+    <li class="active"><a data-toggle="tab" href="#default_player"><img alt="favicon" src="{get_website_favicon_path()}" class="icon"/>{config('site_title')}</a></li>
     <li class="dropdown">
         <a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
             {lang code='video_embed_players'} <span class="caret"></span>

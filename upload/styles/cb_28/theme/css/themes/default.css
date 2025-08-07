@@ -190,6 +190,19 @@ fieldset[disabled],
 .flat-tabs .nav-tabs.nav>li:not(.active)>a:hover{
     background:none;
 }
+.default_bootstrap.nav-tabs.nav>li.active>a,
+.default_bootstrap.nav-tabs.nav>li.active>a:hover,
+.default_bootstrap.nav-tabs.nav>li.active>a:focus,
+.default_bootstrap.nav-tabs.nav>li>a:hover,
+.default_bootstrap.nav-tabs.nav>li>a:focus{
+    color: var(--color-main-01);
+    background: var(--color-01);
+    border-color: var(--color-main-01);
+}
+.default_bootstrap.nav .open>a{
+    background: var(--color-01);
+    color: var(--color-main-01);
+}
 
 /* Miscellaneous */
 pre{
