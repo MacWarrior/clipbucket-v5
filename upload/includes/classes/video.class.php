@@ -108,7 +108,12 @@ class Video
         $this->display_var_name = 'video';
         $this->search_limit = (int)config('videos_items_search_page');
 
-        $this->broadcast_option = ['public' => lang('vdo_br_opt1'), 'private' => lang('vdo_br_opt2'), 'unlisted' => lang('vdo_broadcast_unlisted'), 'logged' => lang('logged_users_only')];
+        $this->broadcast_option = [
+            'public'    => lang('vdo_br_opt1')
+            ,'private'  => lang('vdo_br_opt2')
+            ,'unlisted' => lang('vdo_broadcast_unlisted')
+            ,'logged'   => lang('logged_users_only')
+        ];
     }
 
     public function getBroadcastOption(): array
@@ -1057,6 +1062,68 @@ class Video
         foreach ($video_users as $user_id) {
             Clipbucket_db::getInstance()->insert(tbl('video_users'), ['videoid', 'userid'], [$video_id, $user_id]);
         }
+        return true;
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function getEmbedPlayers(array $params)
+    {
+        $param_videoid = $params['videoid'] ?? false;
+        $param_enabled = $params['enabled'] ?? false;
+
+        $conditions = [];
+        if( $param_videoid ){
+            $conditions[] = 'video_embed.videoid = ' . (int)$param_videoid;
+        }
+        if( $param_enabled ){
+            $conditions[] = 'video_embed.enabled = ' . (int)$param_enabled;
+        }
+
+        $sql = 'SELECT
+                video_embed.id_video_embed
+                ,video_embed.id_fontawesome_icon
+                ,video_embed.title
+                ,video_embed.html
+                ,video_embed.order
+                ,video_embed.enabled
+                ,fontawesome_icons.icon
+            FROM ' . cb_sql_table('video_embed') . '
+                INNER JOIN ' . cb_sql_table('fontawesome_icons') . ' ON video_embed.id_fontawesome_icon = fontawesome_icons.id_fontawesome_icon
+            ' . (empty($conditions) ? '' : ' WHERE ' . implode(' AND ', $conditions)) . '
+            ORDER BY `order` ASC';
+
+        $results = Clipbucket_db::getInstance()->_select($sql);
+
+        if (count($results) == 0) {
+            return false;
+        }
+
+        return $results;
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function removeEmbedPlayer($id_video = null, $id_video_embed = null): bool
+    {
+        if( !Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.2', '999') ){
+            return true;
+        }
+
+        if( empty($id_video) && empty($id_video_embed) ){
+            return false;
+        }
+
+        $sql = 'DELETE FROM video_embed WHERE 1=1';
+        if( !empty($video_id) ){
+            $sql .= ' AND videoid = ' . (int)$video_id;
+        }
+        if( !empty($id_video_embed) ){
+            $sql .= ' AND id_video_embed = ' . (int)$id_video_embed;
+        }
+        Clipbucket_db::getInstance()->execute($sql);
         return true;
     }
 }

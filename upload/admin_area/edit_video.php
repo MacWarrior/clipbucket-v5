@@ -94,6 +94,14 @@ assign('resolution_list', $resolution_list);
 $subtitle_list = get_video_subtitles($data) ?: [];
 assign('subtitle_list', $subtitle_list);
 
+if( config('enable_video_embed_players') == 'yes' ){
+    $list_icons = SocialNetworks::getInstance()->getAllIcons();
+    assign('list_icons', $list_icons);
+
+    $embed_players = Video::getInstance()->getEmbedPlayers(['videoid' => $video_id]);
+    assign('embed_players', $embed_players);
+}
+
 //Deleting comment
 if (isset($_POST['del_cmt'])) {
     Comments::delete(['comment_id' => $_POST['cmt_id']]);

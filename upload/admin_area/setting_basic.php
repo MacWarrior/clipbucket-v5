@@ -159,6 +159,7 @@ if (isset($_POST['update'])) {
         , 'enable_public_video_page'
         , 'can_upload_subtitles'
         , 'enable_anonymous_stats'
+        , 'enable_video_embed_players'
     ];
 
     $config_booleans_to_refactor = [
@@ -423,7 +424,8 @@ if (isset($_POST['update'])) {
         'enable_public_video_page',
         'can_upload_subtitles',
         'videos_video_style',
-        'enable_anonymous_stats'
+        'enable_anonymous_stats',
+        'enable_video_embed_players'
     ];
 
     //Numeric Array

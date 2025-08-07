@@ -1,0 +1,48 @@
+<table class="table table-bordered table-striped manageUsersTable">
+    <tr>
+        <th class="col-md-2">{lang('icon')}</th>
+        <th class="col-md-2">{lang('title')}</th>
+        <th class="col-md-4">{lang('html')}</th>
+        <th class="col-md-1">{lang('order')}</th>
+        <th class="col-md-1">{ucfirst(lang('enabled'))}</th>
+        <th class="col-md-2">Action</th>
+    </tr>
+    {section name=i loop=$embed_players}
+        <tr id="tr_{$embed_players[i].id_video_embed}">
+            <td class="col-md-2">
+                <div class="edit-{$embed_players[i].id_video_embed}" id="icon_{$embed_players[i].id_video_embed}">
+                    <span class="fa fa-{$embed_players[i].icon} "></span>&nbsp;<span class="text-icon">{$embed_players[i].icon}</span>
+                </div>
+                <div  class="input-{$embed_players[i].id_video_embed}" style="display:none;">
+                    <select id="input_id_fontawesome_icon-{$embed_players[i].id_video_embed}" name="id_fontawesome_icon" class="icon_select">
+                        {section name=icon loop=$list_icons}
+                            <option value="{display_clean($list_icons[icon].id_fontawesome_icon)}" {if $embed_player_links[i].id_fontawesome_icon == $list_icons[icon].id_fontawesome_icon} selected="selected"{/if}>{display_clean($list_icons[icon].icon)}</option>
+                        {/section}
+                    </select>
+                </div>
+            </td>
+            <td class="col-md-2">
+                <span class="edit-{$embed_players[i].id_video_embed}" id="title_{$embed_players[i].id_video_embed}" title="{display_clean($embed_players[i].title)}">{display_clean($embed_players[i].title)}</span>
+                <input type="text" class="form-control input-{$embed_players[i].id_video_embed}" id="input_title-{$embed_players[i].id_video_embed}" name="title" value="{display_clean($embed_players[i].title)}" style="display:none;">
+            </td>
+            <td class="col-md-4">
+                <span class="edit-{$embed_players[i].id_video_embed}" id="html_{$embed_players[i].id_video_embed}">{display_clean($embed_players[i].html)}</span>
+                <input type="text" class="form-control input-{$embed_players[i].id_video_embed}" id="input_html-{$embed_players[i].id_video_embed}" name="html" value="{display_clean($embed_players[i].html)}" style="display:none;">
+            </td>
+            <td class="col-md-1">
+                <span class="edit-{$embed_players[i].id_video_embed}" id="order_{$embed_players[i].id_video_embed}">{display_clean($embed_players[i].order)}</span>
+                <input type="text" class="form-control input-{$embed_players[i].id_video_embed}" id="input_order-{$embed_players[i].id_video_embed}" name="order" value="{display_clean($embed_players[i].order)}" style="display:none;">
+            </td>
+            <td class="col-md-1" style="text-align:center; vertical-align:middle;">
+                <input value="1" name="enable_video_embed_players" id="enable_video_embed_players" {if $embed_players[i].enabled=='1'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+                <span class="lbl"></span>
+            </td>
+            <td class="col-md-1" style="text-align:center; vertical-align:middle;">
+                <span class="btn btn-success btn-xs edit_embed_player" title="{lang code='edit'}" id="edit-{$embed_players[i].id_video_embed}" data-id="{$embed_players[i].id_video_embed}"><i class="glyphicon glyphicon-edit"></i></span>
+                <span class="btn btn-danger btn-xs delete_embed_player" title="{lang code='delete'}" id="delete-{$embed_players[i].id_video_embed}" data-id="{$embed_players[i].id_video_embed}"><i class="glyphicon glyphicon-trash"></i></span>
+                <span class="glyphicon glyphicon-ok-circle confirm_update_embed_player" title="{lang code='confirm'}" id="ok-{$embed_players[i].id_video_embed}" data-id="{$embed_players[i].id_video_embed}" style="display:none;color:#87b87f;font-size:1.5em;cursor:pointer;"></span>
+                <span class="glyphicon glyphicon-remove-circle cancel_embed_player" title="{lang code='cancel'}" id="remove-{$embed_players[i].id_video_embed}" data-id="{$embed_players[i].id_video_embed}" style="display:none;color:#d15b47;font-size:1.5em;cursor:pointer; margin-left:15px;"></span>
+            </td>
+        </tr>
+    {/section}
+</table>

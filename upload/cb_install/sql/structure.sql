@@ -1271,3 +1271,25 @@ ALTER TABLE `{tbl_prefix}subscriptions`
     ADD CONSTRAINT `subscriptions_subscribed_to_fk` FOREIGN KEY (`subscribed_to`) REFERENCES `{tbl_prefix}users` (`userid`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 ALTER TABLE `{tbl_prefix}subscriptions`
     ADD CONSTRAINT `subscriptions_userid_fk` FOREIGN KEY (`userid`) REFERENCES `{tbl_prefix}users` (`userid`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+CREATE TABLE `{tbl_prefix}video_embed` (
+  `id_video_embed` int(11) NOT NULL,
+  `videoid` bigint(20) NOT NULL,
+  `id_fontawesome_icon` int(11) DEFAULT NULL,
+  `title` varchar(64) NOT NULL,
+  `html` text NOT NULL,
+  `order` smallint(6) NOT NULL DEFAULT 0,
+  `enabled` tinyint(1) NOT NULL DEFAULT 1
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
+
+ALTER TABLE `{tbl_prefix}video_embed`
+  ADD PRIMARY KEY (`id_video_embed`),
+  ADD KEY `videoid` (`videoid`),
+  ADD KEY `id_fontawesome_icon` (`id_fontawesome_icon`);
+
+ALTER TABLE `{tbl_prefix}video_embed`
+  MODIFY `id_video_embed` int(11) NOT NULL AUTO_INCREMENT;
+
+ALTER TABLE `{tbl_prefix}video_embed`
+  ADD CONSTRAINT `video_embed_ibfk_1` FOREIGN KEY (`videoid`) REFERENCES `{tbl_prefix}video` (`videoid`),
+  ADD CONSTRAINT `video_embed_ibfk_2` FOREIGN KEY (`id_fontawesome_icon`) REFERENCES `{tbl_prefix}fontawesome_icons` (`id_fontawesome_icon`);
