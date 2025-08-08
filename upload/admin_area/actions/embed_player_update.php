@@ -42,33 +42,13 @@ switch($_POST['mode'] ?? ''){
         break;
 
     case 'update':
-
-            if( empty($_POST['id_video_embed'])) {
-                DiscordLog::sendDump(1);
-            }
-            if( empty($_POST['id_fontawesome_icon']) ){
-                DiscordLog::sendDump(2);
-            }
-            if( empty($_POST['title']) ){
-                DiscordLog::sendDump(3);
-            }
-            if( empty($_POST['html']) ){
-                DiscordLog::sendDump(4);
-            }
-            if( !isset($_POST['order']) ){
-                DiscordLog::sendDump(5);
-            }
-            if( trim($_POST['order']) == '' ){
-                DiscordLog::sendDump(6);
-            }
-
         if( empty($_POST['id_video_embed']) || empty($_POST['id_fontawesome_icon']) || empty($_POST['title']) || empty($_POST['html']) || !isset($_POST['order']) || trim($_POST['order']) == '' ){
-            DiscordLog::sendDump($_POST);
             e(lang('missing_params'));
             $success = false;
             $data = [];
             break;
         }
+
         $params = [
             'id_video_embed' => $_POST['id_video_embed'],
             'id_fontawesome_icon' => $_POST['id_fontawesome_icon'],
@@ -84,9 +64,38 @@ switch($_POST['mode'] ?? ''){
         break;
 
     case 'create':
+        if( empty($_POST['videoid']) || empty($_POST['id_fontawesome_icon']) || empty($_POST['title']) || empty($_POST['html']) || !isset($_POST['order']) ){
+            e(lang('missing_params'));
+            $success = false;
+            $data = [];
+            break;
+        }
 
+        if( trim($_POST['order']) == '' ){
+            $_POST['order'] = 0;
+        }
+
+        $id_video_embed = Video::getInstance()->createEmbedPlayer([
+            'videoid' => $_POST['videoid']
+            ,'id_fontawesome_icon' => $_POST['id_fontawesome_icon']
+            ,'title' => $_POST['title']
+            ,'html' => $_POST['html']
+            ,'order' => $_POST['order']
+            ,'enabled' => 1
+        ]);
+
+        $list_icons = SocialNetworks::getInstance()->getAllIcons() ?? [];
+        assign('list_icons', $list_icons);
+
+        $embed_player_line = Video::getInstance()->getEmbedPlayers([
+            'id_video_embed' => $id_video_embed
+            ,'first_only' => true
+        ]);
+        assign('embed_player_line', $embed_player_line);
+
+        $data = [];
+        $data['html'] = getTemplate('/blocks/embed_players_line.html');
         $success = true;
-        $data = Video::getInstance()->getEmbedPlayers(['id_video_embed' => $id_video_embed]);
         break;
 }
 

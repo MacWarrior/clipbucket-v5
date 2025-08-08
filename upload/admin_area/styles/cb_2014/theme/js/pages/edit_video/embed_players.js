@@ -1,18 +1,17 @@
 $(document).ready(function() {
-    $('#hideshow').on('click', function (e) {
+    $('#embed_player_hideshow').on('click', function (e) {
         e.preventDefault();
         $('#form_add_embed_player').slideDown();
         $(this).fadeOut();
     });
-    $('#cancel').on('click', function (e) {
+    $('#embed_player_cancel').on('click', function (e) {
         e.preventDefault();
         $('#form_add_embed_player').slideUp();
-        $('#hideshow').fadeIn();
+        $('#embed_player_hideshow').fadeIn();
     });
 
     $('.edit_embed_player').on("click", function () {
-        var _this = $(this);
-        var id = _this.data('id');
+        let id = $(this).data('id');
         $('.input-' + id).show();
         $('#ok-' + id).show();
         $('#remove-' + id).show();
@@ -22,8 +21,7 @@ $(document).ready(function() {
     });
 
     $('.cancel_embed_player').on("click", function () {
-        var _this = $(this);
-        var id = _this.data('id');
+        let id = $(this).data('id');
         $('.input-' + id).hide();
         $('#ok-' + id).hide();
         $('#remove-' + id).hide();
@@ -35,7 +33,7 @@ $(document).ready(function() {
     let embed_player_update_page = admin_url + 'actions/embed_player_update.php';
 
     $('.confirm_update_embed_player').on("click", function () {
-        let id  =  $(this).data('id');
+        let id = $(this).data('id');
         $.ajax({
             url: embed_player_update_page,
             type: "post",
@@ -65,10 +63,38 @@ $(document).ready(function() {
             }
         });
     });
+    $('#embed_player_validate').on("click", function (e) {
+        e.preventDefault();
+        $.ajax({
+            url: embed_player_update_page,
+            type: "post",
+            dataType: 'json',
+            data: {
+                mode: 'create'
+                , videoid: videoid
+                , id_fontawesome_icon: $('#new_embed_player_id_fontawesome_icon').val()
+                , title: $('#new_embed_player_title').val()
+                , html: $('#new_embed_player_html').val()
+                , order: $('#new_embed_player_order').val()
+            },
+            success: function (response) {
+                $('#form_add_embed_player').slideUp();
+                $('#embed_player_hideshow').fadeIn();
+
+                $('#new_embed_player_id_fontawesome_icon').val('');
+                $('#new_embed_player_title').val('');
+                $('#new_embed_player_html').val('');
+                $('#new_embed_player_order').val('');
+
+                let newRow = $(response.data.html).hide();
+                $('#embed_player table tbody').append(newRow);
+                newRow.fadeIn();
+            }
+        });
+    });
     $('.delete_embed_player').on("click", function () {
-        var _this = $(this);
         if (confirm(lang['confirm_delete_embed_player'])) {
-            var id  = _this.data('id');
+            let id = $(this).data('id');
             $.ajax({
                 url: embed_player_update_page,
                 type: "post",

@@ -1153,7 +1153,7 @@ class Video
         }
 
         $sql = 'DELETE FROM ' . tbl('video_embed') . ' WHERE ' . implode(' AND ', $conditions);
-        //Clipbucket_db::getInstance()->execute($sql);
+        Clipbucket_db::getInstance()->execute($sql);
         return true;
     }
 
@@ -1192,11 +1192,11 @@ class Video
         }
         if( $param_title ){
             $fields[] = 'title';
-            $values[] = mysql_clean($param_title);
+            $values[] = $param_title;
         }
         if( $param_html ){
             $fields[] = 'html';
-            $values[] = mysql_clean($param_html);
+            $values[] = $param_html;
         }
         if( $param_order ){
             $fields[] = 'order';
@@ -1213,6 +1213,46 @@ class Video
 
         Clipbucket_db::getInstance()->update(tbl('video_embed'), $fields, $values, 'id_video_embed = ' . (int)$id_video_embed);
         return true;
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function createEmbedPlayer(array $params)
+    {
+        if( !Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.2', '999') ){
+            return false;
+        }
+
+        if( empty($params) ){
+            e(lang('missing_params'));
+            return false;
+        }
+
+        if( empty($params['videoid']) || empty($params['id_fontawesome_icon']) || empty($params['title']) || empty($params['html']) ){
+            e(lang('missing_params'));
+            return false;
+        }
+
+        $fields = [
+            'videoid'
+            ,'id_fontawesome_icon'
+            ,'title'
+            ,'html'
+            ,'`order`'
+            ,'enabled'
+        ];
+
+        $values = [
+            (int)$params['videoid']
+            , (int)$params['id_fontawesome_icon']
+            , $params['title']
+            , $params['html']
+            , (int)$params['order'] ?? 0
+            , $params['enabled'] ?? 1
+        ];
+
+        return Clipbucket_db::getInstance()->insert(tbl('video_embed'), $fields, $values);
     }
 }
 

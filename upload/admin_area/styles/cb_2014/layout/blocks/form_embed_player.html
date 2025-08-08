@@ -1,28 +1,28 @@
 <form method="post" enctype="multipart/form-data">
     <div class="row">
         <div class="col-md-2">
-            <label for="id_fontawesome_icon">{lang('icon')}*</label>
-            <select id="id_fontawesome_icon" name="id_fontawesome_icon" class="icon_select">
+            <label for="new_embed_player_id_fontawesome_icon">{lang('icon')}*</label>
+            <select id="new_embed_player_id_fontawesome_icon" name="new_embed_player_id_fontawesome_icon" class="icon_select">
                 {section name=icon loop=$list_icons}
                 <option value="{display_clean($list_icons[icon].id_fontawesome_icon)}">{display_clean($list_icons[icon].icon)}</option>
                 {/section}
             </select>
         </div>
         <div class="col-md-4">
-            <label for="title">{lang('title')}*</label>
-            <input id="title" name="title" class="form-control" type="text"/>
+            <label for="new_embed_player_title">{lang('title')}*</label>
+            <input id="new_embed_player_title" name="new_embed_player_title" class="form-control" type="text"/>
         </div>
         <div class="col-md-4">
-            <label for="html">{lang('html')}*</label>
-            <textarea id="html" name="html" class="form-control"></textarea>
+            <label for="new_embed_player_html">{lang('html')}*</label>
+            <textarea id="new_embed_player_html" name="new_embed_player_html" class="form-control"></textarea>
         </div>
         <div class="col-md-2">
-            <label for="order">{lang('order')}</label>
-            <input id="order" name="order" class="form-control" type="number" min="0"/>
+            <label for="new_embed_player_order">{lang('order')}</label>
+            <input id="new_embed_player_order" name="new_embed_player_order" class="form-control" type="number" min="0" step="1"/>
         </div>
     </div>
     <div class="row marginTop alignCenter">
-        <input type="submit" class="btn btn-primary button" id="button" value="{lang('validate')}"/>
-        <button class="btn btn-default button" id="cancel">{lang code='cancel'}</button>
+        <button class="btn btn-primary button" id="embed_player_validate">{lang('validate')}</button>
+        <button class="btn btn-default button" id="embed_player_cancel">{lang code='cancel'}</button>
     </div>
 </form>
