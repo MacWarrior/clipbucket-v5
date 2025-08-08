@@ -27,6 +27,11 @@ class MWIP extends \Migration
             'en' => 'HTML'
         ]);
 
+        self::generateTranslation('confirm_delete_embed_player', [
+            'fr' => 'Êtes-vous sûr de vouloir supprimer ce lecteur intégré ?',
+            'en' => 'Are you sure you want to delete this embed player ?'
+        ]);
+
         $sql = 'CREATE TABLE IF NOT EXISTS `{tbl_prefix}video_embed` (
                     `id_video_embed` int(11) NOT NULL,
                     `videoid` bigint(20) NOT NULL,

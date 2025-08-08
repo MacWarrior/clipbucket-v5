@@ -94,12 +94,18 @@ assign('resolution_list', $resolution_list);
 $subtitle_list = get_video_subtitles($data) ?: [];
 assign('subtitle_list', $subtitle_list);
 
+$min_suffixe = System::isInDev() ? '' : '.min';
+
 if( config('enable_video_embed_players') == 'yes' ){
     $list_icons = SocialNetworks::getInstance()->getAllIcons();
     assign('list_icons', $list_icons);
 
     $embed_players_list = Video::getInstance()->getEmbedPlayers(['videoid' => $video_id]);
     assign('embed_players_list', $embed_players_list);
+
+    ClipBucket::getInstance()->addAdminJS([
+        'pages/edit_video/embed_players' . $min_suffixe . '.js'       => 'admin'
+    ]);
 }
 
 //Deleting comment
@@ -121,7 +127,6 @@ $params['order'] = ' comment_id DESC';
 $comments = Comments::getAll($params);
 assign('comments', $comments);
 
-$min_suffixe = System::isInDev() ? '' : '.min';
 ClipBucket::getInstance()->addAdminJS([
     'tag-it' . $min_suffixe . '.js'                            => 'admin',
     'pages/edit_video/edit_video' . $min_suffixe . '.js'       => 'admin',

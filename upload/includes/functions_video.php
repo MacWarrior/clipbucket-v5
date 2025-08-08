@@ -924,7 +924,7 @@ function remove_video_subtitles($vdetails): void
  */
 function remove_video_embed($vdetails): void
 {
-    Video::getInstance()->removeEmbedPlayer($vdetails['videoid']);
+    Video::getInstance()->removeEmbedPlayer(['videoid' => $vdetails['videoid']]);
 }
 
 /**
