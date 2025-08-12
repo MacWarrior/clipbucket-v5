@@ -1664,4 +1664,11 @@ VALUES ('admin_setting'),
        ('remote_play_invalid_extension'),
        ('remote_play_invalid_url'),
        ('remote_play_invalid_step'),
-       ('remote_play_invalid_duration');
+       ('remote_play_invalid_duration'),
+       ('option_enable_video_embed_players'),
+       ('video_embed_players'),
+       ('html'),
+       ('confirm_delete_embed_player'),
+       ('no_embed_player_to_display'),
+       ('add_new_embed_player'),
+       ('html_code_is_invalid');

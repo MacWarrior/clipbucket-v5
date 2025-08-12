@@ -325,7 +325,8 @@ INSERT INTO `{tbl_prefix}config` (`configid`, `name`, `value`) VALUES
     (NULL, 'can_upload_subtitles', 'yes'),
     (NULL, 'videos_video_style', 'modern'),
     (NULL, 'unique_random', HEX(RANDOM_BYTES(16))),
-    (NULL, 'enable_video_remote_play', 'yes');
+    (NULL, 'enable_video_remote_play', 'yes'),
+    (NULL, 'enable_video_embed_players', 'yes');
 
 INSERT INTO `{tbl_prefix}video_resolution` (`title`, `ratio`, `enabled`, `width`, `height`, `video_bitrate`) VALUES
 	('240p', '16/9', 1, 426, 240, 240000),
