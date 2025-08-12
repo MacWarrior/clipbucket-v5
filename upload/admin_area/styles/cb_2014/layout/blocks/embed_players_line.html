@@ -4,7 +4,7 @@
             <span class="fa fa-{$embed_player_line.icon}"></span>&nbsp;<span class="text-icon">{$embed_player_line.icon}</span>
         </div>
         <div class="input-{$embed_player_line.id_video_embed}" style="display:none;">
-            <select id="input_id_fontawesome_icon-{$embed_player_line.id_video_embed}" name="id_fontawesome_icon" class="icon_select">
+            <select id="input_id_fontawesome_icon-{$embed_player_line.id_video_embed}" name="id_fontawesome_icon" class="icon_select" style="width:100%;">
                 {foreach $list_icons as $icon}
                     <option value="{display_clean($icon.id_fontawesome_icon)}" {if $embed_player_line.id_fontawesome_icon == $icon.id_fontawesome_icon} selected="selected"{/if}>{display_clean($icon.icon)}</option>
                 {/foreach}

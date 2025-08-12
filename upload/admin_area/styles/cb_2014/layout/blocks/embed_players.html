@@ -7,13 +7,16 @@
         <th class="col-md-1">{ucfirst(lang('enabled'))}</th>
         <th class="col-md-2">{lang('action')}</th>
     </tr>
-    {foreach $embed_players_list as $embed_player_line}
-        {include file="$style_dir/blocks/embed_players_line.html" embed_player_line=$embed_player_line list_icons=$list_icons}
-    {/foreach}
+    <tr{if !empty($embed_players_list)} style="display:none;"{/if}><td colspan="6" class="empty_table">{lang code='no_embed_player_to_display'}</td></tr>
+    {if !empty($embed_players_list)}
+        {foreach $embed_players_list as $embed_player_line}
+            {include file="$style_dir/blocks/embed_players_line.html" embed_player_line=$embed_player_line list_icons=$list_icons}
+        {/foreach}
+    {/if}
 </table>
 
 <div class="alignCenter">
-    <button id="embed_player_hideshow" class="btn btn-primary btn-sm">Add new embed player</button>
+    <button id="embed_player_hideshow" class="btn btn-primary btn-sm">{lang code='add_new_embed_player'}</button>
 </div>
 
 <div style="display:none;" id="form_add_embed_player">

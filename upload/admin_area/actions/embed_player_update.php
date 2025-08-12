@@ -49,6 +49,13 @@ switch($_POST['mode'] ?? ''){
             break;
         }
 
+        if( !isValidHTML($_POST['html']) ){
+            e(lang('html_code_is_invalid'));
+            $success = false;
+            $data = [];
+            break;
+        }
+
         $params = [
             'id_video_embed' => $_POST['id_video_embed'],
             'id_fontawesome_icon' => $_POST['id_fontawesome_icon'],
@@ -73,6 +80,13 @@ switch($_POST['mode'] ?? ''){
 
         if( trim($_POST['order']) == '' ){
             $_POST['order'] = 0;
+        }
+
+        if( !isValidHTML($_POST['html']) ){
+            e(lang('html_code_is_invalid'));
+            $success = false;
+            $data = [];
+            break;
         }
 
         $id_video_embed = Video::getInstance()->createEmbedPlayer([

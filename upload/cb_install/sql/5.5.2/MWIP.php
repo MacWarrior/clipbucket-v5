@@ -32,6 +32,21 @@ class MWIP extends \Migration
             'en' => 'Are you sure you want to delete this embed player ?'
         ]);
 
+        self::generateTranslation('no_embed_player_to_display', [
+            'fr' => 'Aucun lecteur intégré à afficher',
+            'en' => 'No embed player to display'
+        ]);
+
+        self::generateTranslation('add_new_embed_player', [
+            'fr' => 'Ajouter un nouveau lecteur intégré',
+            'en' => 'Add new embed player'
+        ]);
+
+        self::generateTranslation('html_code_is_invalid', [
+            'fr' => 'Le code HTML est incorrect',
+            'en' => 'HTML code is invalid'
+        ]);
+
         $sql = 'CREATE TABLE IF NOT EXISTS `{tbl_prefix}video_embed` (
                     `id_video_embed` int(11) NOT NULL,
                     `videoid` bigint(20) NOT NULL,
