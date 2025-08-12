@@ -9,6 +9,25 @@
     var video_title = "{display_clean($vdata.title)}";
 </script>
 
+{if !empty($embed_players)}
+<ul class="default_bootstrap nav nav-tabs">
+    <li class="active"><a data-toggle="tab" href="#default_player"><img alt="favicon" src="{get_website_favicon_path()}" class="icon"/>{config('site_title')}</a></li>
+    <li class="dropdown">
+        <a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
+            {lang code='video_embed_players'} <span class="caret"></span>
+        </a>
+        <ul class="dropdown-menu">
+            {foreach $embed_players as $key => $embed}
+            <li><a data-toggle="tab" href="#embed_player_{$key}" title="{display_clean($embed.title)}"><span class="fa fa-{$embed.icon}"></span>&nbsp;<span class="text-icon">{display_clean($embed.title)}</span></a></li>
+            {/foreach}
+        </ul>
+    </li>
+</ul>
+
+<div class="tab-content">
+    <div id="default_player" class="tab-pane fade active in">
+{/if}
+
 <video playsinline id="cb_video_js_{$vdata.videoid}" class="video-js vjs-default-skin vjs-show-big-play-button-on-pause" height="100%" width="100%" poster="{getThumb vdetails=$vdata size=768x432}">
     {foreach $video_files as $file}
         {if strpos($file, 'no_video.mp4') !== false}
@@ -32,6 +51,15 @@
     {/if}
     <p class="vjs-no-js">To view this video please enable JavaScript, and consider upgrading to a web browser that <a href="http://videojs.com/html5-video-support/" target="_blank">supports HTML5 video</a></p>
 </video>
+
+{if !empty($embed_players)}
+    </div>
+    {foreach $embed_players as $key => $embed}
+        <div id="embed_player_{$key}" class="responsive-video tab-pane fade">
+            {$embed.html}
+        </div>
+    {/foreach}
+{/if}
 
 <script type="text/javascript">
     //player settings
@@ -113,7 +141,6 @@
         this.on('ended', function() {
             let player_tmp = this;
             this.bigPlayButton.hide();
-            //let replay = $('<button class="vjs-replay-button vjs-icon-replay" title="' + lang_player_replay + '" aria-label="replay"></button>');
             let replay = $('<button class="vjs-replay-button" type="button" title="' + lang_player_replay + '" aria-disabled="false"><span class="vjs-icon-placeholder" aria-hidden="true"></span><span class="vjs-control-text" aria-live="polite">' + lang_player_replay + '</span></button>');
             $(this.el()).append(replay);
             this.one('play', function() {

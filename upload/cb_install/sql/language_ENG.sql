@@ -3329,3 +3329,17 @@ INSERT INTO `{tbl_prefix}languages_translations` (`id_language_key`, `translatio
 VALUES ((SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE `language_key` = 'remote_play_invalid_step'), 'Invalid step', @language_id);
 INSERT INTO `{tbl_prefix}languages_translations` (`id_language_key`, `translation`, `language_id`)
 VALUES ((SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE `language_key` = 'remote_play_invalid_duration'), 'Invalid duration', @language_id);
+INSERT INTO `{tbl_prefix}languages_translations` (`id_language_key`, `translation`, `language_id`)
+VALUES ((SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE `language_key` = 'option_enable_video_embed_players'), 'Enable embed players', @language_id);
+INSERT INTO `{tbl_prefix}languages_translations` (`id_language_key`, `translation`, `language_id`)
+VALUES ((SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE `language_key` = 'video_embed_players'), 'Embed players', @language_id);
+INSERT INTO `{tbl_prefix}languages_translations` (`id_language_key`, `translation`, `language_id`)
+VALUES ((SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE `language_key` = 'html'), 'HTML', @language_id);
+INSERT INTO `{tbl_prefix}languages_translations` (`id_language_key`, `translation`, `language_id`)
+VALUES ((SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE `language_key` = 'confirm_delete_embed_player'), 'Are you sure you want to delete this embed player ?', @language_id);
+INSERT INTO `{tbl_prefix}languages_translations` (`id_language_key`, `translation`, `language_id`)
+VALUES ((SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE `language_key` = 'no_embed_player_to_display'), 'No embed player to display', @language_id);
+INSERT INTO `{tbl_prefix}languages_translations` (`id_language_key`, `translation`, `language_id`)
+VALUES ((SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE `language_key` = 'add_new_embed_player'), 'Add new embed player', @language_id);
+INSERT INTO `{tbl_prefix}languages_translations` (`id_language_key`, `translation`, `language_id`)
+VALUES ((SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE `language_key` = 'html_code_is_invalid'), 'HTML code is invalid', @language_id);

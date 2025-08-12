@@ -3,8 +3,6 @@ const THIS_PAGE = 'show_tool_log';
 const IS_AJAX = true;
 require_once dirname(__FILE__, 3) . '/includes/admin_config.php';
 
-User::getInstance()->hasPermissionAjax('admin_access');
-
 $tool = new AdminTool();
 $tool->initById($_POST['id_tool']);
 

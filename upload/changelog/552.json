@@ -1,6 +1,6 @@
 {
   "version":"5.5.2",
-  "revision":"121",
+  "revision":"122",
   "status":"stable",
   "detail":[
     {
@@ -17,6 +17,7 @@
         ,"Implement photo comments management from photo edition"
         ,"Implement stucked update detection"
         ,"Implement anonymous statistics"
+        ,"Implement alternative embed players"
         ,"Refactor conversion queue manager"
         ,"Refactor user levels management"
         ,"Add empty page title error"
@@ -178,8 +179,9 @@
     {
       "title": "Player",
       "description": [
-        "Implement replay button",
-        "Fix ChromeCast button"
+        "Implement replay button"
+        ,"Implement alternative embed players"
+        ,"Fix ChromeCast button"
       ]
     },
     {

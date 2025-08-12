@@ -920,6 +920,14 @@ function remove_video_subtitles($vdetails): void
 }
 
 /**
+ * @throws Exception
+ */
+function remove_video_embed($vdetails): void
+{
+    Video::getInstance()->removeEmbedPlayer(['videoid' => $vdetails['videoid']]);
+}
+
+/**
  * Function used to call functions
  * when video is going to watched
  * ie in watch_video.php

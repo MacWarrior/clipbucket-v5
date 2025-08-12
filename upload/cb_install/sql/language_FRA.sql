@@ -2581,3 +2581,17 @@ INSERT INTO `{tbl_prefix}languages_translations` (`id_language_key`, `translatio
 VALUES ((SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE `language_key` = 'remote_play_invalid_step'), 'Etape invalide', @language_id);
 INSERT INTO `{tbl_prefix}languages_translations` (`id_language_key`, `translation`, `language_id`)
 VALUES ((SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE `language_key` = 'remote_play_invalid_duration'), 'Durée invalide', @language_id);
+INSERT INTO `{tbl_prefix}languages_translations` (`id_language_key`, `translation`, `language_id`)
+VALUES ((SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE `language_key` = 'option_enable_video_embed_players'), 'Activer les lecteurs intégrés', @language_id);
+INSERT INTO `{tbl_prefix}languages_translations` (`id_language_key`, `translation`, `language_id`)
+VALUES ((SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE `language_key` = 'video_embed_players'), 'Lecteurs intégrés', @language_id);
+INSERT INTO `{tbl_prefix}languages_translations` (`id_language_key`, `translation`, `language_id`)
+VALUES ((SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE `language_key` = 'html'), 'HTML', @language_id);
+INSERT INTO `{tbl_prefix}languages_translations` (`id_language_key`, `translation`, `language_id`)
+VALUES ((SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE `language_key` = 'confirm_delete_embed_player'), 'Êtes-vous sûr de vouloir supprimer ce lecteur intégré ?', @language_id);
+INSERT INTO `{tbl_prefix}languages_translations` (`id_language_key`, `translation`, `language_id`)
+VALUES ((SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE `language_key` = 'no_embed_player_to_display'), 'Aucun lecteur intégré à afficher', @language_id);
+INSERT INTO `{tbl_prefix}languages_translations` (`id_language_key`, `translation`, `language_id`)
+VALUES ((SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE `language_key` = 'add_new_embed_player'), 'Ajouter un nouveau lecteur intégré', @language_id);
+INSERT INTO `{tbl_prefix}languages_translations` (`id_language_key`, `translation`, `language_id`)
+VALUES ((SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE `language_key` = 'html_code_is_invalid'), 'Le code HTML est incorrect', @language_id);

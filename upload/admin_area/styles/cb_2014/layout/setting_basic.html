@@ -1449,21 +1449,18 @@
                             </div>
                             <hr/>
                             <div class="row">
-                                <div class="col-md-8">
-                                    <label class="nowrap" for="video_categories" title="{lang('max_video_categories')}"><span class="fa fa-question-circle tips" title="{lang code='max_video_categories_hint'}"></span> {lang('max_video_categories')}</label>
-                                </div>
-                                <div class="col-md-4 row-size">
-                                    <input class="form-control" name="video_categories" id="video_categories" value="{$row.video_categories}"/>
-                                </div>
-                            </div>
-                            <hr/>
-                            <div class="row">
                                 <div class="col-md-4">
                                     <label class="nowrap" for="enable_video_categories" title="{lang('enable_categories')}">{lang('enable_categories')}</label>
                                 </div>
                                 <div class="col-md-2 row-size">
                                     <input value="yes" name="enable_video_categories" id="enable_video_categories" {if $row.enable_video_categories=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
                                     <span class="lbl"></span>
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="nowrap" for="video_categories" title="{lang('max_video_categories')}"><span class="fa fa-question-circle tips" title="{lang code='max_video_categories_hint'}"></span> {lang('max_video_categories')}</label>
+                                </div>
+                                <div class="col-md-2 row-size">
+                                    <input class="form-control" name="video_categories" id="video_categories" value="{$row.video_categories}"/>
                                 </div>
                             </div>
                             <hr/>
@@ -1568,6 +1565,16 @@
                                 </div>
                                 <div class="col-md-2">
                                     <input class="form-control" name="max_video_desc" id="max_video_desc" value="{$row.max_video_desc}"/>
+                                </div>
+                            </div>
+                            <hr/>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <label class="nowrap" for="enable_video_embed_players" title="{lang code='option_enable_video_embed_players'}">{lang code='option_enable_video_embed_players'}</label>
+                                </div>
+                                <div class="col-md-2 row-size">
+                                    <input value="yes" name="enable_video_embed_players" id="enable_video_embed_players" {if $row.enable_video_embed_players=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+                                    <span class="lbl"></span>
                                 </div>
                             </div>
                             <hr/>

@@ -313,6 +313,7 @@ $Smarty->register_modifier('formatfilesize', 'formatfilesize');
 # Registering Video Remove Functions
 register_action_remove_video('remove_video_thumbs');
 register_action_remove_video('remove_video_subtitles');
+register_action_remove_video('remove_video_embed');
 register_action_remove_video('remove_video_log');
 register_action_remove_video('remove_video_files');
 cb_register_function('plupload_photo_uploader', 'uploaderDetails');
