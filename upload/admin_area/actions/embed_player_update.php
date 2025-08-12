@@ -24,10 +24,7 @@ switch($_POST['mode'] ?? ''){
             ,'enabled'       => ($_POST['enabled'] == 'true') ? '1' : '0'
         ];
         $success = Video::getInstance()->updateEmbedPlayer($params);
-        $data = Video::getInstance()->getEmbedPlayers([
-            'id_video_embed' => $_POST['id_video_embed']
-            ,'first_only' => true
-        ]);
+        $data = [];
         break;
 
     case 'delete':
