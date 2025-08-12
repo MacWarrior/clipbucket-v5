@@ -186,7 +186,7 @@ function get_thumb($vdetails, $multi = false, $size = false, $type = false, $max
 
     if (empty($resThumb) && $resVideo['num'] === null && $vdetails['status'] == 'Successful') {
         //if no thumbs, we put some in db see \create_thumb()
-        return create_thumb($resThumb, $multi, $size);
+        return $multi ? [create_thumb($resThumb, $multi, $size)] : create_thumb($resThumb, $multi, $size);
     }
     if (empty($resThumb)) {
         return $multi ? [default_thumb($return_type)] : default_thumb($return_type);

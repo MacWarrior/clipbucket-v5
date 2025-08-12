@@ -1004,6 +1004,9 @@ class Video
         Clipbucket_db::getInstance()->execute($sql);
     }
 
+    /**
+     * @throws Exception
+     */
     public static function get_thumbs_preview($vdetails, string $size = '416x260'): string
     {
         if( config('enable_video_thumbs_preview') != 'yes'){
