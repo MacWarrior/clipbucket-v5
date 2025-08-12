@@ -1073,7 +1073,7 @@ class Video
      */
     public function getEmbedPlayers(array $params)
     {
-        if( !Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.2', '999') ){
+        if( !Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.2', '122') ){
             return false;
         }
 
@@ -1132,7 +1132,7 @@ class Video
      */
     public function removeEmbedPlayer(array $params): bool
     {
-        if( !Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.2', '999') ){
+        if( !Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.2', '122') ){
             return false;
         }
 
@@ -1165,7 +1165,7 @@ class Video
      */
     public function updateEmbedPlayer(array $params): bool
     {
-        if( !Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.2', '999') ){
+        if( !Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.2', '122') ){
             return false;
         }
 
@@ -1223,7 +1223,7 @@ class Video
      */
     public function createEmbedPlayer(array $params)
     {
-        if( !Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.2', '999') ){
+        if( !Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.2', '122') ){
             return false;
         }
 
