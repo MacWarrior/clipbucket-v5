@@ -20,7 +20,8 @@ switch($_POST['mode'] ?? ''){
             break;
         }
         $params = [
-            'enabled' => $_POST['enabled']
+            'id_video_embed' => $_POST['id_video_embed']
+            ,'enabled'       => ($_POST['enabled'] == 'true') ? '1' : '0'
         ];
         $success = Video::getInstance()->updateEmbedPlayer($params);
         $data = Video::getInstance()->getEmbedPlayers([

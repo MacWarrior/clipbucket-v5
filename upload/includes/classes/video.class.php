@@ -1205,9 +1205,9 @@ class Video
             $fields[] = 'order';
             $values[] = (int)$param_order;
         }
-        if( $param_enabled ){
+        if( $param_enabled !== false ){
             $fields[] = 'enabled';
-            $values[] = (int)$param_enabled;
+            $values[] = $param_enabled;
         }
 
         if( empty($fields) ){

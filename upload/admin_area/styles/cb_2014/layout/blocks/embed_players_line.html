@@ -24,7 +24,7 @@
         <input type="number" min="0" class="form-control input-{$embed_player_line.id_video_embed}" id="input_order-{$embed_player_line.id_video_embed}" name="order" value="{display_clean($embed_player_line.order)}" style="display:none;">
     </td>
     <td class="col-md-1" style="text-align:center; vertical-align:middle;">
-        <input value="1" name="enable_video_embed_players" id="enable_video_embed_players" {if $embed_player_line.enabled=='1'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+        <input value="1" name="enable" data-id="{$embed_player_line.id_video_embed}" id="enable_{$embed_player_line.id_video_embed}" {if $embed_player_line.enabled=='1'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
         <span class="lbl"></span>
     </td>
     <td class="col-md-2" style="text-align:center; vertical-align:middle;">

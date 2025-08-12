@@ -32,6 +32,24 @@ $(document).ready(function() {
             $('#edit-' + id).show();
         });
 
+        $('input[name="enable"]').off('change').on('change', function () {
+            let id = $(this).data('id');
+            $.post({
+                url: embed_player_update_page,
+                data: {
+                    mode: 'enable'
+                    , id_video_embed : id
+                    , enabled: $(this).is(':checked')
+                },
+                dataType: 'json',
+                success: function (response) {
+                    if(response.success !== true){
+                        $('.page-content').prepend(response.msg);
+                    }
+                }
+            });
+        });
+
         $('.confirm_update_embed_player').off('click').on("click", function () {
             let id = $(this).data('id');
             $.ajax({
@@ -155,7 +173,6 @@ $(document).ready(function() {
                 } else {
                     $('.page-content').prepend(response.msg);
                 }
-
             }
         });
     });
