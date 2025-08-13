@@ -125,3 +125,37 @@
 	left: 5px;
 }
 /* Channels page slogans */
+
+/* Thumbs preview */
+.thumb-preview {
+    position: relative;
+}
+.thumb-preview img {
+    transition: opacity .3s;
+}
+.thumb-preview .no-transition {
+    transition: none !important;
+}
+.thumb-overlay {
+    position:absolute;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    transition: opacity .3s;
+    opacity:0;
+    pointer-events:none;
+    z-index:1;
+}
+.thumb-preview .time,
+.thumb-preview .add-playlist {
+    position:relative;
+    z-index:2;
+}
+.fade-in {
+    opacity:1;
+}
+.fade-out {
+    opacity:0;
+}
+/* Thumbs preview */

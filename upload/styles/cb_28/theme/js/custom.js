@@ -505,22 +505,52 @@ document.addEventListener("DOMContentLoaded", function () {
         if (!Array.isArray(thumbnails) || thumbnails.length === 0) return;
         let index = 0;
         let interval;
+        let timeout;
         let parent = img.closest("div");
+        parent.classList.add("thumb-preview");
+        const overlay = img.cloneNode();
+        overlay.classList.add("thumb-overlay");
+        parent.insertBefore(overlay, img.nextSibling);
         parent.addEventListener("mouseenter", function () {
-            if( img.src ){
+            if (img.src) {
                 img.dataset.originalSrc = img.src;
             }
             interval = setInterval(() => {
                 index = (index + 1) % thumbnails.length;
                 if (thumbnails[index]) {
-                    img.src = thumbnails[index];
+                    const next = new Image();
+                    next.onload = function () {
+                        overlay.src = next.src;
+                        overlay.classList.add("fade-in");
+                        img.classList.add("fade-out");
+                        timeout = setTimeout(() => {
+                            img.src = next.src;
+                            img.classList.add("no-transition");
+                            overlay.classList.add("no-transition");
+                            overlay.classList.remove("fade-in");
+                            img.classList.remove("fade-out");
+                            void overlay.offsetWidth;
+                            img.classList.remove("no-transition");
+                            overlay.classList.remove("no-transition");
+                        }, 300);
+                    };
+                    next.src = thumbnails[index];
                 }
-            }, 500);
+            }, 600);
         });
         parent.addEventListener("mouseleave", function () {
             clearInterval(interval);
+            if (timeout) clearTimeout(timeout);
             if (img.dataset.originalSrc) {
+                overlay.classList.add("no-transition");
+                img.classList.add("no-transition");
+                overlay.classList.remove("fade-in");
+                img.classList.remove("fade-out");
+                overlay.src = img.dataset.originalSrc;
                 img.src = img.dataset.originalSrc;
+                void overlay.offsetWidth;
+                img.classList.remove("no-transition");
+                overlay.classList.remove("no-transition");
             }
             index = 0;
         });
