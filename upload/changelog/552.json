@@ -1,6 +1,6 @@
 {
   "version":"5.5.2",
-  "revision":"122",
+  "revision":"123",
   "status":"stable",
   "detail":[
     {
@@ -123,6 +123,7 @@
       "title": "Miscellaneous",
       "description": [
         "Implement sub-directory compatibility <i>(#529, #156)</i>"
+        ,"Implement port detection with port forwarding"
         ,"Refactor private videos user list"
         ,"Cleanup code"
         ,"Cleanup ajax calls and separate back & front calls"

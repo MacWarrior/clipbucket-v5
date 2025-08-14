@@ -31,6 +31,8 @@ class Network{
         '2c0f:f248::/32'
     ];
 
+    private static string $base_url = '';
+
     private static function is_ipv4_in_range(string $ip, string $range): bool
     {
         if (!str_contains($range, '/')){
@@ -278,15 +280,29 @@ class Network{
         unlink($filepath_destination . '_ongoing');
     }
 
+    private static function get_server_port(): string
+    {
+        $default = self::is_ssl() ? 443 : 80;
+        $port = null;
+
+        if( !empty($_SERVER['HTTP_HOST']) ) {
+            $port = parse_url(self::get_server_protocol() . $_SERVER['HTTP_HOST'], PHP_URL_PORT);
+        } else if( !empty($_SERVER['SERVER_PORT']) ) {
+            $port = $_SERVER['SERVER_PORT'];
+        }
+
+        return ($port !== $default) ? ':' . $port : '';
+    }
+
     public static function get_server_url(): string
     {
-        if( function_exists('config') && Clipbucket_db::isAvailable() && !empty(trim(config('base_url'))) && filter_var(config('base_url'), FILTER_VALIDATE_URL) ){
-            return rtrim(config('base_url'), '/') . '/';
+        if( !empty(self::$base_url) ){
+            return self::$base_url;
         }
-        
-        $port = '';
-        if( !in_array($_SERVER['SERVER_PORT'], [80, 443]) ){
-            $port = ':' . $_SERVER['SERVER_PORT'];
+
+        if( function_exists('config') && Clipbucket_db::isAvailable() && !empty(trim(config('base_url'))) && filter_var(config('base_url'), FILTER_VALIDATE_URL) ){
+            self::$base_url = rtrim(config('base_url'), '/') . '/';
+            return self::$base_url;
         }
 
         $subdir = str_replace('\\', '/', dirname($_SERVER['SCRIPT_NAME']));
@@ -305,7 +321,11 @@ class Network{
             $subdir = '';
         }
 
-        return rtrim(self::get_server_protocol() . $_SERVER['HTTP_HOST'] . $port . $subdir, '/') . '/';
+        $port = self::get_server_port();
+        $host = parse_url(self::get_server_protocol() . $_SERVER['HTTP_HOST'], PHP_URL_HOST);
+
+        self::$base_url = rtrim(self::get_server_protocol() . $host . $port . $subdir, '/') . '/';
+        return self::$base_url;
     }
 
     private static function get_server_protocol(): string

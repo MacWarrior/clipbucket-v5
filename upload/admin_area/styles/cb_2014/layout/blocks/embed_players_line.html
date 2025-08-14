@@ -4,7 +4,7 @@
             <span class="fa fa-{$embed_player_line.icon}"></span>&nbsp;<span class="text-icon">{$embed_player_line.icon}</span>
         </div>
         <div class="input-{$embed_player_line.id_video_embed}" style="display:none;">
-            <select id="input_id_fontawesome_icon-{$embed_player_line.id_video_embed}" name="id_fontawesome_icon" class="icon_select" style="width:100%;">
+            <select id="input_id_fontawesome_icon-{$embed_player_line.id_video_embed}" class="icon_select" style="width:100%;">
                 {foreach $list_icons as $icon}
                     <option value="{display_clean($icon.id_fontawesome_icon)}" {if $embed_player_line.id_fontawesome_icon == $icon.id_fontawesome_icon} selected="selected"{/if}>{display_clean($icon.icon)}</option>
                 {/foreach}
@@ -13,18 +13,18 @@
     </td>
     <td class="col-md-2">
         <span class="edit-{$embed_player_line.id_video_embed}" id="title_{$embed_player_line.id_video_embed}" title="{display_clean($embed_player_line.title)}">{display_clean($embed_player_line.title)}</span>
-        <input type="text" class="form-control input-{$embed_player_line.id_video_embed}" id="input_title-{$embed_player_line.id_video_embed}" name="title" value="{display_clean($embed_player_line.title)}" style="display:none;">
+        <input type="text" class="form-control input-{$embed_player_line.id_video_embed}" id="input_title-{$embed_player_line.id_video_embed}" value="{display_clean($embed_player_line.title)}" style="display:none;">
     </td>
     <td class="col-md-4">
         <span class="edit-{$embed_player_line.id_video_embed}" id="html_{$embed_player_line.id_video_embed}">{display_clean($embed_player_line.html)}</span>
-        <textarea name="html" class="form-control input-{$embed_player_line.id_video_embed}" id="input_html-{$embed_player_line.id_video_embed}" style="display:none;">{display_clean($embed_player_line.html)}</textarea>
+        <textarea class="form-control input-{$embed_player_line.id_video_embed}" id="input_html-{$embed_player_line.id_video_embed}" style="display:none;">{display_clean($embed_player_line.html)}</textarea>
     </td>
     <td class="col-md-1">
         <span class="edit-{$embed_player_line.id_video_embed}" id="order_{$embed_player_line.id_video_embed}">{display_clean($embed_player_line.order)}</span>
-        <input type="number" min="0" class="form-control input-{$embed_player_line.id_video_embed}" id="input_order-{$embed_player_line.id_video_embed}" name="order" value="{display_clean($embed_player_line.order)}" style="display:none;">
+        <input type="number" min="0" class="form-control input-{$embed_player_line.id_video_embed}" id="input_order-{$embed_player_line.id_video_embed}" value="{display_clean($embed_player_line.order)}" style="display:none;">
     </td>
     <td class="col-md-1" style="text-align:center; vertical-align:middle;">
-        <input value="1" name="enable" data-id="{$embed_player_line.id_video_embed}" id="enable_{$embed_player_line.id_video_embed}" {if $embed_player_line.enabled=='1'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+        <input value="1" data-id="{$embed_player_line.id_video_embed}" id="enable_{$embed_player_line.id_video_embed}" {if $embed_player_line.enabled=='1'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
         <span class="lbl"></span>
     </td>
     <td class="col-md-2" style="text-align:center; vertical-align:middle;">
