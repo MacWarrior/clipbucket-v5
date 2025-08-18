@@ -1,6 +1,6 @@
 {
   "version":"5.5.2",
-  "revision":"123",
+  "revision":"124",
   "status":"stable",
   "detail":[
     {
@@ -157,6 +157,7 @@
       "title": "Installation & Update",
       "description": [
         "Update default config"
+        ,"Update installation script to Debian 13 & Ubuntu 25.04"
         ,"Fix new installation errors <i>(#592)</i>"
         ,"Fix revision 5.5.1 - #334 DB upgrade"
         ,"Fix possible discord error during installation process"
