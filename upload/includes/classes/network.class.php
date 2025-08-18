@@ -291,7 +291,7 @@ class Network{
             $port = $_SERVER['SERVER_PORT'];
         }
 
-        return ($port !== $default) ? ':' . $port : '';
+        return (!empty($port) && $port !== $default) ? ':' . $port : '';
     }
 
     public static function get_server_url(): string
