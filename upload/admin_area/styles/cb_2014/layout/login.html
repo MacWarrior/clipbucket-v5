@@ -103,7 +103,7 @@
             const password = document.getElementById('password').value;
 
             if (username === '' || password === '') {
-                alert('Please fill all fields');
+                alert(lang['please_fill_all_fields']);
                 hideSpinner();
                 return false;
             }
@@ -119,13 +119,13 @@
                 });
 
                 if (mfa_code.trim() === '') {
-                    alert('Please enter MFA code');
+                    alert(lang['please_enter_mfa_code']);
                     hideSpinner();
                     return false;
                 }
 
                 if (mfa_code.length !== 6) {
-                    alert('Please enter 6 digits');
+                    alert(lang['please_enter_6_digit_mfa_code']);
                     hideSpinner();
                     return false;
                 }
