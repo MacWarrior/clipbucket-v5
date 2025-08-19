@@ -3,7 +3,6 @@ const THIS_PAGE = 'admin_check_update';
 const IS_AJAX = true;
 require_once dirname(__FILE__, 3) . '/includes/admin_config.php';
 
-User::getInstance()->hasPermissionAjax('admin_access');
 $return = [];
 if( config('enable_update_checker') == '1' ){
     Assign('update_checker_status', Update::getInstance()->getCoreUpdateStatus());

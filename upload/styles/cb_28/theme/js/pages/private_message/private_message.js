@@ -55,7 +55,7 @@ function init_tags_to(id_input, available_tags, list_tag) {
             var value = info.tagLabel;
             params.append('username', info.tagLabel);
             putSpinnerOnTag(info.tag);
-            fetch('actions/user_check.php', {
+            fetch(baseurl + 'actions/user_check.php', {
                 method: 'POST', headers: {'Accept': 'application/json'}, body: params
             })
                 .then(response => response.json())

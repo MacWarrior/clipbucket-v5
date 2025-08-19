@@ -1,8 +1,7 @@
 <?php
 const THIS_PAGE = 'category_make_default';
+const IS_AJAX = true;
 require_once dirname(__FILE__, 3) . '/includes/admin_config.php';
-
-User::getInstance()->hasPermissionAjax('admin_access');
 
 if (!empty($_POST['category_id'])) {
     Category::getInstance()->makeDefault($_POST['type'], $_POST['category_id']);

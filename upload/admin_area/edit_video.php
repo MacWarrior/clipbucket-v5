@@ -5,11 +5,15 @@ require_once dirname(__FILE__, 2) . '/includes/admin_config.php';
 User::getInstance()->hasPermissionOrRedirect('video_moderation',true);
 pages::getInstance()->page_redir();
 
+if( config('enable_video_remote_play') == 'yes' ){
+    new remote_play();
+}
+
 $video_id = $_GET['video'];
 
 //Updating Video Details
 if (isset($_POST['update'])) {
-    myquery::getInstance()->update_video();
+    CBvideo::getInstance()->update_video();
     if (empty(errorhandler::getInstance()->get_error())) {
         Video::getInstance()->setDefaultPicture($video_id, $_POST['default_thumb']?? '');
 
@@ -79,9 +83,9 @@ if (myquery::getInstance()->video_exists($video_id)) {
 } else {
     //add parameter to display message after redirect
     if ($_GET['mode'] == 'delete') {
-        SessionMessageHandler::add_message(lang('video_deleted'), 'm',  get_server_url() . DirPath::getUrl('admin_area') . 'video_manager.php');
+        SessionMessageHandler::add_message(lang('video_deleted'), 'm',  DirPath::getUrl('admin_area') . 'video_manager.php');
     }
-    SessionMessageHandler::add_message(lang('class_vdo_del_err'), 'e',  get_server_url() . DirPath::getUrl('admin_area') . 'video_manager.php');
+    SessionMessageHandler::add_message(lang('class_vdo_del_err'), 'e',  DirPath::getUrl('admin_area') . 'video_manager.php');
 }
 
 $resolution_list = getResolution_list($data);
@@ -89,6 +93,20 @@ assign('resolution_list', $resolution_list);
 
 $subtitle_list = get_video_subtitles($data) ?: [];
 assign('subtitle_list', $subtitle_list);
+
+$min_suffixe = System::isInDev() ? '' : '.min';
+
+if( config('enable_video_embed_players') == 'yes' ){
+    $list_icons = SocialNetworks::getInstance()->getAllIcons();
+    assign('list_icons', $list_icons);
+
+    $embed_players_list = Video::getInstance()->getEmbedPlayers(['videoid' => $video_id]);
+    assign('embed_players_list', $embed_players_list);
+
+    ClipBucket::getInstance()->addAdminJS([
+        'pages/edit_video/embed_players' . $min_suffixe . '.js'       => 'admin'
+    ]);
+}
 
 //Deleting comment
 if (isset($_POST['del_cmt'])) {
@@ -102,7 +120,6 @@ if (in_array($data['status'], ['Processing', 'Waiting'])) {
 }
 Assign('ids_to_check_progress', json_encode($ids_to_check_progress??[]));
 
-
 $params = [];
 $params['type'] = 'v';
 $params['type_id'] = $video_id;
@@ -110,7 +127,6 @@ $params['order'] = ' comment_id DESC';
 $comments = Comments::getAll($params);
 assign('comments', $comments);
 
-$min_suffixe = System::isInDev() ? '' : '.min';
 ClipBucket::getInstance()->addAdminJS([
     'tag-it' . $min_suffixe . '.js'                            => 'admin',
     'pages/edit_video/edit_video' . $min_suffixe . '.js'       => 'admin',

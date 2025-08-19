@@ -191,6 +191,7 @@ require_once DirPath::get('classes') . 'comments.class.php';
 require_once DirPath::get('classes') . 'gravatar.class.php';
 require_once DirPath::get('includes') . 'plugin.functions.php';
 require_once DirPath::get('includes') . 'plugins_functions.php';
+require_once DirPath::get('classes') . 'remote_play.class.php';
 
 $adsObj = new AdsManager();
 $formObj = new formObj();
@@ -244,22 +245,6 @@ Assign('js', DirPath::getUrl('js'));
 Assign('title', TITLE);
 Assign('PLUG_URL', DirPath::getUrl('plugins'));
 
-ClipBucket::getInstance()->upload_opt_list = [];
-
-if (config('enable_video_file_upload') == 'yes') {
-    ClipBucket::getInstance()->upload_opt_list['file_upload_div'] = [
-        'title'    => lang('upload_file'),
-        'function' => 'enable_video_file_upload'
-    ];
-}
-
-if (config('enable_video_remote_upload') == 'yes') {
-    ClipBucket::getInstance()->upload_opt_list['remote_upload_div'] = [
-        'title'    => lang('remote_upload'),
-        'function' => 'enable_video_remote_upload'
-    ];
-}
-
 # Configuration of time format
 $config['date'] = '%I:%M %p';
 $config['time'] = '%H:%M';
@@ -270,7 +255,6 @@ Assign('page', getConstant('PAGE'));
 
 # REGISTER OBJECTS FOR SMARTY
 global $Smarty;
-$Smarty->assign_by_ref('signup', $signup);
 $Smarty->assign_by_ref('adsObj', $adsObj);
 $Smarty->assign_by_ref('formObj', $formObj);
 $Smarty->assign_by_ref('lang_obj', Language::getInstance());
@@ -329,6 +313,7 @@ $Smarty->register_modifier('formatfilesize', 'formatfilesize');
 # Registering Video Remove Functions
 register_action_remove_video('remove_video_thumbs');
 register_action_remove_video('remove_video_subtitles');
+register_action_remove_video('remove_video_embed');
 register_action_remove_video('remove_video_log');
 register_action_remove_video('remove_video_files');
 cb_register_function('plupload_photo_uploader', 'uploaderDetails');

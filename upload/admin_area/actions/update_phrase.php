@@ -3,8 +3,6 @@ const THIS_PAGE = 'update_phrase';
 const IS_AJAX = true;
 require_once dirname(__FILE__, 3) . '/includes/admin_config.php';
 
-User::getInstance()->hasPermissionAjax('admin_access');
-
 $id_language_key = $_POST['id_language_key'];
 $translation = $_POST['translation'];
 $language_id = $_POST['language_id'];

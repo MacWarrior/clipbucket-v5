@@ -3,7 +3,6 @@ const THIS_PAGE = 'admin_progress_video';
 const IS_AJAX = true;
 require_once dirname(__FILE__, 3) . '/includes/admin_config.php';
 
-User::getInstance()->hasPermissionAjax('admin_access');
 $return = [];
 $params= ['videoids' => $_POST['ids']];
 if (config('enable_video_categories') !='no') {

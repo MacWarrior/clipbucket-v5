@@ -1,0 +1,28 @@
+<form method="post" enctype="multipart/form-data">
+    <div class="row">
+        <div class="col-md-2">
+            <label for="new_embed_player_id_fontawesome_icon">{lang('icon')}*</label>
+            <select id="new_embed_player_id_fontawesome_icon" class="icon_select">
+                {foreach $list_icons as $icon}
+                    <option value="{display_clean($icon.id_fontawesome_icon)}">{display_clean($icon.icon)}</option>
+                {/foreach}
+            </select>
+        </div>
+        <div class="col-md-4">
+            <label for="new_embed_player_title">{lang('title')}*</label>
+            <input id="new_embed_player_title" class="form-control" type="text"/>
+        </div>
+        <div class="col-md-4">
+            <label for="new_embed_player_html">{lang('html')}*</label>
+            <textarea id="new_embed_player_html" class="form-control"></textarea>
+        </div>
+        <div class="col-md-2">
+            <label for="new_embed_player_order">{lang('order')}</label>
+            <input id="new_embed_player_order" class="form-control" type="number" min="0" step="1"/>
+        </div>
+    </div>
+    <div class="row marginTop alignCenter">
+        <button class="btn btn-primary button" id="embed_player_validate">{lang('validate')}</button>
+        <button class="btn btn-default button" id="embed_player_cancel">{lang code='cancel'}</button>
+    </div>
+</form>

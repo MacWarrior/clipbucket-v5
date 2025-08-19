@@ -3,11 +3,9 @@ const THIS_PAGE = 'update_check_before_launch';
 const IS_AJAX = true;
 require_once dirname(__FILE__, 3) . '/includes/admin_config.php';
 
-User::getInstance()->hasPermissionAjax('admin_access');
-
-$response['core_checked'] = $_POST['core_checked'] ??false;
-$response['db_checked'] = $_POST['db_checked'] ??false;
-$response['conversion_checked'] = $_POST['conversion_checked'] ??false;
+$response['core_checked'] = $_POST['core_checked'] ?? false;
+$response['db_checked'] = $_POST['db_checked'] ?? false;
+$response['conversion_checked'] = $_POST['conversion_checked'] ?? false;
 $response['confirm_message'] = '';
 
 if (!$response['core_checked'])  {

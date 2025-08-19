@@ -555,6 +555,13 @@
                             </a>
                         </li>
                         {/if}
+                        {if config('enable_video_embed_players') == 'yes'}
+                            <li>
+                                <a data-toggle="tab" href="#embed_player">
+                                    <i class="glyphicon glyphicon-cloud-upload"></i> {lang code='video_embed_players'}
+                                </a>
+                            </li>
+                        {/if}
                         {if config('enable_video_view_history')=='yes'}
                             <li>
                                 <a data-toggle="tab" href="#view_history">
@@ -588,6 +595,11 @@
                         {if config('player_subtitles')}
                             <div id="subtitles" class="tab-pane fade">
                                 {include file="$style_dir/blocks/subtitle_list.html" videoid=$data.videoid vstatus=$data.status}
+                            </div>
+                        {/if}
+                        {if config('enable_video_embed_players') == 'yes'}
+                            <div id="embed_player" class="tab-pane fade">
+                                {include file="$style_dir/blocks/embed_players.html" videoid=$data.videoid embed_players_list=$embed_players_list}
                             </div>
                         {/if}
                         {if config('enable_video_view_history')=='yes'}

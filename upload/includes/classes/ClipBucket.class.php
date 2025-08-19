@@ -10,7 +10,7 @@ class ClipBucket
         return self::$instance;
     }
 
-    public $custom_video_file_funcs;
+    private $custom_video_file_funcs;
 
     var $JSArray = [];
     var $AdminJSArray = [];
@@ -166,6 +166,9 @@ class ClipBucket
         }
     }
 
+    /**
+     * @throws Exception
+     */
     public function getCacheKey()
     {
         if(System::isInDev()){
@@ -241,7 +244,7 @@ class ClipBucket
      *
      * @param $place
      *
-     * @return bool|mixed
+     * @return array|false
      */
     function get_anchor_function_list($place)
     {
@@ -750,7 +753,7 @@ class ClipBucket
      * @return array|void
      * @throws Exception
      */
-    function foot_menu($params = null)
+    public function foot_menu($params = null)
     {
         $pages = cbpage::getInstance()->get_pages(['active' => 'yes', 'display_only' => 'yes', 'order' => 'page_order ASC']);
 
@@ -770,7 +773,7 @@ class ClipBucket
     /**
      * Function used to clean requests
      */
-    function clean_requests(): void
+    private function clean_requests(): void
     {
         $posts = $_POST;
         $gets = $_GET;
@@ -816,7 +819,7 @@ class ClipBucket
         }
     }
 
-    function getMaxUploadSize($suffix = ''): string
+    public function getMaxUploadSize($suffix = ''): string
     {
         $list_upload_limits = [];
 
@@ -835,6 +838,28 @@ class ClipBucket
         }
 
         return (min($list_upload_limits)-0.01).$suffix;
+    }
+
+    public function get_custom_video_file_funcs()
+    {
+        return $this->custom_video_file_funcs;
+    }
+
+    public function register_custom_video_file_func($method, $class = null): bool
+    {
+        if (empty($method)) {
+            return false;
+        }
+
+        if (empty($class)) {
+            $this->custom_video_file_funcs[] = $method;
+        } else {
+            $this->custom_video_file_funcs[] = [
+                'class'    => $class
+                , 'method' => $method
+            ];
+        }
+        return true;
     }
 
 }

@@ -3,8 +3,6 @@ const THIS_PAGE = 'delete_thumbs';
 const IS_AJAX = true;
 require_once dirname(__FILE__, 3) . '/includes/admin_config.php';
 
-User::getInstance()->hasPermissionAjax('admin_access');
-
 # Generating more thumbs
 $data = Video::getInstance()->getOne(['videoid'=>$_POST['videoid']]);
 

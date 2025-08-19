@@ -1131,6 +1131,4 @@ class Upload
 
         return $fields;
     }
-
-
 }	

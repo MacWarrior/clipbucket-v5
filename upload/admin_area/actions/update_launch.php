@@ -3,7 +3,6 @@ const THIS_PAGE = 'admin_launch_update';
 const IS_AJAX = true;
 require_once dirname(__FILE__, 3) . '/includes/admin_config.php';
 
-User::getInstance()->hasPermissionAjax('admin_access');
 $core_tool = new AdminTool();
 
 $error_init = [];

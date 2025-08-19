@@ -186,7 +186,7 @@ function get_thumb($vdetails, $multi = false, $size = false, $type = false, $max
 
     if (empty($resThumb) && $resVideo['num'] === null && $vdetails['status'] == 'Successful') {
         //if no thumbs, we put some in db see \create_thumb()
-        return create_thumb($resThumb, $multi, $size);
+        return $multi ? [create_thumb($resThumb, $multi, $size)] : create_thumb($resThumb, $multi, $size);
     }
     if (empty($resThumb)) {
         return $multi ? [default_thumb($return_type)] : default_thumb($return_type);
@@ -920,6 +920,14 @@ function remove_video_subtitles($vdetails): void
 }
 
 /**
+ * @throws Exception
+ */
+function remove_video_embed($vdetails): void
+{
+    Video::getInstance()->removeEmbedPlayer(['videoid' => $vdetails['videoid']]);
+}
+
+/**
  * Function used to call functions
  * when video is going to watched
  * ie in watch_video.php
@@ -1085,31 +1093,9 @@ function get_vid_extensions(): array
     return explode(',', $exts);
 }
 
-function register_custom_video_file_func($method, $class = null): bool
-{
-    if (empty($method)) {
-        return false;
-    }
-
-    if (empty($class)) {
-        ClipBucket::getInstance()->custom_video_file_funcs[] = $method;
-    } else {
-        ClipBucket::getInstance()->custom_video_file_funcs[] = [
-            'class'    => $class
-            , 'method' => $method
-        ];
-    }
-    return true;
-}
-
-function get_custom_video_file_funcs()
-{
-    return ClipBucket::getInstance()->custom_video_file_funcs;
-}
-
 function exec_custom_video_file_funcs($vdetails, $hq = false)
 {
-    $custom_video_file_funcs = get_custom_video_file_funcs();
+    $custom_video_file_funcs = ClipBucket::getInstance()->get_custom_video_file_funcs();
     if (!empty($custom_video_file_funcs)) {
         foreach ($custom_video_file_funcs as $func) {
             if (is_array($func)) {

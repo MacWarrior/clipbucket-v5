@@ -1,5 +1,5 @@
 //include('popup_image.js');
-var page = 'actions/admin.php';
+var page = admin_url + 'actions/admin.php';
 
 function admin_spam_comment(cid) {
     $.post(page, {
@@ -59,7 +59,7 @@ function get_readable_filesize(bytes) {
 function getModalUploadSubtitle(video_id) {
     showSpinner();
     $.ajax({
-        url: "actions/subtitle_popin_upload.php",
+        url: admin_url + "actions/subtitle_popin_upload.php",
         type: "POST",
         data: {videoid: video_id},
         dataType: 'json',

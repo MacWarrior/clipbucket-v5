@@ -2,6 +2,10 @@
 
 class mass_upload extends Upload
 {
+    /**
+     * @throws \Predis\Connection\ConnectionException
+     * @throws \Predis\Response\ServerException
+     */
     function get_video_files_list_clear()
     {
         return $this->get_video_files_list(true);

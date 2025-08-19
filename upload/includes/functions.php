@@ -198,6 +198,26 @@ function isValidEmail($email)
     return filter_var($email, FILTER_VALIDATE_EMAIL);
 }
 
+function isValidHTML(string $html): bool {
+    if (!extension_loaded('libxml') || !class_exists('DOMDocument')) {
+        return true;
+    }
+
+    if (!preg_match('/<[^>]+>/', $html)) {
+        return false;
+    }
+
+    libxml_use_internal_errors(true);
+
+    $dom = new DOMDocument();
+
+    $loaded = $dom->loadHTML($html, LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
+
+    $errors = libxml_get_errors();
+    libxml_clear_errors();
+
+    return $loaded !== false && empty($errors);
+}
 
 /**
  * Get Directory Size - get_video_file($vdata,$no_video,false);
@@ -616,8 +636,6 @@ function apply_func($func, $val)
  * Function used to validate YES or NO input
  *
  * @param : { string } { $input } { field to be checked }
- *
- * @param $return
  *
  * @return string
  */
