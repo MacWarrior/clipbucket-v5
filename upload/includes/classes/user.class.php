@@ -1500,7 +1500,9 @@ class userquery extends CBCategory
                     Session::getInstance()->timeout = 86400 * 7;
                 }
                 //reset MFA code
-                Clipbucket_db::getInstance()->update(tbl('users'), ['mfa_code', 'mfa_date'], ['null','null'], 'username = \''.$username.'\'');
+                if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.2', '999') ) {
+                    Clipbucket_db::getInstance()->update(tbl('users'), ['mfa_code', 'mfa_date'], ['null','null'], 'username = \''.$username.'\'');
+                }
                 return $this->init_session($udetails);
             }
         }

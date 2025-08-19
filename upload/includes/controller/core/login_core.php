@@ -15,7 +15,7 @@ if (empty($_POST['username']) || empty($_POST['password'])) {
     $remember_me = mysql_clean($_POST['remember_me'] ?? false);
     //check MFA
     $code_mfa_ok = true;
-    if (config('enable_multi_factor_authentification') != 'disabled' && userquery::getInstance()->authenticate($username, $password)) {
+    if (in_array(config('enable_multi_factor_authentification'), ['enable']) && userquery::getInstance()->authenticate($username, $password)) {
         if (empty($_POST['mfa_code'])) {
             $need_mfa = User::checkAndSendMFAmail($username);
             $code_mfa_ok = !$need_mfa;
