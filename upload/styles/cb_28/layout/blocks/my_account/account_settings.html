@@ -66,10 +66,10 @@
                 </div>
             {/foreach}
         {/if}
-        {if config('enable_multi_factor_authentification') == 'allowed' || Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.2', '999')}
+        {if if in_array(config('enable_multi_factor_authentification'), ['allowed']) || Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.2', '999')}
         <div class="row">
             <div class="form-group">
-                {if config('enable_multi_factor_authentification') == 'allowed'}
+                {if in_array(config('enable_multi_factor_authentification'), ['allowed'])}
                 <div class="col-md-6">
                     <label for="multi_factor_auth">{lang code="option_enable_multi_factor_authentification"}</label>
                     <select name="multi_factor_auth" id="multi_factor_auth" class="form-control">

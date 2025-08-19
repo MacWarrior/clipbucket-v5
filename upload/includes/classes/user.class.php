@@ -1166,7 +1166,7 @@ class User
      */
     public static function checkAndSendMFAmail($username): bool
     {
-        if (config('enable_multi_factor_authentification') == 'allowed') {
+        if( in_array(config('enable_multi_factor_authentification'), ['allowed']) ){
             $user = User::getInstance()->getOne(['username_strict' => $username]);
             if (!empty($user) && $user['email_confirmed'] && $user['multi_factor_auth']=='allowed_email') {
                 $mfa_code = str_pad(rand(0, 999999), 6, '0', STR_PAD_LEFT);
@@ -1529,26 +1529,26 @@ class userquery extends CBCategory
         $user = $this->get_user_id($username);
         if (!$user) {
             return false;
-        } else {
-            $uid = $user['userid'];
-            $pass = pass_code($password, $uid);
-            $udetails = $this->get_user_with_pass($username, $pass);
+        }
+        
+        $uid = $user['userid'];
+        $pass = pass_code($password, $uid);
+        $udetails = $this->get_user_with_pass($username, $pass);
 
-            // This code is used to update user password hash, may be deleted someday
-            if (!$udetails) // Let's try old password method
-            {
-                $oldpass = pass_code_unsecure($password);
-                $udetails = $this->get_user_with_pass($username, $oldpass);
+        // This code is used to update user password hash, may be deleted someday
+        if (!$udetails) // Let's try old password method
+        {
+            $oldpass = pass_code_unsecure($password);
+            $udetails = $this->get_user_with_pass($username, $oldpass);
 
-                // This account still use old password method, let's update it
-                if ($udetails) {
-                        if( Update::IsCurrentDBVersionIsHigherOrEqualTo('5.0.0', '1') ){
-                            Clipbucket_db::getInstance()->update(tbl('users'), ['password'], [$pass], ' userid=\'' . (int)$uid . '\'');
-                    }
+            // This account still use old password method, let's update it
+            if ($udetails) {
+                if( Update::IsCurrentDBVersionIsHigherOrEqualTo('5.0.0', '1') ){
+                    Clipbucket_db::getInstance()->update(tbl('users'), ['password'], [$pass], ' userid=' . (int)$uid);
                 }
             }
-
         }
+
         return $udetails ?? false;
     }
 
