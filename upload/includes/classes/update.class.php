@@ -402,7 +402,9 @@ class Update
          } else {
             $tool = AdminTool::getUpdateCoreTool();
         }
-        $lastStart = $tool->getLastStart();
+        if (!empty($tool->getLastLogs()['logs'])) {
+            $lastStart = $tool->getLastStart();
+        }
         assign('id', $tool->getId());
         assign('lastStart', $lastStart);
         assign('launch_wip', $this->isWIPFile());
