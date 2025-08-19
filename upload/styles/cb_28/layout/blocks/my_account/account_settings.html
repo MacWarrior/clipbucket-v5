@@ -52,7 +52,7 @@
                 {ANCHOR place=$signup_fields.dob.anchor_after}
             </div>
         </div>
-        {if $cust_signup_fields}
+        {if !empty($cust_signup_fields)}
             {foreach from=$cust_signup_fields item=field}
                 <div class="form-group">
                     <label for="{$field.id}">{$field.title}</label>
@@ -66,32 +66,33 @@
                 </div>
             {/foreach}
         {/if}
+        {if config('enable_multi_factor_authentification') == 'allowed' || Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.2', '999')}
         <div class="row">
             <div class="form-group">
-                {if config('enable_multi_factor_authentification') == 'allowed' }
-                    <div class="col-md-6">
-                        <label for="multi_factor_auth">{lang code="option_enable_multi_factor_authentification"}</label>
-                        <select name="multi_factor_auth" id="multi_factor_auth" class="form-control">
-                            <option value="disabled" {if $user.multi_factor_auth == 'disabled'}selected{/if}>{lang('disabled')|ucfirst}</option>
-                            <option value="allowed_email" {if $user.multi_factor_auth == 'allowed_email'}selected{/if} {if !$user.email_confirmed}disabled="disabled" title="{lang('tips_need_confirm_email')}" {/if} >{lang('allowed_by_email')}</option>
-                        </select>
-                    </div>
+                {if config('enable_multi_factor_authentification') == 'allowed'}
+                <div class="col-md-6">
+                    <label for="multi_factor_auth">{lang code="option_enable_multi_factor_authentification"}</label>
+                    <select name="multi_factor_auth" id="multi_factor_auth" class="form-control">
+                        <option value="disabled" {if $user.multi_factor_auth == 'disabled'}selected{/if}>{lang('disabled')|ucfirst}</option>
+                        <option value="allowed_email" {if $user.multi_factor_auth == 'allowed_email'}selected{/if} {if !$user.email_confirmed}disabled="disabled" title="{lang('tips_need_confirm_email')}" {/if} >{lang('allowed_by_email')}</option>
+                    </select>
+                </div>
                 {/if}
-                {if !$user.email_confirmed && Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.2', '999')}
-                    <div class="col-md-2" style="padding-top: 29px;">
-                        <button type="button" class="btn btn-success" id="confirmEmailBtn">{lang code='confirm_email'}</button>
-                    </div>
+                {if !$user.email_confirmed}
+                <div class="col-md-2" style="padding-top:29px;">
+                    <button type="button" class="btn btn-success" id="confirmEmailBtn">{lang code='confirm_email'}</button>
+                </div>
                 {/if}
             </div>
         </div>
-        <br/>
+        {/if}
         <hr/>
         <div class="row">
             <div class="form-group">
-                <button name="update_profile" value="submit" class="btn btn-primary"> {lang code='update'}</button>
+                <button name="update_profile" value="submit" class="btn btn-primary">{lang code='update'}</button>
                 {if config('enable_user_self_deletion')=='yes'}
                     <input type="hidden" name="drop_account" value="yes" disabled/>
-                    <input type="button" id="drop_account" class="btn btn-danger {if $only_admin} disabled" title="{lang('cant_delete_only_admin')}" {/if} value="{lang code='drop_my_account'}"/>
+                    <input type="button" id="drop_account" class="btn btn-danger{if $only_admin} disabled" title="{lang('cant_delete_only_admin')}"{/if} value="{lang code='drop_my_account'}"/>
                     <div class="modal fade" id="confirmDropAccountModal" tabindex="-1" role="dialog" aria-labelledby="confirmModalLabel">
                         <div class="modal-dialog" role="document">
                             <div class="modal-content">

@@ -33,6 +33,7 @@
         </div>
     </div>
 </div>
+{if config('enable_multi_factor_authentification') == 'enabled'}
 <div class="modal fade" id="enterMFACodeModal" tabindex="-1" role="dialog" aria-labelledby="confirmModalLabel">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -63,3 +64,4 @@
     lang['please_enter_6_digit_mfa_code'] = '{lang code="please_enter_6_digit_mfa_code"}';
     lang['please_fill_all_fields'] = '{lang code="please_fill_all_fields"}';
 </script>
+{/if}
