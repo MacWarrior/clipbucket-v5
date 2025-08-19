@@ -84,6 +84,16 @@ class MWIP extends \Migration
             'en'=>'You can\'t activate multi factor authentication until your email address is confirmed'
         ]);
 
+        self::generateTranslation('please_enter_6_digit_mfa_code', [
+            'fr'=>'Veuillez entrer un code de 6 chiffres',
+            'en'=>'Please enter a 6 digit code'
+        ]);
+
+        self::generateTranslation('please_fill_all_fields', [
+            'fr'=>'Veuillez remplir tous les champs',
+            'en'=>'Please fill all fields'
+        ]);
+
         self::alterTable('ALTER TABLE `{tbl_prefix}users` ADD `email_confirmed` BOOL DEFAULT FALSE', [
             'table' => 'users'
         ], [

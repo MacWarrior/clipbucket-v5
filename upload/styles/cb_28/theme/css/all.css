@@ -7083,3 +7083,7 @@ span.tagit-label i.fa {
 #enterMFACodeModal > div > div > div.modal-body {
   min-height: 80px;
 }
+
+#enterMFACodeModal > div > div > div.modal-body > .alert {
+    width: 100%;
+}

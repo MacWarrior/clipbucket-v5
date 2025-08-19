@@ -69,14 +69,21 @@
     }
 
     #mfa_code input {
-        width: 26px;
-        padding-left: 4px;
-        float: left;
+        width: 35px;
         margin-left: 5px;
-        margin-bottom: 10px;
+        display: inline;
+    }
+
+    #enterMFACodeModal > div > div > div.modal-body > .alert {
+        width: 100%;
     }
 </style>
 <script>
+    lang = [];
+    lang['please_enter_mfa_code'] = '{lang code="please_enter_mfa_code"}';
+    lang['please_enter_6_digit_mfa_code'] = '{lang code="please_enter_6_digit_mfa_code"}';
+    lang['please_fill_all_fields'] = '{lang code="please_fill_all_fields"}';
+
     {if config('enable_multi_factor_authentification') != 'disabled'}
     const inputs = document.querySelectorAll('#mfa_code input');
     let modalElement = document.getElementById('enterMFACodeModal');
@@ -110,17 +117,18 @@
                     mfa_code += input.value;
                 });
 
+                if (mfa_code.trim() === '') {
+                    alert('Please enter MFA code');
+                    hideSpinner();
+                    return false;
+                }
+
                 if (mfa_code.length !== 6) {
                     alert('Please enter 6 digits');
                     hideSpinner();
                     return false;
                 }
 
-                if (mfa_code.trim() === '') {
-                    alert('Please enter MFA code');
-                    hideSpinner();
-                    return false;
-                }
             }
 
             fetch(admin_url + 'actions/login.php', {
@@ -143,9 +151,9 @@
                     } else if (response.success) {
                         window.location.href = response.redirect;
                     }
-                    const pageContent = document.querySelector('.mrgnt10');
+                    const pageContent = document.querySelector('#enterMFACodeModal > div > div > div.modal-body > .form-group');
                     if (pageContent) {
-                        pageContent.insertAdjacentHTML('afterbegin', response.msg);
+                        insertHTMLAfter(pageContent, response.msg);
                     }
                 })
                 .catch(err => {
@@ -216,6 +224,13 @@
         modalElement.querySelectorAll('[data-dismiss="modal"]').forEach(function (btn) {
             btn.addEventListener('click', closeModal);
         });
+    }
+
+    function insertHTMLAfter(referenceNode, htmlString) {
+        const range = document.createRange();
+        range.setStartAfter(referenceNode);
+        const fragment = range.createContextualFragment(htmlString);
+        referenceNode.parentNode.insertBefore(fragment, referenceNode.nextSibling);
     }
     {/if}
 </script>

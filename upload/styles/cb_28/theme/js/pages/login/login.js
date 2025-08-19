@@ -19,7 +19,7 @@ document.addEventListener('DOMContentLoaded', function () {
         const remember_me = document.getElementById('remember_me').value;
 
         if (username === '' || password === '') {
-            alert('Please fill all fields');
+            alert(lang['please_fill_all_fields']);
             hideSpinner();
             return false;
         }
@@ -36,13 +36,13 @@ document.addEventListener('DOMContentLoaded', function () {
             });
 
             if (mfa_code.trim() === '') {
-                alert('Please enter MFA code');
+                alert(lang['please_enter_mfa_code']);
                 hideSpinner();
                 return false;
             }
 
             if (mfa_code.length !== 6) {
-                alert('Please enter 6 digits');
+                alert(lang['please_enter_6_digit_mfa_code']);
                 hideSpinner();
                 return false;
             }
@@ -68,7 +68,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 } else if (response.success) {
                     window.location.href = response.redirect;
                 }
-                const pageContent = document.querySelector('.taskHandler');
+                const pageContent = document.querySelector('#enterMFACodeModal > div > div > div.modal-body > .form-group');
                 if (pageContent) {
                     insertHTMLAfter(pageContent, response.msg);
                 }

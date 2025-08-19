@@ -1698,4 +1698,6 @@ VALUES ('ongoing_conversion'),
        ('email_already_confirmed'),
        ('email_forgot_password_sended'),
        ('forgot_password_tips'),
-       ('invalid_mfa_code');
+       ('invalid_mfa_code'),
+       ('please_enter_6_digit_mfa_code'),
+       ('please_fill_all_fields');
