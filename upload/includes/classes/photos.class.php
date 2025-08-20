@@ -341,7 +341,12 @@ class Photo
         }
 
         if( $param_collection_id ){
-            $join[] = 'INNER JOIN ' . cb_sql_table($collection_items_table) . ' ON ' . $collection_items_table . '.collection_id = ' . $param_collection_id . ' AND photos.photo_id = ' . $collection_items_table . '.object_id';
+            if( is_array($param_collection_id) ){
+                $tmp_cond = ' IN (' . implode(',', $param_collection_id) . ')';
+            } else {
+                $tmp_cond = ' = ' . $param_collection_id;
+            }
+            $join[] = 'INNER JOIN ' . cb_sql_table($collection_items_table) . ' ON ' . $collection_items_table . '.collection_id' . $tmp_cond . ' AND photos.photo_id = ' . $collection_items_table . '.object_id';
         } else {
             $join[] = 'LEFT JOIN  ' . cb_sql_table($collection_items_table) . ' ON  photos.photo_id = ' . $collection_items_table . '.object_id AND ' . $collection_items_table . '.type = \'photos\'';
         }

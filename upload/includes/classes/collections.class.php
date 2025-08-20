@@ -249,6 +249,8 @@ class Collection
         $param_count = $params['count'] ?? false;
         $param_first_only = $params['first_only'] ?? false;
         $param_with_items = $params['with_items'] ?? false;
+        $param_with_sub_items = $params['with_sub_items'] ?? false;
+        $param_count_items_only = $params['count_items_only'] ?? false;
 
         $conditions = [];
         if( $param_collection_id !== false ){
@@ -285,9 +287,6 @@ class Collection
         }
         if( $param_type ){
             $conditions[] = $this->getTableName() . '.type = \'' . mysql_clean($param_type) . '\'';
-        }
-        if( $param_parents_only ){
-            $conditions[] = $this->getTableName() . '.collection_id_parent IS NULL';
         }
         if( $param_parents_only ){
             $conditions[] = $this->getTableName() . '.collection_id_parent IS NULL';
@@ -357,18 +356,24 @@ class Collection
         if( !User::getInstance()->hasAdminAccess() ){
             $conditions[] = $this->getGenericConstraints();
             if ($param_can_upload ) {
-                $conditions[] = '(' . $this->getTableName() . '.public_upload = \'yes\' OR ' . $this->getTableName() . '.userid = ' . User::getInstance()->getCurrentUserID() . ')';
+                $cond_temp = $this->getTableName() . '.public_upload = \'yes\'';
+                if( User::getInstance()->isUserConnected() ) {
+                    $cond_temp .= ' OR ' . $this->getTableName() . '.userid = ' . (int)User::getInstance()->getCurrentUserID();
+                }
+                $conditions[] = '(' .$cond_temp . ')';
             }
         }
 
         $join = [];
 
         $need_collection_enfant = false;
-        $total_objects = 'COUNT( DISTINCT(CASE WHEN ' . $this->getTableName() . '.type = \'videos\' THEN video.videoid ELSE photos.photo_id END))';
-
         if( config('enable_sub_collection') == 'yes' && Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.0', '43') ){
-            $total_objects .= ' + COUNT(DISTINCT(collections_enfant.collection_id))';
             $need_collection_enfant = true;
+        }
+
+        $total_objects = 'COUNT( DISTINCT(CASE WHEN ' . $this->getTableName() . '.type = \'videos\' THEN video.videoid ELSE photos.photo_id END))';
+        if( $need_collection_enfant ){
+            $total_objects .= ' + COUNT(DISTINCT(collections_enfant.collection_id))';
         }
 
         if( !$param_with_items && $param_count ){
@@ -377,9 +382,7 @@ class Collection
             $select = $this->getAllFields();
             $select[] = 'users.username AS user_username, users.email, users.dob';
 
-            if( config('enable_sub_collection') == 'yes' && Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.0', '43') ){
-                $need_collection_enfant = true;
-
+            if( $need_collection_enfant ){
                 $select[] = 'collection_parent.collection_name AS collection_name_parent';
                 $join[] =' LEFT JOIN ' . tbl('collections') . ' collection_parent ON collections.collection_id_parent = collection_parent.collection_id';
             }
@@ -393,28 +396,25 @@ class Collection
             }
 
             if ($param_display_indent && User::getInstance()->isUserConnected()) {
-                $select[] = 'CASE WHEN '.$this->getTableName().'.userid = '.mysql_clean(User::getInstance()->getCurrentUserID()).' THEN 1 ELSE 0 END AS is_user_collection';
-                $select[] = 'CASE WHEN '.$this->getTableName().'.userid IN (SELECT contact_userid FROM '.tbl('contacts').' WHERE confirmed = \'yes\' AND userid = '.mysql_clean(User::getInstance()->getCurrentUserID()).' ) THEN 1 ELSE 0 END AS is_contact_collection';
+                $select[] = 'CASE WHEN '.$this->getTableName().'.userid = ' .  (int)User::getInstance()->getCurrentUserID() . ' THEN 1 ELSE 0 END AS is_user_collection';
+                $select[] = 'CASE WHEN '.$this->getTableName().'.userid IN (SELECT contact_userid FROM '.tbl('contacts').' WHERE confirmed = \'yes\' AND userid = ' . (int)User::getInstance()->getCurrentUserID() . ' ) THEN 1 ELSE 0 END AS is_contact_collection';
             }
         }
 
         if (config('hide_empty_collection') == 'yes' && $param_hide_empty_collection !== 'no' && !User::getInstance()->hasAdminAccess()) {
             $hide_empty_collection = $total_objects . ' > 0';
-            if( !empty(User::getInstance()->getCurrentUserID()) ){
+            if( User::getInstance()->isUserConnected() ){
                 if ($param_can_upload) {
                     $upload_condition = ' OR collections.public_upload = \'yes\'';
                 }
-                $hide_empty_collection = '(' . $hide_empty_collection . ' OR ' . $this->getTableName() . '.userid = ' . User::getInstance()->getCurrentUserID() . $upload_condition .' )';
+                $hide_empty_collection = '(' . $hide_empty_collection . ' OR ' . $this->getTableName() . '.userid = ' . (int)User::getInstance()->getCurrentUserID() . $upload_condition .' )';
             }
             $param_having[] = $hide_empty_collection;
-
-            if( config('enable_sub_collection') == 'yes' && Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.0', '43') ){
-                $need_collection_enfant = true;
-            }
         }
 
         if( $need_collection_enfant ){
             $join[] = 'LEFT JOIN ' . tbl('collections') .' AS collections_enfant ON collections.collection_id = collections_enfant.collection_id_parent';
+            $select[] = 'COUNT(DISTINCT(collections_enfant.collection_id)) as nb_childs';
         }
 
         $group = [$this->getTableName() . '.collection_id'];
@@ -505,9 +505,41 @@ class Collection
         if( $param_with_items ){
             $count = 0;
             foreach($result AS &$collection){
+
                 $params = [];
-                $params['collection_id'] = $collection['collection_id'];
+
+                if( $need_collection_enfant && $param_with_sub_items && !empty($collection['nb_childs']) ){
+                    $sql_childs = 'WITH RECURSIVE descendants AS (
+                            SELECT
+                                c.collection_id,
+                                0 AS depth,
+                                CAST(c.collection_id AS CHAR(2000)) AS path
+                            FROM cb_collections c
+                            WHERE c.collection_id = ' . $collection['collection_id'] . '
+                            UNION ALL
+                            SELECT
+                                ch.collection_id,
+                                d.depth + 1 AS depth,
+                                CONCAT(d.path, \',\', ch.collection_id) AS path
+                            FROM cb_collections ch
+                            JOIN descendants d ON ch.collection_id_parent = d.collection_id
+                            WHERE d.depth < 100
+                                AND FIND_IN_SET(ch.collection_id, d.path) = 0
+                        )
+                        SELECT collection_id
+                        FROM descendants
+                        WHERE depth > 0;';
+                    $collection_child_list = Clipbucket_db::getInstance()->_select($sql_childs, 60, 'collection_childrens_'. $collection['collection_id']);
+                    $params['collection_id'] = array_map(fn($item) => $item['collection_id'], $collection_child_list);
+                    $params['collection_id'][] = $collection['collection_id'];
+                } else {
+                    $params['collection_id'] = $collection['collection_id'];
+                }
+
                 $params['show_unlisted'] = true;
+                if( $param_count_items_only ){
+                    $params['count'] = true;
+                }
                 $order_item = '';
                 if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '299')) {
                     $order_item = SortType::getSortLabelById($param_order_item ?: $collection['sort_type']);
@@ -526,6 +558,13 @@ class Collection
                     }
                     $collection['items'] = Photo::getInstance()->getAll($params);
                 }
+
+                if( $param_count_items_only ){
+                    $collection['total_objects'] = $collection['items'];
+                } else {
+                    $collection['total_objects'] = count($collection['items']);
+                }
+                $collection['total_objects'] += $collection['nb_childs'];
 
                 if ($param_count) {
                     if (!empty($collection['items'])) {

@@ -1,6 +1,6 @@
 {
   "version":"5.5.2",
-  "revision":"125",
+  "revision":"126",
   "status":"stable",
   "detail":[
     {
@@ -67,6 +67,7 @@
         ,"Implement default thumb selection and subtitle upload on video upload form"
         ,"Implement user check on internal messaging"
         ,"Implement remote play"
+        ,"Implement sub-collection items display & count"
         ,"Refactor friends requests & management"
         ,"Refactor collection selections"
         ,"Update video & photos management pages display"

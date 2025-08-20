@@ -487,7 +487,13 @@ class Video
 
         if( $param_collection_id ){
             $collection_items_table = Collection::getInstance()->getTableNameItems();
-            $join[] = 'INNER JOIN ' . cb_sql_table($collection_items_table) . ' ON ' . $collection_items_table . '.collection_id = ' . $param_collection_id . ' AND ' . $this->getTableName() . '.videoid = ' . $collection_items_table . '.object_id';
+
+            if( is_array($param_collection_id) ){
+                $tmp_cond = ' IN (' . implode(',', $param_collection_id) . ')';
+            } else {
+                $tmp_cond = ' = ' . $param_collection_id;
+            }
+            $join[] = 'INNER JOIN ' . cb_sql_table($collection_items_table) . ' ON ' . $collection_items_table . '.collection_id' . $tmp_cond . ' AND ' . $this->getTableName() . '.videoid = ' . $collection_items_table . '.object_id';
         }
 
         if (!$param_not_join_user_profile && $param_get_detail) {
