@@ -94,6 +94,11 @@ class MWIP extends \Migration
             'en'=>'Please fill all fields'
         ]);
 
+        self::generateTranslation('cannot_activate_auth_email_if_email_disabled', [
+            'fr'=>'Vous ne pouvez pas activer l\'authentification par email car les emails sont désactivés',
+            'en'=>'You can\'t activate email authentication if emails are disabled'
+        ]);
+
         self::alterTable('ALTER TABLE `{tbl_prefix}users` ADD `email_confirmed` BOOL DEFAULT FALSE', [
             'table' => 'users'
         ], [

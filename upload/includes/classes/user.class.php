@@ -1168,7 +1168,7 @@ class User
     {
         if (config('enable_multi_factor_authentification') == 'allowed') {
             $user = User::getInstance()->getOne(['username_strict' => $username]);
-            if (!empty($user) && $user['email_confirmed'] && $user['multi_factor_auth']=='allowed_email') {
+            if (!empty($user) && $user['email_confirmed'] && $user['multi_factor_auth']=='allowed_email' && config('disable_email') != 'yes') {
                 $mfa_code = str_pad(rand(0, 999999), 6, '0', STR_PAD_LEFT);
                 Clipbucket_db::getInstance()->update(tbl('users'), ['mfa_code', 'mfa_date'],[$mfa_code, '|f|NOW()'],  'userid = '.$user['userid']);
                 EmailTemplate::sendMail('mfa_code', $user['userid'], ['mfa_code'=>$mfa_code]);
@@ -3278,7 +3278,9 @@ class userquery extends CBCategory
                 e(lang('multi_factor_auth_err'));
             } else {
                 $user = User::getInstance()->getOne(['userid' => $array['userid']]);
-                if ($array['multi_factor_auth'] == 'allowed_email' && !$user['email_confirmed']) {
+                if ($array['multi_factor_auth'] == 'allowed_email' && config('disable_email') == 'yes') {
+                    e(lang('cannot_activate_auth_email_if_email_disabled'));
+                } elseif ($array['multi_factor_auth'] == 'allowed_email' && !$user['email_confirmed']) {
                     e(lang('cant_activate_multi_factor_auth_with_no_confirmed_email'));
                 } else {
                     $uquery_field[] = 'multi_factor_auth';

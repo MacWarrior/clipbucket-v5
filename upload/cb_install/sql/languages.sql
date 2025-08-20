@@ -1700,4 +1700,5 @@ VALUES ('ongoing_conversion'),
        ('forgot_password_tips'),
        ('invalid_mfa_code'),
        ('please_enter_6_digit_mfa_code'),
-       ('please_fill_all_fields');
+       ('please_fill_all_fields'),
+       ('cannot_activate_auth_email_if_email_disabled');
