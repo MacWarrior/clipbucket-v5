@@ -562,7 +562,11 @@ class Collection
                 if( $param_count_items_only ){
                     $collection['total_objects'] = $collection['items'];
                 } else {
-                    $collection['total_objects'] = count($collection['items']);
+                    if( !empty($collection['items']) ){
+                        $collection['total_objects'] = count($collection['items']);
+                    } else {
+                        $collection['total_objects'] = 0;
+                    }
                 }
                 $collection['total_objects'] += $collection['nb_childs'];
 
