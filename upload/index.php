@@ -6,7 +6,7 @@ const THIS_PAGE = 'index';
 require 'includes/config.inc.php';
 pages::getInstance()->page_redir();
 
-if (!User::getInstance()->hasPermission('view_videos') && User::getInstance()->isUserConnected()) {
+if (!User::getInstance()->hasPermission('view_videos') && !User::getInstance()->isUserConnected()) {
     template_files('signup_or_login.html');
     display_it();
     die();

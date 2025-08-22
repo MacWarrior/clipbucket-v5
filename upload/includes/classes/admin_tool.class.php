@@ -574,7 +574,6 @@ class AdminTool
             delete_empty_directories($folder);
         }
         $this->addLog(lang('x_orphan_files_have_been_deleted', $this->tasks_processed ?? 0));
-
     }
 
     /**
@@ -675,10 +674,15 @@ class AdminTool
                 }
             } while (empty($has_to_stop) && !empty($tasks) && $this->tasks_index < $element_totals);
         }
+        $this->end();
+    }
+
+    private function end(): void
+    {
         if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.0', '367')) {
             $this->updateToolHisto(['id_tools_histo_status', 'date_end'], ['|no_mc||f|(SELECT id_tools_histo_status FROM ' . tbl('tools_histo_status') . ' WHERE language_key_title like \'ready\')', '|f|NOW()']);
         } else {
-            Clipbucket_db::getInstance()->update(tbl('tools'), ['id_tools_status', 'elements_total', 'elements_done'], [1, '|f|null', '|f|null'], 'id_tool = ' . $secureIdTool);
+            Clipbucket_db::getInstance()->update(tbl('tools'), ['id_tools_status', 'elements_total', 'elements_done'], [1, '|f|null', '|f|null'], 'id_tool = ' . (int)$this->id_tool);
         }
     }
 
@@ -848,6 +852,9 @@ class AdminTool
             ]) ?: [];
             $this->tasks = array_column($users, 'userid');
             $this->executeTool('User::calcUserStorage');
+        } else {
+            $this->addLog(lang('tool_disabled'));
+            $this->end();
         }
     }
 
@@ -1267,7 +1274,7 @@ class AdminTool
      * @return bool
      * @throws Exception
      */
-    public function isToolInError()
+    public function isToolInError(): bool
     {
         return !empty(Clipbucket_db::getInstance()->_select(
             'SELECT id_tool FROM ' . tbl('tools_histo') . ' 
@@ -1281,7 +1288,7 @@ class AdminTool
     public function anonymousStats()
     {
         if (!Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.2', '100') || config('enable_anonymous_stats') != 'yes') {
-            $this->executeTool('');
+            $this->end();
             return true;
         }
         if (empty($this->tasks_total)) {

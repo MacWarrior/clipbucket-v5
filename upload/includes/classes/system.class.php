@@ -1081,4 +1081,9 @@ class System{
         self::$is_in_dev = $in_dev;
     }
 
+    public static function isCli(): bool
+    {
+        return php_sapi_name() == 'cli';
+    }
+
 }

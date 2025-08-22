@@ -775,6 +775,13 @@ function get_file_details($file_name, $get_jsoned = false)
         }
     }
 
+    if( !file_exists($file) ) {
+        if( System::isCli() ){
+            return false;
+        }
+        sessionMessageHandler::add_message(lang('log_file_doesnt_exist'), 'w',  DirPath::getUrl('admin_area'));
+    }
+
     //saving log in a variable
     $data = file_get_contents($file);
 
