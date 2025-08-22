@@ -25,7 +25,7 @@ if (($error_init['core'] === false && $_POST['type'] == 'core') || $error_init['
 
 sendClientResponseAndContinue(function () {
     ob_start();
-    Update::getInstance()->displayGlobalSQLUpdateAlert($_POST['type']);
+    Update::getInstance()->displayGlobalSQLUpdateAlert($_POST['type'], true);
     echo json_encode([
         'success' => true,
         'html'=>ob_get_clean()
