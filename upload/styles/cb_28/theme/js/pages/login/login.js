@@ -79,9 +79,11 @@ document.addEventListener('DOMContentLoaded', function () {
             })
             .finally(hideSpinner);
     });
-    confirmButton.addEventListener('click', function () {
-        form.requestSubmit();
-    });
+    if( confirmButton ){
+        confirmButton.addEventListener('click', function () {
+            form.requestSubmit();
+        });
+    }
 
     closeModalButton.addEventListener('click', function () {
         closeModal();

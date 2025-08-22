@@ -33,7 +33,7 @@
         </div>
     </div>
 </div>
-{if config('enable_multi_factor_authentification') == 'enabled'}
+{if in_array(config('enable_multi_factor_authentification'), ['allowed'])}
 <div class="modal fade" id="enterMFACodeModal" tabindex="-1" role="dialog" aria-labelledby="confirmModalLabel">
     <div class="modal-dialog" role="document">
         <div class="modal-content">

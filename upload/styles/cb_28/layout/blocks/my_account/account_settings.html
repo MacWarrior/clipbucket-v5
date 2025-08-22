@@ -66,8 +66,7 @@
                 </div>
             {/foreach}
         {/if}
-        {if (in_array(config('enable_multi_factor_authentification'), ['allowed']) || Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.2', '999'))
-        && config('disable_email')!='yes'}
+        {if (in_array(config('enable_multi_factor_authentification'), ['allowed']) || Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.2', '999')) && config('disable_email') != 'yes'}
         <div class="row">
             <div class="form-group">
                 {if in_array(config('enable_multi_factor_authentification'), ['allowed'])}

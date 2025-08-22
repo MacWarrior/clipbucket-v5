@@ -37,6 +37,8 @@ switch ($mode) {
             if( User::confirmEmail($user, $avcode) ){
                 sessionMessageHandler::add_message(lang('email_confirmed'), 'm', DirPath::getUrl('root'));
             }
+        } else if( User::getInstance()->isUserConnected() && Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.2', '999') && empty(User::getInstance()->get('email_temp')) && User::getInstance()->get('email_confirmed') == 1 ){
+            sessionMessageHandler::add_message(lang('email_already_confirmed'), 'm', DirPath::getUrl('root'));
         }
         template_files('pages/email_confirmation.html');
         break;
