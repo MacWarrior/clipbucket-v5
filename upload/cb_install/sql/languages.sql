@@ -1671,4 +1671,6 @@ VALUES ('admin_setting'),
        ('confirm_delete_embed_player'),
        ('no_embed_player_to_display'),
        ('add_new_embed_player'),
-       ('html_code_is_invalid');
+       ('html_code_is_invalid'),
+       ('log_file_doesnt_exist'),
+       ('tool_disabled');
