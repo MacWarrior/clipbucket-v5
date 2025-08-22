@@ -378,9 +378,10 @@ class Update
     /**
      * @throws Exception
      */
-    public function displayGlobalSQLUpdateAlert($current_updating = false)
+    public function displayGlobalSQLUpdateAlert($current_updating = false, $force_no_stuck_icon = false)
     {
         $nb_db_update = 0;
+        assign('force_no_stuck_icon', $force_no_stuck_icon);
         if( $this->needCodeDBUpdate() ){
             $nb_db_update += $this->getUpdateFiles(true);
         }
