@@ -38,39 +38,38 @@ if (file_exists(DirPath::get('temp') . 'update_core_tmp.php')) {
 }
 $tmp_file = fopen(DirPath::get('temp') . 'update_core_tmp.php', 'w');
 $data = /** @lang PHP */
-    '<?php
-             if (php_sapi_name() != \'cli\') {
-                die;
-            }
-            const THIS_PAGE = \'update_core_tmp\';
-            include_once dirname(__FILE__, 3) .DIRECTORY_SEPARATOR . \'includes\'.DIRECTORY_SEPARATOR . \'admin_config.php\';
-            $type = \'' . $_POST['type'] . '\';
-            $core_tool = AdminTool::getUpdateCoreTool();
-            if (empty($core_tool)) {
-                echo  \'false\';
-                die;
-            }
-            if (Update::IsCurrentDBVersionIsHigherOrEqualTo(\'5.5.0\', \'367\')) {
-                AdminTool::getInstance()->initByCode(\'update_database_version\');
-            } else {
-                AdminTool::getInstance()->initById(5);
-            }
-            if (empty(AdminTool::getInstance())) {
-                echo  \'false\';
-                die;
-            }
-            if ($type == \'core\' && $core_tool->isAlreadyLaunch() === false) {
-                $core_tool->setToolInProgress();
-                $core_tool->launch();
-            }
-            Update::getInstance()->flush();
-            
-            if (($type == \'core\' || $type == \'db\') && AdminTool::getInstance()->isAlreadyLaunch() === false) {
-                AdminTool::getInstance()->setToolInProgress();
-                AdminTool::getInstance()->launch();
-            }
-            ?>
-    ';
+'<?php
+if (php_sapi_name() != \'cli\') {
+    die;
+}
+const THIS_PAGE = \'update_core_tmp\';
+include_once \'' . DirPath::get('includes') . 'admin_config.php' . '\';
+$type = \'' . $_POST['type'] . '\';
+$core_tool = AdminTool::getUpdateCoreTool();
+if (empty($core_tool)) {
+    echo  \'false\';
+    die;
+}
+if (Update::IsCurrentDBVersionIsHigherOrEqualTo(\'5.5.0\', \'367\')) {
+    AdminTool::getInstance()->initByCode(\'update_database_version\');
+} else {
+    AdminTool::getInstance()->initById(5);
+}
+if (empty(AdminTool::getInstance())) {
+    echo  \'false\';
+    die;
+}
+if ($type == \'core\' && $core_tool->isAlreadyLaunch() === false) {
+    $core_tool->setToolInProgress();
+    $core_tool->launch();
+}
+Update::getInstance()->flush();
+
+if (($type == \'core\' || $type == \'db\') && AdminTool::getInstance()->isAlreadyLaunch() === false) {
+    AdminTool::getInstance()->setToolInProgress();
+    AdminTool::getInstance()->launch();
+}
+?>';
 fwrite($tmp_file, $data);
 fclose($tmp_file);
 chdir(DirPath::get('root'));

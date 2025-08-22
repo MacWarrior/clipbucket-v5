@@ -1,6 +1,6 @@
 {
   "version":"5.5.2",
-  "revision":"128",
+  "revision":"129",
   "status":"stable",
   "detail":[
     {
@@ -48,6 +48,8 @@
         ,"Fix code & database update status on dashboard"
         ,"Fix conversion bitrates display"
         ,"Fix advanced settings display"
+        ,"Fix PHP error when trying to access missing log file"
+        ,"Fix user storage calculation tool staying stuck in ongoing state"
       ]
     },
     {
@@ -165,6 +167,7 @@
         ,"Fix possible discord error during installation process"
         ,"Fix docker setup with root user"
         ,"Fix minified JS & CSS"
+        ,"Fix core update when using mounted directory as storage"
       ]
     },
     {
