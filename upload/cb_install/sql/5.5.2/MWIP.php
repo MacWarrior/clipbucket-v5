@@ -221,6 +221,11 @@ Have a nice day !\', 0)';
             'fr'=>'Code d\'authentification invalide',
             'en'=>'Invalid authentification code'
         ]);
+
+        self::generateTranslation('email_mfa_hint', [
+            'fr'=>'Un email contenant votre code d\'identification vous a été envoyé. Ce code ne restera valide que 15 minutes.',
+            'en'=>'An email containing your identification code has been sent to you. This code will only be valid for 15 minutes.'
+        ]);
     }
 
 }

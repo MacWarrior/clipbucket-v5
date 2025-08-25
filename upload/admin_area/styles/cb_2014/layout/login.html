@@ -1,5 +1,6 @@
 <html>
 <body style="background-color:#ffffff;">
+{include file="$style_dir/blocks/spinner.html"}
     <div class="container">
         <div class="row ">
             <div class="logo-admin">
@@ -47,6 +48,7 @@
                     <h4 class="modal-title" id="confirmModalLabel">{lang('please_enter_mfa_code')}</h4>
                 </div>
                 <div class="modal-body">
+                    <p id="email_mfa_hint" style="display: none;" >{lang('email_mfa_hint')}</p>
                     <div class="form-group" id="mfa_code">
                         <input type="text" class="form-control" maxlength="1">
                         <input type="text" class="form-control" maxlength="1">
@@ -107,7 +109,6 @@
                 hideSpinner();
                 return false;
             }
-
             let mfa_code = '';
             if (typeof need_mfa !== 'undefined' && need_mfa) {
                 if (modalElement.classList.contains('in') === false) {
@@ -148,7 +149,11 @@
                 .then(response => {
                     if (response.need_mfa) {
                         showModal();
-                        need_mfa = true;
+                        need_mfa = response.need_mfa;
+                        if (need_mfa === 'email') {
+                            document.getElementById('email_mfa_hint').style.display = 'block';
+                        }
+                        hideSpinner();
                     } else if (response.success) {
                         window.location.href = response.redirect;
                     }
@@ -161,7 +166,6 @@
                     console.error('Login error:', err);
                     alert('An error occurred');
                 })
-                .finally(hideSpinner);
         });
         confirmButton.addEventListener('click', function () {
             form.requestSubmit();
@@ -234,5 +238,13 @@
         referenceNode.parentNode.insertBefore(fragment, referenceNode.nextSibling);
     }
 {/if}
+function showSpinner() {
+    $('.taskHandler').show();
+}
+
+function hideSpinner() {
+    $('.taskHandler').hide();
+}
+
 </script>
 </html>

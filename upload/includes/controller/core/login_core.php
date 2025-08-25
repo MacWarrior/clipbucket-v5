@@ -17,7 +17,7 @@ if (empty($_POST['username']) || empty($_POST['password'])) {
     $code_mfa_ok = true;
     if (in_array(config('enable_multi_factor_authentification'), ['allowed']) && userquery::getInstance()->authenticate($username, $password)) {
         if (empty($_POST['mfa_code'])) {
-            $need_mfa = User::checkAndSendMFAmail($username);
+            $need_mfa = User::checkAndSendMFAmail($username) ? 'email' : false;
             $code_mfa_ok = !$need_mfa;
         } else {
             $user = User::getInstance()->getOne(['username_strict' => $username]);

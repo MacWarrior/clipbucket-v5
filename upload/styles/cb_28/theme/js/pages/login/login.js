@@ -13,7 +13,6 @@ document.addEventListener('DOMContentLoaded', function () {
     form.addEventListener('submit', function (e) {
         e.preventDefault();
         showSpinner();
-
         const username = document.getElementById('login_username_sp').value;
         const password = document.getElementById('login_password_sp').value;
         const remember_me = document.getElementById('remember_me').value;
@@ -64,7 +63,11 @@ document.addEventListener('DOMContentLoaded', function () {
             .then(response => {
                 if (response.need_mfa) {
                     showModal();
-                    need_mfa = true;
+                    need_mfa = response.need_mfa;
+                    if (need_mfa === 'email') {
+                        document.getElementById('email_mfa_hint').style.display = 'block';
+                    }
+                    hideSpinner();
                 } else if (response.success) {
                     window.location.href = response.redirect;
                 }
@@ -77,7 +80,6 @@ document.addEventListener('DOMContentLoaded', function () {
                 console.error('Login error:', err);
                 alert('An error occurred');
             })
-            .finally(hideSpinner);
     });
     if( confirmButton ){
         confirmButton.addEventListener('click', function () {
