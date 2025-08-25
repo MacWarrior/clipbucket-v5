@@ -405,7 +405,7 @@ class FFMpeg
                 if (System::isInDev()) {
                     $this->log->writeLine('<div class="showHide"><p class="title glyphicon-chevron-right">Output : </p><p class="content">'.$output.'</p></div>', false, true);
                 }
-                Clipbucket_db::getInstance()->insert(tbl('video_subtitle'), ['videoid', 'number', 'title'], [$video['videoid'], $display_count, $data['title']], null, true);;
+                Clipbucket_db::getInstance()->insert(tbl('video_subtitle'), ['videoid', 'number', 'title'], [$video['videoid'], $display_count, $data['title']], null, true);
             }
         } else {
             $this->log->writeLine('No subtitle to extract');

@@ -425,7 +425,9 @@ if (isset($_POST['update'])) {
         'can_upload_subtitles',
         'videos_video_style',
         'enable_anonymous_stats',
-        'enable_video_embed_players'
+        'enable_video_embed_players',
+        'enable_anonymous_stats',
+        'enable_multi_factor_authentification'
     ];
 
     //Numeric Array

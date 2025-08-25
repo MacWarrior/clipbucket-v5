@@ -73,8 +73,7 @@ function resend_verification($userid)
     $uname = $raw_data[0]['username'];
     $email = $raw_data[0]['email'];
     if (trim($usr_status) == "ToActivate") {
-        $avcode = RandomString(10);
-        Clipbucket_db::getInstance()->update(tbl("users"), ["avcode"], [$avcode], "userid = '$userid'");
+        $avcode = User::getInstance($userid)->refreshAvcode();
         $var = [
             'user_username' => $uname,
             'user_email'    => $email,
@@ -90,7 +89,8 @@ function resend_verification($userid)
 /**
  * Returns playable video for user's channel page
  * @param : { array } { $userVideos } { an array user videos }
- * @return : { string / boolean } { video key if found a video matches pattern else false }
+ * @return mixed|void : { string / boolean } { video key if found a video matches pattern else false }
+ * @throws Exception
  * @since : November 17th, 2016 ClipBucket 2.8.2
  * @author : Saqib Razzaq
  */

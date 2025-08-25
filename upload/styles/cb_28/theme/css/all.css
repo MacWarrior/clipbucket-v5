@@ -7070,3 +7070,20 @@ ul.tagit li.tagit-choice.success-important {
 span.tagit-label i.fa {
   padding-left: 5px;
 }
+
+#mfa_code {
+  text-align: center;
+}
+
+#mfa_code input {
+  width: 35px;
+  margin-left: 5px;
+  display: inline;
+}
+#enterMFACodeModal > div > div > div.modal-body {
+  min-height: 80px;
+}
+
+#enterMFACodeModal > div > div > div.modal-body > .alert {
+    width: 100%;
+}

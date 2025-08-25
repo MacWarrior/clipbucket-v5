@@ -1352,7 +1352,7 @@ class AdminTool
             $content = '';
             foreach ($data as $key => $value) {
                 $is_first = ($key == 0);
-                $is_last  = (($key + 1) == count($data));;
+                $is_last  = (($key + 1) == count($data));
 
 
                 if ($is_first) {

@@ -145,7 +145,7 @@ if ($mode == 'sitesettings') {
                 if( !empty($_POST[$key . '_filepath']) ){
                     $filepath = $_POST[$key . '_filepath'];
                 } else {
-                    $filepath = System::get_binaries($key);;
+                    $filepath = System::get_binaries($key);
                 }
 
                 $sql = 'UPDATE ' . $dbprefix . 'config SET value = "' . $cnnct->real_escape_string($filepath) . '" WHERE name = "' . $config['config'] . '"';

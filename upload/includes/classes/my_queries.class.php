@@ -367,7 +367,7 @@ class myquery
                     break;
                 }
 
-                FFmpeg::launchResume($file_name);;
+                FFmpeg::launchResume($file_name);
                 break;
         }
     }

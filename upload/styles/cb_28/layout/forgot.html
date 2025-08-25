@@ -11,10 +11,10 @@
 			<form method="post" name="actvation" id="actvation" class="user-form">
 				<h2>{lang code='user_forgot_message'}</h2>
 				<div class="clearfix text-box">
-					<p>Please enter your username and verification code in the box, password reset instructions will be sent to your mailbox.</p>
+					<p>{lang code='forgot_password_tips'}</p>
 				</div>
 				<div class="form-group">
-					<input type="text" name="forgot_username" id="login_username_sp" class="form-control" placeholder="{lang code='username'}" required autofocus/>
+					<input type="text" name="forgot_email" class="form-control" placeholder="{lang code='user_email_address'}" required autofocus/>
 				</div>
 				<input name="reset" type="submit" class="btn btn-success btn-block" id="reset" value="{lang code='user_reset'}"/>
 			</form>
