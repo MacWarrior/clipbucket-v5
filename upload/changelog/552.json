@@ -1,6 +1,6 @@
 {
   "version":"5.5.2",
-  "revision":"129",
+  "revision":"130",
   "status":"stable",
   "detail":[
     {
@@ -168,6 +168,7 @@
         ,"Fix docker setup with root user"
         ,"Fix minified JS & CSS"
         ,"Fix core update when using mounted directory as storage"
+        ,"Fix stuck update notice"
       ]
     },
     {
