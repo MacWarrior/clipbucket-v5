@@ -1,6 +1,6 @@
 {
   "version":"5.5.2",
-  "revision":"130",
+  "revision":"131",
   "status":"stable",
   "detail":[
     {
@@ -70,11 +70,13 @@
         ,"Implement user check on internal messaging"
         ,"Implement remote play"
         ,"Implement sub-collection items display & count"
+        ,"Implement multi-factor authentification"
         ,"Refactor friends requests & management"
         ,"Refactor collection selections"
         ,"Update video & photos management pages display"
         ,"Update video edition display"
         ,"Update photo upload & edition display"
+        ,"Update email change procedure"
         ,"Hide banned users from channels page, search results & popular user"
         ,"Drop remote upload"
         ,"Fix collection privacy on photos page"

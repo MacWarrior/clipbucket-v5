@@ -205,7 +205,7 @@ INSERT INTO `{tbl_prefix}email` (`code`, `id_email_template`, `is_deletable`, `t
     Welcome aboard !', 0),
     ('verify_email',1,0,'[{{website_title}}] Email address verification','Hello <b>{{user_username}}</b>,
     <br/><br/>
-    In order to verify your email address, please validate your account by <a href="{{baseurl}}email_confirm.php?av_username={{user_username}}&avcode={{avcode}}">clicking here !</a>
+    In order to verify your email address, please validate your account by <a href="{{baseurl}}email_confirm.php?mode=email_confirm&av_username={{user_username}}&avcode={{avcode}}">clicking here !</a>
     <br/><br/>
     If somehow above link isn\'t working, please go to : <a href="{{baseurl}}email_confirm.php">{{baseurl}}email_confirm.php</a><br/>
 And use your activation code : <b>{{avcode}}</b>

@@ -25,7 +25,7 @@ switch ($mode) {
     case 'email_confirm':
         if( isset($_REQUEST['avcode']) ){
             if( User::getInstance()->isUserConnected() ){
-                if( Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.2', '999') && empty(User::getInstance()->get('email_temp')) && User::getInstance()->get('email_confirmed') == 1 ){
+                if( Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.2', '131') && empty(User::getInstance()->get('email_temp')) && User::getInstance()->get('email_confirmed') == 1 ){
                     sessionMessageHandler::add_message(lang('email_already_confirmed'), 'm', DirPath::getUrl('root'));
                 }
                 $user = User::getInstance()->get('username');
@@ -36,8 +36,10 @@ switch ($mode) {
             $avcode = $_REQUEST['avcode'];
             if( User::confirmEmail($user, $avcode) ){
                 sessionMessageHandler::add_message(lang('email_confirmed'), 'm', DirPath::getUrl('root'));
+            } else {
+                DiscordLog::sendDump('Pas valide');
             }
-        } else if( User::getInstance()->isUserConnected() && Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.2', '999') && empty(User::getInstance()->get('email_temp')) && User::getInstance()->get('email_confirmed') == 1 ){
+        } else if( User::getInstance()->isUserConnected() && Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.2', '131') && empty(User::getInstance()->get('email_temp')) && User::getInstance()->get('email_confirmed') == 1 ){
             sessionMessageHandler::add_message(lang('email_already_confirmed'), 'm', DirPath::getUrl('root'));
         }
         template_files('pages/email_confirmation.html');

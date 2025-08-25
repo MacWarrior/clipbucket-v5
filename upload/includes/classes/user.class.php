@@ -82,7 +82,7 @@ class User
         if( Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '313') ){
             $this->fields[] = 'active_theme';
         }
-        if( Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.2', '999') ){
+        if( Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.2', '131') ){
             $this->fields[] = 'email_confirmed';
             $this->fields[] = 'multi_factor_auth';
             $this->fields[] = 'email_temp';
@@ -1199,7 +1199,7 @@ class User
             return false;
         }
 
-        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.2', '999') ) {
+        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.2', '131') ) {
             $field = ['email_confirmed', 'avcode'];
             $value = ['|f|true', RandomString(10)];
             if( !empty($user['email_temp']) ) {
@@ -1500,7 +1500,7 @@ class userquery extends CBCategory
                     Session::getInstance()->timeout = 86400 * 7;
                 }
                 //reset MFA code
-                if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.2', '999') ) {
+                if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.2', '131') ) {
                     Clipbucket_db::getInstance()->update(tbl('users'), ['mfa_code', 'mfa_date'], ['null','null'], 'username = \''.$username.'\'');
                 }
                 return $this->init_session($udetails);
@@ -3781,7 +3781,7 @@ class userquery extends CBCategory
             $msg = lang('email_change_msg');
             if (config('email_verification')) {
                 $fields = ['email_temp'];
-                if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.2', '999')) {
+                if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.2', '131')) {
                     EmailTemplate::sendMail('verify_email', [
                         'mail' => $array['new_email'],
                         'name' => User::getInstance()->get('username')
@@ -3798,7 +3798,7 @@ class userquery extends CBCategory
 
             }
             $values = [$array['new_email']];
-            if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.2', '999')) {
+            if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.2', '131')) {
                 $fields[] = 'email_confirmed';
                 $values[] = 0;
             }
