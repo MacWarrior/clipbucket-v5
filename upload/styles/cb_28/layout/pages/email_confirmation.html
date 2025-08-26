@@ -1,0 +1,21 @@
+<div class="container">
+    <div id="main" class="clearfix">
+        <div class="cb-box ">
+            <h2>{lang code='email_confirmation'}</h2>
+            <div class="alert alert-info">{lang code='email_confirmation_tips'}</div>
+            <form method="post" class="cbform">
+                {if !User::getInstance()->isUserConnected()}
+                <div class="clearfix form-group">
+                    <label for="av_username">{lang code='username'}</label>
+                    <input type="text" name="av_username" id="av_username" class="form-control">
+                </div>
+                {/if}
+                <div class="clearfix form-group">
+                    <label for="avcode">{lang code='usr_activation_code_tl'}</label>
+                    <input type="text" name="avcode" id="avcode" class="form-control">
+                </div>
+                <input type="submit" name="activate_user" class="btn btn-primary" value="{lang code='confirm_email'}">
+            </form>
+        </div>
+    </div>
+</div>
