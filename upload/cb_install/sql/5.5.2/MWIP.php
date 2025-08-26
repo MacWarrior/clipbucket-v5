@@ -32,7 +32,7 @@ class MWIP extends \Migration
       \EmailTemplate::updateEmail($email_reset_reset);
 
       self::generateTranslation('user_change_pass', [
-          'fr'=>'Changer le mot de passe',
+          'fr'=>'Changer le mot de passe'
       ]);
 
       self::generateTranslation('enter_email_and_avcode', [
