@@ -1673,4 +1673,7 @@ VALUES ('admin_setting'),
        ('add_new_embed_player'),
        ('html_code_is_invalid'),
        ('log_file_doesnt_exist'),
-       ('tool_disabled');
+       ('tool_disabled'),
+       ('enter_email_and_avcode'),
+       ('reset_password'),
+       ('confirm_reset_password');

@@ -121,13 +121,14 @@ INSERT INTO `{tbl_prefix}email` (`code`, `id_email_template`, `is_deletable`, `t
     You have requested a password reset, please follow the link in order to reset your password : <br/>
     <a href="{{reset_password_link}}">Reset my password</a>
     <hr/>
+    <br/><br/>
+    If somehow above link isn''t working, please go to : <a href="{{baseurl}}forgot.php?mode=reset_pass">{{baseurl}}forgot.php</a><br/>
+    And use your activation code : <b>{{avcode}}</b>
+    <br/><br/>
     <div style="text-align:center;font-weight:bold;">
     If you have not requested a password reset, please ignore this message
     </div>
     <hr/>', 0),
-    ('password_reset_details', 1, 0, '[{{website_title}}] Password reset details', 'Dear <b>{{user_username}}</b>,<br/><br/>
-    Your password has been manually reset.<br/>
-    Your new temporary password is : <b>{{password}}</b>', 0),
     ('forgot_username_request', 1, 0, '[{{website_title}}] Your username', 'Hello <b>{{user_username}}</b>,
     <br/><br/>
     It seems you forgot your username ; here it is : <b>{{user_username}}</b>.', 0),

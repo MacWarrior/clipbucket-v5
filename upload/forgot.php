@@ -18,7 +18,7 @@ if( User::getInstance()->isUserConnected() ){
  * Sending Email
  */
 if (isset($_POST['reset'])) {
-    $input = post('forgot_username');
+    $input = post('email');
     userquery::getInstance()->reset_password(1, $input);
 }
 
@@ -26,11 +26,37 @@ if (isset($_POST['reset'])) {
  * Reseting Password
  * Real Reseting ;)
  */
-$user = get('user');
-if ($mode == 'reset_pass' && $user) {
-    $avcode = get('avcode');
-    if (userquery::getInstance()->reset_password(2, $user, $avcode)) {
-        assign('pass_recover', 'success');
+if ($mode == 'reset_pass') {
+    if (!empty($_REQUEST['email']) && !empty($_REQUEST['avcode']) && empty($_POST['userid'])) {
+        $user = User::getInstance()->getOne(['email' => $_REQUEST['email']]);
+        if (empty($user)) {
+            e(lang('user_not_exist'));
+        } else {
+            $code = $_REQUEST['avcode'];
+            if ($user['avcode'] != $code) {
+                e(lang('recap_verify_failed'));
+            }
+            assign('userid', $user['userid'] ?? 0);
+            assign('pass_change', true);
+            //display pass field
+        }
+    } else {
+        if (!empty($_POST['userid'])) {
+            assign('pass_change', true);
+            $user = User::getInstance()->getOne(['userid' => $_POST['userid']]);
+            assign('userid', $user['userid'] ?? 0);
+            if (!empty($user)) {
+                if (empty($_POST['password']) || empty($_POST['cpassword'])) {
+                    e(lang('usr_pass_err2'));
+                } elseif ($_POST['password'] != $_POST['cpassword']) {
+                    e(lang('usr_cpass_err1'));
+                } else {
+                    Clipbucket_db::getInstance()->update(tbl('users'), ['password', 'avcode'], [pass_code($_POST['password'], $user['userid']), ''], ' userid=\'' . $user['userid'] . '\'');
+                    Session::kill_all_sessions($user['userid']);
+                    sessionMessageHandler::add_message(lang('usr_pass_email_msg'), 'm', DirPath::getUrl('root').'signup.php?mode=login');
+                }
+            }
+        }
     }
 }
 

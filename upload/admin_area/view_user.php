@@ -72,6 +72,10 @@ if ($udetails) {
         }
     }
 
+    if (isset($_GET['reset_password'])) {
+        userquery::getInstance()->reset_password(1, $uid, false);
+    }
+
     $profile = userquery::getInstance()->get_user_profile($uid);
     if (is_array($profile)) {
         $user_profile = array_merge($udetails, $profile);

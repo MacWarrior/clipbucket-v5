@@ -1,22 +1,52 @@
-{if $pass_recover=='success'}
-
-	{lang code='pass_changed_success'}
-
-{else}
 <div class="account-container">
-	{if $mode=='' || $mode=='reset_pass' }  
+	{if $mode=='' || $mode=='reset_pass'  }
 
 	<div class="clearfix forgot-block">
 		<div class="account-holder">
-			<form method="post" name="actvation" id="actvation" class="user-form">
+			<form method="post" name="activation" id="activation" class="user-form">
 				<h2>{lang code='user_forgot_message'}</h2>
-				<div class="clearfix text-box">
-					<p>Please enter your username and verification code in the box, password reset instructions will be sent to your mailbox.</p>
-				</div>
-				<div class="form-group">
-					<input type="text" name="forgot_username" id="login_username_sp" class="form-control" placeholder="{lang code='username'}" required autofocus/>
-				</div>
-				<input name="reset" type="submit" class="btn btn-success btn-block" id="reset" value="{lang code='user_reset'}"/>
+                <input type="hidden" name="userid" value="{{$userid}}" />
+                {if !$pass_change}
+                    <div class="clearfix text-box">
+                    {if $mode=='reset_pass' }
+                        <p>{lang('enter_email_and_avcode')}</p>
+                    {else }
+                        <p>Please enter your email and verification code in the box, password reset instructions will be sent to your mailbox.</p>
+                    {/if}
+                    </div>
+
+                    <div class="form-group">
+                        <label for="email">{lang code='user_email_address'}</label>
+                        <input type="text" name="email" id="email" class="form-control" placeholder="{lang code='user_email_address'}" required autofocus/>
+                    </div>
+                    {if $mode=='reset_pass' }
+                        <div>
+                            <label for="avcode">{lang code='email_variable_avcode'}</label>
+                            <input type="text" name="avcode" id="avcode" class="form-control" placeholder="{lang code='email_variable_avcode'}" required/>
+                        </div>
+                    {/if}
+                    <br/>
+                    <input name="reset" type="submit" class="btn btn-success btn-block" value="{lang code='user_reset'}"/>
+                {else}
+                    <div class="clearfix text-box">
+                        <p>{lang('user_change_pass')}</p>
+                        {foreach from= userquery::getInstance()->load_signup_fields() item=field}
+                            {if $field.id != 'password' && $field.id != 'cpassword'}
+                                {continue}
+                            {/if}
+                                {$field.class='form-control'}
+
+                            <div class="form-group clearfix">
+                                {ANCHOR place=$field.anchor_before}
+                                {$formObj->createField($field,false, true)}
+                                {ANCHOR place=$field.anchor_after}
+                            </div>
+                        {/foreach}
+                    </div>
+                    <input name="change_password" type="submit" class="btn btn-success btn-block" value="{lang code='user_change_pass'}"/>
+                {/if}
+
+
 			</form>
 			
 		</div>
@@ -38,4 +68,72 @@
 	</div>
 	{/if}
 </div>
-{/if}
+
+<script>
+    $(function() {
+        $('input#password').on('keyup', function() {
+            let passSec = $('#password'),
+                passVal = passSec.val();
+
+            if (passVal.length === 0) {
+                addErrClass(passSec, errors["empty_pass"], true, false);
+            } else {
+                if (passVal.length < 8) {
+                    addErrClass(passSec,errors["weak_pass"],true, false ,'warning-ind');
+                } else {
+                    removeErrClass(passSec,true);
+                }
+            }
+        });
+
+        $('input#cpassword').on('keyup', function() {
+            let cPassSec = $('#cpassword'),
+                cPassVal = cPassSec.val(),
+                passVal = $('#password').val();
+
+            if (cPassVal !== passVal) {
+                addErrClass(cPassSec, errors["pass_mismatch"], true, false);
+            } else {
+                removeErrClass(cPassSec,true);
+            }
+        });
+
+    });
+    let errors = {
+            "name_invalid_chars" : "{lang code='usr_uname_err3'}",
+            "pass_mismatch"      : "{lang code='usr_pass_err3'}",
+            "empty_pass"         : "{lang code='usr_pass_err2'}",
+            "empty_email"        : "{lang code='usr_email_err1'}" ,
+            "invalid_email"      : "{lang code='usr_email_err2'}",
+            "user_exists"        : "{lang code='usr_uname_err2'}",
+            "email_exists"       : "{lang code='usr_email_err3'}",
+            "email_unauthorized" : "{lang code='signup_error_email_unauthorized'}",
+            "weak_pass"          : "{lang code='weak_pass'}",
+            "username_spaces"    : "{lang code='username_spaces'}"
+        },
+
+        config_min_username = {config('min_username')},
+        config_max_username = {config('max_username')},
+
+        lang_password = "{lang code='password'}",
+
+        format_date_js = '{get_date_js()}',
+        language = '{$lang_obj->getLang()}';
+
+    function removeErrClass(obj, passSec = false) {
+        $(obj).closest('.form-group')
+            .removeClass('invalid-error')
+            .removeClass('warning-ind')
+            .addClass('success-ind');
+
+        $(obj).next('span').remove();
+        let value;
+        if (passSec === true) {
+            value = lang_password;
+        } else {
+            value = $(obj).val();
+        }
+        $('<span class="help-block"><strong>'+value+'</strong> seems good to go</span>').insertAfter(obj);
+    }
+</script>
+

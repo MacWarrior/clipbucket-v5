@@ -2339,9 +2339,9 @@ class userquery extends CBCategory
      * @throws \PHPMailer\PHPMailer\Exception
      * @throws Exception
      */
-    function reset_password($step, $input, $code = null): bool
+    function reset_password($step, $input, $check_is_connected = true): bool
     {
-        if (User::getInstance()->isUserConnected()) {
+        if ($check_is_connected && User::getInstance()->isUserConnected()) {
             return false;
         }
 
@@ -2361,7 +2361,8 @@ class userquery extends CBCategory
                     }
 
                     $var = [
-                        'reset_password_link' => DirPath::getUrl('root') . 'forgot.php?mode=reset_pass&user=' . $udetails['userid'] . '&avcode=' . $avcode,
+                        'reset_password_link' => DirPath::getUrl('root') . 'forgot.php?mode=reset_pass&email=' . $udetails['email'] . '&avcode=' . $avcode,
+                        'avcode'              => $avcode,
                     ];
                     //Now Finally Sending Email
                     if (EmailTemplate::sendMail('password_reset_request', $udetails['userid'], $var)) {
@@ -2371,29 +2372,6 @@ class userquery extends CBCategory
                 }
                 break;
 
-            case 2:
-                $udetails = $this->get_user_details($input);
-                if (!$udetails) {
-                    e(lang('usr_exist_err'));
-                } elseif ($udetails['avcode'] != $code) {
-                    e(lang('recap_verify_failed'));
-                } else {
-                    $newpass = RandomString(6);
-                    $pass = pass_code($newpass, $udetails['userid']);
-                    $avcode = RandomString(10);
-                    Clipbucket_db::getInstance()->update(tbl($this->dbtbl['users']), ['password', 'avcode'], [$pass, $avcode], " userid='" . $udetails['userid'] . "'");
-                    //Sending confirmation email
-                    $var = [
-                        'url'      => DirPath::getUrl('root') . 'login.php',
-                        'password' => $newpass
-                    ];
-
-                    //Now Finally Sending Email
-                    EmailTemplate::sendMail('password_reset_details',  $udetails['email'], $var);
-                    e(lang('usr_pass_email_msg'), 'm');
-                    return true;
-                }
-                break;
         }
 
         return false;
