@@ -145,14 +145,14 @@ switch ($mode) {
         if (!empty($_POST['collection_id'])) {
             Collection::getInstance()->addCollectionItem($vid, $_POST['collection_id'], 'videos');
         }
-        Upload::getInstance()->add_conversion_queue($file_name . '.' . $extension);
+        Upload::getInstance()->add_conversion_queue($vid);
 
-        $cmd = FFmpeg::launchConversion($file_name);
+       /* $cmd = FFmpeg::launchConversion($file_name);
         if( System::isInDev() ){
             $log->writeLine(date('Y-m-d H:i:s').' - Conversion command : ' . $cmd);
         }
 
-        $log->writeLine(date('Y-m-d H:i:s').' - Video Converson File executed successfully with Target File > ' . $DestinationFilePath);
+        $log->writeLine(date('Y-m-d H:i:s').' - Video Converson File executed successfully with Target File > ' . $DestinationFilePath);*/
 
         echo json_encode(['success' => 'yes', 'file_name' => $file_name, 'videoid'=>$vid]);
         die();

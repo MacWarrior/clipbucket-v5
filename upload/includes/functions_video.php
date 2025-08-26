@@ -1543,6 +1543,7 @@ function isReconvertAble($vdetails): bool
  */
 function reConvertVideos($data = ''): void
 {
+    //TODO just put videos selected undone in table video_conversion_queue
     $toConvert = 0;
     // if nothing is passed in data array, read from $_POST
     if (!is_array($data)) {
@@ -1614,7 +1615,7 @@ function reConvertVideos($data = ''): void
                     $max_quality_file = get_high_res_file($vdetails);
                     $conversion_filepath = DirPath::get('temp') . $vdetails['file_name'] . '.mp4';
                     copy($max_quality_file, $conversion_filepath);
-                    Upload::getInstance()->add_conversion_queue($vdetails['file_name'] . '.mp4');
+                    Upload::getInstance()->add_conversion_queue($vdetails['videoid'] );
                     break;
 
                 case 'hls':
@@ -1629,7 +1630,7 @@ function reConvertVideos($data = ''): void
                         }
                         copy($file, $temp_dir . $video_file);
                     }
-                    Upload::getInstance()->add_conversion_queue($vdetails['file_name'] . '.m3u8', $vdetails['file_name'] . DIRECTORY_SEPARATOR, $vdetails['file_name']);
+                    Upload::getInstance()->add_conversion_queue($vdetails['videoid']);
                     break;
             }
 

@@ -76,7 +76,7 @@ if (isset($_POST['mass_upload_video'])) {
             $log->newSection('Pre-Check Configurations');
             $log->writeLine(date('Y-m-d H:i:s').' - Initializing File <strong>' . $file_name . '</strong> and pre checking configurations...');
 
-            $results = Upload::getInstance()->add_conversion_queue($file_name);
+            $results = Upload::getInstance()->add_conversion_queue($vid);
             $str1 = date('Y') . DIRECTORY_SEPARATOR . date('m') . DIRECTORY_SEPARATOR . date('d');
             $str = $str1 . DIRECTORY_SEPARATOR;
             mkdir(DirPath::get('videos') . $str, 0755, true);
@@ -84,7 +84,7 @@ if (isset($_POST['mass_upload_video'])) {
             $fname = explode('.', $file_name);
             $cond = 'file_name=' . '\'' . $fname[0] . '\'';
             $result = Clipbucket_db::getInstance()->db_update(tbl('video'), $fields, $cond);
-            FFmpeg::launchConversion($file_key, $file_track);
+//            FFmpeg::launchConversion($file_key, $file_track);
             if (file_exists(DirPath::get('conversion_queue') . $file_name)) {
                 unlink(DirPath::get('conversion_queue') . $file_name);
                 foreach ($vtitle as $title) {

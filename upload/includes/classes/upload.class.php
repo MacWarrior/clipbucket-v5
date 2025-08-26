@@ -758,15 +758,13 @@ class Upload
     /**
      * Function used to add files in conversion queue
      *
-     * @param $file
-     * @param string $sub_directory
-     * @param string $cqueue_name
+     * @param $videoid
      * @return bool|int
      * @throws Exception
      */
-    function add_conversion_queue($file, $sub_directory = '', $cqueue_name = '')
+    function add_conversion_queue($videoid)
     {
-        $ext = getExt($file);
+     /*   $ext = getExt($file);
         $name = getName($file);
         if (!$name) {
             return false;
@@ -798,12 +796,11 @@ class Upload
             case 'm3u8':
                 $tmp_ext = '';
                 break;
-        }
+        }*/
 
         //Adding Details to database
-        Clipbucket_db::getInstance()->execute('INSERT INTO ' . tbl('conversion_queue') . " (cqueue_name,cqueue_ext,cqueue_tmp_ext,date_added)
-							VALUES ('" . mysql_clean($cqueue_name) . "','" . mysql_clean($ext) . "','" . mysql_clean($tmp_ext) . "','" . NOW() . "') ");
-        return Clipbucket_db::getInstance()->insert_id();
+        return Clipbucket_db::getInstance()->execute('INSERT INTO ' . tbl('video_conversion_queue') . ' (videoid) VALUES ('.mysql_clean($videoid).') ');
+
     }
 
     /**
