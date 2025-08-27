@@ -49,6 +49,26 @@ class MWIP extends \Migration
           'fr'=>'Voulez-vous vraiment réinitialiser le mot de passe de cet utilisateur ?',
           'en'=>'Do you really want to reset password of this user ?'
       ]);
+
+      self::generateTranslation('cant_reset_database_not_up_to_date', [
+          'fr'=>'L\'email n\'a pu être envoyé car votre base de donnée n\'est pas à jour.',
+          'en'=>'The email could not be sent because your database is not up to date.'
+      ]);
+
+      self::generateTranslation('save_new_password', [
+          'fr'=>'Sauvegarder le nouveau mot de passe',
+          'en'=>'Save new password'
+      ]);
+
+      self::generateTranslation('new_password', [
+          'fr'=>'Nouveau mot de passe',
+          'en'=>'New password'
+      ]);
+
+      self::generateTranslation('confirm_new_password', [
+          'fr'=>'Confirmer le nouveau mot de passe',
+          'en'=>'Confirm new password'
+      ]);
     }
 
 }

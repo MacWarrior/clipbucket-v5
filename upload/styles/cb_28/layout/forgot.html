@@ -30,20 +30,14 @@
                 {else}
                     <div class="clearfix text-box">
                         <p>{lang('user_change_pass')}</p>
-                        {foreach from= userquery::getInstance()->load_signup_fields() item=field}
-                            {if $field.id != 'password' && $field.id != 'cpassword'}
-                                {continue}
-                            {/if}
-                                {$field.class='form-control'}
-
-                            <div class="form-group clearfix">
-                                {ANCHOR place=$field.anchor_before}
-                                {$formObj->createField($field,false, true)}
-                                {ANCHOR place=$field.anchor_after}
-                            </div>
-                        {/foreach}
+                        <div class="form-group clearfix">
+                            <input type="password" placeholder="{lang('new_password')}" name="password" id="password" class="form-control" title="{lang('new_password')}">
+                        </div>
+                        <div class="form-group clearfix">
+                            <input type="password" placeholder="{lang('confirm_new_password')}" name="cpassword" id="cpassword" class="form-control" title="{lang('confirm_new_password')}">
+                        </div>
                     </div>
-                    <input name="change_password" type="submit" class="btn btn-success btn-block" value="{lang code='user_change_pass'}"/>
+                    <input name="change_password" type="submit" class="btn btn-success btn-block" value="{lang('save_new_password')}"/>
                 {/if}
 
 
@@ -70,35 +64,6 @@
 </div>
 
 <script>
-    $(function() {
-        $('input#password').on('keyup', function() {
-            let passSec = $('#password'),
-                passVal = passSec.val();
-
-            if (passVal.length === 0) {
-                addErrClass(passSec, errors["empty_pass"], true, false);
-            } else {
-                if (passVal.length < 8) {
-                    addErrClass(passSec,errors["weak_pass"],true, false ,'warning-ind');
-                } else {
-                    removeErrClass(passSec,true);
-                }
-            }
-        });
-
-        $('input#cpassword').on('keyup', function() {
-            let cPassSec = $('#cpassword'),
-                cPassVal = cPassSec.val(),
-                passVal = $('#password').val();
-
-            if (cPassVal !== passVal) {
-                addErrClass(cPassSec, errors["pass_mismatch"], true, false);
-            } else {
-                removeErrClass(cPassSec,true);
-            }
-        });
-
-    });
     let errors = {
             "name_invalid_chars" : "{lang code='usr_uname_err3'}",
             "pass_mismatch"      : "{lang code='usr_pass_err3'}",
@@ -120,20 +85,5 @@
         format_date_js = '{get_date_js()}',
         language = '{$lang_obj->getLang()}';
 
-    function removeErrClass(obj, passSec = false) {
-        $(obj).closest('.form-group')
-            .removeClass('invalid-error')
-            .removeClass('warning-ind')
-            .addClass('success-ind');
-
-        $(obj).next('span').remove();
-        let value;
-        if (passSec === true) {
-            value = lang_password;
-        } else {
-            value = $(obj).val();
-        }
-        $('<span class="help-block"><strong>'+value+'</strong> seems good to go</span>').insertAfter(obj);
-    }
 </script>
 

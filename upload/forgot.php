@@ -16,7 +16,12 @@ switch ($mode) {
     default:
         if (isset($_POST['reset'])) {
             $input = post('email');
-            userquery::getInstance()->reset_password(1, $input);
+
+            if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.2', '999')) {
+                e(lang('technical_error'));
+            } else {
+                userquery::getInstance()->reset_password($input);
+            }
         }
         break;
 
@@ -61,6 +66,11 @@ switch ($mode) {
         }
         break;
 }
+
+$min_suffixe = System::isInDev() ? '' : '.min';
+ClipBucket::getInstance()->addJS([
+    'pages/forgot/forgot' . $min_suffixe . '.js' => 'admin'
+]);
 
 subtitle(lang("com_forgot_username"));
 template_files('forgot.html');

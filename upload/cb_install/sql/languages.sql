@@ -1707,4 +1707,8 @@ VALUES ('ongoing_conversion'),
        ('email_mfa_hint'),
        ('enter_email_and_avcode'),
        ('reset_password'),
-       ('confirm_reset_password');
+       ('confirm_reset_password'),
+       ('cant_reset_database_not_up_to_date'),
+       ('save_new_password'),
+       ('new_password'),
+       ('confirm_new_password');

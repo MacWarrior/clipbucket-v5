@@ -2421,58 +2421,44 @@ class userquery extends CBCategory
     }
 
     /**
-     * Function used to reset user password
-     * it has two steps
-     * 1 to send confirmation
-     * 2 to reset the password
-     *
-     * @param      $step
-     * @param      $input
-     * @param null $code
-     *
+     * @param $input
+     * @param $check_is_connected
      * @return bool
      * @throws \PHPMailer\PHPMailer\Exception
-     * @throws Exception
      */
-    function reset_password($step, $input, $check_is_connected = true): bool
+    function reset_password($input, $check_is_connected = true): bool
     {
         if ($check_is_connected && User::getInstance()->isUserConnected()) {
             return false;
         }
 
-        switch ($step) {
-            case 1:
-                if( empty($input) || !isValidEmail($input) ) {
-                    e(lang('invalid_email'));
-                    return false;
-                }
-
-                if (!verify_captcha()) {
-                    e(lang('recap_verify_failed'));
-                    return false;
-                }
-
-                $user = User::getInstance()->getOne(['email' => $input]);
-                if( empty($user) ){
-                    e(lang('email_forgot_password_sended'), 'm');
-                    return true;
-                }
-
-                $avcode = User::getInstance($user['userid'])->refreshAvcode();
-
-                $var = [
-                        'reset_password_link' => DirPath::getUrl('root') . 'forgot.php?mode=reset_pass&email=' . $udetails['email'] . '&avcode=' . $avcode,
-                        'avcode'              => $avcode,
-                ];
-                //Now Finally Sending Email
-                if (EmailTemplate::sendMail('password_reset_request', $user['userid'], $var)) {
-                    e(lang('email_forgot_password_sended'), 'm');
-                }
-                return true;
-
+        if (empty($input) || !isValidEmail($input)) {
+            e(lang('invalid_email'));
+            return false;
         }
 
-        return false;
+        if (!verify_captcha()) {
+            e(lang('recap_verify_failed'));
+            return false;
+        }
+
+        $user = User::getInstance()->getOne(['email' => $input]);
+        if (empty($user)) {
+            e(lang('email_forgot_password_sended'), 'm');
+            return true;
+        }
+
+        $avcode = User::getInstance($user['userid'])->refreshAvcode();
+        $var = [
+            'reset_password_link' => DirPath::getUrl('root') . 'forgot.php?mode=reset_pass&email=' . $udetails['email'] . '&avcode=' . $avcode,
+            'avcode'              => $avcode,
+        ];
+        //Now Finally Sending Email
+        if (EmailTemplate::sendMail('password_reset_request', $user['userid'], $var)) {
+            e(lang('email_forgot_password_sended'), 'm');
+        }
+        return true;
+
     }
 
     /**
