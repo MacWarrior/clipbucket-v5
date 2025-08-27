@@ -2450,8 +2450,8 @@ class userquery extends CBCategory
 
         $avcode = User::getInstance($user['userid'])->refreshAvcode();
         $var = [
-            'reset_password_link' => DirPath::getUrl('root') . 'forgot.php?mode=reset_pass&email=' . $udetails['email'] . '&avcode=' . $avcode,
-            'avcode'              => $avcode,
+                        'reset_password_link' => DirPath::getUrl('root') . 'forgot.php?mode=reset_pass&email=' . $user['email'] . '&avcode=' . $avcode,
+                        'avcode'              => $avcode
         ];
         //Now Finally Sending Email
         if (EmailTemplate::sendMail('password_reset_request', $user['userid'], $var)) {

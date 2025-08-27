@@ -1,11 +1,11 @@
 <div class="account-container">
-	{if $mode=='' || $mode=='reset_pass'  }
+	{if $mode=='' || $mode=='reset_pass'}
 
 	<div class="clearfix forgot-block">
 		<div class="account-holder">
 			<form method="post" name="activation" id="activation" class="user-form">
 				<h2>{lang code='user_forgot_message'}</h2>
-                <input type="hidden" name="userid" value="{{$userid}}" />
+                <input type="hidden" name="userid" value="{{$userid}}"/>
                 {if !$pass_change}
                     <div class="clearfix text-box">
                     {if $mode=='reset_pass' }
@@ -39,10 +39,7 @@
                     </div>
                     <input name="change_password" type="submit" class="btn btn-success btn-block" value="{lang('save_new_password')}"/>
                 {/if}
-
-
 			</form>
-			
 		</div>
 	</div>
 	
