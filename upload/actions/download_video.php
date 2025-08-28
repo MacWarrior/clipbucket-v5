@@ -6,33 +6,33 @@ $mode = $_GET['mode'];
 $videoKey = $_GET['videokey'];
 
 if( empty($videoKey) || empty($mode) ) {
-    redirect_to(get_server_url());
+    redirect_to(Network::get_server_url());
 }
 
 if( config('videosSection') != 'yes' || ($mode != 'cast ' && !User::getInstance()->hasPermission('view_video')) ){
-    redirect_to(get_server_url() . '403.php');
+    redirect_to(Network::get_server_url() . '403.php');
 }
 
 $video = Video::getInstance()->getOne(['videokey' => $videoKey]);
 if( empty($video) ) {
-    redirect_to(get_server_url());
+    redirect_to(Network::get_server_url());
 }
 
 if( $video['file_type'] == 'mp4' && empty($_GET['res']) ) {
-    redirect_to(get_server_url());
+    redirect_to(Network::get_server_url());
 }
 
 $video_playable = video_playable($video);
 if( $mode != 'cast' && !$video_playable ) {
-    redirect_to(get_server_url());
+    redirect_to(Network::get_server_url());
 }
 
 if( $mode == 'download' && !CbVideo::getInstance()->downloadable($video) ){
-    redirect_to(get_server_url());
+    redirect_to(Network::get_server_url());
 }
 
 if( !$video_playable && $mode == 'cast' && !Video::getInstance($video['videoid'])->isCastAuthed() ){
-    redirect_to(get_server_url());
+    redirect_to(Network::get_server_url());
 }
 
 $file = false;
@@ -59,7 +59,7 @@ if( $video['file_type'] == 'hls' && !empty($_GET['file']) ) {
 
 
 if( !$file || !file_exists($file['filepath']) ) {
-    redirect_to(get_server_url() . '404.php');
+    redirect_to(Network::get_server_url() . '404.php');
 }
 
 if (isset($_SERVER['HTTP_RANGE'])) {
