@@ -1,12 +1,12 @@
 <?php
-define('THIS_PAGE', 'cb_conversion_queue');
+const THIS_PAGE = 'cb_conversion_queue';
 require_once dirname(__FILE__, 2) . '/includes/admin_config.php';
 
 $permission = 'advanced_settings';
-if( !Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '275') ){
+if (!Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '275')) {
     $permission = 'web_config_access';
 }
-User::getInstance()->hasPermissionOrRedirect($permission,true);
+User::getInstance()->hasPermissionOrRedirect($permission, true);
 pages::getInstance()->page_redir();
 
 /* Generating breadcrumb */

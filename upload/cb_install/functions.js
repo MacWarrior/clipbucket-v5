@@ -88,12 +88,14 @@ $( document ).ready(function() {
         select_timezone.on('change', function (event) {
             $('.alert-dismissable').remove();
             $(select_timezone).removeClass('has-error');
+            $('#timezone').next('.select2-container').removeClass('has-error');
             $('#spinner-content').show();
             $.post('./check_timezone.php',{timezone: $(this).val()} ,function(data) {
                 if (data.success) {
                     $('.btn-primary').prop('disabled', false);
                 } else {
                     $(select_timezone).addClass('has-error');
+                    $('#timezone').next('.select2-container').addClass('has-error');
                     $('#sub_container').prepend(data.msg);
                     $('.btn-primary').prop('disabled', true);
                 }
@@ -134,6 +136,8 @@ $( document ).ready(function() {
     });
 
     $('#timezone').select2();
+    $('#timezone').next('.select2-container').addClass('has-error');
+
 });
 
 function checkBeforeSubmit(check) {

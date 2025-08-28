@@ -51,6 +51,11 @@ html.light {
         border-radius: var(--border-radius);
     }
 
+    /* Tabs */
+    .default_bootstrap.nav-tabs.nav>li>a{
+        border-radius: var(--border-radius) var(--border-radius) 0 0;
+    }
+
     /* Sidebar */
     .sidebar-channels,
     .sidebar-items,
@@ -200,7 +205,7 @@ html.light {
     }
 
     /* Shadows */
-    .item-video:after,
+    .item-video:not(:has(.slider-video-container)):after,
     .item-photo:after,
     .item-channel:after,
     .collection-item:after,

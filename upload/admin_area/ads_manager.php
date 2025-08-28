@@ -1,5 +1,5 @@
 <?php
-define('THIS_PAGE', 'ads_manager');
+const THIS_PAGE = 'ads_manager';
 require_once dirname(__FILE__, 2) . '/includes/admin_config.php';
 
 User::getInstance()->hasPermissionOrRedirect('ad_manager_access', true);

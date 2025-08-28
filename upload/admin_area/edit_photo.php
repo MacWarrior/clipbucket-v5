@@ -1,6 +1,6 @@
 <?php
 global $breadcrumb;
-define('THIS_PAGE', 'edit_photo');
+const THIS_PAGE = 'edit_photo';
 require_once dirname(__FILE__, 2) . '/includes/admin_config.php';
 
 User::getInstance()->hasPermissionOrRedirect('video_moderation');
@@ -44,7 +44,7 @@ $requiredFields = CBPhotos::getInstance()->load_required_forms($p);
 $otherFields = CBPhotos::getInstance()->load_other_forms($p);
 assign('requiredFields', $requiredFields);
 assign('otherFields', $otherFields);
-
+assign('comments', Comments::getAll(['type' => 'p', 'type_id' => $id, 'order' => ' comment_id DESC']));
 $min_suffixe = System::isInDev() ? '' : '.min';
 ClipBucket::getInstance()->addAdminJS([
     'tag-it' . $min_suffixe . '.js'                            => 'admin',

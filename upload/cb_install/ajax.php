@@ -1,5 +1,5 @@
 <?php
-define('THIS_PAGE', 'cb_install');
+const THIS_PAGE = 'cb_install';
 
 require_once dirname(__DIR__ ). DIRECTORY_SEPARATOR . 'includes' . DIRECTORY_SEPARATOR . 'constants.php';
 require_once DirPath::get('vendor') . 'autoload.php';
@@ -145,7 +145,7 @@ if ($mode == 'sitesettings') {
                 if( !empty($_POST[$key . '_filepath']) ){
                     $filepath = $_POST[$key . '_filepath'];
                 } else {
-                    $filepath = System::get_binaries($key);;
+                    $filepath = System::get_binaries($key);
                 }
 
                 $sql = 'UPDATE ' . $dbprefix . 'config SET value = "' . $cnnct->real_escape_string($filepath) . '" WHERE name = "' . $config['config'] . '"';

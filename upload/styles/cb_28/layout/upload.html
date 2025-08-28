@@ -1,3 +1,4 @@
+
 {if $msg}
     <div class="alert alert-block alert-info">
         {$msg}
@@ -77,6 +78,7 @@
     var available_tags = JSON.parse('{$available_tags|json_encode|replace:"'": "\'"}');
     var pourcent_completed = '{$pourcent_completed}';
     var cancel_uploading = '{$cancel_uploading}';
+    let text_confirm_sub_file = '{lang code = "confirm_delete_subtitle_file"}';
     {if $selected_collection}
     var collection_id = '{$selected_collection.collection_id}';
     {/if}

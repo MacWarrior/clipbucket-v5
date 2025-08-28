@@ -107,7 +107,7 @@ $(document).ready(function (){
 
         nextHit = parseInt(loadHit) + 1;
         $.ajax({
-            url: baseurl+"ajax/view_channel.php",
+            url: baseurl+"actions/view_channel.php",
             type: "post",
             dataType: "json",
             data: {
@@ -159,7 +159,7 @@ $(document).ready(function (){
 
         nextHit = parseInt(loadHit) + 1;
         $.ajax({
-            url: baseurl+"ajax/view_channel.php",
+            url: baseurl+"actions/view_channel.php",
             type: "post",
             dataType: "html",
             data: {

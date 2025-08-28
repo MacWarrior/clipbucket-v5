@@ -1,6 +1,6 @@
 <?php
-define('THIS_PAGE', 'manage_channels');
-define('PARENT_PAGE', 'channels');
+const THIS_PAGE = 'manage_channels';
+const PARENT_PAGE = 'channels';
 
 require_once dirname(__FILE__, 2) . '/includes/config.inc.php';
 

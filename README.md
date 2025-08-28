@@ -220,3 +220,4 @@ Looking for expert support, hosting, or custom development for your <a href="htt
 - ⭐ Star us on <a href="https://hub.docker.com/r/oxygenz/clipbucket-v5" target="_blank">DockerHub</a>
 - 👤 Follow us on <a href="https://www.linkedin.com/company/oxygenz/" target="_blank">Linkedin</a>
 - 🔥 Upvote & review us on <a href="https://www.producthunt.com/posts/clipbucketv5" target="_blank">Product Hunt</a>
+- 📊 Enable anonymous usage statistics *(Admin Area > Configurations > Basic settings : Enable usage statistics reporting)*

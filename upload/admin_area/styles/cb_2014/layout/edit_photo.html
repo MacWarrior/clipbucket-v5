@@ -187,23 +187,52 @@
                 <h3>Other fields</h3>
                 <div class="tabbable">
                     <ul class="nav nav-tabs" id="otherFieldsTab">
-                        {foreach from=$otherFields item=field name=tabs}
-                        <li class="{if $smarty.foreach.tabs.first}active{/if}">
-                            <a data-toggle="tab" href="#id_{$field.id}">
-                                {$field.title}
-                            </a>
+                        <li class="active">
+                            <a data-toggle="tab" href="#miscellaneous">{lang('miscellaneous_options')}</a>
                         </li>
+                        {foreach from=$otherFields item=field name=tabs}
+                            {if !in_array($field.id, ['allow_rating', 'allow_embedding', 'allow_comments']) }
+                                <li>
+                                    <a data-toggle="tab" href="#id_{$field.id}">
+                                        {$field.title}
+                                    </a>
+                                </li>
+                            {/if}
                         {/foreach}
+                        {if config('enable_comments_photo') == 'yes'}
+                            <li>
+                                <a data-toggle="tab" href="#comments">
+                                    <i class="fa fa-comments"></i> {lang('comments')}
+                                </a>
+                            </li>
+                        {/if}
                     </ul>
 
                     <div class="tab-content">
-                        {foreach from=$otherFields item=field name=content}
-                        <div id="id_{$field.id}" class="tab-pane {if $smarty.foreach.content.first}active{/if}">
-                            <label><strong>{$field.title}</strong></label><br>
-                            {if $field.hint_1}<div class="hint">{$field.hint_1}</div>{/if}
-                            {$formObj->createField($field)}
+                        <div id="miscellaneous" class="tab-pane active">
+                            {foreach from=$otherFields item=field name=content}
+                                {if in_array($field.id, ['allow_rating', 'allow_embedding', 'allow_comments']) }
+                                    {$formObj->createField($field)}
+                                {/if}
+                            {/foreach}
                         </div>
+                        {foreach from=$otherFields item=field name=content}
+                            {if !in_array($field.id, ['allow_rating', 'allow_embedding', 'allow_comments']) }
+                                <div id="id_{$field.id}" class="tab-pane ">
+                                    <label><strong>{$field.title}</strong></label><br>
+                                    {if $field.hint_1}
+                                        <div class="hint">{$field.hint_1}</div>{/if}
+                                    {$formObj->createField($field)}
+                                </div>
+                            {/if}
                         {/foreach}
+                        {if config('enable_comments_photo') == 'yes'}
+                            <div id="comments" class="tab-pane">
+                                <div class="form-group">
+                                    {include file="$style_dir/blocks/comments.html" comment_type='photo'}
+                                </div>
+                            </div>
+                        {/if}
                     </div>
                 </div>
             </div>
@@ -219,4 +248,5 @@
 </form>
 <script>
     var available_tags = JSON.parse('{$available_tags|json_encode|replace:"'": "\'"}');
+    let text_confirm_comment = '{lang('text_confirm_comment')}';
 </script>

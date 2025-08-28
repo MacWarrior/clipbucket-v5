@@ -1271,3 +1271,38 @@ textarea[disabled]{
 #config_player .col-md-6 .row {
     height: 31px;
 }
+
+.glyphicon-bell.i-primary {
+    animation: bell-cycle 20s linear infinite;
+    transform-origin: top center;
+}
+
+@keyframes bell-cycle {
+    0% {transform: rotate(0deg);}
+    1%   { transform: rotate(-20deg); }
+    1.5%   { transform: rotate(19deg); }
+    2%   { transform: rotate(-19deg); }
+    2.5%   { transform: rotate(18deg); }
+    3%   { transform: rotate(-18deg); }
+    3.5%   { transform: rotate(18deg); }
+    4%   { transform: rotate(-18deg); }
+    4.5%   { transform: rotate(17deg); }
+    5%   { transform: rotate(-16deg); }
+    5.5%   { transform: rotate(16deg); }
+    6%   { transform: rotate(-15deg); }
+    6.5%   { transform: rotate(13deg); }
+    7%   { transform: rotate(-10deg); }
+    7.5%   { transform: rotate(10deg); }
+    8%   { transform: rotate(-9deg); }
+    8.5%   { transform: rotate(7deg); }
+    9%   { transform: rotate(-5deg); }
+    9.5%   { transform: rotate(3deg); }
+    10%  { transform: rotate(0deg); }
+
+    100% {transform: rotate(0deg);}
+}
+
+.empty_table{
+    text-align: center;
+    font-style: italic;
+}

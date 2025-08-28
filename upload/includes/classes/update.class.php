@@ -378,9 +378,10 @@ class Update
     /**
      * @throws Exception
      */
-    public function displayGlobalSQLUpdateAlert($current_updating = false)
+    public function displayGlobalSQLUpdateAlert($current_updating = false, $force_no_stuck_icon = false)
     {
         $nb_db_update = 0;
+        assign('force_no_stuck_icon', $force_no_stuck_icon);
         if( $this->needCodeDBUpdate() ){
             $nb_db_update += $this->getUpdateFiles(true);
         }
@@ -394,6 +395,19 @@ class Update
         }
 
         assign('current_updating', $current_updating);
+        $lastStart = 0;
+        assign('id', null);
+        if ($current_updating== 'db') {
+            //getting current execution time
+            $tool = AdminTool::getUpdateDbTool();
+         } else {
+            $tool = AdminTool::getUpdateCoreTool();
+        }
+        if (!empty($tool->getLastLogs()['logs'])) {
+            $lastStart = $tool->getLastStart();
+        }
+        assign('id', $tool->getId());
+        assign('lastStart', $lastStart);
         assign('launch_wip', $this->isWIPFile());
 
         assign('need_core_update', false);
@@ -731,16 +745,20 @@ class Update
         return shell_exec(System::get_binaries('git') . ' pull --quiet 2>&1');
     }
 
+    /**
+     * @return true
+     * @throws Exception
+     */
     public static function updateGitSources()
     {
         $update = self::getInstance();
         if( !$update->isGitInstalled() || !$update->isManagedWithGit() ){
-            return false;
+            throw new Exception('Git is not installed or not managed with git');
         }
 
         $root_directory = trim($update->getGitRootDirectory());
         if( !$root_directory ){
-            return false;
+            throw new Exception('Unable to get git root directory');
         }
 
         $return_reset = $update->resetGitRepository($root_directory);
@@ -748,7 +766,7 @@ class Update
             if( System::isInDev() ){
                 DiscordLog::sendDump($return_reset);
             }
-            return $return_reset;
+            throw new Exception($return_reset);
         }
 
         $return_update = $update->updateGitRepository($root_directory);
@@ -756,7 +774,7 @@ class Update
             if( System::isInDev() ){
                 DiscordLog::sendDump($return_update);
             }
-            return $return_update;
+            throw new Exception($return_update);
         }
 
         return true;

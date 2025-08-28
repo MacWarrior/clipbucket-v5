@@ -41,7 +41,7 @@
                     }
                     <li class="purple">
                         <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown" data-bs-display="static">
-                            <i class="glyphicon glyphicon-bell"></i>
+                            <i class="glyphicon glyphicon-bell{if $nb_notif >0 } i-primary{/if}"></i>
                             <span class="badge badge-important">{$nb_notif}</span>
                         </a>
                         <ul class="dropdown-navbar navbar-pink dropdown-menu dropdown-caret dropdown-close pull-right">
@@ -113,15 +113,13 @@
                     <li class="dropdown blue">
                         <a data-bs-toggle="dropdown" data-bs-display="static" class="dropdown-toggle clickable" href="#">
                             <i class="glyphicon glyphicon-arrow-down"></i>
-                            <span class="badge badge-important">Display Option</span>
+                            <span class="badge badge-important">{lang('display_option')}</span>
                         </a>
                         <ul class="dropdown-menu dropdown-caret dropdown-close pull-right" role="menu" aria-labelledby="dropdownMenu1">
                             <li class="dropdown-header">
-                                <form id="display_opts" name="display_opts" method="post">
-                                    Results Per Page :
-                                    <input name="admin_pages" type="text" style="width:50px;" value="{ClipBucket::getInstance()->configs.admin_pages}"/>
-                                    <input type="submit" name="update_dp_options" id="button" value="{lang code='update'}" class="btn btn-primary btn-xs"/>
-                                </form>
+                                Results Per Page :
+                                <input name="admin_pages" type="text" style="width:50px;" value="{ClipBucket::getInstance()->configs.admin_pages}"/>
+                                <button id="update_dp_options" class="btn btn-primary btn-xs">{lang code='update'}</button>
                             </li>
                         </ul>
                     </li>

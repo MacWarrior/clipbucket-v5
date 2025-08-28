@@ -167,7 +167,7 @@ class cbactions
                 $users = explode(',', $post_users);
                 if (is_array($users) && !empty($post_users)) {
                     foreach ($users as $username) {
-                        $user = User::getInstance()->getOne(['username' => $username]);
+                        $user = User::getInstance()->getOne(['username_strict' => $username]);
                         if (!userquery::getInstance()->user_exists($user['username']) && !isValidEmail($user['email'])) {
                             e(lang('user_no_exist_wid_username', $username));
                             $ok = false;

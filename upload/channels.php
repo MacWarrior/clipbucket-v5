@@ -1,5 +1,5 @@
 <?php
-define('THIS_PAGE', 'channels');
+const THIS_PAGE = 'channels';
 require 'includes/config.inc.php';
 
 User::getInstance()->hasPermissionOrRedirect('view_channels');

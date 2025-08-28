@@ -132,16 +132,17 @@
                                         </li>
                                     {/if}
 
+                                    {$total_notif = User::getInstance()->getNotificationInbox() + User::getInstance()->getNotificationContact()}
                                     <li class="dropdown myaccount-dd">
                                         <a href="javascript:void(0);" class="user-area dropdown-toggle" data-bs-toggle="dropdown" data-bs-display="static">
                                             <img src="{userquery::getInstance()->getUserThumb('', '',user_id())}" class="no_select" width="35" height="35"/>
-                                            <span>{display_clean(User::getInstance()->get('username')|truncate:15)}</span>
+                                            <span>{display_clean(User::getInstance()->get('username')|truncate:15)} {if $total_notif > 0 }&nbsp; <i class="glyphicon glyphicon-bell i-primary"></i>{/if}</span>
                                         </a>
                                         <ul class="dropdown-menu">
                                             {if User::getInstance()->hasAdminAccess()}
                                                 <li><a href="{DirPath::getUrl('admin_area')}">{lang code="admin_area"}</a></li>
                                             {/if}
-                                            <li><a href="{cblink name='my_account'}">{lang code="my_account"}</a></li>
+                                            <li><a href="{cblink name='my_account'}">{lang code="my_account"} {if $total_notif > 0 }&nbsp;<div class="pull-right"><i class="glyphicon glyphicon-bell i-primary"></i></div>{/if}</a></li>
                                             {if isSectionEnabled('videos') && User::getInstance()->hasPermission('allow_video_upload')}
                                                 <li><a href="{cblink name='my_videos'}">{lang('manage_x', lang('videos')|lower)}</a></li>
                                             {/if}

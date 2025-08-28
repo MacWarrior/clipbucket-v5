@@ -186,7 +186,7 @@ function get_thumb($vdetails, $multi = false, $size = false, $type = false, $max
 
     if (empty($resThumb) && $resVideo['num'] === null && $vdetails['status'] == 'Successful') {
         //if no thumbs, we put some in db see \create_thumb()
-        return create_thumb($resThumb, $multi, $size);
+        return $multi ? [create_thumb($resThumb, $multi, $size)] : create_thumb($resThumb, $multi, $size);
     }
     if (empty($resThumb)) {
         return $multi ? [default_thumb($return_type)] : default_thumb($return_type);
@@ -741,6 +741,7 @@ function update_video_by_filename($file_name, $fields, $values)
  */
 function activate_video_with_file($vid): void
 {
+    DiscordLog::sendDump('fjneziofhoize');
     $vdetails = get_video_basic_details($vid);
     $file_name = $vdetails['file_name'];
     $results = Clipbucket_db::getInstance()->select(tbl('conversion_queue'), '*', " cqueue_name='$file_name' AND cqueue_conversion='yes'");
@@ -772,6 +773,13 @@ function get_file_details($file_name, $get_jsoned = false)
             $str = $video['file_directory'] . DIRECTORY_SEPARATOR;
             $file = DirPath::get('logs') . $str . $file_name . '.log';
         }
+    }
+
+    if( !file_exists($file) ) {
+        if( System::isCli() ){
+            return false;
+        }
+        sessionMessageHandler::add_message(lang('log_file_doesnt_exist'), 'w',  DirPath::getUrl('admin_area'));
     }
 
     //saving log in a variable
@@ -919,6 +927,14 @@ function remove_video_subtitles($vdetails): void
 }
 
 /**
+ * @throws Exception
+ */
+function remove_video_embed($vdetails): void
+{
+    Video::getInstance()->removeEmbedPlayer(['videoid' => $vdetails['videoid']]);
+}
+
+/**
  * Function used to call functions
  * when video is going to watched
  * ie in watch_video.php
@@ -938,7 +954,7 @@ function call_watch_video_function($vdo): void
         }
     }
 
-    increment_views($vdo['videokey'], 'video');
+    increment_views($vdo, 'video');
 
     $userid = user_id();
     if ($userid) {
@@ -1084,31 +1100,9 @@ function get_vid_extensions(): array
     return explode(',', $exts);
 }
 
-function register_custom_video_file_func($method, $class = null): bool
-{
-    if (empty($method)) {
-        return false;
-    }
-
-    if (empty($class)) {
-        ClipBucket::getInstance()->custom_video_file_funcs[] = $method;
-    } else {
-        ClipBucket::getInstance()->custom_video_file_funcs[] = [
-            'class'    => $class
-            , 'method' => $method
-        ];
-    }
-    return true;
-}
-
-function get_custom_video_file_funcs()
-{
-    return ClipBucket::getInstance()->custom_video_file_funcs;
-}
-
 function exec_custom_video_file_funcs($vdetails, $hq = false)
 {
-    $custom_video_file_funcs = get_custom_video_file_funcs();
+    $custom_video_file_funcs = ClipBucket::getInstance()->get_custom_video_file_funcs();
     if (!empty($custom_video_file_funcs)) {
         foreach ($custom_video_file_funcs as $func) {
             if (is_array($func)) {

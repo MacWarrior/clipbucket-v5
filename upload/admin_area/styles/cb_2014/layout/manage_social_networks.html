@@ -3,7 +3,7 @@
         <h2>
             {lang code='manage_social_networks_links'}
             <div class="dropdown pull-right">
-                <button id="hideshow" class="btn btn-primary pull-right " >
+                <button id="hideshow" class="btn btn-primary pull-right">
                     {lang code='add_new_social_network_link'}
                 </button>
             </div>
@@ -22,7 +22,7 @@
         <th class="col-md-2">{lang('title')}</th>
         <th class="col-md-5">{lang('url')}</th>
         <th class="col-md-2">{lang('order')}</th>
-        <th class="col-md-1">Action</th>
+        <th class="col-md-1">{lang('action')}</th>
     </tr>
     {section name=i loop=$social_network_links}
     <tr id="tr_{$social_network_links[i].id_social_networks_link}">

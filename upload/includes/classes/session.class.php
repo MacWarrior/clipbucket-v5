@@ -9,6 +9,8 @@ class Session
     var $cookie = true;
     var $timeout = 3600; //1 hour
 
+    private static $session;
+
     /**
      * offcourse, its a constructor
      */
@@ -20,8 +22,10 @@ class Session
 
     public static function getInstance(): Session
     {
-        global $sess;
-        return $sess;
+        if( empty(self::$session) ){
+            self::$session = new self();
+        }
+        return self::$session;
     }
 
     /**
@@ -187,6 +191,23 @@ class Session
     function get($name)
     {
         return $this->get_session($name);
+    }
+
+    public static function start(): void
+    {
+        ini_set('session.gc_maxlifetime', COOKIE_TIMEOUT);
+        session_set_cookie_params([
+            'lifetime' => COOKIE_TIMEOUT
+            ,'path' => '/'
+            ,'httponly' => true
+            ,'secure' => Network::is_ssl()
+        ]);
+        try {
+            session_start();
+        } catch(Exception $e) {
+            session_regenerate_id();
+            session_start();
+        }
     }
 
     /**

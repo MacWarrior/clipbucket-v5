@@ -70,8 +70,14 @@ class CB_video_js
         $video_play = get_video_files($vdetails,true);
 
         assign('video_files', $video_play);
-        assign('vdata',$vdetails);
+        assign('vdata', $vdetails);
         assign('anonymous_id', userquery::getInstance()->get_anonymous_user());
+
+        if( config('enable_video_embed_players') == 'yes' && !BACK_END ){
+            $embed_players = Video::getInstance()->getEmbedPlayers(['videoid' => $vdetails['videoid'], 'enabled' => true]);
+            assign('embed_players', $embed_players);
+        }
+
         Template(DirPath::get('player') . self::class .DIRECTORY_SEPARATOR . 'cb_video_js.html',false);
         return true;
     }

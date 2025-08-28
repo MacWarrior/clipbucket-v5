@@ -1,5 +1,5 @@
 <?php
-define('THIS_PAGE', 'basic_settings');
+const THIS_PAGE = 'basic_settings';
 require_once dirname(__FILE__, 2) . '/includes/admin_config.php';
 
 $permission = 'basic_settings';
@@ -158,6 +158,8 @@ if (isset($_POST['update'])) {
         , 'enable_cookie_banner'
         , 'enable_public_video_page'
         , 'can_upload_subtitles'
+        , 'enable_anonymous_stats'
+        , 'enable_video_embed_players'
     ];
 
     $config_booleans_to_refactor = [
@@ -420,7 +422,12 @@ if (isset($_POST['update'])) {
         'max_collection_categories',
         'channel_video_style',
         'enable_public_video_page',
-        'can_upload_subtitles'
+        'can_upload_subtitles',
+        'videos_video_style',
+        'enable_anonymous_stats',
+        'enable_video_embed_players',
+        'enable_anonymous_stats',
+        'enable_multi_factor_authentification'
     ];
 
     //Numeric Array

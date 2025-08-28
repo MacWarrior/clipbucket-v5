@@ -579,7 +579,12 @@ function progressVideoCheckHome(ids_to_check_progress, displayType, interval_nam
                             var process_div = $('.processing[data-id="' + video.videoid + '"]');
                             //if process don't exist : get thumb + process div
                             if (process_div.length == 0) {
-                                parent_div.find(selector).replaceWith(video.html);
+                                if (class_video === '.item-video') {
+                                    parent_div.find(selector).html(video.html)
+                                } else {
+                                    parent_div.find(selector).replaceWith(video.html);
+                                }
+
                                 if (displayType == 'home_featured' && featured_video_style == 'modern') {
                                     slider.updateSlideListeners();
                                     if (slider.slidesContainer.children.length === 1) {
@@ -591,7 +596,12 @@ function progressVideoCheckHome(ids_to_check_progress, displayType, interval_nam
                                 process_div.find('span').html(video.percent + '%');
                             }
                         } else {
-                            parent_div.find(selector).replaceWith(video.html);
+                            if (class_video === '.item-video') {
+                                parent_div.find(selector).html(video.html)
+                            } else {
+                                parent_div.find(selector).replaceWith(video.html);
+                            }
+
                             if (displayType == 'home_featured' && featured_video_style == 'modern') {
                                 slider.updateSlideListeners();
                                 if (slider.slidesContainer.children.length === 1) {

@@ -1,6 +1,6 @@
 <?php
-define('THIS_PAGE', 'upload');
-define('PARENT_PAGE', 'upload');
+const THIS_PAGE = 'upload';
+const PARENT_PAGE = 'upload';
 require 'includes/config.inc.php';
 
 User::getInstance()->hasPermissionOrRedirect('allow_video_upload', true);

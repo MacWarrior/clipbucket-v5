@@ -9,6 +9,7 @@
     ,"ext-mbstring": "*"
     ,"ext-openssl": "*"
     ,"ext-ffi": "*"
+    ,"ext-libxml": "*"
 
     ,"filp/whoops": "*"
     ,"predis/predis": "*"

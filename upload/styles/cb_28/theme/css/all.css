@@ -1865,6 +1865,15 @@ h1 {
   margin: 0 5px 0 0;
 }
 
+.default_bootstrap.nav-tabs{
+    border-bottom: none;
+}
+.default_bootstrap.nav-tabs li a img.icon{
+    width:19px;
+    display:inline;
+    margin-right:5px;
+}
+
 .fav-repo .desc-list,
 .watch-vid-details .desc-list {
   list-style: none;
@@ -7041,4 +7050,36 @@ div.show-cookie-list i{
 
 .newuser-links>li>a {
   color:var(--color-02);
+}
+
+ul.tagit li.tagit-choice.danger-important {
+  color: #a94442;
+  background-color: #f2dede;
+  border-color: #ebccd1;
+}
+ul.tagit li.tagit-choice.success-important {
+  color: #3c763d;
+  background-color: #dff0d8;
+  border-color: #d6e9c6;
+}
+
+span.tagit-label i.fa {
+  padding-left: 5px;
+}
+
+#mfa_code {
+  text-align: center;
+}
+
+#mfa_code input {
+  width: 35px;
+  margin-left: 5px;
+  display: inline;
+}
+#enterMFACodeModal > div > div > div.modal-body {
+  min-height: 80px;
+}
+
+#enterMFACodeModal > div > div > div.modal-body > .alert {
+    width: 100%;
 }

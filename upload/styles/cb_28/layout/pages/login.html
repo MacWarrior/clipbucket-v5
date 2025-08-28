@@ -13,17 +13,56 @@
 
                 <div class="checkbox form-group">
                     <label>
-                        <input type="checkbox" name="remember_me" value="yes">
+                        <input type="checkbox" name="remember_me" id="remember_me" value="yes">
                         {lang code="remember_me"}
                     </label>
                 </div>
 
                 <input id="login_btn" type="submit" name="login" value="{lang code='login'}" class="btn btn-primary btn-lg btn-block">
                 {if config('disable_email') == 'no'}
-                    <a href="{$baseurl}forgot.php?mode=recover_username">{lang code='user_forgot_username'}</a> - <a href="{$baseurl}forgot.php">{lang code='user_forgot_message'}</a>
+                    <div style="font-size:0.75em;text-align:center;">
+                        <a href="{$baseurl}forgot.php?mode=recover_username">{lang code='user_forgot_username'}</a>
+                        - <a href="{$baseurl}forgot.php">{lang code='user_forgot_message'}</a>
+                        {if config('email_verification') == '1'}
+                        - <a href="{$baseurl}email_confirm.php?mode=request">{lang code='usr_actiavation_msg1'}</a>
+                        {/if}
+                    </div>
                 {/if}
                 <input type="hidden" name="login" value="login"/>
             </form>
         </div>
     </div>
 </div>
+{if in_array(config('enable_multi_factor_authentification'), ['allowed'])}
+<div class="modal fade" id="enterMFACodeModal" tabindex="-1" role="dialog" aria-labelledby="confirmModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="confirmModalLabel">{lang('please_enter_mfa_code')}</h4>
+            </div>
+            <div class="modal-body">
+                <p id="email_mfa_hint" style="display:none;">{lang('email_mfa_hint')}</p>
+                <div class="form-group" id="mfa_code">
+                    <input type="text" class="form-control" maxlength="1">
+                    <input type="text" class="form-control" maxlength="1">
+                    <input type="text" class="form-control" maxlength="1">
+                    <input type="text" class="form-control" maxlength="1">
+                    <input type="text" class="form-control" maxlength="1">
+                    <input type="text" class="form-control" maxlength="1">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">{lang code="cancel"}</button>
+                <button type="button" class="btn btn-primary" id="confirmMFACodeBtn">{lang code="login"}</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    lang = [];
+    lang['please_enter_mfa_code'] = '{lang code="please_enter_mfa_code"}';
+    lang['please_enter_6_digit_mfa_code'] = '{lang code="please_enter_6_digit_mfa_code"}';
+    lang['please_fill_all_fields'] = '{lang code="please_fill_all_fields"}';
+</script>
+{/if}

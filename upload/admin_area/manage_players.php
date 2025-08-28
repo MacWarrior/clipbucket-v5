@@ -1,5 +1,5 @@
 <?php
-define('THIS_PAGE', 'manage_players');
+const THIS_PAGE = 'manage_players';
 require_once dirname(__FILE__, 2) . '/includes/admin_config.php';
 
 global $cbplayer;

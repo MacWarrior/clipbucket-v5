@@ -130,13 +130,6 @@
                                     <input value="yes" name="seo" id="seo" {if $row.seo=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
                                     <span class="lbl"></span>
                                 </div>
-                                <div class="col-md-4">
-                                    <label class="nowrap" for="store_guest_session" title="Store guest Session">Store guest Session</label>
-                                </div>
-                                <div class="col-md-2 row-size no_padding">
-                                    <input value="yes" id="store_guest_session" {if $row.store_guest_session=='yes'}checked{/if} name="store_guest_session" type="checkbox" class="ace ace-switch ace-switch-5"/>
-                                    <span class="lbl"></span>
-                                </div>
                             </div>
                             <hr/>
                             <div class="row">
@@ -168,6 +161,16 @@
                                 </div>
                                 <div class="col-md-2 row-size no_padding">
                                     <input value="yes" id="enable_sitemap" {if $row.enable_sitemap=='yes'}checked{/if} name="enable_sitemap" type="checkbox" class="ace ace-switch ace-switch-5"/>
+                                    <span class="lbl"></span>
+                                </div>
+                            </div>
+                            <hr/>
+                            <div class="row">
+                                <div class="col-md-8">
+                                    <label class="nowrap" for="enable_anonymous_stats" title="{lang('anonymous_stats')}">{lang('anonymous_stats')} <span class="fa fa-question-circle tips" title="{lang code='anonymous_stats_hint'}"></span></label>
+                                </div>
+                                <div class="col-md-4 row-size no_padding">
+                                    <input value="yes" id="enable_anonymous_stats" {if $row.enable_anonymous_stats=='yes'}checked{/if} name="enable_anonymous_stats" type="checkbox" class="ace ace-switch ace-switch-5"/>
                                     <span class="lbl"></span>
                                 </div>
                             </div>
@@ -273,6 +276,7 @@
                                 <li><a data-toggle="tab" href="interfaces_photo">{lang('photo')|ucfirst}</a></li>
                                 <li><a data-toggle="tab" href="interfaces_collection">{lang('collection')|ucfirst}</a></li>
                                 <li><a data-toggle="tab" href="interfaces_channels">{lang('channels')|ucfirst}</a></li>
+                                <li><a data-toggle="tab" href="interfaces_videos">{lang('videos')|ucfirst}</a></li>
                             </ul>
                         </div>
                         <div class="col-md-10 tab-content">
@@ -788,12 +792,30 @@
                                     <div class="col-md-6">
                                         <div class="row">
                                             <div class="col-md-8">
-                                                <label class="nowrap" for="channel_video_style" title="{lang('channel_video_style')}">{lang('channel_video_style')}</label>
+                                                <label class="nowrap" for="channel_video_style" title="{lang('option_video_bloc_style')}">{lang('option_video_bloc_style')}</label>
                                             </div>
                                             <div class="col-md-4 row-size">
                                                 <select class='form-control' name="channel_video_style" id="channel_video_style">
                                                     <option value="classic" {if $row.channel_video_style=='classic'}selected{/if}>{lang('classic')}</option>
                                                     <option value="modern" {if $row.channel_video_style=='modern'}selected{/if}>{lang('modern')}</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <hr/>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="tab-pane interfaces" id="interfaces_videos">
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <div class="row">
+                                            <div class="col-md-8">
+                                                <label class="nowrap" for="videos_video_style" title="{lang('option_video_bloc_style')}">{lang('option_video_bloc_style')}</label>
+                                            </div>
+                                            <div class="col-md-4 row-size">
+                                                <select class='form-control' name="videos_video_style" id="videos_video_style">
+                                                    <option value="classic" {if $row.videos_video_style=='classic'}selected{/if}>{lang('classic')}</option>
+                                                    <option value="modern" {if $row.videos_video_style=='modern'}selected{/if}>{lang('modern')}</option>
                                                 </select>
                                             </div>
                                         </div>
@@ -905,6 +927,18 @@
                                 <div class="col-md-4 row-size">
                                     <input value="yes" name="enable_user_self_deletion" id="enable_user_self_deletion" {if $row.enable_user_self_deletion=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
                                     <span class="lbl"></span>
+                                </div>
+                            </div>
+                            <hr/>
+                            <div class="row">
+                                <div class="col-md-8">
+                                    <label class="nowrap" for="enable_multi_factor_authentification" title="{lang code="option_enable_multi_factor_authentification"}">{lang code="option_enable_multi_factor_authentification"}</label>
+                                </div>
+                                <div class="col-md-4 row-size">
+                                    <select class="form-control" name="enable_multi_factor_authentification" id="enable_multi_factor_authentification">
+                                        <option value="allowed" {if $row.enable_multi_factor_authentification == 'allowed' } selected {/if} >{lang('allow')}</option>
+                                        <option value="disabled" {if $row.enable_multi_factor_authentification == 'disabled'} selected {/if} >{lang('disable')}</option>
+                                    </select>
                                 </div>
                             </div>
                             <hr/>
@@ -1427,21 +1461,18 @@
                             </div>
                             <hr/>
                             <div class="row">
-                                <div class="col-md-8">
-                                    <label class="nowrap" for="video_categories" title="{lang('max_video_categories')}"><span class="fa fa-question-circle tips" title="{lang code='max_video_categories_hint'}"></span> {lang('max_video_categories')}</label>
-                                </div>
-                                <div class="col-md-4 row-size">
-                                    <input class="form-control" name="video_categories" id="video_categories" value="{$row.video_categories}"/>
-                                </div>
-                            </div>
-                            <hr/>
-                            <div class="row">
                                 <div class="col-md-4">
                                     <label class="nowrap" for="enable_video_categories" title="{lang('enable_categories')}">{lang('enable_categories')}</label>
                                 </div>
                                 <div class="col-md-2 row-size">
                                     <input value="yes" name="enable_video_categories" id="enable_video_categories" {if $row.enable_video_categories=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
                                     <span class="lbl"></span>
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="nowrap" for="video_categories" title="{lang('max_video_categories')}"><span class="fa fa-question-circle tips" title="{lang code='max_video_categories_hint'}"></span> {lang('max_video_categories')}</label>
+                                </div>
+                                <div class="col-md-2 row-size">
+                                    <input class="form-control" name="video_categories" id="video_categories" value="{$row.video_categories}"/>
                                 </div>
                             </div>
                             <hr/>
@@ -1546,6 +1577,16 @@
                                 </div>
                                 <div class="col-md-2">
                                     <input class="form-control" name="max_video_desc" id="max_video_desc" value="{$row.max_video_desc}"/>
+                                </div>
+                            </div>
+                            <hr/>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <label class="nowrap" for="enable_video_embed_players" title="{lang code='option_enable_video_embed_players'}">{lang code='option_enable_video_embed_players'}</label>
+                                </div>
+                                <div class="col-md-2 row-size">
+                                    <input value="yes" name="enable_video_embed_players" id="enable_video_embed_players" {if $row.enable_video_embed_players=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+                                    <span class="lbl"></span>
                                 </div>
                             </div>
                             <hr/>

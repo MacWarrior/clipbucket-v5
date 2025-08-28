@@ -1,6 +1,6 @@
 {
   "version":"5.5.2",
-  "revision":"94",
+  "revision":"132",
   "status":"stable",
   "detail":[
     {
@@ -14,6 +14,10 @@
         ,"Implement default homepage config per user level"
         ,"Implement public videos page"
         ,"Implement subtitle upload"
+        ,"Implement photo comments management from photo edition"
+        ,"Implement stucked update detection"
+        ,"Implement anonymous statistics"
+        ,"Implement alternative embed players"
         ,"Refactor conversion queue manager"
         ,"Refactor user levels management"
         ,"Add empty page title error"
@@ -23,6 +27,7 @@
         ,"Update collection management display"
         ,"Update data refresh after core update"
         ,"Update core update error handling"
+        ,"Update new member form access"
         ,"Fix code mode on page edition <i>(#595)</i>"
         ,"Fix email sending error catching <i>(#587)</i>"
         ,"Fix incorrect frontend URL <i>(#529)</i>"
@@ -41,6 +46,10 @@
         ,"Fix pages acces when updating from before 5.5.1 - #275"
         ,"Fix TMDB import"
         ,"Fix code & database update status on dashboard"
+        ,"Fix conversion bitrates display"
+        ,"Fix advanced settings display"
+        ,"Fix PHP error when trying to access missing log file"
+        ,"Fix user storage calculation tool staying stuck in ongoing state"
       ]
     },
     {
@@ -54,11 +63,22 @@
         ,"Implement meta tags for social networks"
         ,"Implement public videos page"
         ,"Implement subtitle upload"
+        ,"Implement video bloc style on videos page"
+        ,"Implement friend request notification in my account area"
+        ,"Implement notification bell <i>(#615)</i>"
+        ,"Implement default thumb selection and subtitle upload on video upload form"
+        ,"Implement user check on internal messaging"
+        ,"Implement remote play"
+        ,"Implement sub-collection items display & count"
+        ,"Implement multi-factor authentification"
         ,"Refactor friends requests & management"
         ,"Refactor collection selections"
         ,"Update video & photos management pages display"
         ,"Update video edition display"
+        ,"Update photo upload & edition display"
+        ,"Update email change procedure"
         ,"Hide banned users from channels page, search results & popular user"
+        ,"Drop remote upload"
         ,"Fix collection privacy on photos page"
         ,"Fix visual editor theme change <i>(#590)</i>"
         ,"Fix manage collection list"
@@ -95,17 +115,28 @@
         ,"Fix undefined constant <i>(#633)</i>"
         ,"Fix TMDB search"
         ,"Fix processing videos display"
+        ,"Fix search engine"
+        ,"Fix default theme CSS"
+        ,"Fix video thumb saving from video upload form"
+        ,"Fix internal messaging reply action"
+        ,"Fix default thumb selection on video upload form"
+        ,"Fix video style on videos page while converting"
+        ,"Fix PHP error on video without thumbs"
       ]
     },
     {
       "title": "Miscellaneous",
       "description": [
         "Implement sub-directory compatibility <i>(#529, #156)</i>"
+        ,"Implement port detection with port forwarding"
         ,"Refactor private videos user list"
         ,"Cleanup code"
+        ,"Cleanup ajax calls and separate back & front calls"
         ,"Delete conversion queue entry when deleting a video"
         ,"Drop support for PHP 7.0 to 7.4"
+        ,"Increase session security"
         ,"Update Readme"
+        ,"Update videos views counter"
         ,"Reduce cookies usage"
         ,"Remove unused configs"
         ,"Fix PHP8.X compatibility"
@@ -114,6 +145,10 @@
         ,"Fix typo <i>(#596)</i>"
         ,"Fix Nginx vhost <i>(#604)</i>"
         ,"Fix possible SQL injection"
+        ,"Fix access to temp files"
+        ,"Fix sessions"
+        ,"Fix sub-directory links"
+        ,"Fix port usage detection"
       ]
     },
     {
@@ -128,10 +163,14 @@
       "title": "Installation & Update",
       "description": [
         "Update default config"
+        ,"Update installation script to Debian 13 & Ubuntu 25.04"
         ,"Fix new installation errors <i>(#592)</i>"
         ,"Fix revision 5.5.1 - #334 DB upgrade"
         ,"Fix possible discord error during installation process"
         ,"Fix docker setup with root user"
+        ,"Fix minified JS & CSS"
+        ,"Fix core update when using mounted directory as storage"
+        ,"Fix stuck update notice"
       ]
     },
     {
@@ -145,12 +184,15 @@
       "title": "Plugins",
       "description": [
         "Update compatibility notice to 5.5.2"
+        ,"Drop remote play"
       ]
     },
     {
       "title": "Player",
       "description": [
-        "Fix ChromeCast button"
+        "Implement replay button"
+        ,"Implement alternative embed players"
+        ,"Fix ChromeCast button"
       ]
     },
     {
