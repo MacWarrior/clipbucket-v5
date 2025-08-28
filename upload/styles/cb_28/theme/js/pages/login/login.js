@@ -69,12 +69,22 @@ document.addEventListener('DOMContentLoaded', function () {
                     }
                     hideSpinner();
                 } else if (response.success) {
+                    closeModalButton.trigger('click');
                     window.location.href = response.redirect;
                 }
-                const pageContent = document.querySelector('#enterMFACodeModal > div > div > div.modal-body > .form-group');
-                if (pageContent) {
-                    insertHTMLAfter(pageContent, response.msg);
+
+                if (!need_mfa) {
+                    const pageContent = document.querySelector('.account-holder');
+                    if (pageContent) {
+                        insertHTMLBefore(pageContent, response.msg);
+                    }
+                } else {
+                    const pageContent = document.querySelector('#enterMFACodeModal > div > div > div.modal-body > .form-group');
+                    if (pageContent) {
+                        insertHTMLAfter(pageContent, response.msg);
+                    }
                 }
+                hideSpinner();
             })
             .catch(err => {
                 console.error('Login error:', err);
@@ -154,4 +164,11 @@ function insertHTMLAfter(referenceNode, htmlString) {
     range.setStartAfter(referenceNode);
     const fragment = range.createContextualFragment(htmlString);
     referenceNode.parentNode.insertBefore(fragment, referenceNode.nextSibling);
+}
+
+function insertHTMLBefore(referenceNode, htmlString) {
+    const range = document.createRange();
+    range.setStartBefore(referenceNode);
+    const fragment = range.createContextualFragment(htmlString);
+    referenceNode.parentNode.insertBefore(fragment, referenceNode);
 }
