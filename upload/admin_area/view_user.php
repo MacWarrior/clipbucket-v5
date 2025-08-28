@@ -76,7 +76,7 @@ if ($udetails) {
         if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.2', '999')) {
             e(lang('cant_reset_database_not_up_to_date'));
         } else {
-            userquery::getInstance()->reset_password(1, $uid, false);
+            userquery::getInstance()->reset_password($uid, false);
         }
     }
 
