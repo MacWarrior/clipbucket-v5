@@ -315,39 +315,4 @@ class myquery
         return false;
     }
 
-    /**
-     * Function used to get list of items in conversion queue
-     * @params $Cond, $limit,$order
-     *
-     * @param array|null $cond
-     * @param null $limit
-     * @param string $order
-     *
-     * @return array
-     * @throws Exception
-     */
-    function get_conversion_queue(array $cond = null, $limit = null, string $order = 'date_added DESC'): array
-    {
-        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.2', '999')) {
-            $field_id = 'id';
-            $not_complete_condition = 'is_completed != TRUE';
-        } else {
-            $field_id = 'cqueue_id';
-            $not_complete_condition = ' time_completed is null or time_completed = \'\' or time_completed = 0';
-        }
-        $conditions = [];
-        if (!empty($cond['ids'])) {
-            $conditions[] = ' ' . $field_id. ' IN (' . implode(',', $cond['ids']) . ')';
-        }
-        if (!empty($cond['not_complete'])) {
-            $conditions[] = $not_complete_condition;
-        }
-
-        $result = Clipbucket_db::getInstance()->select(tbl('conversion_queue'), '*', implode(' AND ', $conditions), $limit, $order);
-        if (count($result) > 0) {
-            return $result;
-        }
-        return [];
-    }
-
 }

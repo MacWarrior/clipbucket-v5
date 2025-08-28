@@ -12,6 +12,7 @@ if ($argv[1]) {
     $fileName = $argv[1];
 }
 
+
 $files = get_video_being_processed($fileName);
 
 if (is_array($files)) {

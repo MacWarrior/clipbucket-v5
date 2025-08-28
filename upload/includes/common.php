@@ -89,6 +89,7 @@ require_once DirPath::get('classes') . 'email_template.class.php';
 require_once DirPath::get('classes') . 'ffmpeg.class.php';
 require_once DirPath::get('classes') . 'flag.class.php';
 require_once DirPath::get('classes') . 'sort_type.class.php';
+require_once DirPath::get('classes') . 'video_conversion_queue.class.php';
 
 $cb_columns = new cb_columns();
 $row = myquery::getInstance()->Get_Website_Details();

@@ -19,7 +19,7 @@ class MWIP extends \Migration
                 `date_added` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
                 `date_started` datetime DEFAULT NULL,
                 `date_ended` datetime DEFAULT NULL,
-                `is_completed` boolean DEFAULT 0, 
+                `is_completed` boolean DEFAULT 0 NOT NULL, 
                 INDEX(is_completed)
             )';
          self::query($sql);

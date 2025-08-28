@@ -12,7 +12,6 @@ require_once DirPath::get('classes') . 'sLog.php';
 */
 
 $fileName = $argv[1] ?? false;
-DiscordLog::sendDump($fileName);
 if (empty($fileName)) {
     die();
 }
@@ -25,7 +24,6 @@ $file_directory = $videoDetails['file_directory'] . DIRECTORY_SEPARATOR;
 $logFile = DirPath::get('logs') . $file_directory . $fileName . '.log';
 
 $log = new SLog($logFile);
-DiscordLog::sendDump($log);
 switch ($ext) {
     default:
     case 'mp4':
@@ -130,8 +128,7 @@ if (config('video_enable_nsfw_check') == 'yes' && AIVision::isAvailable()) {
 
         foreach ($models as $model) {
             $ia = new AIVision([
-                'modelType' => $model
-                ,
+                'modelType' => $model,
                 'autoload'  => true
             ]);
 

@@ -555,10 +555,17 @@ function get_queued_video(string $fileName): array
  */
 function get_video_being_processed($queueName = null)
 {
-    $query = 'SELECT * FROM ' . tbl('conversion_queue');
-    $query .= " WHERE cqueue_conversion='p' AND cqueue_name = '" . $queueName . "'";
+    if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.2', '')) {
+        $results = Clipbucket_db::getInstance()->_select(
+            'SELECT * FROM ' . tbl('video_conversion_queue') .' VCQ INNER JOIN ' . tbl('video') . ' V ON VCQ.videoid = V.videoid
+            WHERE is_completed = FALSE AND file_name = \''.mysql_clean($queueName).'\''
+        ) ;
+    } else {
+        $query = 'SELECT * FROM ' . tbl('conversion_queue');
+        $query .= " WHERE cqueue_conversion='p' AND cqueue_name = '" . $queueName . "'";
 
-    $results = db_select($query);
+        $results = db_select($query);
+    }
 
     if ($results) {
         return $results;
@@ -1631,7 +1638,7 @@ function reConvertVideos($data = ''): void
                     }
                     break;
             }
-            Upload::getInstance()->add_conversion_queue($vdetails['videoid']);
+            VideoConversionQueue::insert($vdetails['videoid']);
             e(lang('reconversion_started_for_x', display_clean($vdetails['title'])), 'm');
 
             remove_video_files($vdetails);

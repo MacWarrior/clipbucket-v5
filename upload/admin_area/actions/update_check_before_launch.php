@@ -34,7 +34,7 @@ if (!$response['db_checked'])  {
 }
 if (!$response['conversion_checked'])  {
     /** @var AdminTool $core_tool */
-    if (!empty(myquery::getInstance()->get_conversion_queue(['not_complete'=>true]))) {
+    if (!empty(VideoConversionQueue::get_conversion_queue(['not_complete'=>true]))) {
         $response['confirm_message_conv'] = lang('alert_video_conversion_ongoing');
         echo json_encode($response);
         die;

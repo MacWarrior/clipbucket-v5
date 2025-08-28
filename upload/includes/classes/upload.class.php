@@ -756,20 +756,6 @@ class Upload
     }
 
     /**
-     * Function used to add files in conversion queue
-     *
-     * @param $videoid
-     * @return bool|int
-     * @throws Exception
-     */
-    function add_conversion_queue($videoid)
-    {
-        //Adding Details to database
-        return Clipbucket_db::getInstance()->execute('INSERT INTO ' . tbl('video_conversion_queue') . ' (videoid) VALUES ('.mysql_clean($videoid).') ');
-
-    }
-
-    /**
      * Video Key Gen
      * * it is use to generate video key
      */

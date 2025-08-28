@@ -76,7 +76,7 @@ if (isset($_POST['mass_upload_video'])) {
             $log->newSection('Pre-Check Configurations');
             $log->writeLine(date('Y-m-d H:i:s').' - Initializing File <strong>' . $file_name . '</strong> and pre checking configurations...');
 
-            $results = Upload::getInstance()->add_conversion_queue($vid);
+            $results = VideoConversionQueue::insert($vid);
             $str1 = date('Y') . DIRECTORY_SEPARATOR . date('m') . DIRECTORY_SEPARATOR . date('d');
             $str = $str1 . DIRECTORY_SEPARATOR;
             mkdir(DirPath::get('videos') . $str, 0755, true);

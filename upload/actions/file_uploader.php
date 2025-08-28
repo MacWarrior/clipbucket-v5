@@ -146,7 +146,7 @@ switch ($mode) {
         if (!empty($_POST['collection_id'])) {
             Collection::getInstance()->addCollectionItem($vid, $_POST['collection_id'], 'videos');
         }
-        Upload::getInstance()->add_conversion_queue($vid);
+        VideoConversionQueue::insert($vid);
 
        /* $cmd = FFmpeg::launchConversion($file_name);
         if( System::isInDev() ){

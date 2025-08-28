@@ -91,7 +91,7 @@ if (php_sapi_name() == 'cli') {
                 }
             }
             /** @var AdminTool $core_tool */
-            if (!empty(myquery::getInstance()->get_conversion_queue(['not_complete'=>true]))) {
+            if (!empty(VideoConversionQueue::get_conversion_queue(['not_complete'=>true]))) {
                 echo 'A video conversion is ongoing, do you want to continue update ? (Y/N)';
                 ob_flush();
                 $stdin = fopen('php://stdin', 'r');
