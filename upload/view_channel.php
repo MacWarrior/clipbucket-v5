@@ -1,6 +1,6 @@
 <?php
-define('THIS_PAGE', 'view_channel');
-define('PARENT_PAGE', 'channels');
+const THIS_PAGE = 'view_channel';
+const PARENT_PAGE = 'channels';
 
 require 'includes/config.inc.php';
 
@@ -18,7 +18,7 @@ if( empty($u) ){
 
 $params_user = [
     'channel_enable' => true
-    ,'username' => $u
+    ,'username_strict' => $u
 ];
 
 $udetails = User::getInstance()->getOne($params_user);

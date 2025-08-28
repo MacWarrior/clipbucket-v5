@@ -1,5 +1,5 @@
 <?php
-define('THIS_PAGE', 'photo_manager');
+const THIS_PAGE = 'photo_manager';
 
 require_once dirname(__FILE__, 2) . '/includes/admin_config.php';
 

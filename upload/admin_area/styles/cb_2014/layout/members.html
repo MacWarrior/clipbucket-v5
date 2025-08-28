@@ -1,12 +1,20 @@
 <div class="heading clearfix">
     <h2 class="pull-left">
-    {if $smarty.get.private=='private'}
-        Private Channels
-    {else}
-        {lang code='grp_manage_members_title'}
-    {/if}
+        {if $smarty.get.private=='private'}
+            Private Channels
+        {else}
+            {lang code='grp_manage_members_title'}
+        {/if}
+        <div class="btn-group">
+            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                Actions <span class="caret caret_margin"></span>
+            </button>
+            <ul class="dropdown-menu pull-right" role="menu">
+                <li><a href="{DirPath::getUrl('admin_area')|cat:'add_member.php'}">{lang code='add_member'}</a></li>
+        </div>
     </h2>
     {include file="$layout_dir/blocks/advanced_member_search.html" }
+
 </div>
 
 {if $users}

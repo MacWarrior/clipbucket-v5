@@ -1,5 +1,5 @@
 <?php
-define('THIS_PAGE', 'cb_install');
+const THIS_PAGE = 'cb_install';
 session_start();
 require_once dirname(__DIR__) . DIRECTORY_SEPARATOR . 'includes' . DIRECTORY_SEPARATOR . 'constants.php';
 require_once DirPath::get('vendor') . 'autoload.php';
@@ -9,6 +9,7 @@ require_once DirPath::get('classes') . 'system.class.php';
 require_once DirPath::get('classes') . 'network.class.php';
 require_once DirPath::get('classes') . 'AIVision.class.php';
 require_once DirPath::get('classes') . 'migration' . DIRECTORY_SEPARATOR . 'migration.class.php';
+require_once DirPath::get('cb_install') . 'functions_install.php';
 
 $whoops = new \Whoops\Run;
 if( System::isInDev() ){
@@ -66,7 +67,6 @@ if (in_array($mode, $cbarray)) {
 
 $has_translation = class_exists('Language');
 
-require_once DirPath::get('cb_install') . 'functions_install.php';
 if (!empty($_POST['language'])) {
     if( isset($_COOKIE['cb_lang']) ){
         Session::unsetCookie( 'cb_lang');

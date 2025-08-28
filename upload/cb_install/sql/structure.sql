@@ -99,7 +99,8 @@ CREATE TABLE `{tbl_prefix}comments` (
 CREATE TABLE `{tbl_prefix}config` (
   `configid` int(20) NOT NULL,
   `name` varchar(100) NOT NULL DEFAULT '',
-  `value` mediumtext NOT NULL
+  `value` mediumtext NOT NULL,
+  `allow_stat` BOOL DEFAULT TRUE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_520_ci;
 
 CREATE TABLE `{tbl_prefix}contacts` (
@@ -394,7 +395,12 @@ CREATE TABLE `{tbl_prefix}users` (
   `album_privacy` enum('public','private','friends') NOT NULL DEFAULT 'private',
   `likes` int(11) NOT NULL DEFAULT 0,
   `is_live` enum('yes','no') NOT NULL DEFAULT 'no',
-  `active_theme` VARCHAR(15) NULL
+  `active_theme` VARCHAR(15) NULL,
+  `email_confirmed` BOOL DEFAULT FALSE,
+  `email_temp` VARCHAR( 255 ) ,
+  `multi_factor_auth` ENUM('allowed_email','disabled') NOT NULL DEFAULT 'disabled' ,
+  `mfa_code` VARCHAR( 255 ) NULL ,
+  `mfa_date` DATETIME NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_520_ci;
 
 CREATE TABLE `{tbl_prefix}user_levels` (
@@ -539,7 +545,8 @@ CREATE TABLE `{tbl_prefix}video` (
   `default_backdrop` int(3) NULL DEFAULT NULL,
   `fov` varchar(3) NULL DEFAULT NULL,
   `convert_percent` FLOAT NULL DEFAULT 0,
-  `aspect_ratio` DECIMAL(10,6) NULL DEFAULT NULL
+  `aspect_ratio` DECIMAL(10,6) NULL DEFAULT NULL,
+  `remote_play_url` TEXT NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_520_ci;
 
 CREATE TABLE `{tbl_prefix}video_views` (
@@ -549,6 +556,11 @@ CREATE TABLE `{tbl_prefix}video_views` (
     `view_date`     DATETIME NOT NULL,
     PRIMARY KEY (`id_video_view`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_520_ci;
+
+CREATE TABLE IF NOT EXISTS `{tbl_prefix}temp_stats_data` (
+    key_name VARCHAR(255) NOT NULL PRIMARY KEY ,
+    value TEXT not null
+);
 
 ALTER TABLE `{tbl_prefix}action_log`
   ADD PRIMARY KEY (`action_id`);
@@ -1264,3 +1276,25 @@ ALTER TABLE `{tbl_prefix}subscriptions`
     ADD CONSTRAINT `subscriptions_subscribed_to_fk` FOREIGN KEY (`subscribed_to`) REFERENCES `{tbl_prefix}users` (`userid`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 ALTER TABLE `{tbl_prefix}subscriptions`
     ADD CONSTRAINT `subscriptions_userid_fk` FOREIGN KEY (`userid`) REFERENCES `{tbl_prefix}users` (`userid`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+CREATE TABLE `{tbl_prefix}video_embed` (
+  `id_video_embed` int(11) NOT NULL,
+  `videoid` bigint(20) NOT NULL,
+  `id_fontawesome_icon` int(11) DEFAULT NULL,
+  `title` varchar(64) NOT NULL,
+  `html` text NOT NULL,
+  `order` smallint(6) NOT NULL DEFAULT 0,
+  `enabled` tinyint(1) NOT NULL DEFAULT 1
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
+
+ALTER TABLE `{tbl_prefix}video_embed`
+  ADD PRIMARY KEY (`id_video_embed`),
+  ADD KEY `videoid` (`videoid`),
+  ADD KEY `id_fontawesome_icon` (`id_fontawesome_icon`);
+
+ALTER TABLE `{tbl_prefix}video_embed`
+  MODIFY `id_video_embed` int(11) NOT NULL AUTO_INCREMENT;
+
+ALTER TABLE `{tbl_prefix}video_embed`
+  ADD CONSTRAINT `video_embed_ibfk_1` FOREIGN KEY (`videoid`) REFERENCES `{tbl_prefix}video` (`videoid`),
+  ADD CONSTRAINT `video_embed_ibfk_2` FOREIGN KEY (`id_fontawesome_icon`) REFERENCES `{tbl_prefix}fontawesome_icons` (`id_fontawesome_icon`);

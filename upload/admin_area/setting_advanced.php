@@ -1,5 +1,5 @@
 <?php
-define('THIS_PAGE', 'advanced_settings');
+const THIS_PAGE = 'advanced_settings';
 require_once dirname(__FILE__, 2) . '/includes/admin_config.php';
 
 $permission = 'advanced_settings';
@@ -29,7 +29,7 @@ if (isset($_POST['update'])) {
         'stay_mp4',
         'delete_mass_upload',
         'enable_video_file_upload',
-        'enable_video_remote_upload',
+        'enable_video_remote_play',
         'enable_photo_file_upload',
         'send_comment_notification',
         'approve_video_notification',
@@ -97,7 +97,7 @@ if (isset($_POST['update'])) {
         'delete_mass_upload',
         'stay_mp4',
         'enable_video_file_upload',
-        'enable_video_remote_upload',
+        'enable_video_remote_play',
         'enable_photo_file_upload',
 
         'allow_conversion_1_percent',
@@ -247,7 +247,7 @@ if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.0', '367', true)) {
 }
 if (!empty($tool)) {
     $id_tool_automate = $tool['id_tool'];
-    $cron_line = '* * * * * ' . System::get_binaries('php_cli') . ' -q ' . DirPath::get('actions') . 'launch_tool.php id_tool=' . (int)$id_tool_automate;
+    $cron_line = '* * * * * ' . System::get_binaries('php_cli') . ' -q ' . DirPath::get('admin_actions') . 'tool_launch.php id_tool=' . (int)$id_tool_automate;
 }
 assign('cron_copy_paste', $cron_line ?? '');
 

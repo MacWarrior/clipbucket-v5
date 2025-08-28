@@ -1,5 +1,5 @@
 <?php
-define('THIS_PAGE', 'verify_converted_videos');
+const THIS_PAGE = 'verify_converted_videos';
 
 $in_bg_cron = true;
 

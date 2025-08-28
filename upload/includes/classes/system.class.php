@@ -452,7 +452,7 @@ class System{
         if( THIS_PAGE == 'cb_install' ){
             $complement = ' install';
         }
-        $cmd = $php_path . ' ' . DirPath::get('root') . 'phpinfo.php' . $complement;
+        $cmd = $php_path . ' ' . DirPath::get('admin_actions') . 'phpinfo.php' . $complement;
 
         exec($cmd, $php_cli_info);
 
@@ -1079,6 +1079,11 @@ class System{
     public static function setInDev(bool $in_dev): void
     {
         self::$is_in_dev = $in_dev;
+    }
+
+    public static function isCli(): bool
+    {
+        return php_sapi_name() == 'cli';
     }
 
 }

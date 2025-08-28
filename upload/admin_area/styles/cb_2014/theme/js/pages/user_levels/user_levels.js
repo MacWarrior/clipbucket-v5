@@ -26,7 +26,7 @@ document.addEventListener('DOMContentLoaded', function () {
             params.append('user_level_id', id);
             params.append('active', checked);
 
-            fetch('/actions/admin_activate_user_level.php', {
+            fetch(admin_url + 'actions/user_level_activate.php', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded'
@@ -72,7 +72,7 @@ document.addEventListener('DOMContentLoaded', function () {
             const params = new URLSearchParams();
             params.append('user_level_id', id);
 
-            fetch('/actions/admin_set_default_user_level.php', {
+            fetch(admin_url + 'actions/user_level_set_default.php', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded'

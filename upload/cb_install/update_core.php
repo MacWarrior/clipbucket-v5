@@ -1,5 +1,5 @@
 <?php
-define('THIS_PAGE', 'cb_install');
+const THIS_PAGE = 'cb_install';
 session_start();
 require_once dirname(__DIR__ ). DIRECTORY_SEPARATOR . 'includes' . DIRECTORY_SEPARATOR . 'constants.php';
 require_once DirPath::get('vendor') . 'autoload.php';
@@ -14,12 +14,12 @@ if (!file_exists(DirPath::get('temp') . 'install.me') && !file_exists(DirPath::g
     return false;
 }
 
-$result = Update::updateGitSources();
-$_SESSION['needed_update'] = true;
-$return = ['success'=>$result];
-if( empty($result) || $result === true ){
-    $return['msg']='ClipbucketV5 has been successfully updated !';
-} else {
-    $return['err']='An error occurred during update : ' . $result . '<br/>Please try again';
+try {
+    $result = Update::updateGitSources();
+} catch (Exception $e) {
+    $return['err']='An error occurred during update : ' . $e->getMessage() . '<br/>Please try again';
 }
+$_SESSION['needed_update'] = true;
+$return = ['success'=>empty($return['err'])];
+$return['msg']='ClipbucketV5 has been successfully updated !';
 echo json_encode($return);

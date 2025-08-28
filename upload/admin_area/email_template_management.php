@@ -1,5 +1,5 @@
 <?php
-define('THIS_PAGE', 'email_template_management');
+const THIS_PAGE = 'email_template_management';
 require_once dirname(__FILE__, 2) . '/includes/admin_config.php';
 
 User::getInstance()->hasPermissionOrRedirect('email_template_management');

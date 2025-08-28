@@ -1,6 +1,5 @@
 <?php
-define('THIS_PAGE', 'private_message');
-
+const THIS_PAGE = 'private_message';
 require 'includes/config.inc.php';
 
 User::getInstance()->isUserConnectedOrRedirect();
@@ -138,5 +137,16 @@ switch ($mode) {
         subtitle(lang('title_crt_new_msg'));
 }
 assign('anonymous_id', userquery::getInstance()->get_anonymous_user());
+$min = System::isInDev() ? '' : '.min';
+
+ClipBucket::getInstance()->addCSS([
+    'jquery.tagit' . $min . '.css'     => 'admin',
+    'tagit.ui-zendesk' . $min . '.css' => 'admin'
+]);
+ClipBucket::getInstance()->addJS([
+    'tag-it' . $min . '.js'                                => 'admin',
+    'init_default_tag/init_default_tag' . $min . '.js'     => 'admin',
+    'pages/private_message/private_message' . $min . '.js' => 'admin'
+]);
 template_files('private_message.html');
 display_it();

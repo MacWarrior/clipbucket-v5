@@ -212,19 +212,32 @@ class UserLevel
         $param_user_level_id = $params['user_level_id'] ?? false;
         $param_first_only = $params['first_only'] ?? false;
         $param_is_default = $params['is_default'] ?? false;
+        $param_is_origin = $params['is_origine'] ?? false;
+        $param_count = $params['count'] ?? false;
+        $param_no_anonymous = $params['no_anonymous'] ?? false;
 
         $conditions = [];
         $join = [];
 
-        $select = self::getAllFields();
+
         if ($param_user_level_id) {
             $conditions[] = ' ' . self::$tableName . '.user_level_id = ' . mysql_clean($param_user_level_id);
         }
         if ($param_is_default) {
             $conditions[] = ' ' . self::$tableName . '.user_level_is_default = \'' . mysql_clean($param_is_default) . '\'';
         }
+        if ($param_is_origin) {
+            $conditions[] = ' ' . self::$tableName . '.user_level_is_origin = \'' . mysql_clean($param_is_origin) . '\'';
+        }
+        if ($param_no_anonymous) {
+            $conditions[] = ' ' . self::$tableName . '.user_level_name != \'Anonymous\'';
+        }
 
-
+        if( $param_count ){
+            $select = ['COUNT(DISTINCT ' . self::$tableName . '.user_level_id) AS count'];
+        } else {
+            $select = self::getAllFields();
+        }
         $sql = 'SELECT ' . implode(', ', $select) . '
                 FROM ' . cb_sql_table(self::$tableName)
             . implode(' ', $join)
@@ -234,6 +247,14 @@ class UserLevel
         if ($param_first_only) {
             return $result[0];
         }
+
+        if( $param_count ){
+            if( empty($result) ){
+                return 0;
+            }
+            return $result[0]['count'];
+        }
+
         return empty($result) ? [] : $result;
     }
 

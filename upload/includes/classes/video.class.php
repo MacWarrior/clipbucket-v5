@@ -116,7 +116,12 @@ class Video
             $this->video_data = $this->getAll($params);
         }
 
-        $this->broadcast_option = ['public' => lang('vdo_br_opt1'), 'private' => lang('vdo_br_opt2'), 'unlisted' => lang('vdo_broadcast_unlisted'), 'logged' => lang('logged_users_only')];
+        $this->broadcast_option = [
+            'public'    => lang('vdo_br_opt1')
+            ,'private'  => lang('vdo_br_opt2')
+            ,'unlisted' => lang('vdo_broadcast_unlisted')
+            ,'logged'   => lang('logged_users_only')
+        ];
     }
 
     public function getBroadcastOption(): array
@@ -493,7 +498,13 @@ class Video
 
         if( $param_collection_id ){
             $collection_items_table = Collection::getInstance()->getTableNameItems();
-            $join[] = 'INNER JOIN ' . cb_sql_table($collection_items_table) . ' ON ' . $collection_items_table . '.collection_id = ' . $param_collection_id . ' AND ' . $this->getTableName() . '.videoid = ' . $collection_items_table . '.object_id';
+
+            if( is_array($param_collection_id) ){
+                $tmp_cond = ' IN (' . implode(',', $param_collection_id) . ')';
+            } else {
+                $tmp_cond = ' = ' . $param_collection_id;
+            }
+            $join[] = 'INNER JOIN ' . cb_sql_table($collection_items_table) . ' ON ' . $collection_items_table . '.collection_id' . $tmp_cond . ' AND ' . $this->getTableName() . '.videoid = ' . $collection_items_table . '.object_id';
         }
 
         if (!$param_not_join_user_profile && $param_get_detail) {
@@ -1120,6 +1131,196 @@ class Video
     /**
      * @throws Exception
      */
+    public function getEmbedPlayers(array $params)
+    {
+        if( !Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.2', '122') ){
+            return false;
+        }
+
+        if( empty($params) ){
+            return false;
+        }
+
+        $param_videoid = $params['videoid'] ?? false;
+        $param_id_video_embed = $params['id_video_embed'] ?? false;
+        $param_enabled = $params['enabled'] ?? false;
+        $param_first_only = $params['first_only'] ?? false;
+
+        $conditions = [];
+        if( $param_videoid ){
+            $conditions[] = 'video_embed.videoid = ' . (int)$param_videoid;
+        }
+        if( $param_enabled ){
+            $conditions[] = 'video_embed.enabled = ' . (int)$param_enabled;
+        }
+        if( $param_id_video_embed ){
+            $conditions[] = 'video_embed.id_video_embed = ' . (int)$param_id_video_embed;
+        }
+
+        if( empty($conditions) ){
+            return false;
+        }
+
+        $sql = 'SELECT
+                video_embed.id_video_embed
+                ,video_embed.id_fontawesome_icon
+                ,video_embed.title
+                ,video_embed.html
+                ,video_embed.order
+                ,video_embed.enabled
+                ,fontawesome_icons.icon
+            FROM ' . cb_sql_table('video_embed') . '
+                INNER JOIN ' . cb_sql_table('fontawesome_icons') . ' ON video_embed.id_fontawesome_icon = fontawesome_icons.id_fontawesome_icon
+             WHERE ' . implode(' AND ', $conditions) . '
+            ORDER BY `order` ASC';
+
+        $results = Clipbucket_db::getInstance()->_select($sql);
+
+        if (count($results) == 0) {
+            return false;
+        }
+
+        if( $param_first_only ){
+            return $results[0];
+        }
+
+        return $results;
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function removeEmbedPlayer(array $params): bool
+    {
+        if( !Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.2', '122') ){
+            return false;
+        }
+
+        if( empty($params) ){
+            return false;
+        }
+
+        $param_videoid        = $params['videoid'] ?? false;
+        $param_id_video_embed = $params['id_video_embed'] ?? false;
+
+        $conditions = [];
+        if( $param_videoid ){
+            $conditions[] = 'videoid = ' . (int)$param_videoid;
+        }
+        if( $param_id_video_embed ){
+            $conditions[] = 'id_video_embed = ' . (int)$param_id_video_embed;
+        }
+
+        if( empty($conditions) ){
+            return false;
+        }
+
+        $sql = 'DELETE FROM ' . tbl('video_embed') . ' WHERE ' . implode(' AND ', $conditions);
+        Clipbucket_db::getInstance()->execute($sql);
+        return true;
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function updateEmbedPlayer(array $params): bool
+    {
+        if( !Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.2', '122') ){
+            return false;
+        }
+
+        if( empty($params) ){
+            return false;
+        }
+
+        if( empty($params['id_video_embed']) ){
+            return false;
+        }
+        $id_video_embed = $params['id_video_embed'];
+        if( !is_numeric($id_video_embed) ){
+            return false;
+        }
+
+        $param_id_fontawesome_icon = $params['id_fontawesome_icon'] ?? false;
+        $param_title = $params['title'] ?? false;
+        $param_html = $params['html'] ?? false;
+        $param_order = $params['order'] ?? false;
+        $param_enabled = $params['enabled'] ?? false;
+
+        $fields = [];
+        $values = [];
+        if( $param_id_fontawesome_icon ){
+            $fields[] = 'id_fontawesome_icon';
+            $values[] = $param_id_fontawesome_icon;
+        }
+        if( $param_title ){
+            $fields[] = 'title';
+            $values[] = $param_title;
+        }
+        if( $param_html ){
+            $fields[] = 'html';
+            $values[] = $param_html;
+        }
+        if( $param_order ){
+            $fields[] = 'order';
+            $values[] = (int)$param_order;
+        }
+        if( $param_enabled !== false ){
+            $fields[] = 'enabled';
+            $values[] = $param_enabled;
+        }
+
+        if( empty($fields) ){
+            return false;
+        }
+
+        Clipbucket_db::getInstance()->update(tbl('video_embed'), $fields, $values, 'id_video_embed = ' . (int)$id_video_embed);
+        return true;
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function createEmbedPlayer(array $params)
+    {
+        if( !Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.2', '122') ){
+            return false;
+        }
+
+        if( empty($params) ){
+            e(lang('missing_params'));
+            return false;
+        }
+
+        if( empty($params['videoid']) || empty($params['id_fontawesome_icon']) || empty($params['title']) || empty($params['html']) ){
+            e(lang('missing_params'));
+            return false;
+        }
+
+        $fields = [
+            'videoid'
+            ,'id_fontawesome_icon'
+            ,'title'
+            ,'html'
+            ,'`order`'
+            ,'enabled'
+        ];
+
+        $values = [
+            (int)$params['videoid']
+            , (int)$params['id_fontawesome_icon']
+            , $params['title']
+            , $params['html']
+            , (int)$params['order'] ?? 0
+            , $params['enabled'] ?? 1
+        ];
+
+        return Clipbucket_db::getInstance()->insert(tbl('video_embed'), $fields, $values);
+    }
+
+    /**
+     * @throws Exception
+     */
     public function addCastAuth()
     {
         if( config('chromecast') != 'yes' ){
@@ -1169,6 +1370,7 @@ class Video
 
         return true;
     }
+
 }
 
 class CBvideo extends CBCategory
@@ -1596,8 +1798,9 @@ class CBvideo extends CBCategory
             $required_fields = Upload::getInstance()->loadRequiredFields($array);
             $location_fields = Upload::getInstance()->loadLocationFields($array);
             $option_fields = Upload::getInstance()->loadOptionFields($array);
+            $custom_upload_fields = Upload::getInstance()->load_custom_upload_fields($array, true);
 
-            $upload_fields = array_merge($required_fields, $location_fields, $option_fields);
+            $upload_fields = array_merge($required_fields, $location_fields, $option_fields, $custom_upload_fields);
 
             //Adding Custom Upload Fields
             if (function_exists('custom_fields_list')) {
@@ -1632,6 +1835,9 @@ class CBvideo extends CBCategory
                             $val = $field['validate_function']($val,$field['second_parameter_validate']);
                         } else {
                             $val = $field['validate_function']($val);
+                        }
+                        if( isset($field['keep_original_on_error']) && $field['keep_original_on_error'] && $val == false ){
+                            continue;
                         }
                     }
 

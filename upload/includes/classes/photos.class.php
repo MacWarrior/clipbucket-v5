@@ -341,7 +341,12 @@ class Photo
         }
 
         if( $param_collection_id ){
-            $join[] = 'INNER JOIN ' . cb_sql_table($collection_items_table) . ' ON ' . $collection_items_table . '.collection_id = ' . $param_collection_id . ' AND photos.photo_id = ' . $collection_items_table . '.object_id';
+            if( is_array($param_collection_id) ){
+                $tmp_cond = ' IN (' . implode(',', $param_collection_id) . ')';
+            } else {
+                $tmp_cond = ' = ' . $param_collection_id;
+            }
+            $join[] = 'INNER JOIN ' . cb_sql_table($collection_items_table) . ' ON ' . $collection_items_table . '.collection_id' . $tmp_cond . ' AND photos.photo_id = ' . $collection_items_table . '.object_id';
         } else {
             $join[] = 'LEFT JOIN  ' . cb_sql_table($collection_items_table) . ' ON  photos.photo_id = ' . $collection_items_table . '.object_id AND ' . $collection_items_table . '.type = \'photos\'';
         }
@@ -2129,12 +2134,12 @@ class CBPhotos
 
         if( config('enable_comments_photo') == 'yes' ){
             $return['comments'] = [
-                'title'             => lang('comments'),
+                'label'             => lang('vdo_allow_comm'),
                 'name'              => 'allow_comments',
                 'id'                => 'allow_comments',
                 'db_field'          => 'allow_comments',
-                'type'              => 'radiobutton',
-                'value'             => ['yes' => lang('vdo_allow_comm'), 'no' => lang('vdo_dallow_comm')],
+                'type'              => 'checkboxv2',
+                'value'             => 'yes',
                 'required'          => 'no',
                 'checked'           => config('enable_comments_photo') == 'yes' ? $array['allow_comments'] : 'no',
                 'validate_function' => 'yes_or_no',
@@ -2145,29 +2150,29 @@ class CBPhotos
         }
 
         $return ['embedding'] = [
-            'title'             => lang('vdo_embedding'),
-            'type'              => 'radiobutton',
+            'label'             => lang('pic_allow_embed'),
+            'type'              => 'checkboxv2',
             'name'              => 'allow_embedding',
             'id'                => 'allow_embedding',
             'db_field'          => 'allow_embedding',
-            'value'             => ['yes' => lang('pic_allow_embed'), 'no' => lang('pic_dallow_embed')],
+            'value'             => 'yes',
             'checked'           => $array['allow_embedding'],
             'validate_function' => 'yes_or_no',
             'display_function'  => 'display_sharing_opt',
-            'default_value'     => 'yes'
+            'default_value'     => 'yes',
         ];
 
         $return ['rating'] = [
-            'title'             => lang('rating'),
+            'label'             => lang('pic_allow_rating'),
             'name'              => 'allow_rating',
             'id'                => 'allow_rating',
-            'type'              => 'radiobutton',
+            'type'              => 'checkboxv2',
             'db_field'          => 'allow_rating',
-            'value'             => ['yes' => lang('pic_allow_rating'), 'no' => lang('pic_dallow_rating')],
+            'value'             => 'yes',
             'checked'           => $array['allow_rating'],
             'validate_function' => 'yes_or_no',
             'display_function'  => 'display_sharing_opt',
-            'default_value'     => 'yes'
+            'default_value'     => 'yes',
         ];
 
         if( config('enable_age_restriction') == 'yes' ) {

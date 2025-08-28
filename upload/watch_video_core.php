@@ -155,7 +155,6 @@ if( config('enable_comments_video') == 'yes' ) {
                 'toastui/i18n/' . strtolower(Language::getInstance()->getLang()) . $min_suffixe . '.js' => 'libs'
             ]);
             Comments::initVisualComments();
-
         }
     }
 }

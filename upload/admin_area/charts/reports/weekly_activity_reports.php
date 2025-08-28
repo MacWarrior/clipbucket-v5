@@ -1,5 +1,5 @@
 <?php
-define('THIS_PAGE', 'weekly_activity_reports');
+const THIS_PAGE = 'weekly_activity_reports';
 
 require_once dirname(__FILE__, 4) . '/includes/admin_config.php';
 

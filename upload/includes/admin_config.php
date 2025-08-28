@@ -10,12 +10,16 @@ if( THIS_PAGE != 'admin_login' && php_sapi_name() !== 'cli'){
         redirect_to('login.php');
     }
 
+    if( defined('IS_AJAX') && IS_AJAX ){
+        User::getInstance()->hasPermissionAjax('admin_access');
+    }
+
     if( !User::getInstance()->hasPermission('admin_access') ){
         redirect_to(cblink(['name' => 'error_403']));
     }
 }
 
-if( !in_array(THIS_PAGE, ['update_info', 'admin_launch_update']) && php_sapi_name() != 'cli' && User::getInstance()->isUserConnected() ) {
+if( !defined('IS_AJAX') && !defined('IS_SSE') && php_sapi_name() != 'cli' && User::getInstance()->isUserConnected() ) {
     ClipBucket::getInstance()->initAdminMenu();
 }
 
@@ -28,17 +32,6 @@ global $Smarty;
 $cbmass = new mass_upload();
 $ads_query = new AdsManager();
 
-if (isset($_POST['update_dp_options'])) {
-    if (!is_numeric($_POST['admin_pages']) || $_POST['admin_pages'] < 1) {
-        $num = '20';
-        $msg = 'Please Type Number from 1 to Maximum';
-    } else {
-        $num = $_POST['admin_pages'];
-    }
-
-    myquery::getInstance()->Set_Website_Details('admin_pages', $num);
-}
-
 //Do No Edit Below This Line
 define('TEMPLATEDIR', DirPath::get('admin_area') . 'styles' . DIRECTORY_SEPARATOR . 'cb_2014');
 define('SITETEMPLATEDIR', DirPath::get('styles') . config('template_dir'));
@@ -48,7 +41,7 @@ define('TEMPLATE', config('template_dir'));
 
 require_once TEMPLATEDIR . DIRECTORY_SEPARATOR . 'header.php';
 
-if( !in_array(THIS_PAGE, ['system_info', 'update_info', 'admin_launch_update', 'admin_set_default_user_level', 'admin_activate_user_level']) && php_sapi_name() != 'cli' ){
+if( !defined('IS_AJAX') && !defined('IS_SSE') && php_sapi_name() != 'cli' ){
     $check_global = System::check_global_configs();
     if( $check_global !== 1 ){
         if ($check_global === -1 ) {

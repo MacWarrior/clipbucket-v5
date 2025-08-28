@@ -1,5 +1,5 @@
 <?php
-define('THIS_PAGE', 'view_conversion_log');
+const THIS_PAGE = 'view_conversion_log';
 require_once dirname(__FILE__, 2) . '/includes/admin_config.php';
 
 User::getInstance()->hasPermissionOrRedirect('video_moderation', true);

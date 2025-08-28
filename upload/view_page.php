@@ -1,6 +1,6 @@
 <?php
-define('THIS_PAGE', 'view_page');
-define('PARENT_PAGE', 'home');
+const THIS_PAGE = 'view_page';
+const PARENT_PAGE = 'home';
 require 'includes/config.inc.php';
 
 pages::getInstance()->page_redir();

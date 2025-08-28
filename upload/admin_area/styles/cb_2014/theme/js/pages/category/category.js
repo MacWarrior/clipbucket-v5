@@ -2,7 +2,7 @@ function addOrEdit(category_id) {
     $("#edit_category").trigger('reset');
     showSpinner();
     $.ajax({
-        url: baseurl+'actions/form_category.php',
+        url: admin_url + 'actions/form_category.php',
         type: "post",
         data: {'category_id': category_id, 'type': type},
         dataType: 'json'
@@ -26,7 +26,7 @@ function initListenerList() {
         showSpinner();
         $('input[name="make_default"]').not(this).prop('checked', false);
         $.ajax({
-            url: baseurl+'actions/category_make_default.php',
+            url: admin_url + 'actions/category_make_default.php',
             type: "POST",
             data: {'category_id': $(this).val(), type: type},
             dataType: 'json',

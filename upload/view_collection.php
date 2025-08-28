@@ -1,6 +1,6 @@
 <?php
-define('THIS_PAGE', 'view_collection');
-define('PARENT_PAGE', 'collections');
+const THIS_PAGE = 'view_collection';
+const PARENT_PAGE = 'collections';
 require 'includes/config.inc.php';
 
 pages::getInstance()->page_redir();
@@ -34,9 +34,14 @@ if (!$cdetails || (!isSectionEnabled($cdetails['type']) && !User::getInstance()-
 $page = $_GET['page'];
 $get_limit = create_query_limit($page, config('collection_items_page'));
 if (config('enable_sub_collection') == 'yes') {
-    $params = [];
-    $params['collection_id_parent'] = $collection_id;
-    $params['limit'] = $get_limit;
+    $params = [
+        'collection_id_parent' => $collection_id
+        ,'limit'               => $get_limit
+        ,'with_items'          => true
+        ,'with_sub_items'      => true
+        ,'count_items_only'    => true
+    ];
+
     $collections = Collection::getInstance()->getAll($params);
     assign('collections', $collections);
 }

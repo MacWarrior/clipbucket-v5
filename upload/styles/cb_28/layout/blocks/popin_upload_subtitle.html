@@ -32,9 +32,10 @@
             e.preventDefault();
             showSpinner();
             var formData = new FormData(this);
-
+            var is_for_upload = ($('#uploadMessage').length > 0)
+            formData.append('is_for_upload', is_for_upload);
             $.ajax({
-                url: baseurl + 'actions/save_subtitle.php',
+                url: baseurl + 'actions/subtitle_save.php',
                 type: 'POST',
                 data: formData,
                 contentType: false,
@@ -45,9 +46,19 @@
                         $('.close').trigger('click');
                         hideSpinner();
                         $('.manage-page').prepend(result['msg']);
+                        $('#uploadMessage').parent().prepend(result['msg']);
                     } else {
                         $('.close').trigger('click');
-                        location.reload();
+                        if (is_for_upload) {
+                            var div_sub = $('input[id^="videoid_"][value="{$videoid}"]').parents('.tab-pane.uploadFormContainer').find('[id^=subtitles]');
+                            hideSpinner();
+                            if (div_sub.length === 0) {
+                                div_sub = $('#subtitles_{$videoid}' );
+                            }
+                            div_sub.html(result.html_list);
+                        } else {
+                            location.reload();
+                        }
                     }
                 },
                 error: function () {

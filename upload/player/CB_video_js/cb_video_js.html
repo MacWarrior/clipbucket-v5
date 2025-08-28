@@ -1,11 +1,32 @@
 <script type="text/javascript">
     var lang_by = "{if $vdata.userid != $anonymous_id && config('enable_hide_uploader_name') != 'yes'}{lang code='by'}{/if}";
     var lang_quality = "{lang code='quality'}";
+    var lang_player_replay = "{lang code='player_replay'}";
     var video_id = "{$vdata.videoid}";
+    var video_key = "{$vdata.videokey}";
     var autoplay = "{$player_params.autoplay}" === 'yes';
     var video_uploader = "{if config('enable_hide_uploader_name') != 'yes'}{if $vdata.userid == $anonymous_id}{elseif !empty($vdata.user_username)}{display_clean($vdata.user_username)}{else}{display_clean($vdata.username)}{/if}{/if}";
     var video_title = "{display_clean($vdata.title)}";
 </script>
+
+{if !empty($embed_players)}
+<ul class="default_bootstrap nav nav-tabs">
+    <li class="active"><a data-toggle="tab" href="#default_player"><img alt="favicon" src="{get_website_favicon_path()}" class="icon"/>{config('site_title')}</a></li>
+    <li class="dropdown">
+        <a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
+            {lang code='video_embed_players'} <span class="caret"></span>
+        </a>
+        <ul class="dropdown-menu">
+            {foreach $embed_players as $key => $embed}
+            <li><a data-toggle="tab" href="#embed_player_{$key}" title="{display_clean($embed.title)}"><span class="fa fa-{$embed.icon}"></span>&nbsp;<span class="text-icon">{display_clean($embed.title)}</span></a></li>
+            {/foreach}
+        </ul>
+    </li>
+</ul>
+
+<div class="tab-content">
+    <div id="default_player" class="tab-pane fade active in">
+{/if}
 
 <video playsinline id="cb_video_js_{$vdata.videoid}" class="video-js vjs-default-skin vjs-show-big-play-button-on-pause" height="100%" width="100%" poster="{getThumb vdetails=$vdata size=768x432}">
     {if empty($video_files)}
@@ -31,6 +52,15 @@
     <p class="vjs-no-js">To view this video please enable JavaScript, and consider upgrading to a web browser that <a href="http://videojs.com/html5-video-support/" target="_blank">supports HTML5 video</a></p>
 </video>
 
+{if !empty($embed_players)}
+    </div>
+    {foreach $embed_players as $key => $embed}
+        <div id="embed_player_{$key}" class="responsive-video tab-pane fade">
+            {$embed.html}
+        </div>
+    {/foreach}
+{/if}
+
 <script type="text/javascript">
     //player settings
     var cb_player_setup = {
@@ -55,7 +85,8 @@
                 "subsCapsButton", // Sous-titres
                 "audioTrackButton", //Pistes audio
                 "PictureInPictureToggle", // PictureInPicture
-                "FullscreenToggle" // Plein écran
+                "FullscreenToggle", // Plein écran
+                {if config('chromecast')=='yes' && Network::is_ssl()}"ChromeCastButton",{/if}
             ]
         }
     };
@@ -105,6 +136,26 @@
         {if config('player_thumbnails') === 'yes'}
         this.thumbnails({get_player_thumbs_json($vdata)});
         {/if}
+
+        {literal}
+        this.on('ended', function() {
+            let player_tmp = this;
+            this.bigPlayButton.hide();
+            let replay = $('<button class="vjs-replay-button" type="button" title="' + lang_player_replay + '" aria-disabled="false"><span class="vjs-icon-placeholder" aria-hidden="true"></span><span class="vjs-control-text" aria-live="polite">' + lang_player_replay + '</span></button>');
+            $(this.el()).append(replay);
+            this.one('play', function() {
+                replay.remove();
+                player_tmp.bigPlayButton.show();
+            });
+            replay.on('click', function() {
+                $.post(baseurl + 'actions/increment_video_view.php', {video_key: video_key});
+                player_tmp.currentTime(0);
+                player_tmp.play();
+                replay.remove();
+                player_tmp.bigPlayButton.show();
+            });
+        });
+        {/literal}
     }
 
     //Initializing

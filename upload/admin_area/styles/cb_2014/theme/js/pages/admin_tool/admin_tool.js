@@ -29,7 +29,7 @@ $(function () {
         if (!elem.parent().hasClass('disabled')) {
             var id_tool = $(this).data('id');
             $.ajax({
-                url: baseurl+"actions/launch_tool.php",
+                url: admin_url + "actions/tool_launch.php",
                 type: "POST",
                 data: {id_tool: id_tool},
                 dataType: 'json',
@@ -56,7 +56,7 @@ $(function () {
         if (!$(this).parent().hasClass('disabled')) {
             var id_tool = elem.data('id');
             $.ajax({
-                url: baseurl+"actions/stop_tool.php",
+                url: admin_url + "actions/tool_stop.php",
                 type: "POST",
                 data: {id_tool: id_tool},
                 dataType: 'json',
@@ -74,7 +74,7 @@ $(function () {
         if (!$(this).parent().hasClass('disabled')) {
             var id_tool = elem.data('id');
             $.ajax({
-                url: baseurl+"actions/force_tool_to_error.php",
+                url: admin_url + "actions/tool_force_to_error.php",
                 type: "POST",
                 data: {id_tool: id_tool},
                 dataType: 'json',
@@ -94,7 +94,7 @@ $(function () {
         if (!$(this).parent().hasClass('disabled')) {
             var id_tool = elem.data('id');
             $.ajax({
-                url: baseurl+"actions/show_tool_log.php",
+                url: admin_url + "actions/tool_show_log.php",
                 type: "POST",
                 data: {id_tool: id_tool},
                 dataType: 'json',
@@ -124,7 +124,7 @@ $(function () {
 
         e.preventDefault();
         $.ajax({
-            url: baseurl+"actions/update_frequency_tool.php",
+            url: admin_url + "actions/tool_update_frequency.php",
             type: "POST",
             data: {id_tool: $(input).attr('data-id'), frequency: value},
             dataType: 'json',
@@ -159,7 +159,7 @@ $(function () {
 
         e.preventDefault();
         $.ajax({
-            url: baseurl+"actions/update_frequency_disabled_tool.php",
+            url: admin_url + "actions/tool_update_frequency_disabled.php",
             type: "POST",
             data: {id_tool: $(input).attr('data-id'), is_disabled: !value},
             dataType: 'json',
