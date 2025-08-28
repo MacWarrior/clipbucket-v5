@@ -8,7 +8,7 @@
     {section name=res loop=$resolution_list}
     <tr>
         <td>{$resolution_list[res].resolution}p</td>
-        <td>{$resolution_list[res].size}</td>
+        <td>{formatfilesize($resolution_list[res].size)}</td>
         <td>{$resolution_list[res].nb_files}</td>
         <td>
             <div class="dropdown clearfix alignCenter">

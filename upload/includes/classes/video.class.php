@@ -2,7 +2,7 @@
 
 class Video
 {
-    private static self $video;
+    private static array $video;
     private $tablename = '';
     private $tablename_categories = '';
     private $field_id = '';
@@ -11,13 +11,14 @@ class Video
     private $display_block = '';
     private $display_var_name = '';
     private $search_limit = 0;
+    private $video_data = [];
     private $broadcast_option = [];
     private $status_list= [];
 
     /**
      * @throws Exception
      */
-    public function __construct(){
+    public function __construct($video_id = null){
         $this->tablename = 'video';
         $this->field_id = 'videoid';
         $this->tablename_categories = 'video_categories';
@@ -108,6 +109,13 @@ class Video
         $this->display_var_name = 'video';
         $this->search_limit = (int)config('videos_items_search_page');
 
+        if( !empty($video_id) ){
+            $params = [];
+            $params['videoid'] = $video_id;
+            $params['first_only'] = true;
+            $this->video_data = $this->getAll($params);
+        }
+
         $this->broadcast_option = [
             'public'    => lang('vdo_br_opt1')
             ,'private'  => lang('vdo_br_opt2')
@@ -121,12 +129,15 @@ class Video
         return $this->broadcast_option;
     }
 
-    public static function getInstance(): self
+    /**
+     * @throws Exception
+     */
+    public static function getInstance($video_id = null): self
     {
-        if( empty(self::$video) ){
-            self::$video = new self();
+        if( empty(self::$video[$video_id]) ){
+            self::$video[$video_id] = new self($video_id);
         }
-        return self::$video;
+        return self::$video[$video_id];
     }
 
     public function getTableName(): string
@@ -1000,13 +1011,56 @@ class Video
     /**
      * @throws Exception
      */
+    public function getQualityLinks(string $mode = 'stream'): array
+    {
+        if( !in_array($mode, ['stream', 'download']) ){
+            if( System::isInDev() ){
+                DiscordLog::sendDump('Wrong getQualityLinks mode : ' . $mode);
+            }
+            $mode = 'stream';
+        }
+
+        $base_url = DirPath::getUrl('actions') . 'download_video.php?mode=' . $mode . '&videokey=' . $this->get('videokey');
+        $data = [];
+
+        switch($this->get('file_type')) {
+            case 'mp4':
+                foreach(json_decode($this->get('video_files')) as $resolution){
+                    $data[CB_video_js::getVideoResolutionTitleFromFilePath($resolution)] = $base_url . '&res=' . $resolution;
+                }
+                break;
+
+            case 'hls':
+                $data['index'] = $base_url;
+                break;
+        }
+
+        return $data;
+    }
+
+    public function get(string $value)
+    {
+        if( !isset($this->video_data[$value]) ){
+            if( System::isInDev() ){
+                $msg = 'User->get() - Unknown value : ' . $value . '```' . debug_backtrace_string() . '```';
+                error_log($msg);
+                DiscordLog::sendDump($msg);
+            }
+            return false;
+        }
+        return $this->video_data[$value];
+    }
+
+    /**
+     * @throws Exception
+     */
     public function set(int $id_video, string $field, $value): void
     {
         if( !in_array($field, $this->fields) ){
             return;
         }
 
-        $sql = 'UPDATE ' . tbl($this->tablename) . ' SET ' . $field . ' = ' . $value . ' WHERE ' . $this->field_id . ' = ' . $id_video;
+        $sql = 'UPDATE ' . tbl($this->tablename) . ' SET ' . mysql_clean($field) . ' = \'' . mysql_clean($value) . '\' WHERE ' . $this->field_id . ' = ' . $id_video;
         Clipbucket_db::getInstance()->execute($sql);
     }
 
@@ -1263,6 +1317,60 @@ class Video
 
         return Clipbucket_db::getInstance()->insert(tbl('video_embed'), $fields, $values);
     }
+
+    /**
+     * @throws Exception
+     */
+    public function addCastAuth()
+    {
+        if( config('chromecast') != 'yes' ){
+            return false;
+        }
+
+        if( !Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.2', '999') ){
+            return false;
+        }
+
+        $userid = User::getInstance()->getCurrentUserId();
+        $videoid = $this->get('videoid');
+        $ip = Network::get_remote_ip();
+
+        Clipbucket_db::getInstance()->insert(tbl('video_cast_auth'), ['userid', 'videoid', 'ip'], [$userid, $videoid, $ip]);
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function isCastAuthed(): bool
+    {
+        if( config('chromecast') != 'yes' ){
+            return false;
+        }
+
+        if( !Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.2', '999') ){
+            return false;
+        }
+
+        $videoid = $this->get('videoid');
+        $ip = Network::get_remote_ip();
+
+        $sql = 'UPDATE ' . tbl('video_cast_auth') . '
+                SET last_update = CURRENT_TIMESTAMP
+                WHERE 
+                    videoid = ' . (int)$videoid . ' 
+                    AND ip = \'' . mysql_clean($ip) . '\' 
+                    AND last_update >= CURRENT_TIMESTAMP - INTERVAL 1 HOUR
+                    AND start_date >= CURRENT_TIMESTAMP - INTERVAL 1 DAY';
+        Clipbucket_db::getInstance()->execute($sql);
+        $nb_rows = Clipbucket_db::getInstance()->Affected_Rows();
+
+        if( empty($nb_rows) ){
+            return false;
+        }
+
+        return true;
+    }
+
 }
 
 class CBvideo extends CBCategory

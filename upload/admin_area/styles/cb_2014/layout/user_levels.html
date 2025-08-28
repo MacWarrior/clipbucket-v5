@@ -67,11 +67,11 @@
             <h3>{lang($types[t].user_permission_type_name)}</h3>
             <div class="row">
                 {foreach from=$level_perms item=perm}
-                    {if $perm.id_user_levels_permission !="" && $types[t].user_permission_type_id == $perm.id_user_permission_types }
+                    {if $perm.id_user_levels_permission !="" && $types[t].user_permission_type_id == $perm.id_user_permission_types}
                         <div class="col-md-4">
                             <div class="row">
                                 <div class="col-md-10 col-md-offset-1 myWell">
-                                    <div class="col-md-8 paddingTop">
+                                    <div class="col-md-{if $perm.permission_name == 'download_speed_limit'}7{else}8{/if} paddingTop">
                                         <strong>{lang($perm.permission_name)}</strong><br/>
                                         <small><em>{lang($perm.permission_description)}</em></small>
                                     </div>
@@ -84,14 +84,21 @@
                                             </select>
                                         </div>
                                     {else}
-                                        <div class="col-md-4">
-                                        {if in_array($perm.permission_name, ['allow_manage_user_level', 'admin_access']) && User::getInstance()->get('level') == $level_details.user_level_id}
-                                            <input type="hidden" name="permission_value[{$perm.id_user_levels_permission}]" value="{$perm.permission_value}">
-                                            <input type="checkbox" disabled="disabled" {if $perm.permission_value==yes}checked{/if} class="ace ace-switch ace-switch-5"/>
+                                        <div class="col-md-{if $perm.permission_name == 'download_speed_limit'}5{else}4{/if}">
+                                        {if $perm.permission_name == 'download_speed_limit'}
+                                            <div class="input-group" style="padding-top: 10px;">
+                                                <input class="form-control" value="{$perm.permission_value}" name="permission_value[{$perm.id_user_levels_permission}]">
+                                                <span class="input-group-addon" title="{lang('in_x',lang('kbps'))}">{lang code='kbps'}</span>
+                                            </div>
                                         {else}
-                                            <input type="checkbox" name="permission_value[{$perm.id_user_levels_permission}]" value="yes" {if $perm.permission_value==yes}checked{/if} class="ace ace-switch ace-switch-5"/>
-                                        {/if}
+                                            {if in_array($perm.permission_name, ['allow_manage_user_level', 'admin_access']) && User::getInstance()->get('level') == $level_details.user_level_id}
+                                                <input type="hidden" name="permission_value[{$perm.id_user_levels_permission}]" value="{$perm.permission_value}">
+                                                <input type="checkbox" disabled="disabled" {if $perm.permission_value==yes}checked{/if} class="ace ace-switch ace-switch-5"/>
+                                            {else}
+                                                <input type="checkbox" name="permission_value[{$perm.id_user_levels_permission}]" value="yes" {if $perm.permission_value==yes}checked{/if} class="ace ace-switch ace-switch-5"/>
+                                            {/if}
                                             <span class="lbl"></span>
+                                        {/if}
                                         </div>
                                     {/if}
                                 </div>

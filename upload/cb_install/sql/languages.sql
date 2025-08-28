@@ -1704,4 +1704,7 @@ VALUES ('ongoing_conversion'),
        ('please_enter_6_digit_mfa_code'),
        ('please_fill_all_fields'),
        ('cannot_activate_auth_email_if_email_disabled'),
-       ('email_mfa_hint');
+       ('email_mfa_hint'),
+       ('download_speed_limit'),
+       ('download_speed_limit_desc'),
+       ('kbps');

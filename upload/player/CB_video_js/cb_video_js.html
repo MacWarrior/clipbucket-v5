@@ -29,23 +29,23 @@
 {/if}
 
 <video playsinline id="cb_video_js_{$vdata.videoid}" class="video-js vjs-default-skin vjs-show-big-play-button-on-pause" height="100%" width="100%" poster="{getThumb vdetails=$vdata size=768x432}">
-    {foreach $video_files as $file}
-        {if strpos($file, 'no_video.mp4') !== false}
-            <source src='{$file}' type="video/mp4"/>
-        {else}
+    {if empty($video_files)}
+        <source src='{$file}' type="video/mp4"/>
+    {else}
+        {foreach $video_files as $quality => $stream_url}
             {if $vdata['file_type']=='hls'}
-                <source src='{$file}' type="application/x-mpegURL"/>
+                <source src='{$stream_url}' type="application/x-mpegURL"/>
             {else}
-				{$video_resolution = display_clean(CB_video_js::getVideoResolutionTitleFromFilePath($file))}
-                <source src='{$file}' type="video/mp4" res="{$video_resolution}" label="{$video_resolution}"/>
+                <source src='{$stream_url}' type="video/mp4" res="{$quality}" label="{$quality}"/>
             {/if}
-        {/if}
-    {/foreach}
+        {/foreach}
+    {/if}
+
     {if config('player_subtitles')}
         {$subtitles = get_video_subtitles($vdata)}
         {if $subtitles}
             {foreach $subtitles as $file}
-                <track kind="captions" src="{$file['url']}" label="{display_clean($file['title'])}" />
+                <track kind="captions" src="{$file['url']}" label="{display_clean($file['title'])}"/>
             {/foreach}
         {/if}
     {/if}
