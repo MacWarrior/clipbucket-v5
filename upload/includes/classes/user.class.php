@@ -364,6 +364,7 @@ class User
         $param_search = $params['search'] ?? false;
         $param_channel_enable = $params['channel_enable'] ?? false;
         $param_email = $params['email'] ?? false;
+        $param_email_strict = $params['email_strict'] ?? false;
         $param_username = $params['username'] ?? false;
         $param_username_strict = $params['username_strict'] ?? false;
         $param_status = $params['status'] ?? false;
@@ -398,6 +399,9 @@ class User
 
         if( $param_email ){
             $conditions[] = 'users.email LIKE \'%' . mysql_clean($param_email) . '%\'';
+        }
+        if( $param_email_strict ){
+            $conditions[] = 'users.email = \'' . mysql_clean($param_email_strict) . '\'';
         }
 
         if( $param_username ){

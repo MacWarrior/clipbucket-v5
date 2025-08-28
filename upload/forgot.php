@@ -6,7 +6,7 @@ if (config('disable_email') == 'yes') {
     redirect_to(DirPath::getUrl('root'));
 }
 
-if( User::getInstance()->isUserConnected() ){
+if (User::getInstance()->isUserConnected()) {
     sessionMessageHandler::add_message(lang('you_already_logged'), 'e', DirPath::getUrl('root'));
 }
 
@@ -17,7 +17,7 @@ switch ($mode) {
         if (isset($_POST['reset'])) {
             $input = post('email');
 
-            if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.2', '999')) {
+            if (!Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.2', '999')) {
                 e(lang('technical_error'));
             } else {
                 userquery::getInstance()->reset_password($input);
@@ -34,33 +34,49 @@ switch ($mode) {
 
     case 'reset_pass':
         if (!empty($_REQUEST['email']) && !empty($_REQUEST['avcode']) && empty($_POST['userid'])) {
-            $user = User::getInstance()->getOne(['email' => $_REQUEST['email']]);
+            $user = User::getInstance()->getOne(['email_strict' => $_REQUEST['email']]);
             if (empty($user)) {
-                e(lang('user_not_exist'));
+                e(lang('recap_verify_failed'));
             } else {
+                $success = true;
+
                 $code = $_REQUEST['avcode'];
-                if ($user['avcode'] != $code) {
+                if (empty($user['avcode']) || $user['avcode'] != $code) {
                     e(lang('recap_verify_failed'));
+                    $success = false;
+                } else {
+                    assign('avcode', $user['avcode']);
+                    assign('email', $user['email']);
                 }
                 assign('userid', $user['userid'] ?? 0);
-                assign('pass_change', true);
+                assign('pass_change', $success);
                 //display pass field
             }
         } else {
             if (!empty($_POST['userid'])) {
-                assign('pass_change', true);
-                $user = User::getInstance()->getOne(['userid' => $_POST['userid']]);
+                $user = User::getInstance()->getOne([
+                    'userid' => $_POST['userid'],
+                    'email_strict' => $_POST['email']
+                ]);
+                assign('avcode', $user['avcode'] ?? '');
+                assign('email', $user['email'] ?? '');
                 assign('userid', $user['userid'] ?? 0);
-                if (!empty($user)) {
-                    if (empty($_POST['password']) || empty($_POST['cpassword'])) {
-                        e(lang('usr_pass_err2'));
-                    } elseif ($_POST['password'] != $_POST['cpassword']) {
-                        e(lang('usr_cpass_err1'));
-                    } else {
-                        Clipbucket_db::getInstance()->update(tbl('users'), ['password', 'avcode'], [pass_code($_POST['password'], $user['userid']), ''], ' userid=\'' . $user['userid'] . '\'');
-                        Session::kill_all_sessions($user['userid']);
-                        sessionMessageHandler::add_message(lang('usr_pass_email_msg'), 'm', DirPath::getUrl('root').'signup.php?mode=login');
+                if (!empty($user) && $user['avcode'] == ($_POST['avcode'] ?? null) && !empty($user['avcode'])) {
+                    assign('pass_change', true);
+                    if (!empty($_POST['change_password'])) {
+                        if (empty($_POST['password']) || empty($_POST['cpassword'])) {
+                            e(lang('usr_pass_err2'));
+                        } elseif ($_POST['password'] != $_POST['cpassword']) {
+                            e(lang('usr_cpass_err1'));
+                        } else {
+                            Clipbucket_db::getInstance()->update(tbl('users'), ['password', 'avcode'], [pass_code($_POST['password'], $user['userid']), ''], ' userid=\'' . $user['userid'] . '\'');
+                            Session::kill_all_sessions($user['userid']);
+                            sessionMessageHandler::add_message(lang('usr_pass_email_msg'), 'm', DirPath::getUrl('root') . 'signup.php?mode=login');
+                        }
                     }
+                } else {
+                    e(lang('technical_error'));
+                    assign('pass_change', false);
                 }
             }
         }

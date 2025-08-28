@@ -1,33 +1,28 @@
-var inputs = document.querySelectorAll('#mfa_code input');
-var modalElement = document.getElementById('enterMFACodeModal');
-var confirmButton = document.getElementById('confirmMFACodeBtn');
-var closeModalButton = document.querySelector('.close');
+const inputs = document.querySelectorAll('#mfa_code input');
+let modalElement = document.getElementById('enterMFACodeModal');
+let confirmButton = document.getElementById('confirmMFACodeBtn');
+let closeModalButton = document.querySelector('.close');
 need_mfa = false;
 document.addEventListener('DOMContentLoaded', function () {
-    inputs = document.querySelectorAll('#mfa_code input');
-    modalElement = document.getElementById('enterMFACodeModal');
-    confirmButton = document.getElementById('confirmMFACodeBtn');
-    closeModalButton = document.querySelector('.close');
-    const form = document.querySelector('form[name="login_form"]');
+
+    const form = document.querySelector('form[name="form1"]');
 
     form.addEventListener('submit', function (e) {
         e.preventDefault();
         showSpinner();
-        const username = document.getElementById('login_username_sp').value;
-        const password = document.getElementById('login_password_sp').value;
-        const remember_me = document.getElementById('remember_me').value;
+
+        const username = document.getElementById('username').value;
+        const password = document.getElementById('password').value;
 
         if (username === '' || password === '') {
             alert(lang['please_fill_all_fields']);
             hideSpinner();
             return false;
         }
-
         let mfa_code = '';
         if (typeof need_mfa !== 'undefined' && need_mfa) {
             if (modalElement.classList.contains('in') === false) {
                 showModal();
-                hideSpinner();
                 return false;
             }
             inputs.forEach((input) => {
@@ -45,9 +40,10 @@ document.addEventListener('DOMContentLoaded', function () {
                 hideSpinner();
                 return false;
             }
+
         }
 
-        fetch(baseurl + 'actions/login.php', {
+        fetch(admin_url + 'actions/login.php', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded',
@@ -56,7 +52,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 username: username,
                 password: password,
                 mfa_code: mfa_code,
-                remember_me: remember_me
+
             })
         })
             .then(response => response.json())
@@ -72,9 +68,8 @@ document.addEventListener('DOMContentLoaded', function () {
                     closeModalButton.click();
                     window.location.href = response.redirect;
                 }
-
                 if (!need_mfa) {
-                    const pageContent = document.querySelector('.account-holder');
+                    const pageContent = document.querySelector('#login_box');
                     if (pageContent) {
                         insertHTMLBefore(pageContent, response.msg);
                     }
@@ -91,49 +86,45 @@ document.addEventListener('DOMContentLoaded', function () {
                 alert('An error occurred');
             })
     });
-    if( confirmButton ){
-        confirmButton.addEventListener('click', function () {
-            form.requestSubmit();
-        });
-    }
+    confirmButton.addEventListener('click', function () {
+        form.requestSubmit();
+    });
 
     closeModalButton.addEventListener('click', function () {
         closeModal();
     });
-
-    inputs.forEach((input, idx) => {
-        // Passage automatique au champ suivant après un caractère
-        input.addEventListener('input', () => {
-            if (input.value.length === 1 && idx < inputs.length - 1) {
-                inputs[idx + 1].focus();
-            }
-        });
-
-        // Revenir au champ précédent avec "Backspace" si le champ est vide
-        input.addEventListener('keydown', e => {
-            if (e.key === 'Backspace' && input.value === '' && idx > 0) {
-                inputs[idx - 1].focus();
-            }
-        });
-
-        // Coller une chaîne : remplissage automatique de tous les champs
-        input.addEventListener('paste', e => {
-            e.preventDefault();
-            const data = e.clipboardData.getData('text');
-            for (let i = 0; i < inputs.length; i++) {
-                inputs[i].value = data[i] || '';
-            }
-            // Placer le focus sur le dernier caractère collé
-            const next = Math.min(data.length, inputs.length) - 1;
-            if (next >= 0) {
-                inputs[next].focus();
-            }
-        });
-    });
-
 });
 
 
+inputs.forEach((input, idx) => {
+    // Passage automatique au champ suivant après un caractère
+    input.addEventListener('input', () => {
+        if (input.value.length === 1 && idx < inputs.length - 1) {
+            inputs[idx + 1].focus();
+        }
+    });
+
+    // Revenir au champ précédent avec "Backspace" si le champ est vide
+    input.addEventListener('keydown', e => {
+        if (e.key === 'Backspace' && input.value === '' && idx > 0) {
+            inputs[idx - 1].focus();
+        }
+    });
+
+    // Coller une chaîne : remplissage automatique de tous les champs
+    input.addEventListener('paste', e => {
+        e.preventDefault();
+        const data = e.clipboardData.getData('text');
+        for (let i = 0; i < inputs.length; i++) {
+            inputs[i].value = data[i] || '';
+        }
+        // Placer le focus sur le dernier caractère collé
+        const next = Math.min(data.length, inputs.length) - 1;
+        if (next >= 0) {
+            inputs[next].focus();
+        }
+    });
+});
 
 function closeModal() {
     modalElement.classList.remove('in');
@@ -171,4 +162,12 @@ function insertHTMLBefore(referenceNode, htmlString) {
     range.setStartBefore(referenceNode);
     const fragment = range.createContextualFragment(htmlString);
     referenceNode.parentNode.insertBefore(fragment, referenceNode);
+}
+
+function showSpinner() {
+    $('.taskHandler').show();
+}
+
+function hideSpinner() {
+    $('.taskHandler').hide();
 }

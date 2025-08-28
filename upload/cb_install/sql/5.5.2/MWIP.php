@@ -69,6 +69,11 @@ class MWIP extends \Migration
           'fr'=>'Confirmer le nouveau mot de passe',
           'en'=>'Confirm new password'
       ]);
+
+      self::generateTranslation('recap_verify_failed', [
+          'fr'=>'Le code de vérification n\'est pas valide',
+          'en'=>'Verification code is not valid'
+      ]);
     }
 
 }

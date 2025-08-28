@@ -1711,4 +1711,5 @@ VALUES ('ongoing_conversion'),
        ('cant_reset_database_not_up_to_date'),
        ('save_new_password'),
        ('new_password'),
-       ('confirm_new_password');
+       ('confirm_new_password'),
+       ('recap_verify_failed');
