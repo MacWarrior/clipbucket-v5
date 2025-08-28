@@ -1530,7 +1530,7 @@ class userquery extends CBCategory
         if (!$user) {
             return false;
         }
-        
+
         $uid = $user['userid'];
         $pass = pass_code($password, $uid);
         $udetails = $this->get_user_with_pass($username, $pass);
@@ -2421,80 +2421,44 @@ class userquery extends CBCategory
     }
 
     /**
-     * Function used to reset user password
-     * it has two steps
-     * 1 to send confirmation
-     * 2 to reset the password
-     *
-     * @param      $step
-     * @param      $input
-     * @param null $code
-     *
+     * @param $input
+     * @param $check_is_connected
      * @return bool
      * @throws \PHPMailer\PHPMailer\Exception
-     * @throws Exception
      */
-    function reset_password($step, $input, $code = null): bool
+    function reset_password($input, $check_is_connected = true): bool
     {
-        if (User::getInstance()->isUserConnected()) {
+        if ($check_is_connected && User::getInstance()->isUserConnected()) {
             return false;
         }
 
-        switch ($step) {
-            case 1:
-                if( empty($input) || !isValidEmail($input) ) {
-                    e(lang('invalid_email'));
-                    return false;
-                }
-
-                if (!verify_captcha()) {
-                    e(lang('recap_verify_failed'));
-                    return false;
-                }
-
-                $user = User::getInstance()->getOne(['email' => $input]);
-                if( empty($user) ){
-                    e(lang('email_forgot_password_sended'), 'm');
-                    return true;
-                }
-
-                $avcode = User::getInstance($user['userid'])->refreshAvcode();
-
-                $var = [
-                    'reset_password_link' => DirPath::getUrl('root') . 'forgot.php?mode=reset_pass&user=' . $user['userid'] . '&avcode=' . $avcode,
-                ];
-                //Now Finally Sending Email
-                if (EmailTemplate::sendMail('password_reset_request', $user['userid'], $var)) {
-                    e(lang('email_forgot_password_sended'), 'm');
-                }
-                return true;
-
-            case 2:
-                $udetails = $this->get_user_details($input);
-                if (!$udetails) {
-                    e(lang('usr_exist_err'));
-                } elseif ($udetails['avcode'] != $code) {
-                    e(lang('avcode_incorrect'));
-                } else {
-                    $newpass = RandomString(6);
-                    $pass = pass_code($newpass, $udetails['userid']);
-
-                    Clipbucket_db::getInstance()->update(tbl($this->dbtbl['users']), ['password', 'avcode'], [$pass, ''], " userid='" . $udetails['userid'] . "'");
-                    //Sending confirmation email
-                    $var = [
-                        'url'      => DirPath::getUrl('root') . 'login.php',
-                        'password' => $newpass
-                    ];
-
-                    //Now Finally Sending Email
-                    EmailTemplate::sendMail('password_reset_details',  $udetails['email'], $var);
-                    e(lang('usr_pass_email_msg'), 'm');
-                    return true;
-                }
-                break;
+        if (empty($input) || !isValidEmail($input)) {
+            e(lang('invalid_email'));
+            return false;
         }
 
-        return false;
+        if (!verify_captcha()) {
+            e(lang('recap_verify_failed'));
+            return false;
+        }
+
+        $user = User::getInstance()->getOne(['email' => $input]);
+        if (empty($user)) {
+            e(lang('email_forgot_password_sended'), 'm');
+            return true;
+        }
+
+        $avcode = User::getInstance($user['userid'])->refreshAvcode();
+        $var = [
+                        'reset_password_link' => DirPath::getUrl('root') . 'forgot.php?mode=reset_pass&email=' . $user['email'] . '&avcode=' . $avcode,
+                        'avcode'              => $avcode
+        ];
+        //Now Finally Sending Email
+        if (EmailTemplate::sendMail('password_reset_request', $user['userid'], $var)) {
+            e(lang('email_forgot_password_sended'), 'm');
+        }
+        return true;
+
     }
 
     /**
