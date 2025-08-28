@@ -1,6 +1,7 @@
 <?php
 
 require_once DirPath::get('classes') . 'cron_expression.class.php';
+require_once DirPath::get('classes') . 'sLog.php';
 
 class AdminTool
 {
@@ -1672,6 +1673,44 @@ class AdminTool
         $this->addLog($encoded);
         $sql = 'INSERT INTO ' . tbl('temp_stats_data') . ' (key_name, value) VALUES (\''.$task.'\',\''.$encoded.'\' )';
         Clipbucket_db::getInstance()->execute($sql);
+    }
+
+    public function launchVideoConversion()
+    {
+        if (!Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.2', '000') ) {
+            $this->end();
+            return true;
+        }
+        if (empty($this->tasks_total)) {
+            $this->tasks_total = 0;
+            $this->tasks_processed = 0;
+            $this->tasks = [];
+            $sql = 'SELECT VCQ.videoid, VCQ.id, V.file_name, V.file_type, VCQ.date_started FROM ' . tbl('video_conversion_queue') . ' AS VCQ 
+            INNER JOIN '.tbl('video').' AS V ON V.videoid = VCQ.videoid 
+            WHERE is_completed =  FALSE AND date_started IS NULL
+            ORDER BY VCQ.date_added ASC LIMIT ' . config('max_conversion');
+            $videos_to_convert = Clipbucket_db::getInstance()->_select($sql);
+            $datas = [];
+            $max_conversion = config('max_conversion');
+            $nb_lock = count(glob(DirPath::get('temp') . 'conv_lock*.loc'));
+            foreach ($videos_to_convert as $video) {
+                if ($max_conversion >= $nb_lock) {
+                    $datas[] = $video;
+                    $nb_lock++;
+                }
+            }
+            $this->insertTaskData($datas);
+        }
+        $this->executeTool('AdminTool::convert_videos');
+        return true;
+    }
+
+    public static function convert_videos($video)
+    {
+        if (FFmpeg::launchConversion($video['file_name'] )) {
+            Clipbucket_db::getInstance()->update(tbl('video_conversion_queue'), ['date_started'],['|no_mc||f|NOW()'], 'id = ' . mysql_clean($video['id']));
+        }
+
     }
 }
 

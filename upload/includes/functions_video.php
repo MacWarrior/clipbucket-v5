@@ -1615,7 +1615,6 @@ function reConvertVideos($data = ''): void
                     $max_quality_file = get_high_res_file($vdetails);
                     $conversion_filepath = DirPath::get('temp') . $vdetails['file_name'] . '.mp4';
                     copy($max_quality_file, $conversion_filepath);
-                    Upload::getInstance()->add_conversion_queue($vdetails['videoid'] );
                     break;
 
                 case 'hls':
@@ -1630,20 +1629,16 @@ function reConvertVideos($data = ''): void
                         }
                         copy($file, $temp_dir . $video_file);
                     }
-                    Upload::getInstance()->add_conversion_queue($vdetails['videoid']);
                     break;
             }
+            Upload::getInstance()->add_conversion_queue($vdetails['videoid']);
+            e(lang('reconversion_started_for_x', display_clean($vdetails['title'])), 'm');
 
             remove_video_files($vdetails);
             if( empty(errorhandler::getInstance()->get_error()) ){
                 errorhandler::getInstance()->flush();
             }
 
-            e(lang('reconversion_started_for_x', display_clean($vdetails['title'])), 'm');
-
-            FFmpeg::launchReconvert($vdetails['file_name']);
-
-            setVideoStatus($daVideo, 'started', true);
         }
 
     }

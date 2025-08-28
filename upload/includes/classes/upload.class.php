@@ -764,40 +764,6 @@ class Upload
      */
     function add_conversion_queue($videoid)
     {
-     /*   $ext = getExt($file);
-        $name = getName($file);
-        if (!$name) {
-            return false;
-        }
-
-        if (empty($cqueue_name)) {
-            $cqueue_name = $name;
-        }
-
-        $tmp_filepath = DirPath::get('temp') . $sub_directory . $file;
-        //Checking file exists or not
-        if (!file_exists($tmp_filepath)) {
-            return false;
-        }
-
-        switch ($ext) {
-            default:
-            case 'mp4':
-                //Get Temp Ext
-                $tmp_ext = ClipBucket::getInstance()->temp_exts;
-                $tmp_ext = $tmp_ext[rand(0, count($tmp_ext) - 1)];
-                //Creating New File Name
-                $dest_filepath = DirPath::get('temp') . $sub_directory . $name . '.' . $tmp_ext;
-
-                //Renaming File for security purpose
-                rename($tmp_filepath, $dest_filepath);
-                break;
-
-            case 'm3u8':
-                $tmp_ext = '';
-                break;
-        }*/
-
         //Adding Details to database
         return Clipbucket_db::getInstance()->execute('INSERT INTO ' . tbl('video_conversion_queue') . ' (videoid) VALUES ('.mysql_clean($videoid).') ');
 

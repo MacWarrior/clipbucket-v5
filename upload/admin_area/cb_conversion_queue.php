@@ -50,7 +50,7 @@ if (isset($_POST['resume']) && is_array($_POST['check_queue'])) {
 //Getting List of Conversion Queue
 $page = (int)$_GET['page'];
 $get_limit = create_query_limit($page, config('admin_pages'));
-$queue_list = myquery::getInstance()->get_conversion_queue(null, $get_limit);
+$queue_list = myquery::getInstance()->get_conversion_queue(limit: $get_limit);
 assign('queues', $queue_list);
 
 if ($page == 1 && count($queue_list) < config('admin_pages')) {

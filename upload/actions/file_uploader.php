@@ -123,6 +123,7 @@ switch ($mode) {
             , 'file_name'       => $file_name
             , 'file_directory'  => $file_directory
             , 'description'     => $filename_without_ext
+            , 'file_type'       => $extension
             , 'category'        => $category
             , 'userid'          => user_id()
             , 'allow_comments'  => 'yes'

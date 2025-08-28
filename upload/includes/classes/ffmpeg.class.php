@@ -1249,28 +1249,13 @@ class FFMpeg
         return '0x' . strtoupper($hex_color);
     }
 
-    /**
-     * @throws Exception
-     */
-    public static function launchResume(string $filename)
-    {
-        return self::launchConversion($filename, '', '', 'resume');
-    }
 
     /**
      * @throws Exception
      */
-    public static function launchReconvert(string $filename)
+    public static function launchConversion(string $filename, string $audio_track = '')
     {
-        return self::launchConversion($filename, '', 'reconvert', '');
-    }
-
-    /**
-     * @throws Exception
-     */
-    public static function launchConversion(string $filename, string $audio_track = '', string $reconvert = '', string $resume = '')
-    {
-        $video = Video::getInstance()->getOne(['file_name' => $filename]);
+        $video = Video::getInstance()->getOne(['file_name' => $filename, 'disable_generic_constraints'=>true]);
         if( empty($video) ){
             e(lang('class_vdo_del_err'));
             return;

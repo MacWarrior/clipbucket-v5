@@ -12,37 +12,20 @@ require_once DirPath::get('classes') . 'sLog.php';
 */
 
 $fileName = $argv[1] ?? false;
-if( empty($fileName) ){
+DiscordLog::sendDump($fileName);
+if (empty($fileName)) {
     die();
 }
 
 $audio_track = $argv[2] ?? false;
-$reconvert = $argv[3] ?? false;
-$resume = $argv[4] ?? false;
-
-$extension = getExt($fileName);
-switch ($extension) {
-    default:
-    case 'mp4':
-        $queue_filename = $fileName;
-        break;
-    case 'm3u8':
-        $queue_filename = $fileName . '.' . $extension;
-        break;
-}
-
-$queue_details = get_queued_video($queue_filename);
-$tmp_ext = $queue_details['cqueue_tmp_ext'];
-$ext = $queue_details['cqueue_ext'];
-if (empty($tmp_ext)) {
-    $tmp_ext = $ext;
-}
 
 $videoDetails = CBvideo::getInstance()->get_video($fileName, true);
+$ext = $videoDetails['file_type'];
 $file_directory = $videoDetails['file_directory'] . DIRECTORY_SEPARATOR;
 $logFile = DirPath::get('logs') . $file_directory . $fileName . '.log';
-$log = new SLog($logFile);
 
+$log = new SLog($logFile);
+DiscordLog::sendDump($log);
 switch ($ext) {
     default:
     case 'mp4':
@@ -54,87 +37,39 @@ switch ($ext) {
         break;
 }
 
-if( !$resume ){
-    $log->newSection('Starting ' . ($reconvert ? 'reconversion' : 'conversion'));
-    $log->writeLine(date('Y-m-d H:i:s').' - Filename : '.$fileName);
-    $log->writeLine(date('Y-m-d H:i:s').' - File directory : '.$file_directory);
-    $log->writeLine(date('Y-m-d H:i:s').' - Moving file to conversion queue...');
+$log->newSection('Starting conversion' );
+$log->writeLine(date('Y-m-d H:i:s') . ' - Filename : ' . $fileName);
+$log->writeLine(date('Y-m-d H:i:s') . ' - File directory : ' . $file_directory);
+$log->writeLine(date('Y-m-d H:i:s') . ' - Moving file to conversion queue...');
 
-    switch ($ext) {
-        default:
-        case 'mp4':
-            // Delete the uploaded file from temp directory
-            // and move it into the conversion queue directory for conversion
-            $temp_file = DirPath::get('temp') . $fileName . '.' . $tmp_ext;
-            $renamed = rename($temp_file, $orig_file);
-            break;
-        case 'm3u8':
-            $temp_dir = DirPath::get('temp') . $fileName . DIRECTORY_SEPARATOR;
-            $temp_file = $temp_dir . '*';
-            mkdir($conversion_path);
-            foreach (glob($temp_file) as $file) {
-                $files_part = explode('/', $file);
-                $video_file = $files_part[count($files_part) - 1];
-                $renamed = rename($file, $conversion_path . $video_file);
-            }
-            rmdir($temp_dir);
-            break;
-    }
-
-    if (!$renamed) {
-        $log->writeLine(date('Y-m-d H:i:s').' => Something went wrong while moving file ' . $temp_file . ' ...');
-        setVideoStatus($videoDetails['videoid'], 'Failed');
-        die();
-    }
-
-    $log->writeLine(date('Y-m-d H:i:s').' => File moved to ' . $orig_file);
-} else {
-    $log->newSection('Resuming conversion');
-    if( file_exists($orig_file) ){
-        $log->writeLine(date('Y-m-d H:i:s').' => Resume conversion from ' . $orig_file);
-    } else {
-        switch ($ext) {
-            default:
-            case 'mp4':
-                $temp_file = DirPath::get('temp') . $fileName . '.' . $tmp_ext;
-                if( file_exists($temp_file) ){
-                    $log->writeLine(date('Y-m-d H:i:s').' => Resume conversion from ' . $temp_file);
-                    $log->writeLine(date('Y-m-d H:i:s').' - Moving file to conversion queue...');
-                    $renamed = rename($temp_file, $orig_file);
-                    break;
-                }
-                $log->writeLine(date('Y-m-d H:i:s').' => Video file not found, conversion can\'t be resumed...');
-                setVideoStatus($videoDetails['videoid'], 'Failed');
-                die();
-
-            case 'm3u8':
-                $temp_dir = DirPath::get('temp') . $fileName . DIRECTORY_SEPARATOR;
-                $temp_files = glob($temp_dir . '*');
-                if( !empty($temp_files) ){
-                    $log->writeLine(date('Y-m-d H:i:s').' => Resume conversion from ' . $temp_dir . '*');
-                    $log->writeLine(date('Y-m-d H:i:s').' - Moving files to conversion queue...');
-                    mkdir($conversion_path);
-                    foreach ($temp_files as $file) {
-                        $files_part = explode('/', $file);
-                        $video_file = $files_part[count($files_part) - 1];
-                        $renamed = rename($file, $conversion_path . $video_file);
-                    }
-                    rmdir($temp_dir);
-                    break;
-                }
-                $log->writeLine(date('Y-m-d H:i:s').' => Video file not found, conversion can\'t be resumed...');
-                setVideoStatus($videoDetails['videoid'], 'Failed');
-                die();
+switch ($ext) {
+    default:
+    case 'mp4':
+        // Delete the uploaded file from temp directory
+        // and move it into the conversion queue directory for conversion
+        $temp_file = DirPath::get('temp') . $fileName . '.' . $ext;
+        $renamed = rename($temp_file, $orig_file);
+        break;
+    case 'm3u8':
+        $temp_dir = DirPath::get('temp') . $fileName . DIRECTORY_SEPARATOR;
+        $temp_file = $temp_dir . '*';
+        mkdir($conversion_path);
+        foreach (glob($temp_file) as $file) {
+            $files_part = explode('/', $file);
+            $video_file = $files_part[count($files_part) - 1];
+            $renamed = rename($file, $conversion_path . $video_file);
         }
-    }
-
-    if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '279')) {
-        Video::getInstance()->set($videoDetails['videoid'], 'convert_percent',0);
-    }
-
-    $sql_update = 'UPDATE ' . tbl('conversion_queue') . ' SET time_completed = 0 WHERE cqueue_id = ' . (int)$queue_details['cqueue_id'];
-    Clipbucket_db::getInstance()->execute($sql_update);
+        rmdir($temp_dir);
+        break;
 }
+
+if (!$renamed) {
+    $log->writeLine(date('Y-m-d H:i:s') . ' => Something went wrong while moving file ' . $temp_file . ' ...');
+    setVideoStatus($videoDetails['videoid'], 'Failed');
+    die();
+}
+
+$log->writeLine(date('Y-m-d H:i:s') . ' => File moved to ' . $orig_file);
 
 $ffmpeg = new FFMpeg($log);
 $ffmpeg->conversion_type = config('conversion_type');
@@ -146,14 +81,8 @@ if ($audio_track && is_numeric($audio_track)) {
     $ffmpeg->audio_track = $audio_track;
 }
 
-$fields = [
-    'file_type'
-    ,'status'
-];
-$values = [
-    $ffmpeg->conversion_type
-    ,'Waiting'
-];
+$fields = ['file_type', 'status'];
+$values = [$ffmpeg->conversion_type, 'Waiting'];
 
 update_video_by_filename($fileName, $fields, $values);
 
@@ -161,14 +90,8 @@ $ffmpeg->ClipBucket();
 
 $video_files = json_encode($ffmpeg->video_files);
 
-$fields = [
-    'video_files'
-    ,'duration'
-];
-$values = [
-    $video_files
-    ,(int)$ffmpeg->input_details['duration']
-];
+$fields = ['video_files', 'duration'];
+$values = [$video_files, (int)$ffmpeg->input_details['duration']];
 
 if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '273') && !empty($ffmpeg->input_details['fov'])) {
     $fields[] = 'fov';
@@ -186,19 +109,18 @@ $videoDetails = CBvideo::getInstance()->get_video($fileName, true);
 update_bits_color($videoDetails);
 update_castable_status($videoDetails);
 
-if ($reconvert) {
-    setVideoStatus($fileName, 'completed', $reconvert, true);
-}
-
 $active = config('activation') ? 'no' : 'yes';
-if( config('video_enable_nsfw_check') == 'yes' && AIVision::isAvailable() ){
-    $thumbs = get_thumb($videoDetails,TRUE,'original','auto', null, 'filepath');
+if (config('video_enable_nsfw_check') == 'yes' && AIVision::isAvailable()) {
+    $thumbs = get_thumb($videoDetails, true, 'original', 'auto', null, 'filepath');
 
-    if( !empty($thumbs) ){
-        switch( config('video_nsfw_check_model') ){
+    if (!empty($thumbs)) {
+        switch (config('video_nsfw_check_model')) {
             default:
             case 'nudity+nsfw':
-                $models = ['nudity','nsfw'];
+                $models = [
+                    'nudity',
+                    'nsfw'
+                ];
                 break;
             case 'nsfw':
             case 'nudity':
@@ -206,17 +128,18 @@ if( config('video_enable_nsfw_check') == 'yes' && AIVision::isAvailable() ){
                 break;
         }
 
-        foreach($models as $model){
+        foreach ($models as $model) {
             $ia = new AIVision([
                 'modelType' => $model
-                ,'autoload' => true
+                ,
+                'autoload'  => true
             ]);
 
-            foreach($thumbs as $thumb){
-                if( $ia->is($thumb, $model) ){
+            foreach ($thumbs as $thumb) {
+                if ($ia->is($thumb, $model)) {
                     $active = 'no';
                     if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '255')) {
-                        Flag::flagItem($videoDetails['videoid'], 'video', array_search('sexual_content',Flag::getFlagTypes()),0);
+                        Flag::flagItem($videoDetails['videoid'], 'video', array_search('sexual_content', Flag::getFlagTypes()), 0);
                     }
                     break 2;
                 }
@@ -224,7 +147,7 @@ if( config('video_enable_nsfw_check') == 'yes' && AIVision::isAvailable() ){
         }
     }
 }
-if( $active == 'yes' ){
+if ($active == 'yes') {
     Clipbucket_db::getInstance()->update(tbl('video'), ['active'], ['yes'], 'videoid = ' . mysql_clean($videoDetails['videoid']));
 }
 
