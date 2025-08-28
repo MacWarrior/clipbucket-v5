@@ -16,7 +16,6 @@ switch ($mode) {
     default:
         if (isset($_POST['reset'])) {
             $input = post('email');
-
             if (!Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.2', '999')) {
                 e(lang('technical_error'));
             } else {
@@ -33,7 +32,7 @@ switch ($mode) {
         break;
 
     case 'reset_pass':
-        if (!empty($_REQUEST['email']) && !empty($_REQUEST['avcode']) && empty($_POST['userid'])) {
+        if (!empty($_REQUEST['email']) && !empty($_REQUEST['avcode'])) {
             $user = User::getInstance()->getOne(['email_strict' => $_REQUEST['email']]);
             if (empty($user)) {
                 e(lang('recap_verify_failed'));
@@ -48,36 +47,29 @@ switch ($mode) {
                     assign('avcode', $user['avcode']);
                     assign('email', $user['email']);
                 }
-                assign('userid', $user['userid'] ?? 0);
                 assign('pass_change', $success);
                 //display pass field
             }
         } else {
-            if (!empty($_POST['userid'])) {
-                $user = User::getInstance()->getOne([
-                    'userid' => $_POST['userid'],
-                    'email_strict' => $_POST['email']
-                ]);
-                assign('avcode', $user['avcode'] ?? '');
-                assign('email', $user['email'] ?? '');
-                assign('userid', $user['userid'] ?? 0);
-                if (!empty($user) && $user['avcode'] == ($_POST['avcode'] ?? null) && !empty($user['avcode'])) {
-                    assign('pass_change', true);
-                    if (!empty($_POST['change_password'])) {
-                        if (empty($_POST['password']) || empty($_POST['cpassword'])) {
-                            e(lang('usr_pass_err2'));
-                        } elseif ($_POST['password'] != $_POST['cpassword']) {
-                            e(lang('usr_cpass_err1'));
-                        } else {
-                            Clipbucket_db::getInstance()->update(tbl('users'), ['password', 'avcode'], [pass_code($_POST['password'], $user['userid']), ''], ' userid=\'' . $user['userid'] . '\'');
-                            Session::kill_all_sessions($user['userid']);
-                            sessionMessageHandler::add_message(lang('usr_pass_email_msg'), 'm', DirPath::getUrl('root') . 'signup.php?mode=login');
-                        }
+            $user = User::getInstance()->getOne(['email_strict' => $_POST['email']]);
+            assign('avcode', $user['avcode'] ?? '');
+            assign('email', $user['email'] ?? '');
+            if (!empty($user) && $user['avcode'] == ($_POST['avcode'] ?? null) && !empty($user['avcode'])) {
+                assign('pass_change', true);
+                if (!empty($_POST['change_password'])) {
+                    if (empty($_POST['password']) || empty($_POST['cpassword'])) {
+                        e(lang('usr_pass_err2'));
+                    } elseif ($_POST['password'] != $_POST['cpassword']) {
+                        e(lang('usr_cpass_err1'));
+                    } else {
+                        Clipbucket_db::getInstance()->update(tbl('users'), ['password', 'avcode'], [pass_code($_POST['password'], $user['userid']), ''], ' userid=\'' . $user['userid'] . '\'');
+                        Session::kill_all_sessions($user['userid']);
+                        sessionMessageHandler::add_message(lang('usr_pass_email_msg'), 'm', DirPath::getUrl('root') . 'signup.php?mode=login');
                     }
-                } else {
-                    e(lang('technical_error'));
-                    assign('pass_change', false);
                 }
+            } else {
+                e(lang('recap_verify_failed'));
+                assign('pass_change', false);
             }
         }
         break;

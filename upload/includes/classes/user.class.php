@@ -1847,19 +1847,13 @@ class userquery extends CBCategory
     {
         $udetails = $this->get_user_details($email);
 
-        if (!$udetails || !$email) {
-            e(lang('usr_exist_err'));
-        } elseif ($udetails['usr_status'] == 'Ok') {
-            e(lang('usr_activation_err'));
-        } elseif ($udetails['ban_status'] == 'yes') {
-            e(lang('ban_status'));
-        } else {
+        if ($udetails && $email && $udetails['usr_status'] != 'Ok' && $udetails['ban_status'] != 'yes') {
             $avcode = User::getInstance($udetails['userid'])->refreshAvcode();
             $var = ['avcode' => $avcode];
             //Now Finally Sending Email
             EmailTemplate::sendMail('avcode_request', $udetails['userid'],  $var);
-            e(lang('usr_activation_em_msg'), 'm');
         }
+        e(lang('if_email_exist_been_sent'), 'm');
     }
 
     /**
@@ -2449,7 +2443,7 @@ class userquery extends CBCategory
 
         $user = User::getInstance()->getOne(['email' => $input]);
         if (empty($user)) {
-            e(lang('email_forgot_password_sended'), 'm');
+            e(lang('if_email_exist_been_sent'), 'm');
             return true;
         }
 
@@ -2460,7 +2454,7 @@ class userquery extends CBCategory
         ];
         //Now Finally Sending Email
         if (EmailTemplate::sendMail('password_reset_request', $user['userid'], $var)) {
-            e(lang('email_forgot_password_sended'), 'm');
+            e(lang('if_email_exist_been_sent'), 'm');
         }
         return true;
     }
@@ -2472,16 +2466,12 @@ class userquery extends CBCategory
     function recover_username($email): void
     {
         $udetails = $this->get_user_details($email);
-        if (!$udetails) {
-            e(lang('no_user_associated_with_email'));
-        } elseif (!verify_captcha()) {
-            e(lang('recap_verify_failed'));
-        } else {
+        if ( $udetails && verify_captcha()) {
             //Now Finally Sending Email
-            if (EmailTemplate::sendMail('forgot_username_request', $udetails['userid'], [])) {
-                e(lang("usr_uname_email_msg"), 'm');
-            }
+            EmailTemplate::sendMail('forgot_username_request', $udetails['userid'], []);
         }
+        e(lang("if_email_exist_been_sent"), 'm');
+
     }
 
     //FUNCTION USED TO UPDATE LAST ACTIVE FOR OF USER

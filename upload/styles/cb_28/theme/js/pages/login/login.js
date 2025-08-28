@@ -71,6 +71,8 @@ document.addEventListener('DOMContentLoaded', function () {
                 } else if (response.success) {
                     closeModalButton.click();
                     window.location.href = response.redirect;
+                } else {
+                    hideSpinner();
                 }
 
                 if (!need_mfa) {
@@ -84,7 +86,6 @@ document.addEventListener('DOMContentLoaded', function () {
                         insertHTMLAfter(pageContent, response.msg);
                     }
                 }
-                hideSpinner();
             })
             .catch(err => {
                 console.error('Login error:', err);
