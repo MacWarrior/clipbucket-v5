@@ -2422,11 +2422,12 @@ class userquery extends CBCategory
 
     /**
      * @param $input
-     * @param $check_is_connected
+     * @param bool $check_is_connected
      * @return bool
      * @throws \PHPMailer\PHPMailer\Exception
+     * @throws Exception
      */
-    function reset_password($input, $check_is_connected = true): bool
+    function reset_password($input, bool $check_is_connected = true): bool
     {
         if ($check_is_connected && User::getInstance()->isUserConnected()) {
             return false;
@@ -2450,15 +2451,14 @@ class userquery extends CBCategory
 
         $avcode = User::getInstance($user['userid'])->refreshAvcode();
         $var = [
-                        'reset_password_link' => DirPath::getUrl('root') . 'forgot.php?mode=reset_pass&email=' . $user['email'] . '&avcode=' . $avcode,
-                        'avcode'              => $avcode
+            'reset_password_link' => DirPath::getUrl('root') . 'forgot.php?mode=reset_pass&email=' . $user['email'] . '&avcode=' . $avcode,
+            'avcode'              => $avcode
         ];
         //Now Finally Sending Email
         if (EmailTemplate::sendMail('password_reset_request', $user['userid'], $var)) {
             e(lang('email_forgot_password_sended'), 'm');
         }
         return true;
-
     }
 
     /**
@@ -2625,13 +2625,13 @@ class userquery extends CBCategory
     /**
      * This function will return
      * user field without array
+     * @throws Exception
      */
     function get_user_field_only($uid, $field)
     {
         $fields = $this->get_user_field($uid, $field);
         return $fields[$field];
     }
-
 
     /**
      * Function used to get all levels
@@ -2819,6 +2819,7 @@ class userquery extends CBCategory
 
     /**
      * Function used to get logged in username
+     * @throws Exception
      */
     function get_logged_username()
     {
@@ -2827,6 +2828,7 @@ class userquery extends CBCategory
 
     /**
      * FUnction used to get username from userid
+     * @throws Exception
      */
     function get_username($uid)
     {
@@ -2966,7 +2968,6 @@ class userquery extends CBCategory
         foreach($user_profile_fields as $field){
             $select[] = 'UP.' . $field;
         }
-
 
         if( Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.0', '264') ){
             $group = $select;
