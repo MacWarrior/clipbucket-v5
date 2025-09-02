@@ -814,9 +814,19 @@
                                             </div>
                                             <div class="col-md-4 row-size">
                                                 <select class='form-control' name="videos_video_style" id="videos_video_style">
-                                                    <option value="classic" {if $row.videos_video_style=='classic'}selected{/if}>{lang('classic')}</option>
-                                                    <option value="modern" {if $row.videos_video_style=='modern'}selected{/if}>{lang('modern')}</option>
+                                                    <option value="classic"{if $row.videos_video_style=='classic'} selected{/if}>{lang('classic')}</option>
+                                                    <option value="modern"{if $row.videos_video_style=='modern'} selected{/if}>{lang('modern')}</option>
                                                 </select>
+                                            </div>
+                                        </div>
+                                        <hr/>
+                                        <div class="row">
+                                            <div class="col-md-10">
+                                                <label class="nowrap" for="videos_enable_fullwidth" title="{lang code='option_enable_fullwidth'}">{lang code='option_enable_fullwidth'}</label>
+                                            </div>
+                                            <div class="col-md-2 no_padding">
+                                                <input value="yes" name="videos_enable_fullwidth" id="videos_enable_fullwidth"{if $row.videos_enable_fullwidth=='yes'} checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+                                                <span class="lbl"></span>
                                             </div>
                                         </div>
                                         <hr/>
