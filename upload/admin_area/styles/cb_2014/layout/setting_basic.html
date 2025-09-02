@@ -277,6 +277,7 @@
                                 <li><a data-toggle="tab" href="interfaces_collection">{lang('collection')|ucfirst}</a></li>
                                 <li><a data-toggle="tab" href="interfaces_channels">{lang('channels')|ucfirst}</a></li>
                                 <li><a data-toggle="tab" href="interfaces_videos">{lang('videos')|ucfirst}</a></li>
+                                <li><a data-toggle="tab" href="interfaces_collections">{lang('collections')|ucfirst}</a></li>
                             </ul>
                         </div>
                         <div class="col-md-10 tab-content">
@@ -826,6 +827,22 @@
                                             </div>
                                             <div class="col-md-2 no_padding">
                                                 <input value="yes" name="videos_enable_fullwidth" id="videos_enable_fullwidth"{if $row.videos_enable_fullwidth=='yes'} checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+                                                <span class="lbl"></span>
+                                            </div>
+                                        </div>
+                                        <hr/>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="tab-pane interfaces" id="interfaces_collections">
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <div class="row">
+                                            <div class="col-md-10">
+                                                <label class="nowrap" for="collections_enable_fullwidth" title="{lang code='option_enable_fullwidth'}">{lang code='option_enable_fullwidth'}</label>
+                                            </div>
+                                            <div class="col-md-2 no_padding">
+                                                <input value="yes" name="collections_enable_fullwidth" id="collections_enable_fullwidth"{if $row.collections_enable_fullwidth=='yes'} checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
                                                 <span class="lbl"></span>
                                             </div>
                                         </div>
