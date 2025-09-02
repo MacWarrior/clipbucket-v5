@@ -5,7 +5,6 @@
 		<div class="account-holder">
 			<form method="post" name="activation" id="activation" class="user-form">
 				<h2>{lang code='user_forgot_message'}</h2>
-                <input type="hidden" name="userid" value="{{$userid}}"/>
                 {if !$pass_change}
                     <div class="clearfix text-box">
                     {if $mode=='reset_pass' }

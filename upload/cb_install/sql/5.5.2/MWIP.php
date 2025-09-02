@@ -74,6 +74,15 @@ class MWIP extends \Migration
           'fr'=>'Le code de vérification n\'est pas valide',
           'en'=>'Verification code is not valid'
       ]);
+
+      self::generateTranslation('if_email_exist_been_sent' , [
+          'fr'=>'Si cet adresse e-mail est lié à un compte en attente de validation, un e-mail lui a été envoyé',
+          'en'=>'If this email address is related with an account awaiting validation, an email has been sent to it'
+      ]);
+
+      self::updateTranslation('email_forgot_password_sended', [
+          'en'=>'If this email address is associated with a user account, reset instructions has been sent to it'
+      ]);
     }
 
 }
