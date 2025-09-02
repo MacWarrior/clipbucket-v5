@@ -2465,6 +2465,11 @@ class userquery extends CBCategory
      */
     function recover_username($email): void
     {
+        if (empty($email) || !isValidEmail($email)) {
+            e(lang('invalid_email'));
+            return;
+        }
+
         $udetails = $this->get_user_details($email);
         if ( $udetails && verify_captcha()) {
             //Now Finally Sending Email
