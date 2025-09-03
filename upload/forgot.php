@@ -52,8 +52,8 @@ switch ($mode) {
             }
         } else {
             $user = User::getInstance()->getOne(['email_strict' => $_POST['email']]);
-            assign('avcode', $user['avcode'] ?? '');
-            assign('email', $user['email'] ?? '');
+            assign('avcode', $_POST['avcode'] ?? '');
+            assign('email', $_POST['email'] ?? '');
             if (!empty($user) && $user['avcode'] == ($_POST['avcode'] ?? null) && !empty($user['avcode'])) {
                 assign('pass_change', true);
                 if (!empty($_POST['change_password'])) {
@@ -68,7 +68,9 @@ switch ($mode) {
                     }
                 }
             } else {
-                e(lang('recap_verify_failed'));
+                if (!empty($_POST)) {
+                    e(lang('recap_verify_failed'));
+                }
                 assign('pass_change', false);
             }
         }

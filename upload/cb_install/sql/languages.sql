@@ -1712,4 +1712,5 @@ VALUES ('ongoing_conversion'),
        ('save_new_password'),
        ('new_password'),
        ('confirm_new_password'),
-       ('recap_verify_failed');
+       ('recap_verify_failed'),
+       ('if_email_exist_been_sent');
