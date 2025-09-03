@@ -1,6 +1,6 @@
 {
   "version":"5.5.2",
-  "revision":"132",
+  "revision":"134",
   "status":"stable",
   "detail":[
     {
@@ -71,6 +71,8 @@
         ,"Implement remote play"
         ,"Implement sub-collection items display & count"
         ,"Implement multi-factor authentification"
+        ,"Implement fullwidth videos page"
+        ,"Implement fullwidth collections page"
         ,"Refactor friends requests & management"
         ,"Refactor collection selections"
         ,"Update video & photos management pages display"
