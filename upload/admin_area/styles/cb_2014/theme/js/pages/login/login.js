@@ -65,7 +65,9 @@ document.addEventListener('DOMContentLoaded', function () {
                     }
                     hideSpinner();
                 } else if (response.success) {
-                    closeModalButton.click();
+                    if( closeModalButton ) {
+                        closeModalButton.click();
+                    }
                     window.location.href = response.redirect;
                 } else {
                     hideSpinner();
@@ -88,13 +90,17 @@ document.addEventListener('DOMContentLoaded', function () {
                 alert('An error occurred');
             })
     });
-    confirmButton.addEventListener('click', function () {
-        form.requestSubmit();
-    });
+    if( confirmButton ){
+        confirmButton.addEventListener('click', function () {
+            form.requestSubmit();
+        });
+    }
 
-    closeModalButton.addEventListener('click', function () {
-        closeModal();
-    });
+    if( closeModalButton ){
+        closeModalButton.addEventListener('click', function () {
+            closeModal();
+        });
+    }
 });
 
 

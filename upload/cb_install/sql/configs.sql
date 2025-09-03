@@ -327,7 +327,8 @@ INSERT INTO `{tbl_prefix}config` (`configid`, `name`, `value`) VALUES
     (NULL, 'unique_random', HEX(RANDOM_BYTES(16))),
     (NULL, 'enable_video_remote_play', 'yes'),
     (NULL, 'enable_video_embed_players', 'yes'),
-    (NULL, 'enable_multi_factor_authentification', 'allowed');
+    (NULL, 'enable_multi_factor_authentification', 'allowed'),
+    (NULL, 'videos_enable_fullwidth', 'yes');
 
 
 INSERT INTO `{tbl_prefix}video_resolution` (`title`, `ratio`, `enabled`, `width`, `height`, `video_bitrate`) VALUES
