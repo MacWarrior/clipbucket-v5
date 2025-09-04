@@ -1,4 +1,4 @@
-<div id="main" class="container clearfix">
+<div id="main" class="container clearfix{if config('collections_enable_fullwidth') == 'yes'} fullwidth{/if}">
     <div class="clearfix">
         <section id="content" class="clearfix">
             {if config("enable_advertisement") == "yes"}
@@ -74,13 +74,21 @@
                 </div>
             {/if}
 
+            {if config('collections_enable_fullwidth') == 'yes'}
+                {$class_video = 'col-lg-2'}
+                {$class_photo = 'col-lg-3'}
+            {else}
+                {$class_video = 'col-lg-3'}
+                {$class_photo = 'col-lg-4'}
+            {/if}
+
             {if $c.type == 'photos'}
                 <div class="photos clearfix">
                     {section name=list loop=$objects}
-                        <div class="item-photo col-lg-4 col-md-4 col-sm-6 col-xs-12">
+                        <div class="item-photo {$class_photo} col-md-4 col-sm-6 col-xs-12">
                             {include file="$style_dir/blocks/photo.html" photo=$objects[list] display_type=collection_item}
                         </div>
-                        {sectionelse}
+                    {sectionelse}
                         <div class="well well-info">{lang code='no_photos_found'}</div>
                     {/section}
                 </div>
@@ -88,7 +96,7 @@
                 <div class="videos clearfix">
                     {if $objects}
                         {foreach $objects as $video}
-                            <div class="item-video col-lg-3 col-md-4 col-sm-4 col-xs-12" data-id="{$video.videoid}">
+                            <div class="item-video {$class_video} col-md-4 col-sm-4 col-xs-12" data-id="{$video.videoid}">
                                 {include file="$style_dir/blocks/videos/video-classic.html"}
                             </div>
                         {/foreach}
@@ -167,10 +175,10 @@
                     {if myquery::getInstance()->is_commentable($c,'collection')}
                         <div class="collectionComments addComment">
                             <h2>
-                                {if $c.total_comments <= 1 }
+                                {if $c.total_comments <= 1}
                                     {lang code='comment'}
                                 {else}
-                                    {{lang code='comments'} }
+                                    {lang code='comments'}
                                 {/if}
                                 (<span id="comment_count">{$c.total_comments}</span>)
                             </h2>
@@ -198,7 +206,7 @@
             {if config("enable_advertisement") == "yes"}
                 <div class="box-ad ad">{AD place='ad_300x250'}</div>
             {/if}
-            {if $featured}
+            {if !empty($featured)}
                 <h2>{lang code='featured_photos'}</h2>
                 <div class="clearfix sidebar-items">
                     <div class="row">
@@ -210,23 +218,17 @@
                     </div>
                 </div>
             {/if}
-            {if config('collectionsSection') == 'yes'}
-                {$cond = ['limit'=>5, 'active'=>'yes', 'has_items'=>true]}
-                {if config('enable_sub_collection')}
-                    {$cond['parent_id'] = $c.collection_id}
-                {/if}
-                {if $collections}
-                    <h2>{lang code="top_collections"}</h2>
-                    <div class="clearfix sidebar-items collections-grid">
-                        <div class="clearfix row">
-                            {foreach from=$collections item=collection}
-                                <div class="clearfix collection-item col-lg-6 col-md-6 col-sm-12 col-xs-12">
-                                    {include file="$style_dir/blocks/collection-item.html"}
-                                </div>
-                            {/foreach}
-                        </div>
+            {if config('collectionsSection') == 'yes' && !empty($collections)}
+                <h2>{lang code="top_collections"}</h2>
+                <div class="clearfix sidebar-items collections-grid">
+                    <div class="clearfix row">
+                        {foreach from=$collections item=collection}
+                            <div class="clearfix collection-item col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                                {include file="$style_dir/blocks/collection-item.html"}
+                            </div>
+                        {/foreach}
                     </div>
-                {/if}
+                </div>
             {/if}
         </aside>
     </div>
