@@ -148,13 +148,6 @@ switch ($mode) {
         }
         VideoConversionQueue::insert($vid);
 
-       /* $cmd = FFmpeg::launchConversion($file_name);
-        if( System::isInDev() ){
-            $log->writeLine(date('Y-m-d H:i:s').' - Conversion command : ' . $cmd);
-        }
-
-        $log->writeLine(date('Y-m-d H:i:s').' - Video Converson File executed successfully with Target File > ' . $DestinationFilePath);*/
-
         echo json_encode(['success' => 'yes', 'file_name' => $file_name, 'videoid'=>$vid]);
         die();
 

@@ -1707,8 +1707,16 @@ class AdminTool
 
     public static function convert_videos($video)
     {
-        if (FFmpeg::launchConversion($video['file_name'] )) {
+        $logFile = DirPath::get('logs') . $video['file_directory'] . DIRECTORY_SEPARATOR . $video['file_name'] . '.log';
+        $log = new SLog($logFile);
+        $cmd = FFmpeg::launchConversion($video['file_name'] );
+        if( System::isInDev() ){
+            $log->writeLine(date('Y-m-d H:i:s').' - Conversion command : ' . $cmd);
+        }
+
+        if ($cmd) {
             Clipbucket_db::getInstance()->update(tbl('video_conversion_queue'), ['date_started'],['|no_mc||f|NOW()'], 'id = ' . mysql_clean($video['id']));
+            $log->writeLine(date('Y-m-d H:i:s').' - Video Conversion File executed successfully with Target File > ' . DirPath::get('temp') . $video['file_name']);
         }
 
     }
