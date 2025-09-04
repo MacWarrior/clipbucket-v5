@@ -1677,7 +1677,7 @@ class AdminTool
 
     public function launchVideoConversion()
     {
-        if (!Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.2', '000') ) {
+        if (!Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.2', '999') ) {
             $this->end();
             return true;
         }

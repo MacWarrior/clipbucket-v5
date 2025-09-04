@@ -4,6 +4,9 @@ require_once dirname(__FILE__, 2) . '/includes/admin_config.php';
 
 require_once DirPath::get('classes') . 'sLog.php';
 global $cbmass, $breadcrumb;
+if (!Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.2', '999')) {
+    sessionMessageHandler::add_message('Sorry, you cannot upload new videos until the application has been fully updated by an administrator', 'e', DirPath::get('admin_area', true));
+}
 User::getInstance()->hasPermissionOrRedirect('admin_access', true);
 pages::getInstance()->page_redir();
 
@@ -50,6 +53,7 @@ if (isset($_POST['mass_upload_video'])) {
             , 'tags'            => $file_tags
             , 'category'        => $file_categories
             , 'file_name'       => $file_key
+            , 'file_type'       => getExt($file['file'])
             , 'file_directory'  => $file_directory
             , 'allow_comments'  => 'yes'
             , 'comment_voting'  => 'yes'
@@ -84,7 +88,6 @@ if (isset($_POST['mass_upload_video'])) {
             $fname = explode('.', $file_name);
             $cond = 'file_name=' . '\'' . $fname[0] . '\'';
             $result = Clipbucket_db::getInstance()->db_update(tbl('video'), $fields, $cond);
-//            FFmpeg::launchConversion($file_key, $file_track);
             if (file_exists(DirPath::get('conversion_queue') . $file_name)) {
                 unlink(DirPath::get('conversion_queue') . $file_name);
                 foreach ($vtitle as $title) {

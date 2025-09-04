@@ -116,10 +116,31 @@
                                 {if user_id()}
                                     {if (isSectionEnabled('videos') && !empty(Upload::getInstance()->get_upload_options()) && User::getInstance()->hasPermission('allow_video_upload')) || (isSectionEnabled('photos') && config('enable_photo_file_upload') == 'yes' && User::getInstance()->hasPermission('allow_photo_upload'))}
                                         <li class="dropdown upload_link">
-                                            <a href="{cblink name='upload'}" class="dropdown-toggle btn-upload btn btn-default" data-toggle="dropdown"><i class="icon-upload"></i><span>{lang code="upload"}</span><b class="icon-down-arrow"></b></a>
+                                            <a class="dropdown-toggle btn-upload btn btn-default"
+                                                {if (!Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.2', '999') && !(isSectionEnabled('photos') && config('enable_photo_file_upload') == 'yes' && User::getInstance()->hasPermission('allow_photo_upload')))}
+                                                    href="javascript:void(0);"
+                                                    disabled="disabled" title="Sorry, you cannot upload new videos until the application has been fully updated by an administrator"
+                                                {else}
+                                                    href="{cblink name='upload'}"
+                                                    data-toggle="dropdown"
+                                                {/if}
+                                            >
+                                                <i class="icon-upload"></i><span>{lang code="upload"}</span><b class="icon-down-arrow"></b></a>
                                             <ul role="menu" class="dropdown-menu">
                                                 {if User::getInstance()->hasPermission('allow_video_upload') && isSectionEnabled('videos') && !empty(Upload::getInstance()->get_upload_options())}
-                                                    <li class="up_vid"><a href="{cblink name='upload'}">{lang code="upload_video"}<i class="icon-video visible-xs"></i></a></li>
+                                                    <li class="up_vid">
+                                                        <a
+                                                            {if (!Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.2', '999'))}
+                                                                href="javascript:void(0);"
+                                                                class="disabled"
+                                                                disabled="disabled" title="Sorry, you cannot upload new videos until the application has been fully updated by an administrator"
+                                                            {else}
+                                                                href="{cblink name='upload'}"
+                                                            {/if}
+                                                        >
+                                                            {lang code="upload_video"}<i class="icon-video visible-xs"></i>
+                                                        </a>
+                                                    </li>
                                                 {/if}
                                                 {if User::getInstance()->hasPermission('allow_photo_upload') && isSectionEnabled('photos') && config('enable_photo_file_upload') == 'yes'}
                                                     <li class="up_img"><a href="{cblink name='photo_upload'}">{lang code="upload_photo"}<i class="icon-photo visible-xs"></i></a></li>

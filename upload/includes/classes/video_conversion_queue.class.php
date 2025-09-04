@@ -118,7 +118,7 @@ class VideoConversionQueue
      */
     public static function get_conversion_queue(array $cond = [], string $limit = '', string $order = 'date_added DESC'): array
     {
-        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.2', '000')) {
+        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.2', '999')) {
             $result = self::getAll(array_merge($cond, ['limit' => $limit, 'order' => $order]));
         } else {
             $conditions = [];
@@ -138,7 +138,10 @@ class VideoConversionQueue
         return [];
     }
 
-
+    public static function getTableName(): string
+    {
+        return self::$tableName;
+    }
 
 
 }

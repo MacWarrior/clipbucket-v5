@@ -148,6 +148,11 @@ class Upload
         $file_name = mysql_clean($array['file_name']);
         $query_val[] = $file_name;
 
+        if (!empty($array['file_type'])) {
+            $query_field[] = 'file_type';
+            $query_val[] = $array['file_type'];
+        }
+
         if (!isset($array['file_directory']) && isset($array['time_stamp'])) {
             $query_field[] = 'file_directory';
             $file_directory = create_dated_folder(null, $array['time_stamp']);

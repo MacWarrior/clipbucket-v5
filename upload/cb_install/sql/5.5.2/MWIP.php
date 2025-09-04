@@ -47,6 +47,15 @@ class MWIP extends \Migration
             'en'=>'Launch video conversion from queue'
         ]);
 
+        self::generateTranslation('video_is_not_convertable', [
+            'fr'=>'La vidéo avec l\'id : %s n\'est pas convertible',
+            'en'=>'Video with id : %s is not convertable'
+        ]);
+        self::generateTranslation('video_is_already_processing', [
+            'fr'=>'La vidéo avec l\'id : %s est déjà en cours de conversion',
+            'en'=>'Video with id : %s is already processing'
+        ]);
+
     }
 
 }

@@ -350,7 +350,7 @@ class FFMpeg
         }
 
         $this->log->writeLine('Conversion_status : '.$conversion_status);
-        setVideoStatus($this->file_name, $video_status, false, true);
+        setVideoStatus($this->file_name, $video_status, true);
 
         $this->unLock();
     }

@@ -29,9 +29,9 @@ switch ($ext) {
     case 'mp4':
         $orig_file = DirPath::get('conversion_queue') . $fileName . '.' . $ext;
         break;
-    case 'm3u8':
+    case 'hls':
         $conversion_path = DirPath::get('conversion_queue') . $fileName . DIRECTORY_SEPARATOR;
-        $orig_file = $conversion_path . $fileName . '.' . $ext;
+        $orig_file = $conversion_path . $fileName . '.m3u8';
         break;
 }
 
@@ -48,7 +48,7 @@ switch ($ext) {
         $temp_file = DirPath::get('temp') . $fileName . '.' . $ext;
         $renamed = rename($temp_file, $orig_file);
         break;
-    case 'm3u8':
+    case 'hls':
         $temp_dir = DirPath::get('temp') . $fileName . DIRECTORY_SEPARATOR;
         $temp_file = $temp_dir . '*';
         mkdir($conversion_path);
@@ -104,6 +104,10 @@ if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '279')) {
 update_video_by_filename($fileName, $fields, $values);
 
 $videoDetails = CBvideo::getInstance()->get_video($fileName, true);
+if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.2', '999')) {
+    $queue = VideoConversionQueue::getOne(['videoid' => $videoDetails['videoid'], 'not_complete' => true]);
+    Clipbucket_db::getInstance()->update(tbl(VideoConversionQueue::getTableName()), ['date_ended', 'is_completed'],['|no_mc||f|NOW()', true], 'id = ' . mysql_clean($queue['id']));
+}
 update_bits_color($videoDetails);
 update_castable_status($videoDetails);
 
@@ -163,7 +167,7 @@ switch ($ext) {
     case 'mp4':
         unlink($orig_file);
         break;
-    case 'm3u8':
+    case 'hls':
         foreach (glob($conversion_path . '*') as $file) {
             unlink($file);
         }
