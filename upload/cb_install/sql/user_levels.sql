@@ -46,7 +46,8 @@ VALUES (1, 3, 'admin_access', 'admin_access_desc'),
        (31, 3, 'email_template_management', 'email_template_management_desc'),
        (32, 3, 'advanced_settings', 'advanced_settings_desc'),
        (33, 1, 'allow_public_video_page', 'allow_public_video_page'),
-       (34, 4, 'default_homepage', 'default_homepage_desc');
+       (34, 4, 'default_homepage', 'default_homepage_desc'),
+       (35, 4, 'download_speed_limit', 'download_speed_limit_desc');
 
 INSERT INTO `{tbl_prefix}user_levels_permissions_values` (`user_level_id`, `id_user_levels_permission`, `permission_value`)
 VALUES (1, 1, 'yes'),
@@ -83,6 +84,7 @@ VALUES (1, 1, 'yes'),
        (1, 32, 'yes'),
        (1, 33, 'no'),
        (1, 34, 'homepage'),
+       (1, 35, 0),
 
        (2, 1, 'no'),
        (2, 2, 'yes'),
@@ -118,6 +120,7 @@ VALUES (1, 1, 'yes'),
        (2, 32, 'no'),
        (2, 33, 'no'),
        (2, 34, 'homepage'),
+       (2, 35, 0),
 
        (3, 1, 'no'),
        (3, 2, 'no'),
@@ -153,6 +156,7 @@ VALUES (1, 1, 'yes'),
        (3, 32, 'no'),
        (3, 33, 'no'),
        (3, 34, 'homepage'),
+       (3, 35, 0),
 
        (4, 1, 'no'),
        (4, 2, 'no'),
@@ -188,6 +192,7 @@ VALUES (1, 1, 'yes'),
        (4, 32, 'no'),
        (4, 33, 'no'),
        (4, 34, 'homepage'),
+       (4, 35, 0),
 
        (5, 1, 'yes'),
        (5, 2, 'yes'),
@@ -223,6 +228,7 @@ VALUES (1, 1, 'yes'),
        (5, 32, 'no'),
        (5, 33, 'no'),
        (5, 34, 'homepage'),
+       (5, 35, 0),
 
        (6, 1, 'no'),
        (6, 2, 'yes'),
@@ -257,4 +263,5 @@ VALUES (1, 1, 'yes'),
        (6, 31, 'no'),
        (6, 32, 'no'),
        (6, 33, 'no'),
-       (6, 34, 'homepage');
+       (6, 34, 'homepage'),
+       (6, 35, 0);

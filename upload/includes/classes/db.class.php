@@ -620,4 +620,8 @@ class Clipbucket_db
         return $this->db_name;
     }
 
+    public function close(){
+        $this->mysqli->close();
+    }
+
 }

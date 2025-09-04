@@ -58,6 +58,13 @@ if( config('collectionsSection') == 'yes' && User::getInstance()->hasPermission(
     assign('item_id', $vdo['videoid']);
 }
 
+if( config('video_download') == 1 && CbVideo::getInstance()->downloadable($vdo) ){
+    assign('video_download', true);
+    assign('video_download_links', Video::getInstance($vdo['videoid'])->getQualityLinks('download'));
+} else {
+    assign('video_download', false);
+}
+
 if( !$is_playlist ){
     $videoid = $vdo['videoid'];
     $param = ['title'             => $vdo['title'],
