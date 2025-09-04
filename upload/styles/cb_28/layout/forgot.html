@@ -1,24 +1,44 @@
-{if $pass_recover=='success'}
-
-	{lang code='pass_changed_success'}
-
-{else}
 <div class="account-container">
-	{if $mode=='' || $mode=='reset_pass' }  
+	{if $mode=='' || $mode=='reset_pass'}
 
 	<div class="clearfix forgot-block">
 		<div class="account-holder">
-			<form method="post" name="actvation" id="actvation" class="user-form">
+			<form method="post" name="activation" id="activation" class="user-form">
 				<h2>{lang code='user_forgot_message'}</h2>
-				<div class="clearfix text-box">
-					<p>{lang code='forgot_password_tips'}</p>
-				</div>
-				<div class="form-group">
-					<input type="text" name="forgot_email" class="form-control" placeholder="{lang code='user_email_address'}" required autofocus/>
-				</div>
-				<input name="reset" type="submit" class="btn btn-success btn-block" id="reset" value="{lang code='user_reset'}"/>
+                {if !$pass_change}
+                    <div class="clearfix text-box">
+                    {if $mode=='reset_pass' }
+                        <p>{lang('enter_email_and_avcode')}</p>
+                    {else }
+                        <p>{lang code='forgot_password_tips'}</p>
+                    {/if}
+                    </div>
+
+                    <div class="form-group">
+                        <label for="email">{lang code='user_email_address'}</label>
+                        <input type="text" name="email" id="email" class="form-control" placeholder="{lang code='user_email_address'}" required autofocus value="{{$email}}"/>
+                    </div>
+                    <div {if $mode !='reset_pass' } class="hidden"{/if}>
+                        <label for="avcode">{lang code='email_variable_avcode'}</label>
+                        <input type="text" name="avcode" id="avcode" class="form-control" placeholder="{lang code='email_variable_avcode'}" {if $mode =='reset_pass' } required {/if} value="{{$avcode}}"/>
+                    </div>
+                    <br/>
+                    <input name="reset" type="submit" class="btn btn-success btn-block" value="{lang code='user_reset'}"/>
+                {else}
+                    <input type="hidden" name="email" id="email" value="{{$email}}"/>
+                    <input type="hidden" name="avcode" id="avcode" value="{{$avcode}}"/>
+                    <div class="clearfix text-box">
+                        <p>{lang('user_change_pass')}</p>
+                        <div class="form-group clearfix">
+                            <input type="password" placeholder="{lang('new_password')}" name="password" id="password" class="form-control" title="{lang('new_password')}">
+                        </div>
+                        <div class="form-group clearfix">
+                            <input type="password" placeholder="{lang('confirm_new_password')}" name="cpassword" id="cpassword" class="form-control" title="{lang('confirm_new_password')}">
+                        </div>
+                    </div>
+                    <input name="change_password" type="submit" class="btn btn-success btn-block" value="{lang('save_new_password')}"/>
+                {/if}
 			</form>
-			
 		</div>
 	</div>
 	
@@ -38,4 +58,28 @@
 	</div>
 	{/if}
 </div>
-{/if}
+
+<script>
+    let errors = {
+            "name_invalid_chars" : "{lang code='usr_uname_err3'}",
+            "pass_mismatch"      : "{lang code='usr_pass_err3'}",
+            "empty_pass"         : "{lang code='usr_pass_err2'}",
+            "empty_email"        : "{lang code='usr_email_err1'}" ,
+            "invalid_email"      : "{lang code='usr_email_err2'}",
+            "user_exists"        : "{lang code='usr_uname_err2'}",
+            "email_exists"       : "{lang code='usr_email_err3'}",
+            "email_unauthorized" : "{lang code='signup_error_email_unauthorized'}",
+            "weak_pass"          : "{lang code='weak_pass'}",
+            "username_spaces"    : "{lang code='username_spaces'}"
+        },
+
+        config_min_username = {config('min_username')},
+        config_max_username = {config('max_username')},
+
+        lang_password = "{lang code='password'}",
+
+        format_date_js = '{get_date_js()}',
+        language = '{$lang_obj->getLang()}';
+
+</script>
+

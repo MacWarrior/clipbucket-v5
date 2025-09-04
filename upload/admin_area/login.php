@@ -20,6 +20,11 @@ if (user_id() && !User::getInstance()->hasAdminAccess()) {
     e(lang('you_dont_hv_perms'));
 }
 
+$min_suffixe = System::isInDev() ? '' : '.min';
+ClipBucket::getInstance()->addAdminJS(
+    ['pages/login/login' . $min_suffixe . '.js' => 'admin']
+);
+
 subtitle('Admin Login');
 Template('global_header.html');
 Template('login.html');

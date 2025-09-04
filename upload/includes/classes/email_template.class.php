@@ -121,7 +121,7 @@ class EmailTemplate
             switch ($field) {
                 case 'is_deletable':
                 case 'disabled':
-                    $value = (bool)$value;
+                    $value = (bool)$value ? 'true' : 'false';
                     break;
                 case 'content':
                     $value = '\'' . mysql_clean($value) . '\'';
@@ -532,20 +532,21 @@ class EmailTemplate
      */
     public static function deleteEmail(int $id_email): bool
     {
-        $template = self::getOneEmail([
-            'id_email_template' => $id_email,
+        $email = self::getOneEmail([
+            'id_email' => $id_email,
             'has_histo'         => true
         ]);
-        if (empty($template)) {
+        if (empty($email)) {
             e(lang('template_dont_exist'));
             return false;
         }
-        if ($template['has_histo']) {
+        if ($email['has_histo']) {
             self::updateEmail([
                 'id_email' => $id_email,
                 'disabled' => true
             ]);
         } else {
+            Clipbucket_db::getInstance()->delete(tbl(self::$tableNameEmailVariableLink), ['id_email'], [$id_email]);
             Clipbucket_db::getInstance()->delete(tbl(self::$tableNameEmail), ['id_email'], [$id_email]);
         }
         return true;

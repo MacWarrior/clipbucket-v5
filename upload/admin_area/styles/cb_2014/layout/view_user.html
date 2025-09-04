@@ -27,6 +27,7 @@
                             <li><a role="menuitem" tabindex="-1" href="?uid={$u.userid}&amp;delete_vids=yes">Delete Videos</a></li>
                             <li><a role="menuitem" tabindex="-1" href="?uid={$u.userid}&amp;delete_contacts=yes">Delete Contacts</a></li>
                             <li><a role="menuitem" tabindex="-1" href="?uid={$u.userid}&amp;delete_pm=yes">Delete Private Messages</a></li>
+                            <li><a role="menuitem" id="confirm_reset_password" tabindex="-1" href="?uid={$u.userid}&amp;reset_password=yes">{lang('reset_password')}</a></li>
                         </ul>
                     {/if}
                 </div>
@@ -566,4 +567,5 @@
     let lang_storage_history = "{lang('storage_history')}";
     let lang_storage_use = "{lang('storage_use')}";
     let storage_history = {json_encode($storage_history)};
+    let lang_confirm_reset_password = "{lang('confirm_reset_password')}";
 </script>
