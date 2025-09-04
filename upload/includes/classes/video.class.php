@@ -65,7 +65,6 @@ class Video
             ,'file_server_path'
             ,'video_version'
             ,'thumbs_version'
-            ,'re_conv_status'
             ,'subscription_email'
         ];
 
@@ -1440,8 +1439,7 @@ class CBvideo extends CBCategory
             , 'comment_voting', 'comments_count', 'last_commented', 'featured', 'featured_date', 'allow_rating'
             , 'active', 'favourite_count', 'playlist_count', 'views', 'last_viewed', 'date_added', 'flagged', 'duration', 'status'
             , 'default_thumb', 'embed_code', 'downloads', 'uploader_ip'
-            , 'video_files', 'file_server_path', 'video_version', 'thumbs_version'
-            , 're_conv_status', 'subscription_email'
+            , 'video_files', 'file_server_path', 'video_version', 'thumbs_version', 'subscription_email'
         ];
 
         if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.3.0', '1')) {
@@ -1901,7 +1899,8 @@ class CBvideo extends CBCategory
                 Clipbucket_db::getInstance()->delete(tbl('favorites'), ['type', 'id'], ['v', $vdetails['videoid']]);
                 Clipbucket_db::getInstance()->delete(tbl('video_views'), ['id_video'], [$vdetails['videoid']]);
                 Clipbucket_db::getInstance()->delete(tbl('video_users'), ['videoid'], [$vdetails['videoid']]);
-                Clipbucket_db::getInstance()->delete(tbl('conversion_queue'), ['cqueue_name'], [$vdetails['file_name']]);
+
+                Clipbucket_db::getInstance()->delete(tbl(VideoConversionQueue::getTableName()), ['videoid'], [$vdetails['videoid']]);
 
                 //Removing video Comments
                 $params = [];
