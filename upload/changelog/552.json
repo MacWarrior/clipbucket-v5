@@ -1,6 +1,6 @@
 {
   "version":"5.5.2",
-  "revision":"134",
+  "revision":"135",
   "status":"stable",
   "detail":[
     {
@@ -73,6 +73,7 @@
         ,"Implement multi-factor authentification"
         ,"Implement fullwidth videos page"
         ,"Implement fullwidth collections page"
+        ,"Implement fullwidth collection page"
         ,"Refactor friends requests & management"
         ,"Refactor collection selections"
         ,"Update video & photos management pages display"
