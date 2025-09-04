@@ -1704,4 +1704,8 @@ VALUES ('ongoing_conversion'),
        ('please_enter_6_digit_mfa_code'),
        ('please_fill_all_fields'),
        ('cannot_activate_auth_email_if_email_disabled'),
-       ('email_mfa_hint');
+       ('email_mfa_hint'),
+       ('launch_video_conversion_label'),
+       ('launch_video_conversion_description'),
+       ('video_is_not_convertable'),
+       ('video_is_already_processing');
