@@ -1212,7 +1212,11 @@ function get_high_res_file($vdetails): string
         }
     }
 
-    $filepath = DirPath::get('videos') . $vdetails['file_directory'] . DIRECTORY_SEPARATOR;
+    if ($vdetails['status'] == 'Successful') {
+        $filepath = DirPath::get('videos') . $vdetails['file_directory'] . DIRECTORY_SEPARATOR;
+    } else {
+        $filepath = DirPath::get( 'conversion_queue') . $vdetails['file_directory'] . DIRECTORY_SEPARATOR;
+    }
     switch ($vdetails['file_type']) {
         default:
         case 'mp4':
@@ -1536,16 +1540,20 @@ function reConvertVideos($data = ''): void
             default:
             case 'mp4':
                 $max_quality_file = get_high_res_file($vdetails);
-                $conversion_filepath = DirPath::get('temp') . $vdetails['file_name'] . '.mp4';
-                copy($max_quality_file, $conversion_filepath);
+                $temp_path = DirPath::get('temp') . $vdetails['file_name'] . '.mp4';
+                copy($max_quality_file, $temp_path);
                 break;
 
             case 'hls':
                 $temp_dir = DirPath::get('temp') . $vdetails['file_name'] . DIRECTORY_SEPARATOR;
                 mkdir($temp_dir);
-                $original_files_path = DirPath::get('videos') . $vdetails['file_directory'] . DIRECTORY_SEPARATOR . $vdetails['file_name'] . DIRECTORY_SEPARATOR . '*';
+                if ($vdetails['status'] == 'Successful') {
+                    $original_files_path = DirPath::get('videos') . $vdetails['file_directory'] . DIRECTORY_SEPARATOR . $vdetails['file_name'] . DIRECTORY_SEPARATOR . '*';
+                } else {
+                    $original_files_path = DirPath::get('conversion_queue') . $vdetails['file_name'] . DIRECTORY_SEPARATOR . '*';
+                }
                 foreach (glob($original_files_path) as $file) {
-                    $files_part = explode('/', $file);
+                    $files_part = explode(DIRECTORY_SEPARATOR, $file);
                     $video_file = $files_part[count($files_part) - 1];
                     if ($video_file == 'index.m3u8') {
                         $video_file = $vdetails['file_name'] . '.m3u8';
