@@ -1465,6 +1465,14 @@ function isReconvertAble($vdetails): bool
                     $path = DirPath::get('videos') . $fileName . '*';
                 }
                 $vid_files = glob($path);
+                if (empty($vid_files) && $vdetails['status'] == 'Failed') {
+                    if (!empty($fileDirectory)) {
+                        $path = DirPath::get('conversion_queue') . $fileDirectory . DIRECTORY_SEPARATOR . $fileName . '*';
+                    } else {
+                        $path = DirPath::get('conversion_queue') . $fileName . '*';
+                    }
+                    $vid_files = glob($path);
+                }
                 if (!empty($vid_files) && is_array($vid_files)) {
                     $is_convertable = true;
                 }
@@ -1549,7 +1557,6 @@ function reConvertVideos($data = ''): void
         VideoConversionQueue::insert($vdetails['videoid']);
         e(lang('reconversion_started_for_x', display_clean($vdetails['title'])), 'm');
 
-        remove_video_files($vdetails);
         if (empty(errorhandler::getInstance()->get_error())) {
             errorhandler::getInstance()->flush();
         }

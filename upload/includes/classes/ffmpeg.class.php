@@ -1264,8 +1264,6 @@ class FFMpeg
         $cmd = System::get_binaries('php') . ' -q ' . DirPath::get('actions') . 'video_convert.php ' . $filename;
 
         $cmd .= !empty($audio_track) ? ' ' . $audio_track : ' \'\'';
-        $cmd .= !empty($reconvert) ? ' ' . $reconvert : ' \'\'';
-        $cmd .= !empty($resume) ? ' ' . $resume : ' \'\'';
 
         if (stristr(PHP_OS, 'WIN')) {
             $complement = '';

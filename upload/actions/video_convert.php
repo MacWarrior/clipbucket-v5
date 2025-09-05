@@ -53,7 +53,7 @@ switch ($ext) {
         $temp_file = $temp_dir . '*';
         mkdir($conversion_path);
         foreach (glob($temp_file) as $file) {
-            $files_part = explode('/', $file);
+            $files_part = explode(DIRECTORY_SEPARATOR, $file);
             $video_file = $files_part[count($files_part) - 1];
             $renamed = rename($file, $conversion_path . $video_file);
         }
@@ -65,6 +65,10 @@ if (!$renamed) {
     $log->writeLine(date('Y-m-d H:i:s') . ' => Something went wrong while moving file ' . $temp_file . ' ...');
     setVideoStatus($videoDetails['videoid'], 'Failed');
     die();
+} else {
+    //remove original files if they exist
+    remove_video_files($videoDetails);
+    $log->writeLine(date('Y-m-d H:i:s') . ' => files in /video deleted');
 }
 
 $log->writeLine(date('Y-m-d H:i:s') . ' => File moved to ' . $orig_file);
@@ -162,14 +166,17 @@ if (stristr(PHP_OS, 'WIN')) {
 }
 exec($default_cmd . $complement);
 
-switch ($ext) {
-    default:
-    case 'mp4':
-        unlink($orig_file);
-        break;
-    case 'hls':
-        foreach (glob($conversion_path . '*') as $file) {
-            unlink($file);
-        }
-        rmdir($conversion_path);
+//delete files if conversion was successful
+if (strtolower($videoDetails['status']) == 'successful') {
+    switch ($ext) {
+        default:
+        case 'mp4':
+            unlink($orig_file);
+            break;
+        case 'hls':
+            foreach (glob($conversion_path . '*') as $file) {
+                unlink($file);
+            }
+            rmdir($conversion_path);
+    }
 }
