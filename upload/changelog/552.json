@@ -1,6 +1,6 @@
 {
   "version":"5.5.2",
-  "revision":"135",
+  "revision":"136",
   "status":"stable",
   "detail":[
     {
@@ -76,6 +76,7 @@
         ,"Implement fullwidth collection page"
         ,"Refactor friends requests & management"
         ,"Refactor collection selections"
+        ,"Refactor password reset"
         ,"Update video & photos management pages display"
         ,"Update video edition display"
         ,"Update photo upload & edition display"

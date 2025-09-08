@@ -74,4 +74,10 @@ $(document).ready(function(){
         ],
         "dataProvider": storage_history
     });
+
+    document.getElementById('confirm_reset_password').addEventListener('click', function (e) {
+        if (!confirm(lang_confirm_reset_password)) {
+            e.preventDefault();
+        }
+    }, false);
 });

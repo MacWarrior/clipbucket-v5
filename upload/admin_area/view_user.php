@@ -72,6 +72,14 @@ if ($udetails) {
         }
     }
 
+    if (isset($_GET['reset_password'])) {
+        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.2', '136')) {
+            e(lang('cant_reset_database_not_up_to_date'));
+        } else {
+            userquery::getInstance()->reset_password($uid, false);
+        }
+    }
+
     $profile = userquery::getInstance()->get_user_profile($uid);
     if (is_array($profile)) {
         $user_profile = array_merge($udetails, $profile);
