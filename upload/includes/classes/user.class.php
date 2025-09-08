@@ -2475,7 +2475,7 @@ class userquery extends CBCategory
             //Now Finally Sending Email
             EmailTemplate::sendMail('forgot_username_request', $udetails['userid'], []);
         }
-        e(lang("if_email_exist_been_sent"), 'm');
+        e(lang('if_email_exist_been_sent'), 'm');
 
     }
 

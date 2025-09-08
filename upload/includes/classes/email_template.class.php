@@ -533,8 +533,8 @@ class EmailTemplate
     public static function deleteEmail(int $id_email): bool
     {
         $email = self::getOneEmail([
-            'id_email' => $id_email,
-            'has_histo'         => true
+            'id_email'  => $id_email,
+            'has_histo' => true
         ]);
         if (empty($email)) {
             e(lang('template_dont_exist'));
