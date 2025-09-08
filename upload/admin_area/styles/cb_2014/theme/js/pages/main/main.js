@@ -252,4 +252,20 @@ $(document).ready(function () {
     }
 
     $('#timezone').select2();
+
+    $('.delete_conversion_lock').on('click', function (e) {
+        e.preventDefault();
+        var button = $(this);
+        showSpinner();
+        $.post({
+          url:admin_url + 'actions/conversion_delete_lock.php',
+            dataType: 'json',
+            success: function (response) {
+                $(".page-content").prepend(response.msg);
+                button.prop('disabled', true).prop('title', response.lang_title);
+                hideSpinner();
+
+            }
+        })
+    });
 });

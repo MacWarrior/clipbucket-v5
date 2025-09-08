@@ -51,9 +51,23 @@ class MWIP extends \Migration
             'fr'=>'La vidéo avec l\'id : %s n\'est pas convertible',
             'en'=>'Video with id : %s is not convertable'
         ]);
+
         self::generateTranslation('video_is_already_processing', [
             'fr'=>'La vidéo avec l\'id : %s est déjà en cours de conversion',
             'en'=>'Video with id : %s is already processing'
+        ]);
+
+        self::generateTranslation('all_locks_deleted', [
+            'fr'=>'Tous les fichiers de verrous ont été supprimés',
+            'en'=>'All locks files have been deleted'
+        ]);
+        self::generateTranslation('delete_conversion_lock', [
+            'fr'=>'Supprimer les verrous de conversion',
+            'en'=>'Delete all conversion locks'
+        ]);
+        self::generateTranslation('no_lock_to_delete', [
+            'fr'=>'Aucun verrou de conversion à supprimer',
+            'en'=>'No conversion lock to delete'
         ]);
 
     }

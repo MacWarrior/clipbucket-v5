@@ -497,10 +497,6 @@ class ClipBucket
                         , 'url' => DirPath::getUrl('admin_area') . 'action_logs.php?type=login'
                     ]
                     , [
-                        'title' => 'Conversion Queue Manager'
-                        , 'url' => DirPath::getUrl('admin_area') . 'cb_conversion_queue.php'
-                    ]
-                    , [
                         'title' => 'ReIndexer'
                         , 'url' => DirPath::getUrl('admin_area') . 'reindex_cb.php'
                     ]

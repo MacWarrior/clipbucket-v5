@@ -244,6 +244,29 @@ class FFMpeg
         }
     }
 
+    static function unlockAll()
+    {
+        $max_conversion = config('max_conversion');
+        for ($i = 0; $i < $max_conversion; $i++) {
+            $conv_file = DirPath::get('temp') . 'conv_lock' . $i . '.loc';
+            if (file_exists($conv_file)) {
+                unlink($conv_file);
+            }
+        }
+    }
+
+    static function isThereAnyConversionLocks()
+    {
+        $max_conversion = config('max_conversion');
+        for ($i = 0; $i < $max_conversion; $i++) {
+            $conv_file = DirPath::get('temp') . 'conv_lock' . $i . '.loc';
+            if (file_exists($conv_file)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     /**
      * @throws Exception
      */
