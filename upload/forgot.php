@@ -62,7 +62,7 @@ switch ($mode) {
                     } elseif ($_POST['password'] != $_POST['cpassword']) {
                         e(lang('usr_cpass_err1'));
                     } else {
-                        Clipbucket_db::getInstance()->update(tbl('users'), ['password', 'avcode'], [pass_code($_POST['password'], $user['userid']), ''], ' userid=\'' . $user['userid'] . '\'');
+                        Clipbucket_db::getInstance()->update(tbl('users'), ['password', 'avcode'], [pass_code($_POST['password'], $user['userid']), ''], ' userid=' . (int)$user['userid']);
                         Session::kill_all_sessions($user['userid']);
                         sessionMessageHandler::add_message(lang('usr_pass_email_msg'), 'm', DirPath::getUrl('root') . 'signup.php?mode=login');
                     }

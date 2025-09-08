@@ -95,12 +95,8 @@ class Session
     /**
      * @throws Exception
      */
-    public static function kill_all_sessions($user_id): bool {
-        $sessions = Clipbucket_db::getInstance()->select(tbl(self::tbl), '*', 'session_user = ' . (int)$user_id );
-        foreach( $sessions as $session ){
-            self::deleteById( $session['session_id'] );
-        }
-        return true;
+    public static function kill_all_sessions($user_id): void {
+        Clipbucket_db::getInstance()->delete(tbl(self::tbl), ['session_user'], [(int)$user_id]);
     }
 
     /**
