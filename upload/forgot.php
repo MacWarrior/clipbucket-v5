@@ -16,7 +16,7 @@ switch ($mode) {
     default:
         if (isset($_POST['reset'])) {
             $input = post('email');
-            if (!Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.2', '999')) {
+            if (!Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.2', '136')) {
                 e(lang('technical_error'));
             } else {
                 userquery::getInstance()->reset_password($input);
