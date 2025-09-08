@@ -1,6 +1,6 @@
 {
   "version":"5.5.2",
-  "revision":"136",
+  "revision":"137",
   "status":"stable",
   "detail":[
     {
@@ -126,6 +126,7 @@
         ,"Fix default thumb selection on video upload form"
         ,"Fix video style on videos page while converting"
         ,"Fix PHP error on video without thumbs"
+        ,"Fix featured users on channels page"
       ]
     },
     {
