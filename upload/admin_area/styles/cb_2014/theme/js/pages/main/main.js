@@ -252,4 +252,13 @@ $(document).ready(function () {
     }
 
     $('#timezone').select2();
+
+    $('input[name^="gen_"]').on('change', function (event) {
+        var elem = $(this);
+        if ($('input[name^="gen_"]:checked').length < 1) {
+            event.preventDefault();
+            alert(lang['at_least_one_resolution']);
+            elem.prop('checked', true);
+        }
+    });
 });
