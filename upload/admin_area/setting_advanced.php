@@ -251,6 +251,8 @@ if (!empty($tool)) {
 }
 assign('cron_copy_paste', $cron_line ?? '');
 
+assign('is_there_conversion_lock', FFMpeg::isThereAnyConversionLocks());
+
 $allTimezone = [];
 if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '99')) {
     $query = /** @lang MySQL */
