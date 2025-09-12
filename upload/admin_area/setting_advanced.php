@@ -191,7 +191,7 @@ if (isset($_POST['update'])) {
     unset($_SESSION['check_global_configs']);
     $find = false;
     foreach (array_keys($_POST) as $item) {
-        if (str_starts_with($item, 'gen_')) {
+        if (str_starts_with($item, 'gen_') && $_POST[$item] == 'yes') {
             myquery::getInstance()->saveVideoResolutions($_POST);
             $find = true;
             break;
