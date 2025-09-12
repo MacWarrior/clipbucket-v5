@@ -1713,4 +1713,5 @@ VALUES ('ongoing_conversion'),
        ('new_password'),
        ('confirm_new_password'),
        ('recap_verify_failed'),
-       ('if_email_exist_been_sent');
+       ('if_email_exist_been_sent'),
+       ('at_least_one_resolution');
