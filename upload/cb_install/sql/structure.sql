@@ -1298,3 +1298,41 @@ ALTER TABLE `{tbl_prefix}video_embed`
 ALTER TABLE `{tbl_prefix}video_embed`
   ADD CONSTRAINT `video_embed_ibfk_1` FOREIGN KEY (`videoid`) REFERENCES `{tbl_prefix}video` (`videoid`),
   ADD CONSTRAINT `video_embed_ibfk_2` FOREIGN KEY (`id_fontawesome_icon`) REFERENCES `{tbl_prefix}fontawesome_icons` (`id_fontawesome_icon`);
+
+CREATE TABLE `{tbl_prefix}video_image`
+(
+    id_video_image INT                                     NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    videoid        BIGINT(20)                              NOT NULL,
+    type           ENUM ('thumbnail','poster', 'backdrop') NOT NULL,
+    num            INT                                     NOT NULL,
+    UNIQUE KEY (videoid, type, num)
+);
+
+ALTER TABLE `{tbl_prefix}video_image`
+    ADD CONSTRAINT `video_image_ibfk_1` FOREIGN KEY (videoid) REFERENCES `{tbl_prefix}video` (videoid);
+
+CREATE TABLE `{tbl_prefix}video_thumb`
+(
+    id_video_thumb INT         NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    id_video_image INT         NOT NULL,
+    width          INT         NOT NULL,
+    height         INT         NOT NULL,
+    extension      VARCHAR(4)  NOT NULL,
+    version        VARCHAR(16) NOT NULL,
+    UNIQUE KEY (id_video_image, width, height)
+);
+ALTER TABLE `{tbl_prefix}video_thumb`
+    ADD CONSTRAINT `video_thumb_ibfk_1` FOREIGN KEY (id_video_image) REFERENCES `{tbl_prefix}video_image` (id_video_image);
+
+CREATE TABLE `{tbl_prefix}photo_thumb`
+(
+    id_photo_thumb INT         NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    photo_id       BIGINT(255) NOT NULL,
+    width          INT         NOT NULL,
+    height         INT         NOT NULL,
+    extension      VARCHAR(4)  NOT NULL,
+    version        VARCHAR(16) NOT NULL,
+    UNIQUE KEY (photo_id, width, height)
+);
+ALTER TABLE `{tbl_prefix}photo_thumb`
+    ADD CONSTRAINT `photo_thumb_ibfk_1` FOREIGN KEY (photo_id) REFERENCES `{tbl_prefix}photos` (photo_id);

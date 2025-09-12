@@ -861,7 +861,6 @@ class FFMpeg
 
         $thumbs_settings = [];
         $thumbs_settings['duration'] = $this->input_details['duration'];
-        $thumbs_settings['num'] = config('num_thumbs');
 
         $video_info = Video::getInstance()->getOne([
             'file_name' => $this->file_name
@@ -914,28 +913,30 @@ class FFMpeg
     {
         $duration = $array['duration'];
         $size_tag = $array['size_tag'];
-        $num = $array['num'];
+        //numbers of thumbs to generate
+        $maxnum = $array['num'];
 
         $this->log->writeLine(date('Y-m-d H:i:s').' - Generating '.$size_tag.'...');
 
-        if ($num > $duration) {
-            $num = (int)$duration;
+        if ($maxnum > $duration) {
+            $maxnum = (int)$duration;
         }
 
-        $thumb_dir = DirPath::get('thumbs') . $this->file_directory;
+        $thumb_dir = DirPath::get('thumbs') . DIRECTORY_SEPARATOR . 'video'. DIRECTORY_SEPARATOR . $this->file_directory;
         if (!is_dir($thumb_dir)) {
             mkdir($thumb_dir, 0755, true);
         }
 
         $videoid = $array['videoid'];
 
+        //TODO boucler sur les resolutions
         $extension = 'jpg';
-        if ($num >= 1) {
-            $division = $duration / $num;
+        if ($maxnum >= 1) {
+            $division = $duration / $maxnum;
 
-            for ($count = 1; $count <= $num; $count++) {
-                $thumb_file_number = str_pad((string)$count, 4, '0', STR_PAD_LEFT);
-                $file_name = $this->file_name . '-' . $size_tag . '-' . $thumb_file_number . '.' . $extension;
+            for ($count = 1; $count <= $maxnum; $count++) {
+                $thumb_file_number = str_pad((string)$count, 5, '0', STR_PAD_LEFT);
+                $file_name = $this->file_name . '-' . $array['type'] . '-' . $size_tag . '-' . $thumb_file_number . '.' . $extension;
                 $file_path = $thumb_dir . $file_name;
                 $time_sec = (int)($division * $count);
 
@@ -956,13 +957,14 @@ class FFMpeg
                 }
 
                 if (file_exists($file_path)) {
+                    //TODO insert into new table video_thumb with id_video_img
                     Clipbucket_db::getInstance()->insert(tbl('video_thumbs'), ['videoid', 'resolution', 'num', 'extension', 'version', 'type'], [$videoid, $size_tag, $thumb_file_number, $extension, Update::getInstance()->getCurrentCoreVersion(), 'auto']);
                 } else {
                     $this->log->writeLine(date('Y-m-d H:i:s').' => Error generating '.$file_name.'...');
                 }
             }
         } else {
-            $this->log->writeLine(date('Y-m-d H:i:s').' - Thumbs num can\'t be '.$num.'...');
+            $this->log->writeLine(date('Y-m-d H:i:s').' - Thumbs num can\'t be '.$maxnum.'...');
         }
     }
 
@@ -975,7 +977,6 @@ class FFMpeg
 
         $thumbs_settings = [];
         $thumbs_settings['duration'] = $this->input_details['duration'];
-        $thumbs_settings['num'] = config('num_thumbs');
         $rs = Clipbucket_db::getInstance()->select(tbl('video'), '*', 'file_name LIKE \'' . $this->file_name . '\'');
 
         if( empty($rs) ){
@@ -1205,6 +1206,10 @@ class FFMpeg
      */
     public function generateDefaultsThumbs($videoid, array $thumbs_res_settings, array $thumbs_settings): void
     {
+
+        //TODO boucler sur les nums
+        $max_num = config('num_thumbs');
+
         foreach ($thumbs_res_settings as $key => $thumbs_size) {
             $height_setting = $thumbs_size[1];
             $width_setting = $thumbs_size[0];
@@ -1220,6 +1225,7 @@ class FFMpeg
             $this->generateThumbs($thumbs_settings);
         }
 
+        //if video already has default thumb, don't update value
         $res = Clipbucket_db::getInstance()->select(tbl('video') . ' AS V LEFT JOIN ' . tbl('video_thumbs') . ' AS VT ON VT.videoid = V.videoid '
             , 'num'
             , ' V.videoid = ' . mysql_clean($videoid). ' AND type=\'custom\' AND V.default_thumb = VT.num'

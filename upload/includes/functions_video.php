@@ -836,7 +836,6 @@ function get_thumb_num($name): string
  */
 function delete_video_thumb($videoDetails, $num, $type): void
 {
-    $db = Clipbucket_db::getInstance();
     $type_file = array_search($type,Upload::getInstance()->types_thumb);
     if (!empty($type_file) && in_array($type_file,['p','b']) ) {
         $type_search = '-' . $type_file . '.*';
