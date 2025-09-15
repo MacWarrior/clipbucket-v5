@@ -90,11 +90,11 @@
                     <div class="clearfix sidebar-channels">
                         {foreach $featured_users as $user}
                             <div class="clearfix channel-item">
-                                <a href="{User::getInstance($user.userid)->getLink('channel')}" class="avatar">
+                                <a href="{if isSectionEnabled('channel')}{User::getInstance($user.userid)->getLink('channel')}{else}#{/if}" class="avatar">
                                     <img src="{userquery::getInstance()->getuserthumb($user,'m')}" alt="avatar" width="50" height="50" class="img-circle no_select"/>
                                 </a>
                                 <div class="channel-info">
-                                    <h3><a href="{User::getInstance($user.userid)->getLink('channel')}">{display_clean(User::getInstance($user.userid)->get('username'))}</a></h3>
+                                    <h3><a href="{if isSectionEnabled('channel')}{User::getInstance($user.userid)->getLink('channel')}{else}#{/if}">{display_clean(User::getInstance($user.userid)->get('username'))}</a></h3>
                                     <div class="clearfix views-videos">
                                         <span>{prettyNum(User::getInstance($user.userid)->get('profile_hits')|number_format)} {lang code='views'}</span>
                                         {if isSectionEnabled('videos') && User::getInstance($user.userid)->get('show_my_videos') == 'yes'}
