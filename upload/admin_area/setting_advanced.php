@@ -189,9 +189,19 @@ if (isset($_POST['update'])) {
     //clear cache
     CacheRedis::flushAll();
     unset($_SESSION['check_global_configs']);
-
-    myquery::getInstance()->saveVideoResolutions($_POST);
-    e('Website settings have been updated', 'm');
+    $find = false;
+    foreach (array_keys($_POST) as $item) {
+        if (str_starts_with($item, 'gen_') && $_POST[$item] == 'yes') {
+            myquery::getInstance()->saveVideoResolutions($_POST);
+            $find = true;
+            break;
+        }
+    }
+    if (!$find) {
+        e(lang('at_least_one_resolution'));
+    } else {
+        e('Website settings have been updated', 'm');
+    }
 
     //reset permissions check cache
     if (isset($_SESSION['folder_access'])) {

@@ -1,6 +1,6 @@
 {
   "version":"5.5.2",
-  "revision":"137",
+  "revision":"139",
   "status":"stable",
   "detail":[
     {
@@ -50,6 +50,7 @@
         ,"Fix advanced settings display"
         ,"Fix PHP error when trying to access missing log file"
         ,"Fix user storage calculation tool staying stuck in ongoing state"
+        ,"Fix possibility to disable all conversion resolutions <i>(#664)</i>"
       ]
     },
     {
@@ -127,6 +128,7 @@
         ,"Fix video style on videos page while converting"
         ,"Fix PHP error on video without thumbs"
         ,"Fix featured users on channels page"
+        ,"Fix channel links on homepage"
       ]
     },
     {
@@ -176,6 +178,7 @@
         ,"Fix minified JS & CSS"
         ,"Fix core update when using mounted directory as storage"
         ,"Fix stuck update notice"
+        ,"Fix SQL error catching during update"
       ]
     },
     {
