@@ -1,6 +1,6 @@
 {
   "version":"5.5.2",
-  "revision":"139",
+  "revision":"140",
   "status":"stable",
   "detail":[
     {
@@ -129,6 +129,7 @@
         ,"Fix PHP error on video without thumbs"
         ,"Fix featured users on channels page"
         ,"Fix channel links on homepage"
+        ,"Fix collection creation <i>(#667)</i>"
       ]
     },
     {
