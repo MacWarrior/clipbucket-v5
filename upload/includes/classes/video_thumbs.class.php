@@ -581,6 +581,7 @@ class VideoThumbs
         } else if ($width && $height) {
             $conditions_old[] = 'resolution = \''.mysql_clean($width) . 'x' . mysql_clean($height).'\'';
         }
+        //TODO change select to get new val (is_default, is_auto)
         $sql = 'SELECT * FROM ' . tbl('video_thumbs') . ' WHERE videoid = ' . mysql_clean($videoid) . ' AND type = \'' . mysql_clean($old_type) . '\' ' . implode(' AND ', $conditions_old);
         if ($is_multi) {
 
