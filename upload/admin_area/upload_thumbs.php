@@ -15,9 +15,9 @@ $breadcrumb[1] = ['title' => lang('manage_x', strtolower(lang('videos'))), 'url'
 $breadcrumb[2] = ['title' => 'Editing : ' . display_clean($data['title']), 'url' => DirPath::getUrl('admin_area') . 'edit_video.php?video=' . display_clean($video)];
 
 $allowed_types = [
-    'thumbs'=>'thumbs',
+    'thumbs'=>'thumbnail',
     'posters'=>'poster',
-    'backdrops'=>'backdrop'
+    'backdrops'=>'backdrop',
 ];
 $type = $_GET['type'] ?? $_POST['type'];
 $translation_type = array_search($type, $allowed_types);
@@ -30,7 +30,7 @@ if (empty($_GET['type']) || !$translation_type) {
 
 assign('type', $type);
 assign('translation_type', $translation_type);
-assign('db_type',array_search(( $type=='thumbs') ? 'custom': $type, Upload::getInstance()->types_thumb));
+assign('db_type',array_search(( $type=='thumbnail') ? 'custom': $type, Upload::getInstance()->types_thumb));
 
 /* Complete breadcrumb */
 $breadcrumb[3] = ['title' => str_replace('%s',strtolower(lang($translation_type)), lang('manage_x')), 'url' => DirPath::getUrl('admin_area') . 'upload_thumbs.php?video=' . display_clean($video) . '&type=' . display_clean($type)];
@@ -46,15 +46,16 @@ if (myquery::getInstance()->video_exists($video)) {
 
     # Uploading Thumbs
     if (isset($_POST['upload_thumbs'])) {
-        Upload::getInstance()->upload_thumbs($data['file_name'], $_FILES['vid_thumb'], $data['file_directory'], $_POST['db_type']);
+//        Upload::getInstance()->upload_thumbs($data['file_name'], $_FILES['vid_thumb'], $data['file_directory'], $_POST['db_type']);
+        VideoThumbs::uploadThumbs($data['videoid'], $_FILES['vid_thumb'], $type, false);
     }
 
     assign('data', $data);
-    if ($type=='thumbs') {
-        assign('vidthumbs', get_thumb($data,TRUE,'168x105','auto'));
-        assign('vidthumbs_custom', get_thumb($data,TRUE,'168x105','custom'));
+    if ($type=='thumbnail') {
+        assign('vidthumbs', VideoThumbs::getAllThumbFiles($data['videoid'], '168','105',type: $type, is_auto: true, return_with_num: true) );
+        assign('vidthumbs_custom', VideoThumbs::getAllThumbFiles($data['videoid'], '168','105',type: $type, is_auto: false, return_with_num: true));
     } else {
-        assign('vidthumbs', get_thumb($data,TRUE,false,$type));
+        assign('vidthumbs', VideoThumbs::getAllThumbFiles($data['videoid'], 'original','original',type: $type, is_auto: true, return_with_num: true));
     }
 } else {
     $msg[] = lang('class_vdo_del_err');

@@ -1,7 +1,7 @@
 {$msg}
 {if $data.title neq ""}
 <h3>{lang('manage_x', lang($translation_type)|lower)}</h3>
-    {if $type == 'thumbs'}
+    {if $type == 'thumbnail'}
         <div class="lead dropdown">
             <a class="btn btn-primary btn-xs dropdown-toggle pull-right" data-toggle="dropdown" href="">Actions <i class="caret"></i></a>
             <ul class="dropdown-menu pull-right" role="menu" aria-labelledby="dropdownMenu1">
@@ -17,7 +17,7 @@
 <hr>
 <form action="{DirPath::getUrl('admin_area')}upload_thumbs.php?video={$data.videoid}&type={$type}" method="post" enctype="multipart/form-data" name="form1">
     <h4>
-        {if $type == 'thumbs'}
+        {if $type == 'thumbnail'}
             {lang code="upload_custom_thumbnail"}
         {elseif $type == 'poster'}
             {lang code="upload_poster"}

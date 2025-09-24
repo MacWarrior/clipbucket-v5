@@ -2000,7 +2000,6 @@ class Collections extends CBCategory
      */
     function upload_thumb($cid, $file): void
     {
-        global $imgObj;
         $file_ext = getext($file['name']);
 
         $exts = ['jpg', 'gif', 'jpeg', 'png'];
@@ -2019,12 +2018,12 @@ class Collections extends CBCategory
                     }
                 }
                 move_uploaded_file($file['tmp_name'], $thumb);
-                if (!$imgObj->ValidateImage($thumb, $ext)) {
+                if (!VideoThumbs::ValidateImage($thumb, $ext)) {
                     e('pic_upload_vali_err');
                 } else {
-                    $imgObj->createThumb($thumb, $thumb, $this->collect_thumb_width, $ext, $this->collect_thumb_height);
-                    $imgObj->createThumb($thumb, $sThumb, $this->collect_small_thumb_width, $ext, $this->collect_small_thumb_height);
-                    $imgObj->createThumb($thumb, $oThumb, $this->collect_orignal_thumb_width, $ext, $this->collect_orignal_thumb_height);
+                    VideoThumbs::createThumb($thumb, $thumb, $this->collect_thumb_width, $ext, $this->collect_thumb_height);
+                    VideoThumbs::createThumb($thumb, $sThumb, $this->collect_small_thumb_width, $ext, $this->collect_small_thumb_height);
+                    VideoThumbs::createThumb($thumb, $oThumb, $this->collect_orignal_thumb_width, $ext, $this->collect_orignal_thumb_height);
                 }
             }
         }

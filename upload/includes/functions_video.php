@@ -277,7 +277,8 @@ function create_thumb($video_db, $multi, $size)
  */
 function get_player_thumbs_json($data): void
 {
-    $thumbs = get_thumb($data, true, '168x105', 'auto');
+//    $thumbs = get_thumb($data, true, '168x105', 'auto');
+    $thumbs = VideoThumbs::getAllThumbFiles($data['videoid'], 168, 105, 'thumbnail', true);
     $duration = (int)$data['duration'];
     $json = '';
     if (is_array($thumbs)) {
@@ -857,29 +858,6 @@ function delete_video_thumb($videoDetails, $num, $type): void
     }
 
     Clipbucket_db::getInstance()->delete(tbl('video_thumbs'), ['videoid', 'num'], [$videoDetails['videoid'], $num]);
-
-    //check if there are thumbs left
-    $thumbs = Clipbucket_db::getInstance()->select(tbl('video_thumbs'), '*', ' videoid = ' . mysql_clean($videoDetails['videoid']));
-    if (count($thumbs) == 0) {
-        create_thumb($videoDetails, '', '');
-    }
-    switch ($type_file) {
-        case 'p':
-            if ($videoDetails['default_poster'] == $num) {
-                Clipbucket_db::getInstance()->execute('UPDATE ' . tbl('video') . ' SET `default_poster` = IFNULL((SELECT MIN( CASE WHEN num = \'\' THEN 0 ELSE CAST(num AS INTEGER) END)  FROM ' . tbl('video_thumbs') . ' WHERE videoid = ' . mysql_clean($videoDetails['videoid']) . ' AND type = \'poster\' ), 0) WHERE videoid = ' . mysql_clean($videoDetails['videoid']), 'update');
-            }
-            break;
-        case 'b':
-            if ($videoDetails['default_backdrop'] == $num) {
-                Clipbucket_db::getInstance()->execute('UPDATE ' . tbl('video') . ' SET `default_backdrop` = IFNULL((SELECT MIN( CASE WHEN num = \'\' THEN 0 ELSE CAST(num AS INTEGER) END)  FROM ' . tbl('video_thumbs') . ' WHERE videoid = ' . mysql_clean($videoDetails['videoid']) . ' AND type = \'backdrop\' ), 0) WHERE videoid = ' . mysql_clean($videoDetails['videoid']), 'update');
-            }
-            break;
-        default:
-            if ($videoDetails['default_thumb'] == $num) {
-                Clipbucket_db::getInstance()->execute('UPDATE ' . tbl('video') . ' SET `default_thumb` = IFNULL((SELECT MIN( CASE WHEN num = \'\' THEN 0 ELSE cast(num AS INTEGER) END)  FROM ' . tbl('video_thumbs') . ' WHERE videoid = ' . mysql_clean($videoDetails['videoid']) . ' AND type IN (\'auto\', \'custom\')) , 0) WHERE videoid = ' . mysql_clean($videoDetails['videoid']), 'update');
-            }
-            break;
-    }
 }
 
 /**

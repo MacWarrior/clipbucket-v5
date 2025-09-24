@@ -92,6 +92,9 @@ class Video
         if (!Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.2', '72')) {
             $this->fields[] = 'video_users';
         }
+        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.2', '999')) {
+            $this->fields[] = 'default_thumbnail';
+        }
 
         $this->fields_categories = [
             'category_id'
@@ -727,44 +730,86 @@ class Video
             e(lang('missing_params'));
             return;
         }
-        if (!in_array($type, ['auto', 'custom', 'poster', 'backdrop']) ) {
-            if( System::isInDev() ){
-                e(lang('unknown_type', $type));
-            } else {
-                e(lang('technical_error'));
+        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.2', '999')) {
+            if (!in_array($type, ['thumbnail', 'poster', 'backdrop']) ) {
+                if( System::isInDev() ){
+                    e(lang('unknown_type', $type));
+                } else {
+                    e(lang('technical_error'));
+                }
+                return;
             }
-            return;
-        }
+            //check if poster is valable ID
+            if (!empty(VideoThumbs::getOne(['id_video_image' => (int)$poster]))) {
+                Clipbucket_db::getInstance()->update(tbl('video'), ['default_' . $type], [$poster], ' videoid=\'' . mysql_clean($video_id) . '\'');
+            }
+        } else {
+            if (!in_array($type, ['auto', 'custom', 'poster', 'backdrop']) ) {
+                if( System::isInDev() ){
+                    e(lang('unknown_type', $type));
+                } else {
+                    e(lang('technical_error'));
+                }
+                return;
+            }
 
-        if( in_array($type, ['auto', 'custom'])){
-            $type = 'thumb';
-        }
+            if( in_array($type, ['auto', 'custom'])){
+                $type = 'thumb';
+            }
 
-        $num = get_thumb_num($poster);
-        if( empty($num) ){
-            return;
+            $num = get_thumb_num($poster);
+            if( empty($num) ){
+                return;
+            }
+            Clipbucket_db::getInstance()->update(tbl('video'), ['default_' . $type], [$num], ' videoid=\'' . mysql_clean($video_id) . '\'');
         }
-        Clipbucket_db::getInstance()->update(tbl('video'), ['default_' . $type], [$num], ' videoid=\'' . mysql_clean($video_id) . '\'');
     }
     /**
      * @throws Exception
      */
     public function resetDefaultPicture($video_id, string $type = 'auto'): void
     {
-        if (!in_array($type, ['auto', 'custom', 'poster', 'backdrop']) ) {
-            if( System::isInDev() ){
+        $allowed_array = [
+            'auto',
+            'custom',
+            'poster',
+            'backdrop'
+        ];
+        $sub_request = /** @lang MySQL */
+            'IFNULL (SELECT MIN(CASE WHEN num = \'\' THEN 0 ELSE CAST(num AS INTEGER) END) 
+                     FROM ' . tbl('video_thumbs') . ' 
+                     WHERE videoid = ' . mysql_clean($video_id) . ' 
+                         AND type = \'' . $type . '\'' . ', 0)';
+        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.2', '999')) {
+            $allowed_array = [
+                'thumbnail',
+                'poster',
+                'backdrop'
+            ];
+            $sub_request = /** @lang MySQL */
+                'SELECT id_video_image 
+                     FROM ' . tbl(VideoThumbs::getTableName()) . ' 
+                     WHERE videoid = ' . mysql_clean($video_id) . ' 
+                         AND type = \'' . $type . '\' AND is_auto = TRUE 
+                     GROUP BY videoid, type HAVING MIN(num)';
+        }
+        if (!in_array($type, $allowed_array)) {
+            if (System::isInDev()) {
                 e(lang('unknown_type', $type));
             } else {
                 e(lang('technical_error'));
             }
             return;
         }
-
-        if( in_array($type, ['auto', 'custom'])){
+        if (in_array($type, ['auto', 'custom'])) {
             $type = 'thumb';
         }
 
-        Clipbucket_db::getInstance()->update(tbl('video'), ['default_' . $type], ['|f|null'], ' videoid=\'' . mysql_clean($video_id) . '\'');
+        $sql = /** @lang MySQL */
+            'UPDATE ' . tbl('video') . '
+            SET `default_' . $type . '` = ( ' . $sub_request . ')
+            WHERE videoid = ' . mysql_clean($video_id);
+        Clipbucket_db::getInstance()->execute($sql, 'update');
     }
 
     /**
@@ -773,9 +818,13 @@ class Video
      * @return void
      * @throws Exception
      */
-    public function deletePictures(array $video_detail, string $type): void
+    public function dropPictures(array $video_detail, string $type): void
     {
-        if (!in_array($type, ['auto', 'custom', 'poster', 'backdrop']) ) {
+        $allowed_array = ['auto', 'custom', 'poster', 'backdrop'];
+        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.2', '999')) {
+            $allowed_array = ['thumbnail', 'poster', 'backdrop'];
+        }
+        if (!in_array($type, $allowed_array) ) {
             if( System::isInDev() ){
                 e(lang('unknown_type', $type));
             } else {

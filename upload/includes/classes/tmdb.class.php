@@ -320,7 +320,7 @@ class Tmdb
         }
 
         if (config('tmdb_get_poster') == 'yes' && config('enable_video_poster') == 'yes') {
-            Video::getInstance()->deletePictures($video_info, 'poster');
+            Video::getInstance()->dropPictures($video_info, 'poster');
 
             switch ($type) {
                 case 'movie':
@@ -357,7 +357,7 @@ class Tmdb
         }
 
         if (config('tmdb_get_backdrop') == 'yes' && config('enable_video_backdrop') == 'yes') {
-            Video::getInstance()->deletePictures($video_info, 'backdrop');
+            Video::getInstance()->dropPictures($video_info, 'backdrop');
 
             switch ($type) {
                 case 'movie':

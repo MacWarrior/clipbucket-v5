@@ -247,7 +247,7 @@ class FFMpeg
     /**
      * @throws Exception
      */
-    function ClipBucket(): void
+    function ClipBucket(int $videoid): void
     {
         $this->log->newSection('Conversion lock');
         while($this->isLocked()){
@@ -279,7 +279,9 @@ class FFMpeg
 
         if (file_exists($this->input_file)) {
             try {
-                $this->generateAllThumbs();
+//                $this->generateAllThumbs();
+                $videoConverion = new VideoThumbs($videoid, $this);
+                $videoConverion->generateAutomaticThumbs();
             } catch (\Exception $e) {
                 $this->log->writeLine(date('Y-m-d H:i:s').' - Error occured : ' . $e->getMessage());
             }
@@ -991,7 +993,7 @@ class FFMpeg
         $thumbs = get_thumb($video_details, true);
         //si rien en base
         if (empty($thumbs) || $thumbs[0] == default_thumb()) {
-            Video::getInstance()->deletePictures($video_details, 'auto');
+            Video::getInstance()->dropPictures($video_details, 'auto');
 
             //generate default thumb
             $this->generateDefaultsThumbs($video_details['videoid'], $thumbs_res_settings, $thumbs_settings);

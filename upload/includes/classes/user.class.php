@@ -3428,8 +3428,7 @@ class userquery extends CBCategory
 
         if (rename($data['filepath'], $file_path)) {
             unlink($data['filepath']);
-            $imgObj = new ResizeImage();
-            if (!$imgObj->ValidateImage($file_path,  $data['extension'])) {
+            if (!VideoThumbs::ValidateImage($file_path,  $data['extension'])) {
                 @unlink($file_path);
                 return [
                     'status' => false,

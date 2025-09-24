@@ -30,20 +30,26 @@ if ($vdetails['userid'] != $userid) {
         $_POST['videoid'] = $vid;
         CBvideo::getInstance()->update_video();
         if (empty(errorhandler::getInstance()->get_error())) {
-            Video::getInstance()->setDefautThumb($_POST['default_thumb'], 'thumb', $vid);
-            if (config('enable_video_poster') == 'yes' && !empty($_POST['default_poster'])) {
-                Video::getInstance()->setDefautThumb($_POST['default_poster'], 'poster', $vid);
-            }
-            if (config('enable_video_backdrop') == 'yes' && !empty($_POST['default_backdrop'])) {
-                Video::getInstance()->setDefautThumb($_POST['default_backdrop'], 'backdrop', $vid);
+            if (!Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.2', '999')) {
+                e('Sorry, you cannot perform this action until the application has been fully updated by an administrator');
+            } else {
+                if (!empty($_POST['default_thumb'])) {
+                    Video::getInstance()->setDefautThumb($_POST['default_thumb'], 'thumbnail', $vid);
+                }
+                if (config('enable_video_poster') == 'yes' && !empty($_POST['default_poster'])) {
+                    Video::getInstance()->setDefautThumb($_POST['default_poster'], 'poster', $vid);
+                }
+                if (config('enable_video_backdrop') == 'yes' && !empty($_POST['default_backdrop'])) {
+                    Video::getInstance()->setDefautThumb($_POST['default_backdrop'], 'backdrop', $vid);
+                }
             }
             $vdetails = Video::getInstance()->getOne(['videoid' => $vid]);
         }
     }
 
     assign('v', $vdetails);
-    assign('vidthumbs', get_thumb($vdetails,TRUE,'168x105','auto'));
-    assign('vidthumbs_custom', get_thumb($vdetails,TRUE,'168x105','custom'));
+    assign('vidthumbs', VideoThumbs::getAllThumbFiles($vid, '168','105',type: 'thumbnail', is_auto: true, return_with_num: true) ?: [VideoThumbs::getDefaultMissingThumb(return_with_num: true)]);
+    assign('vidthumbs_custom', VideoThumbs::getAllThumbFiles($vid, '168','105',type: 'thumbnail', is_auto: false, return_with_num: true));
     if( config('enable_video_poster') == 'yes' ){
         assign('vidthumbs_poster', get_thumb($vdetails,TRUE,'original','poster'));
     }

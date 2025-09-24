@@ -89,6 +89,7 @@ require_once DirPath::get('classes') . 'email_template.class.php';
 require_once DirPath::get('classes') . 'ffmpeg.class.php';
 require_once DirPath::get('classes') . 'flag.class.php';
 require_once DirPath::get('classes') . 'sort_type.class.php';
+require_once DirPath::get('classes') . 'video_thumbs.class.php';
 
 $cb_columns = new cb_columns();
 $row = myquery::getInstance()->Get_Website_Details();
@@ -169,7 +170,6 @@ if (!Update::isVersionSystemInstalled()) {
 
 require_once DirPath::get('includes') . 'defined_links.php';
 require_once DirPath::get('classes') . 'search.class.php';
-require_once DirPath::get('classes') . 'image.class.php';
 require_once DirPath::get('classes') . 'fileupload.class.php';
 require_once DirPath::get('classes') . 'upload.class.php';
 require_once DirPath::get('classes') . 'ads.class.php';
@@ -199,7 +199,6 @@ $formObj = new formObj();
 $cbplugin = new CBPlugin();
 
 $cblog = new CBLogs();
-$imgObj = new ResizeImage();
 $cbplayer = new CBPlayer();
 $cbemail = new CBEmail();
 $cbpm = new cb_pm();

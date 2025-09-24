@@ -16,7 +16,7 @@ class MWIP extends \Migration
             type ENUM(\'thumbnail\',\'poster\', \'backdrop\') NOT NULL,
             num INT NOT NULL,
             is_auto BOOL DEFAULT TRUE NOT NULL,
-            UNIQUE KEY (videoid, type, num)
+            UNIQUE KEY (videoid, type, num, is_auto)
         );';
         self::query($sql);
 
@@ -37,6 +37,7 @@ class MWIP extends \Migration
             height INT NOT NULL,
             extension VARCHAR(4) NOT NULL,
             version VARCHAR(16) NOT NULL,
+            is_original_size BOOL DEFAULT FALSE NOT NULL,
             UNIQUE KEY (id_video_image, width, height)
         );';
         self::query($sql);
@@ -72,19 +73,42 @@ class MWIP extends \Migration
             ]
         ]);
 
-        self::alterTable('ALTER TABLE `{tbl_prefix}video` ADD COLUMN `default_thumb` INT ', [
+        self::alterTable('ALTER TABLE `{tbl_prefix}video` ADD COLUMN `default_thumbnail` INT ', [
             'table'  => 'video'
         ], [
             'table'  => 'video',
-            'column' => 'default_thumb'
+            'column' => 'default_thumbnail'
         ]);
-        self::alterTable('ALTER TABLE `{tbl_prefix}video` ADD COLUMN `default_poster` INT ', [
-            'table'  => 'video'
+        self::alterTable('ALTER TABLE `{tbl_prefix}video` ADD CONSTRAINT `video_default_thumb_ibfk_1` FOREIGN KEY (default_thumbnail) REFERENCES `{tbl_prefix}video_image` (id_video_image);', [
+            'table'  => 'video_image',
+            'column' => 'id_video_image'
         ], [
-            'table'  => 'video',
-            'column' => 'default_poster'
+            'constraint' => [
+                'type' => 'FOREIGN KEY',
+                'name' => 'video_default_thumb_ibfk_1'
+            ]
         ]);
-        self::alterTable('ALTER TABLE `{tbl_prefix}video` ADD COLUMN `default_backdrop` INT ', ['table'  => 'video'], ['table'  => 'video', 'column' => 'default_backdrop']);
+        self::alterTable('ALTER TABLE `{tbl_prefix}video` ADD CONSTRAINT `video_default_poster_ibfk_1` FOREIGN KEY (default_poster) REFERENCES `{tbl_prefix}video_image` (id_video_image);', [
+            'table'  => 'video_image',
+            'column' => 'id_video_image'
+        ], [
+            'constraint' => [
+                'type' => 'FOREIGN KEY',
+                'name' => 'video_default_poster_ibfk_1'
+            ]
+        ]);
+        self::alterTable('ALTER TABLE `{tbl_prefix}video` ADD CONSTRAINT `video_default_backdrop_ibfk_1` FOREIGN KEY (default_backdrop) REFERENCES `{tbl_prefix}video_image` (id_video_image);', [
+            'table'  => 'video_image',
+            'column' => 'id_video_image'
+        ], [
+            'constraint' => [
+                'type' => 'FOREIGN KEY',
+                'name' => 'video_default_backdrop_ibfk_1'
+            ]
+        ]);
+
+        $sql = 'UPDATE {tbl_prefix}video SET default_thumbnail = default_thumb';
+        self::query($sql);
 
         //TODO migrer les thumbs
 

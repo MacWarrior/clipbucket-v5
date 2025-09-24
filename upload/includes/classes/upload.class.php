@@ -271,7 +271,6 @@ class Upload
      */
     function upload_thumb($video_file_name, $file_array, $key = 0, $files_dir = null, $type = 'c')
     {
-        global $imgObj;
         $file = $file_array;
         if (!empty($file['name'][$key])) {
             define('dir', $files_dir);
@@ -279,7 +278,7 @@ class Upload
             $file_num = $this->get_next_available_num($video_file_name);
             $ext_original = getExt($file['name'][$key]);
             $ext = 'jpg';
-            if ($imgObj->ValidateImage($file['tmp_name'][$key], $ext_original)) {
+            if (VideoThumbs::ValidateImage($file['tmp_name'][$key], $ext_original)) {
                 $thumbs_settings_28 = thumbs_res_settings_28();
                 $temp_file_path = DirPath::get('thumbs') . $files_dir . DIRECTORY_SEPARATOR . $video_file_name . '-' . $file_num . '-'.$type.'.' . $ext;
 
@@ -305,7 +304,7 @@ class Upload
                     }
                     $file_name_final =  $video_file_name . '-' . $dimensions . '-' . $file_num . '-'.$type.'.' . $ext;
                     $outputFilePath = DirPath::get('thumbs') . $files_dir . DIRECTORY_SEPARATOR . $file_name_final;
-                    $imgObj->CreateThumb($temp_file_path, $outputFilePath, $width_setting, $ext_original, $height_setting, false);
+                    VideoThumbs::CreateThumb($temp_file_path, $outputFilePath, $width_setting, $ext_original, $height_setting, false);
 
                     $rs = Clipbucket_db::getInstance()->select(tbl('video'), 'videoid, default_poster, default_backdrop', 'file_name LIKE \'' . $video_file_name . '\'');
                     if (!empty($rs)) {
@@ -949,7 +948,6 @@ class Upload
      */
     function upload_user_file(string $type, $file, $uid)
     {
-        global $imgObj;
         if (empty($file['tmp_name'])) {
             e(lang('please_select_img_file'));
             return false;
@@ -982,7 +980,7 @@ class Upload
                 $file_name = $uid . '.' . $ext;
                 $file_path = DirPath::get('avatars') . $file_name;
                 if (move_uploaded_file($file['tmp_name'], $file_path)) {
-                    if (!$imgObj->ValidateImage($file_path, $ext)) {
+                    if (!VideoThumbs::ValidateImage($file_path, $ext)) {
                         e(lang('Invalid file type'));
                         @unlink($file_path);
                         return false;
@@ -1015,7 +1013,7 @@ class Upload
                 $file_name = $uid . '.' . $ext;
                 $file_path = DirPath::get('backgrounds') . $file_name;
                 if (move_uploaded_file($file['tmp_name'], $file_path)) {
-                    if (!$imgObj->ValidateImage($file_path, $ext)) {
+                    if (!VideoThumbs::ValidateImage($file_path, $ext)) {
                         e(lang('Invalid file type'));
                         @unlink($file_path);
                         return false;

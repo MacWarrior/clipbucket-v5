@@ -15,18 +15,21 @@ $video_id = $_GET['video'];
 if (isset($_POST['update'])) {
     CBvideo::getInstance()->update_video();
     if (empty(errorhandler::getInstance()->get_error())) {
-        Video::getInstance()->setDefaultPicture($video_id, $_POST['default_thumb']?? '');
 
-        if( !empty($_POST['default_thumb']) ){
-            Video::getInstance()->setDefaultPicture($video_id, $_POST['default_thumb']);
-        }
+        if (!Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.2', '999')) {
+            e('Sorry, you cannot change default thumbnail,poster or backdrop until the application has been fully updated by an administrator');
+        } else {
+            if (!empty($_POST['default_thumb'])) {
+                Video::getInstance()->setDefaultPicture($video_id, $_POST['default_thumb'], 'thumbnail');
+            }
 
-        if( config('enable_video_poster') == 'yes' && !empty($_POST['default_poster']) ){
-            Video::getInstance()->setDefaultPicture($video_id, $_POST['default_poster'], 'poster');
-        }
+            if (config('enable_video_poster') == 'yes' && !empty($_POST['default_poster'])) {
+                Video::getInstance()->setDefaultPicture($video_id, $_POST['default_poster'], 'poster');
+            }
 
-        if( config('enable_video_backdrop') == 'yes' && !empty($_POST['default_backdrop']) ) {
-            Video::getInstance()->setDefaultPicture($video_id, $_POST['default_backdrop'], 'backdrop');
+            if (config('enable_video_backdrop') == 'yes' && !empty($_POST['default_backdrop'])) {
+                Video::getInstance()->setDefaultPicture($video_id, $_POST['default_backdrop'], 'backdrop');
+            }
         }
     }
 }
@@ -57,8 +60,9 @@ if (myquery::getInstance()->video_exists($video_id)) {
     $data['date_added'] = $date_added->format(config('date_format'));
 
     assign('data', $data);
-    assign('vidthumbs', get_thumb($data,TRUE,'168x105','auto'));
-    assign('vidthumbs_custom', get_thumb($data,TRUE,'168x105','custom'));
+//    assign('vidthumbs', get_thumb($data,TRUE,'168x105','auto'));
+    assign('vidthumbs', VideoThumbs::getAllThumbFiles($video_id, '168','105',type: 'thumbnail', is_auto: true, return_with_num: true) ?: [VideoThumbs::getDefaultMissingThumb(return_with_num: true)]);
+    assign('vidthumbs_custom', VideoThumbs::getAllThumbFiles($video_id, '168','105',type: 'thumbnail', is_auto: false, return_with_num: true));
 
     if( config('enable_video_poster') == 'yes' ){
         assign('vidthumbs_poster', get_thumb($data,TRUE,'original','poster'));
