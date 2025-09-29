@@ -60,16 +60,15 @@ if (myquery::getInstance()->video_exists($video_id)) {
     $data['date_added'] = $date_added->format(config('date_format'));
 
     assign('data', $data);
-//    assign('vidthumbs', get_thumb($data,TRUE,'168x105','auto'));
     assign('vidthumbs', VideoThumbs::getAllThumbFiles($video_id, '168','105',type: 'thumbnail', is_auto: true, return_with_num: true) ?: [VideoThumbs::getDefaultMissingThumb(return_with_num: true)]);
     assign('vidthumbs_custom', VideoThumbs::getAllThumbFiles($video_id, '168','105',type: 'thumbnail', is_auto: false, return_with_num: true));
 
     if( config('enable_video_poster') == 'yes' ){
-        assign('vidthumbs_poster', get_thumb($data,TRUE,'original','poster'));
+        assign('vidthumbs_poster', VideoThumbs::getAllThumbFiles($video_id, 'original','original',type: 'poster', return_with_num: true));
     }
 
     if( config('enable_video_backdrop') == 'yes' ) {
-        assign('vidthumbs_backdrop', get_thumb($data, TRUE, 'original', 'backdrop'));
+        assign('vidthumbs_backdrop', VideoThumbs::getAllThumbFiles($video_id, 'original','original',type: 'backdrop', return_with_num: true));
     }
 
     if ($data['file_server_path']) {

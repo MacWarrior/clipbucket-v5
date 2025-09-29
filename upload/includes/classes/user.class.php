@@ -5585,7 +5585,7 @@ class userquery extends CBCategory
                 'video_title'       => $vidDetails['title'],
                 'video_description' => $vidDetails['description'],
                 'video_link'        => video_link($vidDetails),
-                'video_thumb'       => DirPath::getUrl('root') . get_thumb($vidDetails)
+                'video_thumb'       => DirPath::getUrl('root') . VideoThumbs::getDefaultThumbFile($vidDetails['videoid'])
             ];
             foreach ($subscribers as $subscriber) {
                 EmailTemplate::sendMail('video_subscription', $subscriber['userid'], $var);

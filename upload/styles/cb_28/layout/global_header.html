@@ -12,7 +12,7 @@
 			<meta property="og:description" content="{display_clean($vdo.description)|truncate:200}" />
 			<meta property="og:type" content="video.other" />
 			<meta property="og:url" content="{video_link($vdo)}" />
-			<meta property="og:image" content="{getThumb vdetails=$vdo size=768x432}" />
+			<meta property="og:image" content="{VideoThumbs::getDefaultThumbFile($vdo.videoid, 768,432)}" />
 			<meta property="og:video" content="{video_link($vdo)}" />
 			<meta property="og:video:type" content="text/html" />
 			<meta property="og:video:width" content="1280" />
@@ -21,7 +21,7 @@
 			<meta name="twitter:card" content="summary_large_image" />
 			<meta name="twitter:title" content="🎬 {display_clean($vdo.title)|truncate:60}" />
 			<meta name="twitter:description" content="{display_clean($vdo.description)|truncate:200}" />
-			<meta name="twitter:image" content="{getThumb vdetails=$vdo size=768x432}" />
+			<meta name="twitter:image" content="{VideoThumbs::getDefaultThumbFile($vdo.videoid, 768, 432)}" />
 			<meta name="twitter:image:alt" content="{display_clean($vdo.title)|truncate:60}" />
 		{elseif THIS_PAGE == 'view_item' && isSectionEnabled('photos') && User::getInstance()->hasPermission('view_photos')}
 			<!-- Balises Open Graph -->

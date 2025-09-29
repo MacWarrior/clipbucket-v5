@@ -1068,7 +1068,8 @@ class Video
             return '';
         }
 
-        $thumbs = get_thumb($vdetails, true, $size, 'auto');
+        $sizes = VideoThumbs::getWidthHeightFromSize($size);
+        $thumbs = VideoThumbs::getAllThumbFiles($vdetails['videoid'], $sizes['width'],  $sizes['height']);
         if( empty($thumbs) ){
             return '';
         }
@@ -2634,7 +2635,7 @@ class CBvideo extends CBCategory
             'video_description' => $details['description'],
             'video_title'       => $details['title'],
             'video_link'        => video_link($details),
-            'video_thumb'       => get_thumb($details)
+            'video_thumb'       => VideoThumbs::getDefaultThumbFile($details['videoid'])
         ];
 
         $this->action->share_template_name = 'share_video';

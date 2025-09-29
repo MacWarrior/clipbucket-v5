@@ -878,7 +878,7 @@ class Collection
         }
         switch ($type) {
             case 'videos':
-                $thumb = get_thumb($item);
+                $thumb = VideoThumbs::getDefaultThumbFile($item['videoid']);
                 break;
 
             case 'photos':
@@ -2179,7 +2179,7 @@ class Collections extends CBCategory
             $type = $item[0]['type'];
             switch ($type) {
                 case 'videos':
-                    $thumb = get_thumb(CBvideo::getInstance()->get_video($item[0]['object_id']));
+                    $thumb = VideoThumbs::getDefaultThumbFile(CBvideo::getInstance()->get_video($item[0]['object_id']));
                     break;
 
                 case 'photos':
@@ -2515,15 +2515,19 @@ class Collections extends CBCategory
 
         if( $col_data['type'] == 'videos' ){
             if (!$size || $size == 's') {
-                $size = '168x105';
+                $width = 168;
+                $height = 105;
             } else {
                 if ($size == 'l') {
-                    $size = '632x395';
+                    $width = 632;
+                    $height = 395;
                 } else {
-                    $size = '416x260';
+                    $width = '416';
+                    $height = '260';
                 }
             }
-            return get_thumb($object_id, false, $size);
+
+            return VideoThumbs::getDefaultThumbFile($object_id, $width, $height);
         }
 
         if ($object_id) {

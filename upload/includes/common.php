@@ -268,8 +268,6 @@ function show_video_rating($params)
 }
 
 $Smarty->register_function('AD', 'getAd');
-$Smarty->register_function('get_thumb', 'getSmartyThumb');
-$Smarty->register_function('getThumb', 'getSmartyThumb');
 $Smarty->register_function('videoLink', 'videoSmartyLink');
 $Smarty->register_function('show_rating', 'show_rating');
 $Smarty->register_function('ANCHOR', 'ANCHOR');

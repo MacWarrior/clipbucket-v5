@@ -270,7 +270,12 @@ class AdminTool
     public function generateMissingThumbs(): void
     {
         //get list of video without thumbs
-        $this->tasks = Clipbucket_db::getInstance()->select(tbl('video') . ' AS V LEFT JOIN ' . tbl('video_thumbs') . ' AS VT ON V.videoid = VT.videoid', 'V.*', ' 1 GROUP by videoid HAVING COUNT(VT.videoid) = 0');
+
+        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '1')) {
+            $this->tasks = Clipbucket_db::getInstance()->select(tbl('video') . ' AS V LEFT JOIN ' . tbl('video_image') . ' AS VT ON V.videoid = VT.videoid', 'V.*', ' 1 GROUP by videoid HAVING COUNT(VT.videoid) = 0');
+        } else {
+            $this->tasks = Clipbucket_db::getInstance()->select(tbl('video') . ' AS V LEFT JOIN ' . tbl('video_thumbs') . ' AS VT ON V.videoid = VT.videoid', 'V.*', ' 1 GROUP by videoid HAVING COUNT(VT.videoid) = 0');
+        }
         $this->executeTool('generatingMoreThumbs');
     }
 
@@ -458,18 +463,43 @@ class AdminTool
             }
             unset($videos_hls);
 
+            //OLD THUMBS
+            $old_thumbs = new GlobIterator(DirPath::get('thumbs') . '[0-9]*' . DIRECTORY_SEPARATOR . '[0-9]*' . DIRECTORY_SEPARATOR . '[0-9]*' . DIRECTORY_SEPARATOR . '*.jpg');
+            foreach ($old_thumbs as $thumb) {
+                $vid_file_name = explode('-', basename($thumb, '.jpg'))[0];
+                $insert_values = [
+                    'type'  => 'old_thumb',
+                    'data'  => DirPath::getFromProjectRoot($thumb->getPathname()),
+                    'video' => $vid_file_name
+                ];
+                $this->insertTaskData([$insert_values]);
+            }
+            unset($old_thumbs);
+
             //THUMBS
-            $thumbs = new GlobIterator(DirPath::get('thumbs') . '[0-9]*' . DIRECTORY_SEPARATOR . '[0-9]*' . DIRECTORY_SEPARATOR . '[0-9]*' . DIRECTORY_SEPARATOR . '*.jpg');
+            $thumbs = new GlobIterator(DirPath::get('thumbs') . 'video' . DIRECTORY_SEPARATOR . '[0-9]*' . DIRECTORY_SEPARATOR . '[0-9]*' . DIRECTORY_SEPARATOR . '[0-9]*' . DIRECTORY_SEPARATOR .  '[0-9]*' . DIRECTORY_SEPARATOR . '*.jpg');
             foreach ($thumbs as $thumb) {
                 $vid_file_name = explode('-', basename($thumb, '.jpg'))[0];
                 $insert_values = [
-                    'type'  => 'thumb',
+                    'type'  => 'video_thumb',
                     'data'  => DirPath::getFromProjectRoot($thumb->getPathname()),
                     'video' => $vid_file_name
                 ];
                 $this->insertTaskData([$insert_values]);
             }
             unset($thumbs);
+            //THUMBS
+            $photo_thumbs = new GlobIterator(DirPath::get('thumbs') . 'photo' . DIRECTORY_SEPARATOR . '[0-9]*' . DIRECTORY_SEPARATOR . '[0-9]*' . DIRECTORY_SEPARATOR . '[0-9]*' . DIRECTORY_SEPARATOR .  '[0-9]*' . DIRECTORY_SEPARATOR . '*.jpg');
+            foreach ($photo_thumbs as $thumb) {
+                $vid_file_name = explode('-', basename($thumb, '.jpg'))[0];
+                $insert_values = [
+                    'type'  => 'photo_thumb',
+                    'data'  => DirPath::getFromProjectRoot($thumb->getPathname()),
+                    'video' => $vid_file_name
+                ];
+                $this->insertTaskData([$insert_values]);
+            }
+            unset($photo_thumbs);
 
             //SUBTITLES
             $subtitles = new GlobIterator(DirPath::get('subtitles') . '[0-9]*' . DIRECTORY_SEPARATOR . '[0-9]*' . DIRECTORY_SEPARATOR . '[0-9]*' . DIRECTORY_SEPARATOR . '*.srt');

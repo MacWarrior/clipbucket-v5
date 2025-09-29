@@ -244,35 +244,6 @@ function get_count_thumb($videoid)
 }
 
 /**
- * @param $video_db
- * @param $multi
- * @param $size
- * @return array|string
- * @throws Exception
- */
-function create_thumb($video_db, $multi, $size)
-{
-    if(empty($video_db)){
-        return default_thumb();
-    }
-
-    //check files
-    $glob = DirPath::get('thumbs') . $video_db['file_directory'] . DIRECTORY_SEPARATOR . $video_db['file_name'] . '*';
-    $vid_thumbs = glob($glob);
-    if (!empty($vid_thumbs) && !empty($video_db['file_directory']) && !empty($video_db['file_name'])) {
-        foreach ($vid_thumbs as $thumb) {
-            $files_info = [];
-            //pattern must match :  /`file_name`-`size`-`num`.`extension`
-            preg_match('/\/\w*-(\w{1,16})-(\d{1,3})\.(\w{2,4})$/', $thumb, $files_info);
-            if (!empty($files_info)) {
-                Clipbucket_db::getInstance()->insert(tbl('video_thumbs'), ['videoid', 'resolution', 'num', 'extension', 'version'], [$video_db['videoid'], $files_info[1], $files_info[2], $files_info[3], Update::getInstance()->getCurrentCoreVersion()]);
-            }
-        }
-    }
-    return get_thumb($video_db['videoid'], $multi, $size);
-}
-
-/**
  * @throws Exception
  */
 function get_player_thumbs_json($data): void
@@ -1633,26 +1604,14 @@ function reConvertVideos($data = ''): void
  */
 function generatingMoreThumbs($data, bool $regenerate = false): void
 {
-    $vid_file = get_high_res_file($data);
-    require_once DirPath::get('classes') . 'sLog.php';
-    $log = new SLog();
-    $ffmpeg = new FFMpeg($log);
-    $ffmpeg->input_details['duration'] = $data['duration'];
-    $ffmpeg->input_file = $vid_file;
-    $ffmpeg->file_directory = $data['file_directory'] . DIRECTORY_SEPARATOR;
-    $ffmpeg->file_name = $data['file_name'];
-    if ($regenerate) {
-        $ffmpeg->generateAllThumbs();
-    } else {
-        $ffmpeg->generateAllMissingThumbs();
-    }
+    $video_thumb = new VideoThumbs($data['videoid']);
+    $video_thumb->prepareFFmpeg();
+    $video_thumb->generateAutomaticThumbs($regenerate);
 
     if( !error() && !warning() ) {
         errorhandler::getInstance()->flush();
         e(lang('video_thumbs_regenerated'), 'm');
     }
-
-    Clipbucket_db::getInstance()->update(tbl('video'), ['thumbs_version'], [Update::getInstance()->getCurrentCoreVersion()], ' file_name = \'' . $data['file_name'] . '\'');
 }
 
 /**
@@ -1794,6 +1753,7 @@ function clean_orphan_files($file): string
         case 'video_mp4':
         case 'video_hls':
         case 'thumb':
+        case 'video_thumb':
         case 'subtitle':
         case 'log':
             $query = 'SELECT file_name FROM ' . tbl('video') . ' WHERE file_name = \'' . mysql_clean($file['video']) . '\'';
@@ -1808,6 +1768,7 @@ function clean_orphan_files($file): string
             break;
 
         case 'photo':
+        case 'photo_thumb':
             $query = 'SELECT filename FROM ' . tbl('photos') . ' WHERE filename = \'' . mysql_clean($file['photo']) . '\'';
             $filename = $file['photo'];
             if (config('cache_enable') == 'yes') {
@@ -1895,9 +1856,17 @@ function clean_orphan_files($file): string
             $stop_path = DirPath::get('videos');
             break;
 
-        case 'thumb':
+        case 'old_thumb':
             unlink($full_path);
             $stop_path = DirPath::get('thumbs');
+            break;
+        case 'photo_thumb':
+            unlink($full_path);
+            $stop_path = DirPath::get('thumbs') . 'photo' . DIRECTORY_SEPARATOR;
+            break;
+        case 'video_thumb':
+            unlink($full_path);
+            $stop_path = DirPath::get('thumbs') . 'video' . DIRECTORY_SEPARATOR;
             break;
 
         case 'subtitle':

@@ -135,7 +135,7 @@
                                                 {$videos = get_videos(['videoid'=>$videoid,'limit'=>'2'])}
                                                 {foreach $videos as $video}
                                                     <a href="{video_link($video)}{if config('seo') != 'yes'}&{else}?{/if}play_list={$playlist.playlist_id}" class="playlist-video">
-                                                        <img src="{getThumb vdetails=$video size=168x105}" class="img-responsive no_select {if Video::getInstance()->isToBlur($video['videoid'])}blur{/if}"/>
+                                                        <img src="{VideoThumbs::getDefaultThumbFile($video.videoid)}" class="img-responsive no_select {if Video::getInstance()->isToBlur($video['videoid'])}blur{/if}"/>
                                                     </a>
                                                 {/foreach}
                                             </div>

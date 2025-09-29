@@ -30,8 +30,8 @@ if ($vdetails['userid'] != $userid) {
         $_POST['videoid'] = $vid;
         CBvideo::getInstance()->update_video();
         if (empty(errorhandler::getInstance()->get_error())) {
-            if (!Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.2', '999')) {
-                e('Sorry, you cannot perform this action until the application has been fully updated by an administrator');
+            if (!Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.2', '999') && (!empty($_POST['default_thumb']) || !empty($_POST['default_poster']) || !empty($_POST['default_backdrop']))) {
+                e('Sorry, you cannot change default thumbnail until the application has been fully updated by an administrator');
             } else {
                 if (!empty($_POST['default_thumb'])) {
                     Video::getInstance()->setDefautThumb($_POST['default_thumb'], 'thumbnail', $vid);
@@ -50,12 +50,13 @@ if ($vdetails['userid'] != $userid) {
     assign('v', $vdetails);
     assign('vidthumbs', VideoThumbs::getAllThumbFiles($vid, '168','105',type: 'thumbnail', is_auto: true, return_with_num: true) ?: [VideoThumbs::getDefaultMissingThumb(return_with_num: true)]);
     assign('vidthumbs_custom', VideoThumbs::getAllThumbFiles($vid, '168','105',type: 'thumbnail', is_auto: false, return_with_num: true));
-    if( config('enable_video_poster') == 'yes' ){
-        assign('vidthumbs_poster', get_thumb($vdetails,TRUE,'original','poster'));
+    if( config('enable_video_poster') == 'yes' ) {
+        assign('vidthumbs_poster', VideoThumbs::getAllThumbFiles($vid, 'original','original',type: 'poster', return_with_num: true));
+
     }
 
     if( config('enable_video_backdrop') == 'yes' ) {
-        assign('vidthumbs_backdrop', get_thumb($vdetails, TRUE, 'original', 'backdrop'));
+        assign('vidthumbs_backdrop', VideoThumbs::getAllThumbFiles($vid, 'original','original',type: 'backdrop', return_with_num: true));
     }
 
 }

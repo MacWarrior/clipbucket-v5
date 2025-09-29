@@ -8,10 +8,8 @@ if (!Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.2', '999')) {
     echo json_encode(['success' => false, 'msg'=>getTemplateMsg()]);
     die();
 }
-# Generating more thumbs
-$data = Video::getInstance()->getOne(['videoid'=>$_POST['videoid']]);
 
-$num = $_POST['num'];
-delete_video_thumb($data, $num, $_POST['type']);
-
-display_thumb_list($data, $_POST['type']);
+$image = VideoThumbs::getOne(['id_video_image' => $_POST['id_video_image'], 'get_is_default'=>true]);
+$data = Video::getInstance()->getOne(['videoid'=>$image['videoid']]);
+VideoThumbs::deleteVideoImage($_POST['id_video_image']);
+display_thumb_list($data, $image['type']);

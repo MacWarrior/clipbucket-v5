@@ -42,7 +42,7 @@ if (isset($_POST['mode'])) {
                             $related_videos = get_videos(['exclude' => $videoid, 'limit' => 12, 'order' => 'date_added DESC']);
                         }
                         foreach ($related_videos as $video) {
-                            $video['imageSrc'] = get_thumb($video, false, '168x105');
+                            $video['imageSrc'] = VideoThumbs::getDefaultThumbFile($video['videoid'], '168', '105');
                             $video['url'] = video_link($video);
                             $related_videos_temp[] = $video;
                         }
