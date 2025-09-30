@@ -724,7 +724,7 @@ class Video
     /**
      * @throws Exception
      */
-    public function setDefaultPicture($video_id, string $poster, string $type = 'auto'): void
+    public function setDefaultPicture($video_id, string $poster, string $type = 'thumbnail'): void
     {
         if (empty($poster)) {
             e(lang('missing_params'));
@@ -1001,24 +1001,6 @@ class Video
         return $total;
     }
 
-    /**
-     * @throws Exception
-     */
-    public function setDefautThumb($num, $type, $videoid)
-    {
-        if (!empty(Upload::getInstance()->types_thumb[$type])) {
-            $type_db = Upload::getInstance()->types_thumb[$type];
-        } elseif (in_array($type, Upload::getInstance()->types_thumb) || $type == 'thumb') {
-            $type_db = $type;
-        } else {
-            e(lang('error'));
-            return false;
-        }
-        if ($type_db == 'auto' || $type_db == 'custom') {
-            $type_db = 'thumb';
-        }
-        Clipbucket_db::getInstance()->update(tbl($this->tablename), ['default_' . $type_db], [(int)$num], ' videoid = ' . mysql_clean($videoid));
-    }
 
     /**
      * @param int $videoid
@@ -1976,23 +1958,20 @@ class CBvideo extends CBCategory
     }
 
     /**
-     * Function used to remove video thumbs
+     * Function used to remove all video thumbs
      *
      * @param $vdetails
      * @throws Exception
      */
     function remove_thumbs($vdetails)
     {
-        //delete olds thumbs from db and on disk
-        Clipbucket_db::getInstance()->delete(tbl('video_thumbs'), ['videoid'], [$vdetails['videoid']]);
-        $pattern = DirPath::get('thumbs') . $vdetails['file_directory'] . DIRECTORY_SEPARATOR . $vdetails['file_name'] . '*';
-        $glob = glob($pattern);
-        foreach ($glob as $thumb) {
-            unlink($thumb);
-        }
-
         //reset default thumb
-        Clipbucket_db::getInstance()->update(tbl('video'), ['default_thumb'], [1], ' videoid = ' . mysql_clean($vdetails['videoid']));
+        Clipbucket_db::getInstance()->update(tbl('video'), ['default_thumbnail'], ['|f|null'], ' videoid = ' . mysql_clean($vdetails['videoid']));
+        $videoThumb = new VideoThumbs($vdetails['videoid']);
+        $video_images = VideoThumbs::getAll(['videoid' => $vdetails['videoid']]);
+        foreach ($video_images as $video_image) {
+            $videoThumb->deleteImageAndThumbs($video_image);
+        }
         e(lang('vid_thumb_removed_msg'), 'm');
     }
 

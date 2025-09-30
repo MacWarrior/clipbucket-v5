@@ -28,23 +28,23 @@ if (myquery::getInstance()->video_exists($video)) {
     if (!empty($_FILES['vid_thumb'])) {
         $is_file_to_upload= true;
         $files = $_FILES['vid_thumb'];
-        $type='c';
+        $type='thumbnail';
     }
     if (!empty($_FILES['vid_thumb_poster'])) {
         $is_file_to_upload= true;
         $files = $_FILES['vid_thumb_poster'];
-        $type='p';
+        $type='poster';
     }
     if (!empty($_FILES['vid_thumb_backdrop'])) {
         $is_file_to_upload= true;
         $files = $_FILES['vid_thumb_backdrop'];
-        $type='b';
+        $type='backdrop';
     }
     if ($is_file_to_upload) {
-        Upload::getInstance()->upload_thumbs($data['file_name'], $files, $data['file_directory'], $type);
+        VideoThumbs::uploadThumbs($data['videoid'], $files, $type, false);
     }
 } else {
     $msg[] = lang('class_vdo_del_err');
 }
 
-redirect_to(DirPath::getUrl('root') . 'edit_video.php?vid=' . $data['videoid']);
+echo json_encode(['redirect'=>DirPath::getUrl('root') . 'edit_video.php?vid=' . $data['videoid']]);

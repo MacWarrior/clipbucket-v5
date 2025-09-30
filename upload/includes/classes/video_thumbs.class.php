@@ -23,7 +23,8 @@ class VideoThumbs
         'id_video_image',
         'videoid',
         'type',
-        'num'
+        'num',
+        'is_auto'
     ];
 
     private static array $fieldsThumb = [
@@ -90,8 +91,8 @@ class VideoThumbs
             $conditions[] = self::$tableName .'.id_video_image = \'' . mysql_clean($param_id_video_image) . '\'';
         }
 
-        if ($param_is_auto!=null) {
-            $conditions[] = self::$tableName . '.is_auto = ' . mysql_clean($param_is_auto);
+        if ( $param_is_auto !== null ) {
+            $conditions[] = self::$tableName . '.is_auto = ' . mysql_clean((int)$param_is_auto);
         }
         if ($param_default) {
             $conditions[] = Video::getInstance()->getTableName() . '.default_'. $param_default .' = ' . self::$tableName .'.id_video_image';
@@ -334,8 +335,8 @@ class VideoThumbs
      */
     private static function getLastNum(int $videoid, string $type, bool $is_auto = false): int
     {
-        $res = self::getOne(['videoid' => $videoid, 'type' => $type, 'is_auto' => $is_auto]);
-        return $res[0]['max_num'] ?? 0;
+        $res = self::getOne(['videoid' => $videoid, 'type' => $type, 'is_auto' => $is_auto, 'max_num'=>true]);
+        return $res['max_num'] ?? 0;
     }
 
     public static function getTableNameThumb(): string
@@ -606,16 +607,15 @@ class VideoThumbs
             foreach ($glob as $thumb) {
                 unlink($thumb);
             }
-            Clipbucket_db::getInstance()->delete(tbl('video_thumb'), ['id_video_image'], [$video_image['id_video_image']]);
-            Clipbucket_db::getInstance()->delete(tbl('video_image'), ['id_video_image'], [$video_image['id_video_image']]);
         } else {
-            Clipbucket_db::getInstance()->delete(tbl('video_thumb'), ['videoid'], [$video_image['videoid']]);
             $pattern = DirPath::get('thumbs') . $this->ffmpeg_instance->file_directory . DIRECTORY_SEPARATOR . $this->ffmpeg_instance->file_name . '*[!-cpb].*';
             $glob = glob($pattern);
             foreach ($glob as $thumb) {
                 unlink($thumb);
             }
         }
+        Clipbucket_db::getInstance()->delete(tbl('video_thumb'), ['id_video_image'], [$video_image['id_video_image']]);
+        Clipbucket_db::getInstance()->delete(tbl('video_image'), ['id_video_image'], [$video_image['id_video_image']]);
     }
 
     /**
@@ -723,12 +723,21 @@ class VideoThumbs
         }
         $thumbs_files = [];
         if (empty($thumbs)) {
-            if (empty(self::getAllThumbs(['videoid' => $videoid, 'type' => $type, 'is_auto' => true]))) {
+            if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.2', '999') ) {
+                $all_thumbs = self::getAllThumbs(['videoid' => $videoid, 'type' => $type, 'is_auto' => true]);
+            } else {
+                $all_thumbs = Clipbucket_db::getInstance()->_select('select * from ' . tbl('video_thumbs') . ' where videoid = ' . mysql_clean($videoid) . ' and type = \'' . mysql_clean($type) . '\' and type != \'custom\'');
+            }
+            if (empty($all_thumbs)) {
                 $instance = new VideoThumbs($videoid);
                 $instance->ffmpeg_instance->prepare();
                 $instance->importOldThumbFromDisk();
                 $params['limit'] = '1';
-                $thumbs = self::getAllThumbs($params);
+                if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.2', '999')) {
+                    $thumbs = self::getAllThumbs($params);
+                } else {
+                    $thumbs = Clipbucket_db::getInstance()->_select($sql);
+                }
                 if (!empty($thumbs)) {
                     return self::getThumbsFile($is_multi, $videoid, $width, $height, $type, $is_auto, $is_default, $return_type, $return_with_num);
                 } else {

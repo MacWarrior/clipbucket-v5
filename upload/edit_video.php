@@ -34,13 +34,13 @@ if ($vdetails['userid'] != $userid) {
                 e('Sorry, you cannot change default thumbnail until the application has been fully updated by an administrator');
             } else {
                 if (!empty($_POST['default_thumb'])) {
-                    Video::getInstance()->setDefautThumb($_POST['default_thumb'], 'thumbnail', $vid);
+                    Video::getInstance()->setDefaultPicture($vid, $_POST['default_thumb'], 'thumbnail');
                 }
                 if (config('enable_video_poster') == 'yes' && !empty($_POST['default_poster'])) {
-                    Video::getInstance()->setDefautThumb($_POST['default_poster'], 'poster', $vid);
+                    Video::getInstance()->setDefaultPicture($vid, $_POST['default_poster'], 'poster');
                 }
                 if (config('enable_video_backdrop') == 'yes' && !empty($_POST['default_backdrop'])) {
-                    Video::getInstance()->setDefautThumb($_POST['default_backdrop'], 'backdrop', $vid);
+                    Video::getInstance()->setDefaultPicture($vid, $_POST['default_backdrop'], 'backdrop');
                 }
             }
             $vdetails = Video::getInstance()->getOne(['videoid' => $vid]);
