@@ -21,7 +21,6 @@ $video = mysql_clean($_GET['video']);
 if (myquery::getInstance()->video_exists($video)) {
 
     $data = get_video_details($video);
-    $vid_file = DirPath::get('videos') . $data['file_directory'] . DIRECTORY_SEPARATOR . get_video_file($data, false, false);
 
     $is_file_to_upload= false;
     # Uploading Thumbs

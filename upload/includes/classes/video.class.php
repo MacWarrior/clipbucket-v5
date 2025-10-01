@@ -790,7 +790,7 @@ class Video
                 'SELECT id_video_image 
                      FROM ' . tbl(VideoThumbs::getTableName()) . ' 
                      WHERE videoid = ' . mysql_clean($video_id) . ' 
-                         AND type = \'' . $type . '\' AND is_auto = TRUE 
+                         AND type = \'' . $type . '\' 
                      GROUP BY videoid, type HAVING MIN(num)';
         }
         if (!in_array($type, $allowed_array)) {
@@ -815,14 +815,18 @@ class Video
     /**
      * @param array $video_detail
      * @param string $type must one of following : thumb, poster, backdrop
+     * @param bool $is_auto
      * @return void
      * @throws Exception
      */
-    public function dropPictures(array $video_detail, string $type): void
+    public function dropPictures(array $video_detail, string $type, bool $is_auto = null): void
     {
-        $allowed_array = ['auto', 'custom', 'poster', 'backdrop'];
         if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.2', '999')) {
             $allowed_array = ['thumbnail', 'poster', 'backdrop'];
+            $results = VideoThumbs::getAll(['type' => $type, 'videoid' => $video_detail['videoid'], 'is_auto' => $is_auto, 'get_is_default'=>true]);
+        } else {
+            $allowed_array = ['auto', 'custom', 'poster', 'backdrop'];
+            $results = Clipbucket_db::getInstance()->select(tbl('video_thumbs'), 'num', ' type= \''. mysql_clean($type) .'\' and videoid = ' . mysql_clean($video_detail['videoid']));
         }
         if (!in_array($type, $allowed_array) ) {
             if( System::isInDev() ){
@@ -832,10 +836,14 @@ class Video
             }
             return;
         }
-        $results = Clipbucket_db::getInstance()->select(tbl('video_thumbs'), 'num', ' type= \''. mysql_clean($type) .'\' and videoid = ' . mysql_clean($video_detail['videoid']));
         if (!empty($results)) {
             foreach ($results as $result) {
-                delete_video_thumb($video_detail, $result['num'], $type);
+                if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.2', '999')) {
+                    VideoThumbs::deleteVideoImage($result, false);
+                } else {
+                    delete_video_thumb($video_detail, $result['num'], $type);
+                }
+
             }
             Video::getInstance()->resetDefaultPicture($video_detail['videoid'], $type);
         }

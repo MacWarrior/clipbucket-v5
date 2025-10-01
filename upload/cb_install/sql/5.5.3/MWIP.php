@@ -1,8 +1,6 @@
 <?php
 
-namespace V5_5_2;
-
-use Clipbucket_db;
+namespace V5_5_3;
 
 require_once \DirPath::get('classes') . DIRECTORY_SEPARATOR . 'migration' . DIRECTORY_SEPARATOR . 'migration.class.php';
 require_once \DirPath::get('classes') . 'sLog.php';
@@ -202,6 +200,21 @@ class MWIP extends \Migration
         self::alterTable('ALTER TABLE `{tbl_prefix}video` DROP COLUMN `thumbs_version`', [
             'table'  => 'video',
             'column' => 'thumbs_version',
+        ]);
+
+        self::generateTranslation('custom_thumbnail', [
+            'fr'=>'Vignettes personnalisées',
+            'en'=>'Custom Thumbnails'
+        ]);
+
+        self::generateTranslation('custom_poster', [
+            'fr'=>'Affiches personnalisées',
+            'en'=>'Custom Posters'
+        ]);
+
+        self::generateTranslation('custom_backdrop', [
+            'fr'=>'Décors personnalisés',
+            'en'=>'Custom Backdrops'
         ]);
     }
 

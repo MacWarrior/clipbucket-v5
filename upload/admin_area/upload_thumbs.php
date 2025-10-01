@@ -51,12 +51,8 @@ if (myquery::getInstance()->video_exists($video)) {
     }
 
     assign('data', $data);
-    if ($type=='thumbnail') {
-        assign('vidthumbs', VideoThumbs::getAllThumbFiles($data['videoid'], '168','105',type: $type, is_auto: true, return_with_num: true) );
-        assign('vidthumbs_custom', VideoThumbs::getAllThumbFiles($data['videoid'], '168','105',type: $type, is_auto: false, return_with_num: true));
-    } else {
-        assign('vidthumbs', VideoThumbs::getAllThumbFiles($data['videoid'], 'original','original',type: $type, is_auto: true, return_with_num: true));
-    }
+    assign('vidthumbs', VideoThumbs::getAllThumbFiles($data['videoid'], '168','105',type: $type, is_auto: true, return_with_num: true) );
+    assign('vidthumbs_custom', VideoThumbs::getAllThumbFiles($data['videoid'], '168','105',type: $type, is_auto: false, return_with_num: true));
 } else {
     $msg[] = lang('class_vdo_del_err');
 }

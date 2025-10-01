@@ -320,7 +320,7 @@ class Tmdb
         }
 
         if (config('tmdb_get_poster') == 'yes' && config('enable_video_poster') == 'yes') {
-            Video::getInstance()->dropPictures($video_info, 'poster');
+            Video::getInstance()->dropPictures($video_info, 'poster', true);
 
             switch ($type) {
                 case 'movie':
@@ -340,16 +340,19 @@ class Tmdb
             } else {
                 $poster_iterate = $posters;
             }
+            $video_thumbs = new VideoThumbs($videoid);
+            $video_thumbs->prepareFFmpeg();
             foreach ($poster_iterate as $poster) {
                 $path_without_slash = str_replace('/', '', $poster['file_path']);
                 $url = self::IMAGE_URL . $poster['file_path'];
                 $tmp_path = DirPath::get('temp') . $path_without_slash;
                 file_put_contents($tmp_path, file_get_contents($url));
-                Upload::getInstance()->upload_thumbs($video_info['file_name'], [
+                VideoThumbs::uploadThumbs($video_info['videoid'], [
                     'tmp_name' => [$tmp_path],
-                    'name'     => [$path_without_slash],
-                ], $video_info['file_directory'], 'p');
+                    'name'     => [$path_without_slash]
+                ], 'poster', true);
             }
+            Video::getInstance()->resetDefaultPicture($videoid, 'poster');
 
             if (empty(errorhandler::getInstance()->get_error())) {
                 errorhandler::getInstance()->flush();
@@ -357,7 +360,7 @@ class Tmdb
         }
 
         if (config('tmdb_get_backdrop') == 'yes' && config('enable_video_backdrop') == 'yes') {
-            Video::getInstance()->dropPictures($video_info, 'backdrop');
+            Video::getInstance()->dropPictures($video_info, 'backdrop',true);
 
             switch ($type) {
                 case 'movie':
@@ -382,11 +385,12 @@ class Tmdb
                 $url = self::IMAGE_URL . $backdrop['file_path'];
                 $tmp_path = DirPath::get('temp') . $path_without_slash;
                 file_put_contents($tmp_path, file_get_contents($url));
-                Upload::getInstance()->upload_thumbs($video_info['file_name'], [
+                VideoThumbs::uploadThumbs($video_info['videoid'], [
                     'tmp_name' => [$tmp_path],
-                    'name'     => [$path_without_slash],
-                ], $video_info['file_directory'], 'b');
+                    'name'     => [$path_without_slash]
+                ], 'backdrop', true);
             }
+            Video::getInstance()->resetDefaultPicture($videoid, 'backdrop');
 
             if (empty(errorhandler::getInstance()->get_error())) {
                 errorhandler::getInstance()->flush();

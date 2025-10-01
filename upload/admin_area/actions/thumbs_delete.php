@@ -11,5 +11,5 @@ if (!Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.2', '999')) {
 
 $image = VideoThumbs::getOne(['id_video_image' => $_POST['id_video_image'], 'get_is_default'=>true]);
 $data = Video::getInstance()->getOne(['videoid'=>$image['videoid']]);
-VideoThumbs::deleteVideoImage($_POST['id_video_image']);
+VideoThumbs::deleteVideoImage($image);
 display_thumb_list($data, $image['type']);
