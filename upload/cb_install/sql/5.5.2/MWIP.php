@@ -10,9 +10,6 @@ class MWIP extends \Migration
      */
     public function start()
     {
-        $sql='DROP TABLE IF EXISTS `{tbl_prefix}conversion_queue`;';
-        self::query($sql);
-
         $sql='CREATE TABLE IF NOT EXISTS `{tbl_prefix}video_conversion_queue` (
             `id` int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY ,
             `videoid` bigint(20) NOT NULL,
@@ -69,6 +66,8 @@ class MWIP extends \Migration
             'en'=>'No conversion lock to delete'
         ]);
 
+        $sql='DROP TABLE IF EXISTS `{tbl_prefix}conversion_queue`;';
+        self::query($sql);
     }
 
 }
