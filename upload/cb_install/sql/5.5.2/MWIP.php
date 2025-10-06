@@ -13,27 +13,26 @@ class MWIP extends \Migration
         $sql='DROP TABLE IF EXISTS `{tbl_prefix}conversion_queue`;';
         self::query($sql);
 
-         $sql='CREATE TABLE IF NOT EXISTS `{tbl_prefix}video_conversion_queue` (
-                `id` int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY ,
-                `videoid` bigint(20) NOT NULL,
-                `date_added` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-                `date_started` datetime DEFAULT NULL,
-                `date_ended` datetime DEFAULT NULL,
-                `is_completed` boolean DEFAULT 0 NOT NULL, 
-                INDEX(is_completed)
-            )';
-         self::query($sql);
+        $sql='CREATE TABLE IF NOT EXISTS `{tbl_prefix}video_conversion_queue` (
+            `id` int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY ,
+            `videoid` bigint(20) NOT NULL,
+            `date_added` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+            `date_started` datetime DEFAULT NULL,
+            `date_ended` datetime DEFAULT NULL,
+            `is_completed` boolean DEFAULT 0 NOT NULL, 
+            INDEX(is_completed)
+        )';
+        self::query($sql);
 
-         self::alterTable('ALTER TABLE `{tbl_prefix}video_conversion_queue` ADD CONSTRAINT `video_conversion_fk` FOREIGN KEY (`videoid`) REFERENCES `{tbl_prefix}video` (`videoid`) ON DELETE NO ACTION ON UPDATE NO ACTION;', [
-             'table'  => 'video_conversion_queue',
-             'column' => 'videoid'
-         ], [
-             'constraint' => [
-                 'type' => 'FOREIGN KEY',
-                 'name' => 'video_conversion_fk'
-             ]
-         ]);
-
+        self::alterTable('ALTER TABLE `{tbl_prefix}video_conversion_queue` ADD CONSTRAINT `video_conversion_fk` FOREIGN KEY (`videoid`) REFERENCES `{tbl_prefix}video` (`videoid`) ON DELETE NO ACTION ON UPDATE NO ACTION;', [
+            'table'  => 'video_conversion_queue',
+            'column' => 'videoid'
+        ], [
+            'constraint' => [
+                'type' => 'FOREIGN KEY',
+                'name' => 'video_conversion_fk'
+            ]
+        ]);
 
         self::insertTool('launch_video_conversion', 'AdminTool::launchVideoConversion', '* * * * *', true);
 
