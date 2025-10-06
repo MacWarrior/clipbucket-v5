@@ -58,10 +58,10 @@ class MWIP extends \Migration
             id_photo_thumb INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
             photo_id BIGINT(255) NOT NULL,
             width INT NOT NULL,
-            height INT NOT NULL,
             extension VARCHAR(4) NOT NULL,
             version VARCHAR(16) NOT NULL,
-            UNIQUE KEY (photo_id, width, height)
+            is_original_size BOOL DEFAULT FALSE NOT NULL,
+            UNIQUE KEY (photo_id, width)
         );';
         self::query($sql);
 

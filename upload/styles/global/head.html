@@ -226,7 +226,7 @@ function doUpdateVideo(formId,ID)
 {if $object.photo_id}
     <meta property="og:title" content="{display_clean($object.photo_title)}" />
     <meta property="og:description" content="{display_clean($object.photo_description)|description}" />
-    <meta property="og:image" content="{get_photo details=$object size='m' output='non_html' alt=display_clean($object.photo_title)}" />
+    <meta property="og:image" content="{PhotoThumbs::getThumbFile($object.photo_id, 550)}" />
     <meta property="og:image:type" content="image/jpeg" />
     <meta name="medium" content="image" />
 {/if}

@@ -654,17 +654,6 @@ class VideoThumbs
      */
     private static function getThumbsFile(bool $is_multi, int $videoid, int|string $width, int|string $height, string $type = 'thumbnail', bool $is_auto = null, bool $is_default = null, string $return_type = 'url', bool $return_with_num = false): array|string
     {
-        $thumb_suffix =Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.2', '999') ? 'video' . DIRECTORY_SEPARATOR : '';
-        $thumb_video_directory_path = DirPath::get('thumbs') . $thumb_suffix;
-        switch ($return_type) {
-            default:
-            case 'url':
-                $thumb_video_directory = DirPath::getUrl('thumbs') . $thumb_suffix;
-                break;
-            case 'filepath':
-                $thumb_video_directory = $thumb_video_directory_path;
-                break;
-        }
         if (!in_array($type, [
             'thumbnail',
             'poster',
@@ -680,6 +669,17 @@ class VideoThumbs
             e(lang('technical_error'));
             error_log('getDefaultThumbFile - called on empty vdetails');
             return $is_multi ? [self::getDefaultMissingThumb($return_type, $return_with_num)] : self::getDefaultMissingThumb($return_type, $return_with_num);
+        }
+        $thumb_suffix =Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.2', '999') ? 'video' . DIRECTORY_SEPARATOR : '';
+        $thumb_video_directory_path = DirPath::get('thumbs') . $thumb_suffix;
+        switch ($return_type) {
+            default:
+            case 'url':
+                $thumb_video_directory = DirPath::getUrl('thumbs') . $thumb_suffix;
+                break;
+            case 'filepath':
+                $thumb_video_directory = $thumb_video_directory_path;
+                break;
         }
 
 

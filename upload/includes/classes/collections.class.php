@@ -882,7 +882,7 @@ class Collection
                 break;
 
             case 'photos':
-                $thumb = CBPhotos::getInstance()->get_image_file($item);
+                $thumb = PhotoThumbs::getThumbFile($item['photo_id']);
                 break;
         }
         return $thumb;
@@ -2183,7 +2183,7 @@ class Collections extends CBCategory
                     break;
 
                 case 'photos':
-                    $thumb = CBPhotos::getInstance()->get_image_file(CBPhotos::getInstance()->get_photo($item[0]['object_id']));
+                    $thumb = PhotoThumbs::getThumbFile($item[0]['object_id']);
                     break;
             }
 
@@ -2530,15 +2530,10 @@ class Collections extends CBCategory
             return VideoThumbs::getDefaultThumbFile($object_id, $width, $height);
         }
 
-        if ($object_id) {
-            $param['details'] = Photo::getInstance()->getOne(['photo_id'=>$object_id]);
+        if (empty($size)) {
+            $size = 's';
         }
-        if (!$size) {
-            $param['size'] = 's';
-        } else {
-            $param['size'] = $size;
-        }
-        return get_photo($param);
+        return PhotoThumbs::getThumbFile($object_id, $size);
     }
 
 }

@@ -1,10 +1,9 @@
 {lang code='photo' assign='object_type'}
 
-{assign var=json value=$photo.photo_details|json_decode}
 {$curr_photo = $photo|@json_encode}
 {$user_admin = $user|@json_encode}
-{$srcfirst = {get_photo(['details'=>$photo,'size'=>'l'])}}
-{$shareableThumb = get_photo_file($photo.photo_id)}
+{$srcfirst = {PhotoThumbs::getThumbFile($photo.photo_id, 900)}}
+{$shareableThumb = {PhotoThumbs::getThumbFile($photo.photo_id, 150)}}
 {$shareableThumb = $shareableThumb.0}
 <div id="main" class="clearfix container">
     <div id="collectionItemView" class="clearfix">
@@ -37,7 +36,7 @@
                                         {lang("photo_is", strtolower(lang("orphan")))}
                                     </div>
                                 {/if}
-                                {get_photo details=$photo size='l' class='img-responsive center-block' output='html' height="100"}
+                                {PhotoThumbs::getHtmlThumbFile($photo.photo_id, 900, ['class'=>'img-responsive center-block'])}
                             </div>
                         </div>
                     </div>

@@ -546,6 +546,7 @@ class Photo
      * @param string $extension
      * @return int
      * @throws Exception
+     * TODO corriger la fonction ici elle ne calcul que le poids des petites images
      */
     public function getUsage($id, string $file_name, string $file_directory, string $extension, string $photo_key): int
     {
@@ -557,10 +558,10 @@ class Photo
             'filename'=>$file_name,
             'ext'=>$extension
         ];
-        $files = get_image_file(['details' => $details, 'size' => 't', 'multi' => true, 'with_orig' => true, 'with_path' => false]);
-        if (!empty($files)) {
-            foreach ($files as $file) {
-                $file_dir = DirPath::get('photos') . $file;
+        $photos_thumbs = PhotoThumbs::getAllThumbs(['photo_id' => $id]);
+        if (!empty($photos_thumbs)) {
+            foreach ($photos_thumbs as $photos_thumb) {
+                $file_dir = PhotoThumbs::getThumbPath($photos_thumb['file_directory'], $photos_thumb['filename'], $photos_thumb['width'], $photos_thumb['ext'], $photos_thumb['version']);
                 if (file_exists($file_dir)) {
                     $total += filesize($file_dir);
                 }
@@ -836,7 +837,7 @@ class CBPhotos
             'photo_description' => $data['photo_description'],
             'photo_title'       => $data['photo_title'],
             'photo_link'        => $this->collection->collection_links($data, 'view_item'),
-            'photo_thumb'       => $this->get_image_file($data['photo_id'], 'm')
+            'photo_thumb'       => PhotoThumbs::getThumbFile($data['photo_id'], 550)
         ];
         $this->action->share_template_name = 'share_photo';
         $this->action->val_array = $this->share_email_vars;
@@ -1438,6 +1439,7 @@ class CBPhotos
      *
      * @param $id
      * @throws Exception
+     * TODO supprimer seulement l'image ici et les thumbs dans la classe PhotoThumbs
      */
     function delete_photo_files($id): void
     {
@@ -1447,17 +1449,12 @@ class CBPhotos
             $photo = $id;
         }
 
-        $files = get_image_file(['details' => $photo, 'size' => 't', 'multi' => true, 'with_orig' => true, 'with_path' => false]);
-        if (!empty($files)) {
-            foreach ($files as $file) {
-                $file_dir = DirPath::get('photos') . $file;
-                if (file_exists($file_dir)) {
-                    unlink($file_dir);
-                }
-            }
-
-            e(lang('success_delete_file', display_clean($photo['photo_title'])), 'm');
+        $file_dir = DirPath::get('photos') . $photo['file_directory'] . DIRECTORY_SEPARATOR . $photo['filename'] . '.' . $photo['ext'];
+        if (file_exists($file_dir)) {
+            unlink($file_dir);
         }
+        PhotoThumbs::deleteThumbs($photo['photo_id']);
+        e(lang('success_delete_file', display_clean($photo['photo_title'])), 'm');
     }
 
     /**
@@ -1611,52 +1608,6 @@ class CBPhotos
         $this->update_image_details($p);
     }
 
-    /**
-     * This function is used to get photo files and extract
-     * dimensions and file size of each file, put them in array
-     * then encode in json and finally update photo details column
-     *
-     * @param $photo
-     * @throws Exception
-     */
-    function update_image_details($photo): void
-    {
-        if (is_array($photo) && !empty($photo['photo_id'])) {
-            $p = $photo;
-        } else {
-            $p = $this->get_photo($photo);
-        }
-
-        if (!empty($photo)) {
-            $images = get_image_file(['details' => $photo, 'size' => 't', 'multi' => true, 'with_path' => false]);
-
-            if ($images) {
-                foreach ($images as $image) {
-                    $imageFile = DirPath::get('photos') . $image;
-
-                    if (file_exists($imageFile)) {
-                        $imageDetails = getimagesize($imageFile);
-                        $imageSize = filesize($imageFile);
-                        $data[$this->get_image_type($image)] = [
-                            'width'     => $imageDetails[0],
-                            'height'    => $imageDetails[1],
-                            'attribute' => mysql_clean($imageDetails[3]),
-                            'size'      => [
-                                'bytes'     => round($imageSize),
-                                'kilobytes' => round($imageSize / 1024),
-                                'megabytes' => round($imageSize / 1024 / 1024, 2)
-                            ]
-                        ];
-                    }
-                }
-
-                if (is_array($data) && !empty($data)) {
-                    $encodedData = stripslashes(json_encode($data));
-                    Clipbucket_db::getInstance()->update(tbl('photos'), ['photo_details'], ["|no_mc|$encodedData"], " photo_id = '" . $p['photo_id'] . "' ");
-                }
-            }
-        }
-    }
 
     /**
      * Creating resized photo
@@ -1680,7 +1631,7 @@ class CBPhotos
 
             if( stristr(PHP_OS, 'WIN') ) {
                 // On Windows hosts, imagecreatefromX functions consumes lots of RAM
-                $memory_needed = Image::getMemoryNeededForImage($from);
+                $memory_needed = PhotoThumbs::getMemoryNeededForImage($from);
                 $memory_limit = ini_get('memory_limit');
                 if ($memory_needed > getBytesFromFileSize($memory_limit)) {
                     $msg = 'Photo generation would requiere ~' . System::get_readable_filesize($memory_needed, 0) . ' of memory, but it\'s currently limited to ' . $memory_limit;
@@ -2468,30 +2419,6 @@ class CBPhotos
         }
     }
 
-    /**
-     * Used to get image file
-     *
-     * @param        $pid
-     * @param string $size
-     * @param bool $multi
-     * @param null $assign
-     * @param bool $with_path
-     * @param bool $with_orig
-     *
-     * @return string|void
-     */
-    function get_image_file($pid, $size = 't', $multi = false, $assign = null, $with_path = true, $with_orig = false)
-    {
-        $params = [
-            'details'     => $pid
-            , 'size'      => $size
-            , 'multi'     => $multi
-            , 'assign'    => $assign
-            , 'with_path' => $with_path
-            , 'with_orig' => $with_orig
-        ];
-        return get_image_file($params);
-    }
 
     /**
      * This will become a Smarty function.
@@ -2933,68 +2860,6 @@ class CBPhotos
         return ['rating' => $new_rate, 'rated_by' => $rated_by, 'total' => 10, 'id' => $id, 'type' => 'photo', 'disable' => 'disabled'];
     }
 
-    /**
-     * Used to generate different
-     * embed codes
-     *
-     * @param $p
-     *
-     * @return bool|string
-     * @throws Exception
-     */
-    function generate_embed_codes($p)
-    {
-        $details = $p['details'];
-        $type = $p['type'];
-
-        if (is_array($details)) {
-            $photo = $details;
-        } else {
-            $photo = $this->get_photo($details);
-        }
-
-        $code = '';
-        $image_file = $this->get_image_file($photo);
-        if (is_array($image_file)) {
-            $image_file = $image_file[0];
-        }
-
-        $base_url = DirPath::getUrl('root');
-        switch ($type) {
-            case 'html':
-                if ($p['with_url']) {
-                    $code .= "&lt;a href='" . $this->collection->collection_links($photo, 'view_item') . "' target='_blank'&gt;";
-                }
-                $code .= "&lt;img src='" . $base_url . $image_file . "' title='" . display_clean($photo['photo_title']) . "' alt='" . display_clean($photo['photo_title']) . '&nbsp;' . TITLE . "' /&gt;";
-                if ($p['with_url']) {
-                    $code .= '&lt;/a&gt;';
-                }
-                break;
-
-            case 'forum':
-                if ($p['with_url']) {
-                    $code .= '&#91;URL=' . $this->collection->collection_links($photo, 'view_item') . '&#93;';
-                }
-                $code .= '&#91;IMG&#93;' . $base_url . $image_file . '&#91;/IMG&#93;';
-                if ($p['with_url']) {
-                    $code .= '&#91;/URL&#93;';
-                }
-                break;
-
-            case 'email':
-                $code .= $this->collection->collection_links($photo, 'view_item');
-                break;
-
-            case 'direct':
-                $code .= $base_url . $image_file;
-                break;
-
-            default:
-                return false;
-        }
-
-        return $code;
-    }
 
     /**
      * Used encode photo key

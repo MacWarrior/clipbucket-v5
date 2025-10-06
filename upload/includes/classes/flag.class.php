@@ -331,7 +331,7 @@ class Flag
                 return [
                     'fo'    => Photo::getInstance()->getFOLink($flag['id_element']),
                     'bo'    => DirPath::getUrl('admin_area') . 'edit_photo.php?photo=' . $flag['id_element'],
-                    'thumb' => get_image_file(['details' => $flag['id_element']])
+                    'thumb' => PhotoThumbs::getThumbFile($flag['id_element'])
                 ];
 
             case 'collection':

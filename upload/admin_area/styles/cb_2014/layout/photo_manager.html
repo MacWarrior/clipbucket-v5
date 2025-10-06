@@ -34,7 +34,7 @@
                             <div class="col-md-10">
                                 <div class="row">
                                     <div class="col-md-3">
-                                        {get_photo details=$photos[list] output='html' class='acc_usr_video_thumb img-responsive'}
+                                        {PhotoThumbs::getHtmlThumbFile({$photos[list].photo_id}, '150', ['class'=>'acc_usr_video_thumb img-responsive'])}
                                     </div>
                                     <div class="col-md-9">
                                         <a class="block" href="{DirPath::getUrl('admin_area')}edit_photo.php?photo={$photos[list].photo_id}">{display_clean($photos[list].photo_title)}</a>

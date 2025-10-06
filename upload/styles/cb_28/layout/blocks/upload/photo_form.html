@@ -30,7 +30,7 @@
                         <br/>
                         <p>{lang code='loading'}</p>
                     </div>
-                     <img src="{get_photo details=$photoArray size='m'}" class="no_select" style="max-width:100%;" />
+                     <img src="{PhotoThumbs::getThumbFile($photoArray.photo_id, 550)}" class="no_select" style="max-width:100%;" />
                 </div>
                 <div class="photoOptionalSettings" >
                     <div>

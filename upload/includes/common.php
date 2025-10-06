@@ -90,6 +90,7 @@ require_once DirPath::get('classes') . 'ffmpeg.class.php';
 require_once DirPath::get('classes') . 'flag.class.php';
 require_once DirPath::get('classes') . 'sort_type.class.php';
 require_once DirPath::get('classes') . 'video_thumbs.class.php';
+require_once DirPath::get('classes') . 'photo_thumbs.class.php';
 
 $cb_columns = new cb_columns();
 $row = myquery::getInstance()->Get_Website_Details();
@@ -295,7 +296,6 @@ $Smarty->register_function('include_template_file', 'include_template_file');
 $Smarty->register_function('include_js', 'include_js');
 $Smarty->register_function('include_css', 'include_css');
 $Smarty->register_function('rss_feeds', 'rss_feeds');
-$Smarty->register_function('get_photo', 'get_image_file');
 $Smarty->register_function('cbCategories', 'getSmartyCategoryList');
 $Smarty->register_modifier('SetTime', 'SetTime');
 $Smarty->register_modifier('getname', 'getname');
