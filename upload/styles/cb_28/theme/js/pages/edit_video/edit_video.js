@@ -120,7 +120,7 @@ $(function () {
 function getInfoTmdb(video_id, type, video_title, page,sort, sort_order,selected_year) {
     showSpinner();
     $.ajax({
-        url: baseurl+"actions/info_tmdb.php",
+        url: baseurl+"actions/tmdb_info.php",
         type: "POST",
         data: {videoid: video_id, video_title:video_title, type: type, page: page,sort: sort, sort_order: sort_order,selected_year },
         dataType: 'json',
@@ -137,7 +137,7 @@ function getInfoTmdb(video_id, type, video_title, page,sort, sort_order,selected
 function saveInfoTmdb(tmdb_video_id, type, videoid) {
     showSpinner();
     $.ajax({
-        url: baseurl+"actions/import_tmdb.php",
+        url: baseurl+"actions/tmdb_import.php",
         type: "POST",
         data: {tmdb_video_id: tmdb_video_id, videoid: videoid, type: type},
         dataType: 'json',
