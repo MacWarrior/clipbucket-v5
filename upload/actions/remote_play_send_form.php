@@ -2,6 +2,10 @@
 const THIS_PAGE = 'remote_play_send_form';
 require_once dirname(__FILE__, 2) . '/includes/config.inc.php';
 
+if (!Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.2', '999')) {
+    sessionMessageHandler::add_message('Sorry, you cannot upload new videos until the application has been fully updated by an administrator', 'e', User::getInstance()->getDefaultHomepageFromUserLevel());
+}
+
 if( !User::getInstance()->hasPermission('allow_video_upload') ){
     echo json_encode(['error'=>lang('insufficient_privileges')]);
     die();
@@ -77,12 +81,14 @@ switch($step){
 
         $errors = errorhandler::getInstance()->get_error();
         if (empty($errors)) {
-            Video::getInstance()->setDefautThumb($_POST['default_thumb'], 'thumb', $video_id);
+            if ( !empty($_POST['default_thumb'])) {
+                Video::getInstance()->setDefaultPicture($video_id, $_POST['default_thumb'], 'thumbnail');
+            }
             if (config('enable_video_poster') == 'yes' && !empty($_POST['default_poster'])) {
-                Video::getInstance()->setDefautThumb($_POST['default_poster'], 'poster', $video_id);
+                Video::getInstance()->setDefaultPicture($video_id, $_POST['default_poster'], 'poster');
             }
             if (config('enable_video_backdrop') == 'yes' && !empty($_POST['default_backdrop'])) {
-                Video::getInstance()->setDefautThumb($_POST['default_backdrop'], 'backdrop', $video_id);
+                Video::getInstance()->setDefaultPicture($video_id, $_POST['default_backdrop'], 'backdrop');
             }
         }
         $response = [];

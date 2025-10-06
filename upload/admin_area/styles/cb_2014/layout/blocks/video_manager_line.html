@@ -5,9 +5,9 @@
     <td>
         <div class="row">
             {if config('enable_video_poster') == 'yes' && !empty($video.default_poster)}
-                {$img_url = get_thumb($video, false, 'original', 'poster')}
+                {$img_url = VideoThumbs::getDefaultThumbFile($video.videoid, 'original', 'original', 'poster')}
             {else}
-                {$img_url = get_thumb($video, false, '168x105')}
+                {$img_url = VideoThumbs::getDefaultThumbFile($video.videoid, '168', '105')}
             {/if}
             <div class="col-md-2" style="text-align:center;">
                 <img src="{$img_url}" id="thumbs_{$video.videoid}" alt="video_thumb" style="max-height:80px; max-width:100%;"/>

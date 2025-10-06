@@ -324,7 +324,7 @@ class Flag
                 return [
                     'fo'    => video_link($flag['id_element']),
                     'bo'    => DirPath::getUrl('admin_area') . 'edit_video.php?video=' . $flag['id_element'],
-                    'thumb' => get_thumb($flag['id_element'], false, '168x105')
+                    'thumb' => VideoThumbs::getDefaultThumbFile($flag['id_element'])
                 ];
 
             case 'photo':

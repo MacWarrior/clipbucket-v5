@@ -142,6 +142,12 @@ class remote_play{
         update_video_status($video['file_name'], 'Processing');
         $ffmpeg->input_details['video_width'] = $video_infos['video_width'];
         $ffmpeg->input_details['video_height'] = $video_infos['video_height'];
+        $ffmpeg->file_name = $video['file_name'];
+        $ffmpeg->input_file = $video_url;
+        $ffmpeg->file_directory = $file_directory.DIRECTORY_SEPARATOR;
+        $ffmpeg->extract_subtitles();
+        $ffmpeg->input_details['duration'] = $video_infos['duration'];
+        $videoThumbs = new VideoThumbs($video_id, $ffmpeg);
         $resolutions = $ffmpeg->get_eligible_resolutions();
         $max_resolution = '';
         foreach($resolutions as $res){
@@ -149,14 +155,7 @@ class remote_play{
                 $max_resolution =  $res['height'];
             }
         }
-
-        $ffmpeg->file_name = $video['file_name'];
-        $ffmpeg->input_file = $video_url;
-        $ffmpeg->file_directory = $file_directory.DIRECTORY_SEPARATOR;
-        $ffmpeg->extract_subtitles();
-
-        $ffmpeg->input_details['duration'] = $video_infos['duration'];
-        $ffmpeg->generateAllThumbs();
+        $videoThumbs->generateAutomaticThumbs();
 
         $fields = [
             'duration' => $video_infos['duration']

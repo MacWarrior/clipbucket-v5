@@ -267,90 +267,6 @@ class Upload
     }
 
     /**
-     * @throws Exception
-     */
-    function upload_thumb($video_file_name, $file_array, $key = 0, $files_dir = null, $type = 'c')
-    {
-        global $imgObj;
-        $file = $file_array;
-        if (!empty($file['name'][$key])) {
-            define('dir', $files_dir);
-
-            $file_num = $this->get_next_available_num($video_file_name);
-            $ext_original = getExt($file['name'][$key]);
-            $ext = 'jpg';
-            if ($imgObj->ValidateImage($file['tmp_name'][$key], $ext_original)) {
-                $thumbs_settings_28 = thumbs_res_settings_28();
-                $temp_file_path = DirPath::get('thumbs') . $files_dir . DIRECTORY_SEPARATOR . $video_file_name . '-' . $file_num . '-'.$type.'.' . $ext;
-
-                $imageDetails = getimagesize($file['tmp_name'][$key]);
-                if (is_uploaded_file($file['tmp_name'][$key])) {
-                    move_uploaded_file($file['tmp_name'][$key], $temp_file_path);
-                } else {
-                    rename($file['tmp_name'][$key], $temp_file_path);
-                }
-
-                foreach ($thumbs_settings_28 as $key => $thumbs_size) {
-                    $height_setting = $thumbs_size[1];
-                    $width_setting = $thumbs_size[0];
-                    if ($key != 'original') {
-                        if ($type != 'c') {
-                            continue;
-                        }
-                        $dimensions = implode('x', $thumbs_size);
-                    } else {
-                        $dimensions = 'original';
-                        $width_setting = $imageDetails[0];
-                        $height_setting = $imageDetails[1];
-                    }
-                    $file_name_final =  $video_file_name . '-' . $dimensions . '-' . $file_num . '-'.$type.'.' . $ext;
-                    $outputFilePath = DirPath::get('thumbs') . $files_dir . DIRECTORY_SEPARATOR . $file_name_final;
-                    $imgObj->CreateThumb($temp_file_path, $outputFilePath, $width_setting, $ext_original, $height_setting, false);
-
-                    $rs = Clipbucket_db::getInstance()->select(tbl('video'), 'videoid, default_poster, default_backdrop', 'file_name LIKE \'' . $video_file_name . '\'');
-                    if (!empty($rs)) {
-                        $videoid = $rs[0]['videoid'];
-                    } else {
-                        e(lang('technical_error'));
-                        $videoid = 0;
-                    }
-                    Clipbucket_db::getInstance()->insert(tbl('video_thumbs'), ['videoid', 'resolution', 'num', 'extension', 'version', 'type'], [$videoid, $dimensions, $file_num, $ext, Update::getInstance()->getCurrentCoreVersion(), $this->types_thumb[$type]]);
-                    if ($type != 'c' && $videoid && $rs[0]['default_' . $this->types_thumb[$type]] == null) {
-                        Video::getInstance()->setDefaultPicture($videoid, $file_name_final, $this->types_thumb[$type]);
-                    }
-                }
-
-                unlink($temp_file_path);
-                e(lang($this->types_thumb[$type] . '_upload_successfully'),'m');
-            }
-        }
-    }
-
-    /**
-     * Function used to upload video thumbs
-     *
-     * @param      $file_name
-     * @param      $file_array
-     * @param null $files_dir
-     * @param string $type
-     * @throws Exception
-     * @internal param $FILE_NAME
-     * @internal param array $_FILES name
-     */
-    function upload_thumbs($file_name, $file_array, $files_dir = null, string $type = 'c')
-    {
-        if (count($file_array['name']) > 1) {
-            for ($i = 0; $i < count($file_array['name']); $i++) {
-                $this->upload_thumb($file_name, $file_array, $i, $files_dir, $type);
-            }
-            e(lang('upload_vid_thumbs_msg'), 'm');
-        } else {
-            $file = $file_array;
-            $this->upload_thumb($file_name, $file, $key = 0, $files_dir, $type);
-        }
-    }
-
-    /**
      * FUNCTION USED TO LOAD UPLOAD FORM REQUIRED FIELDS
      * title [Text Field]
      * description [Text Area]
@@ -949,7 +865,6 @@ class Upload
      */
     function upload_user_file(string $type, $file, $uid)
     {
-        global $imgObj;
         if (empty($file['tmp_name'])) {
             e(lang('please_select_img_file'));
             return false;
@@ -982,7 +897,7 @@ class Upload
                 $file_name = $uid . '.' . $ext;
                 $file_path = DirPath::get('avatars') . $file_name;
                 if (move_uploaded_file($file['tmp_name'], $file_path)) {
-                    if (!$imgObj->ValidateImage($file_path, $ext)) {
+                    if (!VideoThumbs::ValidateImage($file_path, $ext)) {
                         e(lang('Invalid file type'));
                         @unlink($file_path);
                         return false;
@@ -1015,7 +930,7 @@ class Upload
                 $file_name = $uid . '.' . $ext;
                 $file_path = DirPath::get('backgrounds') . $file_name;
                 if (move_uploaded_file($file['tmp_name'], $file_path)) {
-                    if (!$imgObj->ValidateImage($file_path, $ext)) {
+                    if (!VideoThumbs::ValidateImage($file_path, $ext)) {
                         e(lang('Invalid file type'));
                         @unlink($file_path);
                         return false;

@@ -42,7 +42,12 @@ function get_playlist_items($list_id, $limit = -1, $order = "playlist_items.play
 function get_playlist_thumb($playlist, $size = false)
 {
     if (!$size) {
-        $size = 'big';
+        $width = 'original';
+        $height = 'original';
+    } else {
+        $sizes = VideoThumbs::getWidthHeightFromSize($size);
+        $width = $sizes['width'];
+        $height = $sizes['height'];
     }
 
     $first_item = $playlist['first_item'];
@@ -53,7 +58,7 @@ function get_playlist_thumb($playlist, $size = false)
             $first_item = json_decode($first_item, true);
         }
 
-        $thumb = get_thumb($first_item, false, $size);
+        $thumb = VideoThumbs::getDefaultThumbFile($first_item['videoid'], $width, $height);
 
         if (!str_contains($thumb, 'processing')) {
             return $thumb;

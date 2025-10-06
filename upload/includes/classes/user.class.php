@@ -3428,8 +3428,7 @@ class userquery extends CBCategory
 
         if (rename($data['filepath'], $file_path)) {
             unlink($data['filepath']);
-            $imgObj = new ResizeImage();
-            if (!$imgObj->ValidateImage($file_path,  $data['extension'])) {
+            if (!VideoThumbs::ValidateImage($file_path,  $data['extension'])) {
                 @unlink($file_path);
                 return [
                     'status' => false,
@@ -5586,7 +5585,7 @@ class userquery extends CBCategory
                 'video_title'       => $vidDetails['title'],
                 'video_description' => $vidDetails['description'],
                 'video_link'        => video_link($vidDetails),
-                'video_thumb'       => DirPath::getUrl('root') . get_thumb($vidDetails)
+                'video_thumb'       => DirPath::getUrl('root') . VideoThumbs::getDefaultThumbFile($vidDetails['videoid'])
             ];
             foreach ($subscribers as $subscriber) {
                 EmailTemplate::sendMail('video_subscription', $subscriber['userid'], $var);

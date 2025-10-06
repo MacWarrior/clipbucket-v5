@@ -242,7 +242,7 @@ class cbfeeds
                             }
                             $farr['link'] = video_link($video);
                             $farr['object_content'] = $video['description'];
-                            $farr['thumb'] = get_thumb($video);
+                            $farr['thumb'] = VideoThumbs::getDefaultThumbFile($video['videoid']);
                             $farr['links'][] = ['link' => video_link($video), 'text' => lang('watch_video')];
                             $farr['icon'] = 'video.png';
 
@@ -303,7 +303,7 @@ class cbfeeds
                             $farr['action_title'] = $userlink . ' ' . lang('commented on a post');
                             $farr['link'] = video_link($video);
                             $farr['object_content'] = $video['description'];
-                            $farr['thumb'] = get_thumb($video);
+                            $farr['thumb'] = VideoThumbs::getDefaultThumbFile($video['videoid']);
                             $farr['links'][] = ['link' => video_link($video), 'text' => lang('watch_video')];
                             $farr['icon'] = 'video.png';
                             if ($action == 'add_favorite') {

@@ -471,7 +471,6 @@ class Category
      */
     public function add_category_thumb($cid, $file): bool
     {
-        global $imgObj;
         $category = $this->getById($cid);
         if (empty($category)) {
             return false;
@@ -507,11 +506,11 @@ class Category
         move_uploaded_file($file['tmp_name'], $path);
 
         //Now checking if file is really an image
-        if (!@$imgObj->ValidateImage($path, $ext)) {
+        if (!@VideoThumbs::ValidateImage($path, $ext)) {
             e(lang('pic_upload_vali_err'));
             unlink($path);
         } else {
-            $imgObj->CreateThumb($path, $path, $this->cat_thumb_width, $ext, $this->cat_thumb_height);
+            VideoThumbs::CreateThumb($path, $path, $this->cat_thumb_width, $ext, $this->cat_thumb_height);
             Category::getInstance()->update([
                 'category_id'    => $cid,
                 'category_thumb' => $cid . '.' . $ext

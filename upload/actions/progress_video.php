@@ -101,8 +101,8 @@ foreach ($videos as $video) {
     }
     if (!empty($_POST['display_thumbs'])) {
         assign('v', $video);
-        assign('vidthumbs', get_thumb($video,TRUE,'168x105','auto'));
-        assign('vidthumbs_custom', get_thumb($video,TRUE,'168x105','custom'));
+        assign('vidthumbs', VideoThumbs::getAllThumbFiles($video['videoid'], '168','105',type: 'thumbnail', is_auto: true, return_with_num: true) ?: [VideoThumbs::getDefaultMissingThumb(return_with_num: true)]);
+        assign('vidthumbs_custom', VideoThumbs::getAllThumbFiles($video['videoid'], '168','105',type: 'thumbnail', is_auto: false, return_with_num: true));
         $data['thumbs'] = getTemplate('blocks/videos/thumb_form.html');
     }
     if (!empty($_POST['display_subtitles'])) {
