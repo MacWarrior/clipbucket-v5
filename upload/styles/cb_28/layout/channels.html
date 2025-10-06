@@ -88,10 +88,10 @@
             {if config("enable_advertisement") == "yes"}
                 <div class="box-ad ad">{AD place='ad_300x250'}</div>
             {/if}
-            {if $feature_users}
+            {if !empty($featured_users)}
                 <h2>{lang code="featured_users"}</h2>
                 <div class="clearfix sidebar-channels">
-                    {foreach $feature_users as $user}
+                    {foreach $featured_users as $user}
                         <div class="clearfix channel-item">
                             <a href="{userquery::getInstance()->profile_link($user)}" class="avatar">
                                 <img src="{userquery::getInstance()->getuserthumb($user,'m')}" width="50" height="50" class="img-circle"/>
