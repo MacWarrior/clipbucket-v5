@@ -1563,6 +1563,9 @@ function reConvertVideos($data = ''): void
                 break;
         }
         VideoConversionQueue::insert($vdetails['videoid']);
+        $logFile = DirPath::get('logs') . $vdetails['file_directory'] . DIRECTORY_SEPARATOR . $vdetails['file_name'] . '.log';
+        $log = new SLog($logFile);
+        $log->newSection('Reconvert launched from function_video.php reConvertVideos()');
         e(lang('reconversion_started_for_x', display_clean($vdetails['title'])), 'm');
 
         if (empty(errorhandler::getInstance()->get_error())) {
