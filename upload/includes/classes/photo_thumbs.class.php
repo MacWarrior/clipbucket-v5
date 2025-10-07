@@ -159,6 +159,7 @@ class PhotoThumbs
             $params = [
                 'photo_id'       => $photo_id,
                 'width'          => $width,
+                'get_photo_info' => true
             ];
             $thumb = self::getOneThumb($params);
         } else {
@@ -281,7 +282,7 @@ class PhotoThumbs
 
 
     /**
-     * @param array $video
+     * @param array $photo
      * @param $file
      * @param $file_array_key
      * @param string $type
@@ -289,65 +290,48 @@ class PhotoThumbs
      * @return void
      * @throws Exception
      */
-    public static function uploadThumb(array $video, $file, $file_array_key, string $type = 'thumbnail', bool $is_auto = false): void
+    public static function generateThumbs(array $photo): void
     {
-        $thumb_video_directory = DirPath::get('thumbs' ) . 'video' . DIRECTORY_SEPARATOR;
-        if (!empty($file['name'])) {
-            $ext_original = getExt($file['name'][$file_array_key]);
-            $ext_destination = 'jpg';
-            $num = self::getLastNum($video['photo_id'], $type, $is_auto) + 1;
-            $temp_file_path = $thumb_video_directory . $video['file_name'] . '-' . $num . '-' . $type . '.' . $ext_destination;
+        if (empty($photo['photo_id'])) {
+            return;
+        }
+        $thumb_photo_directory = DirPath::get('thumbs' ) . 'photo' . DIRECTORY_SEPARATOR;
+        if (!file_exists($thumb_photo_directory . $photo['file_directory'] . DIRECTORY_SEPARATOR . $photo['filename'] . DIRECTORY_SEPARATOR) ) {
+            mkdir($thumb_photo_directory. $photo['file_directory'] . DIRECTORY_SEPARATOR . $photo['filename'] . DIRECTORY_SEPARATOR, 0777, true);
+        }
+        $ext = $photo['ext'];
+        $original_photo_path = DirPath::get('photos') . $photo['file_directory'] . DIRECTORY_SEPARATOR . $photo['filename'] . '.' . $ext;
+        $original_sizes = getimagesize($original_photo_path);
+        if (empty($original_sizes)) {
+            return;
+        }
+        foreach (self::$resolution_setting as $resolution_key => $res) {
+            if ($resolution_key == 'original') {
+                $size_tag = 'original';
+                $res['width'] = $original_sizes[0];
+            } else {
+                $size_tag = $res['width'] ;
+            }
+            $new_thumb_path = $thumb_photo_directory . self::getThumbPath($photo['file_directory'], $photo['filename'], $size_tag, $ext, Update::getInstance()->getCurrentCoreVersion());
 
-            if (self::ValidateImage($file['tmp_name'][$file_array_key], $ext_original)) {
-                $id_video_image = Clipbucket_db::getInstance()->insert(tbl(self::$tableName), [
+            PhotoThumbs::CreateThumb($original_photo_path, $new_thumb_path, $size_tag, $ext, $original_sizes);
+            if (file_exists($new_thumb_path)) {
+                Clipbucket_db::getInstance()->insert(tbl(self::$tableNameThumb), [
                     'photo_id',
-                    'type',
-                    'num',
-                    'is_auto'
+                    'width',
+                    'extension',
+                    'version',
+                    'is_original_size'
                 ], [
-                    $video['photo_id'],
-                    $type,
-                    $num,
-                    (int)$is_auto
+                    $photo['photo_id'],
+                    $res['width'] ?? null,
+                    $ext,
+                    Update::getInstance()->getCurrentCoreVersion(),
+                    (int)($resolution_key == 'original')
                 ]);
-                foreach (self::$resolution_setting[$type] as $resolution_key => $res) {
-                    if (is_uploaded_file($file['tmp_name'][$file_array_key])) {
-                        move_uploaded_file($file['tmp_name'][$file_array_key], $temp_file_path);
-                    } else {
-                        rename($file['tmp_name'][$file_array_key], $temp_file_path);
-                    }
-                    if ($resolution_key == 'original') {
-                        $size_tag = 'original';
-                        $imageDetails = getimagesize($temp_file_path);
-                        $res['width'] = $imageDetails[0] ?? '';
-                        $res['height'] = $imageDetails[1] ?? '';
-                    } else {
-                        $size_tag = $res['width'] . 'x' . $res['height'];
-                    }
-                    $new_thumb_path = $thumb_video_directory . self::getThumbPath($video['file_directory'], $video['file_name'],  $res['width'], $ext_destination, Update::getInstance()->getCurrentCoreVersion());
-                    PhotoThumbs::CreateThumb($temp_file_path, $new_thumb_path, $res['width'], $ext_original, $res['height'], false);
-                    if (file_exists($new_thumb_path)) {
-                        Clipbucket_db::getInstance()->insert(tbl(self::$tableNameThumb), [
-                            'id_video_image',
-                            'width',
-                            'height',
-                            'extension',
-                            'version',
-                            'is_original_size'
-                        ], [
-                            $id_video_image,
-                            $res['width'] ?? null,
-                            $res['height'] ?? null,
-                            $ext_destination,
-                            Update::getInstance()->getCurrentCoreVersion(),
-                            (int)($resolution_key == 'original')
-                        ]);
-                    } else {
-                        e(lang('error_uploading_thumb'));
-                        return;
-                    }
-                }
-                unlink($temp_file_path);
+            } else {
+                e(lang('error_uploading_thumb'));
+                return;
             }
         }
     }
@@ -374,68 +358,74 @@ class PhotoThumbs
     //Resize the following image
 
     /**
-     * @param string $file
-     * @param string $des
-     * @param int $dim
-     * @param string $ext
-     * @param int|null $dim_h
-     * @param bool $aspect_ratio
+     * @param string $original_file_path
+     * @param string $destination_path
+     * @param int|string $destination_width
+     * @param string $extension
+     * @param array $original_sizes
      * @return void
+     * @throws Exception
      */
-    public static function CreateThumb(string $file, string $des, int $dim, string $ext, int $dim_h = null, bool $aspect_ratio = true)
+    public static function CreateThumb(string $original_file_path, string $destination_path, int|string $destination_width, string $extension, array $original_sizes): void
     {
-        $array = getimagesize($file);
-        $width_orig = $array[0];
-        $height_orig = $array[1];
+        $org_width = $original_sizes[0];
+        $org_height = $original_sizes[1];
 
-        if ($width_orig > $dim || $height_orig > $dim) {
-            if ($width_orig > $height_orig) {
-                $ratio = $width_orig / $dim;
-            } else {
-                if ($dim_h == null) {
-                    $ratio = $height_orig / $dim;
-                } else {
-                    $ratio = $height_orig / $dim_h;
+        if ($org_width > $destination_width && !empty($destination_width) && $destination_width != 'original') {
+            if( stristr(PHP_OS, 'WIN') ) {
+                // On Windows hosts, imagecreatefromX functions consumes lots of RAM
+                $memory_needed = PhotoThumbs::getMemoryNeededForImage($original_file_path);
+                $memory_limit = ini_get('memory_limit');
+                if ($memory_needed > getBytesFromFileSize($memory_limit)) {
+                    $msg = 'Photo generation would requiere ~' . System::get_readable_filesize($memory_needed, 0) . ' of memory, but it\'s currently limited to ' . $memory_limit;
+                    if (System::isInDev()) {
+                        e($msg);
+                    } else {
+                        e(lang('technical_error'));
+                    }
+                    DiscordLog::sendDump($msg);
+                    return;
                 }
             }
 
-            $width = $width_orig / $ratio;
-            $height = $height_orig / $ratio;
+            $ratio = $org_width / $destination_width; // We will resize it according to Width
 
-            if (!$aspect_ratio && $dim_h != '') {
-                $width = $dim;
-                $height = $dim_h;
-            }
+            $width = $org_width / $ratio;
+            $height = $org_height / $ratio;
 
-            $image_p = imagecreatetruecolor($width, $height);
+            $image_r = imagecreatetruecolor($width, $height);
 
-            switch (strtolower($ext)) {
-                case 'jpg':
+            switch ($extension) {
                 case 'jpeg':
-                    $image = imagecreatefromjpeg($file);
+                case 'jpg':
+                case 'JPG':
+                case 'JPEG':
+                    $image = imagecreatefromjpeg($original_file_path);
+                    imagecopyresampled($image_r, $image, 0, 0, 0, 0, $width, $height, $org_width, $org_height);
+                    imagejpeg($image_r, $destination_path, 90);
                     break;
 
                 case 'png':
-                    $image = imagecreatefrompng($file);
+                case 'PNG':
+                    $image = imagecreatefrompng($original_file_path);
+                    imagecopyresampled($image_r, $image, 0, 0, 0, 0, $width, $height, $org_width, $org_height);
+                    imagepng($image_r, $destination_path, 9);
                     break;
 
                 case 'gif':
-                    $image = imagecreatefromgif($file);
+                case 'GIF':
+                    $image = imagecreatefromgif($original_file_path);
+                    imagecopyresampled($image_r, $image, 0, 0, 0, 0, $width, $height, $org_width, $org_height);
+                    imagegif($image_r, $destination_path, 90);
                     break;
-
-                default:
-                    return;
             }
-
-            // Output format is always jpeg
-            imagecopyresampled($image_p, $image, 0, 0, 0, 0, $width, $height, $width_orig, $height_orig);
-            imagejpeg($image_p, $des, 90);
-
-            imagedestroy($image_p);
+            imagedestroy($image_r);
             imagedestroy($image);
         } else {
-            if (!file_exists($des)) {
-                copy($file, $des);
+            if (!file_exists($destination_path)) {
+                if (!is_dir($original_file_path)) {
+                    copy($original_file_path, $destination_path);
+                }
             }
         }
     }

@@ -1603,9 +1603,6 @@ class CBPhotos
                 $this->watermark_image($path . $filename . '_o.' . $extension, $path . $filename . '_o.' . $extension);
             }
         }
-
-        /* GETTING DETAILS OF IMAGES AND STORING THEM IN DB */
-        $this->update_image_details($p);
     }
 
 
@@ -2013,7 +2010,7 @@ class CBPhotos
             Collection::getInstance()->addCollectionItem($insert_id, $array['collection_id'], 'photos');
 
             if (!$array['server_url'] || $array['server_url'] == 'undefined') {
-                $this->generate_photos($photo);
+                PhotoThumbs::generateThumbs($photo);
             }
             if (config('enable_photo_categories') == 'yes') {
                 Category::getInstance()->saveLinks('photo', $insert_id, $array['category'] ?? [Category::getInstance()->getDefaultByType('photo')['category_id']]);
@@ -2023,6 +2020,8 @@ class CBPhotos
 
             if (empty(errorhandler::getInstance()->get_error())) {
                 e(lang('photo_is_saved_now', display_clean($photo['photo_title'])), 'm');
+            } else {
+                //TODO error
             }
 
             Clipbucket_db::getInstance()->update(tbl('users'), ['total_photos'], ['|f|total_photos+1'], " userid='" . $userid . "'");

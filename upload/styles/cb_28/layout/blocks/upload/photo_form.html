@@ -1,5 +1,5 @@
-{assign var='reqFields'  value=CBPhotos::getInstance()->load_required_forms($photoArray)}
-{assign var='otherFields'  value=CBPhotos::getInstance()->load_other_forms($photoArray)}
+{assign var='reqFields'  value=CBPhotos::getInstance()->load_required_forms()}
+{assign var='otherFields'  value=CBPhotos::getInstance()->load_other_forms()}
 <div id="uploadFormContainer0" class="uploadFormContainer">
     <form action="#" method="post" id="Form{$uniqueID}"> 
         <div class="row">
@@ -30,7 +30,7 @@
                         <br/>
                         <p>{lang code='loading'}</p>
                     </div>
-                     <img src="{PhotoThumbs::getThumbFile($photoArray.photo_id, 550)}" class="no_select" style="max-width:100%;" />
+                     <img src="" class="no_select" style="max-width:100%;" />
                 </div>
                 <div class="photoOptionalSettings" >
                     <div>
