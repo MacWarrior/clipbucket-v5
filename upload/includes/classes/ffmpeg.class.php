@@ -244,6 +244,29 @@ class FFMpeg
         }
     }
 
+    static function unlockAll()
+    {
+        $max_conversion = config('max_conversion');
+        for ($i = 0; $i < $max_conversion; $i++) {
+            $conv_file = DirPath::get('temp') . 'conv_lock' . $i . '.loc';
+            if (file_exists($conv_file)) {
+                unlink($conv_file);
+            }
+        }
+    }
+
+    static function isThereAnyConversionLocks()
+    {
+        $max_conversion = config('max_conversion');
+        for ($i = 0; $i < $max_conversion; $i++) {
+            $conv_file = DirPath::get('temp') . 'conv_lock' . $i . '.loc';
+            if (file_exists($conv_file)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     /**
      * @throws Exception
      */
@@ -350,7 +373,7 @@ class FFMpeg
         }
 
         $this->log->writeLine('Conversion_status : '.$conversion_status);
-        setVideoStatus($this->file_name, $video_status, false, true);
+        setVideoStatus($this->file_name, $video_status, true);
 
         $this->unLock();
     }
@@ -1249,28 +1272,13 @@ class FFMpeg
         return '0x' . strtoupper($hex_color);
     }
 
-    /**
-     * @throws Exception
-     */
-    public static function launchResume(string $filename)
-    {
-        return self::launchConversion($filename, '', '', 'resume');
-    }
 
     /**
      * @throws Exception
      */
-    public static function launchReconvert(string $filename)
+    public static function launchConversion(string $filename, string $audio_track = '')
     {
-        return self::launchConversion($filename, '', 'reconvert', '');
-    }
-
-    /**
-     * @throws Exception
-     */
-    public static function launchConversion(string $filename, string $audio_track = '', string $reconvert = '', string $resume = '')
-    {
-        $video = Video::getInstance()->getOne(['file_name' => $filename]);
+        $video = Video::getInstance()->getOne(['file_name' => $filename, 'disable_generic_constraints'=>true]);
         if( empty($video) ){
             e(lang('class_vdo_del_err'));
             return;
@@ -1279,8 +1287,6 @@ class FFMpeg
         $cmd = System::get_binaries('php') . ' -q ' . DirPath::get('actions') . 'video_convert.php ' . $filename;
 
         $cmd .= !empty($audio_track) ? ' ' . $audio_track : ' \'\'';
-        $cmd .= !empty($reconvert) ? ' ' . $reconvert : ' \'\'';
-        $cmd .= !empty($resume) ? ' ' . $resume : ' \'\'';
 
         if (stristr(PHP_OS, 'WIN')) {
             $complement = '';
