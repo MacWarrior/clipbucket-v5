@@ -8,11 +8,11 @@ class PhotoThumbs
 
 
     private static array $resolution_setting = [
-        'original' => ['size_tag' => 'original'],
-        'large'    => ['width'  => 900],
-        'thumb'    => ['width'  => 150],
-        'small'    => ['width'  => 300],
-        'medium'   => ['width'  => 550]
+        'original' => ['size_tag' => 'original', 'should_watermark' => true],
+        'large'    => ['width' => 900, 'height' => 562, 'should_watermark' => true],
+        'thumb'    => ['width' => 150, 'height' => 94, 'should_watermark' => false],
+        'small'    => ['width' => 300, 'height' => 188, 'should_watermark' => false],
+        'medium'   => ['width' => 550, 'height' => 344, 'should_watermark' => false]
         //150 300 550 (900)
     ];
 
@@ -134,7 +134,7 @@ class PhotoThumbs
      * @return array|string
      * @throws Exception
      */
-    public static function getThumbFile(int $photo_id, int|string $width = 150, string $return_type = 'url'): array|string
+    public static function  getThumbFile(int $photo_id, int|string $width = 150, string $return_type = 'url'): array|string
     {
         if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.2', '999')) {
             $thumb_photo_directory_path = DirPath::get('thumbs') . 'photo' . DIRECTORY_SEPARATOR;
@@ -290,14 +290,14 @@ class PhotoThumbs
      * @return void
      * @throws Exception
      */
-    public static function generateThumbs(array $photo): void
+    public static function generateThumbs(array $photo, $ignore = false): void
     {
         if (empty($photo['photo_id'])) {
             return;
         }
         $thumb_photo_directory = DirPath::get('thumbs' ) . 'photo' . DIRECTORY_SEPARATOR;
         if (!file_exists($thumb_photo_directory . $photo['file_directory'] . DIRECTORY_SEPARATOR . $photo['filename'] . DIRECTORY_SEPARATOR) ) {
-            mkdir($thumb_photo_directory. $photo['file_directory'] . DIRECTORY_SEPARATOR . $photo['filename'] . DIRECTORY_SEPARATOR, 0777, true);
+            mkdir($thumb_photo_directory. $photo['file_directory'] . DIRECTORY_SEPARATOR . $photo['filename'] . DIRECTORY_SEPARATOR, 0755, true);
         }
         $ext = $photo['ext'];
         $original_photo_path = DirPath::get('photos') . $photo['file_directory'] . DIRECTORY_SEPARATOR . $photo['filename'] . '.' . $ext;
@@ -307,15 +307,21 @@ class PhotoThumbs
         }
         foreach (self::$resolution_setting as $resolution_key => $res) {
             if ($resolution_key == 'original') {
-                $size_tag = 'original';
+                $width = 'original';
+                $height = 0;
                 $res['width'] = $original_sizes[0];
             } else {
-                $size_tag = $res['width'] ;
+                $width = $res['width'] ;
+                $height = $res['height'] ;
             }
-            $new_thumb_path = $thumb_photo_directory . self::getThumbPath($photo['file_directory'], $photo['filename'], $size_tag, $ext, Update::getInstance()->getCurrentCoreVersion());
+            $new_thumb_path = $thumb_photo_directory . self::getThumbPath($photo['file_directory'], $photo['filename'], $width, $ext, Update::getInstance()->getCurrentCoreVersion());
 
-            PhotoThumbs::CreateThumb($original_photo_path, $new_thumb_path, $size_tag, $ext, $original_sizes);
+            PhotoThumbs::CreateThumb($original_photo_path, $new_thumb_path, $width, $height, $ext, $original_sizes);
             if (file_exists($new_thumb_path)) {
+                //watermark
+                if ($res['should_watermark'] && config('watermark_photo')) {
+                    self::watermark_image($new_thumb_path, $new_thumb_path);
+                }
                 Clipbucket_db::getInstance()->insert(tbl(self::$tableNameThumb), [
                     'photo_id',
                     'width',
@@ -328,7 +334,7 @@ class PhotoThumbs
                     $ext,
                     Update::getInstance()->getCurrentCoreVersion(),
                     (int)($resolution_key == 'original')
-                ]);
+                ], ignore: $ignore);
             } else {
                 e(lang('error_uploading_thumb'));
                 return;
@@ -361,12 +367,13 @@ class PhotoThumbs
      * @param string $original_file_path
      * @param string $destination_path
      * @param int|string $destination_width
+     * @param int $destination_height
      * @param string $extension
      * @param array $original_sizes
      * @return void
      * @throws Exception
      */
-    public static function CreateThumb(string $original_file_path, string $destination_path, int|string $destination_width, string $extension, array $original_sizes): void
+    public static function CreateThumb(string $original_file_path, string $destination_path, int|string $destination_width, int $destination_height, string $extension, array $original_sizes): void
     {
         $org_width = $original_sizes[0];
         $org_height = $original_sizes[1];
@@ -393,6 +400,9 @@ class PhotoThumbs
             $width = $org_width / $ratio;
             $height = $org_height / $ratio;
 
+            if (config('keep_ratio_photo') == 'yes') {
+                $height = $destination_height;
+            }
             $image_r = imagecreatetruecolor($width, $height);
 
             switch ($extension) {
@@ -472,32 +482,6 @@ class PhotoThumbs
         Clipbucket_db::getInstance()->delete(tbl(self::$tableNameThumb), ['id_photo_thumb'],[$thumb['id_photo_thumb']]);
     }
 
-    /**
-     * @param int $id_video_thumb
-     * @return void
-     * @throws Exception
-     */
-    public static function deleteVideoThumbById(int $id_video_thumb)
-    {
-        $thumb = self::getOneThumb(['id_video_thumb' => $id_video_thumb,'get_video_directory'=>true, 'get_video_file_name'=>true]);
-        self::deletePhotoThumb($thumb);
-    }
-
-    /**
-     * @param $size
-     * @return array|string[]
-     */
-    public static function getWidthHeightFromSize($size)
-    {
-        $preg_matches = [];
-        preg_match_all('/(\d+)x(\d+)/', $size, $preg_matches);
-        $width = isset($preg_matches[1]) ? $preg_matches[1][0] : 'original';
-        $height = isset($preg_matches[2]) ? $preg_matches[2][0] : 'original';
-        return [
-            'width'  => $width,
-            'height' => $height
-        ];
-    }
 
     /**
      * @param int $photo_id
@@ -511,9 +495,17 @@ class PhotoThumbs
         $photo = Photo::getInstance()->getOne(['photo_id' => $photo_id]);
         $src = self::getThumbFile($photo_id, $width);
 
-        $attrs = ['src' => str_replace(DIRECTORY_SEPARATOR, '/', $src)];
-
-        $attrs['id'] = (($params_html['id']) ? $params_html['id'] . '_' : 'photo_') . $photo_id;
+        $anchor_p = [
+            'place' => 'photo_thumb',
+            'data'  => $photo
+        ];
+        $attrs = [
+            'src'   => str_replace(DIRECTORY_SEPARATOR, '/', $src),
+            'id'    => (($params_html['id']) ? $params_html['id'] . '_' : 'photo_') . $photo_id,
+            'html'  => $photo['photo_title'],
+            'alt'   => TITLE . ' - ' . $photo['photo_title'],
+            'extra' => ANCHOR($anchor_p)
+        ];
 
         if (!empty($params_html['class'])) {
             $attrs['class'] = $params_html['class'];
@@ -523,19 +515,10 @@ class PhotoThumbs
             $attrs['align'] = $params_html['align'];
         }
 
-        $attrs['title'] = $photo['photo_title'];
 
         if (isset($params_html['title']) and $params_html['title'] == '') {
             unset($attrs['title']);
         }
-
-        $attrs['alt'] = TITLE . ' - ' . $photo['photo_title'];
-
-        $anchor_p = [
-            'place' => 'photo_thumb',
-            'data'  => $photo
-        ];
-        $params_html['extra'] = ANCHOR($anchor_p);
 
         if (!empty($params_html['style'])) {
             $attrs['style'] = $params_html['style'];
@@ -546,5 +529,176 @@ class PhotoThumbs
         }
 
         return cb_create_html_tag('img', true, $attrs);
+    }
+
+    /**
+     * Used to get watermark file
+     */
+    public static function watermark_file()
+    {
+        if (file_exists(DirPath::get('images') . 'photo_watermark.png')) {
+            return DirPath::getUrl('images') . 'photo_watermark.png';
+        }
+        return false;
+    }
+
+    /**
+     * Fetches watermark default position from database
+     * @return bool|string : { position of watermark }
+     */
+    public static function get_watermark_position()
+    {
+        return config('watermark_placement');
+    }
+
+    /**
+     * Used to set watermark position
+     *
+     * @param $image_to_mark
+     * @param $watermark
+     *
+     * @return array
+     */
+    public static function position_watermark($image_to_mark, $watermark): array
+    {
+        $watermark_pos = self::get_watermark_position();
+        if (empty($watermark_pos)) {
+            $info = ['right', 'top'];
+        } else {
+            $info = explode(":", $watermark_pos);
+        }
+
+        $x = $info[0];
+        $y = $info[1];
+        [$image_to_mark_width, $image_to_mark_height] = getimagesize($image_to_mark);
+        [$watermark_width, $watermark_height] = getimagesize($watermark);
+        $padding = 10;
+
+        switch ($x) {
+            case 'center':
+                $finalxPadding = $image_to_mark_width / 2 - $watermark_width / 2;
+                break;
+
+            case 'left':
+            default:
+                $finalxPadding = $padding;
+                break;
+
+            case 'right':
+                $finalxPadding = $image_to_mark_width - $watermark_width - $padding;
+                break;
+        }
+
+        switch ($y) {
+            case 'top':
+            default:
+                $finalyPadding = $padding;
+                break;
+
+            case 'center':
+                $finalyPadding = $image_to_mark_height / 2 - $watermark_height / 2;
+                break;
+
+            case 'bottom':
+                $finalyPadding = $image_to_mark_height - $watermark_height - $padding;
+                break;
+        }
+
+        return [$finalxPadding, $finalyPadding];
+    }
+
+    /**
+     * Used to watermark image
+     *
+     * @param $input
+     * @param $output
+     *
+     * @return bool|void
+     */
+    public static function watermark_image($input, $output)
+    {
+        $watermark_file = self::watermark_file();
+        if (!$watermark_file) {
+            return false;
+        }
+
+        [$Swidth, $Sheight, $Stype] = getimagesize($input);
+        $watermark_image = imagecreatefrompng($watermark_file);
+        $watermark_width = imagesx($watermark_image);
+        $watermark_height = imagesy($watermark_image);
+        $paddings = self::position_watermark($input, $watermark_file);
+
+        switch ($Stype) {
+            case 1: //GIF
+                $source_image = imagecreatefromgif($input);
+                imagecopy($source_image, $watermark_image, $paddings[0], $paddings[1], 0, 0, $watermark_width, $watermark_height);
+                imagejpeg($source_image, $output, 90);
+                break;
+
+            case 2: //JPEG
+                $source_image = imagecreatefromjpeg($input);
+                imagecopy($source_image, $watermark_image, $paddings[0], $paddings[1], 0, 0, $watermark_width, $watermark_height);
+                imagejpeg($source_image, $output, 90);
+                break;
+
+            case 3: //PNG
+                $source_image = imagecreatefrompng($input);
+                imagecopy($source_image, $watermark_image, $paddings[0], $paddings[1], 0, 0, $watermark_width, $watermark_height);
+                imagepng($source_image, $input, 9);
+                break;
+        }
+    }
+
+    /**
+     * Used to crop the image
+     * Image will be crop to dead-center
+     *
+     * @param $input
+     * @param $output
+     * @param $ext
+     * @param $width
+     * @param $height
+     *
+     * @return bool|void
+     */
+    public static function crop_image($input, $output, $ext, $width, $height)
+    {
+        $info = getimagesize($input);
+        $Swidth = $info[0];
+        $Sheight = $info[1];
+
+        $canvas = imagecreatetruecolor($width, $height);
+        $left_padding = $Swidth / 2 - $width / 2;
+        $top_padding = $Sheight / 2 - $height / 2;
+
+        switch ($ext) {
+            case 'jpeg':
+            case 'jpg':
+            case 'JPG':
+            case 'JPEG':
+                $image = imagecreatefromjpeg($input);
+                imagecopy($canvas, $image, 0, 0, $left_padding, $top_padding, $width, $height);
+                imagejpeg($canvas, $output, 90);
+                break;
+
+            case 'png':
+            case 'PNG':
+                $image = imagecreatefrompng($input);
+                imagecopy($canvas, $image, 0, 0, $left_padding, $top_padding, $width, $height);
+                imagepng($canvas, $output, 9);
+                break;
+
+            case 'gif':
+            case 'GIF':
+                $image = imagecreatefromgif($input);
+                imagecopy($canvas, $image, 0, 0, $left_padding, $top_padding, $width, $height);
+                imagejpeg($canvas, $output, 90);
+                break;
+
+            default:
+                return false;
+        }
+        imagedestroy($image);
+        imagedestroy($canvas);
     }
 }

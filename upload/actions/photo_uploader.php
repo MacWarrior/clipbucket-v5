@@ -2,6 +2,10 @@
 const THIS_PAGE = 'photo_uploader';
 include('../includes/config.inc.php');
 
+if (!Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.2', '999')) {
+    upload_error('Sorry, you cannot upload new photos until the application has been fully updated by an administrator');
+    die();
+}
 if( !User::getInstance()->hasPermission('allow_photo_upload') ){
     upload_error(lang('insufficient_privileges_loggin'));
     die();

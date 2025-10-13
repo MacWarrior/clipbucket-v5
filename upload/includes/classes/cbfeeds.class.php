@@ -205,11 +205,7 @@ class cbfeeds
                             $this->deleteFeed($uid, $feed['file']);
                             $remove_feed = true;
                         } else {
-                            $objectArr['details'] = $photo;
-                            $objectArr['size'] = 't';
-                            $objectArr['output'] = 'non_html';
-                            $objectArr['alt'] = $photo['photo_title'];
-                            $farr['thumb'] = CBPhotos::getInstance()->getFileSmarty($objectArr);
+                            $farr['thumb'] = PhotoThumbs::getThumbFile($photo['photo_id']);
                             $farr['link'] = CBPhotos::getInstance()->photo_links($photo, 'view_item');
 
                             //Content Title

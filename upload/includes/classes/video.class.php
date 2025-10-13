@@ -64,7 +64,6 @@ class Video
             ,'video_files'
             ,'file_server_path'
             ,'video_version'
-            ,'thumbs_version'
             ,'re_conv_status'
             ,'subscription_email'
         ];
@@ -94,6 +93,7 @@ class Video
         }
         if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.2', '999')) {
             $this->fields[] = 'default_thumbnail';
+            $this->fields[] = 'thumbs_version';
         }
 
         $this->fields_categories = [
@@ -769,17 +769,7 @@ class Video
      */
     public function resetDefaultPicture($video_id, string $type = 'auto'): void
     {
-        $allowed_array = [
-            'auto',
-            'custom',
-            'poster',
-            'backdrop'
-        ];
-        $sub_request = /** @lang MySQL */
-            'IFNULL (SELECT MIN(CASE WHEN num = \'\' THEN 0 ELSE CAST(num AS INTEGER) END) 
-                     FROM ' . tbl('video_thumbs') . ' 
-                     WHERE videoid = ' . mysql_clean($video_id) . ' 
-                         AND type = \'' . $type . '\'' . ', 0)';
+
         if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.2', '999')) {
             $allowed_array = [
                 'thumbnail',
@@ -792,6 +782,18 @@ class Video
                      WHERE videoid = ' . mysql_clean($video_id) . ' 
                          AND type = \'' . $type . '\' 
                      GROUP BY videoid, type HAVING MIN(num)';
+        } else {
+            $allowed_array = [
+                'auto',
+                'custom',
+                'poster',
+                'backdrop'
+            ];
+            $sub_request = /** @lang MySQL */
+                'IFNULL (SELECT MIN(CASE WHEN num = \'\' THEN 0 ELSE CAST(num AS INTEGER) END) 
+                     FROM ' . tbl('video_thumbs') . ' 
+                     WHERE videoid = ' . mysql_clean($video_id) . ' 
+                         AND type = \'' . $type . '\'' . ', 0)';
         }
         if (!in_array($type, $allowed_array)) {
             if (System::isInDev()) {
@@ -1480,9 +1482,13 @@ class CBvideo extends CBCategory
             , 'comment_voting', 'comments_count', 'last_commented', 'featured', 'featured_date', 'allow_rating'
             , 'active', 'favourite_count', 'playlist_count', 'views', 'last_viewed', 'date_added', 'flagged', 'duration', 'status'
             , 'default_thumb', 'embed_code', 'downloads', 'uploader_ip'
-            , 'video_files', 'file_server_path', 'video_version', 'thumbs_version'
+            , 'video_files', 'file_server_path', 'video_version'
             , 're_conv_status', 'subscription_email'
         ];
+
+        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.2', '999')) {
+            $basic_fields[] = 'thumbs_version';
+        }
 
         if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.3.0', '1')) {
             $basic_fields[] = 'is_castable';

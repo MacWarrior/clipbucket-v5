@@ -903,8 +903,8 @@ class Upload
                         return false;
                     }
                     $small_size = DirPath::get('avatars') . $uid . '-small.' . $ext;
-                    CBPhotos::getInstance()->CreateThumb($file_path, $file_path, $ext, AVATAR_SIZE, AVATAR_SIZE);
-                    CBPhotos::getInstance()->CreateThumb($file_path, $small_size, $ext, AVATAR_SMALL_SIZE, AVATAR_SMALL_SIZE);
+                    CBPhotos::getInstance()->createImage($file_path, $file_path, $ext, AVATAR_SIZE, AVATAR_SIZE);
+                    CBPhotos::getInstance()->createImage($file_path, $small_size, $ext, AVATAR_SMALL_SIZE, AVATAR_SMALL_SIZE);
                     return $file_name;
                 }
                 e(lang('class_error_occured'));

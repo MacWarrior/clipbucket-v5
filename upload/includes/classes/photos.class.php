@@ -529,42 +529,27 @@ class Photo
         return $this->isCurrentUserRestricted($photo_id);
     }
 
-    /**
-     * @param $id
-     * @return null
-     * @throws Exception
-     */
-    public static function generatePhoto($id)
-    {
-        CBPhotos::getInstance()->generate_photos($id);
-    }
 
     /**
      * @param string|int $id
-     * @param string $file_name
-     * @param string $file_directory
-     * @param string $extension
      * @return int
-     * @throws Exception
-     * TODO corriger la fonction ici elle ne calcul que le poids des petites images
      */
-    public function getUsage($id, string $file_name, string $file_directory, string $extension, string $photo_key): int
+    public function getUsage($id, string $file_name, string $file_directory, string $extension): int
     {
         $total = 0;
-        $details = [
-            'photo_id' => $id,
-            'photo_key' => $photo_key,
-            'file_directory'=>$file_directory,
-            'filename'=>$file_name,
-            'ext'=>$extension
-        ];
-        $photos_thumbs = PhotoThumbs::getAllThumbs(['photo_id' => $id]);
-        if (!empty($photos_thumbs)) {
-            foreach ($photos_thumbs as $photos_thumb) {
-                $file_dir = PhotoThumbs::getThumbPath($photos_thumb['file_directory'], $photos_thumb['filename'], $photos_thumb['width'], $photos_thumb['ext'], $photos_thumb['version']);
-                if (file_exists($file_dir)) {
-                    $total += filesize($file_dir);
+        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.2', '999')) {
+            $photos_thumbs = PhotoThumbs::getAllThumbs(['photo_id' => $id]);
+            if (!empty($photos_thumbs)) {
+                foreach ($photos_thumbs as $photos_thumb) {
+                    $file_dir = PhotoThumbs::getThumbPath($photos_thumb['file_directory'], $photos_thumb['filename'], $photos_thumb['width'], $photos_thumb['ext'], $photos_thumb['version']);
+                    if (file_exists($file_dir)) {
+                        $total += filesize($file_dir);
+                    }
                 }
+            }
+            $photo_file = DirPath::get('photos') . $file_directory . DIRECTORY_SEPARATOR . $file_name . '.' . $extension;
+            if (file_exists($photo_file)) {
+                $total += filesize($photo_file);
             }
         }
         return $total;
@@ -638,7 +623,6 @@ class CBPhotos
             self::$instance->mid_height = config('photo_med_height');
             self::$instance->lar_width = config('photo_lar_width');
             self::$instance->cropping = config('photo_crop');
-            self::$instance->position = config('watermark_placement');
         }
         return self::$instance;
     }
@@ -1439,7 +1423,6 @@ class CBPhotos
      *
      * @param $id
      * @throws Exception
-     * TODO supprimer seulement l'image ici et les thumbs dans la classe PhotoThumbs
      */
     function delete_photo_files($id): void
     {
@@ -1568,43 +1551,6 @@ class CBPhotos
         imagedestroy($canvas);
     }
 
-    /**
-     * Used to resize and watermark image
-     *
-     * @param $array
-     * @throws Exception
-     */
-    function generate_photos($array): void
-    {
-        $path = DirPath::get('photos');
-
-        if (!is_array($array)) {
-            $p = $this->get_photo($array);
-        } else {
-            $p = $array;
-        }
-
-        $path .= get_photo_date_folder($p) . DIRECTORY_SEPARATOR;
-
-        $filename = $p['filename'];
-        $extension = $p['ext'];
-
-        $this->createThumb($path . $filename . '.' . $extension, $path . $filename . '_o.' . $extension, $extension);
-        $this->createThumb($path . $filename . '.' . $extension, $path . $filename . '_t.' . $extension, $extension, $this->thumb_width, $this->thumb_height);
-
-        if (empty(errorhandler::getInstance()->get_error())) {
-            $this->createThumb($path . $filename . '.' . $extension, $path . $filename . '_m.' . $extension, $extension, $this->mid_width, $this->mid_height);
-            $this->createThumb($path . $filename . '.' . $extension, $path . $filename . '_l.' . $extension, $extension, $this->lar_width);
-
-            $should_watermark = config('watermark_photo');
-
-            if (!empty($should_watermark) && $should_watermark == 1) {
-                $this->watermark_image($path . $filename . '_l.' . $extension, $path . $filename . '_l.' . $extension);
-                $this->watermark_image($path . $filename . '_o.' . $extension, $path . $filename . '_o.' . $extension);
-            }
-        }
-    }
-
 
     /**
      * Creating resized photo
@@ -1617,7 +1563,7 @@ class CBPhotos
      * @param bool $force_copy
      * @throws Exception
      */
-    function createThumb($from, $to, $ext, $d_width = null, $d_height = null, $force_copy = false): void
+    function createImage($from, $to, $ext, $d_width = null, $d_height = null, $force_copy = false): void
     {
         $file = $from;
         $info = getimagesize($file);
@@ -1697,123 +1643,7 @@ class CBPhotos
         }
     }
 
-    /**
-     * Used to get watermark file
-     */
-    function watermark_file()
-    {
-        if (file_exists(DirPath::get('images') . 'photo_watermark.png')) {
-            return DirPath::getUrl('images') . 'photo_watermark.png';
-        }
-        return false;
-    }
 
-    /**
-     * Fetches watermark default position from database
-     * @return bool|string : { position of watermark }
-     */
-    function get_watermark_position()
-    {
-        return config('watermark_placement');
-    }
-
-    /**
-     * Used to set watermark position
-     *
-     * @param $file
-     * @param $watermark
-     *
-     * @return array
-     */
-    function position_watermark($file, $watermark): array
-    {
-        $watermark_pos = $this->get_watermark_position();
-        if (empty($watermark_pos)) {
-            $info = ['right', 'top'];
-        } else {
-            $info = explode(":", $watermark_pos);
-        }
-
-        $x = $info[0];
-        $y = $info[1];
-        [$w, $h] = getimagesize($file);
-        [$ww, $wh] = getimagesize($watermark);
-        $padding = $this->padding;
-
-        switch ($x) {
-            case 'center':
-                $finalxPadding = $w / 2 - $ww / 2;
-                break;
-
-            case 'left':
-            default:
-                $finalxPadding = $padding;
-                break;
-
-            case 'right':
-                $finalxPadding = $w - $ww - $padding;
-                break;
-        }
-
-        switch ($y) {
-            case 'top':
-            default:
-                $finalyPadding = $padding;
-                break;
-
-            case 'center':
-                $finalyPadding = $h / 2 - $wh / 2;
-                break;
-
-            case 'bottom':
-                $finalyPadding = $h - $wh - $padding;
-                break;
-        }
-
-        return [$finalxPadding, $finalyPadding];
-    }
-
-    /**
-     * Used to watermark image
-     *
-     * @param $input
-     * @param $output
-     *
-     * @return bool|void
-     */
-    function watermark_image($input, $output)
-    {
-        $watermark_file = $this->watermark_file();
-        if (!$watermark_file) {
-            return false;
-        }
-
-        [$Swidth, $Sheight, $Stype] = getimagesize($input);
-        $wImage = imagecreatefrompng($watermark_file);
-        $ww = imagesx($wImage);
-        $wh = imagesy($wImage);
-        $paddings = $this->position_watermark($input, $watermark_file);
-
-        switch ($Stype) {
-            case 1: //GIF
-                $sImage = imagecreatefromgif($input);
-                imagecopy($sImage, $wImage, $paddings[0], $paddings[1], 0, 0, $ww, $wh);
-                imagejpeg($sImage, $output, 90);
-                break;
-
-            case 2: //JPEG
-                $sImage = imagecreatefromjpeg($input);
-                imagecopy($sImage, $wImage, $paddings[0], $paddings[1], 0, 0, $ww, $wh);
-                imagejpeg($sImage, $output, 90);
-                break;
-
-            case 3: //PNG
-                $sImage = imagecreatefrompng($input);
-                imagecopy($sImage, $wImage, $paddings[0], $paddings[1], 0, 0, $ww, $wh);
-                imagepng($sImage, $input, 9);
-                break;
-        }
-    }
 
     /**
      * Load Required Form
@@ -2056,7 +1886,7 @@ class CBPhotos
                 if (move_uploaded_file($file['tmp_name'], DirPath::get('images') . 'photo_watermark.png')) {
                     $wFile = DirPath::get('images') . 'photo_watermark.png';
                     if ($width > $this->max_watermark_width) {
-                        $this->createThumb($wFile, $wFile, 'png', $this->max_watermark_width);
+                        $this->createImage($wFile, $wFile, 'png', $this->max_watermark_width);
                     }
                 }
                 e(lang('watermark_updated'), 'm');
@@ -2231,19 +2061,6 @@ class CBPhotos
         return time() . RandomString(6);
     }
 
-    /**
-     * Construct extensions for SWF
-     */
-    function extensions(): string
-    {
-        $exts = $this->exts;
-        $list = '';
-        foreach ($exts as $ext) {
-            $list .= "*." . $ext . ";";
-        }
-        return $list;
-
-    }
 
     /**
      * Function used to validate form fields
@@ -2419,199 +2236,6 @@ class CBPhotos
     }
 
 
-    /**
-     * This will become a Smarty function.
-     * I am writting this to eliminate the possiblitles
-     * of distort pictures
-     *
-     * @param $p
-     *
-     * @return string|array
-     * @throws Exception
-     */
-    function getFileSmarty($p)
-    {
-        $details = $p['details'];
-        $output = $p['output'];
-        if (empty($details)) {
-            return $this->default_thumb($size, $output);
-        } else {
-            //Calling Custom Functions
-            if (!empty(ClipBucket::getInstance()->custom_get_photo_funcs)) {
-                foreach (ClipBucket::getInstance()->custom_get_photo_funcs as $funcs) {
-                    if (function_exists($funcs)) {
-                        $func_returned = $funcs($p);
-                        if ($func_returned) {
-                            return $func_returned;
-                        }
-                    }
-                }
-            }
-
-            if (($p['size'] != 't' && $p['size'] != 'm' && $p['size'] != 'l' && $p['size'] != 'o') || empty($p['size'])) {
-                $p['size'] = 't';
-            }
-
-            if ($p['with_path'] === false) {
-                $p['with_path'] = false;
-            } else {
-                $p['with_path'] = true;
-            }
-            $with_path = $p['with_path'];
-            $with_orig = $p['with_orig'] ? $p['with_orig'] : false;
-
-            if (!is_array($details)) {
-                $photo = $this->get_photo($details);
-            } else {
-                $photo = $details;
-            }
-
-            if (empty($photo['photo_id']) || empty($photo['photo_key'])) {
-                return $this->default_thumb($size, $output);
-            }
-
-            if (!empty($photo['filename']) && !empty($photo['ext'])) {
-                $files = glob(DirPath::get('photos') . $photo['filename'] . '*.' . $photo['ext']);
-                if (!empty($files) && is_array($files)) {
-                    $thumbs = [];
-                    foreach ($files as $file) {
-                        $file_parts = explode('/', $file);
-                        $thumb_name = $file_parts[count($file_parts) - 1];
-
-                        $type = $this->get_image_type($thumb_name);
-                        if ($with_orig) {
-                            if ($with_path) {
-                                $thumbs[] = DirPath::getUrl('photos') . $thumb_name;
-                            } else {
-                                $thumbs[] = $thumb_name;
-                            }
-                        } elseif (!empty($type)) {
-                            if ($with_path) {
-                                $thumbs[] = DirPath::getUrl('photos') . $thumb_name;
-                            } else {
-                                $thumbs[] = $thumb_name;
-                            }
-                        }
-                    }
-
-                    if (empty($p['output']) || $p['output'] == 'non_html') {
-                        if ($p['assign'] && $p['multi']) {
-                            assign($p['assign'], $thumbs);
-                        } else {
-                            if (!$p['assign'] && $p['multi']) {
-                                return $thumbs;
-                            } else {
-                                $size = '_' . $p['size'];
-                                $return_thumb = array_find_cb($photo['filename'] . $size, $thumbs);
-
-                                if (empty($return_thumb)) {
-                                    $this->default_thumb($size, $output);
-                                } else {
-                                    if ($p['assign'] != null) {
-                                        assign($p['assign'], $return_thumb);
-                                    } else {
-                                        return $return_thumb;
-                                    }
-                                }
-                            }
-                        }
-                    }
-
-                    if ($p['output'] == 'html') {
-                        $size = '_' . $p['size'];
-
-                        $src = array_find_cb($photo['filename'] . $size, $thumbs);
-                        DiscordLog::sendDump($src);
-                        if (empty($src)) {
-                            $src = $this->default_thumb($size);
-                        }
-
-                        if (!empty($js)) {
-                            $imgDetails = $js->json_decode($photo['photo_details'], true);
-                        } else {
-                            $imgDetails = json_decode($photo['photo_details'], true);
-                        }
-
-                        if (empty($imgDetails) || empty($imgDetails[$p['size']])) {
-                            $dem = getimagesize(str_replace(DirPath::getUrl('photos'), DirPath::get('photos'), $src));
-                            $width = $dem[0];
-                            $height = $dem[1];
-                            /* UPDATING IMAGE DETAILS */
-                            $this->update_image_details($details);
-                        } else {
-                            $width = $imgDetails[$p['size']]['width'];
-                            $height = $imgDetails[$p['size']]['height'];
-                        }
-
-                        $img = '<img src=\'' . $src . '\'';
-
-                        if ($p['id']) {
-                            $img .= ' id=\'' . display_clean($p['id']) . '_' . $photo['photo_id'] . '\'';
-                        }
-
-                        if ($p['class']) {
-                            $img .= ' class=\'' . display_clean($p['class']) . '\'';
-                        }
-
-                        if ($p['align']) {
-                            $img .= ' align=\'' . $p['align'] . '\'';
-                        }
-                        if (($p['width'] && is_numeric($p['width'])) && ($p['height'] && is_numeric($p['height']))) {
-                            $height = $p['height'];
-                            $width = $p['width'];
-                        } elseif ($p['width'] && is_numeric($p['width'])) {
-                            $height = round($p['width'] / $width * $height);
-                            $width = $p['width'];
-                        } elseif ($p['height'] && is_numeric($p['height'])) {
-                            $width = round($p['height'] * $width / $height);
-                            $height = $p['height'];
-                        }
-
-                        $img .= ' width=\'' . $width . '\'';
-                        $img .= ' height=\'' . $height . '\'';
-
-                        if ($p['title']) {
-                            $img .= " title='" . display_clean($p['title']) . '\'';
-                        } else {
-                            $img .= " title='" . display_clean($photo['photo_title']) . '\'';
-                        }
-
-                        if ($p['alt']) {
-                            $img .= ' alt=\'' . display_clean($p['alt']) . '\'';
-                        } else {
-                            $img .= ' alt=\'' . display_clean($photo['photo_title']) . '\'';
-                        }
-
-                        if ($p['anchor']) {
-                            $anchor_p = [
-                                'place'  => $p['anchor']
-                                , 'data' => $photo
-                            ];
-                            ANCHOR($anchor_p);
-                        }
-
-                        if ($p['style']) {
-                            $img .= ' style=\'' . $p['style'] . '\'';
-                        }
-
-                        if ($p['extra']) {
-                            $img .= ($p['extra']);
-                        }
-
-                        $img .= ' />';
-
-                        if ($p['assign']) {
-                            assign($p['assign'], $img);
-                        } else {
-                            return $img;
-                        }
-                    }
-                } else {
-                    return $this->default_thumb($size, $output);
-                }
-            }
-        }
-    }
 
     /**
      * Will be called when collection is being deleted

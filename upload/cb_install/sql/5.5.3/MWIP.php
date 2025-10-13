@@ -128,7 +128,7 @@ class MWIP extends \Migration
                 .', CASE WHEN type != \'custom\' THEN 1 ELSE 0 END AS is_auto
                 FROM ' . tbl('video_thumbs') . ' 
                 WHERE videoid = ' . mysql_clean($video['videoid']);
-                $old_thumbs = Clipbucket_db::getInstance()->_select($sql_old_thumbs);
+                $old_thumbs = \Clipbucket_db::getInstance()->_select($sql_old_thumbs);
                 foreach ($old_thumbs as $old_thumb) {
                     $type = $old_thumb['type'];
                     if ($type == 'custom' || $type == 'auto') {
@@ -140,7 +140,7 @@ class MWIP extends \Migration
                         'num'     => (int)$old_thumb['num']
                     ])['id_video_image'] ?? null;
                     if (empty($id_video_image)) {
-                        $id_video_image = Clipbucket_db::getInstance()->insert(tbl('video_image'), [
+                        $id_video_image = \Clipbucket_db::getInstance()->insert(tbl('video_image'), [
                             'videoid',
                             'type',
                             'num',
@@ -150,7 +150,7 @@ class MWIP extends \Migration
                             'thumbnail',
                             (int)$old_thumb['num'],
                             (int)$old_thumb['is_auto']
-                        ]);
+                        ], ignore: true);
                         $sql_field = false;
                         if ((int)$old_thumb['is_default_thumb']) {
                             $sql_field = 'default_thumbnail';
@@ -161,7 +161,7 @@ class MWIP extends \Migration
                         }
                         if (!empty($sql_field)) {
                             $sql = 'UPDATE ' . tbl('video') . ' SET '.$sql_field.' = ' . $id_video_image . ' WHERE videoid = ' . $video['videoid'];
-                            Clipbucket_db::getInstance()->execute($sql);
+                            \Clipbucket_db::getInstance()->execute($sql);
                         }
                     }
                     if ($old_thumb['resolution'] == 'original') {
@@ -171,7 +171,7 @@ class MWIP extends \Migration
                     } else {
                         $sizes = \VideoThumbs::getWidthHeightFromSize($old_thumb['resolution']);
                     }
-                    Clipbucket_db::getInstance()->insert(tbl('video_thumb'), [
+                    \Clipbucket_db::getInstance()->insert(tbl('video_thumb'), [
                         'id_video_image',
                         'width',
                         'height',
@@ -185,11 +185,45 @@ class MWIP extends \Migration
                         $old_thumb['extension'],
                         $old_thumb['version'],
                         (int)($old_thumb['resolution'] == 'original')
-                    ]);
+                    ], ignore: true);
                 }
             }
 
         } while (!empty($videos));
+
+        global $cbplugin;
+        $plugins = $cbplugin->getInstalledPlugins();
+        $is_server_timthumb_installed = false;
+        foreach ($plugins as $plugin) {
+            if ($plugin['folder'] == 'cb_server_thumb') {
+                $is_server_timthumb_installed = $plugin['plugin_active'] == 'yes';
+                break;
+            }
+        }
+        self::generateConfig('keep_ratio_photo', ($is_server_timthumb_installed ? 'yes' : 'no'));
+        \myquery::$website_details = [];
+        \ClipBucket::getInstance()->configs = \ClipBucket::getInstance()->get_configs();
+
+        self::generateTranslation('option_keep_ration_photo', [
+            'fr'=>'Conserver les proportions des photos',
+            'en'=>'Keep Ratio Photo'
+        ]);
+        //migrer les thumbs
+        $limit = 1;
+        $offset = 0;
+        do {
+            $photos = \Photo::getInstance()->getAll([
+                'limit' => $offset . ' , ' . $limit,
+            ]);
+            $offset += $limit;
+            foreach ($photos as $photo) {
+                $globs = glob(\DirPath::get('photos') . $photo['file_directory'] . DIRECTORY_SEPARATOR . $photo['filename'] . '*_*.*');
+                foreach ($globs as $glob) {
+                    unlink($glob);
+                }
+                \PhotoThumbs::generateThumbs($photo, ignore: true);
+            }
+        } while (!empty($photos));
 
         $sql = 'DROP TABLE IF EXISTS `{tbl_prefix}video_thumbs`';
         self::query($sql);

@@ -2530,8 +2530,12 @@ class Collections extends CBCategory
             return VideoThumbs::getDefaultThumbFile($object_id, $width, $height);
         }
 
-        if (empty($size)) {
-            $size = 's';
+        if (empty($size) || $size == 's') {
+            $size = '150';
+        } elseif ($size == 'l') {
+            $size = '900';
+        } elseif ($size == 'm') {
+            $size = '550';
         }
         return PhotoThumbs::getThumbFile($object_id, $size);
     }

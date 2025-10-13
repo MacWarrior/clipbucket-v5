@@ -815,7 +815,7 @@ class AdminTool
             $photos = [];
         }
         $this->tasks = array_column($photos, 'photo_id');
-        $this->executeTool('Photo::generatePhoto');
+        $this->executeTool('PhotoThumb::generatePhoto');
     }
 
     /**
