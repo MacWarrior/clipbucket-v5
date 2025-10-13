@@ -768,7 +768,8 @@ class VideoThumbs
             }
         }
         foreach ($thumbs as $thumb) {
-            $thumb_path = self::getThumbPath($type, $video['file_directory'], $video['file_name'], $thumb['is_auto'], $thumb['num'], ($thumb['is_original_size'] ?'original':false) , $thumb['width'], $thumb['height'], $thumb['extension'], $thumb['version']);
+            $resolution = $thumb['resolution'] ?? ($thumb['is_original_size'] ?'original':false);
+            $thumb_path = self::getThumbPath($type, $video['file_directory'], $video['file_name'], $thumb['is_auto'], $thumb['num'], $resolution, $thumb['width'], $thumb['height'], $thumb['extension'], $thumb['version']);
             $filepath = $thumb_video_directory . $thumb_path;
             if (!file_exists($thumb_video_directory_path . $thumb_path)) {
                 $filepath = self::getDefaultMissingThumb($return_type);
