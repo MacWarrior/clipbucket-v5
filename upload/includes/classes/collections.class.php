@@ -2179,7 +2179,7 @@ class Collections extends CBCategory
             $type = $item[0]['type'];
             switch ($type) {
                 case 'videos':
-                    $thumb = VideoThumbs::getDefaultThumbFile(CBvideo::getInstance()->get_video($item[0]['object_id']));
+                    $thumb = VideoThumbs::getDefaultThumbFile($item[0]['object_id']);
                     break;
 
                 case 'photos':
