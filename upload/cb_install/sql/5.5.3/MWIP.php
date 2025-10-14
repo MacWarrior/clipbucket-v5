@@ -81,7 +81,7 @@ class MWIP extends \Migration
             'table'  => 'video',
             'column' => 'default_thumbnail'
         ]);
-        self::alterTable('ALTER TABLE `{tbl_prefix}video` ADD CONSTRAINT `video_default_thumb_ibfk_1` FOREIGN KEY (default_thumbnail) REFERENCES `{tbl_prefix}video_image` (id_video_image);', [
+        self::alterTable('ALTER TABLE `{tbl_prefix}video` ADD CONSTRAINT `video_default_thumb_ibfk_1` FOREIGN KEY (default_thumbnail) REFERENCES `{tbl_prefix}video_image` (id_video_image) ON DELETE SET NULL;', [
             'table'  => 'video_image',
             'column' => 'id_video_image'
         ], [
@@ -90,7 +90,7 @@ class MWIP extends \Migration
                 'name' => 'video_default_thumb_ibfk_1'
             ]
         ]);
-        self::alterTable('ALTER TABLE `{tbl_prefix}video` ADD CONSTRAINT `video_default_poster_ibfk_1` FOREIGN KEY (default_poster) REFERENCES `{tbl_prefix}video_image` (id_video_image);', [
+        self::alterTable('ALTER TABLE `{tbl_prefix}video` ADD CONSTRAINT `video_default_poster_ibfk_1` FOREIGN KEY (default_poster) REFERENCES `{tbl_prefix}video_image` (id_video_image) ON DELETE SET NULL;', [
             'table'  => 'video_image',
             'column' => 'id_video_image'
         ], [
@@ -99,7 +99,7 @@ class MWIP extends \Migration
                 'name' => 'video_default_poster_ibfk_1'
             ]
         ]);
-        self::alterTable('ALTER TABLE `{tbl_prefix}video` ADD CONSTRAINT `video_default_backdrop_ibfk_1` FOREIGN KEY (default_backdrop) REFERENCES `{tbl_prefix}video_image` (id_video_image);', [
+        self::alterTable('ALTER TABLE `{tbl_prefix}video` ADD CONSTRAINT `video_default_backdrop_ibfk_1` FOREIGN KEY (default_backdrop) REFERENCES `{tbl_prefix}video_image` (id_video_image) ON DELETE SET NULL;', [
             'table'  => 'video_image',
             'column' => 'id_video_image'
         ], [
@@ -249,6 +249,11 @@ class MWIP extends \Migration
         self::generateTranslation('custom_backdrop', [
             'fr'=>'Décors personnalisés',
             'en'=>'Custom Backdrops'
+        ]);
+
+        self::generateTranslation('error_uploading_thumb', [
+            'fr'=>'Erreur lors du téléversement de la vignette',
+            'en'=>'Error uploading thumbnail'
         ]);
     }
 

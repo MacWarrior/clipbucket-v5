@@ -28,7 +28,7 @@
     <div id="default_player" class="tab-pane fade active in">
 {/if}
 
-<video playsinline id="cb_video_js_{$vdata.videoid}" class="video-js vjs-default-skin vjs-show-big-play-button-on-pause" height="100%" width="100%" poster="{VideoThumbs::getDefaultThumbFile($vdata['videoid'],768,432)}">
+<video playsinline id="cb_video_js_{$vdata.videoid}" class="video-js vjs-default-skin vjs-show-big-play-button-on-pause" height="100%" width="100%" poster="{VideoThumbs::getDefaultThumbFile($vdata['videoid'],768,480)}">
     {foreach $video_files as $file}
         {if strpos($file, 'no_video.mp4') !== false}
             <source src='{$file}' type="video/mp4"/>

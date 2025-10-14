@@ -1447,27 +1447,43 @@ class AdminTool
                 $value = [$task => $total];
                 break;
             case 'count_thumbs_auto':
-                $sql = 'SELECT count(DISTINCT(CONCAT( videoid, \'-\', num))) as count FROM ' . tbl('video_thumbs') . ' WHERE type = \'auto\' AND resolution = \'original\'';
-                $res = Clipbucket_db::getInstance()->_select($sql);
-                $total = $res[0]['count'] ?? 0;
+                if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.2', '999')) {
+                    $total = VideoThumbs::getAll(['count' => true, 'is_auto' => true, 'type' => 'thumbnail']);
+                } else {
+                    $sql = 'SELECT count(DISTINCT(CONCAT( videoid, \'-\', num))) as count FROM ' . tbl('video_thumbs') . ' WHERE type = \'auto\' AND resolution = \'original\'';
+                    $res = Clipbucket_db::getInstance()->_select($sql);
+                    $total = $res[0]['count'] ?? 0;
+                }
                 $value = [$task => $total];
                 break;
             case 'count_thumbs_manual':
-                $sql = 'SELECT count(DISTINCT(CONCAT( videoid, \'-\', num))) as count FROM ' . tbl('video_thumbs') . ' WHERE type = \'custom\' AND resolution = \'original\'';
-                $res = Clipbucket_db::getInstance()->_select($sql);
-                $total = $res[0]['count'] ?? 0;
+                if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.2', '999')) {
+                    $total = VideoThumbs::getAll(['count' => true, 'is_auto' => false, 'type' => 'thumbnail']);
+                } else {
+                    $sql = 'SELECT count(DISTINCT(CONCAT( videoid, \'-\', num))) as count FROM ' . tbl('video_thumbs') . ' WHERE type = \'custom\' AND resolution = \'original\'';
+                    $res = Clipbucket_db::getInstance()->_select($sql);
+                    $total = $res[0]['count'] ?? 0;
+                }
                 $value = [$task => $total];
                 break;
             case 'count_posters':
-                $sql = 'SELECT count(DISTINCT(CONCAT( videoid, \'-\', num))) as count FROM ' . tbl('video_thumbs') . ' WHERE type = \'poster\' AND resolution = \'original\'';
-                $res = Clipbucket_db::getInstance()->_select($sql);
-                $total = $res[0]['count'] ?? 0;
+                if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.2', '999')) {
+                    $total = VideoThumbs::getAll(['count' => true, 'type' => 'poster']);
+                } else {
+                    $sql = 'SELECT count(DISTINCT(CONCAT( videoid, \'-\', num))) as count FROM ' . tbl('video_thumbs') . ' WHERE type = \'poster\' AND resolution = \'original\'';
+                    $res = Clipbucket_db::getInstance()->_select($sql);
+                    $total = $res[0]['count'] ?? 0;
+                }
                 $value = [$task => $total];
                 break;
             case 'count_backdrop':
-                $sql = 'SELECT count(DISTINCT(CONCAT( videoid, \'-\', num))) as count FROM ' . tbl('video_thumbs') . ' WHERE type = \'backdrop\' AND resolution = \'original\'';
-                $res = Clipbucket_db::getInstance()->_select($sql);
-                $total = $res[0]['count'] ?? 0;
+                if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.2', '999')) {
+                    $total = VideoThumbs::getAll(['count' => true, 'type' => 'backdrop']);
+                } else {
+                    $sql = 'SELECT count(DISTINCT(CONCAT( videoid, \'-\', num))) as count FROM ' . tbl('video_thumbs') . ' WHERE type = \'backdrop\' AND resolution = \'original\'';
+                    $res = Clipbucket_db::getInstance()->_select($sql);
+                    $total = $res[0]['count'] ?? 0;
+                }
                 $value = [$task => $total];
                 break;
             case 'count_subtitles':

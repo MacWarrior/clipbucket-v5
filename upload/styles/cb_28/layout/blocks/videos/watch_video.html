@@ -15,7 +15,7 @@
 {else}
     <div id="cb_player" class="clearfix cb_player"{$aspect_ratio}>
         <div class="thumb-holder">
-            <img alt="thumbnail" class="img-responsive{if Video::getInstance()->isToBlur($video['videoid'])} blur{/if}" src="{VideoThumbs::getDefaultThumbFile($video.videoid, 768, 432)}"/>
+            <img alt="thumbnail" class="img-responsive{if Video::getInstance()->isToBlur($video['videoid'])} blur{/if}" src="{VideoThumbs::getDefaultThumbFile($video.videoid, 768, 480)}"/>
             {ANCHOR place='in_video_thumb' data=$video}
         </div>
     </div>

@@ -49,10 +49,20 @@ if (myquery::getInstance()->video_exists($video)) {
 //        Upload::getInstance()->upload_thumbs($data['file_name'], $_FILES['vid_thumb'], $data['file_directory'], $_POST['db_type']);
         VideoThumbs::uploadThumbs($data['videoid'], $_FILES['vid_thumb'], $type, false);
     }
-
+    switch ($type) {
+        case 'thumbnail':
+        case 'backdrop':
+            $width = 168;
+            $height = 105;
+            break;
+        case 'poster':
+            $width = 90;
+            $height = 140;
+            break;
+    }
     assign('data', $data);
-    assign('vidthumbs', VideoThumbs::getAllThumbFiles($data['videoid'], '168','105',type: $type, is_auto: true, return_with_num: true) );
-    assign('vidthumbs_custom', VideoThumbs::getAllThumbFiles($data['videoid'], '168','105',type: $type, is_auto: false, return_with_num: true));
+    assign('vidthumbs', VideoThumbs::getAllThumbFiles($data['videoid'], $width, $height, type: $type, is_auto: true, return_with_num: true));
+    assign('vidthumbs_custom', VideoThumbs::getAllThumbFiles($data['videoid'], $width, $height, type: $type, is_auto: false, return_with_num: true));
 } else {
     $msg[] = lang('class_vdo_del_err');
 }

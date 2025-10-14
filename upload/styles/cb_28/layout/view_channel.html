@@ -22,7 +22,7 @@
                             {show_player vdetails=$first_video}
                         {else}
                             <div class="thumb-holder">
-                                <img class="img-responsive{if Video::getInstance()->isToBlur($first_video['videoid'])} blur{/if}" src="{VideoThumbs::getDefaultThumbFile($first_video.videoid, 768, 432)}"/>
+                                <img class="img-responsive{if Video::getInstance()->isToBlur($first_video['videoid'])} blur{/if}" src="{VideoThumbs::getDefaultThumbFile($first_video.videoid, 768, 480)}"/>
                                 {ANCHOR place='in_video_thumb' data=$first_video}
                             </div>
                         {/if}

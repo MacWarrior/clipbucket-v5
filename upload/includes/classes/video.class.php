@@ -91,9 +91,11 @@ class Video
         if (!Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.2', '72')) {
             $this->fields[] = 'video_users';
         }
+        if (!Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.2', '999')) {
+            $this->fields[] = 'thumbs_version';
+        }
         if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.2', '999')) {
             $this->fields[] = 'default_thumbnail';
-            $this->fields[] = 'thumbs_version';
         }
 
         $this->fields_categories = [
@@ -1486,7 +1488,7 @@ class CBvideo extends CBCategory
             , 're_conv_status', 'subscription_email'
         ];
 
-        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.2', '999')) {
+        if (!Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.2', '999')) {
             $basic_fields[] = 'thumbs_version';
         }
 

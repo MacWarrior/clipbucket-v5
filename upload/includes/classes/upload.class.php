@@ -178,9 +178,11 @@ class Upload
         $query_field[] = 'video_version';
         $query_val[] = Update::getInstance()->getCurrentCoreVersion();
 
-        //thumbs_version
-        $query_field[] = 'thumbs_version';
-        $query_val[] = Update::getInstance()->getCurrentCoreVersion();
+        if (!Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.2', '999')) {
+            //thumbs_version
+            $query_field[] = 'thumbs_version';
+            $query_val[] = Update::getInstance()->getCurrentCoreVersion();
+        }
 
         //Upload Ip
         $query_field[] = 'uploader_ip';
@@ -248,23 +250,6 @@ class Upload
         return true;
     }
 
-    /**
-     * Function used to get available name for video thumb
-     *
-     * @param $file_name
-     * @return string
-     * @throws Exception
-     */
-    function get_next_available_num($file_name): string
-    {
-        $res = Clipbucket_db::getInstance()->select(tbl('video_thumbs'), 'MAX(CAST(num AS UNSIGNED)) + 1 as num_max', ' videoid = (SELECT videoid FROM ' . tbl('video') . ' WHERE file_name LIKE \'' . mysql_clean($file_name) . '\')');
-        if (empty($res)) {
-            $code = 0;
-        } else {
-            $code = $res[0]['num_max'];
-        }
-        return str_pad((string)$code, 4, '0', STR_PAD_LEFT);
-    }
 
     /**
      * FUNCTION USED TO LOAD UPLOAD FORM REQUIRED FIELDS

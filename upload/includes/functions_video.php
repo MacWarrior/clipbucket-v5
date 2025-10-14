@@ -97,158 +97,10 @@ function video_playable($id): bool
 }
 
 /**
- * FUNCTION USED TO GET THUMBNAIL
- *
- * @param array $vdetails video_details, or videoid will also work
- * @param bool $multi
- * @param bool $size
- *
- * @return array|string
- * @throws Exception
- */
-function get_thumb($vdetails, $multi = false, $size = false, $type = false, $max_id = null, $return_type = 'url')
-{
-    if (is_array($vdetails)) {
-        if (empty($vdetails['videoid']) && empty($vdetails['vid'])) {
-            e(lang('technical_error'));
-            error_log('get_thumb - called on empty vdetails');
-            return $multi ? [default_thumb($return_type)] : default_thumb($return_type);
-        }
-        if (!empty($vdetails['videoid'])) {
-            $vid = $vdetails['videoid'];
-        } elseif (!empty($vdetails['vid'])) {
-            $vid = $vdetails['vid'];
-        }
-    } else {
-        if (is_numeric($vdetails)) {
-            $vid = $vdetails;
-            $vdetails = Video::getInstance()->getOne(['videoid'=>$vid]);
-        } else {
-            e(lang('technical_error'));
-            error_log('get_thumb - called on empty vdetails');
-            return $multi ? [default_thumb($return_type)] : default_thumb($return_type);
-        }
-    }
-
-    $fields = ['V.videoid', 'V.file_name', 'V.file_directory', 'VT.num', 'V.default_thumb', 'V.status'];
-
-    if( Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.0', '366') ){
-        $fields[] = 'V.default_poster';
-        $fields[] = 'V.default_backdrop';
-    }
-
-    //get current video from db
-    if( Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.0', '163') ){
-        $resVideo = Clipbucket_db::getInstance()->select(tbl('video') . ' AS V LEFT JOIN ' . tbl('video_thumbs') . ' AS VT ON VT.videoid = V.videoid ', implode(',', $fields), 'V.videoid = ' . mysql_clean($vid));
-    } else {
-        return $multi ? [default_thumb($return_type)] : default_thumb($return_type);
-    }
-    if (empty($resVideo)) {
-        error_log('get_thumb - called on missing videoid ' . $vid);
-        e(lang('technical_error'));
-        return $multi ? [default_thumb($return_type)] : default_thumb($return_type);
-    }
-    $resVideo = $resVideo[0];
-
-    //get thumbs for current video from db
-    $where[] = 'videoid = ' . mysql_clean($vid);
-    if (!$multi) {
-        switch ($type) {
-            default:
-                $default = $resVideo['default_thumb'];
-                break;
-            case 'poster':
-                $default = $resVideo['default_poster'];
-                break;
-            case 'backdrop':
-                $default = $resVideo['default_backdrop'];
-                break;
-        }
-        $where[] = ' num = ' . mysql_clean($default);
-    }
-    if (!empty($size)) {
-        $where[] = ' resolution LIKE \'' . mysql_clean($size) . '\'';
-    }
-
-    if ($type) {
-        $where[] = ' type = \'' . $type . '\'';
-    }
-
-    if (!empty($max_id)) {
-        $where[] = ' id > ' . mysql_clean($max_id);
-    }
-
-    $resThumb = Clipbucket_db::getInstance()->select(tbl('video_thumbs'), '*', implode(' AND ', $where));
-
-    if (empty($resThumb) && $type =='custom') {
-        return $multi ? [] : '';
-    }
-
-    if (empty($resThumb) && $resVideo['num'] === null && $vdetails['status'] == 'Successful') {
-        //if no thumbs, we put some in db see \create_thumb()
-        return $multi ? [create_thumb($resThumb, $multi, $size)] : create_thumb($resThumb, $multi, $size);
-    }
-    if (empty($resThumb)) {
-        return $multi ? [default_thumb($return_type)] : default_thumb($return_type);
-    }
-    if ($multi) {
-        $thumb = [];
-        foreach ($resThumb as $re) {
-            if ($re['size'] === '') {
-                return [default_thumb($return_type)];
-            }
-            $filepath = $resVideo['file_directory'] . DIRECTORY_SEPARATOR . $resVideo['file_name'] . '-' . $re['resolution'] . '-' . $re['num'] . ($re['type'] != 'auto' ? '-'.array_search($re['type'], Upload::getInstance()->types_thumb) : '') .'.' . $re['extension'];
-            if (file_exists(DirPath::get('thumbs') . $filepath)) {
-                switch($return_type) {
-                    default:
-                    case 'url':
-                        $thumb[] = DirPath::getUrl('thumbs') . $filepath;
-                        break;
-                    case 'filepath':
-                        $thumb[] = DirPath::get('thumbs') . $filepath;
-                        break;
-                }
-            } else {
-                error_log('get_thumb - missing file : ' . $filepath);
-                $thumb[] = default_thumb($return_type);
-            }
-        }
-        return $thumb;
-    }
-    $filepath = $resVideo['file_directory'] . DIRECTORY_SEPARATOR . $resVideo['file_name'] . '-' . $resThumb[0]['resolution'] . '-' . $resThumb[0]['num'] . ($resThumb[0]['type'] != 'auto' ? '-'. array_search($resThumb[0]['type'], Upload::getInstance()->types_thumb) : '') .'.' . $resThumb[0]['extension'];
-    if (!file_exists(DirPath::get('thumbs') . $filepath)) {
-        return default_thumb($return_type);
-    }
-
-    switch($return_type) {
-        default:
-        case 'url':
-            return DirPath::getUrl('thumbs') . $filepath;
-        case 'filepath':
-            return DirPath::get('thumbs') . $filepath;
-    }
-
-}
-
-/**
- * @throws Exception
- */
-function get_count_thumb($videoid)
-{
-    $resVideo = Clipbucket_db::getInstance()->select(tbl('video') . ' AS V INNER JOIN ' . tbl('video_thumbs') . ' AS VT ON VT.videoid = V.videoid ', 'COUNT(V.videoid) as nb_thumbs', 'V.videoid = ' . mysql_clean($videoid));
-    if (empty($resVideo)) {
-        error_log('get_count_thumb - no thumbnails for videoid : ' . $videoid);
-        return 0;
-    }
-    return $resVideo[0]['nb_thumbs'];
-}
-
-/**
  * @throws Exception
  */
 function get_player_thumbs_json($data): void
 {
-//    $thumbs = get_thumb($data, true, '168x105', 'auto');
     $thumbs = VideoThumbs::getAllThumbFiles($data['videoid'], 168, 105, 'thumbnail', true);
     $duration = (int)$data['duration'];
     $json = '';
@@ -1150,17 +1002,6 @@ function get_video_files($vdetails, $with_path = true, $multi = false, $count_on
             break;
     }
     return $vid_files;
-}
-
-function thumbs_res_settings_28(): array
-{
-    return [
-        'original' => 'original',
-        '105'      => ['168', '105'],
-        '260'      => ['416', '260'],
-        '320'      => ['632', '395'],
-        '480'      => ['768', '432']
-    ];
 }
 
 /**

@@ -195,8 +195,19 @@ function display_thumb_list_with_param($data, $vidthumbs, $vidthumbs_custom, $nb
 function display_thumb_list($data, $type)
 {
     $size= false;
-    $vidthumbs = VideoThumbs::getAllThumbFiles($data['videoid'], '168','105',type: $type, is_auto: true, return_with_num: true) ;
-    $vidthumbs_custom = VideoThumbs::getAllThumbFiles($data['videoid'], '168','105',type: $type, is_auto: false, return_with_num: true);
+    switch ($type) {
+        case 'thumbnail':
+        case 'backdrop':
+            $width = 168;
+            $height = 105;
+            break;
+        case 'poster':
+            $width = 90;
+            $height = 140;
+            break;
+    }
+    $vidthumbs = VideoThumbs::getAllThumbFiles($data['videoid'], $width, $height, type: $type, is_auto: true, return_with_num: true);
+    $vidthumbs_custom = VideoThumbs::getAllThumbFiles($data['videoid'], $width, $height, type: $type, is_auto: false, return_with_num: true);
     display_thumb_list_with_param(
         $data, $vidthumbs
         , ($vidthumbs_custom ?? [])
@@ -247,7 +258,7 @@ function display_thumb_list_regenerate ($data)
 
     $nb_thumbs = count($vidthumbs);
     for ($i = $nb_thumbs; $i < $max_thumb; $i++) {
-        $vidthumbs[] = default_thumb();
+        $vidthumbs[] = VideoThumbs::getDefaultMissingThumb(return_with_num: true);
     }
     $vidthumbs_custom = VideoThumbs::getAllThumbFiles($data['videoid'], '168','105',type: 'thumbnail', is_auto: false, return_with_num: true);
 
