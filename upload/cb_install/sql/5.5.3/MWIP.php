@@ -264,6 +264,9 @@ class MWIP extends \Migration
             'fr'=>'Erreur lors du téléversement de la vignette',
             'en'=>'Error uploading thumbnail'
         ]);
+
+        $sql = 'DELETE FROM `{tbl_prefix}plugins` WHERE `plugin_folder` = \'cb_server_thumb\';';
+        self::query($sql);
     }
 
 }
