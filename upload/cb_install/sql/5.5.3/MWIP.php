@@ -2,6 +2,8 @@
 
 namespace V5_5_3;
 
+use OxygenzSAS\Discord\Discord;
+
 require_once \DirPath::get('classes') . DIRECTORY_SEPARATOR . 'migration' . DIRECTORY_SEPARATOR . 'migration.class.php';
 require_once \DirPath::get('classes') . 'sLog.php';
 
@@ -90,24 +92,7 @@ class MWIP extends \Migration
                 'name' => 'video_default_thumb_ibfk_1'
             ]
         ]);
-        self::alterTable('ALTER TABLE `{tbl_prefix}video` ADD CONSTRAINT `video_default_poster_ibfk_1` FOREIGN KEY (default_poster) REFERENCES `{tbl_prefix}video_image` (id_video_image) ON DELETE SET NULL;', [
-            'table'  => 'video_image',
-            'column' => 'id_video_image'
-        ], [
-            'constraint' => [
-                'type' => 'FOREIGN KEY',
-                'name' => 'video_default_poster_ibfk_1'
-            ]
-        ]);
-        self::alterTable('ALTER TABLE `{tbl_prefix}video` ADD CONSTRAINT `video_default_backdrop_ibfk_1` FOREIGN KEY (default_backdrop) REFERENCES `{tbl_prefix}video_image` (id_video_image) ON DELETE SET NULL;', [
-            'table'  => 'video_image',
-            'column' => 'id_video_image'
-        ], [
-            'constraint' => [
-                'type' => 'FOREIGN KEY',
-                'name' => 'video_default_backdrop_ibfk_1'
-            ]
-        ]);
+
 
         //migrer les thumbs
         $limit = 1;
@@ -147,16 +132,21 @@ class MWIP extends \Migration
                             'is_auto',
                         ], [
                             $video['videoid'],
-                            'thumbnail',
+                            $type,
                             (int)$old_thumb['num'],
                             (int)$old_thumb['is_auto']
                         ], ignore: true);
+                        if (empty($id_video_image)) {
+                            \DiscordLog::sendDump('error creating video image for video ' . $video['videoid'] . ' type: ' . $type . ' num: ' . $old_thumb['num'] . ' is_auto: ' . $old_thumb['is_auto'] );
+                            error_log('error creating video image for video ' . $video['videoid'] . ' type: ' . $type . ' num: ' . $old_thumb['num'] . ' is_auto: ' . $old_thumb['is_auto'] );
+                            break;
+                        }
                         $sql_field = false;
                         if ((int)$old_thumb['is_default_thumb']) {
                             $sql_field = 'default_thumbnail';
-                        } else if ((int)$old_thumb['is_default_poster']) {
+                        } elseif ((int)$old_thumb['is_default_poster']) {
                             $sql_field = 'default_poster';
-                        } else if ((int)$old_thumb['is_default_backdrop']) {
+                        } elseif ((int)$old_thumb['is_default_backdrop']) {
                             $sql_field = 'default_backdrop';
                         }
                         if (!empty($sql_field)) {
@@ -190,6 +180,25 @@ class MWIP extends \Migration
             }
 
         } while (!empty($videos));
+
+        self::alterTable('ALTER TABLE `{tbl_prefix}video` ADD CONSTRAINT `video_default_poster_ibfk_1` FOREIGN KEY (default_poster) REFERENCES `{tbl_prefix}video_image` (id_video_image) ON DELETE SET NULL;', [
+            'table'  => 'video_image',
+            'column' => 'id_video_image'
+        ], [
+            'constraint' => [
+                'type' => 'FOREIGN KEY',
+                'name' => 'video_default_poster_ibfk_1'
+            ]
+        ]);
+        self::alterTable('ALTER TABLE `{tbl_prefix}video` ADD CONSTRAINT `video_default_backdrop_ibfk_1` FOREIGN KEY (default_backdrop) REFERENCES `{tbl_prefix}video_image` (id_video_image) ON DELETE SET NULL;', [
+            'table'  => 'video_image',
+            'column' => 'id_video_image'
+        ], [
+            'constraint' => [
+                'type' => 'FOREIGN KEY',
+                'name' => 'video_default_backdrop_ibfk_1'
+            ]
+        ]);
 
         global $cbplugin;
         $plugins = $cbplugin->getInstalledPlugins();
