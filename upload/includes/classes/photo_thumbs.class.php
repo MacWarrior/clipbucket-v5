@@ -400,7 +400,7 @@ class PhotoThumbs
             $width = $org_width / $ratio;
             $height = $org_height / $ratio;
 
-            if (config('keep_ratio_photo') == 'yes') {
+            if (config('keep_ratio_photo') != 'yes') {
                 $height = $destination_height;
             }
             $image_r = imagecreatetruecolor($width, $height);

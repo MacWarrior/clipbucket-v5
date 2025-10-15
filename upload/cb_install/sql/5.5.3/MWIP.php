@@ -200,16 +200,9 @@ class MWIP extends \Migration
             ]
         ]);
 
-        global $cbplugin;
-        $plugins = $cbplugin->getInstalledPlugins();
-        $is_server_timthumb_installed = false;
-        foreach ($plugins as $plugin) {
-            if ($plugin['folder'] == 'cb_server_thumb') {
-                $is_server_timthumb_installed = $plugin['plugin_active'] == 'yes';
-                break;
-            }
-        }
-        self::generateConfig('keep_ratio_photo', ($is_server_timthumb_installed ? 'yes' : 'no'));
+        $sql = 'SELECT plugin_id FROM `{tbl_prefix}plugins` WHERE `plugin_folder` = \'cb_server_thumb\' AND `plugin_active` = \'yes\';';
+        $is_server_timthumb_installed = !empty(self::req($sql));
+        self::generateConfig('keep_ratio_photo', (!$is_server_timthumb_installed ? 'yes' : 'no'));
         \myquery::$website_details = [];
         \ClipBucket::getInstance()->configs = \ClipBucket::getInstance()->get_configs();
 
