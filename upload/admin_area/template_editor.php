@@ -13,24 +13,24 @@ $breadcrumb[1] = ['title' => lang('template_editor'), 'url' => DirPath::getUrl('
 /**
  * Getting List Of Templates
  */
-$templates = $cbtpl->get_templates();
+$templates = CBTemplate::getInstance()->get_templates();
 assign('templates', $templates);
 #Checking if user has selected template for editing, if not, make SELECTED template for editing
 $sel_dir = $_GET['dir'];
-if (!$sel_dir || !$cbtpl->is_template($sel_dir)) {
+if (!$sel_dir || !CBTemplate::getInstance()->is_template($sel_dir)) {
     $sel_dir = TEMPLATE;
 }
 
 //Checking if still there is no template, display error
-if (!$cbtpl->is_template($sel_dir)) {
+if (!CBTemplate::getInstance()->is_template($sel_dir)) {
     e('No Template Found');
 } else {
     assign('sel_dir', $sel_dir);
     //Getting list template layout files , i.e HTML files
-    $files = $cbtpl->get_template_files($sel_dir);
+    $files = CBTemplate::getInstance()->get_template_files($sel_dir);
     assign('tpl_files', $files);
     //Getting list of css files
-    $css_files = $cbtpl->get_template_files($sel_dir, 'theme');
+    $css_files = CBTemplate::getInstance()->get_template_files($sel_dir, 'theme');
     assign('css_files', $css_files);
 
     //Reading File
