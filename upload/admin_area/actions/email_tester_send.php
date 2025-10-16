@@ -16,8 +16,7 @@ if (empty($_POST['email_recipient'])) {
     e(lang('missing_email_recipient'));
     $success = false;
 } else {
-    $_POST['email_recipient'] = filter_var($_POST['email_recipient'], FILTER_SANITIZE_EMAIL);
-    if (filter_var($_POST['email_recipient'], FILTER_VALIDATE_EMAIL) === false) {
+    if (isValidEmail($_POST['email_recipient']) === false) {
         $success = false;
         e(lang('invalid_email_recipient'));
     }
@@ -34,8 +33,7 @@ if (empty($_POST['email_sender'])) {
         $success = false;
     }
 } else {
-    $_POST['email_sender'] = filter_var($_POST['email_sender'], FILTER_SANITIZE_EMAIL);
-    if (filter_var($_POST['email_sender'], FILTER_VALIDATE_EMAIL) === false) {
+    if (isValidEmail($_POST['email_sender']) === false) {
         $success = false;
         e(lang('invalid_email_sender'));
     }

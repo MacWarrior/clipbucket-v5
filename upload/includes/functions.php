@@ -195,7 +195,10 @@ function SetTime($sec, $padHours = true): string
  */
 function isValidEmail($email)
 {
-    return filter_var($email, FILTER_VALIDATE_EMAIL);
+    $email = filter_var($email, FILTER_SANITIZE_EMAIL);
+    $hosts = [];
+    $domain = substr(strrchr($email, "@"), 1);
+    return (filter_var($email, FILTER_VALIDATE_EMAIL) && getmxrr($domain, $hosts));
 }
 
 function isValidHTML(string $html): bool {
