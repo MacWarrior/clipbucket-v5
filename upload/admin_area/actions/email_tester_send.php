@@ -16,7 +16,7 @@ if (empty($_POST['email_recipient'])) {
     e(lang('missing_email_recipient'));
     $success = false;
 } else {
-    if (isValidEmail($_POST['email_recipient']) === false) {
+    if (Email::isValid($_POST['email_recipient']) === false) {
         $success = false;
         e(lang('invalid_email_recipient'));
     }
@@ -33,7 +33,7 @@ if (empty($_POST['email_sender'])) {
         $success = false;
     }
 } else {
-    if (isValidEmail($_POST['email_sender']) === false) {
+    if (Email::isValid($_POST['email_sender']) === false) {
         $success = false;
         e(lang('invalid_email_sender'));
     }
