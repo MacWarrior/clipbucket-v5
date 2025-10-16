@@ -428,12 +428,12 @@ class Email{
      */
     public static function isValid(string $email): bool
     {
-        $email = filter_var($email, FILTER_SANITIZE_EMAIL);
-        $hosts = [];
-        $domain = substr(strrchr($email, "@"), 1);
-        if (filter_var($email, FILTER_VALIDATE_EMAIL === false)) {
+        if (filter_var($email, FILTER_VALIDATE_EMAIL) === false) {
             return false;
         }
+
+        $hosts = [];
+        $domain = substr(strrchr($email, "@"), 1);
         return getmxrr($domain, $hosts);
     }
 }
