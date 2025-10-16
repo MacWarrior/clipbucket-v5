@@ -14,7 +14,7 @@ $breadcrumb[1] = ['title' => lang('template_editor'), 'url' => DirPath::getUrl('
  * Getting List Of Templates
  */
 $templates = $cbtpl->get_templates();
-
+assign('templates', $templates);
 #Checking if user has selected template for editing, if not, make SELECTED template for editing
 $sel_dir = $_GET['dir'];
 if (!$sel_dir || !$cbtpl->is_template($sel_dir)) {
@@ -34,29 +34,47 @@ if (!$cbtpl->is_template($sel_dir)) {
     assign('css_files', $css_files);
 
     //Reading File
-    if (isset($_GET['file']) && isset($_GET['folder'])) {
-        $file = DirPath::get('styles') . TEMPLATE . DIRECTORY_SEPARATOR . $_GET['folder'] . DIRECTORY_SEPARATOR . $_GET['file'];
-
-        if (file_exists($file)) {
-            if (isset($_POST['update_file'])) {
-                if (is_writable($file)) {
-                    //echo $file;
-                    $data = $_POST['thecontent'];
-                    $open_file = fopen($file, 'w');
-                    fwrite($open_file, stripslashes($data));
-                    e('File has been updated', 'm');
-                } else {
-                    e('Unable to write file');
-                }
+    if (!empty($_GET['file'])) {
+        preg_match('/.*\.(.*)$/', $_GET['file'], $preg_matches);
+        if (empty($preg_matches)) {
+            e(lang('unknown_extension'));
+        } else {
+            $extension = $preg_matches[1];
+            switch ($extension) {
+                case 'css':
+                    $folder = 'theme' . DIRECTORY_SEPARATOR . 'css';
+                    break;
+                case 'html':
+                default:
+                    $folder = 'layout';
+                    break;
             }
+            if (!empty($_GET['folder'])) {
+                $folder .= DIRECTORY_SEPARATOR . $_GET['folder'];
+            }
+            $file = DirPath::get('styles') . $sel_dir . DIRECTORY_SEPARATOR . $folder . DIRECTORY_SEPARATOR . $_GET['file'];
+            if (realpath($file) && str_starts_with(realpath($file), realpath(DirPath::get('styles') . $sel_dir . DIRECTORY_SEPARATOR))) {
+                if (isset($_POST['update_file'])) {
+                    if (is_writable($file)) {
+                        $data = $_POST['thecontent'];
+                        $open_file = fopen($file, 'w');
+                        fwrite($open_file, stripslashes($data));
+                        e('File has been updated', 'm');
+                    } else {
+                        e('Unable to write file');
+                    }
+                }
 
-            $content = htmlentities(file_get_contents($file));
-            assign('content', $content);
+                $content = htmlentities(file_get_contents($file));
+                assign('content', $content);
 
-            if (!is_writable($file)) {
-                assign('writeable', 'no');
+                if (!is_writable($file)) {
+                    assign('writeable', 'no');
+                } else {
+                    assign('writeable', 'yes');
+                }
             } else {
-                assign('writeable', 'yes');
+                e(lang('file_not_found'));
             }
         }
     }
