@@ -32,7 +32,10 @@ if (isset($_POST['mass_upload_video'])) {
         $file_arr = $file;
         $file_path = $file['path'];
         $file_orgname = $file['file'];
-
+        if (strlen($file_orgname) > config('max_video_title')) {
+            e(lang('video_title_exceed', [$file_orgname, config('max_video_title')]));
+            break;
+        }
         $file_title = $_POST[$hash . '_title'];
         $file_description = $_POST[$hash . '_description'];
         $file_tags = $_POST[$hash . '_tags'];
