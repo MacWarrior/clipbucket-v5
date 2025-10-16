@@ -1,6 +1,6 @@
 {
   "version":"5.5.2",
-  "revision":"143",
+  "revision":"144",
   "status":"stable",
   "detail":[
     {
@@ -148,6 +148,7 @@
         ,"Increase session security"
         ,"Update Readme"
         ,"Update videos views counter"
+        ,"Update email validity check"
         ,"Reduce cookies usage"
         ,"Remove unused configs"
         ,"Fix PHP8.X compatibility"
