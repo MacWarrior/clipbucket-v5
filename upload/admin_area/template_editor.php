@@ -37,7 +37,7 @@ if (!$cbtpl->is_template($sel_dir)) {
     if (!empty($_GET['file'])) {
         preg_match('/.*\.(.*)$/', $_GET['file'], $preg_matches);
         if (empty($preg_matches)) {
-            e(lang('unknown_extension'));
+            e(lang('remote_play_invalid_extension'));
         } else {
             $extension = $preg_matches[1];
             switch ($extension) {
