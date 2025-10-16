@@ -262,7 +262,6 @@ CREATE TABLE `{tbl_prefix}photos` (
   `downloaded` bigint(255) NOT NULL DEFAULT 0,
   `server_url` text NULL DEFAULT NULL,
   `owner_ip` varchar(45) NOT NULL DEFAULT '',
-  `photo_details` text NULL DEFAULT NULL,
   `age_restriction` INT DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_520_ci;
 
@@ -535,12 +534,12 @@ CREATE TABLE `{tbl_prefix}video` (
   `video_files` tinytext NULL DEFAULT NULL,
   `file_server_path` text NULL DEFAULT NULL,
   `video_version` varchar(8) NOT NULL DEFAULT '5.5.1',
-  `thumbs_version` varchar(8) NOT NULL DEFAULT '5.5.1',
   `re_conv_status` tinytext NULL DEFAULT NULL,
   `is_castable` tinyint(1) NOT NULL DEFAULT 0,
   `bits_color` tinyint(4) DEFAULT NULL,
   `subscription_email` enum('pending','sent') NOT NULL DEFAULT 'pending',
   `age_restriction` INT DEFAULT NULL,
+  `default_thumbnail` int NULL DEFAULT NULL,
   `default_poster` int(3) NULL DEFAULT NULL,
   `default_backdrop` int(3) NULL DEFAULT NULL,
   `fov` varchar(3) NULL DEFAULT NULL,
@@ -847,21 +846,6 @@ ALTER TABLE `{tbl_prefix}languages_translations`
 ALTER TABLE `{tbl_prefix}languages_translations`
     ADD CONSTRAINT `languages_translations_ibfk_1` FOREIGN KEY (`language_id`) REFERENCES `{tbl_prefix}languages` (`language_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
     ADD CONSTRAINT `languages_translations_ibfk_2` FOREIGN KEY (`id_language_key`) REFERENCES `{tbl_prefix}languages_keys` (`id_language_key`) ON DELETE NO ACTION ON UPDATE NO ACTION;
-
-CREATE TABLE `{tbl_prefix}video_thumbs`(
-    `videoid`    BIGINT(20)  NOT NULL,
-    `resolution` VARCHAR(16) NOT NULL,
-    `num`        VARCHAR(4)  NOT NULL,
-    `extension`  VARCHAR(4)  NOT NULL,
-    `version`    VARCHAR(30) NOT NULL,
-    `type`       VARCHAR(15) NOT NULL,
-    PRIMARY KEY `resolution` (`videoid`, `resolution`, `num`),
-    KEY `videoid` (`videoid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_520_ci;
-
-ALTER TABLE `{tbl_prefix}video_thumbs`
-    ADD CONSTRAINT `video_thumbs_ibfk_1` FOREIGN KEY (`videoid`) REFERENCES `{tbl_prefix}video` (`videoid`) ON DELETE RESTRICT ON UPDATE NO ACTION,
-    ADD INDEX(`type`);
 
 CREATE TABLE `{tbl_prefix}tools`(
     `id_tool`                  INT          NOT NULL AUTO_INCREMENT,
@@ -1305,7 +1289,8 @@ CREATE TABLE `{tbl_prefix}video_image`
     videoid        BIGINT(20)                              NOT NULL,
     type           ENUM ('thumbnail','poster', 'backdrop') NOT NULL,
     num            INT                                     NOT NULL,
-    UNIQUE KEY (videoid, type, num)
+    is_auto        BOOL DEFAULT TRUE                       NOT NULL,
+    UNIQUE KEY (videoid, type, num, is_auto)
 );
 
 ALTER TABLE `{tbl_prefix}video_image`
@@ -1313,12 +1298,13 @@ ALTER TABLE `{tbl_prefix}video_image`
 
 CREATE TABLE `{tbl_prefix}video_thumb`
 (
-    id_video_thumb INT         NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    id_video_image INT         NOT NULL,
-    width          INT         NOT NULL,
-    height         INT         NOT NULL,
-    extension      VARCHAR(4)  NOT NULL,
-    version        VARCHAR(16) NOT NULL,
+    id_video_thumb   INT                NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    id_video_image   INT                NOT NULL,
+    width            INT                NOT NULL,
+    height           INT                NOT NULL,
+    extension        VARCHAR(4)         NOT NULL,
+    version          VARCHAR(16)        NOT NULL,
+    is_original_size BOOL DEFAULT FALSE NOT NULL,
     UNIQUE KEY (id_video_image, width, height)
 );
 ALTER TABLE `{tbl_prefix}video_thumb`
@@ -1326,13 +1312,20 @@ ALTER TABLE `{tbl_prefix}video_thumb`
 
 CREATE TABLE `{tbl_prefix}photo_thumb`
 (
-    id_photo_thumb INT         NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    photo_id       BIGINT(255) NOT NULL,
-    width          INT         NOT NULL,
-    height         INT         NOT NULL,
-    extension      VARCHAR(4)  NOT NULL,
-    version        VARCHAR(16) NOT NULL,
-    UNIQUE KEY (photo_id, width, height)
+    id_photo_thumb   INT                NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    photo_id         BIGINT(255)        NOT NULL,
+    width            INT                NOT NULL,
+    extension        VARCHAR(4)         NOT NULL,
+    version          VARCHAR(16)        NOT NULL,
+    is_original_size BOOL DEFAULT FALSE NOT NULL,
+    UNIQUE KEY (photo_id, width)
 );
 ALTER TABLE `{tbl_prefix}photo_thumb`
     ADD CONSTRAINT `photo_thumb_ibfk_1` FOREIGN KEY (photo_id) REFERENCES `{tbl_prefix}photos` (photo_id);
+
+ALTER TABLE `{tbl_prefix}video`
+    ADD CONSTRAINT `video_default_poster_ibfk_1` FOREIGN KEY (default_poster) REFERENCES `{tbl_prefix}video_image` (id_video_image) ON DELETE SET NULL;
+ALTER TABLE `{tbl_prefix}video`
+    ADD CONSTRAINT `video_default_backdrop_ibfk_1` FOREIGN KEY (default_backdrop) REFERENCES `{tbl_prefix}video_image` (id_video_image) ON DELETE SET NULL;
+ALTER TABLE `{tbl_prefix}video`
+    ADD CONSTRAINT `video_default_thumb_ibfk_1` FOREIGN KEY (default_thumbnail) REFERENCES `{tbl_prefix}video_image` (id_video_image) ON DELETE SET NULL;

@@ -330,7 +330,8 @@ INSERT INTO `{tbl_prefix}config` (`configid`, `name`, `value`) VALUES
     (NULL, 'enable_multi_factor_authentification', 'allowed'),
     (NULL, 'videos_enable_fullwidth', 'yes'),
     (NULL, 'collections_enable_fullwidth', 'yes'),
-    (NULL, 'collection_enable_fullwidth', 'yes');
+    (NULL, 'collection_enable_fullwidth', 'yes'),
+    (NULL, 'keep_ratio_photo', 'yes');
 
 
 INSERT INTO `{tbl_prefix}video_resolution` (`title`, `ratio`, `enabled`, `width`, `height`, `video_bitrate`) VALUES
@@ -367,8 +368,6 @@ INSERT INTO `{tbl_prefix}tools` (`language_key_label`, `language_key_description
     ('anonymous_stats_label', 'anonymous_stats_description', 'AdminTool::anonymousStats', 'anonymous_stats', '0 1 * * 7', CURRENT_TIMESTAMP, '1', '0');
 
 INSERT INTO `{tbl_prefix}tags_type` (`name`) VALUES ('video'), ('photo'), ('collection'), ('profile'), ('playlist'), ('actors'), ('producer'), ('executive_producer'), ('director'), ('crew'), ('genre');
-
-UPDATE `{tbl_prefix}video_thumbs` SET `type` = 'auto' WHERE `type` IS NULL;
 
 INSERT INTO `{tbl_prefix}categories_type` (`name`)
 VALUES ('video'),

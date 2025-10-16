@@ -206,7 +206,7 @@ class MWIP extends \Migration
         \myquery::$website_details = [];
         \ClipBucket::getInstance()->configs = \ClipBucket::getInstance()->get_configs();
 
-        self::generateTranslation('option_keep_ration_photo', [
+        self::generateTranslation('option_keep_ratio_photo', [
             'fr'=>'Conserver les proportions des photos',
             'en'=>'Keep Ratio Photo'
         ]);
@@ -237,6 +237,10 @@ class MWIP extends \Migration
             'table'  => 'video',
             'column' => 'thumbs_version',
         ]);
+        self::alterTable('ALTER TABLE `{tbl_prefix}photos` DROP COLUMN `photo_details`', [
+            'table'  => 'photos',
+            'column' => 'photo_details',
+        ]);
 
         self::generateTranslation('custom_thumbnail', [
             'fr'=>'Vignettes personnalisées',
@@ -257,6 +261,7 @@ class MWIP extends \Migration
             'fr'=>'Erreur lors du téléversement de la vignette',
             'en'=>'Error uploading thumbnail'
         ]);
+        
 
         $sql = 'DELETE FROM `{tbl_prefix}plugins` WHERE `plugin_folder` = \'cb_server_thumb\';';
         self::query($sql);

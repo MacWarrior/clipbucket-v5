@@ -1713,4 +1713,9 @@ VALUES ('ongoing_conversion'),
        ('new_password'),
        ('confirm_new_password'),
        ('recap_verify_failed'),
-       ('if_email_exist_been_sent');
+       ('if_email_exist_been_sent'),
+       ('custom_thumbnail'),
+       ('custom_poster'),
+       ('custom_backdrop'),
+       ('error_uploading_thumb'),
+       ('option_keep_ratio_photo');

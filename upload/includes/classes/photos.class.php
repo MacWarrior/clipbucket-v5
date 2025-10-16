@@ -42,9 +42,11 @@ class Photo
             ,'downloaded'
             ,'server_url'
             ,'owner_ip'
-            ,'photo_details'
         ];
 
+        if (!Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.2', '999')) {
+            $this->fields[] = 'photo_details';
+        }
         if( Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.0', '305') ){
             $this->fields[] = 'age_restriction';
         }
@@ -709,10 +711,13 @@ class CBPhotos
         # Set basic photo fields
         $basic_fields = [
             'photo_id', 'photo_key', 'userid', 'photo_title', 'photo_description',
-            'photo_details', 'date_added', 'filename', 'ext', 'active', 'broadcast', 'file_directory', 'views',
+            'date_added', 'filename', 'ext', 'active', 'broadcast', 'file_directory', 'views',
             'last_commented', 'total_comments'
         ];
 
+        if (!Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.2','999')) {
+            $basic_fields[] = 'photo_details';
+        }
         if( Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.0', '305') ){
             $basic_fields[] = 'age_restriction';
         }
