@@ -1812,7 +1812,7 @@ class userquery extends CBCategory
         if( Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.0', '331') ){
             $query .= ' LEFT JOIN ' . cb_sql_table('users_categories') . ' ON users.userid = users_categories.id_user';
         }
-        $query .= " WHERE users.$select_field = '$id'";
+        $query .= ' WHERE users.$select_field = \'' . mysql_clean($id) . '\'';
 
         $result = select($query, 60);
 
