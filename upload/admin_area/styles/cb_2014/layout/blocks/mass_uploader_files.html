@@ -9,6 +9,7 @@
 {assign var='hash' value=hash('sha512', $file.path|cat:$file.file)}
 
 {$requiredFields.title.name="{$hash|cat:'_title'}"}
+{$requiredFields.title.extra_tags='maxlength="'|cat:config('max_video_title')|cat:'"'}
 {$requiredFields.tags_video.name="{$hash|cat:'_tags'}"}
 
 {$requiredFields.desc.name="{$hash|cat:'_description'}"}
