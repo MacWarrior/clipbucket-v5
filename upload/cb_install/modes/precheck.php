@@ -85,7 +85,7 @@ $skippable_option = get_skippable_options();
         if( $check_ffi ){
             $msg = ['msg' => 'FFI extension enabled'];
         } else {
-            $msg = ['war' => 'FFI extension disabled<br/>AI features will be disabled.<br/>Please use PHP 7.4+ and enable FFI extension ("preload" won\'t work).'];
+            $msg = ['war' => 'FFI extension disabled<br/>AI features will be disabled.<br/>Please enable FFI extension ("preload" setting won\'t work).'];
         }
         echo '<dt' . ($line %2 == 0 ? ' class=\'white\'' : '') . '><span>FFI</dt>';
         echo '<dd' . ($line %2 == 0 ? ' class=\'white\'' : '') . '><span>' . msg_arr($msg) . '</span></dd>';
