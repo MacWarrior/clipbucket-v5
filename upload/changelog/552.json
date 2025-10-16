@@ -1,6 +1,6 @@
 {
   "version":"5.5.2",
-  "revision":"142",
+  "revision":"143",
   "status":"stable",
   "detail":[
     {
@@ -28,6 +28,7 @@
         ,"Update data refresh after core update"
         ,"Update core update error handling"
         ,"Update new member form access"
+        ,"Update FFI module warning"
         ,"Fix code mode on page edition <i>(#595)</i>"
         ,"Fix email sending error catching <i>(#587)</i>"
         ,"Fix incorrect frontend URL <i>(#529)</i>"
@@ -174,6 +175,7 @@
       "description": [
         "Update default config"
         ,"Update installation script to Debian 13 & Ubuntu 25.04"
+        ,"Update FFI module warning"
         ,"Fix new installation errors <i>(#592)</i>"
         ,"Fix revision 5.5.1 - #334 DB upgrade"
         ,"Fix possible discord error during installation process"
