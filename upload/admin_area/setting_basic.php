@@ -163,6 +163,7 @@ if (isset($_POST['update'])) {
         , 'videos_enable_fullwidth'
         , 'collections_enable_fullwidth'
         , 'collection_enable_fullwidth'
+        , 'keep_ratio_photo'
     ];
 
     $config_booleans_to_refactor = [
@@ -433,7 +434,8 @@ if (isset($_POST['update'])) {
         'enable_multi_factor_authentification',
         'videos_enable_fullwidth',
         'collections_enable_fullwidth',
-        'collection_enable_fullwidth'
+        'collection_enable_fullwidth',
+        'keep_ratio_photo'
     ];
 
     //Numeric Array

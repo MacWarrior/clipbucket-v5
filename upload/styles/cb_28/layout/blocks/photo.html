@@ -1,5 +1,4 @@
 {assign var='photo_class' value='img-responsive photo-land no_select'}
-
 {if Photo::getInstance()->isToBlur($photo['photo_id'])}
 	{$photo_class = $photo_class|cat:' blur'}
 {/if}
@@ -8,7 +7,7 @@
 <div class="item-photo col-lg-4 col-md-4 col-sm-6 col-xs-6">
 	<a class="photo-holder" href="{CBPhotos::getInstance()->photo_links($photo,'view_item')}" title="{display_clean($photo.photo_title)}">
 		{ANCHOR place='in_photo_thumb' data=$photo}
-        {PhotoThumbs::getHtmlThumbFile($photo.photo_id, 900, ['class'=>$photo_class])}
+        {PhotoThumbs::getHtmlThumbFile($photo.photo_id, 300, ['class'=>$photo_class, 'crop'=>true])}
 		<i class="icon-zoom"></i>
 	</a>
 	<div class="photo-info {if config('enable_hide_uploader_name') == 'yes'}nouploader{/if}">
@@ -30,7 +29,7 @@
 	<div class="photoAppending">
 		<a class="photo-holder no_overflow" href="{CBPhotos::getInstance()->photo_links($photo,'view_item')}" title="{display_clean($photo.photo_title)}">
 			{ANCHOR place='in_photo_thumb' data=$photo}
-            {PhotoThumbs::getHtmlThumbFile($photo.photo_id, 900, ['class'=>$photo_class])}
+            {PhotoThumbs::getHtmlThumbFile($photo.photo_id, 300, ['class'=>$photo_class, 'crop'=>true])}
 			<i class="icon-zoom"></i>
 		</a>
 		<div class="photo-info {if config('enable_hide_uploader_name') == 'yes'}nouploader{/if}">
@@ -53,7 +52,7 @@
 <div style="display: none" class="item-photo col-lg-4 col-md-4 col-sm-6 col-xs-12">
 	<a class="photo-holder" href="{CBPhotos::getInstance()->photo_links($photo,'view_item')}" title="{display_clean($photo.photo_title)}">
 		{ANCHOR place='in_photo_thumb' data=$photo}
-        {PhotoThumbs::getHtmlThumbFile($photo.photo_id, 900, ['class'=>$photo_class])}
+        {PhotoThumbs::getHtmlThumbFile($photo.photo_id, 300, ['class'=>$photo_class, 'crop'=>true])}
 		<i class="icon-zoom"></i>
 	</a>
 	<div class="photo-info {if config('enable_hide_uploader_name') == 'yes'}nouploader{/if}">
@@ -74,7 +73,7 @@
 {if $display_type == "user_photos"}
 	<a class="photo-holder" href="{CBPhotos::getInstance()->photo_links($photo,'view_item')}" title="{display_clean($photo.photo_title)}">
 		{ANCHOR place='in_photo_thumb' data=$photo}
-        {PhotoThumbs::getHtmlThumbFile($photo.photo_id, 900, ['class'=>$photo_class])}
+        {PhotoThumbs::getHtmlThumbFile($photo.photo_id, 300, ['class'=>$photo_class, 'crop'=>true])}
 		<i class="icon-zoom"></i>
 	</a>
 	<div class="photo-info {if config('enable_hide_uploader_name') == 'yes'}nouploader{/if}">
@@ -94,7 +93,7 @@
 {if $display_type == "featuredPhoto_sidebar"}
 	<a class="photo-holder" href="{CBPhotos::getInstance()->photo_links($photo,'view_item')}" title="{display_clean($photo.photo_title)}">
 		{ANCHOR place='in_photo_thumb' data=$photo}
-        {PhotoThumbs::getHtmlThumbFile($photo.photo_id, 550, ['class'=>$photo_class])}
+        {PhotoThumbs::getHtmlThumbFile($photo.photo_id, 150, ['class'=>$photo_class, 'crop'=>true])}
 		<i class="icon-zoom"></i>
 	</a>
 {/if}
@@ -102,7 +101,7 @@
 {if $display_type == "search_photos"}
 	<a class="searchresult-photo" href="{CBPhotos::getInstance()->photo_links($photo,'view_item')}" title="{display_clean($photo.photo_title)}">
 		{ANCHOR place='in_photo_thumb' data=$photo}
-        {PhotoThumbs::getHtmlThumbFile($photo.photo_id, 900, ['class'=>$photo_class])}
+        {PhotoThumbs::getHtmlThumbFile($photo.photo_id, 300, ['class'=>$photo_class, 'crop'=>true])}
 		<div class="hover hidden-xs hidden-sm">
 			<i class="icon-zoom"></i>
 		</div>
@@ -125,14 +124,14 @@
 {if $display_type == "relatedPhoto_sidebar"}
 	<a class="photo-holder" href="{CBPhotos::getInstance()->photo_links($photo,'view_item')}" title="{display_clean($photo.photo_title)}">
 		{ANCHOR place='in_photo_thumb' data=$photo}
-        {PhotoThumbs::getHtmlThumbFile($photo.photo_id, 550, ['class'=>'img-responsive'])}
+        {PhotoThumbs::getHtmlThumbFile($photo.photo_id, 150, ['class'=>'img-responsive', 'crop'=>true])}
 		<i class="icon-zoom"></i>
 	</a>
 {/if}
 
 {if $display_type == 'subscription'}
 	<div class="grid_view clearfix" style="width:auto; margin-right:4px;">
-		<a href="{CBPhotos::getInstance()->photo_links($photo,'view_item')}">{PhotoThumbs::getHtmlThumbFile($photo_photo_id, 150, ['class'=>'photoThumbBox'])}</a>
+		<a href="{CBPhotos::getInstance()->photo_links($photo,'view_item')}">{PhotoThumbs::getHtmlThumbFile($photo_photo_id, 150, ['class'=>'photoThumbBox', 'crop'=>true])}</a>
 		<div class="photoTitle" style="margin:5px 0px; font:bold 11px Arial;">
 			<a href="{CBPhotos::getInstance()->photo_links($photo,'view_item')}" title="{display_clean($photo.photo_title)}">{display_clean($photo.photo_title)|truncate:15}</a>
 		</div>
@@ -146,7 +145,7 @@
 	<div style="display:inline-block; *display:inline; vertical-align:middle; padding:0 8px 5px 0px;">
 		<a href="{CBPhotos::getInstance()->photo_links($photo,'view_item')}">
 			{ANCHOR place='in_photo_thumb' data=$photo}
-			{PhotoThumbs::getHtmlThumbFile($photo.photo_id, 150, ['class'=>'photoThumbBox'])}
+			{PhotoThumbs::getHtmlThumbFile($photo.photo_id, 150, ['class'=>'photoThumbBox', 'crop'=>true])}
 		</a>
 		<div class="photoTitle" style="font:bold 10px Arial; margin:1px 0px;">
 			<a href="{CBPhotos::getInstance()->photo_links($photo,'view_item')}" title="{display_clean($photo.photo_title)}">{display_clean($photo.photo_title)|truncate:15}</a>
@@ -161,7 +160,7 @@
 {if $display_type == "channel_page"}
 	<li class="itemBox" onclick="loadObject(this,'photos','{$photo.photo_id}','viewingArea')">
 		{ANCHOR place='in_photo_thumb' data=$photo}
-        {PhotoThumbs::getHtmlThumbFile($photo.photo_id, 150, ['style'=>'display:block;margin:0 auto;'])}
+        {PhotoThumbs::getHtmlThumbFile($photo.photo_id, 150, ['style'=>'display:block;margin:0 auto;', 'crop'=>true])}
 	</li>
 {/if}
 
@@ -169,7 +168,7 @@
 <div class="photoAppending">
     <a class="photo-holder no_overflow" href="{CBPhotos::getInstance()->photo_links($photo,'view_item')}" title="{display_clean($photo.photo_title)}">
 		{ANCHOR place='in_photo_thumb' data=$photo}
-        {PhotoThumbs::getHtmlThumbFile($photo.photo_id, 900)}
+        {PhotoThumbs::getHtmlThumbFile($photo.photo_id, 550, ['crop'=>true])}
         <i class="icon-zoom"></i>
     </a>
     <div class="photo-info {if config('enable_hide_uploader_name') == 'yes'}nouploader{/if}">

@@ -1718,4 +1718,6 @@ VALUES ('ongoing_conversion'),
        ('custom_poster'),
        ('custom_backdrop'),
        ('error_uploading_thumb'),
-       ('option_keep_ratio_photo');
+       ('option_keep_ratio_photo'),
+       ('photo_delete_successfully'),
+       ('option_keep_ratio_photo_description');

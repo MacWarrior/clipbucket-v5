@@ -202,14 +202,20 @@ class MWIP extends \Migration
 
         $sql = 'SELECT plugin_id FROM `{tbl_prefix}plugins` WHERE `plugin_folder` = \'cb_server_thumb\' AND `plugin_active` = \'yes\';';
         $is_server_timthumb_installed = !empty(self::req($sql));
-        self::generateConfig('keep_ratio_photo', (!$is_server_timthumb_installed ? 'yes' : 'no'));
+        self::generateConfig('keep_ratio_photo', ($is_server_timthumb_installed ? 'yes' : 'no'));
         \myquery::$website_details = [];
         \ClipBucket::getInstance()->configs = \ClipBucket::getInstance()->get_configs();
 
         self::generateTranslation('option_keep_ratio_photo', [
-            'fr'=>'Conserver les proportions des photos',
-            'en'=>'Keep Ratio Photo'
+            'fr'=>'Forcer les proportions des photos',
+            'en'=>'Force thumb ratio'
         ]);
+
+        self::generateTranslation('option_keep_ratio_photo_description', [
+            'fr'=>'Toutes les vignettes photos auront le même ratio pour être affiché en grille',
+            'en'=>'All photos thumbs will have the same ratio to be displayed as a grid'
+        ]);
+
         //migrer les thumbs
         $limit = 1;
         $offset = 0;
@@ -262,7 +268,10 @@ class MWIP extends \Migration
             'en'=>'Error uploading thumbnail'
         ]);
         
-
+        self::generateTranslation('photo_delete_successfully', [
+            'fr'=>'La photo a été supprimée avec succès',
+            'en'=>'Photo deleted successfully'
+        ]);
         $sql = 'DELETE FROM `{tbl_prefix}plugins` WHERE `plugin_folder` = \'cb_server_thumb\';';
         self::query($sql);
     }

@@ -42,7 +42,7 @@
                                                 {lang("photo_is", strtolower(lang("orphan")))}
                                             </div>
                                         {/if}
-                                        {PhotoThumbs::getHtmlThumbFile($p.photo_id, 550, ['class'=>'photoThumbBox moveL'])}
+                                        {PhotoThumbs::getHtmlThumbFile($p.photo_id, 550, ['class'=>'photoThumbBox moveL', 'extra'=>'style="width: -webkit-fill-available"'])}
                                     </div>
                                 </div>
                                 {foreach from=$optionFields item=field}

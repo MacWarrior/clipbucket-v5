@@ -5,7 +5,7 @@
 		</td>
 		<td valign="middle">
 			<label for="check_photo-{$photo.photo_id}">
-                {PhotoThumbs::getHtmlThumbFile($photo.photo_id, 150, ['class'=>'acc_usr_video_thumb img-responsive'])}
+                {PhotoThumbs::getHtmlThumbFile($photo.photo_id, 150, ['class'=>'acc_usr_video_thumb img-responsive', 'crop'=>true])}
 			</label>
 			<br/>{display_clean($photo.photo_title)|truncate:100}<br/>
 			{if !$photo.collection_id}<span class="label label-warning">{lang code='orphan'}</span>{/if}
@@ -29,7 +29,7 @@
 		</td>
 		<td valign="middle">
 			<label for="check_photo-{$photo.photo_id}">
-                {PhotoThumbs::getHtmlThumbFile($photo.photo_id, 150, ['class'=>'acc_usr_video_thumb img-responsive'])}
+                {PhotoThumbs::getHtmlThumbFile($photo.photo_id, 150, ['class'=>'acc_usr_video_thumb img-responsive', 'crop'=>true])}
 			</label>
 			{display_clean($photo.photo_title)|truncate:100}<br>
 			<span class="btn-group show">
@@ -52,7 +52,7 @@
 
 		<td valign="middle">
 			<label for="check_photo-{$photo.photo_id}">
-                {PhotoThumbs::getHtmlThumbFile($photo.photo_id, 150, ['class'=>'acc_usr_video_thumb img-responsive'])}
+                {PhotoThumbs::getHtmlThumbFile($photo.photo_id, 150, ['class'=>'acc_usr_video_thumb img-responsive', 'crop'=>true])}
 			</label>
 			{display_clean($photo.photo_title)|truncate:100}<br>
 			<span class="btn-group show">

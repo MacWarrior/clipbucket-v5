@@ -2,7 +2,7 @@
 
 {$curr_photo = $photo|@json_encode}
 {$user_admin = $user|@json_encode}
-{$srcfirst = {PhotoThumbs::getThumbFile($photo.photo_id, 900)}}
+{$srcfirst = {PhotoThumbs::getThumbFile($photo.photo_id, 'original')}}
 {$shareableThumb = {PhotoThumbs::getThumbFile($photo.photo_id, 150)}}
 {$shareableThumb = $shareableThumb.0}
 <div id="main" class="clearfix container">

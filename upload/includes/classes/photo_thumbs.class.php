@@ -134,9 +134,9 @@ class PhotoThumbs
      * @return array|string
      * @throws Exception
      */
-    public static function  getThumbFile(int $photo_id, int|string $width = 150, string $return_type = 'url'): array|string
+    public static function getThumbFile(int $photo_id, int|string $width = 150, string $return_type = 'url'): array|string
     {
-        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.2', '999')) {
+        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.2', '999') && $width != 'original') {
             $thumb_photo_directory_path = DirPath::get('thumbs') . 'photo' . DIRECTORY_SEPARATOR;
         } else {
             $thumb_photo_directory_path = DirPath::get('photos');
@@ -144,7 +144,7 @@ class PhotoThumbs
         switch ($return_type) {
             default:
             case 'url':
-                if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.2', '999')) {
+                if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.2', '999') && $width != 'original') {
                     $thumb_photo_directory = DirPath::getUrl('thumbs') . 'photo' . DIRECTORY_SEPARATOR;
                 } else {
                     $thumb_photo_directory = DirPath::getUrl('photos');
@@ -162,6 +162,9 @@ class PhotoThumbs
                 'get_photo_info' => true
             ];
             $thumb = self::getOneThumb($params);
+            if (!empty($thumb['is_original_size'])) {
+                $thumb['width'] = 'original';
+            }
         } else {
             //param old
             $photo = Photo::getInstance()->getOne(['photo_id' => $photo_id]);
@@ -227,7 +230,7 @@ class PhotoThumbs
      */
     public static function getThumbPath($photo_file_directory, $photo_file_name, $thumb_width, $thumb_extension, $thumb_version): string
     {
-        if ($thumb_version > '5.5.2') {
+        if ($thumb_version > '5.5.2' && $thumb_width != 'original') {
             $filepath = $photo_file_directory . DIRECTORY_SEPARATOR . $photo_file_name .DIRECTORY_SEPARATOR;
         } else {
             $filepath = $photo_file_directory . DIRECTORY_SEPARATOR;
@@ -249,6 +252,9 @@ class PhotoThumbs
      */
     public static function getThumbName($photo_file_name, $thumb_width, $thumb_extension, $thumb_version): string
     {
+        if ($thumb_width == 'original') {
+            return $photo_file_name . '.' . $thumb_extension;
+        }
         if ($thumb_version <= '5.5.2') {
             $thumb_width = self::getOldNameFromResolutionArray()[$thumb_width] ?? $thumb_width;
             return $photo_file_name . '_' . $thumb_width . '.' . $thumb_extension;
@@ -307,16 +313,13 @@ class PhotoThumbs
         }
         foreach (self::$resolution_setting as $resolution_key => $res) {
             if ($resolution_key == 'original') {
-                $width = 'original';
-                $height = 0;
-                $res['width'] = $original_sizes[0];
+                continue;
             } else {
                 $width = $res['width'] ;
-                $height = $res['height'] ;
             }
             $new_thumb_path = $thumb_photo_directory . self::getThumbPath($photo['file_directory'], $photo['filename'], $width, $ext, Update::getInstance()->getCurrentCoreVersion());
 
-            PhotoThumbs::CreateThumb($original_photo_path, $new_thumb_path, $width, $height, $ext, $original_sizes);
+            PhotoThumbs::CreateThumb($original_photo_path, $new_thumb_path, $width, $ext, $original_sizes);
             if (file_exists($new_thumb_path)) {
                 //watermark
                 if ($res['should_watermark'] && config('watermark_photo')) {
@@ -373,7 +376,7 @@ class PhotoThumbs
      * @return void
      * @throws Exception
      */
-    public static function CreateThumb(string $original_file_path, string $destination_path, int|string $destination_width, int $destination_height, string $extension, array $original_sizes): void
+    public static function CreateThumb(string $original_file_path, string $destination_path, int|string $destination_width, string $extension, array $original_sizes): void
     {
         $org_width = $original_sizes[0];
         $org_height = $original_sizes[1];
@@ -400,9 +403,6 @@ class PhotoThumbs
             $width = $org_width / $ratio;
             $height = $org_height / $ratio;
 
-            if (config('keep_ratio_photo') != 'yes') {
-                $height = $destination_height;
-            }
             $image_r = imagecreatetruecolor($width, $height);
 
             switch ($extension) {
@@ -475,7 +475,7 @@ class PhotoThumbs
 
     public static function deletePhotoThumb(array $thumb)
     {
-        $thumb_path = DirPath::get('thumbs') . 'photo' . DIRECTORY_SEPARATOR . self::getThumbPath($thumb['file_directory'], $thumb['filename'], $thumb['width'], $thumb['extension'], $thumb['version']);
+        $thumb_path = DirPath::get('thumbs') . 'photo' . DIRECTORY_SEPARATOR . self::getThumbPath($thumb['file_directory'], $thumb['filename'], ($thumb['is_original_size'] ? 'original' : $thumb['width']), $thumb['extension'], $thumb['version']);
         if (file_exists($thumb_path)) {
             unlink($thumb_path);
         }
@@ -511,10 +511,13 @@ class PhotoThumbs
             $attrs['class'] = $params_html['class'];
         }
 
+        if (!empty($params_html['crop']) && config('keep_ratio_photo')=='yes') {
+            $attrs['class'] .= ' crop_image';
+        }
+
         if (!empty($params_html['align'])) {
             $attrs['align'] = $params_html['align'];
         }
-
 
         if (isset($params_html['title']) and $params_html['title'] == '') {
             unset($attrs['title']);
