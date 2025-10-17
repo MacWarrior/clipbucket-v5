@@ -103,6 +103,17 @@ class formObj
             $textField .= ' rows="' . $field['rows'] . '"';
         }
 
+        if (!empty($field['max_length'])) {
+            $textField .= ' maxlength="' . $field['max_length']. '"';
+        }
+        if (!empty($field['min_length'])) {
+            $textField .= ' minlength="' . $field['min_length']. '"';
+        }
+
+        if (!empty($field['required']) && $field['required'] == 'yes') {
+            $textField .= ' required';
+        }
+
         if (!empty($field['extra_tags'])) {
             $textField .= ' ' . $field['extra_tags'];
         }
