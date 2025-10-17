@@ -144,6 +144,7 @@ $(document).ready(function () {
         , 'enable_video_backdrop': 'tmdb_get_backdrop'
         , 'enable_tmdb': 'tmdb_token'
         , 'enable_tmdb_mature_content': 'tmdb_mature_content_age'
+        , 'keep_ratio_photo': 'ratio_photo'
 
     }, function (index, value) {
 

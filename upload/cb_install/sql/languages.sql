@@ -1720,4 +1720,5 @@ VALUES ('ongoing_conversion'),
        ('error_uploading_thumb'),
        ('option_keep_ratio_photo'),
        ('photo_delete_successfully'),
-       ('option_keep_ratio_photo_description');
+       ('option_keep_ratio_photo_description'),
+       ('option_ratio_photo')

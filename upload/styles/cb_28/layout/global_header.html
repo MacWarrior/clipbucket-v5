@@ -147,4 +147,12 @@
 				});
 			});
 		</script>
+
+        {if config('keep_ratio_photo') == 'yes' && config('ratio_photo')}
+            <style>
+                .crop_image {
+                    --crop_ratio: {config('ratio_photo')};
+                }
+            </style>
+        {/if}
 	</head>

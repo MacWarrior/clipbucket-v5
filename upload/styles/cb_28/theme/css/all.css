@@ -7085,8 +7085,12 @@ span.tagit-label i.fa {
     width: 100%;
 }
 
+:root {
+    --crop_ratio: 16 / 10
+}
+
 .crop_image {
-    aspect-ratio: 16 / 10;
+    aspect-ratio: var(--crop_ratio);
     width: 100%;
     height: auto;
     object-fit: cover;

@@ -331,7 +331,8 @@ INSERT INTO `{tbl_prefix}config` (`configid`, `name`, `value`) VALUES
     (NULL, 'videos_enable_fullwidth', 'yes'),
     (NULL, 'collections_enable_fullwidth', 'yes'),
     (NULL, 'collection_enable_fullwidth', 'yes'),
-    (NULL, 'keep_ratio_photo', 'yes');
+    (NULL, 'keep_ratio_photo', 'yes'),
+    (NULL, 'ratio_photo', 1.7777);
 
 
 INSERT INTO `{tbl_prefix}video_resolution` (`title`, `ratio`, `enabled`, `width`, `height`, `video_bitrate`) VALUES

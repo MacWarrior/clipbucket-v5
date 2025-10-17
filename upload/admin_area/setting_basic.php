@@ -435,7 +435,8 @@ if (isset($_POST['update'])) {
         'videos_enable_fullwidth',
         'collections_enable_fullwidth',
         'collection_enable_fullwidth',
-        'keep_ratio_photo'
+        'keep_ratio_photo',
+        'ratio_photo'
     ];
 
     //Numeric Array
@@ -489,7 +490,8 @@ if (isset($_POST['update'])) {
         'video_thumbs_preview_count',
 
         'max_photo_categories',
-        'max_collection_categories'
+        'max_collection_categories',
+        'ratio_photo'
     ];
 
     foreach ($rows as $field) {

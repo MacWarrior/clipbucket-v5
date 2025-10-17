@@ -274,6 +274,13 @@ class MWIP extends \Migration
         ]);
         $sql = 'DELETE FROM `{tbl_prefix}plugins` WHERE `plugin_folder` = \'cb_server_thumb\';';
         self::query($sql);
+
+        self::generateTranslation('option_ratio_photo', [
+            'fr'=>'Ratio des vignettes photos',
+            'en'=>'Ratio of photos thumbs'
+        ]);
+
+        self::generateConfig('ratio_photo', '1.7777');
     }
 
 }
