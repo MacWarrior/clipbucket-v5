@@ -203,7 +203,7 @@ class CBTemplate
         switch ($type) {
             case 'layout':
             default:
-                $style_dir = DirPath::get('styles') . "$template/layout/";
+                $style_dir = DirPath::get('styles') . $template . DIRECTORY_SEPARATOR . 'layout' . DIRECTORY_SEPARATOR;
                 $files_patt = $style_dir . '*.html';
                 $files = glob($files_patt);
                 /**
@@ -217,7 +217,7 @@ class CBTemplate
                 /**
                  * Now Reading Blocks Folder
                  */
-                $blocks = $style_dir . 'blocks/';
+                $blocks = $style_dir . 'blocks' . DIRECTORY_SEPARATOR;
                 $file_patt = $blocks . '*.html';
                 $files = glob($file_patt);
                 foreach ($files as $file) {
@@ -226,7 +226,7 @@ class CBTemplate
                 return $new_files;
 
             case 'theme':
-                $style_dir = DirPath::get('styles') . "$template/theme/";
+                $style_dir = DirPath::get('styles') . $template . DIRECTORY_SEPARATOR . 'theme' . DIRECTORY_SEPARATOR . 'css' . DIRECTORY_SEPARATOR;
                 $files_patt = $style_dir . '*.css';
                 $files = glob($files_patt);
                 /**
