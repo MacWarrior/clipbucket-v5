@@ -1,6 +1,6 @@
 {
   "version":"5.5.2",
-  "revision":"146",
+  "revision":"147",
   "status":"stable",
   "detail":[
     {
@@ -23,6 +23,7 @@
         ,"Add empty page title error"
         ,"Add collection mass broadcast update"
         ,"Add users and collections to dashboard flagged objects chart <i>(#74)</i>"
+        ,"Add notice when editing default template"
         ,"Update configs organisation"
         ,"Update collection management display"
         ,"Update data refresh after core update"
@@ -54,6 +55,7 @@
         ,"Fix possibility to disable all conversion resolutions <i>(#664)</i>"
         ,"Fix possible SQL injection (Thanks @Takumi142857 !)"
         ,"Fix possible XSS injection"
+        ,"Fix possible arbitraty file access (Thanks @Takumi142857 !)"
       ]
     },
     {
