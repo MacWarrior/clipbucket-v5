@@ -1,6 +1,6 @@
 {
   "version":"5.5.2",
-  "revision":"143",
+  "revision":"147",
   "status":"stable",
   "detail":[
     {
@@ -23,6 +23,7 @@
         ,"Add empty page title error"
         ,"Add collection mass broadcast update"
         ,"Add users and collections to dashboard flagged objects chart <i>(#74)</i>"
+        ,"Add notice when editing default template"
         ,"Update configs organisation"
         ,"Update collection management display"
         ,"Update data refresh after core update"
@@ -53,6 +54,8 @@
         ,"Fix user storage calculation tool staying stuck in ongoing state"
         ,"Fix possibility to disable all conversion resolutions <i>(#664)</i>"
         ,"Fix possible SQL injection (Thanks @Takumi142857 !)"
+        ,"Fix possible XSS injection"
+        ,"Fix possible arbitraty file access (Thanks @Takumi142857 !)"
       ]
     },
     {
@@ -133,6 +136,8 @@
         ,"Fix channel links on homepage"
         ,"Fix collection creation <i>(#667)</i>"
         ,"Fix TMDB import <i>(#679)</i>"
+        ,"Fix possible XSS injection (Thanks @Takumi142857 !)"
+        ,"Fix photo edition from upload form"
       ]
     },
     {
@@ -148,6 +153,7 @@
         ,"Increase session security"
         ,"Update Readme"
         ,"Update videos views counter"
+        ,"Update email validity check"
         ,"Reduce cookies usage"
         ,"Remove unused configs"
         ,"Fix PHP8.X compatibility"
@@ -224,7 +230,7 @@
         ,"Update predis/predis to 3.0.1"
         ,"Update phpmailer/phpmailer to 6.10.0"
         ,"Update psr/http-message to 1.1"
-        ,"Update VideoJS to version 8.23.3"
+        ,"Update VideoJS to version 8.23.4"
         ,"Update summernote to version 0.9.1"
       ]
     }

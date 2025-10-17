@@ -621,7 +621,7 @@
     let text_confirm_vid_file = '{lang code = "confirm_delete_video_file"}';
     let text_confirm_sub_file = '{lang code = "confirm_delete_subtitle_file"}';
     var videoid = '{$data.videoid}';
-    let available_tags = JSON.parse('{$available_tags|json_encode|replace:"'": "\'"}');
+    let available_tags = JSON.parse('{$available_tags|json_encode|escape:'javascript'}');
     let text_confirm_comment = '{lang('text_confirm_comment')}';
     let text_no_comment = '{lang('no_comments',strtolower(lang('video')))}';
     let visual_editor_comments_enabled = "{config('enable_visual_editor_comments') == 'yes'}";

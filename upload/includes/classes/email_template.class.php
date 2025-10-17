@@ -641,7 +641,7 @@ class EmailTemplate
         $mail = new PHPMailer();
         $mail->CharSet = PHPMailer::CHARSET_UTF8;
         $mail->isHTML();
-        if (!isValidEmail($sender_email)) {
+        if (!Email::isValid($sender_email)) {
             return lang('invalid_email_sender');
         }
         $mail->setFrom($sender_email, $sender_name, false);
@@ -663,14 +663,14 @@ class EmailTemplate
 
         if (is_array($to) && empty($to['name'])) {
             foreach ($to as $email) {
-                if (isValidEmail($email)) {
+                if (Email::isValid($email)) {
                     self::addAddressAndNameIfExist($mail, $email);
                 } else {
                     return lang('invalid_email_recipient');
                 }
             }
         } else {
-            if (isValidEmail($to) || isValidEmail($to['mail'])) {
+            if (Email::isValid($to) || Email::isValid($to['mail'])) {
                 self::addAddressAndNameIfExist($mail, $to);
             } else {
                 return lang('invalid_email_recipient');

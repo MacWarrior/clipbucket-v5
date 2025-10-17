@@ -68,6 +68,8 @@ class ClipBucket
     //This array contains the public pages name for private access to website 
     var $public_pages = ["signup", "view_page"];
 
+    public const DEFAULT_TEMPLATE = 'cb_28';
+
     /**
      * @throws Exception
      */
@@ -604,7 +606,7 @@ class ClipBucket
             $template = $this->template;
         } else {
             // Fallback to default template
-            $template = 'cb_28';
+            $template = self::DEFAULT_TEMPLATE;
         }
         require_once DirPath::get('styles') . $template . DIRECTORY_SEPARATOR . 'header.php';
 

@@ -126,6 +126,6 @@
     var max_file_size ="{config('max_upload_size')}Mb";
     var chunk_upload ="{config('enable_chunk_upload') == 'yes'}";
     var collection_id = '{$selected_collection.collection_id}';
-    var available_tags = JSON.parse('{$available_tags|json_encode|replace:"'": "\'"}');
-    var available_collection_tags = JSON.parse('{$available_collection_tags|json_encode|replace:"'": "\'"}');
+    var available_tags = JSON.parse('{$available_tags|json_encode|escape:'javascript'}');
+    var available_collection_tags = JSON.parse('{$available_collection_tags|json_encode|escape:'javascript'}');
 </script>

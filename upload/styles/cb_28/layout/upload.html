@@ -75,7 +75,7 @@
     var date_format_time = "{date(config('date_format'),time())}";
     var get_default_cid = "{$default_category_id}";
     var stay_mp4 = "{config('stay_mp4')}";
-    var available_tags = JSON.parse('{$available_tags|json_encode|replace:"'": "\'"}');
+    var available_tags = JSON.parse('{$available_tags|json_encode|escape:'javascript'}');
     var pourcent_completed = '{$pourcent_completed}';
     var cancel_uploading = '{$cancel_uploading}';
     let text_confirm_sub_file = '{lang code = "confirm_delete_subtitle_file"}';
