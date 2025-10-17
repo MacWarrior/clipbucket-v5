@@ -68,7 +68,7 @@ class Gravatar
 
     public function setEmail($email)
     {
-        if ($this->isValidEmail($email)) {
+        if (Email::isValid($email)) {
             $this->email = $email;
             $this->properties['gravatar_id'] = md5(strtolower($this->email));
             return true;
@@ -102,11 +102,6 @@ class Gravatar
     public function setExtra($extra)
     {
         $this->extra = $extra;
-    }
-
-    public function isValidEmail($email): bool
-    {
-        return is_valid_syntax('email', $email);
     }
 
     /**
