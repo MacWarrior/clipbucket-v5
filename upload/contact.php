@@ -11,7 +11,7 @@ $message = post('message');
 if (isset($_POST['contact'])) {
     if (empty($name)) {
         e(lang('name_was_empty'));
-    } elseif (empty($email) || !isValidEmail($email)) {
+    } elseif (empty($email) || !Email::isValid($email)) {
         e(lang('invalid_email'));
     } elseif (empty($reason)) {
         e(lang('pelase_enter_reason'));

@@ -50,7 +50,7 @@ switch ($mode) {
             redirect_to(DirPath::getUrl('root'));
         }
         if( isset($_POST['av_email']) ){
-            if( !isvalidEmail( $_POST['av_email'] ) ){
+            if( !Email::isValid( $_POST['av_email'] ) ){
                 e(lang('usr_email_err2'));
             } else {
                 userquery::getInstance()->send_activation_code($_POST['av_email']);
