@@ -50,7 +50,7 @@
             <div class="form-group">
                 <label for="file_content"><h3>Edit Template</h3></label>
                 <textarea rows="30" class="form-control" name="thecontent" class="file_content" id="file_content">
-                    {if $content}{$content}{else}<em>No File Selected</em>{/if}
+                    {if $content}{$content}{else}<em>{lang('no_file_selected')}</em>{/if}
                 </textarea>
             </div>
             <div>
@@ -58,7 +58,7 @@
                 This file is not writeable, please set
                 <em>
                     <strong>{$smarty.get.file}</strong>
-                </em> permissions to 0777 - 
+                </em> permissions to 0755 -
                 <a href="http://docs.clip-bucket.com/clipbucket-docs/files-folder-permissions" target="_blank">
                     <strong>More Details</strong>
                 </a>

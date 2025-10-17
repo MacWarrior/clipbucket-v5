@@ -16,14 +16,22 @@ $breadcrumb[1] = ['title' => lang('template_editor'), 'url' => DirPath::getUrl('
 $templates = CBTemplate::getInstance()->get_templates();
 assign('templates', $templates);
 #Checking if user has selected template for editing, if not, make SELECTED template for editing
-$sel_dir = $_GET['dir'];
-if (!$sel_dir || !CBTemplate::getInstance()->is_template($sel_dir)) {
-    $sel_dir = TEMPLATE;
+$sel_dir = TEMPLATE;
+if (!empty($_GET['dir'])) {
+    if (!CBTemplate::getInstance()->is_template($_GET['dir'])) {
+        e(lang('template_dont_exist'));
+        unset($_GET['file']);
+    } else {
+        $sel_dir = $_GET['dir'];
+    }
+}
+if ($sel_dir == ClipBucket::DEFAULT_TEMPLATE) {
+    e(lang('warning_official_cb_template'),'w');
 }
 
 //Checking if still there is no template, display error
 if (!CBTemplate::getInstance()->is_template($sel_dir)) {
-    e('No Template Found');
+    e(lang('template_dont_exist'));
 } else {
     assign('sel_dir', $sel_dir);
     //Getting list template layout files , i.e HTML files
@@ -59,9 +67,9 @@ if (!CBTemplate::getInstance()->is_template($sel_dir)) {
                         $data = $_POST['thecontent'];
                         $open_file = fopen($file, 'w');
                         fwrite($open_file, stripslashes($data));
-                        e('File has been updated', 'm');
+                        e(lang('file_has_been_updated'), 'm');
                     } else {
-                        e('Unable to write file');
+                        e(lang('unable_to_write_file'));
                     }
                 }
 
@@ -100,15 +108,6 @@ while ($file = readdir($dp)) {
 closedir($dp);
 sort($files);
 Assign('files', $files);
-
-//Writing File
-if (isset($_POST['save'])) {
-    $file = $dir . $_POST['file'];
-    $data = stripslashes($_POST['data']);
-    $open_file = fopen($file, "w");
-    fwrite($open_file, $data);
-    $msg = $_POST['file'] . " Has Been Saved And Updated";
-}
 
 //Getting Data from File
 if (isset($_POST['file'])) {
