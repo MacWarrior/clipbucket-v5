@@ -1,6 +1,6 @@
 {
   "version":"5.5.2",
-  "revision":"132",
+  "revision":"145",
   "status":"stable",
   "detail":[
     {
@@ -28,6 +28,7 @@
         ,"Update data refresh after core update"
         ,"Update core update error handling"
         ,"Update new member form access"
+        ,"Update FFI module warning"
         ,"Fix code mode on page edition <i>(#595)</i>"
         ,"Fix email sending error catching <i>(#587)</i>"
         ,"Fix incorrect frontend URL <i>(#529)</i>"
@@ -50,6 +51,8 @@
         ,"Fix advanced settings display"
         ,"Fix PHP error when trying to access missing log file"
         ,"Fix user storage calculation tool staying stuck in ongoing state"
+        ,"Fix possibility to disable all conversion resolutions <i>(#664)</i>"
+        ,"Fix possible SQL injection (Thanks @Takumi142857 !)"
       ]
     },
     {
@@ -71,8 +74,12 @@
         ,"Implement remote play"
         ,"Implement sub-collection items display & count"
         ,"Implement multi-factor authentification"
+        ,"Implement fullwidth videos page"
+        ,"Implement fullwidth collections page"
+        ,"Implement fullwidth collection page"
         ,"Refactor friends requests & management"
         ,"Refactor collection selections"
+        ,"Refactor password reset"
         ,"Update video & photos management pages display"
         ,"Update video edition display"
         ,"Update photo upload & edition display"
@@ -122,6 +129,10 @@
         ,"Fix default thumb selection on video upload form"
         ,"Fix video style on videos page while converting"
         ,"Fix PHP error on video without thumbs"
+        ,"Fix featured users on channels page"
+        ,"Fix channel links on homepage"
+        ,"Fix collection creation <i>(#667)</i>"
+        ,"Fix TMDB import <i>(#679)</i>"
       ]
     },
     {
@@ -137,6 +148,7 @@
         ,"Increase session security"
         ,"Update Readme"
         ,"Update videos views counter"
+        ,"Update email validity check"
         ,"Reduce cookies usage"
         ,"Remove unused configs"
         ,"Fix PHP8.X compatibility"
@@ -164,6 +176,7 @@
       "description": [
         "Update default config"
         ,"Update installation script to Debian 13 & Ubuntu 25.04"
+        ,"Update FFI module warning"
         ,"Fix new installation errors <i>(#592)</i>"
         ,"Fix revision 5.5.1 - #334 DB upgrade"
         ,"Fix possible discord error during installation process"
@@ -171,6 +184,7 @@
         ,"Fix minified JS & CSS"
         ,"Fix core update when using mounted directory as storage"
         ,"Fix stuck update notice"
+        ,"Fix SQL error catching during update"
       ]
     },
     {
@@ -211,7 +225,7 @@
         ,"Update predis/predis to 3.0.1"
         ,"Update phpmailer/phpmailer to 6.10.0"
         ,"Update psr/http-message to 1.1"
-        ,"Update VideoJS to version 8.23.3"
+        ,"Update VideoJS to version 8.23.4"
         ,"Update summernote to version 0.9.1"
       ]
     }

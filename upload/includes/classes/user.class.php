@@ -364,6 +364,7 @@ class User
         $param_search = $params['search'] ?? false;
         $param_channel_enable = $params['channel_enable'] ?? false;
         $param_email = $params['email'] ?? false;
+        $param_email_strict = $params['email_strict'] ?? false;
         $param_username = $params['username'] ?? false;
         $param_username_strict = $params['username_strict'] ?? false;
         $param_status = $params['status'] ?? false;
@@ -398,6 +399,9 @@ class User
 
         if( $param_email ){
             $conditions[] = 'users.email LIKE \'%' . mysql_clean($param_email) . '%\'';
+        }
+        if( $param_email_strict ){
+            $conditions[] = 'users.email = \'' . mysql_clean($param_email_strict) . '\'';
         }
 
         if( $param_username ){
@@ -1529,7 +1533,7 @@ class userquery extends CBCategory
         if (!$user) {
             return false;
         }
-        
+
         $uid = $user['userid'];
         $pass = pass_code($password, $uid);
         $udetails = $this->get_user_with_pass($username, $pass);
@@ -1807,7 +1811,7 @@ class userquery extends CBCategory
         if( Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.0', '331') ){
             $query .= ' LEFT JOIN ' . cb_sql_table('users_categories') . ' ON users.userid = users_categories.id_user';
         }
-        $query .= " WHERE users.$select_field = '$id'";
+        $query .= ' WHERE users.' . $select_field . ' = \'' . mysql_clean($id) . '\'';
 
         $result = select($query, 60);
 
@@ -1842,19 +1846,13 @@ class userquery extends CBCategory
     {
         $udetails = $this->get_user_details($email);
 
-        if (!$udetails || !$email) {
-            e(lang('usr_exist_err'));
-        } elseif ($udetails['usr_status'] == 'Ok') {
-            e(lang('usr_activation_err'));
-        } elseif ($udetails['ban_status'] == 'yes') {
-            e(lang('ban_status'));
-        } else {
+        if ($udetails && $email && $udetails['usr_status'] != 'Ok' && $udetails['ban_status'] != 'yes') {
             $avcode = User::getInstance($udetails['userid'])->refreshAvcode();
             $var = ['avcode' => $avcode];
             //Now Finally Sending Email
             EmailTemplate::sendMail('avcode_request', $udetails['userid'],  $var);
-            e(lang('usr_activation_em_msg'), 'm');
         }
+        e(lang('if_email_exist_been_sent'), 'm');
     }
 
     /**
@@ -2420,80 +2418,44 @@ class userquery extends CBCategory
     }
 
     /**
-     * Function used to reset user password
-     * it has two steps
-     * 1 to send confirmation
-     * 2 to reset the password
-     *
-     * @param      $step
-     * @param      $input
-     * @param null $code
-     *
+     * @param $input
+     * @param bool $check_is_connected
      * @return bool
      * @throws \PHPMailer\PHPMailer\Exception
      * @throws Exception
      */
-    function reset_password($step, $input, $code = null): bool
+    function reset_password($input, bool $check_is_connected = true): bool
     {
-        if (User::getInstance()->isUserConnected()) {
+        if ($check_is_connected && User::getInstance()->isUserConnected()) {
             return false;
         }
 
-        switch ($step) {
-            case 1:
-                if( empty($input) || !isValidEmail($input) ) {
-                    e(lang('invalid_email'));
-                    return false;
-                }
-
-                if (!verify_captcha()) {
-                    e(lang('recap_verify_failed'));
-                    return false;
-                }
-
-                $user = User::getInstance()->getOne(['email' => $input]);
-                if( empty($user) ){
-                    e(lang('email_forgot_password_sended'), 'm');
-                    return true;
-                }
-
-                $avcode = User::getInstance($user['userid'])->refreshAvcode();
-
-                $var = [
-                    'reset_password_link' => DirPath::getUrl('root') . 'forgot.php?mode=reset_pass&user=' . $user['userid'] . '&avcode=' . $avcode,
-                ];
-                //Now Finally Sending Email
-                if (EmailTemplate::sendMail('password_reset_request', $user['userid'], $var)) {
-                    e(lang('email_forgot_password_sended'), 'm');
-                }
-                return true;
-
-            case 2:
-                $udetails = $this->get_user_details($input);
-                if (!$udetails) {
-                    e(lang('usr_exist_err'));
-                } elseif ($udetails['avcode'] != $code) {
-                    e(lang('avcode_incorrect'));
-                } else {
-                    $newpass = RandomString(6);
-                    $pass = pass_code($newpass, $udetails['userid']);
-
-                    Clipbucket_db::getInstance()->update(tbl($this->dbtbl['users']), ['password', 'avcode'], [$pass, ''], " userid='" . $udetails['userid'] . "'");
-                    //Sending confirmation email
-                    $var = [
-                        'url'      => DirPath::getUrl('root') . 'login.php',
-                        'password' => $newpass
-                    ];
-
-                    //Now Finally Sending Email
-                    EmailTemplate::sendMail('password_reset_details',  $udetails['email'], $var);
-                    e(lang('usr_pass_email_msg'), 'm');
-                    return true;
-                }
-                break;
+        if (empty($input) || !Email::isValid($input)) {
+            e(lang('invalid_email'));
+            return false;
         }
 
-        return false;
+        if (!verify_captcha()) {
+            e(lang('recap_verify_failed'));
+            return false;
+        }
+
+        $user = User::getInstance()->getOne(['email' => $input]);
+        if (empty($user)) {
+            e(lang('if_email_exist_been_sent'), 'm');
+            return true;
+        }
+
+        $avcode = User::getInstance($user['userid'])->refreshAvcode();
+        $var = [
+            'reset_password_link' => DirPath::getUrl('root') . 'forgot.php?mode=reset_pass&email=' . $user['email'] . '&avcode=' . $avcode,
+            'avcode'              => $avcode
+        ];
+        //Now Finally Sending Email
+        if (EmailTemplate::sendMail('password_reset_request', $user['userid'], $var)) {
+            e(lang('if_email_exist_been_sent'), 'm');
+        }
+        return true;
     }
 
     /**
@@ -2502,17 +2464,18 @@ class userquery extends CBCategory
      */
     function recover_username($email): void
     {
-        $udetails = $this->get_user_details($email);
-        if (!$udetails) {
-            e(lang('no_user_associated_with_email'));
-        } elseif (!verify_captcha()) {
-            e(lang('recap_verify_failed'));
-        } else {
-            //Now Finally Sending Email
-            if (EmailTemplate::sendMail('forgot_username_request', $udetails['userid'], [])) {
-                e(lang("usr_uname_email_msg"), 'm');
-            }
+        if (empty($email) || !Email::isValid($email)) {
+            e(lang('invalid_email'));
+            return;
         }
+
+        $udetails = $this->get_user_details($email);
+        if ( $udetails && verify_captcha()) {
+            //Now Finally Sending Email
+            EmailTemplate::sendMail('forgot_username_request', $udetails['userid'], []);
+        }
+        e(lang('if_email_exist_been_sent'), 'm');
+
     }
 
     //FUNCTION USED TO UPDATE LAST ACTIVE FOR OF USER
@@ -2660,13 +2623,13 @@ class userquery extends CBCategory
     /**
      * This function will return
      * user field without array
+     * @throws Exception
      */
     function get_user_field_only($uid, $field)
     {
         $fields = $this->get_user_field($uid, $field);
         return $fields[$field];
     }
-
 
     /**
      * Function used to get all levels
@@ -2854,6 +2817,7 @@ class userquery extends CBCategory
 
     /**
      * Function used to get logged in username
+     * @throws Exception
      */
     function get_logged_username()
     {
@@ -2862,6 +2826,7 @@ class userquery extends CBCategory
 
     /**
      * FUnction used to get username from userid
+     * @throws Exception
      */
     function get_username($uid)
     {
@@ -3002,7 +2967,6 @@ class userquery extends CBCategory
             $select[] = 'UP.' . $field;
         }
 
-
         if( Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.0', '264') ){
             $group = $select;
             $select[] = 'GROUP_CONCAT( DISTINCT(T.name) SEPARATOR \',\') as profile_tags';
@@ -3117,7 +3081,7 @@ class userquery extends CBCategory
             //Checking Email
             if (empty($array['email'])) {
                 e(lang('usr_email_err1'));
-            } elseif (!is_valid_syntax('email', $array['email'])) {
+            } elseif (!Email::isValid($array['email'])) {
                 e(lang('usr_email_err2'));
             } elseif (email_exists($array['email']) && $array['email'] != $array['demail']) {
                 e(lang('usr_email_err3'));
@@ -3768,7 +3732,7 @@ class userquery extends CBCategory
     function change_email($array): void
     {
         //function used to change user email
-        if (!isValidEmail($array['new_email']) || $array['new_email'] == '') {
+        if (!Email::isValid($array['new_email']) || $array['new_email'] == '') {
             e(lang("usr_email_err2"));
         } elseif ($array['new_email'] != $array['cnew_email']) {
             e(lang('user_email_confirm_email_err'));
@@ -3995,7 +3959,7 @@ class userquery extends CBCategory
                 'db_value_check_func' => 'email_exists',
                 'db_value_exists'     => false,
                 'db_value_err'        => lang('usr_email_err3'),
-                'validate_function'   => 'isValidEmail',
+                'validate_function'   => 'Email::isValid',
                 'constraint_func'     => 'check_email_domain',
                 'constraint_err'      => lang('signup_error_email_unauthorized')
             ],

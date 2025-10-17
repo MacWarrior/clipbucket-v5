@@ -4,7 +4,7 @@ const THIS_PAGE = 'login_as_user';
 require_once dirname(__FILE__, 2) . '/includes/admin_config.php';
 User::getInstance()->hasPermissionOrRedirect('member_moderation',true);
 
-$uid = $_GET['uid'];
+$uid = (int)$_GET['uid'];
 
 $udetails = userquery::getInstance()->get_user_details(user_id());
 $userLevel = $udetails['level'];
