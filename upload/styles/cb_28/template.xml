@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <template>
-	<name>Clipbucket V5.X</name>
+	<name>ClipbucketV5 official</name>
 	<author>Jamil ur Rehman, Fahad Abbas, Saqib Razzaq, MacWarrior</author>
-	<version>5.5.1</version>
-	<released>27th january 2022</released>
-	<description>Default ClipBucket 5.X Theme</description>
+	<version>5.5.2</version>
+	<released>18th April 2025</released>
+	<description>Default ClipBucketV5 Theme</description>
 	<website title="Github ClipBucketV5">https://github.com/MacWarrior/clipbucket-v5</website>
 </template>

@@ -1714,4 +1714,9 @@ VALUES ('ongoing_conversion'),
        ('confirm_new_password'),
        ('recap_verify_failed'),
        ('if_email_exist_been_sent'),
-       ('at_least_one_resolution');
+       ('at_least_one_resolution'),
+       ('file_not_found'),
+       ('file_has_been_updated'),
+       ('unable_to_write_file'),
+       ('no_file_selected'),
+       ('warning_official_cb_template');
