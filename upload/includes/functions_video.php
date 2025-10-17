@@ -1541,6 +1541,7 @@ function reConvertVideos($data = ''): void
             case 'mp4':
                 $max_quality_file = get_high_res_file($vdetails);
                 $temp_path = DirPath::get('temp') . $vdetails['file_name'] . '.mp4';
+                $file_used = $max_quality_file;
                 copy($max_quality_file, $temp_path);
                 break;
 
@@ -1552,11 +1553,18 @@ function reConvertVideos($data = ''): void
                 } else {
                     $original_files_path = DirPath::get('conversion_queue') . $vdetails['file_name'] . DIRECTORY_SEPARATOR . '*';
                 }
+                $max_res = 0;
                 foreach (glob($original_files_path) as $file) {
+                    $matches = [];
                     $files_part = explode(DIRECTORY_SEPARATOR, $file);
                     $video_file = $files_part[count($files_part) - 1];
                     if ($video_file == 'index.m3u8') {
                         $video_file = $vdetails['file_name'] . '.m3u8';
+                    }
+                    preg_match('/video_(\d+)p.m3u8/', $video_file, $matches);
+                    if (!empty($matches) && $matches[1] > $max_res) {
+                        $max_res = $matches[1];
+                        $file_used = $video_file;
                     }
                     copy($file, $temp_dir . $video_file);
                 }
@@ -1565,7 +1573,7 @@ function reConvertVideos($data = ''): void
         VideoConversionQueue::insert($vdetails['videoid']);
         $logFile = DirPath::get('logs') . $vdetails['file_directory'] . DIRECTORY_SEPARATOR . $vdetails['file_name'] . '.log';
         $log = new SLog($logFile);
-        $log->newSection('Reconvert launched from function_video.php reConvertVideos()');
+        $log->newSection('Reconvert launched from ' . $file_used );
         e(lang('reconversion_started_for_x', display_clean($vdetails['title'])), 'm');
 
         if (empty(errorhandler::getInstance()->get_error())) {
