@@ -125,6 +125,6 @@
     {include file="$style_dir/blocks/pagination.html"}
     <div class="marginBottomLarge"></div>
 <script>
-    let available_tags = JSON.parse('{$available_tags|json_encode|replace:"'": "\'"}');
+    let available_tags = JSON.parse('{$available_tags|json_encode|escape:'javascript'}');
     let id_input = 'playlists_tags';
 </script>

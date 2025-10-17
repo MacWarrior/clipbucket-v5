@@ -562,7 +562,7 @@
 </div>
 
 <script>
-    let available_tags = JSON.parse('{$available_tags|json_encode|replace:"'": "\'"}');
+    let available_tags = JSON.parse('{$available_tags|json_encode|escape:'javascript'}');
     let visual_editor_comments_enabled = "{config('enable_visual_editor_comments') == 'yes'}";
     let lang_storage_history = "{lang('storage_history')}";
     let lang_storage_use = "{lang('storage_use')}";
