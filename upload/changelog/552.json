@@ -1,6 +1,6 @@
 {
   "version":"5.5.2",
-  "revision":"145",
+  "revision":"146",
   "status":"stable",
   "detail":[
     {
@@ -53,6 +53,7 @@
         ,"Fix user storage calculation tool staying stuck in ongoing state"
         ,"Fix possibility to disable all conversion resolutions <i>(#664)</i>"
         ,"Fix possible SQL injection (Thanks @Takumi142857 !)"
+        ,"Fix possible XSS injection"
       ]
     },
     {
@@ -133,6 +134,8 @@
         ,"Fix channel links on homepage"
         ,"Fix collection creation <i>(#667)</i>"
         ,"Fix TMDB import <i>(#679)</i>"
+        ,"Fix possible XSS injection (Thanks @Takumi142857 !)"
+        ,"Fix photo edition from upload form"
       ]
     },
     {

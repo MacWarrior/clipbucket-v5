@@ -88,8 +88,6 @@ switch ($mode) {
         die();
 
     case 'update_photo':
-        $_POST['photo_title'] = mysql_clean($_POST['photo_title']);
-        $_POST['photo_description'] = mysql_clean($_POST['photo_description']);
         CBPhotos::getInstance()->update_photo();
 
         if (error()) {

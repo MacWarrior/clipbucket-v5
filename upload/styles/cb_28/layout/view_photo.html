@@ -170,7 +170,7 @@
                                         {if !empty($photo.photo_tags)}
                                             <li>
                                                 <strong class="pull-left" id="label_tags">{lang('tags')} : </strong>
-                                                <input type="hidden" id="tags" value="{$photo.photo_tags}">
+                                                <input type="hidden" id="tags" value="{display_clean($photo.photo_tags)}"/>
                                                 <ul id="list_tags" style="border: 0;"></ul>
                                             </li>
                                         {/if}
