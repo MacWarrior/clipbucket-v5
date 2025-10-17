@@ -99,7 +99,7 @@
         let language = '{$lang_obj->getLang()}';
     {/if}
 
-    let available_tags = JSON.parse('{$available_tags|json_encode|replace:"'": "\'"}');
+    let available_tags = JSON.parse('{$available_tags|json_encode|escape:'javascript'}');
 
     let mode = "{$on}";
 
