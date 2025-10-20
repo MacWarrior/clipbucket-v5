@@ -71,5 +71,5 @@
     </div>
 </div>
 <script>
-    var available_tags = JSON.parse('{$available_tags|json_encode|replace:"'": "\'"}');
+    var available_tags = JSON.parse('{$available_tags|json_encode|escape:'javascript'}');
 </script>

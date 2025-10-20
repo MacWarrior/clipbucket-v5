@@ -13,50 +13,76 @@ $breadcrumb[1] = ['title' => lang('template_editor'), 'url' => DirPath::getUrl('
 /**
  * Getting List Of Templates
  */
-$templates = $cbtpl->get_templates();
-
+$templates = CBTemplate::getInstance()->get_templates();
+assign('templates', $templates);
 #Checking if user has selected template for editing, if not, make SELECTED template for editing
-$sel_dir = $_GET['dir'];
-if (!$sel_dir || !$cbtpl->is_template($sel_dir)) {
-    $sel_dir = TEMPLATE;
+$sel_dir = TEMPLATE;
+if (!empty($_GET['dir'])) {
+    if (!CBTemplate::getInstance()->is_template($_GET['dir'])) {
+        e(lang('template_dont_exist'));
+        unset($_GET['file']);
+    } else {
+        $sel_dir = $_GET['dir'];
+    }
+}
+if ($sel_dir == ClipBucket::DEFAULT_TEMPLATE) {
+    e(lang('warning_official_cb_template'),'w');
 }
 
 //Checking if still there is no template, display error
-if (!$cbtpl->is_template($sel_dir)) {
-    e('No Template Found');
+if (!CBTemplate::getInstance()->is_template($sel_dir)) {
+    e(lang('template_dont_exist'));
 } else {
     assign('sel_dir', $sel_dir);
     //Getting list template layout files , i.e HTML files
-    $files = $cbtpl->get_template_files($sel_dir);
+    $files = CBTemplate::getInstance()->get_template_files($sel_dir);
     assign('tpl_files', $files);
     //Getting list of css files
-    $css_files = $cbtpl->get_template_files($sel_dir, 'theme');
+    $css_files = CBTemplate::getInstance()->get_template_files($sel_dir, 'theme');
     assign('css_files', $css_files);
 
     //Reading File
-    if (isset($_GET['file']) && isset($_GET['folder'])) {
-        $file = DirPath::get('styles') . TEMPLATE . DIRECTORY_SEPARATOR . $_GET['folder'] . DIRECTORY_SEPARATOR . $_GET['file'];
-
-        if (file_exists($file)) {
-            if (isset($_POST['update_file'])) {
-                if (is_writable($file)) {
-                    //echo $file;
-                    $data = $_POST['thecontent'];
-                    $open_file = fopen($file, 'w');
-                    fwrite($open_file, stripslashes($data));
-                    e('File has been updated', 'm');
-                } else {
-                    e('Unable to write file');
-                }
+    if (!empty($_GET['file'])) {
+        preg_match('/.*\.(.*)$/', $_GET['file'], $preg_matches);
+        if (empty($preg_matches)) {
+            e(lang('remote_play_invalid_extension'));
+        } else {
+            $extension = $preg_matches[1];
+            switch ($extension) {
+                case 'css':
+                    $folder = 'theme' . DIRECTORY_SEPARATOR . 'css';
+                    break;
+                case 'html':
+                default:
+                    $folder = 'layout';
+                    break;
             }
+            if (!empty($_GET['folder'])) {
+                $folder .= DIRECTORY_SEPARATOR . $_GET['folder'];
+            }
+            $file = DirPath::get('styles') . $sel_dir . DIRECTORY_SEPARATOR . $folder . DIRECTORY_SEPARATOR . $_GET['file'];
+            if (realpath($file) && str_starts_with(realpath($file), realpath(DirPath::get('styles') . $sel_dir . DIRECTORY_SEPARATOR))) {
+                if (isset($_POST['update_file'])) {
+                    if (is_writable($file)) {
+                        $data = $_POST['thecontent'];
+                        $open_file = fopen($file, 'w');
+                        fwrite($open_file, stripslashes($data));
+                        e(lang('file_has_been_updated'), 'm');
+                    } else {
+                        e(lang('unable_to_write_file'));
+                    }
+                }
 
-            $content = htmlentities(file_get_contents($file));
-            assign('content', $content);
+                $content = htmlentities(file_get_contents($file));
+                assign('content', $content);
 
-            if (!is_writable($file)) {
-                assign('writeable', 'no');
+                if (!is_writable($file)) {
+                    assign('writeable', 'no');
+                } else {
+                    assign('writeable', 'yes');
+                }
             } else {
-                assign('writeable', 'yes');
+                e(lang('file_not_found'));
             }
         }
     }
@@ -82,15 +108,6 @@ while ($file = readdir($dp)) {
 closedir($dp);
 sort($files);
 Assign('files', $files);
-
-//Writing File
-if (isset($_POST['save'])) {
-    $file = $dir . $_POST['file'];
-    $data = stripslashes($_POST['data']);
-    $open_file = fopen($file, "w");
-    fwrite($open_file, $data);
-    $msg = $_POST['file'] . " Has Been Saved And Updated";
-}
 
 //Getting Data from File
 if (isset($_POST['file'])) {

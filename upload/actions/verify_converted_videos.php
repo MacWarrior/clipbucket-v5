@@ -18,10 +18,7 @@ if (is_array($files)) {
     foreach ($files as $file) {
         $file_details = get_file_details($fileName, true);
 
-        Clipbucket_db::getInstance()->update(tbl('conversion_queue'),
-            ['cqueue_conversion', 'time_completed'],
-            ['yes', time()], " cqueue_id = '" . $file['cqueue_id'] . "'");
-
+        Clipbucket_db::getInstance()->update(tbl('video_conversion_queue'), ['date_ended', 'is_completed'],['|no_mc||f|NOW()', true], 'id = ' . mysql_clean($file['id']));
         /**
          * Calling Functions after converting Video
          */

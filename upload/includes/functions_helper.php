@@ -79,7 +79,7 @@ function cb_create_html_tag($tag = 'p', $self_closing = false, $attrs = [], $con
             if (strtolower($attr) == 'extra') {
                 $attributes .= ($value);
             } else {
-                $attributes .= ' ' . $attr . ' = "' . $value . '" ';
+                $attributes .= ' ' . $attr . ' = "' . display_clean($value) . '" ';
             }
 
         }

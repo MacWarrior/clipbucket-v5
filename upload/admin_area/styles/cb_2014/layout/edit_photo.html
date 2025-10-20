@@ -247,6 +247,6 @@
     </div>
 </form>
 <script>
-    var available_tags = JSON.parse('{$available_tags|json_encode|replace:"'": "\'"}');
+    var available_tags = JSON.parse('{$available_tags|json_encode|escape:'javascript'}');
     let text_confirm_comment = '{lang('text_confirm_comment')}';
 </script>

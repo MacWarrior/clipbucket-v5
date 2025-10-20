@@ -269,7 +269,8 @@ class Tmdb
     public function importDataFromTmdb(int $videoid, int $tmdb_id, $type = 'movie')
     {
         $video_info = Video::getInstance()->getOne([
-            'videoid' => $videoid
+            'videoid' => $videoid,
+            'get_detail'=>true,
         ]);
         if (empty($video_info)) {
             e(lang('class_vdo_del_err'));
@@ -316,6 +317,8 @@ class Tmdb
             $update_video = true;
         }
         if ($update_video) {
+            $category_list = json_decode($video_info['category_list'], true);
+            $video_info['category'] = array_column($category_list, 'id');
             CBvideo::getInstance()->update_video($video_info);
         }
 

@@ -2,7 +2,6 @@
     <h2>Edit template</h2>
 </div>
 
-    {assign var='templates' value=$cbtpl->get_templates()}
     {if $templates}
     <form name="select_template" method="get">
         <div class="form-group">
@@ -23,7 +22,17 @@
         <ul class="nav nav-pills nav-stacked tabs ">
             {foreach from=$tpl_files item=tplfile key=folder}
                 {if !is_array($tplfile)}
-                    <li {if $smarty.get.file == $tplfile} class = "sel_file"{/if}><a href="?dir={$sel_dir}&file={$tplfile}&folder=layout">{$tplfile}</a></li>
+                    <li {if $smarty.get.file == $tplfile} class = "sel_file"{/if}><a href="?dir={$sel_dir}&file={$tplfile}">{$tplfile}</a></li>
+                {else}
+                    <li>
+                        <ul class="nav nav-pills nav-stacked tabs ">
+                            <li><b>/{$folder}/</b></li>
+                            {foreach from=$tplfile item=file}
+                                <li {if $_GET['file'] == $file && $_GET['folder'] == $folder} class = "sel_file"{/if}><a href="?dir={$sel_dir}&file={$file}&folder={$folder}">{$file}</a></li>
+                            {/foreach}
+                        </ul>
+                    </li>
+
                 {/if}
             {/foreach}
         </ul>
@@ -31,7 +40,7 @@
         <ul class="nav nav-pills nav-stacked tabs horizontalTabs">
         {foreach from=$css_files item=cssfile}
             {if !is_array($cssfile)}
-                <li {if $smarty.get.file == $cssfile} class="sel_file"{/if}><a href="?dir={$sel_dir}&file={$cssfile}&folder='theme'">{$cssfile}</a></li>
+                <li {if $smarty.get.file == $cssfile} class="sel_file"{/if}><a href="?dir={$sel_dir}&file={$cssfile}">{$cssfile}</a></li>
             {/if}
         {/foreach}
         </ul>
@@ -41,7 +50,7 @@
             <div class="form-group">
                 <label for="file_content"><h3>Edit Template</h3></label>
                 <textarea rows="30" class="form-control" name="thecontent" class="file_content" id="file_content">
-                    {if $content}{$content}{else}<em>No File Selected</em>{/if}
+                    {if $content}{$content}{else}<em>{lang('no_file_selected')}</em>{/if}
                 </textarea>
             </div>
             <div>
@@ -49,7 +58,7 @@
                 This file is not writeable, please set
                 <em>
                     <strong>{$smarty.get.file}</strong>
-                </em> permissions to 0777 - 
+                </em> permissions to 0755 -
                 <a href="http://docs.clip-bucket.com/clipbucket-docs/files-folder-permissions" target="_blank">
                     <strong>More Details</strong>
                 </a>

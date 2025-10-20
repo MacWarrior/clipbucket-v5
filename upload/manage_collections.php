@@ -5,7 +5,7 @@ require 'includes/config.inc.php';
 
 User::getInstance()->isUserConnectedOrRedirect();
 
-if( !isSectionEnabled('collections') || !(isSectionEnabled('videos') && isSectionEnabled('photos')) ){
+if( !isSectionEnabled('collections') || (!isSectionEnabled('videos') && !isSectionEnabled('photos')) ){
     redirect_to(cblink(['name' => 'my_account']));
 }
 

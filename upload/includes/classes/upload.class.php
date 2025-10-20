@@ -148,6 +148,11 @@ class Upload
         $file_name = mysql_clean($array['file_name']);
         $query_val[] = $file_name;
 
+        if (!empty($array['file_type'])) {
+            $query_field[] = 'file_type';
+            $query_val[] = $array['file_type'];
+        }
+
         if (!isset($array['file_directory']) && isset($array['time_stamp'])) {
             $query_field[] = 'file_directory';
             $file_directory = create_dated_folder(null, $array['time_stamp']);
@@ -654,57 +659,6 @@ class Upload
             ];
         }
         return $fields;
-    }
-
-    /**
-     * Function used to add files in conversion queue
-     *
-     * @param $file
-     * @param string $sub_directory
-     * @param string $cqueue_name
-     * @return bool|int
-     * @throws Exception
-     */
-    function add_conversion_queue($file, $sub_directory = '', $cqueue_name = '')
-    {
-        $ext = getExt($file);
-        $name = getName($file);
-        if (!$name) {
-            return false;
-        }
-
-        if (empty($cqueue_name)) {
-            $cqueue_name = $name;
-        }
-
-        $tmp_filepath = DirPath::get('temp') . $sub_directory . $file;
-        //Checking file exists or not
-        if (!file_exists($tmp_filepath)) {
-            return false;
-        }
-
-        switch ($ext) {
-            default:
-            case 'mp4':
-                //Get Temp Ext
-                $tmp_ext = ClipBucket::getInstance()->temp_exts;
-                $tmp_ext = $tmp_ext[rand(0, count($tmp_ext) - 1)];
-                //Creating New File Name
-                $dest_filepath = DirPath::get('temp') . $sub_directory . $name . '.' . $tmp_ext;
-
-                //Renaming File for security purpose
-                rename($tmp_filepath, $dest_filepath);
-                break;
-
-            case 'm3u8':
-                $tmp_ext = '';
-                break;
-        }
-
-        //Adding Details to database
-        Clipbucket_db::getInstance()->execute('INSERT INTO ' . tbl('conversion_queue') . " (cqueue_name,cqueue_ext,cqueue_tmp_ext,date_added)
-							VALUES ('" . mysql_clean($cqueue_name) . "','" . mysql_clean($ext) . "','" . mysql_clean($tmp_ext) . "','" . NOW() . "') ");
-        return Clipbucket_db::getInstance()->insert_id();
     }
 
     /**

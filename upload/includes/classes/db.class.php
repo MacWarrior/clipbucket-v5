@@ -551,7 +551,10 @@ class Clipbucket_db
                 DiscordLog::sendDump('ERROR : ' . $this->getError());
                 throw new \Exception('missing_table');
             }
-
+            $backstack = debug_backtrace_string();
+            if (preg_match('/classes\/migration\/migration\.class.*->start\(\)/', $backstack)) {
+                throw new \Exception($this->getError());
+            }
             if (System::isInDev()) {
                 e('SQL : ' . $query);
                 e('ERROR : ' . $this->getError());
@@ -560,7 +563,7 @@ class Clipbucket_db
                 error_log(debug_backtrace_string());
                 DiscordLog::sendDump('SQL : ```' . $query . '```');
                 DiscordLog::sendDump('ERROR : ' . $this->getError());
-                DiscordLog::sendDump(debug_backtrace_string());
+                DiscordLog::sendDump($backstack);
             } else {
                 e(lang('technical_error'));
             }

@@ -2182,14 +2182,6 @@ h1 {
 }
 
 .photo-view .overlay .overlay-content {
-  /*position: relative;*/
-  /*height: auto;*/
-  /*max-height: 100%;*/
-  /*width: 100%;*/
-  /*!* 100% width *!*/
-  /*text-align: center;*/
-  /*!* Centered text/links *!*/
-  /*display: table-cell;*/
   vertical-align: middle;
 }
 
@@ -7083,6 +7075,14 @@ span.tagit-label i.fa {
 
 #enterMFACodeModal > div > div > div.modal-body > .alert {
     width: 100%;
+}
+
+li.up_vid > a[disabled] {
+    cursor: not-allowed;
+    filter: alpha(opacity=65);
+    opacity: .65;
+    -webkit-box-shadow: none;
+    box-shadow: none;
 }
 
 :root {

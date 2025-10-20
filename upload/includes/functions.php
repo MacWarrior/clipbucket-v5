@@ -185,17 +185,6 @@ function SetTime($sec, $padHours = true): string
     return $hms;
 }
 
-/**
- * Checks if provided email is valid or not
- *
- * @param : { string } { $email } { email address to check }
- *
- * @return mixed
- */
-function isValidEmail($email)
-{
-    return filter_var($email, FILTER_VALIDATE_EMAIL);
-}
 
 function isValidHTML(string $html): bool {
     if (!extension_loaded('libxml') || !class_exists('DOMDocument')) {
@@ -587,8 +576,11 @@ function is_valid_syntax($code, $text): bool
  */
 function is_valid_value($func, $val): bool
 {
-    if (!function_exists($func)) {
-        return true;
+    if (!is_callable($func)) {
+        if(System::isInDev()) {
+            DiscordLog::sendDump('function not found : ' . $func);
+        }
+        return false;
     }
     if ($func($val)===false) {
         return false;
@@ -1700,7 +1692,6 @@ function validate_cb_form($input, $array): void
     //Check the Collpase Category Checkboxes
     if (is_array($input)) {
         foreach ($input as $field) {
-            $funct_err = false;
             $field['name'] = formObj::rmBrackets($field['name']);
             $title = $field['title'];
             $val = $array[$field['name']];
@@ -1732,13 +1723,12 @@ function validate_cb_form($input, $array): void
                 } else {
                     $block = false;
                 }
-            } else {
-                //if field not required and empty it's valid
-                $funct_err = true;
             }
-            if (!empty($val) || $val === '0') {
-                //don't test validity if field is empty
+            if (!empty($val) && !empty($field['validate_function'])) {
+                //don't test validity if field or validate function is empty
                 $funct_err = is_valid_value($field['validate_function'], $val);
+            } else {
+                $funct_err = true;
             }
             if (!$block) {
                 //Checking Syntax

@@ -1812,7 +1812,7 @@ class userquery extends CBCategory
         if( Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.0', '331') ){
             $query .= ' LEFT JOIN ' . cb_sql_table('users_categories') . ' ON users.userid = users_categories.id_user';
         }
-        $query .= " WHERE users.$select_field = '$id'";
+        $query .= ' WHERE users.' . $select_field . ' = \'' . mysql_clean($id) . '\'';
 
         $result = select($query, 60);
 
@@ -2431,7 +2431,7 @@ class userquery extends CBCategory
             return false;
         }
 
-        if (empty($input) || !isValidEmail($input)) {
+        if (empty($input) || !Email::isValid($input)) {
             e(lang('invalid_email'));
             return false;
         }
@@ -2465,7 +2465,7 @@ class userquery extends CBCategory
      */
     function recover_username($email): void
     {
-        if (empty($email) || !isValidEmail($email)) {
+        if (empty($email) || !Email::isValid($email)) {
             e(lang('invalid_email'));
             return;
         }
@@ -3082,7 +3082,7 @@ class userquery extends CBCategory
             //Checking Email
             if (empty($array['email'])) {
                 e(lang('usr_email_err1'));
-            } elseif (!is_valid_syntax('email', $array['email'])) {
+            } elseif (!Email::isValid($array['email'])) {
                 e(lang('usr_email_err2'));
             } elseif (email_exists($array['email']) && $array['email'] != $array['demail']) {
                 e(lang('usr_email_err3'));
@@ -3732,7 +3732,7 @@ class userquery extends CBCategory
     function change_email($array): void
     {
         //function used to change user email
-        if (!isValidEmail($array['new_email']) || $array['new_email'] == '') {
+        if (!Email::isValid($array['new_email']) || $array['new_email'] == '') {
             e(lang("usr_email_err2"));
         } elseif ($array['new_email'] != $array['cnew_email']) {
             e(lang('user_email_confirm_email_err'));
@@ -3959,7 +3959,7 @@ class userquery extends CBCategory
                 'db_value_check_func' => 'email_exists',
                 'db_value_exists'     => false,
                 'db_value_err'        => lang('usr_email_err3'),
-                'validate_function'   => 'isValidEmail',
+                'validate_function'   => 'Email::isValid',
                 'constraint_func'     => 'check_email_domain',
                 'constraint_err'      => lang('signup_error_email_unauthorized')
             ],

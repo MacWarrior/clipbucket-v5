@@ -366,7 +366,8 @@ INSERT INTO `{tbl_prefix}tools` (`language_key_label`, `language_key_description
     ('calc_user_storage_label', 'calc_user_storage_description', 'AdminTool::calcUserStorage', 'calc_user_storage', '0 1 * * *', CURRENT_TIMESTAMP, '1', '0'),
     ('assign_default_thumb_label', 'assign_default_thumb_description', 'AdminTool::assignDefaultThumbForCollections', 'assign_default_thumb', NULL, CURRENT_TIMESTAMP, '0', '0'),
     ('update_aspect_ratio_label', 'update_aspect_ratio_description', 'AdminTool::updateAspectRatio', 'update_aspect_ratio', NULL, NULL, '1', '1'),
-    ('anonymous_stats_label', 'anonymous_stats_description', 'AdminTool::anonymousStats', 'anonymous_stats', '0 1 * * 7', CURRENT_TIMESTAMP, '1', '0');
+    ('anonymous_stats_label', 'anonymous_stats_description', 'AdminTool::anonymousStats', 'anonymous_stats', '0 1 * * 7', CURRENT_TIMESTAMP, '1', '0'),
+    ('launch_video_conversion_label', 'launch_video_conversion_description', 'AdminTool::launchVideoConversion', 'launch_video_conversion', '* * * * *', CURRENT_TIMESTAMP, '1', '0');
 
 INSERT INTO `{tbl_prefix}tags_type` (`name`) VALUES ('video'), ('photo'), ('collection'), ('profile'), ('playlist'), ('actors'), ('producer'), ('executive_producer'), ('director'), ('crew'), ('genre');
 

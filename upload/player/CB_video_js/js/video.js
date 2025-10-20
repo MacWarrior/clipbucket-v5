@@ -1,6 +1,6 @@
 /**
  * @license
- * Video.js 8.23.3 <http://videojs.com/>
+ * Video.js 8.23.4 <http://videojs.com/>
  * Copyright Brightcove, Inc. <https://www.brightcove.com/>
  * Available under Apache License Version 2.0
  * <https://github.com/videojs/video.js/blob/main/LICENSE>
@@ -16,7 +16,7 @@
   (global = typeof globalThis !== 'undefined' ? globalThis : global || self, global.videojs = factory());
 })(this, (function () { 'use strict';
 
-  var version$5 = "8.23.3";
+  var version$5 = "8.23.4";
 
   /**
    * An Object that contains lifecycle hooks as keys which point to an array
@@ -4114,8 +4114,8 @@
      * Remove a child `Component` from this `Component`s list of children. Also removes
      * the child `Component`s element from this `Component`s element.
      *
-     * @param {Component} component
-     *        The child `Component` to remove.
+     * @param {string|Component} component
+     *       The name or instance of a child to remove.
      */
     removeChild(component) {
       if (typeof component === 'string') {
@@ -41025,7 +41025,7 @@
   };
   var clock_1 = clock.ONE_SECOND_IN_TS;
 
-  /*! @name @videojs/http-streaming @version 3.17.0 @license Apache-2.0 */
+  /*! @name @videojs/http-streaming @version 3.17.2 @license Apache-2.0 */
 
   /**
    * @file resolve-url.js - Handling how URLs are resolved and manipulated
@@ -42529,7 +42529,7 @@
     } else if (request.aborted) {
       errorMetadata.errorType = videojs.Error.NetworkRequestAborted;
     } else if (request.timedout) {
-      errorMetadata.erroType = videojs.Error.NetworkRequestTimeout;
+      errorMetadata.errorType = videojs.Error.NetworkRequestTimeout;
     } else if (isBadStatusOrParseFailure) {
       const errorType = parseFailure ? videojs.Error.NetworkBodyParserFailed : videojs.Error.NetworkBadStatus;
       errorMetadata.errorType = errorType;
@@ -43805,16 +43805,17 @@
      */
 
     getKeyIdSet(playlist) {
-      if (playlist.contentProtection) {
-        const keyIds = new Set();
-        for (const keysystem in playlist.contentProtection) {
-          const keyId = playlist.contentProtection[keysystem].attributes.keyId;
-          if (keyId) {
-            keyIds.add(keyId.toLowerCase());
-          }
-        }
+      const keyIds = new Set();
+      if (!playlist || !playlist.contentProtection) {
         return keyIds;
       }
+      for (const keysystem in playlist.contentProtection) {
+        if (playlist.contentProtection[keysystem] && playlist.contentProtection[keysystem].attributes && playlist.contentProtection[keysystem].attributes.keyId) {
+          const keyId = playlist.contentProtection[keysystem].attributes.keyId;
+          keyIds.add(keyId.toLowerCase());
+        }
+      }
+      return keyIds;
     }
   }
 
@@ -67619,7 +67620,7 @@ ${segmentInfoString(segmentInfo)}`); // If there's an init segment associated wi
   const reloadSourceOnError = function (options) {
     initPlugin(this, options);
   };
-  var version$4 = "3.17.0";
+  var version$4 = "3.17.2";
   var version$3 = "7.1.0";
   var version$2 = "1.3.1";
   var version$1 = "7.2.0";
