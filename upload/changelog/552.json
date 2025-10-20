@@ -1,6 +1,6 @@
 {
   "version":"5.5.2",
-  "revision":"149",
+  "revision":"150",
   "status":"stable",
   "detail":[
     {
@@ -24,6 +24,7 @@
         ,"Add collection mass broadcast update"
         ,"Add users and collections to dashboard flagged objects chart <i>(#74)</i>"
         ,"Add notice when editing default template"
+        ,"Add min & max length and required fields attributes to forms"
         ,"Update configs organisation"
         ,"Update collection management display"
         ,"Update data refresh after core update"
@@ -84,6 +85,7 @@
         ,"Refactor friends requests & management"
         ,"Refactor collection selections"
         ,"Refactor password reset"
+        ,"Add min & max length and required fields attributes to forms"
         ,"Update video & photos management pages display"
         ,"Update video edition display"
         ,"Update photo upload & edition display"

@@ -1726,4 +1726,5 @@ VALUES ('ongoing_conversion'),
        ('video_is_already_processing'),
        ('all_locks_deleted'),
        ('delete_conversion_lock'),
-       ('no_lock_to_delete');
+       ('no_lock_to_delete'),
+       ('video_title_exceed');
