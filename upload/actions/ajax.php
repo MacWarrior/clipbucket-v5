@@ -227,26 +227,26 @@ if (!empty($mode)) {
         case 'flag_object':
             $type = strtolower($_POST['type']);
             $id = $_POST['id'];
-            if (empty($_POST['flag_type'])) {
-                e(lang('missing_category_report'));
+            if (User::getInstance()->isUserConnected()) {
+                e(lang('please_login_to_tag'));
             } else {
-                if (Flag::flagItem($id, $type, $_POST['flag_type'])) {
-                    e(lang('report_successful'), 'm');
+                if (empty($_POST['flag_type'])) {
+                    e(lang('missing_category_report'));
+                } else {
+                    if (Flag::flagItem($id, $type, $_POST['flag_type'])) {
+                        e(lang('report_successful'), 'm');
+                    }
                 }
             }
 
-            $error = errorhandler::getInstance()->get_error();
-            $warning = errorhandler::getInstance()->get_warning();
-            $message = errorhandler::getInstance()->get_message();
-
-            if ($error) {
-                echo '<div class="error">' . $error[0]['val'] . '</div>';
+            if (errorhandler::getInstance()->get_error()) {
+                echo '<div class="error">' . errorhandler::getInstance()->get_error()[0]['val'] . '</div>';
             } else {
-                if ($warning) {
-                    echo '<div class="warning">' . $warning[0]['val'] . '</div>';
+                if (errorhandler::getInstance()->get_warning()) {
+                    echo '<div class="warning">' . errorhandler::getInstance()->get_warning()[0]['val'] . '</div>';
                 } else {
-                    if ($message) {
-                        echo '<div class="msg">' . $message[0]['val'] . '</div>';
+                    if (errorhandler::getInstance()->get_message()) {
+                        echo '<div class="msg">' . errorhandler::getInstance()->get_message()[0]['val'] . '</div>';
                     }
                 }
             }
