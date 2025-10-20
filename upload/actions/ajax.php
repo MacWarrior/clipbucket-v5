@@ -228,7 +228,7 @@ if (!empty($mode)) {
             $type = strtolower($_POST['type']);
             $id = $_POST['id'];
             if (User::getInstance()->isUserConnected()) {
-                e(lang('please_login_to_tag'));
+                e(lang('please_login_to_flag'));
             } else {
                 if (empty($_POST['flag_type'])) {
                     e(lang('missing_category_report'));
