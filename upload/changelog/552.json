@@ -1,6 +1,6 @@
 {
   "version":"5.5.2",
-  "revision":"148",
+  "revision":"149",
   "status":"stable",
   "detail":[
     {
@@ -56,6 +56,7 @@
         ,"Fix possible SQL injection (Thanks @Takumi142857 !)"
         ,"Fix possible XSS injection"
         ,"Fix possible arbitraty file access (Thanks @Takumi142857 !)"
+        ,"Fix TMDB import error"
       ]
     },
     {
