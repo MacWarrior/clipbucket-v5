@@ -108,7 +108,7 @@ if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '279')) {
 update_video_by_filename($fileName, $fields, $values);
 
 $videoDetails = CBvideo::getInstance()->get_video($fileName, true);
-if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.2', '999')) {
+if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.2', '148')) {
     $queue = VideoConversionQueue::getOne(['videoid' => $videoDetails['videoid'], 'not_complete' => true]);
     Clipbucket_db::getInstance()->update(tbl(VideoConversionQueue::getTableName()), ['date_ended', 'is_completed'],['|no_mc||f|NOW()', true], 'id = ' . mysql_clean($queue['id']));
 }
@@ -123,10 +123,7 @@ if (config('video_enable_nsfw_check') == 'yes' && AIVision::isAvailable()) {
         switch (config('video_nsfw_check_model')) {
             default:
             case 'nudity+nsfw':
-                $models = [
-                    'nudity',
-                    'nsfw'
-                ];
+                $models = ['nudity','nsfw'];
                 break;
             case 'nsfw':
             case 'nudity':

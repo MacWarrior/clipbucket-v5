@@ -536,7 +536,7 @@ function file_name_exists($name)
  */
 function get_video_being_processed($queueName = null)
 {
-    if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.2', '')) {
+    if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.2', '148')) {
         $results = Clipbucket_db::getInstance()->_select(
             'SELECT * FROM ' . tbl('video_conversion_queue') .' VCQ INNER JOIN ' . tbl('video') . ' V ON VCQ.videoid = V.videoid
             WHERE is_completed = FALSE AND file_name = \''.mysql_clean($queueName).'\''

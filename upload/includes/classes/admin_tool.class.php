@@ -1675,9 +1675,12 @@ class AdminTool
         Clipbucket_db::getInstance()->execute($sql);
     }
 
+    /**
+     * @throws Exception
+     */
     public function launchVideoConversion()
     {
-        if (!Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.2', '999') ) {
+        if (!Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.2', '148') ) {
             $this->end();
             return true;
         }
@@ -1705,6 +1708,9 @@ class AdminTool
         return true;
     }
 
+    /**
+     * @throws Exception
+     */
     public static function convert_videos($video)
     {
         $logFile = DirPath::get('logs') . $video['file_directory'] . DIRECTORY_SEPARATOR . $video['file_name'] . '.log';

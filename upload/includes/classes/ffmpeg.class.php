@@ -701,7 +701,7 @@ class FFMpeg
             $this->log->writeLine('<div class="showHide"><p class="title glyphicon-chevron-right">Output : </p><p class="content">'.$output.'</p></div>', false, true);
         }
 
-        if (file_exists($this->output_file) && filesize($this->output_file) > 0 && strpos($output, 'Conversion failed!') === false) {
+        if (file_exists($this->output_file) && filesize($this->output_file) > 0 && !str_contains($output, 'Conversion failed!')) {
             $this->log->writeLine(date('Y-m-d H:i:s').' => Video converted');
         } else {
             $this->log->writeLine(date('Y-m-d H:i:s').' => Conversion failed');
@@ -1271,7 +1271,6 @@ class FFMpeg
         }
         return '0x' . strtoupper($hex_color);
     }
-
 
     /**
      * @throws Exception

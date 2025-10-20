@@ -4,7 +4,7 @@ require_once dirname(__FILE__, 2) . '/includes/admin_config.php';
 
 require_once DirPath::get('classes') . 'sLog.php';
 global $cbmass, $breadcrumb;
-if (!Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.2', '999')) {
+if (!Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.2', '148')) {
     sessionMessageHandler::add_message('Sorry, you cannot upload new videos until the application has been fully updated by an administrator', 'e', DirPath::get('admin_area', true));
 }
 User::getInstance()->hasPermissionOrRedirect('admin_access', true);
