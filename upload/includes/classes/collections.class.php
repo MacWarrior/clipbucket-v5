@@ -294,9 +294,6 @@ class Collection
         if( $param_empty_thumb_objectid ){
             $conditions[] = $this->getTableName() . '.thumb_objectid IS NULL';
         }
-        if( $param_empty_thumb_objectid ){
-            $conditions[] = $this->getTableName() . '.thumb_objectid IS NULL';
-        }
 
         if( Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.0', '43') ){
             if( $param_collection_id_parent ){
@@ -2492,10 +2489,15 @@ class Collections extends CBCategory
 
         $objId = mysql_clean($objId);
 
+        $collections_that_contain_item_to_delete = Clipbucket_db::getInstance()->select(tbl('collection_items') . ' CI LEFT JOIN ' . tbl('collections') . ' C ON C.collection_id = CI.collection_id', 'C.collection_id, C.thumb_objectid'
+            , ' object_id = ' . $objId . ' AND CI.type = \'' . $type . '\'');
         Clipbucket_db::getInstance()->execute('DELETE FROM ' . tbl('collection_items') . ' WHERE '
             . ('type=\'' . $type . '\'') . ' AND ' . ('object_id=\'' . $objId . '\''));
-
-
+        foreach ($collections_that_contain_item_to_delete as $collection) {
+            if ($collection['thumb_objectid'] == $objId) {
+                Collection::assignDefaultThumb($collection['collection_id']);
+            }
+        }
     }
 
     /**
