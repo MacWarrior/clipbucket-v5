@@ -23,8 +23,10 @@ if (isset($_POST['mass_upload_video'])) {
     $vtitle = $_POST['title'];
     $can_import = true;
     foreach ($files as $file) {
-        if (strlen($file['file']) > config('max_video_title')) {
-            e(lang('video_title_exceed', [$file['file'], config('max_video_title')]));
+        $hash = hash('sha512', $file['path'] . $file['file']);
+        $title = $_POST[$hash . '_title'];
+        if (strlen($title) > config('max_video_title')) {
+            e(lang('video_title_exceed', [$title, config('max_video_title')]));
             $can_import = false;
         }
     }
@@ -39,11 +41,11 @@ if (isset($_POST['mass_upload_video'])) {
             $file_arr = $file;
             $file_path = $file['path'];
             $file_orgname = $file['file'];
-            if (strlen($file_orgname) > config('max_video_title')) {
-                e(lang('video_title_exceed', [$file_orgname, config('max_video_title')]));
+            $file_title = $_POST[$hash . '_title'];
+            if (strlen($file_title) > config('max_video_title')) {
+                e(lang('video_title_exceed', [$file_title, config('max_video_title')]));
                 break;
             }
-            $file_title = $_POST[$hash . '_title'];
             $file_description = $_POST[$hash . '_description'];
             $file_tags = $_POST[$hash . '_tags'];
             $file_categories = $_POST[$hash . '_cat'];
