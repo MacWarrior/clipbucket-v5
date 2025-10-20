@@ -7087,3 +7087,11 @@ span.tagit-label i.fa {
 #enterMFACodeModal > div > div > div.modal-body > .alert {
     width: 100%;
 }
+
+li.up_vid > a[disabled] {
+    cursor: not-allowed;
+    filter: alpha(opacity=65);
+    opacity: .65;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+}

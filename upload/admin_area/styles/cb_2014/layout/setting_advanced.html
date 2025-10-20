@@ -470,6 +470,15 @@
                                 </div>
                             </div>
                             <hr/>
+                            <div class="row">
+                                <div class="col-md-10">
+                                    <label class="nowrap" for="delete_conversion_lock" title="{{lang('delete_conversion_lock')}}"> {{lang('delete_conversion_lock')}}</label>
+                                </div>
+                                <div class="col-md-2 row-size">
+                                    <button  class="btn btn-primary btn-xs delete_conversion_lock" style="padding-left:15px;padding-right:15px;" {if !$is_there_conversion_lock} disabled="disabled" title="{{lang('no_lock_to_delete')}}" {/if}>{{lang('delete')}}</button>
+                                </div>
+                            </div>
+                            <hr/>
 
                         </div>
 

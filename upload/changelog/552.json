@@ -1,6 +1,6 @@
 {
   "version":"5.5.2",
-  "revision":"147",
+  "revision":"148",
   "status":"stable",
   "detail":[
     {
@@ -173,6 +173,7 @@
       "description": [
         "Implement video conversion resume"
         ,"Refactor video conversion script"
+        ,"Refactor video conversion queue management"
         ,"Fix HLS video reconversion"
       ]
     },

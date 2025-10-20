@@ -1719,4 +1719,11 @@ VALUES ('ongoing_conversion'),
        ('file_has_been_updated'),
        ('unable_to_write_file'),
        ('no_file_selected'),
-       ('warning_official_cb_template');
+       ('warning_official_cb_template'),
+       ('launch_video_conversion_label'),
+       ('launch_video_conversion_description'),
+       ('video_is_not_convertable'),
+       ('video_is_already_processing'),
+       ('all_locks_deleted'),
+       ('delete_conversion_lock'),
+       ('no_lock_to_delete');
