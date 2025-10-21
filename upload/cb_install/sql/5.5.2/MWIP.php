@@ -16,6 +16,11 @@ class MWIP extends \Migration
             'en'=>'Sorry, you cannot perform this action until the application has been fully updated by an administrator.'
         ]);
 
+        self::generateTranslation('basic_url_required', [
+            'fr'=>'L\'URL de base est requise',
+            'en'=>'Basic URL is required'
+        ]);
+
         $sql = 'UPDATE {tbl_prefix}email SET title = \'[{{website_title}}] Friend request from {{sender_username}}\' WHERE code=\'friend_request\'';
         self::query($sql);
     }

@@ -1728,4 +1728,5 @@ VALUES ('ongoing_conversion'),
        ('delete_conversion_lock'),
        ('no_lock_to_delete'),
        ('video_title_exceed'),
-       ('cant_perform_action_until_app_fully_updated');
+       ('cant_perform_action_until_app_fully_updated'),
+       ('base_url_required');

@@ -280,7 +280,7 @@ $(document).ready(function () {
 
     $('#update').on('click',function (e) {
         var base_url = $('#base_url');
-        if (base_url.val() === '') {
+        if (base_url.val().trim() === '') {
             $('a[href="#config_hosting"]').trigger('click');
             base_url.trigger('focus');
         }
