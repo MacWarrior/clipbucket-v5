@@ -1727,4 +1727,5 @@ VALUES ('ongoing_conversion'),
        ('all_locks_deleted'),
        ('delete_conversion_lock'),
        ('no_lock_to_delete'),
-       ('video_title_exceed');
+       ('video_title_exceed'),
+       ('cant_perform_action_until_app_fully_updated');

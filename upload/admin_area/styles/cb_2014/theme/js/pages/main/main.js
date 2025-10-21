@@ -277,4 +277,12 @@ $(document).ready(function () {
             }
         })
     });
+
+    $('#update').on('click',function (e) {
+        var base_url = $('#base_url');
+        if (base_url.val() === '') {
+            $('a[href="#config_hosting"]').trigger('click');
+            base_url.trigger('focus');
+        }
+    });
 });
