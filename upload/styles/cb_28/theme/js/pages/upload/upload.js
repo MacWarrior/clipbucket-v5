@@ -563,15 +563,25 @@ function getUpdate() {
 
                     data.videos.forEach(function (video) {
                         if ( video.percent > 0 || typeof video.percent === "undefined") {
-                            if ($('input[id^="videoid_"][value="' + video.videoid + '"]').parent().find('[name="default_thumb"]').length === 0 &&  typeof video.thumbs !== 'undefined' && video.thumbs.length > 0) {
-                                const thumbs = $(video.thumbs).hide();
-                                thumbs.insertBefore($('input[id^="videoid_"][value="' + video.videoid + '"]').parent().find('.pad-bottom-sm.text-right'));
-                                thumbs.slideDown('slow');
+                            if (typeof video.thumbs !== 'undefined' && video.thumbs.length > 0) {
+                                if ($('input[id^="videoid_"][value="' + video.videoid + '"]').parent().find('[name="default_thumb"]').length === 0) {
+                                    const thumbs = $(video.thumbs).hide();
+                                    thumbs.insertBefore($('input[id^="videoid_"][value="' + video.videoid + '"]').parent().find('.pad-bottom-sm.text-right'));
+                                    thumbs.slideDown('slow');
+                                } else {
+                                    const parent_div = $('input[id^="videoid_"][value="' + video.videoid + '"]').parent().find('[name="default_thumb"]').parents('.formSection.clear')[0];
+                                    $(parent_div).html(video.thumbs);
+                                }
                             }
-                            if (video.status.toLowerCase() == 'successful' && $('input[id^="videoid_"][value="' + video.videoid + '"]').parent().find('#subtitles_'+video.videoid).length === 0 && typeof video.subtitles !== 'undefined' && video.subtitles.length > 0) {
-                                const subtitles = $(video.subtitles).hide();
-                                subtitles.insertBefore($('input[id^="videoid_"][value="' + video.videoid + '"]').parent().find('.pad-bottom-sm.text-right'));
-                                subtitles.slideDown('slow');
+                            if (typeof video.subtitles !== 'undefined' && video.subtitles.length > 0) {
+                                if (video.status.toLowerCase() == 'successful' && $('input[id^="videoid_"][value="' + video.videoid + '"]').parent().find('#subtitles_'+video.videoid).length === 0) {
+                                    const subtitles = $(video.subtitles).hide();
+                                    subtitles.insertBefore($('input[id^="videoid_"][value="' + video.videoid + '"]').parent().find('.pad-bottom-sm.text-right'));
+                                    subtitles.slideDown('slow');
+                                } else {
+                                    const parent_div = $('input[id^="videoid_"][value="' + video.videoid + '"]').parent().find('#subtitles_'+video.videoid).parents('.formSection.clear')[0];
+                                    $(parent_div).html(video.subtitles);
+                                }
                             }
                             slideFormSection();
                         }
