@@ -562,7 +562,7 @@ function getUpdate() {
                     var data = response.data;
 
                     data.videos.forEach(function (video) {
-                        if ( video.percent > 0 || typeof video.percent === "undefined") {
+                        if ( video.percent > 0 || typeof video.percent === "undefined" && video.status.toLowerCase() !== 'waiting') {
                             if (typeof video.thumbs !== 'undefined' && video.thumbs.length > 0) {
                                 if ($('input[id^="videoid_"][value="' + video.videoid + '"]').parent().find('[name="default_thumb"]').length === 0) {
                                     const thumbs = $(video.thumbs).hide();
