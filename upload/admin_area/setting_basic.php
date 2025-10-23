@@ -517,7 +517,10 @@ if (isset($_POST['update'])) {
             }
         }
 
-        myquery::getInstance()->Set_Website_Details($field, $value);
+        if (!myquery::getInstance()->Set_Website_Details($field, $value)) {
+            e(lang('error_missing_config_please_use_tool', DirPath::getUrl('admin_area') . 'admin_tool.php?code_tool=install_missing_config'),'w',false);
+            break;
+        }
     }
 
     if (!empty($_FILES['upload_logo']['name'])) {
