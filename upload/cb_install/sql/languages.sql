@@ -1728,4 +1728,5 @@ VALUES ('ongoing_conversion'),
        ('delete_conversion_lock'),
        ('no_lock_to_delete'),
        ('video_title_exceed'),
-       ('please_login_to_flag');
+       ('please_login_to_flag'),
+       ('please_login');

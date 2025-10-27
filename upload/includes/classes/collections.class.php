@@ -1941,7 +1941,7 @@ class Collections extends CBCategory
             return false;
         }
 
-        if (!user_id()) {
+        if (!User::getInstance()->isUserConnected()) {
             e(lang('you_not_logged_in'));
         } elseif (!$this->object_in_collection($id, $cid)) {
             e(lang('object_not_in_collect', $this->objName));
@@ -2395,7 +2395,6 @@ class Collections extends CBCategory
                     return $base_url . 'view_item.php?item=' . $details['photo_key'] . '&amp;collection=' . $details['collection_id'];
                 case 'load_more':
                 case 'more_items':
-                case 'moreItems':
                     if (empty($details['collection_id'])) {
                         return $base_url;
                     }

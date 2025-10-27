@@ -179,7 +179,7 @@ class Comments
         }
 
         $user_id = user_id();
-        if( !$user_id ){
+        if( !$user_id || !User::getInstance()->isUserConnected()){
             return false;
         }
 
@@ -285,7 +285,7 @@ class Comments
             return false;
         }
 
-        if( $comment['userid'] == $user_id || ( empty($comment['userid']) && config('anonym_comments') && Network::get_remote_ip() == $comment['comment_ip']) ){
+        if( $comment['userid'] == $user_id || ( empty($comment['userid']) && config('anonym_comments')!='yes' && Network::get_remote_ip() == $comment['comment_ip']) ){
             e(lang('no_own_commen_spam'));
             return false;
         }
@@ -363,11 +363,6 @@ class Comments
 
             if (empty(trim($anonym_name))) {
                 e(lang('please_enter_your_name'));
-                return false;
-            }
-
-            if (empty(trim($anonym_email))) {
-                e(lang('please_enter_your_email'));
                 return false;
             }
 

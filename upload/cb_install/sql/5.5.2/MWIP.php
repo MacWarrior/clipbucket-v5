@@ -11,8 +11,13 @@ class MWIP extends \Migration
     public function start()
     {
         self::generateTranslation('please_login_to_flag', [
-            'fr'=>'Veuillez vous connecter pour effectuer un signalement',
-            'en'=>'Please login to flag'
+            'fr' => 'Veuillez vous connecter pour effectuer un signalement',
+            'en' => 'Please login to flag'
+        ]);
+
+        self::generateTranslation('please_login', [
+            'fr' => 'Veuillez vous connecter',
+            'en' => 'Please login'
         ]);
     }
 
