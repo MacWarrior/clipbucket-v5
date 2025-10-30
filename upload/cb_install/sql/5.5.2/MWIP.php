@@ -15,18 +15,18 @@ class MWIP extends \Migration
         self::insertTool('install_missing_translation', 'AdminTool::installMissingTranslations');
 
         self::generateTranslation('install_missing_config_label', [
-            'fr' => 'Installer les configurations manquantes',
-            'en' => 'Install missing config'
+            'fr' => 'Corriger les configurations manquantes',
+            'en' => 'Fix missing configs'
         ]);
 
         self::generateTranslation('install_missing_config_description', [
-            'fr' => 'Rejoue les scripts d\'installation pour installer les configurations manquantes',
-            'en' => 'Re-run install scripts to install missing config'
+            'fr' => 'Rejoue les scripts d\'installation pour corriger les configurations manquantes',
+            'en' => 'Re-run install scripts to fix missing configs'
         ]);
 
         self::generateTranslation('install_missing_translation_label', [
-            'fr' => 'Installer les traductions manquantes',
-            'en' => 'Install missing translation'
+            'fr' => 'Corriger les traductions manquantes',
+            'en' => 'Fix missing translations'
         ]);
 
         self::generateTranslation('install_missing_translation_description', [
@@ -66,7 +66,7 @@ class MWIP extends \Migration
                 }
             }
         }
-        self::alterTable('ALTER TABLE `{tbl_prefix}categories_type` ADD CONSTRAINT \'name\' UNIQUE (`name`)', [
+        self::alterTable('ALTER TABLE `{tbl_prefix}categories_type` ADD CONSTRAINT name UNIQUE (`name`)', [
             'table'  => 'categories_type',
             'column' => 'name'
         ], [
