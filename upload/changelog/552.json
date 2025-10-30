@@ -1,6 +1,6 @@
 {
   "version":"5.5.2",
-  "revision":"151",
+  "revision":"152",
   "status":"stable",
   "detail":[
     {
@@ -54,7 +54,7 @@
         ,"Fix PHP error when trying to access missing log file"
         ,"Fix user storage calculation tool staying stuck in ongoing state"
         ,"Fix possibility to disable all conversion resolutions <i>(#664)</i>"
-        ,"Fix possible SQL injection (Thanks @Takumi142857 !)"
+        ,"Fix possible SQL injection (Thanks @Takumi142857 & @nzaar9 !)"
         ,"Fix possible XSS injection"
         ,"Fix possible arbitraty file access (Thanks @Takumi142857 !)"
         ,"Fix TMDB import error"
@@ -208,6 +208,7 @@
       "description": [
         "Update compatibility notice to 5.5.2"
         ,"Drop remote play"
+        ,"Drop custom field"
       ]
     },
     {
