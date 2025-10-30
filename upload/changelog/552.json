@@ -208,6 +208,7 @@
       "description": [
         "Update compatibility notice to 5.5.2"
         ,"Drop remote play"
+        ,"Drop custom field"
       ]
     },
     {
