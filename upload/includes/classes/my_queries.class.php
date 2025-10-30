@@ -16,15 +16,16 @@ class myquery
     /**
      * @param $name
      * @param $value
-     * @return mysqli_result|bool
+     * @return int
      * @throws Exception
      */
-    function Set_Website_Details($name, $value): mysqli_result|bool
+    function Set_Website_Details($name, $value): int
     {
         $return = Clipbucket_db::getInstance()->update(tbl('config'), ['value'], [$value], " name = '" . $name . "'");
+
         ClipBucket::getInstance()->configs[$name] = $value;
         static::$website_details[$name] = $value;
-        return $return;
+        return Clipbucket_db::getInstance()->Affected_Rows();
     }
 
     /**

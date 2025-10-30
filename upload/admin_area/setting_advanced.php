@@ -182,11 +182,11 @@ if (isset($_POST['update'])) {
                 $value = '0';
             }
         }
-
-        if (!myquery::getInstance()->Set_Website_Details($field, $value)) {
-            e(lang('error_missing_config_please_use_tool', DirPath::getUrl('admin_area') . 'admin_tool.php?code_tool=install_missing_config'),'w',false);
-            break;
-        }
+        if (!myquery::getInstance()->Get_Website_Details()[$field]) {
+               e(lang('error_missing_config_please_use_tool', DirPath::getUrl('admin_area') . 'admin_tool.php?code_tool=install_missing_config'),'w',false);
+                break;
+         }
+        myquery::getInstance()->Set_Website_Details($field, $value);
     }
 
     //clear cache
