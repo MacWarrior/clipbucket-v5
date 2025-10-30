@@ -30,8 +30,8 @@ class MWIP extends \Migration
         ]);
 
         self::generateTranslation('install_missing_translation_description', [
-            'fr' => 'Rejoue les scripts d\'installation pour installer les traductions manquantes',
-            'en' => 'Re-run install scripts to install missing translation'
+            'fr' => 'Rejoue les scripts d\'installation pour corriger les traductions manquantes',
+            'en' => 'Re-run install scripts to fix missing translation'
         ]);
 
         self::generateTranslation('error_missing_config_please_use_tool', [
