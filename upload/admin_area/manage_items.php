@@ -34,7 +34,7 @@ switch ($type) {
         if (isset($_POST['remove_selected']) && is_array($_POST['check_obj'])) {
             $total = count($_POST['check_obj']);
             for ($i = 0; $i < $total; $i++) {
-                Collection::removeItemFromCollection($collection_id, $_POST['check_item'][$i], $type);
+                Collection::removeItemFromCollection($collection_id, $_POST['check_obj'][$i], $type);
                 CBPhotos::getInstance()->make_photo_orphan($collection_id, $_POST['check_obj'][$i]);
             }
             errorhandler::getInstance()->flush();
@@ -60,7 +60,7 @@ switch ($type) {
         if (isset($_POST['remove_selected']) && is_array($_POST['check_obj'])) {
             $total = count($_POST['check_obj']);
             for ($i = 0; $i < $total; $i++) {
-                Collection::removeItemFromCollection($collection_id, $_POST['check_item'][$i], $type);
+                Collection::removeItemFromCollection($collection_id, $_POST['check_obj'][$i], $type);
             }
         }
 
