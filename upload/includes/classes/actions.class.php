@@ -156,62 +156,68 @@ class cbactions
      */
     function share_content($id)
     {
-        $ok = true;
-        $tpl = $this->share_template_name;
-        $var = $this->val_array;
-        $id = mysql_clean($id);
-        //First checking weather object exists or not
-        if ($this->exists($id)) {
-            if (user_id()) {
-                $post_users = mysql_clean(post('users'));
-                $users = explode(',', $post_users);
-                if (is_array($users) && !empty($post_users)) {
-                    foreach ($users as $username) {
-                        $user = User::getInstance()->getOne(['username_strict' => $username]);
-                        if (!userquery::getInstance()->user_exists($user['username']) && !Email::isValid($user['email'])) {
-                            e(lang('user_no_exist_wid_username', $username));
-                            $ok = false;
-                            break;
-                        }
-                        if (userquery::getInstance()->is_user_banned(User::getInstance()->get('username'), $user['username'])) {
-                            e(lang('this_user_blocked_you', $user['username']));
-                            $ok = false;
-                            break;
-                        }
-                        if ($user['ban_status'] == 'yes') {
-                            e(lang('user_is_banned',$user['username']));
-                            $ok = false;
-                            break;
-                        }
-                        if ($user['username'] == User::getInstance()->get('username')) {
-                            e(lang('you_cant_share_to_yourself'));
-                            $ok = false;
-                            break;
+        if ((empty(trim(config('base_url'))) || !filter_var(config('base_url'), FILTER_VALIDATE_URL))) {
+            e(lang('cant_perform_action_until_app_fully_updated'));
+        } else {
+            $ok = true;
+            $tpl = $this->share_template_name;
+            $var = $this->val_array;
+            $id = mysql_clean($id);
+            //First checking weather object exists or not
+            if ($this->exists($id)) {
+                if (user_id()) {
+                    $post_users = mysql_clean(post('users'));
+                    $users = explode(',', $post_users);
+                    if (is_array($users) && !empty($post_users)) {
+                        foreach ($users as $username) {
+                            $user = User::getInstance()->getOne(['username_strict' => $username]);
+                            if (!userquery::getInstance()->user_exists($user['username']) && !Email::isValid($user['email'])) {
+                                e(lang('user_no_exist_wid_username', $username));
+                                $ok = false;
+                                break;
+                            }
+                            if (userquery::getInstance()->is_user_banned(User::getInstance()->get('username'), $user['username'])) {
+                                e(lang('this_user_blocked_you', $user['username']));
+                                $ok = false;
+                                break;
+                            }
+                            if ($user['ban_status'] == 'yes') {
+                                e(lang('user_is_banned', $user['username']));
+                                $ok = false;
+                                break;
+                            }
+                            if ($user['username'] == User::getInstance()->get('username')) {
+                                e(lang('you_cant_share_to_yourself'));
+                                $ok = false;
+                                break;
+                            }
+
+                            $emails_array[] = $user['email'];
                         }
 
-                        $emails_array[] = $user['email'];
-                    }
+                        if ($ok) {
+                            $more_var = [
+                                'sender_username' => user_name(),
+                                'sender_message'  => display_clean(post('message')),
+                            ];
+                            $var = array_merge($more_var, $var);
 
-                    if ($ok) {
-                        $more_var = [
-                            'sender_username' => user_name(),
-                            'sender_message'  => display_clean(post('message')),
-                        ];
-                        $var = array_merge($more_var, $var);
+                            //Now Finally Sending Email
+                            $from = userquery::getInstance()->get_user_field_only(user_name(), 'email');
 
-                        //Now Finally Sending Email
-                        $from = userquery::getInstance()->get_user_field_only(user_name(), 'email');
-                        EmailTemplate::sendMail($tpl, $emails_array, $var, $from, user_name());
-                        e(lang('thnx_sharing_msg', $this->name), 'm');
+                            if (EmailTemplate::sendMail($tpl, $emails_array, $var, $from, user_name())) {
+                                e(lang('thnx_sharing_msg', $this->name), 'm');
+                            }
+                        }
+                    } else {
+                        e(lang('share_video_no_user_err', $this->name));
                     }
                 } else {
-                    e(lang('share_video_no_user_err', $this->name));
+                    e(lang('you_not_logged_in'));
                 }
             } else {
-                e(lang('you_not_logged_in'));
+                e(lang('obj_not_exists', $this->name));
             }
-        } else {
-            e(lang('obj_not_exists', $this->name));
         }
     }
 

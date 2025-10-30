@@ -133,7 +133,7 @@ INSERT INTO `{tbl_prefix}email` (`code`, `id_email_template`, `is_deletable`, `t
     ('forgot_username_request', 1, 0, '[{{website_title}}] Your username', 'Hello <b>{{user_username}}</b>,
     <br/><br/>
     It seems you forgot your username ; here it is : <b>{{user_username}}</b>.', 0),
-    ('friend_request', 1, 0, '[{{website_title}}] Friend request from {{user_username}}', 'Hello <b>{{user_username}}</b>,
+    ('friend_request', 1, 0, '[{{website_title}}] Friend request from {{sender_username}}', 'Hello <b>{{user_username}}</b>,
     <br/><br/>
     <a href="{{profile_link}}"><b>{{sender_username}}</b></a> sent you a friend request.<br/>
     <hr/>

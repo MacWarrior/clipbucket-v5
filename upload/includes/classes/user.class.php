@@ -1934,22 +1934,6 @@ class userquery extends CBCategory
             $insert_id = Clipbucket_db::getInstance()->insert_id();
 
             e(lang('friend_request_sent'), 'm');
-
-            //Sending friendship request email
-            $tpl = CBEmail::getInstance()->get_template('friend_request');
-
-            $var = [
-                '{reciever}'     => $friend['username'],
-                '{sender}'       => $sender['username'],
-                '{sender_link}'  => $this->profile_link($sender),
-                '{request_link}' => '/manage_contacts.php?mode=request&confirm=' . $uid
-            ];
-
-            $subj = CBEmail::getInstance()->replace($tpl['email_template_subject'], $var);
-            $msg = nl2br(CBEmail::getInstance()->replace($tpl['email_template'], $var));
-
-            //Now Finally Sending Email
-            #cbmail(['to'=>$friend['email'],'from'=>WEBSITE_EMAIL,'subject'=>$subj,'content'=>$msg]);
         }
 
     }

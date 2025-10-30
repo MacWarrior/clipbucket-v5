@@ -640,7 +640,7 @@ class System{
 
         //config
         if( Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '261') && (empty(trim(config('base_url'))) || !filter_var(config('base_url'), FILTER_VALIDATE_URL)) ){
-            self::displayConfigError('error config : base_url');
+            self::displayConfigError('error config : base_url', -1);
             return -1;
         }
 
@@ -820,12 +820,12 @@ class System{
      * @throws \Predis\Connection\ConnectionException
      * @throws \Predis\Response\ServerException
      */
-    private static function displayConfigError($error): void
+    private static function displayConfigError($error, $value = 0): void
     {
         if (System::isInDev()) {
             DiscordLog::sendDump($error . '```' . debug_backtrace_string() . '```');
         }
-        self::setGlobalConfigCache(0);
+        self::setGlobalConfigCache($value);
     }
 
     public static function is_nginx(): bool

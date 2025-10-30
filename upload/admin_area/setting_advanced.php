@@ -183,6 +183,11 @@ if (isset($_POST['update'])) {
             }
         }
 
+        if ($field == 'base_url' && (trim($value) ==='' || empty($value))) {
+            e(lang('base_url_cannot_be_empty'));
+            break;
+        }
+
         myquery::getInstance()->Set_Website_Details($field, $value);
     }
 
