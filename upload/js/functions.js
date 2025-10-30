@@ -372,8 +372,7 @@ function swap_auto_play()
 
 function collection_actions(form,mode,objID,result_con,type,cid)
 {
-    $(result_con).css('display','block');
-    $(result_con).html(loading);
+    showSpinner();
     switch(mode) {
         case 'add_new_item':
             const value = $('#'+form+' #collection').val();
@@ -402,7 +401,6 @@ function collection_actions(form,mode,objID,result_con,type,cid)
             break;
 
         case 'remove_collection_item':
-            $('#'+form).hide();
             $.post(page, {
                 mode: mode,
                 obj_id: objID,
@@ -418,17 +416,16 @@ function collection_actions(form,mode,objID,result_con,type,cid)
                     if(data.err) {
                         alert(data.err);
                         $(result_con+'_'+objID).hide();
-                        $('#'+form+objID).show();
                     }
-
                     if(data.msg) {
                         $(result_con).html(data.msg);
-                        $('#'+form+'_'+objID).slideUp(350);
+                        $('#'+form).slideUp(350);
                     }
                 }
             },'json');
             break;
     }
+    hideSpinner();
 }
 
 // Simple function to open url with javascript

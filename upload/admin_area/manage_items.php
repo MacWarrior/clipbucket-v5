@@ -5,8 +5,8 @@ require_once dirname(__FILE__, 2) . '/includes/admin_config.php';
 User::getInstance()->hasPermissionOrRedirect('video_moderation',true);
 pages::getInstance()->page_redir();
 
-$id = mysql_clean($_GET['collection']);
-$c = Collections::getInstance()->get_collection($id);
+$collection_id = mysql_clean($_GET['collection']);
+$c = Collections::getInstance()->get_collection($collection_id);
 
 /* Generating breadcrumb */
 global $breadcrumb;
@@ -20,11 +20,11 @@ $breadcrumb[1] = [
 ];
 $breadcrumb[2] = [
     'title' => 'Editing : ' . display_clean($c['collection_name']),
-    'url'   => DirPath::getUrl('admin_area') . 'edit_collection.php?collection=' . display_clean($id)
+    'url'   => DirPath::getUrl('admin_area') . 'edit_collection.php?collection=' . display_clean($collection_id)
 ];
 $breadcrumb[3] = [
     'title' => lang('manage_collection_items'),
-    'url'   => DirPath::getUrl('admin_area') . 'manage_items.php?collection=' . display_clean($id)
+    'url'   => DirPath::getUrl('admin_area') . 'manage_items.php?collection=' . display_clean($collection_id)
 ];
 
 $type = $c['type'];
@@ -34,8 +34,8 @@ switch ($type) {
         if (isset($_POST['remove_selected']) && is_array($_POST['check_obj'])) {
             $total = count($_POST['check_obj']);
             for ($i = 0; $i < $total; $i++) {
-                CBPhotos::getInstance()->collection->remove_item($_POST['check_obj'][$i], $id);
-                CBPhotos::getInstance()->make_photo_orphan($id, $_POST['check_obj'][$i]);
+                Collection::removeItemFromCollection($collection_id, $_POST['check_item'][$i], $type);
+                CBPhotos::getInstance()->make_photo_orphan($collection_id, $_POST['check_obj'][$i]);
             }
             errorhandler::getInstance()->flush();
             e($total . ' photos have been removed.', 'm');
@@ -45,21 +45,22 @@ switch ($type) {
             $total = count($_POST['check_obj']);
             $new = mysql_clean($_POST['collection_id']);
             for ($i = 0; $i < $total; $i++) {
-                CBPhotos::getInstance()->collection->change_collection($new, $_POST['check_obj'][$i], $id);
+                CBPhotos::getInstance()->collection->change_collection($new, $_POST['check_obj'][$i], $collection_id);
             }
             errorhandler::getInstance()->flush();
             e($total . ' photo(s) have been moved to \'<strong>' . display_clean(get_collection_field($new, 'collection_name')) . '</strong>\'', 'm', false);
         }
 
-        $items = CBPhotos::getInstance()->collection->get_collection_items_with_details($id);
+        $items = CBPhotos::getInstance()->collection->get_collection_items_with_details($collection_id);
         break;
 
     default:
     case 'videos':
+        $type = 'videos';
         if (isset($_POST['remove_selected']) && is_array($_POST['check_obj'])) {
             $total = count($_POST['check_obj']);
             for ($i = 0; $i < $total; $i++) {
-                CBvideo::getInstance()->collection->remove_item($_POST['check_obj'][$i], $id);
+                Collection::removeItemFromCollection($collection_id, $_POST['check_item'][$i], $type);
             }
         }
 
@@ -67,13 +68,13 @@ switch ($type) {
             $total = count($_POST['check_obj']);
             $new = mysql_clean($_POST['collection_id']);
             for ($i = 0; $i < $total; $i++) {
-                CBvideo::getInstance()->collection->change_collection($new, $_POST['check_obj'][$i], $id);
+                CBvideo::getInstance()->collection->change_collection($new, $_POST['check_obj'][$i], $collection_id);
             }
             errorhandler::getInstance()->flush();
             e($total . ' video(s) have been moved to \'<strong>' . display_clean(get_collection_field($new, 'collection_name')) . '</strong>\'', 'm', false);
         }
 
-        $items = CBvideo::getInstance()->collection->get_collection_items_with_details($id);
+        $items = CBvideo::getInstance()->collection->get_collection_items_with_details($collection_id);
         break;
 }
 
@@ -95,7 +96,7 @@ if (config('enable_sub_collection') == 'yes') {
         e(lang(''), 'm');
     }
 
-    $childs = Collection::getInstance()->getChildCollection($id);
+    $childs = Collection::getInstance()->getChildCollection($collection_id);
     if (!empty($childs)) {
         foreach ($childs as $child) {
             $items[] = $child;
