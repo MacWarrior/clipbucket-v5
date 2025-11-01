@@ -1727,4 +1727,10 @@ VALUES ('ongoing_conversion'),
        ('all_locks_deleted'),
        ('delete_conversion_lock'),
        ('no_lock_to_delete'),
-       ('video_title_exceed');
+       ('video_title_exceed'),
+       ('install_missing_config_label'),
+       ('install_missing_config_description'),
+       ('install_missing_translation_label'),
+       ('install_missing_translation_description'),
+       ('error_missing_config_please_use_tool'),
+       ('error_missing_translation_please_use_tool');

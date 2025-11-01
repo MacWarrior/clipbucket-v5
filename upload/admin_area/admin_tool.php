@@ -28,10 +28,12 @@ if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.0', '367')) {
         $tool->initById($_GET['id_tool']);
     }
 }
+$to_launch = false;
 assign('can_sse', $can_sse);
-sendClientResponseAndContinue(function () use ($tool){
+sendClientResponseAndContinue(function () use (&$tool, &$to_launch){
     if ($tool && $tool->isAlreadyLaunch() === false) {
         $tool->setToolInProgress();
+        $to_launch = true;
     }
     $admin_tool_list = AdminTool::getAllTools();
     assign('admin_tool_list', $admin_tool_list);
@@ -43,8 +45,7 @@ sendClientResponseAndContinue(function () use ($tool){
     template_files('admin_tool.html');
     display_it();
 });
-
-if ($tool && $tool->isAlreadyLaunch() === false) {
+if ($to_launch === true) {
     //execute tool
     $tool->launch();
 }

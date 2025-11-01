@@ -14,13 +14,18 @@ class myquery
     static $video_resolutions = [];
 
     /**
+     * @param $name
+     * @param $value
+     * @return int
      * @throws Exception
      */
-    function Set_Website_Details($name, $value): void
+    function Set_Website_Details($name, $value): int
     {
-        Clipbucket_db::getInstance()->update(tbl('config'), ['value'], [$value], " name = '" . $name . "'");
+        $return = Clipbucket_db::getInstance()->update(tbl('config'), ['value'], [$value], " name = '" . $name . "'");
+
         ClipBucket::getInstance()->configs[$name] = $value;
         static::$website_details[$name] = $value;
+        return Clipbucket_db::getInstance()->Affected_Rows();
     }
 
     /**
