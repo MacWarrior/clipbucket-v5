@@ -94,7 +94,7 @@ switch ($mode) {
             'mimeType'            => 'video',
             'destinationFilePath' => $targetFile,
             'keepExtension'       => true,
-            'maxFileSize'         => config('max_upload_size'),
+            'maxFileSize'         => config('max_upload_size') ? : 1,
             'allowedExtensions'   => config('allowed_video_types')
         ];
 
