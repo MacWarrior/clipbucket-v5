@@ -132,10 +132,7 @@ if (isset($_POST['update'])) {
         'video_nsfw_check_model',
         'email_sender_address',
         'email_sender_name',
-        'photo_nsfw_check_model',
-        'video_nsfw_check_model',
         'base_url',
-        'video_nsfw_check_model',
         'thumb_background_color',
         'subtitle_format',
         'store_guest_session',
@@ -182,7 +179,7 @@ if (isset($_POST['update'])) {
                 $value = '0';
             }
         }
-        if (!myquery::getInstance()->Get_Website_Details()[$field]) {
+        if (!isset(myquery::getInstance()->Get_Website_Details()[$field])) {
                e(lang('error_missing_config_please_use_tool', DirPath::getUrl('admin_area') . 'admin_tool.php?code_tool=install_missing_config'),'w',false);
                 break;
          }
