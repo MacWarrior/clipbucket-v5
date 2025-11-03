@@ -7,6 +7,7 @@ class CBTemplate
         return $cbtpl;
     }
 
+    const DEFAULT_TEMPLATE_NAME = 'ClipbucketV5 official';
     /**
      * Function used to set Smarty Functions
      */
@@ -87,7 +88,7 @@ class CBTemplate
         $tpls = [];
         foreach ($tpl_dirs as $tpl_dir) {
             $tpl_details = CBTemplate::get_template_details($tpl_dir);
-
+            //TODO check if is copy
             if ($tpl_details && $tpl_details['name'] != '') {
                 $tpls[$tpl_details['name']] = $tpl_details;
             }
@@ -147,13 +148,14 @@ class CBTemplate
      */
     function get_preview_thumb($template): string
     {
-        $path = DirPath::getUrl('styles') . $template . '/images/preview.';
+        $url = DirPath::getUrl('styles') . $template . '/images/preview.';
+        $path = DirPath::get('styles') . $template . '/images/preview.';
         $exts = ['png', 'jpg', 'gif'];
-        $thumb_path = DirPath::getUrl('images') . 'icons/no_thumb_template.png';
+        $thumb_path = DirPath::getUrl('images') . 'icons/no_thumb_template.jpg';
         foreach ($exts as $ext) {
-            $file = DirPath::get('root') . $path . $ext;
+            $file = $path . $ext;
             if (file_exists($file)) {
-                $thumb_path = $path . $ext;
+                $thumb_path = $url . $ext;
                 break;
             }
         }
@@ -239,5 +241,93 @@ class CBTemplate
 
                 return $new_files;
         }
+    }
+
+    /**
+     * @return true
+     * @throws Exception
+     */
+    public static function duplicate_default_theme(): bool
+    {
+        $source = DirPath::get('styles') . ClipBucket::DEFAULT_TEMPLATE;
+        $dest = DirPath::get('styles') . ClipBucket::DEFAULT_TEMPLATE . '_' . str_replace('.','',Update::getInstance()->getCurrentCoreVersion()) . '_' . Update::getInstance()->getCurrentCoreRevision() . '_' . date('YmdHis');
+        $permissions = 0755;
+        //Copy all folders and files recursively
+        self::xcopy($source, $dest, $permissions);
+        //change template.xml
+        $new_template = $dest . DIRECTORY_SEPARATOR . 'template.xml';
+        if (!file_exists($new_template)) {
+            throw new Exception('template.xml not found');
+        }
+        $xml = simplexml_load_file($new_template);
+        $xml->name = 'Copy of ' . $xml->name;
+        $xml->description = 'Copy of ' . $xml->description;
+        $xml->saveXML($new_template);
+        return true;
+    }
+
+    /**
+     * @param $source
+     * @param $dest
+     * @param $permissions
+     * @return bool
+     */
+    private static function xcopy($source, $dest, $permissions): bool
+    {
+        $sourceHash = self::hashDirectory($source);
+        // Check for symlinks
+        if (is_link($source)) {
+            return symlink(readlink($source), $dest);
+        }
+        // Simple copy for a file
+        if (is_file($source)) {
+            return copy($source, $dest);
+        }
+        // Make destination directory
+        if (!is_dir($dest)) {
+            mkdir($dest, $permissions);
+        }
+        // Loop through the folder
+        $dir = dir($source);
+        while (false !== $entry = $dir->read()) {
+            // Skip pointers
+            if ($entry == '.' || $entry == '..') {
+                continue;
+            }
+            // Deep copy directories
+            if ($sourceHash != self::hashDirectory($source . DIRECTORY_SEPARATOR . $entry)) {
+                self::xcopy($source . DIRECTORY_SEPARATOR . $entry, $dest . DIRECTORY_SEPARATOR . $entry, $permissions);
+            }
+        }
+
+        // Clean up
+        $dir->close();
+        return true;
+    }
+
+
+    /**
+     * In case of coping a directory inside itself, there is a need to hash check the directory otherwise and infinite loop of coping is generated
+     * @param $directory
+     * @return false|string
+     */
+    private static function hashDirectory($directory): bool|string
+    {
+        if (!is_dir($directory)) {
+            return false;
+        }
+        $files = [];
+        $dir = dir($directory);
+        while (false !== ($file = $dir->read())) {
+            if ($file != '.' and $file != '..') {
+                if (is_dir($directory . '/' . $file)) {
+                    $files[] = self::hashDirectory($directory . '/' . $file);
+                } else {
+                    $files[] = md5_file($directory . '/' . $file);
+                }
+            }
+        }
+        $dir->close();
+        return md5(implode('', $files));
     }
 }

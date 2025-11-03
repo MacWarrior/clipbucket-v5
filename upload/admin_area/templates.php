@@ -2,11 +2,10 @@
 const THIS_PAGE = 'templates';
 require_once dirname(__FILE__, 2) . '/includes/admin_config.php';
 
-global $cbtpl;
 User::getInstance()->hasPermissionOrRedirect('manage_template_access', true);
 pages::getInstance()->page_redir();
 
-if( count($cbtpl->get_templates()) <= 1 && !System::isInDev() ){
+if (count(CBTemplate::getInstance()->get_templates()) <= 1 && !System::isInDev()) {
     redirect_to(DirPath::getUrl('admin_area'));
 }
 
@@ -19,6 +18,12 @@ if ($_GET['change']) {
     myquery::getInstance()->set_template($_GET['change']);
 }
 
+$min_in_dev = System::isInDev() ? '.min' : '';
+ClipBucket::getInstance()->addAdminJS([
+    'pages/templates/templates' . $min_in_dev . '.js' => 'admin'
+]);
+
+assign('templates', CBTemplate::getInstance()->get_templates());
 subtitle('Template Manager');
 template_files('templates.html');
 display_it();
