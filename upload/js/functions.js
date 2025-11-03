@@ -380,24 +380,23 @@ function collection_actions(form,mode,objID,result_con,type,cid)
                  $(result_con).html('No Data returned');
                  return false;
             }
-            $.post(baseurl+'actions/add_to_collection.php', {
-                mode: mode,
-                cid: value,
-                obj_id: objID,
-                type: type
-            },
-            function(data) {
-                if(!data){
-                    alert('No Data returned');
-                } else {
-                    if(data.msg){
-                        $(result_con).html(data.msg);
-                        $(result_con).find('.container').css({
-                            'maxWidth' : '100%'
-                        });
+            $.post(baseurl + 'actions/add_to_collection.php', {
+                    mode: mode,
+                    cid: value,
+                    obj_id: objID,
+                    type: type
+                }, function (data) {
+                    if (!data) {
+                        alert('No Data returned');
+                    } else {
+                        if (data.msg) {
+                            $(result_con).html(data.msg).slideDown(350);
+                            $(result_con).find('.container').css({
+                                'maxWidth': '100%'
+                            });
+                        }
                     }
-                }
-            },'json');
+                }, 'json');
             break;
 
         case 'remove_collection_item':
@@ -418,7 +417,7 @@ function collection_actions(form,mode,objID,result_con,type,cid)
                         $(result_con+'_'+objID).hide();
                     }
                     if(data.msg) {
-                        $(result_con).html(data.msg);
+                        $(result_con).html(data.msg).slideDown(350);
                         $('#'+form).slideUp(350);
                     }
                 }
