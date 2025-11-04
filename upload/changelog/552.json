@@ -1,6 +1,6 @@
 {
   "version":"5.5.2",
-  "revision":"152",
+  "revision":"153",
   "status":"stable",
   "detail":[
     {
@@ -178,6 +178,7 @@
         ,"Refactor video conversion script"
         ,"Refactor video conversion queue management"
         ,"Fix HLS video reconversion"
+        ,"Fix wrong extension check"
       ]
     },
     {
