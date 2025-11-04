@@ -898,38 +898,42 @@
 				},'text');
 		};
 
-		this.addToPlaylist = function (vid,form_id,objtype){
-			curObj = this;
-			$('#playlist_form_result').html(loading).show();
-			$.post(page,
-				{
-					mode : 'add_playlist',
-					id : vid,
-					objtype : objtype,
-					pid : $('#playlist_id option:selected').val()
-				},
-				function(data)
-				{
-					if(!data){
-						alert('No data');
-					} else {
-						if(data.err.length > 2) {
-							cleanedHtml = $.parseHTML(data.err);
-							var msg = $(cleanedHtml).html();
-							curObj.throwHeadMsg('danger',msg, 5000, true);
-						}
+        this.addToPlaylist = function (vid, form_id, objtype) {
+            curObj = this;
+            var val = $('#playlist_id option:selected').val()
+            if (val == '0' || val == '' || val == null) {
+                curObj.throwHeadMsg('danger', please_select_playlist , 5000, true);
+            } else {
+                $('#playlist_form_result').html(loading).show();
+                $.post(page,
+                    {
+                        mode: 'add_playlist',
+                        id: vid,
+                        objtype: objtype,
+                        pid: val
+                    },
+                    function (data) {
+                        if (!data) {
+                            alert('No data');
+                        } else {
+                            if (data.err.length > 2) {
+                                cleanedHtml = $.parseHTML(data.err);
+                                var msg = $(cleanedHtml).html();
+                                curObj.throwHeadMsg('danger', msg, 5000, true);
+                            }
 
-						if(data.msg.length > 2) {
-							cleanedHtml = $.parseHTML(data.msg);
-							var msg = $(cleanedHtml).find('div.alert').html();
-							curObj.throwHeadMsg('success',msg, 5000, true);
-							$('#addPlaylistCont').toggle();
-						}
-					}
-					$('#playlist_form_result').hide();
-				},'json'
-			);
-		};
+                            if (data.msg.length > 2) {
+                                cleanedHtml = $.parseHTML(data.msg);
+                                var msg = $(cleanedHtml).find('div.alert').html();
+                                curObj.throwHeadMsg('success', msg, 5000, true);
+                                $('#addPlaylistCont').toggle();
+                            }
+                        }
+                        $('#playlist_form_result').hide();
+                    }, 'json'
+                );
+            }
+        };
 
 		this.createPlaylist = function (vid,form_id,objtype){
 			curObj = this;

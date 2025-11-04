@@ -2715,3 +2715,5 @@ INSERT INTO `{tbl_prefix}languages_translations` (`id_language_key`, `translatio
 VALUES ((SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE `language_key` = 'please_login_to_flag'), 'Veuillez vous connecter pour effectuer un signalement', @language_id);
 INSERT INTO `{tbl_prefix}languages_translations` (`id_language_key`, `translation`, `language_id`)
 VALUES ((SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE `language_key` = 'please_login'), 'Veuillez vous connecter', @language_id);
+INSERT INTO `{tbl_prefix}languages_translations` (`id_language_key`, `translation`, `language_id`)
+VALUES ((SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE `language_key` = 'report_text'), 'Veuillez choisir la catégorie qui correspond le mieux à votre préoccupation concernant la vidéo, afin que nous puissions déterminer si elle est en violation avec notre charte de communauté ou n''est pas approprié pour tous les utilisateurs. Tout abu de cette fonctionnalité est également une violation de notre charte de communauté, donc veuillez ne pas le faire.', @language_id);

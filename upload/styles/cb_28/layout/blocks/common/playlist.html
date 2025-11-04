@@ -8,7 +8,7 @@
 				<select name="playlist_id" id="playlist_id" class="form-control">
 					{if $playlists}
 						{foreach $playlists as $playlist}
-							<option value="{$playlist.playlist_id}">{display_clean($playlist.playlist_name)}</option>
+							<option value="{$playlist.playlist_id}">{display_clean($playlist.playlist_name)} ({$playlist.total_items})</option>
 						{/foreach}
 					{else}
 						<option value="" placeholder>--- {lang("no_playlist_exists")} ---</option>

@@ -268,13 +268,16 @@ if (!empty($mode)) {
             $id = $_POST['id'];
             if (!User::getInstance()->isUserConnected()) {
                 e(lang('please_login_to_flag'));
+            } elseif (empty($_POST['flag_type'])) {
+                e(lang('missing_category_report'));
             } else {
-                if (empty($_POST['flag_type'])) {
-                    e(lang('missing_category_report'));
+                //get flag reports
+                if (!empty(Flag::getOne(['flag_id' => user_id(), 'element_type' => $type, 'id_element' => $id, 'id_flag_type' => $_POST['flag_type']]))) {
+                    e(lang('obj_report_err',strtolower(lang($type))));
+                } elseif (Flag::flagItem($id, $type, $_POST['flag_type'])) {
+                    e(lang('report_successful'), 'm');
                 } else {
-                    if (Flag::flagItem($id, $type, $_POST['flag_type'])) {
-                        e(lang('report_successful'), 'm');
-                    }
+                    e(lang('report_failed'));
                 }
             }
 
@@ -474,16 +477,16 @@ if (!empty($mode)) {
             $params['comment_id'] = $id;
             $params['first_only'] = true;
             $new_com = Comments::getAll($params);
-            if ($new_com['type'] == 'v' && config('enable_comments_video') == 'yes') {
+            if ($new_com['type'] == 'v' && config('enable_comments_video') != 'yes') {
                 return false;
             }
-            if ($new_com['type'] == 'p' && config('enable_comments_photo') == 'yes') {
+            if ($new_com['type'] == 'p' && config('enable_comments_photo') != 'yes') {
                 return false;
             }
-            if ($new_com['type'] == 'channel' && config('enable_comments_channel') == 'yes') {
+            if ($new_com['type'] == 'channel' && config('enable_comments_channel') != 'yes') {
                 return false;
             }
-            if ($new_com['type'] == 'cl' && config('enable_comments_collection') == 'yes') {
+            if ($new_com['type'] == 'cl' && config('enable_comments_collection') != 'yes') {
                 return false;
             }
             //getting parent id if it is a reply comment
@@ -711,6 +714,8 @@ if (!empty($mode)) {
                 assign('selected', $insert_id);
             }
             $response = templateWithMsgJson('blocks/collection_select_upload.html', false);
+            //empty $_POST to prevent bad value in photo form
+            unset($_POST);
             $response['photoForm'] = getTemplate('blocks/upload/photo_form.html');
             $response['success'] = (bool)$insert_id;
             echo json_encode($response);
@@ -753,7 +758,7 @@ if (!empty($mode)) {
                 e(lang('insufficient_privileges'));
                 echo getTemplateMsg();
                 break;
-            } elseif ($_POST['type'] == 'p' && (config('enable_comments_photo') != 'yes' || !User::getInstance()->hasPermission('view_photo'))) {
+            } elseif ($_POST['type'] == 'p' && (config('enable_comments_photo') != 'yes' || !User::getInstance()->hasPermission('view_photos'))) {
                 e(lang('insufficient_privileges'));
                 echo getTemplateMsg();
                 break;
@@ -761,7 +766,7 @@ if (!empty($mode)) {
                 e(lang('insufficient_privileges'));
                 echo getTemplateMsg();
                 break;
-            } elseif ($_POST['type'] == 'cl' && (config('enable_comments_collection') != 'yes' || !User::getInstance()->hasPermission('view_collection'))) {
+            } elseif ($_POST['type'] == 'cl' && (config('enable_comments_collection') != 'yes' || !User::getInstance()->hasPermission('view_collections'))) {
                 e(lang('insufficient_privileges'));
                 echo getTemplateMsg();
                 break;

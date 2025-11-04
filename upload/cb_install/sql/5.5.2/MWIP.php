@@ -19,6 +19,10 @@ class MWIP extends \Migration
             'fr' => 'Veuillez vous connecter',
             'en' => 'Please login'
         ]);
+
+        self::generateTranslation('report_text', [
+            'fr'=>'Veuillez choisir la catégorie qui correspond le mieux à votre préoccupation concernant la vidéo, afin que nous puissions déterminer si elle est en violation avec notre charte de communauté ou n\'est pas approprié pour tous les utilisateurs. Tout abu de cette fonctionnalité est également une violation de notre charte de communauté, donc veuillez ne pas le faire.'
+        ]);
     }
 
 }
