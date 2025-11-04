@@ -1167,9 +1167,11 @@ class AdminTool
     }
 
     /**
+     * @param array $datas
+     * @return bool|mysqli_result
      * @throws Exception
      */
-    public function insertTaskData($datas)
+    public function insertTaskData(array $datas)
     {
         if (empty($datas)) {
             return false;
@@ -1178,7 +1180,7 @@ class AdminTool
             $sql_insert = 'INSERT INTO ' . tbl('tools_tasks') . ' (id_histo, loop_index, data) VALUES ';
             $inserted_values = [];
             foreach ($datas as $data) {
-                $inserted_values[] = '(' . $this->id_histo . ', ' . ($this->tasks_total++) . ', \'' . json_encode($data) . '\')';
+                $inserted_values[] = '(' . $this->id_histo . ', ' . ($this->tasks_total++) . ', \'' . addslashes(json_encode($data)) . '\')';
             }
             return Clipbucket_db::getInstance()->execute($sql_insert . implode(', ', $inserted_values));
         } else {
@@ -1725,6 +1727,76 @@ class AdminTool
             $log->writeLine(date('Y-m-d H:i:s').' - Video Conversion File executed successfully with Target File > ' . DirPath::get('temp') . $video['file_name']);
         }
 
+    }
+
+    /**
+     * @return void
+     * @throws Exception
+     */
+    public function installMissingConfigs()
+    {
+        if (empty($this->tasks_total)) {
+            $this->tasks_total = 0;
+            $this->tasks_processed = 0;
+            $this->tasks = [];
+            $config_install_file = DirPath::get('sql') . 'configs.sql';
+            if (!file_exists($config_install_file)) {
+                throw new Exception('Missing config file');
+            }
+            $lines = file($config_install_file);
+            $requests = [];
+            $templine = '';
+            foreach ($lines as $line) {
+                $templine .= $line;
+                if (str_ends_with(trim($line), ';')) {
+                    $requests[] = $templine;
+                    $templine = '';
+                }
+            }
+            $this->insertTaskData($requests);
+        }
+        $this->executeTool('AdminTool::executeSqlRequestsIgnore');
+    }
+
+    /**
+     * @return void
+     * @throws Exception
+     */
+    public function installMissingTranslations()
+    {
+        if (empty($this->tasks_total)) {
+            $this->tasks_total = 0;
+            $this->tasks_processed = 0;
+            $this->tasks = [];
+            //@remind : if you update $files, don't forget to update $files in upload/cb_install/ajax.php mode=sitesettings
+            $files = [
+                DirPath::get('sql') . 'languages.sql',
+                DirPath::get('sql') . 'language_ENG.sql',
+                DirPath::get('sql') . 'language_FRA.sql',
+                DirPath::get('sql') . 'language_DEU.sql',
+                DirPath::get('sql') . 'language_POR.sql',
+                DirPath::get('sql') . 'language_ESP.sql'
+            ];
+            $requests = [];
+            foreach ($files as $item) {
+                $requests = array_merge(getSQLRequestsFromFile($item), $requests);
+            }
+            $this->insertTaskData($requests);
+        }
+        $this->executeTool('AdminTool::executeSqlRequestsIgnore');
+    }
+
+    /**
+     * @param string $request
+     * @return bool
+     * @throws Exception
+     */
+    public static function executeSqlRequestsIgnore(string $request): bool
+    {
+        require_once DirPath::get('classes') . 'migration' . DIRECTORY_SEPARATOR . 'migration.class.php';
+        $request = \Migration::prepare($request);
+        $request = preg_replace('/INSERT INTO/', 'INSERT IGNORE INTO', $request);
+        return (bool)Clipbucket_db::getInstance()->execute($request);
     }
 }
 
