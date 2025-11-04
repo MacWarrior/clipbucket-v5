@@ -16,7 +16,7 @@
 		</div>
 	</a>
 	<div class="playlist-info">
-		<h2><a href="{videoLink vdetails=$first[0]}">{$playlist.playlist_name}</a></h2>
+		<h2><a href="{videoLink vdetails=$first[0]}" title="{display_clean($playlist.playlist_name)}">{display_clean($playlist.playlist_name)}</a></h2>
 		<time datetime="{$playlist.date_added}" class="date-time">{$playlist.date_added|niceTime}</time>
 	</div>
 </div>
