@@ -1,6 +1,6 @@
 {
   "version":"5.5.2",
-  "revision":"155",
+  "revision":"156",
   "status":"stable",
   "detail":[
     {
@@ -143,6 +143,7 @@
         ,"Fix TMDB import <i>(#679)</i>"
         ,"Fix possible XSS injection (Thanks @Takumi142857 !)"
         ,"Fix photo edition from upload form"
+        ,"Fix collection items management"
       ]
     },
     {
