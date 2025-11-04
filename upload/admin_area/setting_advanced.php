@@ -132,10 +132,7 @@ if (isset($_POST['update'])) {
         'video_nsfw_check_model',
         'email_sender_address',
         'email_sender_name',
-        'photo_nsfw_check_model',
-        'video_nsfw_check_model',
         'base_url',
-        'video_nsfw_check_model',
         'thumb_background_color',
         'subtitle_format',
         'store_guest_session',
@@ -165,6 +162,7 @@ if (isset($_POST['update'])) {
         'option_maximum_allowed_subtitle_size'
     ];
 
+    $has_missing_config = false;
     foreach ($rows as $field) {
         $value = ($_POST[$field]);
         if (in_array($field, $num_array)) {
@@ -182,8 +180,23 @@ if (isset($_POST['update'])) {
                 $value = '0';
             }
         }
-
-        myquery::getInstance()->Set_Website_Details($field, $value);
+        if (!isset(myquery::getInstance()->Get_Website_Details()[$field])) {
+            if( !$has_missing_config ){
+                e(lang('error_missing_config_please_use_tool', DirPath::getUrl('admin_area') . 'admin_tool.php?code_tool=install_missing_config'),'w',false);
+                $has_missing_config = true;
+            }
+            if( System::isInDev() ){
+                $tmp_text = 'Missing config: '.$field;
+                error_log($tmp_text);
+                DiscordLog::sendDump($tmp_text);
+            }
+            continue;
+        }
+        if( !is_null($value) ){
+            myquery::getInstance()->Set_Website_Details($field, $value);
+        } else {
+            DiscordLog::sendDump('Missing value for config: '.$field);
+        }
     }
 
     //clear cache
