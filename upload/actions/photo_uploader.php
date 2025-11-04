@@ -117,7 +117,7 @@ switch ($mode) {
             'mimeType' => 'image',
             'destinationFilePath' => $targetFile,
             'keepExtension' => true,
-            'maxFileSize' => config('max_upload_size') ? : 1,
+            'maxFileSize' => empty((int)config('max_upload_size')) ? config('max_upload_size'): 1000,
             'allowedExtensions' => config('allowed_photo_types')
         ];
 
