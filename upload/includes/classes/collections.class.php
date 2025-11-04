@@ -331,7 +331,7 @@ class Collection
             }
 
             /** USER */
-            $like_user = ' lower(users.username) LIKE \'' . $param_search . '\'';
+            $like_user = ' lower(users.username) LIKE \'' . mysql_clean($param_search) . '\'';
             $cond .= ' OR ' . $like_user;
             $order_search .= ', CASE WHEN ' . $like_user . ' THEN 1 ELSE 0 END DESC ';
 
