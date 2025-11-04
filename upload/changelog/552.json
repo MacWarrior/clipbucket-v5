@@ -1,6 +1,6 @@
 {
   "version":"5.5.2",
-  "revision":"157",
+  "revision":"158",
   "status":"stable",
   "detail":[
     {
@@ -144,6 +144,7 @@
         ,"Fix possible XSS injection (Thanks @Takumi142857, @satoki !)"
         ,"Fix photo edition from upload form"
         ,"Fix collection items management"
+        ,"Fix possible upload issue with missing configs"
       ]
     },
     {
