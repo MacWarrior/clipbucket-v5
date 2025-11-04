@@ -11,8 +11,9 @@ class MWIP extends \Migration
     public function start()
     {
         self::insertTool('install_missing_config', 'AdminTool::installMissingConfigs');
-
         self::insertTool('install_missing_translation', 'AdminTool::installMissingTranslations');
+
+        self::generateConfig('enable_user_profil_censor', 'no');
 
         self::generateTranslation('install_missing_config_label', [
             'fr' => 'Corriger les configurations manquantes',

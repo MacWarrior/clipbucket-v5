@@ -163,6 +163,9 @@ if (isset($_POST['update'])) {
         , 'videos_enable_fullwidth'
         , 'collections_enable_fullwidth'
         , 'collection_enable_fullwidth'
+        , 'autoplay_video'
+        , 'autoplay_embed'
+        , 'contextual_menu_disabled'
     ];
 
     $config_booleans_to_refactor = [
@@ -490,12 +493,13 @@ if (isset($_POST['update'])) {
         'max_collection_categories'
     ];
 
+    $has_missing_config = false;
     foreach ($rows as $field) {
         $value = ($_POST[$field]);
         if (in_array($field, $num_array)) {
             if ($field == 'min_age_reg' && ($value > 99 || $value <= 0 || !is_numeric($value) )) {
                 e(lang('error_age_restriction_save'));
-                break;
+                continue;
             }
             if (($value <= 0 || !is_numeric($value)) && !in_array($field, ['video_categories', 'max_collection_categories', 'max_photo_categories']) ) {
                 $value = 1;
@@ -504,7 +508,7 @@ if (isset($_POST['update'])) {
 
         if ($field=='date_format' && !validatePHPDateFormat($value)) {
             e(lang('invalid_date_format'));
-            break;
+            continue;
         }
         if (in_array($field, $config_booleans)) {
             if ($value != 'yes') {
@@ -517,9 +521,23 @@ if (isset($_POST['update'])) {
             }
         }
 
-        if (!myquery::getInstance()->Set_Website_Details($field, $value)) {
-            e(lang('error_missing_config_please_use_tool', DirPath::getUrl('admin_area') . 'admin_tool.php?code_tool=install_missing_config'),'w',false);
-            break;
+        if (!isset(myquery::getInstance()->Get_Website_Details()[$field])) {
+            if( !$has_missing_config ){
+                e(lang('error_missing_config_please_use_tool', DirPath::getUrl('admin_area') . 'admin_tool.php?code_tool=install_missing_config'),'w',false);
+                $has_missing_config = true;
+            }
+            if( System::isInDev() ){
+                $tmp_text = 'Missing config: '.$field;
+                error_log($tmp_text);
+                DiscordLog::sendDump($tmp_text);
+            }
+            continue;
+        }
+
+        if( !is_null($value) ){
+            myquery::getInstance()->Set_Website_Details($field, $value);
+        } else {
+            DiscordLog::sendDump('Missing value for config: '.$field);
         }
     }
 
