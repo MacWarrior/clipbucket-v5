@@ -171,6 +171,7 @@
         ,"Fix sessions"
         ,"Fix sub-directory links"
         ,"Fix port usage detection"
+        ,"Fix possible configs & translations duplicates"
       ]
     },
     {
