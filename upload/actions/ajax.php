@@ -1,5 +1,6 @@
 <?php
 const THIS_PAGE = 'ajax';
+CONST IS_AJAX = true;
 require_once dirname(__FILE__, 2) . '/includes/config.inc.php';
 
 if (isset($_POST['mode'])) {
@@ -515,7 +516,7 @@ if (!empty($mode)) {
             $obj_id = $_POST['obj_id'];
             $cid = $_POST['cid'];
 
-            CBvideo::getInstance()->collection->remove_item($obj_id, $cid);
+            Collection::removeItemFromCollection($cid, $obj_id, $type);
             if ($type == 'photos') {
                 CBPhotos::getInstance()->make_photo_orphan($cid, $obj_id);
             }
