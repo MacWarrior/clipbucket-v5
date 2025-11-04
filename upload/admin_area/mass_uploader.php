@@ -65,7 +65,7 @@ if (isset($_POST['mass_upload_video'])) {
                 , 'tags'            => $file_tags
                 , 'category'        => $file_categories
                 , 'file_name'       => $file_key
-                , 'file_type'       => config('conversion_type')
+                , 'file_type'       => getExt($file['file'])
                 , 'file_directory'  => $file_directory
                 , 'allow_comments'  => 'yes'
                 , 'comment_voting'  => 'yes'
