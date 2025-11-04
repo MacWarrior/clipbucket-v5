@@ -26,32 +26,34 @@ if (@$_GET['msg']) {
 
 if (isset($_POST['update'])) {
     $config_booleans = [
-        'stay_mp4',
-        'delete_mass_upload',
-        'enable_video_file_upload',
-        'enable_video_remote_play',
-        'enable_photo_file_upload',
-        'send_comment_notification',
-        'approve_video_notification',
-        'smtp_auth',
-        'proxy_enable',
-        'proxy_auth',
-        'cache_enable',
-        'cache_auth',
-        'disable_email',
-        'only_keep_max_resolution',
-        'enable_chunk_upload',
-        'photo_enable_nsfw_check',
-        'video_enable_nsfw_check',
-        'store_guest_session'
+        'stay_mp4'
+        , 'delete_mass_upload'
+        , 'enable_video_file_upload'
+        , 'enable_video_remote_play'
+        , 'enable_photo_file_upload'
+        , 'send_comment_notification'
+        , 'approve_video_notification'
+        , 'smtp_auth'
+        , 'proxy_enable'
+        , 'proxy_auth'
+        , 'cache_enable'
+        , 'cache_auth'
+        , 'disable_email'
+        , 'only_keep_max_resolution'
+        , 'enable_chunk_upload'
+        , 'photo_enable_nsfw_check'
+        , 'video_enable_nsfw_check'
+        , 'store_guest_session'
+        , 'allow_conversion_1_percent'
     ];
 
     $config_booleans_to_refactor = [
-        'chromecast_fix',
-        'force_8bits',
-        'keep_audio_tracks',
-        'keep_subtitles',
-        'extract_subtitles'
+        'chromecast_fix'
+        , 'force_8bits'
+        , 'keep_audio_tracks'
+        , 'keep_subtitles'
+        , 'extract_subtitles'
+        , 'photo_crop'
     ];
 
     $rows = [

@@ -166,6 +166,10 @@ if (isset($_POST['update'])) {
         , 'autoplay_video'
         , 'autoplay_embed'
         , 'contextual_menu_disabled'
+        , 'control_bar_logo'
+        , 'enable_360_video'
+        , 'chromecast'
+        , 'player_thumbnails'
     ];
 
     $config_booleans_to_refactor = [
@@ -190,6 +194,7 @@ if (isset($_POST['update'])) {
         , 'show_collapsed_checkboxes'
         , 'activation'
         , 'photo_activation'
+        , 'player_subtitles'
     ];
 
     $rows = [
