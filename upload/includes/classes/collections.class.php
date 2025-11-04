@@ -974,6 +974,31 @@ class Collection
 
         return $list_collection_display;
     }
+
+    public static function removeItemFromCollection($collection_id, $item_id, $type)
+    {
+        $item_id = mysql_clean($item_id);
+        $collection_id = mysql_clean($collection_id);
+        if (!user_id()) {
+            e(lang('you_not_logged_in'));
+            return false;
+        }
+        if (!self::getInstance()->isValidType($type)) {
+            e(lang('unknown_type'));
+            return false;
+        }
+        $collection = self::getInstance()->getOne(['collection_id' => $collection_id]);
+        if (!$collection['userid'] == User::getInstance()->getCurrentUserID() && !User::getInstance()->hasAdminAccess() && !User::getInstance()->hasPermission('view_collections')) {
+            e(lang('cant_perform_action_collect'));
+            return false;
+        }
+
+        $sql = 'DELETE FROM ' . tbl('collection_items') . ' WHERE collection_id = ' . $collection_id . ' AND object_id = ' . $item_id . ' AND type = \'' . $type . '\'';
+        Clipbucket_db::getInstance()->execute($sql);
+        e(lang('collect_item_removed', $type), 'm');
+        return true;
+
+    }
 }
 
 class Collections extends CBCategory
@@ -1922,36 +1947,6 @@ class Collections extends CBCategory
         e(lang('collection_deleted'), 'm');
     }
 
-    /**
-     * Function used to delete collection items
-     *
-     * @param $id
-     * @param $cid
-     *
-     * @return bool|void
-     * @throws Exception
-     */
-    function remove_item($id, $cid)
-    {
-        $id = mysql_clean($id);
-        $cid = mysql_clean($cid);
-
-        if (!$this->collection_exists($cid)) {
-            e(lang('collect_not_exists'));
-            return false;
-        }
-
-        if (!User::getInstance()->isUserConnected()) {
-            e(lang('you_not_logged_in'));
-        } elseif (!$this->object_in_collection($id, $cid)) {
-            e(lang('object_not_in_collect', $this->objName));
-        } elseif (!$this->is_collection_owner($cid) && !User::getInstance()->hasAdminAccess()) {
-            e(lang('cant_perform_action_collect'));
-        } else {
-            Clipbucket_db::getInstance()->execute('DELETE FROM ' . tbl($this->items) . ' WHERE object_id = ' . $id . ' AND collection_id = ' . $cid);
-            e(lang('collect_item_removed', $this->objName), 'm');
-        }
-    }
 
     /**
      * Function used to count collection items
