@@ -1,6 +1,6 @@
 {
   "version":"5.5.2",
-  "revision":"156",
+  "revision":"158",
   "status":"stable",
   "detail":[
     {
@@ -141,9 +141,10 @@
         ,"Fix channel links on homepage"
         ,"Fix collection creation <i>(#667)</i>"
         ,"Fix TMDB import <i>(#679)</i>"
-        ,"Fix possible XSS injection (Thanks @Takumi142857 !)"
+        ,"Fix possible XSS injection (Thanks @Takumi142857, @satoki !)"
         ,"Fix photo edition from upload form"
         ,"Fix collection items management"
+        ,"Fix possible upload issue with missing configs"
       ]
     },
     {

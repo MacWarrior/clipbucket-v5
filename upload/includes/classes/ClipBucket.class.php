@@ -828,7 +828,7 @@ class ClipBucket
         $list_upload_limits[] = (float)$upload_max_filesize * pow(1024, stripos('KMGT', strtoupper(substr($upload_max_filesize, -1)))) / 1024;
 
         if( config('enable_chunk_upload') == 'yes' ){
-            $list_upload_limits[] = (float)config('chunk_upload_size');
+            $list_upload_limits[] = !empty((float)config('chunk_upload_size')) ? (float)config('chunk_upload_size') : 2;
         }
 
         if( Network::is_cloudflare() ){

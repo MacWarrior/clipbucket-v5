@@ -242,7 +242,7 @@ class formObj
                 $disabled = ' disabled';
             }
 
-            echo '<label ' . $label_class . '> <input name="' . $field_name . '" type="checkbox" value="' . $key . '" ' . $field_id . ' ' . $checked . ' '.$disabled.' ' . $field['extra_tags'] . '> ' . $value . '</label>';
+            echo '<label ' . $label_class . '> <input name="' . $field_name . '" type="checkbox" value="' . $key . '" ' . $field_id . ' ' . $checked . ' '.$disabled.' ' . $field['extra_tags'] . '> ' . display_clean($value) . '</label>';
 
             if ($field['wrapper_class']) {
                 echo '</div>';
@@ -412,7 +412,7 @@ class formObj
                 $disabled = ' disabled';
             }
 
-            echo '<label ' . $label_class . '> <input name="' . $field_name . '" type="radio" value="' . $key . '" ' . $field_id . ' ' . $class . ' ' . $title . ' ' . $checked . ' ' . $disabled . ' ' . $field['extra_tags'] . '>' . $value . '</label>';
+            echo '<label ' . $label_class . '> <input name="' . $field_name . '" type="radio" value="' . $key . '" ' . $field_id . ' ' . $class . ' ' . $title . ' ' . $checked . ' ' . $disabled . ' ' . $field['extra_tags'] . '>' . display_clean($value) . '</label>';
 
             if ($field['wrapper_class']) {
                 echo '</div>';
@@ -513,7 +513,7 @@ class formObj
                     }
                     $count++;
                 }
-                $fieldOpts .= '<option value="' . $key . '" ' . $checked . ' ' . $field['extra_option_tags'] . '>' . $value . '</option>';
+                $fieldOpts .= '<option value="' . $key . '" ' . $checked . ' ' . $field['extra_option_tags'] . '>' . display_clean($value) . '</option>';
             }
         }
         $ddFieldEnd = '</select>';
@@ -578,7 +578,7 @@ class formObj
                         }
                         $count++;
                     }
-                    $fieldOpts .= '<option value="' . $key . '" ' . $checked . ' ' . $field['extra_option_tags'] . '>' . $value . '</option>';
+                    $fieldOpts .= '<option value="' . $key . '" ' . $checked . ' ' . $field['extra_option_tags'] . '>' . display_clean($value) . '</option>';
                 }
                 $fieldOpts .= '</optgroup>';
             }

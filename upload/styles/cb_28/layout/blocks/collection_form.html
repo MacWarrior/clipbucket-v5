@@ -7,7 +7,7 @@
                 <select name="collection" id="collection" class="form-control">
                     {if count($collections) > 0}
                         {foreach $collections as $col_id => $col_data}
-                            <option value="{$col_data['collection_id']}">{$col_data['collection_name']} ({$col_data['total_objects']})</option>
+                            <option value="{$col_data['collection_id']}">{display_clean($col_data['collection_name'])} ({$col_data['total_objects']})</option>
                         {/foreach}
                     {else}
                         <option value="0">--- {lang code="no_collection_found"} ---</option>
