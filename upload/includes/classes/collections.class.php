@@ -251,6 +251,7 @@ class Collection
         $param_with_items = $params['with_items'] ?? false;
         $param_with_sub_items = $params['with_sub_items'] ?? false;
         $param_count_items_only = $params['count_items_only'] ?? false;
+        $param_limit_item = $params['limit_item'] ?? false;
 
         $conditions = [];
         if( $param_collection_id !== false ){
@@ -506,7 +507,7 @@ class Collection
             $count = 0;
             foreach($result AS &$collection){
 
-                $params = [];
+                $params_item = [];
 
                 if( $need_collection_enfant && $param_with_sub_items && !empty($collection['nb_childs']) ){
                     $sql_childs = 'WITH RECURSIVE descendants AS (
@@ -530,33 +531,36 @@ class Collection
                         FROM descendants
                         WHERE depth > 0;';
                     $collection_child_list = Clipbucket_db::getInstance()->_select($sql_childs, 60, 'collection_childrens_'. $collection['collection_id']);
-                    $params['collection_id'] = array_map(fn($item) => $item['collection_id'], $collection_child_list);
-                    $params['collection_id'][] = $collection['collection_id'];
+                    $params_item['collection_id'] = array_map(fn($item) => $item['collection_id'], $collection_child_list);
+                    $params_item['collection_id'][] = $collection['collection_id'];
                 } else {
-                    $params['collection_id'] = $collection['collection_id'];
+                    $params_item['collection_id'] = $collection['collection_id'];
                 }
 
-                $params['show_unlisted'] = true;
+                $params_item['show_unlisted'] = true;
                 if( $param_count_items_only ){
-                    $params['count'] = true;
+                    $params_item['count'] = true;
+                }
+                if ($param_limit_item) {
+                    $params_item['limit'] = $param_limit_item;
                 }
                 $order_item = '';
                 if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '299')) {
                     $order_item = SortType::getSortLabelById($param_order_item ?: $collection['sort_type']);
                 }
                 if ($collection['type'] == 'videos') {
-                    $params['order'] = Video::getInstance()->getFilterParams($order_item, [])['order'] ?? null;
-                    if (empty($params['order'])) {
-                        $params['order'] = $this->getTableNameItems() . '.date_added ASC';
+                    $params_item['order'] = Video::getInstance()->getFilterParams($order_item, [])['order'] ?? null;
+                    if (empty($params_item['order'])) {
+                        $params_item['order'] = $this->getTableNameItems() . '.date_added ASC';
                     }
-                    $params['get_detail'] = true;
-                    $collection['items'] = Video::getInstance()->getAll($params);
+                    $params_item['get_detail'] = true;
+                    $collection['items'] = Video::getInstance()->getAll($params_item);
                 } else {
-                    $params['order'] = Photo::getInstance()->getFilterParams($order_item, [])['order'] ?? null;
-                    if (empty($params['order'])) {
-                        $params['order'] = $this->getTableNameItems() . '.date_added ASC';
+                    $params_item['order'] = Photo::getInstance()->getFilterParams($order_item, [])['order'] ?? null;
+                    if (empty($params_item['order'])) {
+                        $params_item['order'] = $this->getTableNameItems() . '.date_added ASC';
                     }
-                    $collection['items'] = Photo::getInstance()->getAll($params);
+                    $collection['items'] = Photo::getInstance()->getAll($params_item);
                 }
 
                 if( $param_count_items_only ){
