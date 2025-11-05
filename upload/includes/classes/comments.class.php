@@ -178,8 +178,8 @@ class Comments
             return false;
         }
 
-        $user_id = user_id();
-        if( !$user_id || !User::getInstance()->isUserConnected()){
+        $user_id = User::getInstance()->getCurrentUserID();
+        if( !User::getInstance()->isUserConnected()){
             return false;
         }
 
