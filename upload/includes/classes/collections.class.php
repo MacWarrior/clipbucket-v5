@@ -894,6 +894,8 @@ class Collection
 
     /**
      * @param array $params
+     * @param int $level
+     * @param bool $display_group
      * @return array
      * @throws Exception
      */
@@ -921,14 +923,14 @@ class Collection
                     $group = 'public_collections';
                 }
                 if ($parent['user_username'] != $last_user && $parent['is_user_collection'] == 0) {
-                    $last_user = $parent['user_username'];
+                    $last_user = display_clean($parent['user_username']);
                 }
             }
             if (User::getInstance()->getCurrentUserID() != $parent['userid'] && !empty($last_user)) {
                 $display_user = $last_user . ': ';
             }
             if ($level == 0) {
-                $parent['collection_name'] = $display_user . $parent['collection_name'];
+                $parent['collection_name'] = $display_user . display_clean($parent['collection_name']);
             }
             if ($display_group && $level==0 && !empty($group)) {
                 $indentList[$group][] = $parent;
@@ -939,7 +941,7 @@ class Collection
             $params['collection_id_parent'] = $parent['collection_id'];
             $children = $this->getAllIndent($params, $level + 1);
             foreach ($children as &$child) {
-                $child['collection_name'] = $display_user . '&nbsp&nbsp&nbsp' . $child['collection_name'];
+                $child['collection_name'] = $display_user . '&nbsp&nbsp&nbsp' . display_clean($child['collection_name']);
                 if ($level == 0 && $display_group) {
                     $indentList[$group][] = $child;
                 } else {
@@ -1568,15 +1570,16 @@ class Collections extends CBCategory
             }
             $list_parent_categories = Collection::getInstance()->getAvailableParents($collection_id, ($default['type'] ?? array_keys($this->types)[0]), true);
             $data['parent'] = [
-                'title'       => lang('collection_parent'),
-                'type'        => 'dropdown_group',
-                'name'        => 'collection_id_parent',
-                'id'          => 'collection_id_parent',
-                'value'       => $list_parent_categories,
-                'db_field'    => 'collection_id_parent',
-                'required'    => 'yes',
-                'checked'     => $collection_id_parent,
-                'null_option' => lang('collection_no_parent')
+                'title'           => lang('collection_parent'),
+                'type'            => 'dropdown_group',
+                'already_secured' => true,
+                'name'            => 'collection_id_parent',
+                'id'              => 'collection_id_parent',
+                'value'           => $list_parent_categories,
+                'db_field'        => 'collection_id_parent',
+                'required'        => 'yes',
+                'checked'         => $collection_id_parent,
+                'null_option'     => lang('collection_no_parent')
             ];
         }
 
