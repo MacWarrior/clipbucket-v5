@@ -1,0 +1,23 @@
+<div class="col-md-4">
+    <div class="row">
+        <div class="col-md-10 col-md-offset-1">
+            <div class="well alignCenter">
+                <img src="{$cbtpl->get_preview_thumb($template.dir)}" class="img-thumbnail">
+                <h3>{$template.name}</h3>
+                <em>
+                    <a href="{$template.website.link}"><strong>{$template.author}</strong></a>
+                </em>
+                <p>{$template.description}</p>
+                <p>Version : {$template.version}, Released on {$template.released|date_format}</p>
+                <p>Website : <a href="{$template.website.link}">{$template.website.title}</a></p>
+                {if !$selected}
+                    <a href="{DirPath::getUrl('admin_area')}templates.php?change={$template.dir}">Activate This Template</a>
+                {/if}
+                <br>
+                {if $template.name == CBTemplate::DEFAULT_TEMPLATE_NAME}
+                    <i class="glyphicon glyphicon-copy copy_default_theme" style="float: right; cursor:pointer;" title="{lang('create_copy')}"></i>
+                {/if}
+            </div>
+        </div>
+    </div>
+</div>

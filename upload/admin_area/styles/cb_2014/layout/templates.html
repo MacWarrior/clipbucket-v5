@@ -1,4 +1,4 @@
-<h2>Selected Template</h2>
+<h2>{lang('active_template')}</h2>
 
 {assign var="selected" value=ClipBucket::getInstance()->configs.template_dir}
 {assign var="curtpl" value=$cbtpl->get_template_details($selected)}
@@ -6,57 +6,22 @@
 <div class="selectedTemplate">
 
     <div class="row">
-        <div class="col-md-4">
-            
-            <div class="row">
-                <div class="col-md-10 col-md-offset-1">
-                    <div class="well alignCenter">
-                        <img src="{$cbtpl->get_preview_thumb($curtpl.dir)}" class="img-thumbnail" >
-                        <h3>{$curtpl.name}</h3>
-                        <em>
-                        <a href="{$curtpl.website.link}"><strong>{$curtpl.author}</strong></a>
-                        </em>
-                        <p>{$curtpl.description}</p>
-                        <p>Version : {$curtpl.version}, Released on {$curtpl.released|date_format}</p>
-                        <p>Website : <a href="{$curtpl.website.link}">{$curtpl.website.title}</a></p>
-                    </div>    
-                </div>
-            </div>
-        </div>
-            
+        {include file="$layout_dir/blocks/template.html" template=$curtpl selected=true}
     </div>
 </div>
 
-{* Listing All Avilable Templates *}    
-{assign var='templates' value=$cbtpl->get_templates()}
-{if $templates} 
-    <h2>Available Templates</h2>
+{* Listing All Avilable Templates *}
+{if $templates && count($templates) > 1}
+    <h2>{lang('available_templates')}</h2>
     <div class="availableTemplates">
         <div>
             <div class="row">
                 {foreach from=$templates item=template}
                     {if $selected != $template.dir}
-                    <div class="col-md-4">
-                        <div class="row">
-                            <div class="col-md-10 col-md-offset-1">
-                                <div class="alignCenter well">
-                                    <img src="{$cbtpl->get_preview_thumb($curtpl.dir)}" class="img-thumbnail">
-                                    <h3>{$template.name}</h3>
-                                    <em>
-                                        {$template.name} <br /><em>by <strong>{$template.author}</strong></em>
-                                    </em>
-                                    <p>Website : <a href="{$template.website.link}">{$template.website.title}</a></p>
-                                    <a href="{DirPath::getUrl('admin_area')}templates.php?change={$template.dir}">Activate This Template</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                        {include file="$layout_dir/blocks/template.html" template=$template selected=false}
                     {/if}
                 {/foreach}
             </div>
         </div>
-{else}
-	<div align="center">No New Template Found</div>
-{/if}
     </div>
-</div>
+{/if}
