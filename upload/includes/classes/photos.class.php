@@ -1940,6 +1940,7 @@ class CBPhotos
                 'name'                 => 'collection_id',
                 'id'                   => 'collection_id',
                 'type'                 => 'dropdown_group',
+                'already_secured'      => true,
                 'value'                => $cl_array,
                 'checked'              => $collection,
                 'invalid_err'          => lang('collection_not_found'),
