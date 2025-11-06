@@ -1,6 +1,6 @@
 {
   "version":"5.5.2",
-  "revision":"161",
+  "revision":"162",
   "status":"stable",
   "detail":[
     {
@@ -60,6 +60,7 @@
         ,"Fix possible arbitraty file access (Thanks @Takumi142857 !)"
         ,"Fix TMDB import error"
         ,"Fix settings saving issues"
+        ,"Fix missing config warning"
       ]
     },
     {
