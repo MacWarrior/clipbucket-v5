@@ -123,6 +123,7 @@
                                             </option>
                                         {/foreach}
                                     </select>
+                                    <input type="hidden" id="video_nsfw_check_model_hidden" name="video_nsfw_check_model" value="{$row.video_nsfw_check_model}" {if AIVision::isAvailable()} disabled{/if}/>
                                 </div>
                             </div>
                             <hr/>
@@ -240,6 +241,7 @@
                                             </option>
                                         {/foreach}
                                     </select>
+                                    <input type="hidden" name="photo_nsfw_check_model" id="photo_nsfw_check_model_hidden" value="{$row.photo_nsfw_check_model}" {if AIVision::isAvailable()} disabled{/if}/>
                                 </div>
                             </div>
                             <hr/>
