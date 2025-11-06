@@ -8,7 +8,7 @@ if (isset($_POST['mode'])) {
     switch ($mode) {
         case 'channelMore':
             $load_hit = $_POST['loadHit'];
-            $load_limit = $_POST['loadLimit'];
+            $load_limit = config('videos_item_channel_page');
             $user = $_POST['userid'];
             $start = $load_limit * $load_hit - $load_limit;
             $sql_limit = "$start, $load_limit";
