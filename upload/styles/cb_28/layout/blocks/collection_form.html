@@ -7,7 +7,7 @@
                 <select name="collection" id="collection" class="form-control">
                     {if count($collections) > 0}
                         {foreach $collections as $col_id => $col_data}
-                            <option value="{$col_data['collection_id']}">{display_clean($col_data['collection_name'])} ({$col_data['total_objects']})</option>
+                            <option value="{$col_data['collection_id']}">{$col_data['collection_name']} ({$col_data['total_objects']})</option>
                         {/foreach}
                     {else}
                         <option value="0">--- {lang code="no_collection_found"} ---</option>
@@ -21,7 +21,7 @@
                 </div>
                 {if User::getInstance()->hasPermission('allow_create_collection') && !$restore_collection}
                     <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 add_collection">
-                        <a class="btn btn-block mtm btn-success" href="{$baseurl}manage_collections.php?mode=add_new">{lang code='create_new_collection_btn'}</a>
+                        <a class="btn btn-block mtm btn-success" href="{$baseurl}manage_collections.php?mode=add_new&type=videos">{lang code='create_new_collection_btn'}</a>
                     </div>
                 {else}
                     <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 add_collection">

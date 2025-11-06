@@ -39,9 +39,11 @@ class formObj
             case 'dropdown':
                 $fields = $this->createDropDown($field, $multi, $skipall);
                 break;
+
             case 'dropdown_group':
                 $fields = $this->createDropDownWithOptionGroups($field, $multi, $skipall);
                 break;
+
             case 'checkboxv2':
                 $fields = $this->createCheckBoxV2($field);
                 break;
@@ -519,6 +521,10 @@ class formObj
         $ddFieldEnd = '</select>';
         echo $hidden . $ddFieldStart . $fieldOpts . $ddFieldEnd;
     }
+
+    /**
+     * @throws Exception
+     */
     function createDropDownWithOptionGroups($field, $multi = false, $skipall = false)
     {
         if (!$multi) {
@@ -557,10 +563,13 @@ class formObj
         $fieldOpts = '';
         $fieldOptsNull= '';
 
+        $already_secured = (isset($field['already_secured']) && $field['already_secured'] == true);
+
         $is_checked = false;
         if (is_array($field['value'])) {
             foreach ($field['value'] as $group => $group_values) {
                 $fieldOpts .= '<optgroup label="' . lang($group) . '">';
+                $count = 0;
                 foreach ($group_values as $key => $value) {
                     if ((is_array($_REQUEST) && !empty($_REQUEST[$arrayName])) || !empty($field['checked'])) {
                         if ((is_array($_REQUEST) && $_REQUEST[$arrayName] == $key) || $field['checked'] == $key) {
@@ -578,7 +587,7 @@ class formObj
                         }
                         $count++;
                     }
-                    $fieldOpts .= '<option value="' . $key . '" ' . $checked . ' ' . $field['extra_option_tags'] . '>' . display_clean($value) . '</option>';
+                    $fieldOpts .= '<option value="' . $key . '" ' . $checked . ' ' . $field['extra_option_tags'] . '>' . ($already_secured ? $value : display_clean($value)) . '</option>';
                 }
                 $fieldOpts .= '</optgroup>';
             }
