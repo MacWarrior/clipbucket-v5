@@ -69,8 +69,11 @@ switch ($mode) {
         if( !User::getInstance()->hasPermission('allow_create_collection') ){
             redirect_to(cblink(['name' => 'my_account']));
         }
-
-        $reqFields = Collections::getInstance()->load_required_fields();
+        $params = [];
+        if (!empty($_GET['type']) && Collection::getInstance()->isValidType($_GET['type'])) {
+            $params['type'] = $_GET['type'];
+        }
+        $reqFields = Collections::getInstance()->load_required_fields($params);
         $otherFields = Collections::getInstance()->load_other_fields();
 
         assign('fields', $reqFields);
