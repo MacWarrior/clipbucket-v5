@@ -113,12 +113,11 @@ $(document).ready(function (){
             data: {
                 "mode":'channelMore',
                 "loadHit":loadHit,
-                "loadLimit":loadLimit,
                 "totalVids":totalVids,
                 "userid":channelId,
             },
             beforeSend: function() {
-                $(document).find('#more-view-channel').text('Loading videos..')
+                $(document).find('#more-view-channel').text(loading + '...')
             },
             success: function(data) {
                 $('#more-view-channel').parent().remove();
@@ -166,28 +165,28 @@ $(document).ready(function (){
                 "mode":'channelMorePhotos',
                 "loadHit":loadHit,
                 "loadLimit":loadLimit,
-                "totalPhotos":totalPhotos,
                 "userid":channelId,
             },
             beforeSend: function() {
-                $(document).find('#more-channel-photos').text('Loading photos..')
+                $(document).find('#more-channel-photos').text(loading + '...')
             },
             success: function(data) {
                 $('#more-channel-photos').remove();
                 if (data.length > 1) {
                     $(data).appendTo('#usr-photos').fadeIn('slow');
+                    $('#usr-photos .clearfix').remove();
                     if (loadMore == true) {
-                        $('<div class="clearfix text-center"><button id="more-channel-photos" class="btn btn-loadmore" dataLimit="'+loadLimit+'" dataHit="'+nextHit+'">loadMoreLang</button></div>').appendTo('.user_photos').fadeIn('slow');
+                        $('<div class="clearfix text-center col-lg-12 col-md-12 col-sm-12 col-xs-12"><button id="more-channel-photos" class="btn btn-loadmore" dataLimit="'+loadLimit+'" dataHit="'+nextHit+'">'+loadMoreLang+'</button></div>').appendTo('.user_photos').fadeIn('slow');
                     }
 
-                    var moveTo = $( ".photoAppending" ).last().offset().top,
+                    let lastTop = $( ".photoAppending" ).last().offset().top,
                         currWidth = $(window).width();
-                    moveTo = moveTo + 240;
+                    let moveTo = lastTop + 240;
                     if (currWidth > 767) {
                         thakkiLoading(moveTo);
                     }
                 } else {
-                    $('<div class="clearfix text-center"><button id="more-view-channel" class="btn btn-loadmore" disabled="disabled">Unable to fetch more</button></div>').appendTo('.user_vids').fadeIn('slow');
+                    $('<div class="clearfix text-center col-lg-12 col-md-12 col-sm-12 col-xs-12"><button id="more-view-channel" class="btn btn-loadmore" disabled="disabled">Unable to fetch more</button></div>').appendTo('.user_vids').fadeIn('slow');
                 }
             }
         });

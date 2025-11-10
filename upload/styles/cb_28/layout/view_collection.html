@@ -164,7 +164,7 @@
                     {if !empty($c.tags)}
                     <li>
                         <strong class="pull-left" id="label_tags">{lang('tags')}:&nbsp;&nbsp;</strong>
-                        <input type="hidden" id="tags" value="{$c.tags}">
+                        <input type="hidden" id="tags" value="{display_clean($c.tags)}">
                         <ul id="list_tags" style="border:0;"></ul>
                     </li>
                     {/if}

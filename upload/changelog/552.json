@@ -1,6 +1,6 @@
 {
   "version":"5.5.2",
-  "revision":"152",
+  "revision":"162",
   "status":"stable",
   "detail":[
     {
@@ -18,6 +18,7 @@
         ,"Implement stucked update detection"
         ,"Implement anonymous statistics"
         ,"Implement alternative embed players"
+        ,"Implement Fix missing configs & Fix missing translations tools"
         ,"Refactor conversion queue manager"
         ,"Refactor user levels management"
         ,"Add empty page title error"
@@ -58,6 +59,8 @@
         ,"Fix possible XSS injection"
         ,"Fix possible arbitraty file access (Thanks @Takumi142857 !)"
         ,"Fix TMDB import error"
+        ,"Fix settings saving issues"
+        ,"Fix missing config warning"
       ]
     },
     {
@@ -90,6 +93,7 @@
         ,"Update video edition display"
         ,"Update photo upload & edition display"
         ,"Update email change procedure"
+        ,"Update collection creation from video"
         ,"Hide banned users from channels page, search results & popular user"
         ,"Drop remote upload"
         ,"Fix collection privacy on photos page"
@@ -139,8 +143,12 @@
         ,"Fix channel links on homepage"
         ,"Fix collection creation <i>(#667)</i>"
         ,"Fix TMDB import <i>(#679)</i>"
-        ,"Fix possible XSS injection (Thanks @Takumi142857 !)"
+        ,"Fix possible XSS injection (Thanks @Takumi142857, @satoki !)"
         ,"Fix photo edition from upload form"
+        ,"Fix collection items management"
+        ,"Fix possible upload issue with missing configs"
+        ,"Fix collection pagination"
+        ,"Fix load more photos on channel page"
       ]
     },
     {
@@ -169,6 +177,7 @@
         ,"Fix sessions"
         ,"Fix sub-directory links"
         ,"Fix port usage detection"
+        ,"Fix possible configs & translations duplicates"
       ]
     },
     {
@@ -178,6 +187,7 @@
         ,"Refactor video conversion script"
         ,"Refactor video conversion queue management"
         ,"Fix HLS video reconversion"
+        ,"Fix wrong extension check"
       ]
     },
     {
@@ -194,6 +204,7 @@
         ,"Fix core update when using mounted directory as storage"
         ,"Fix stuck update notice"
         ,"Fix SQL error catching during update"
+        ,"Fix missing config in installation script"
       ]
     },
     {

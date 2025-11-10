@@ -26,32 +26,34 @@ if (@$_GET['msg']) {
 
 if (isset($_POST['update'])) {
     $config_booleans = [
-        'stay_mp4',
-        'delete_mass_upload',
-        'enable_video_file_upload',
-        'enable_video_remote_play',
-        'enable_photo_file_upload',
-        'send_comment_notification',
-        'approve_video_notification',
-        'smtp_auth',
-        'proxy_enable',
-        'proxy_auth',
-        'cache_enable',
-        'cache_auth',
-        'disable_email',
-        'only_keep_max_resolution',
-        'enable_chunk_upload',
-        'photo_enable_nsfw_check',
-        'video_enable_nsfw_check',
-        'store_guest_session'
+        'stay_mp4'
+        , 'delete_mass_upload'
+        , 'enable_video_file_upload'
+        , 'enable_video_remote_play'
+        , 'enable_photo_file_upload'
+        , 'send_comment_notification'
+        , 'approve_video_notification'
+        , 'smtp_auth'
+        , 'proxy_enable'
+        , 'proxy_auth'
+        , 'cache_enable'
+        , 'cache_auth'
+        , 'disable_email'
+        , 'only_keep_max_resolution'
+        , 'enable_chunk_upload'
+        , 'photo_enable_nsfw_check'
+        , 'video_enable_nsfw_check'
+        , 'store_guest_session'
+        , 'allow_conversion_1_percent'
     ];
 
     $config_booleans_to_refactor = [
-        'chromecast_fix',
-        'force_8bits',
-        'keep_audio_tracks',
-        'keep_subtitles',
-        'extract_subtitles'
+        'chromecast_fix'
+        , 'force_8bits'
+        , 'keep_audio_tracks'
+        , 'keep_subtitles'
+        , 'extract_subtitles'
+        , 'photo_crop'
     ];
 
     $rows = [
@@ -132,10 +134,7 @@ if (isset($_POST['update'])) {
         'video_nsfw_check_model',
         'email_sender_address',
         'email_sender_name',
-        'photo_nsfw_check_model',
-        'video_nsfw_check_model',
         'base_url',
-        'video_nsfw_check_model',
         'thumb_background_color',
         'subtitle_format',
         'store_guest_session',
@@ -165,6 +164,7 @@ if (isset($_POST['update'])) {
         'option_maximum_allowed_subtitle_size'
     ];
 
+    $has_missing_config = false;
     foreach ($rows as $field) {
         $value = ($_POST[$field]);
         if (in_array($field, $num_array)) {
@@ -188,7 +188,23 @@ if (isset($_POST['update'])) {
             continue;
         }
 
-        myquery::getInstance()->Set_Website_Details($field, $value);
+        if (!isset(myquery::getInstance()->Get_Website_Details()[$field])) {
+            if( !$has_missing_config ){
+                e(lang('error_missing_config_please_use_tool', DirPath::getUrl('admin_area') . 'admin_tool.php?code_tool=install_missing_config'),'w',false);
+                $has_missing_config = true;
+            }
+            if( System::isInDev() ){
+                $tmp_text = 'Missing config: '.$field;
+                error_log($tmp_text);
+                DiscordLog::sendDump($tmp_text);
+            }
+            continue;
+        }
+        if( !is_null($value) ){
+            myquery::getInstance()->Set_Website_Details($field, $value);
+        } else {
+            DiscordLog::sendDump('Missing value for config: '.$field);
+        }
     }
 
     //clear cache

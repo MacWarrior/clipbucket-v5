@@ -40,6 +40,11 @@ $p['user'] = $p['userid'];
 
 assign('data', $p);
 
+if( !empty($p['collection_id']) ){
+    $collection_name = Collection::getInstance()->getOne(['collection_id'=>$p['collection_id']])['collection_name'];
+    assign('collection_name', $collection_name);
+}
+
 $requiredFields = CBPhotos::getInstance()->load_required_forms($p);
 $otherFields = CBPhotos::getInstance()->load_other_forms($p);
 assign('requiredFields', $requiredFields);
