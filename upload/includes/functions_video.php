@@ -1191,14 +1191,31 @@ function thumbs_res_settings_28(): array
  */
 function get_high_res_file($vdetails): string
 {
-    $custom_video_file_funcs_retun = exec_custom_video_file_funcs($vdetails);
-    if ($custom_video_file_funcs_retun) {
-        return $custom_video_file_funcs_retun;
+    $custom_video_file_funcs_return = exec_custom_video_file_funcs($vdetails);
+    if ($custom_video_file_funcs_return) {
+        return $custom_video_file_funcs_return;
+    }
+
+    if ($vdetails['status'] !== 'Successful') {
+        $conversion_path = DirPath::get('conversion_queue') . $vdetails['file_name'];
+
+        switch ($vdetails['file_type']) {
+            case 'mp4':
+            default:
+                $glob_files = glob($conversion_path . '.*');
+                $orig_file = $glob_files ? $glob_files[0] : false;
+                break;
+            case 'hls':
+                $orig_file = $conversion_path . DIRECTORY_SEPARATOR . $vdetails['file_name'] . '.m3u8';
+                break;
+        }
+
+        return $orig_file;
     }
 
     $video_qualities = json_decode($vdetails['video_files']);
 
-    if( empty($video_qualities) ){
+    if (empty($video_qualities)) {
         return false;
     }
 
@@ -1212,11 +1229,8 @@ function get_high_res_file($vdetails): string
         }
     }
 
-    if ($vdetails['status'] == 'Successful') {
-        $filepath = DirPath::get('videos') . $vdetails['file_directory'] . DIRECTORY_SEPARATOR;
-    } else {
-        $filepath = DirPath::get( 'conversion_queue') . $vdetails['file_directory'] . DIRECTORY_SEPARATOR;
-    }
+    $filepath = DirPath::get('videos') . $vdetails['file_directory'] . DIRECTORY_SEPARATOR;
+
     switch ($vdetails['file_type']) {
         default:
         case 'mp4':
