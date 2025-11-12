@@ -1733,4 +1733,6 @@ VALUES ('ongoing_conversion'),
        ('install_missing_translation_label'),
        ('install_missing_translation_description'),
        ('error_missing_config_please_use_tool'),
-       ('error_missing_translation_please_use_tool');
+       ('error_missing_translation_please_use_tool'),
+       ('please_login_to_flag'),
+       ('please_login');
