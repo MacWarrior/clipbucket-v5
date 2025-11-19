@@ -310,6 +310,7 @@ class Tmdb
                     $credentials = $this->seriesCurrentLanguageAgeRestriction($tmdb_id);
                     break;
             }
+            $credentials = preg_replace('/\D/', '',$credentials);
             $video_info['age_restriction'] = $credentials;
             if (!$credentials && config('enable_tmdb_mature_content') == 'yes' && $details['adult']) {
                 $video_info['age_restriction'] = config('tmdb_mature_content_age');
