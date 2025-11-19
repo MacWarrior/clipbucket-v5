@@ -64,14 +64,13 @@ class Playlist
             return '';
         }
 
-        $cond = '(playlists.privacy = \'public\' AND playlists.total_items > 0 ';
+        $cond = '((playlists.privacy = \'public\' AND playlists.total_items > 0) ';
 
         $current_user_id = user_id();
         if ($current_user_id) {
             $cond .= ' OR (playlists.userid = ' . $current_user_id . ')';
-        } else {
-            $cond .= ')';
         }
+        $cond .= ')';
         return $cond;
     }
 
