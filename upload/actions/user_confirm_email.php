@@ -9,6 +9,8 @@ $sql = 'SELECT * FROM ' . tbl('email_histo') . ' WHERE userid = ' . user_id() . 
 $res = Clipbucket_db::getInstance()->_select($sql);
 if (!empty($res) && (time() - strtotime($res[0]['send_date'])) < 900) {
     e(lang('email_confirm_last_sent_under_15_min'));
+} elseif ((empty(trim(config('base_url'))) || !filter_var(config('base_url'), FILTER_VALIDATE_URL))) {
+    e(lang('cant_perform_action_until_app_fully_updated'));
 } else {
     EmailTemplate::sendMail('verify_email', User::getInstance()->getCurrentUserID(), ['avcode'=>User::getInstance()->get('avcode')]);
     e(lang('email_confirm_sent'), 'm');

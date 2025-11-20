@@ -1733,4 +1733,6 @@ VALUES ('ongoing_conversion'),
        ('install_missing_translation_label'),
        ('install_missing_translation_description'),
        ('error_missing_config_please_use_tool'),
-       ('error_missing_translation_please_use_tool');
+       ('error_missing_translation_please_use_tool'),
+       ('cant_perform_action_until_app_fully_updated'),
+       ('base_url_required');
