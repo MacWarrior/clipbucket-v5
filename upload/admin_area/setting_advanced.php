@@ -183,8 +183,8 @@ if (isset($_POST['update'])) {
             }
         }
 
-        if ($field == 'base_url' && (trim($value) ==='' || empty($value))) {
-            e(lang('basic_url_required'));
+        if ($field == 'base_url' && (trim($value) ==='' || empty($value) || !filter_var($value, FILTER_VALIDATE_URL))) {
+            e(lang('base_url_required'));
             continue;
         }
 

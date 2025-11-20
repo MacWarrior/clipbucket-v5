@@ -2726,4 +2726,4 @@ VALUES ((SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE `languag
 INSERT INTO `{tbl_prefix}languages_translations` (`id_language_key`, `translation`, `language_id`)
 VALUES ((SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE `language_key` = 'cant_perform_action_until_app_fully_updated'), 'Désolé, vous ne pouvez pas effectuer cette action tant que l''application ne sera pas mise à jour par un administrateur.', @language_id);
 INSERT INTO `{tbl_prefix}languages_translations` (`id_language_key`, `translation`, `language_id`)
-VALUES ((SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE `language_key` = 'base_url_required'), 'L''URL de base est requise.', @language_id);
+VALUES ((SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE `language_key` = 'base_url_required'), 'L''URL de base est requise et doit être une URL valide', @language_id);
