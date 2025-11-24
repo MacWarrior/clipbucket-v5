@@ -634,7 +634,7 @@ function updateCookieBannerPosition() {
 }
 
 function showCookieBanner() {
-    if (!cookieConsent) {
+    if (!window.cookieConsent) {
         let banner = document.getElementById('cookie-banner');
         if (banner) {
             banner.style.display = '';
