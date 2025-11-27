@@ -2894,6 +2894,9 @@ class CBvideo extends CBCategory
         $query = 'SELECT ' . table_fields($fields) . ' FROM ' . cb_sql_table('playlist_items');
         $query .= ' LEFT JOIN ' . cb_sql_table('playlists') . ' ON playlist_items.playlist_id = playlists.playlist_id';
         $query .= ' LEFT JOIN ' . cb_sql_table('video') . ' ON playlist_items.object_id = video.videoid';
+        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.2', '72')) {
+            $query .= ' LEFT JOIN ' . cb_sql_table('video_users') . ' ON video_users.videoid = video.videoid';
+        }
         $query .= ' WHERE playlist_items.playlist_id = \'' . $playlist_id . '\'' . $where;
 
         if (!is_null($order)) {

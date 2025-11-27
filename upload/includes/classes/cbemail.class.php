@@ -407,19 +407,21 @@ class CBEmail
 class Email{
 
     /**
+     * @param string $receiver_email
+     * @param string $sender_username
+     * @return bool
      * @throws \PHPMailer\PHPMailer\Exception
-     * @throws Exception
      */
-    public static function send_friend_request($email, $username)
+    public static function send_friend_request(string $receiver_email, string $sender_username): bool
     {
-        $receiver = User::getInstance()->getOne(['email'=>$email]);
+        $receiver = User::getInstance()->getOne(['email'=>$receiver_email]);
         $var = [
-            'sender_name'   => $username,
-            'profile_link'   => '/user/' . $username,
+            'sender_name'   => $sender_username,
+            'profile_link'   => '/user/' . $sender_username,
             'request_link'  => '/manage_contacts.php?mode=manage',
         ];
 
-        EmailTemplate::sendMail('friend_request', $receiver['userid'], $var);
+        return EmailTemplate::sendMail('friend_request', $receiver['userid'], $var);
     }
 
     /**

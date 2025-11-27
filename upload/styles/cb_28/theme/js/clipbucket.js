@@ -82,34 +82,6 @@
 				},'text');
 		};
 
-		/**
-		 * functio used to get photos through ajax
-		 */
-		this.getAjaxPhoto = function(type,div){
-			var self = this;
-			$(div).css('display','block');
-			var preservedHTML = $(div).html();
-			$.ajax({
-				url : self.page,
-				type : 'POST',
-				dataType : 'json',
-				data : ({ mode : 'loadAjaxPhotos', 'photosType' : type }),
-				beforeSend : function ()
-				{
-					$(div).html(this.loading);
-				},
-				success : function (data)
-				{
-					if(data['failed']) {
-						$(div).html(preservedHTML);
-					}
-
-					if(data['completed']) {
-						$(div).html(data['photoBlocks']);
-					}
-				}
-			});
-		};
 
 
 		this.rating_over = function(msg,disable){
@@ -470,32 +442,6 @@
 			document.locati= url;
 		};
 
-		this.get_item = function(obj,ci_id,cid,type,direction){
-			var btn_text = $(obj).html();
-			$(obj).html(this.loading);
-
-			$.post(page,
-				{
-					mode : 'get_item',
-					ci_id: ci_id,
-					cid : cid,
-					type: type,
-					direction: direction
-				},
-				function(data)
-				{
-					if(!data)
-					{
-						alert('No '+type+' returned');
-						$(obj).text(btn_text);
-					} else {
-						var jsArray = new Array(type,data['cid'],data['key']);
-						construct_url(jsArray);
-						$('#collectionItemView').html(data['content']);
-					}
-				},'json')
-		};
-
 		this.construct_url = function(jsArr){
 			var url;
 			if(Seo === 'yes')
@@ -550,7 +496,7 @@
 				type: 'post',
 				dataType: 'json',
 				data: {
-					mode: 'moreItems',
+					mode: 'more_items',
 					page : pageNumber,
 					cid: cid,
 					type: type
@@ -600,18 +546,6 @@
 					}
 				}
 			});
-		};
-
-		this.getDetails = function(obj){
-			var forms = getInputs(obj), ParamArray = new Array(forms.length);
-
-			$.each(forms,function(index,form) {
-				query = $('#'+form.id+' *').serialize();
-				query += '&mode=ajaxPhotos';
-				ParamArray[index] = query;
-			})
-
-			return ParamArray;
 		};
 
 		this.getName = function(File){
@@ -682,68 +616,7 @@
 			}
 		};
 
-		this.loadObject = function(currentDOM,type,objID,container){
-			var self = this;
-			var object = new Array(4);
-			object['this'] = currentDOM, object['type'] = type,
-				object['objID'] = objID, object['container'] = container;
-
-			var obj = $(object['this']);
-
-			{
-				obj.parent().css('position','relative');
-
-				$.ajax({
-					url : self.page,
-					type : 'POST',
-					dataType : 'json',
-					data  : ({ mode : 'channelFeatured',
-						contentType : object['type'],
-						objID : object['objID']
-					}),
-					beforeSend : function()
-					{
-						obj.find('img').animate({ opacity : .5 });
-						$('#'+object['container']).animate({ opacity : .5 });
-					},
-					success : function(data)
-					{
-						if(data['error']) {
-							obj.find('img').animate({ opacity : 1 });
-							$('#'+object['container']).animate({ opacity : 1 });
-							alert(data['error']);
-						} else {
-							obj.parent().children('.selected').removeClass('selected');
-							obj.addClass('selected');
-							obj.find('img').animate({ opacity : 1 });
-							$('#'+object['container']).html(data['data']).animate({ opacity : 1 });
-						}
-					}
-				})
-			}
-		};
-
 		var comments_voting = 'no';
-		this.getComments = function(type,type_id,last_update,pageNum,total,object_type,admin){
-			var self = this;
-			$('#comments').html("<div style='padding:5px 0;'>"+this.loading+'</div>');
-			$.ajax({
-				type: 'POST',
-				url: self.page,
-				data:  {mode:'getComments',
-					page:pageNum,type:type,
-					type_id:type_id,
-					object_type : object_type,
-					last_update : last_update,
-					total_comments : total,
-					comments_voting : comments_voting,admin : admin},
-				success: function(data)
-				{
-					$('#comments').hide().html(data).fadeIn('slow');
-				},
-				dataType: 'text'
-			});
-		};
 
 		this.checkUncheckAll = function(theElement) {
 			var theForm = theElement.form, z = 0;
@@ -823,35 +696,6 @@
 			});
 		};
 
-		this.getCommentsNew = function(type,type_id,last_update,pageNum,total,object_type,admin){
-			$.ajax({
-				type: 'POST',
-				url: page,
-				data: {
-					mode:'getCommentsNew',
-					page:pageNum,
-					type:type,
-					type_id:type_id,
-					object_type : object_type,
-					last_update : last_update,
-					total_comments : total,
-					comments_voting : comments_voting,
-					admin : admin
-				},
-				beforeSend: function() {
-					$(document).find('#load-more-comments').text(lang_loading);
-				},
-				success: function(comments){
-					if (comments === 'none') {
-						$('#load-more-comments').text('End of comments list').attr('disabled','disabled');
-					} else {
-						$('#userCommentsList').append(comments);
-						$(document).find('#load-more-comments').text(lang_load_more);
-					}
-				},
-				dataType: 'text'
-			});
-		};
 
 		this.addToFav = function(type,id){
 			$('#messageFav').show();
@@ -1054,38 +898,42 @@
 				},'text');
 		};
 
-		this.addToPlaylist = function (vid,form_id,objtype){
-			curObj = this;
-			$('#playlist_form_result').html(loading).show();
-			$.post(page,
-				{
-					mode : 'add_playlist',
-					id : vid,
-					objtype : objtype,
-					pid : $('#playlist_id option:selected').val()
-				},
-				function(data)
-				{
-					if(!data){
-						alert('No data');
-					} else {
-						if(data.err.length > 2) {
-							cleanedHtml = $.parseHTML(data.err);
-							var msg = $(cleanedHtml).html();
-							curObj.throwHeadMsg('danger',msg, 5000, true);
-						}
+        this.addToPlaylist = function (vid, form_id, objtype) {
+            curObj = this;
+            var val = $('#playlist_id option:selected').val()
+            if (val == '0' || val == '' || val == null) {
+                curObj.throwHeadMsg('danger', please_select_playlist , 5000, true);
+            } else {
+                $('#playlist_form_result').html(loading).show();
+                $.post(page,
+                    {
+                        mode: 'add_playlist',
+                        id: vid,
+                        objtype: objtype,
+                        pid: val
+                    },
+                    function (data) {
+                        if (!data) {
+                            alert('No data');
+                        } else {
+                            if (data.err.length > 2) {
+                                cleanedHtml = $.parseHTML(data.err);
+                                var msg = $(cleanedHtml).html();
+                                curObj.throwHeadMsg('danger', msg, 5000, true);
+                            }
 
-						if(data.msg.length > 2) {
-							cleanedHtml = $.parseHTML(data.msg);
-							var msg = $(cleanedHtml).find('div.alert').html();
-							curObj.throwHeadMsg('success',msg, 5000, true);
-							$('#addPlaylistCont').toggle();
-						}
-					}
-					$('#playlist_form_result').hide();
-				},'json'
-			);
-		};
+                            if (data.msg.length > 2) {
+                                cleanedHtml = $.parseHTML(data.msg);
+                                var msg = $(cleanedHtml).find('div.alert').html();
+                                curObj.throwHeadMsg('success', msg, 5000, true);
+                                $('#addPlaylistCont').toggle();
+                            }
+                        }
+                        $('#playlist_form_result').hide();
+                    }, 'json'
+                );
+            }
+        };
 
 		this.createPlaylist = function (vid,form_id,objtype){
 			curObj = this;

@@ -1735,4 +1735,6 @@ VALUES ('ongoing_conversion'),
        ('error_missing_config_please_use_tool'),
        ('error_missing_translation_please_use_tool'),
        ('cant_perform_action_until_app_fully_updated'),
-       ('base_url_required');
+       ('base_url_required'),
+       ('please_login_to_flag'),
+       ('please_login');

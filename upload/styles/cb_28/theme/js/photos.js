@@ -41,7 +41,6 @@ $("#gallery img").on('load',function() {
 // event which brings previous image from the collection 	
 $(document).on("click", "#mainNextBtn,#mainPrevBtn", function () {
 //	var curr_photo = d;
-	var user_admin = user;
 	var check = $(this).data('check');
 	if(check == "prev") {
 		var pre_next = "prev";
@@ -52,7 +51,6 @@ $(document).on("click", "#mainNextBtn,#mainPrevBtn", function () {
 	data = {
 		'mode': mode,
 		'photo_pre' : curr_photo,
-		'user': user_admin,
 		'item': pre_next,
 	}
 

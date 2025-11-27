@@ -1,6 +1,6 @@
 {
   "version":"5.5.2",
-  "revision":"163",
+  "revision":"164",
   "status":"stable",
   "detail":[
     {
@@ -151,6 +151,7 @@
         ,"Fix possible upload issue with missing configs"
         ,"Fix collection pagination"
         ,"Fix load more photos on channel page"
+        ,"Fix possible unauthorized actions (Thanks @nzaar9 !)"
       ]
     },
     {
