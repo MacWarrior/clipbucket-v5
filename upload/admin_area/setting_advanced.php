@@ -182,6 +182,12 @@ if (isset($_POST['update'])) {
                 $value = '0';
             }
         }
+
+        if ($field == 'base_url' && (trim($value) ==='' || empty($value) || !filter_var($value, FILTER_VALIDATE_URL))) {
+            e(lang('base_url_required'));
+            continue;
+        }
+
         if (!isset(myquery::getInstance()->Get_Website_Details()[$field])) {
             if( !$has_missing_config ){
                 e(lang('error_missing_config_please_use_tool', DirPath::getUrl('admin_area') . 'admin_tool.php?code_tool=install_missing_config'),'w',false);

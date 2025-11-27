@@ -1246,6 +1246,7 @@ class User
             Clipbucket_db::getInstance()->update(tbl(User::getInstance()->getTableName()), ['welcome_email_sent'], ['yes'], ' userid=' . (int)$user['userid']);
         }
         sessionMessageHandler::add_message(lang('usr_activation_msg'), 'm',  DirPath::getUrl('root'));
+        return true;
     }
 
     /**
@@ -1931,9 +1932,8 @@ class userquery extends CBCategory
         } else {
             Clipbucket_db::getInstance()->insert(tbl($this->dbtbl['contacts']), ['userid', 'contact_userid', 'date_added', 'request_type'],
                 [$sender_id, $friend_id, now(), 'out']);
-            $insert_id = Clipbucket_db::getInstance()->insert_id();
             e(lang('friend_request_sent'), 'm');
-           Email::send_friend_request($friend['email'], $sender['username']);
+            Email::send_friend_request($friend['email'], $sender['username']);
         }
 
     }

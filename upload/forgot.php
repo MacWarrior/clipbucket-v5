@@ -9,6 +9,9 @@ if (config('disable_email') == 'yes') {
 if (User::getInstance()->isUserConnected()) {
     sessionMessageHandler::add_message(lang('you_already_logged'), 'e', DirPath::getUrl('root'));
 }
+if ((empty(trim(config('base_url'))) || !filter_var(config('base_url'), FILTER_VALIDATE_URL))) {
+    sessionMessageHandler::add_message(lang('cant_perform_action_until_app_fully_updated'), 'e', User::getInstance()->getDefaultHomepageFromUserLevel());
+}
 
 $mode = $_GET['mode'];
 assign('mode', $mode);

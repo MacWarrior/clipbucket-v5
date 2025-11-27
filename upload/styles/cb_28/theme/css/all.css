@@ -7095,3 +7095,9 @@ li.up_vid > a[disabled] {
     -webkit-box-shadow: none;
     box-shadow: none;
 }
+
+li:has(a.disabled) {
+    cursor: not-allowed;
+    filter: alpha(opacity=65);
+    opacity: .65;
+}
