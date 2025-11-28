@@ -100,9 +100,15 @@ class VideoConversionQueue
      * @return bool|mysqli_result
      * @throws Exception
      */
-    public static function insert(int $video_id)
+    public static function insert(int $video_id, $audio_track = null)
     {
-        return Clipbucket_db::getInstance()->execute('INSERT INTO ' . tbl(self::$tableName) . ' (videoid) VALUES (' . mysql_clean($video_id) . ') ');
+        $field = ['videoid'];
+        $value = [mysql_clean($video_id)];
+        if (!empty($audio_track)) {
+            $field[] = 'audio_track';
+            $value[] = mysql_clean($audio_track);
+        }
+        return Clipbucket_db::getInstance()->execute('INSERT INTO ' . tbl(self::$tableName) . ' (' . implode(', ', $field) . ') VALUES (' . implode(', ', $value) . ') ');
     }
 
     /**
