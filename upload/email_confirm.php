@@ -46,6 +46,9 @@ switch ($mode) {
         break;
 
     case 'request':
+        if ((empty(trim(config('base_url'))) || !filter_var(config('base_url'), FILTER_VALIDATE_URL)) && (($_GET['mode'] ?? '') != 'login')) {
+            sessionMessageHandler::add_message(lang('cant_perform_action_until_app_fully_updated'), 'e', User::getInstance()->getDefaultHomepageFromUserLevel());
+        }
         if( User::getInstance()->isUserConnected() ){
             redirect_to(DirPath::getUrl('root'));
         }

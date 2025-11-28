@@ -1,6 +1,6 @@
 {
   "version":"5.5.2",
-  "revision":"162",
+  "revision":"164",
   "status":"stable",
   "detail":[
     {
@@ -26,6 +26,7 @@
         ,"Add users and collections to dashboard flagged objects chart <i>(#74)</i>"
         ,"Add notice when editing default template"
         ,"Add min & max length and required fields attributes to forms"
+        ,"Add base URL checks & constraints"
         ,"Update configs organisation"
         ,"Update collection management display"
         ,"Update data refresh after core update"
@@ -96,6 +97,7 @@
         ,"Update collection creation from video"
         ,"Hide banned users from channels page, search results & popular user"
         ,"Drop remote upload"
+        ,"Prevent user actions if base URL is not correctly set"
         ,"Fix collection privacy on photos page"
         ,"Fix visual editor theme change <i>(#590)</i>"
         ,"Fix manage collection list"
@@ -149,6 +151,7 @@
         ,"Fix possible upload issue with missing configs"
         ,"Fix collection pagination"
         ,"Fix load more photos on channel page"
+        ,"Fix possible unauthorized actions (Thanks @nzaar9 !)"
       ]
     },
     {
@@ -178,6 +181,8 @@
         ,"Fix sub-directory links"
         ,"Fix port usage detection"
         ,"Fix possible configs & translations duplicates"
+        ,"Fix wrong variable usage in email"
+        ,"Fix possible phishing attack (Thanks @Takumi142857 !)"
       ]
     },
     {
