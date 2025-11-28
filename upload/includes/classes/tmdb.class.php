@@ -12,6 +12,7 @@ class Tmdb
     private static $fields_title = ['movie'=>'title','series'=>'name'];
     private static $fields_date = ['movie'=>'release_date','series'=>'first_air_date'];
 
+
     private $language = '';
 
     /**
@@ -83,8 +84,18 @@ class Tmdb
     {
         $results = $this->requestAPI('movie/' . $movie_id . '/release_dates')['response']['results'];
         $restriction = array_search(strtoupper($this->language), array_column($results, 'iso_3166_1'));
+        if (empty($restriction) && $this->language == 'en') {
+            $restriction = array_search('US', array_column($results, 'iso_3166_1'));
+        }
         if ($restriction !== false) {
-            return (!empty($results[$restriction]['release_dates'][0]['certification']) ? $results[$restriction]['release_dates'][0]['certification'] : 0);
+            foreach ($results[$restriction]['release_dates'] as $certification) {
+                if (!empty($certification['certification'])) {
+                    if ($certification['certification'] == 'R') {
+                        return 18;
+                    }
+                    return $certification['certification'];
+                }
+            }
         }
         return 0;
     }
