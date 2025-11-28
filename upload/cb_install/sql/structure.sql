@@ -1283,12 +1283,13 @@ ALTER TABLE `{tbl_prefix}video_embed`
 
 CREATE TABLE `{tbl_prefix}video_conversion_queue`
 (
-    `id`           INT(11)    NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    `videoid`      BIGINT(20) NOT NULL,
-    `date_added`   DATETIME   NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    `date_started` DATETIME            DEFAULT NULL,
-    `date_ended`   DATETIME            DEFAULT NULL,
-    `is_completed` BOOLEAN             DEFAULT 0 NOT NULL,
+    `id`           INT(11)      NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `videoid`      BIGINT(20)   NOT NULL,
+    `date_added`   DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `date_started` DATETIME              DEFAULT NULL,
+    `date_ended`   DATETIME              DEFAULT NULL,
+    `is_completed` BOOLEAN               DEFAULT 0 NOT NULL,
+    `audio_track`  VARCHAR(255) NULL,
     INDEX (is_completed)
 );
 
