@@ -104,7 +104,7 @@ class VideoConversionQueue
     {
         $field = ['videoid'];
         $value = [mysql_clean($video_id)];
-        if (!empty($audio_track)) {
+        if (!empty($audio_track) && Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.2', '999')) {
             $field[] = 'audio_track';
             $value[] = mysql_clean($audio_track);
         }

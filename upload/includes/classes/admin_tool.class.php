@@ -1690,7 +1690,12 @@ class AdminTool
             $this->tasks_total = 0;
             $this->tasks_processed = 0;
             $this->tasks = [];
-            $sql = 'SELECT VCQ.videoid, VCQ.id, V.file_name, V.file_type, VCQ.date_started, VCQ.audio_track FROM ' . tbl('video_conversion_queue') . ' AS VCQ 
+            if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.2', '999')) {
+                $select_audio_track = ', VCQ.audio_track';
+            } else {
+                $select_audio_track = '';
+            }
+            $sql = 'SELECT VCQ.videoid, VCQ.id, V.file_name, V.file_type, VCQ.date_started ' . $select_audio_track . ' FROM ' . tbl('video_conversion_queue') . ' AS VCQ 
             INNER JOIN '.tbl('video').' AS V ON V.videoid = VCQ.videoid 
             WHERE is_completed =  FALSE AND date_started IS NULL
             ORDER BY VCQ.date_added ASC LIMIT ' . config('max_conversion');
