@@ -238,7 +238,7 @@ class Tags
         while( !empty($tag_array) ) {
             $tmp_tags = array_splice($tag_array, 0, 500);
             $tmp_tags = array_filter($tmp_tags, function ($tag) {
-                return mb_strlen($tag) > 2;
+                return mb_strlen(trim($tag)) > 2;
             });
             $values = ' SELECT \'' . implode('\' UNION SELECT \'', $tmp_tags) . '\'';
 
