@@ -419,7 +419,7 @@ class Tmdb
         if (config('tmdb_get_actors') == 'yes' && config('enable_video_actor') == 'yes') {
             $actors_tags = [];
             foreach ($credits['cast'] as $actor) {
-                $actors_tags[] = trim($actor['name']);
+                $actors_tags[] = str_replace(',','.',trim($actor['name']));
             }
             Tags::saveTags(implode(',', $actors_tags), 'actors', $_POST['videoid']);
         }
@@ -431,17 +431,17 @@ class Tmdb
         foreach ($credits['crew'] as $crew) {
             switch (strtolower($crew['job'])) {
                 case 'producer':
-                    $producer_tags[] = trim($crew['name']);
+                    $producer_tags[] = str_replace(',','.',trim($crew['name']));
                     break;
                 case 'executive producer':
-                    $executive_producer_tags[] = trim($crew['name']);
+                    $executive_producer_tags[] = str_replace(',','.',trim($crew['name']));
                     break;
                 case 'director':
                 case 'co-director':
-                    $director_tags[] = trim($crew['name']);
+                    $director_tags[] = str_replace(',','.',trim($crew['name']));
                     break;
                 default:
-                    $crew_tags[] = trim($crew['name']);
+                    $crew_tags[] = str_replace(',','.',trim($crew['name']));
                     break;
             }
         }
