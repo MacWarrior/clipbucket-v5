@@ -11,7 +11,7 @@ class Tmdb
 
     private static $fields_title = ['movie'=>'title','series'=>'name'];
     private static $fields_date = ['movie'=>'release_date','series'=>'first_air_date'];
-    
+
     private $language = '';
 
     /**
