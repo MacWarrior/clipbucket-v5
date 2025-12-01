@@ -1,6 +1,6 @@
 {
   "version":"5.5.2",
-  "revision":"168",
+  "revision":"169",
   "status":"stable",
   "detail":[
     {
@@ -63,6 +63,7 @@
         ,"Fix settings saving issues"
         ,"Fix missing config warning"
         ,"Fix TMDB tags import"
+        ,"Fix TMDB age restriction import"
       ]
     },
     {
