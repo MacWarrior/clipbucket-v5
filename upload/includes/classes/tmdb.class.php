@@ -91,7 +91,7 @@ class Tmdb
             foreach ($results[$restriction]['release_dates'] as $certification) {
                 if (!empty($certification['certification'])) {
                     if ($certification['certification'] == 'R') {
-                        return 18;
+                        return 17;
                     }
                     return $certification['certification'];
                 }
