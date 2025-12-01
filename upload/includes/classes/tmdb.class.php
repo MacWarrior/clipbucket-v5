@@ -83,8 +83,18 @@ class Tmdb
     {
         $results = $this->requestAPI('movie/' . $movie_id . '/release_dates')['response']['results'];
         $restriction = array_search(strtoupper($this->language), array_column($results, 'iso_3166_1'));
+        if (empty($restriction) && $this->language == 'en') {
+            $restriction = array_search('US', array_column($results, 'iso_3166_1'));
+        }
         if ($restriction !== false) {
-            return (!empty($results[$restriction]['release_dates'][0]['certification']) ? $results[$restriction]['release_dates'][0]['certification'] : 0);
+            foreach ($results[$restriction]['release_dates'] as $certification) {
+                if (!empty($certification['certification'])) {
+                    if ($certification['certification'] == 'R') {
+                        return 17;
+                    }
+                    return $certification['certification'];
+                }
+            }
         }
         return 0;
     }
@@ -310,6 +320,7 @@ class Tmdb
                     $credentials = $this->seriesCurrentLanguageAgeRestriction($tmdb_id);
                     break;
             }
+            $credentials = preg_replace('/\D/', '',$credentials);
             $video_info['age_restriction'] = $credentials;
             if (!$credentials && config('enable_tmdb_mature_content') == 'yes' && $details['adult']) {
                 $video_info['age_restriction'] = config('tmdb_mature_content_age');
