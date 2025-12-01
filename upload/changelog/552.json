@@ -1,6 +1,6 @@
 {
   "version":"5.5.2",
-  "revision":"164",
+  "revision":"166",
   "status":"stable",
   "detail":[
     {
@@ -62,6 +62,7 @@
         ,"Fix TMDB import error"
         ,"Fix settings saving issues"
         ,"Fix missing config warning"
+        ,"Fix TMDB tags import"
       ]
     },
     {
@@ -216,6 +217,7 @@
       "title": "Translations",
       "description": [
         "Translate hardcoded texts"
+        ,"Update translation"
         ,"Fix translation"
       ]
     },
