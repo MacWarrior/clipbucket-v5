@@ -958,10 +958,7 @@
 							cleanedHtml = $.parseHTML(data.msg);
 							var msg = $(cleanedHtml).find('div.alert').html();
 							curObj.throwHeadMsg('success',msg, 5000, true);
-							$('#'+form_id)[0].reset();
-							$('#addPlaylistCont').toggle();
-							$('#add_playlist_form').css('display','block');
-							$('#new_playlist_form').css('display','none')
+							$('#'+form_id).html(data.html);
 						}
 					}
 					$('#playlist_form_result').hide();
