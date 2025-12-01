@@ -17,7 +17,7 @@
 
 			<div class="form-group clearfix">
 				<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-					<input type="button" class="btn mtm btn-block btn-primary" name="add_to_playlist" value="{lang code='add_to_playlist'}" class="cb_button" onclick="_cb.addToPlaylist('{$params.id}','add_playlist_form','{$type}');">
+					<input type="button" class="btn mtm btn-block btn-primary" name="add_to_playlist" value="{lang code='add_to_playlist'}" class="cb_button" {if empty($playlists)}disabled="disabled"{else}onclick="_cb.addToPlaylist('{$params.id}','add_playlist_form','{$type}');"{/if}/>
 				</div>
 				{if User::getInstance()->hasPermission('allow_create_playlist')}
 				<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
@@ -39,10 +39,10 @@
 
 			<div class="form-group clearfix">
 				<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-					<input type="button" name="add_new_playlist" value="{lang code='add_new_playlist'}" class="btn mtm btn-block btn-success cb_button" onclick="_cb.createPlaylist('{$params.id}','new_playlist_form','{$type}')">
+					<input type="button" name="add_new_playlist" value="{lang code='add_new_playlist'}" class="btn mtm btn-block btn-success cb_button" onclick="_cb.createPlaylist('{$params.id}','playlist_form','{$type}')">
 				</div>
 				<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-					<a href="javascript:void(0);" class="btn btn-block mtm btn-primary" onClick="$('#add_playlist_form').css('display','block');$('#new_playlist_form').css('display','none')">{lang code='select_playlist'} </a>
+					<a href="javascript:void(0);" class="btn btn-block mtm btn-primary" onClick="$('#add_playlist_form').css('display','block');$('#new_playlist_form').css('display','none')">{lang code='select_playlist'}</a>
 				</div>
 			</div>
 		</form>
