@@ -1,6 +1,6 @@
 {
   "version":"5.5.2",
-  "revision":"164",
+  "revision":"168",
   "status":"stable",
   "detail":[
     {
@@ -62,6 +62,7 @@
         ,"Fix TMDB import error"
         ,"Fix settings saving issues"
         ,"Fix missing config warning"
+        ,"Fix TMDB tags import"
       ]
     },
     {
@@ -135,7 +136,7 @@
         ,"Fix TMDB search"
         ,"Fix processing videos display"
         ,"Fix search engine"
-        ,"Fix default theme CSS"
+        ,"Fix default, dark & light themes CSS"
         ,"Fix video thumb saving from video upload form"
         ,"Fix internal messaging reply action"
         ,"Fix default thumb selection on video upload form"
@@ -152,6 +153,7 @@
         ,"Fix collection pagination"
         ,"Fix load more photos on channel page"
         ,"Fix possible unauthorized actions (Thanks @nzaar9 !)"
+        ,"Fix possible error on add to playlist"
       ]
     },
     {
@@ -216,6 +218,7 @@
       "title": "Translations",
       "description": [
         "Translate hardcoded texts"
+        ,"Update translation"
         ,"Fix translation"
       ]
     },

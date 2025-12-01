@@ -161,7 +161,7 @@ html.dark {
         border-bottom-left-radius: var(--border-radius);
         border-bottom-right-radius: var(--border-radius);
     }
-    .item-photo .photo-holder img{
+    .item-photo .photo-holder{
         border-top-left-radius: var(--border-radius);
         border-top-right-radius: var(--border-radius);
     }
@@ -182,6 +182,16 @@ html.dark {
     .collections .title{
         border-bottom-left-radius: var(--border-radius);
         border-bottom-right-radius: var(--border-radius);
+    }
+    .collections .photo-block a{
+        border-top-left-radius: var(--border-radius);
+        border-top-right-radius: var(--border-radius);
+        overflow: hidden;
+    }
+
+    /* Collection */
+    .fav-repo{
+        border-radius: var(--border-radius);
     }
 
     /* Quicklist */
@@ -277,5 +287,10 @@ html.dark {
     /* Featured videos slider */
     .slider-container-featured{
         box-shadow: var(--generic-box-shadow);
+    }
+
+    /* Video manager */
+    #updateVideoInfo .formSection h4{
+        border-radius: var(--border-radius);
     }
 }
