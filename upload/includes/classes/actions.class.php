@@ -426,11 +426,12 @@ class cbactions
      */
     function add_playlist_item($pid, $id)
     {
-        $playlist = Playlist::getInstance()->getOne($pid);
-
+        if (!empty($pid) && !empty($id)) {
+            $playlist = Playlist::getInstance()->getOne($pid);
+        }
         if (!$this->exists($id)) {
             e(lang('obj_not_exists', $this->name));
-        } elseif (!$playlist) {
+        } elseif (empty($playlist)) {
             e(lang('playlist_not_exist'));
         } elseif (!user_id()) {
             e(lang('you_not_logged_in'));
@@ -720,6 +721,9 @@ class cbactions
         if( !User::getInstance()->hasAdminAccess() ){
             $left_join_video = ' LEFT JOIN '.cb_sql_table('video').' ON playlist_items.object_id = video.videoid';
             $where_video = 'AND ' . Video::getInstance()->getGenericConstraints(['show_unlisted' => true]);
+            if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.2', '72')) {
+                $left_join_video .= ' LEFT JOIN ' . cb_sql_table('video_users') . ' ON video_users.videoid = video.videoid';
+            }
         }
 
         return Clipbucket_db::getInstance()->count(cb_sql_table($this->playlist_items_tbl) . $left_join_video, 'playlist_items.object_id', 'playlist_id=\'' . mysql_clean($id) . '\'' . $where_video);

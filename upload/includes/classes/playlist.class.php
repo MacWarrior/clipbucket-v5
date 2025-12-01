@@ -64,15 +64,13 @@ class Playlist
             return '';
         }
 
-        $cond = '(playlists.privacy = \'public\'';
+        $cond = '((playlists.privacy = \'public\' AND playlists.total_items > 0) ';
 
         $current_user_id = user_id();
         if ($current_user_id) {
-            $cond .= ' OR playlists.userid = ' . $current_user_id . ')';
-            $cond .= ' OR (playlists.privacy = \'public\')';
-        } else {
-            $cond .= ')';
+            $cond .= ' OR (playlists.userid = ' . $current_user_id . ')';
         }
+        $cond .= ')';
         return $cond;
     }
 
@@ -129,7 +127,7 @@ class Playlist
         }
 
         if( !User::getInstance()->hasAdminAccess() && !$param_exist ){
-            $conditions[] = $this->getGenericConstraints(['show_unlisted' => $param_first_only]);
+            $conditions[] = $this->getGenericConstraints();
         }
 
         if( $param_count ){

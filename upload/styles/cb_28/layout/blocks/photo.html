@@ -173,13 +173,6 @@
 	</div>
 {/if}
 
-{if $display_type == "channel_page"}
-	<li class="itemBox" onclick="loadObject(this,'photos','{$photo.photo_id}','viewingArea')">
-		{ANCHOR place='in_photo_thumb' data=$photo}
-		{get_photo details=$photo output='html' width='110' height='64' size='m' style='display:block;margin:0 auto;'}
-	</li>
-{/if}
-
 {if $display_type == "collection_item"}
 <div class="photoAppending">
     <a class="photo-holder no_overflow" href="{CBPhotos::getInstance()->photo_links($photo,'view_item')}" title="{display_clean($photo.photo_title)}">
