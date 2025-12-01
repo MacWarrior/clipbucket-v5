@@ -564,6 +564,9 @@ if (!empty($mode)) {
                 if ($message) {
                     $msg = '<div class="msg">' . $message[0]['val'] . '</div>';
                 }
+                ob_start();
+                show_playlist_form(['user'=> User::getInstance()->getCurrentUserID(), 'type'=>'video', 'id'=>$vid]);
+                $ajax['html']= ob_get_clean();
                 $ajax['msg'] = $msg ?: '';
                 $ajax['err'] = $err ?: '';
 

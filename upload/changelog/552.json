@@ -1,6 +1,6 @@
 {
   "version":"5.5.2",
-  "revision":"165",
+  "revision":"167",
   "status":"stable",
   "detail":[
     {
@@ -153,6 +153,7 @@
         ,"Fix collection pagination"
         ,"Fix load more photos on channel page"
         ,"Fix possible unauthorized actions (Thanks @nzaar9 !)"
+        ,"Fix possible error on add to playlist"
       ]
     },
     {
@@ -217,6 +218,7 @@
       "title": "Translations",
       "description": [
         "Translate hardcoded texts"
+        ,"Update translation"
         ,"Fix translation"
       ]
     },
