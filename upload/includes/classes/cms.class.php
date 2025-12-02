@@ -76,12 +76,12 @@ class CMS
             $func_list = ClipBucket::getInstance()->getFunctionList($this->params['functionList']);
             if (is_array($func_list) && count($func_list) > 0) {
                 foreach ($func_list as $func) {
-                    $this->content = $func($this->content);
+                    $this->content_cleaned = $func($this->content_cleaned);
                 }
             }
         }
 
-        return nl2br($this->content);
+        return nl2br($this->content_cleaned);
     }
 
 }
