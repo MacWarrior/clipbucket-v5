@@ -4,6 +4,7 @@ class CMS
 {
     private static $CMS;
     private $content;
+    private $content_cleaned;
     private $params;
 
     public function __construct(string $content, array $params = []){
@@ -29,7 +30,7 @@ class CMS
                     $period = '.';
                     $matches['6'][$i] = substr($matches['6'][$i], 0, -1);
                 }
-                $this->content = str_replace($matches['0'][$i],
+                $this->content_cleaned = str_replace($matches['0'][$i],
                     $matches['1'][$i] . '<a href="http' .
                     $matches['4'][$i] . '://' .
                     $matches['5'][$i] .
@@ -47,17 +48,20 @@ class CMS
         $censored_words = explode(',',config('censored_words'));
         foreach ($censored_words as $word) {
             $word = trim($word);
-            $this->content = str_ireplace($word, str_repeat('*', strlen($word)), $this->content);
+            $this->content_cleaned = str_ireplace($word, str_repeat('*', strlen($word)), $this->content);
         }
     }
 
     private function clean(): void
     {
-        $this->content = display_clean($this->content);
+        $this->content_cleaned = display_clean($this->content);
     }
 
     public function getClean(): string
     {
+        if (!empty($this->content_cleaned)) {
+            return $this->content_cleaned;
+        }
         $this->clean();
 
         if( !empty($this->params['links']) ){
