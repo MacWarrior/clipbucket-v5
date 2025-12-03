@@ -13,7 +13,6 @@ function get_the_comment(id,type_id,div) {
                 if (data.parent_id) {
                     $('.reply-box-' + data.parent_id).hide();
                     $('.comments-reply-' + data.parent_id).append(data.li_data).slideDown();
-
                     if( visual_editor_comments_enabled ){
                         let elements = document.querySelectorAll('.comments-reply-' + data.parent_id + ' .commented-txt p');
                         let last_reply = elements[elements.length - 1];
@@ -103,6 +102,7 @@ function clear_comment_form() {
 }
 
 function init_visual_editor(selector, placeholder){
+    if ($(selector).length === 0) return false;
     return new toastui.Editor({
         el: document.querySelector(selector),
         initialEditType: 'wysiwyg',
