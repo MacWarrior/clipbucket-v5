@@ -1,6 +1,6 @@
 {
   "version":"5.5.2",
-  "revision":"168",
+  "revision":"179",
   "status":"stable",
   "detail":[
     {
@@ -63,6 +63,9 @@
         ,"Fix settings saving issues"
         ,"Fix missing config warning"
         ,"Fix TMDB tags import"
+        ,"Fix TMDB age restriction import"
+        ,"Fix video edition display (Thanks @McArrow !) <i>(#695)</i>"
+        ,"Fix playlist management missing template (Thanks @McArrow !) <i>(#695)</i>"
       ]
     },
     {
@@ -154,6 +157,13 @@
         ,"Fix load more photos on channel page"
         ,"Fix possible unauthorized actions (Thanks @nzaar9 !)"
         ,"Fix possible error on add to playlist"
+        ,"Fix account creation button"
+        ,"Fix cookies settings on login page"
+        ,"Fix SSE on video upload page"
+        ,"Fix similar videos display"
+        ,"Fix possible cookie banner JS error <i>(#695)</i>"
+        ,"Fix user channel infos display"
+        ,"Fix possible JS on comment visual editor"
       ]
     },
     {
@@ -185,6 +195,7 @@
         ,"Fix possible configs & translations duplicates"
         ,"Fix wrong variable usage in email"
         ,"Fix possible phishing attack (Thanks @Takumi142857 !)"
+        ,"Fix typo in email template"
       ]
     },
     {
@@ -195,6 +206,7 @@
         ,"Refactor video conversion queue management"
         ,"Fix HLS video reconversion"
         ,"Fix wrong extension check"
+        ,"Fix possible error during video conversion"
       ]
     },
     {
