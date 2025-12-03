@@ -64,6 +64,7 @@
         ,"Fix missing config warning"
         ,"Fix TMDB tags import"
         ,"Fix TMDB age restriction import"
+        ,"Fix channel datas display"
       ]
     },
     {
