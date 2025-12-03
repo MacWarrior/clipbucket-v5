@@ -1,6 +1,6 @@
 {
   "version":"5.5.2",
-  "revision":"171",
+  "revision":"172",
   "status":"stable",
   "detail":[
     {
@@ -157,6 +157,7 @@
         ,"Fix possible error on add to playlist"
         ,"Fix account creation button"
         ,"Fix cookies settings on login page"
+        ,"Fix SSE on video upload page"
       ]
     },
     {
@@ -198,6 +199,7 @@
         ,"Refactor video conversion queue management"
         ,"Fix HLS video reconversion"
         ,"Fix wrong extension check"
+        ,"Fix possible error during video conversion"
       ]
     },
     {
