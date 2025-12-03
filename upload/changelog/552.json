@@ -1,6 +1,6 @@
 {
   "version":"5.5.2",
-  "revision":"175",
+  "revision":"178",
   "status":"stable",
   "detail":[
     {
@@ -64,6 +64,7 @@
         ,"Fix missing config warning"
         ,"Fix TMDB tags import"
         ,"Fix TMDB age restriction import"
+        ,"Fix video edition display (Thanks @McArrow !) <i>(#695)</i>"
       ]
     },
     {
@@ -160,6 +161,8 @@
         ,"Fix SSE on video upload page"
         ,"Fix similar videos display"
         ,"Fix possible cookie banner JS error <i>(#695)</i>"
+        ,"Fix user channel infos display"
+        ,"Fix possible JS on comment visual editor"
       ]
     },
     {
