@@ -20,7 +20,7 @@ if(!$video_exists){
 unset($params['exist']);
 $video = Video::getInstance()->getOne($params);
 
-if(!$video){
+if(empty($video) ){
     exit(lang('video_not_available'));
 }
 
