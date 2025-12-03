@@ -183,8 +183,8 @@
                                 {else}
 
                                     {if config('allow_registeration')}
-                                        <li class="navbar-sm-login-links" {if base_url_empty}title="{lang('cant_perform_action_until_app_fully_updated')}{/if}">
-                                            <a class="btn btn-default btn-newacc {if base_url_empty}disabled{/if}" href="{cblink name='signup'}">
+                                        <li class="navbar-sm-login-links" {if $base_url_empty}title="{lang('cant_perform_action_until_app_fully_updated')}{/if}">
+                                            <a class="btn btn-default btn-newacc {if $base_url_empty}disabled{/if}" href="{cblink name='signup'}">
                                                 {lang code='create_new_account'}</a>
                                         </li>
                                     {/if}
