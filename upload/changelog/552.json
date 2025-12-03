@@ -1,6 +1,6 @@
 {
   "version":"5.5.2",
-  "revision":"170",
+  "revision":"171",
   "status":"stable",
   "detail":[
     {
@@ -156,6 +156,7 @@
         ,"Fix possible unauthorized actions (Thanks @nzaar9 !)"
         ,"Fix possible error on add to playlist"
         ,"Fix account creation button"
+        ,"Fix cookies settings on login page"
       ]
     },
     {
