@@ -1,6 +1,6 @@
 {
   "version":"5.5.2",
-  "revision":"175",
+  "revision":"176",
   "status":"stable",
   "detail":[
     {
@@ -160,6 +160,7 @@
         ,"Fix SSE on video upload page"
         ,"Fix similar videos display"
         ,"Fix possible cookie banner JS error <i>(#695)</i>"
+        ,"Fix user channel infos display"
       ]
     },
     {
