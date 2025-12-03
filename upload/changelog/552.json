@@ -1,6 +1,6 @@
 {
   "version":"5.5.2",
-  "revision":"170",
+  "revision":"175",
   "status":"stable",
   "detail":[
     {
@@ -156,6 +156,10 @@
         ,"Fix possible unauthorized actions (Thanks @nzaar9 !)"
         ,"Fix possible error on add to playlist"
         ,"Fix account creation button"
+        ,"Fix cookies settings on login page"
+        ,"Fix SSE on video upload page"
+        ,"Fix similar videos display"
+        ,"Fix possible cookie banner JS error <i>(#695)</i>"
       ]
     },
     {
@@ -187,6 +191,7 @@
         ,"Fix possible configs & translations duplicates"
         ,"Fix wrong variable usage in email"
         ,"Fix possible phishing attack (Thanks @Takumi142857 !)"
+        ,"Fix typo in email template"
       ]
     },
     {
@@ -197,6 +202,7 @@
         ,"Refactor video conversion queue management"
         ,"Fix HLS video reconversion"
         ,"Fix wrong extension check"
+        ,"Fix possible error during video conversion"
       ]
     },
     {

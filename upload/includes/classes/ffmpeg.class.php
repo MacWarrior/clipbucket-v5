@@ -325,9 +325,10 @@ class FFMpeg
                     $max_key = $key;
                 }
             }
-            $resolutions = [ $resolutions[$max_key] ];
+            if (!empty( $resolutions[$max_key] )) {
+                $resolutions = [ $resolutions[$max_key] ];
+            }
         }
-
         $this->log->newSection('FFMpeg '.strtoupper($this->conversion_type).' conversion');
         if (!empty($resolutions)) {
             switch ($this->conversion_type) {
