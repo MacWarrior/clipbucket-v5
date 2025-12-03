@@ -1,6 +1,6 @@
 {
   "version":"5.5.2",
-  "revision":"168",
+  "revision":"171",
   "status":"stable",
   "detail":[
     {
@@ -63,6 +63,7 @@
         ,"Fix settings saving issues"
         ,"Fix missing config warning"
         ,"Fix TMDB tags import"
+        ,"Fix TMDB age restriction import"
       ]
     },
     {
@@ -154,6 +155,8 @@
         ,"Fix load more photos on channel page"
         ,"Fix possible unauthorized actions (Thanks @nzaar9 !)"
         ,"Fix possible error on add to playlist"
+        ,"Fix account creation button"
+        ,"Fix cookies settings on login page"
       ]
     },
     {
