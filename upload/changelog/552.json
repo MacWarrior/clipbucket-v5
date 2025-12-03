@@ -1,6 +1,6 @@
 {
   "version":"5.5.2",
-  "revision":"173",
+  "revision":"174",
   "status":"stable",
   "detail":[
     {
@@ -190,6 +190,7 @@
         ,"Fix possible configs & translations duplicates"
         ,"Fix wrong variable usage in email"
         ,"Fix possible phishing attack (Thanks @Takumi142857 !)"
+        ,"Fix typo in email template"
       ]
     },
     {
