@@ -1,6 +1,6 @@
 {
   "version":"5.5.2",
-  "revision":"177",
+  "revision":"178",
   "status":"stable",
   "detail":[
     {
@@ -64,6 +64,7 @@
         ,"Fix missing config warning"
         ,"Fix TMDB tags import"
         ,"Fix TMDB age restriction import"
+        ,"Fix video edition display (Thanks @McArrow !) <i>(#695)</i>"
       ]
     },
     {
