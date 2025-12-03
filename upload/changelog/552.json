@@ -1,6 +1,6 @@
 {
   "version":"5.5.2",
-  "revision":"179",
+  "revision":"180",
   "status":"stable",
   "detail":[
     {
@@ -207,6 +207,7 @@
         ,"Fix HLS video reconversion"
         ,"Fix wrong extension check"
         ,"Fix possible error during video conversion"
+        ,"Fix possible multiple video conversion"
       ]
     },
     {
