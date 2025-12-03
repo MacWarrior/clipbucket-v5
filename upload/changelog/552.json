@@ -1,6 +1,6 @@
 {
   "version":"5.5.2",
-  "revision":"174",
+  "revision":"175",
   "status":"stable",
   "detail":[
     {
@@ -159,6 +159,7 @@
         ,"Fix cookies settings on login page"
         ,"Fix SSE on video upload page"
         ,"Fix similar videos display"
+        ,"Fix possible cookie banner JS error <i>(#695)</i>"
       ]
     },
     {
