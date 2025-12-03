@@ -1,6 +1,6 @@
 {
   "version":"5.5.2",
-  "revision":"178",
+  "revision":"179",
   "status":"stable",
   "detail":[
     {
@@ -65,6 +65,7 @@
         ,"Fix TMDB tags import"
         ,"Fix TMDB age restriction import"
         ,"Fix video edition display (Thanks @McArrow !) <i>(#695)</i>"
+        ,"Fix playlist management missing template (Thanks @McArrow !) <i>(#695)</i>"
       ]
     },
     {
