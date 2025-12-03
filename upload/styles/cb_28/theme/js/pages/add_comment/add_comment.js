@@ -102,7 +102,9 @@ function clear_comment_form() {
 }
 
 function init_visual_editor(selector, placeholder){
-    if ($(selector).length === 0) return false;
+    if ($(selector).length === 0){
+        return false;
+    }
     return new toastui.Editor({
         el: document.querySelector(selector),
         initialEditType: 'wysiwyg',
