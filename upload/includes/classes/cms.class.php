@@ -2,10 +2,10 @@
 
 class CMS
 {
-    private static $CMS;
-    private $content;
-    private $content_cleaned;
-    private $params;
+    private static array $CMS;
+    private string $content;
+    private string $content_cleaned;
+    private array $params;
 
     public function __construct(string $content, array $params = []){
         $this->content = $content;
@@ -23,7 +23,7 @@ class CMS
 
     private function generateLinks(): void
     {
-        if (preg_match_all("#(^|\s|\()((http(s?)://)|(www\.))(\w+[^\s\)\<]+)#i", $this->content, $matches)) {
+        if (preg_match_all("#(^|\s|\()((http(s?)://)|(www\.))(\w+[^\s\)\<]+)#i", $this->content_cleaned, $matches)) {
             for ($i = 0; $i < count($matches['0']); $i++) {
                 $period = '';
                 if (preg_match("|\.$|", $matches['6'][$i])) {
@@ -38,7 +38,7 @@ class CMS
                     $matches['4'][$i] . '://' .
                     $matches['5'][$i] .
                     $matches['6'][$i] . '</a>' .
-                    $period, $this->content);
+                    $period, $this->content_cleaned);
             }
         }
     }
@@ -48,7 +48,7 @@ class CMS
         $censored_words = explode(',',config('censored_words'));
         foreach ($censored_words as $word) {
             $word = trim($word);
-            $this->content_cleaned = str_ireplace($word, str_repeat('*', strlen($word)), $this->content);
+            $this->content_cleaned = str_ireplace($word, str_repeat('*', strlen($word)), $this->content_cleaned);
         }
     }
 
