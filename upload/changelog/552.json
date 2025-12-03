@@ -1,6 +1,6 @@
 {
   "version":"5.5.2",
-  "revision":"172",
+  "revision":"173",
   "status":"stable",
   "detail":[
     {
@@ -158,6 +158,7 @@
         ,"Fix account creation button"
         ,"Fix cookies settings on login page"
         ,"Fix SSE on video upload page"
+        ,"Fix similar videos display"
       ]
     },
     {
