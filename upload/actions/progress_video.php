@@ -86,7 +86,7 @@ if( config('enable_quicklist') == 'yes' && Session::isCookieConsent('fast_qlist'
 foreach ($videos as $video) {
     assign('video', $video);
     $data = ['videoid' => $video['videoid'], 'status'=>$video['status']];
-    if ($video['status'] !='Successful' && $video['status'] !='Failed') {
+    if( !in_array($video['status'], ['Successful', 'Failed']) ){
         $all_complete = false;
         if ($video['status'] == 'Processing') {
             $data['percent'] = $video['convert_percent'];
