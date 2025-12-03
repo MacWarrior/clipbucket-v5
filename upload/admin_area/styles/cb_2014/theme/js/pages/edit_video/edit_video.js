@@ -132,7 +132,7 @@ function saveInfoTmdb(tmdb_video_id, type) {
                 hideSpinner();
                 $('.page-content').prepend(result['msg']);
             } else {
-                location.reload();
+                window.location.href = window.location.href;
             }
         },
     });

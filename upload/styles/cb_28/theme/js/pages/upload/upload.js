@@ -569,8 +569,15 @@ function getUpdate() {
                                     thumbs.insertBefore($('input[id^="videoid_"][value="' + video.videoid + '"]').parent().find('.pad-bottom-sm.text-right'));
                                     thumbs.slideDown('slow');
                                 } else {
-                                    const parent_div = $('input[id^="videoid_"][value="' + video.videoid + '"]').parent().find('[name="default_thumb"]').parents('.formSection.clear')[0];
-                                    $(parent_div).html(video.thumbs);
+                                    let parent_div = $('input[id^="videoid_"][value="' + video.videoid + '"]').parent().find('[name="default_thumb"]').parents('.formSection.clear')[0];
+                                    const is_parent_visible = $(parent_div).find('.sectionContent')[0].checkVisibility();
+                                    $(parent_div).replaceWith(video.thumbs);
+                                    //getting parent div again because it has been replaced
+                                    if (is_parent_visible) {
+                                        let parent_div = $('input[id^="videoid_"][value="' + video.videoid + '"]').parent().find('[name="default_thumb"]').parents('.formSection.clear')[0];
+                                        $(parent_div).find('i').removeClass('glyphicon-chevron-down').addClass('glyphicon-chevron-up');
+                                        $(parent_div).find('.sectionContent').show();
+                                    }
                                 }
                             }
                             if (typeof video.subtitles !== 'undefined' && video.subtitles.length > 0) {
@@ -580,7 +587,7 @@ function getUpdate() {
                                     subtitles.slideDown('slow');
                                 } else {
                                     const parent_div = $('input[id^="videoid_"][value="' + video.videoid + '"]').parent().find('#subtitles_'+video.videoid).parents('.formSection.clear')[0];
-                                    $(parent_div).html(video.subtitles);
+                                    $(parent_div).replaceWith(video.subtitles);
                                 }
                             }
                             slideFormSection();
