@@ -10,9 +10,8 @@ class MWIP extends \Migration
      */
     public function start()
     {
-        self::generateTranslation('error_php_version', [
-            'fr'=>'Votre version PHP actuelle (%s) est dépréciée et ne sera plus compatible avec les futures version de ClipBucketV5, veuillez mettre à jour vers à minima PHP 8.1 (8.3 recommandé)',
-            'en'=>'Your current PHP version (%s) is deprecated and won’t be compatible with future ClipBucketV5 versions, please update to at least PHP 8.1 (8.3 recommanded)'
+        self::updateTranslation('warning_php_version', [
+            'en'=>'Dear admin,<br/> It seems that you are using an old version of PHP (<b>%s</b>). This version won\'t be supported anymore on upcoming <b>%s </b> version .<br />Please update your PHP version to % s or above .<br /><br />Thank you for using ClipBucketV5 !'
         ]);
     }
 }

@@ -5,6 +5,10 @@ class System{
     static string $versionCli;
     static array $configsCli = [];
     static $is_in_dev = null;
+
+    const MIN_PHP_VERSION = '9.0.0';
+    const MIN_MYSQL_VERSION = '5.6.0';
+
     private static function init_php_extensions($type, $custom_filepath = null): array
     {
         switch($type){
@@ -142,10 +146,10 @@ class System{
                 $regVersionPHP = '/(\d+\.\d+\.\d+)/';
                 preg_match($regVersionPHP, phpversion(), $match);
                 $php_version = $match[1] ?? phpversion();
-                $req = '8.0.0';
+                $req = self::MIN_PHP_VERSION;
                 $binary_path = $custom_filepath ?? System::get_binaries($software, false);
                 if ($php_version < $req) {
-                    return $verbose ? ['err' =>sprintf('Found PHP %s but required is PHP %s : %s', $php_version, $req, $binary_path)] : false;
+                    return $verbose ? ['err' =>sprintf('Found PHP %s but required is PHP %s : %s', $php_version, $req, $binary_path)] : ($version_only ? $php_version : false);
                 }
                 return $verbose ? ['msg' => sprintf('Found PHP %s : %s', $php_version, $binary_path)] : $php_version;
 
@@ -170,9 +174,9 @@ class System{
                     return false;
                 }
 
-                $req = '8.0.0';
+                $req = System::MIN_PHP_VERSION;
                 if (self::$versionCli < $req) {
-                    return $verbose ? ['err' => sprintf('Found PHP CLI %s but required is PHP CLI %s : %s', self::$versionCli, $req, $binary_path)] : false;
+                    return $verbose ? ['err' => sprintf('Found PHP CLI %s but required is PHP CLI %s : %s', self::$versionCli, $req, $binary_path)] :  ($version_only ? self::$versionCli : false);
                 }
 
                 if( $version_only || !$verbose ){
@@ -214,7 +218,7 @@ class System{
                     return $verbose ? ['err' => 'Unable to find MySQL Client'] : false;
                 }
 
-                $mysqlReq='5.6.0';
+                $mysqlReq=System::MIN_MYSQL_VERSION;
                 if ((version_compare($version, $mysqlReq) < 0)) {
                     return $verbose ? ['err' => sprintf('Current version is %s, minimal version %s is required. Please update', $version, $mysqlReq)] : false;
                 }
@@ -705,7 +709,7 @@ class System{
         }
 
         // Services
-        $phpVersionReq = '8.0.0';
+        $phpVersionReq = System::MIN_PHP_VERSION;
         $php_web_version = System::getPHPVersionWeb();
         if ($php_web_version < $phpVersionReq) {
             self::displayConfigError('error config : php web');
@@ -743,7 +747,7 @@ class System{
             return false;
         }
 
-        $mysqlReq = '5.6.0';
+        $mysqlReq = System::MIN_MYSQL_VERSION;
         $serverMySqlVersion = getMysqlServerVersion()[0]['@@version'];
         $regex_version = '(\d+\.\d+\.\d+)';
         preg_match($regex_version, $serverMySqlVersion, $match_mysql);

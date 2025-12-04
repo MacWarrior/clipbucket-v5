@@ -1737,5 +1737,4 @@ VALUES ('ongoing_conversion'),
        ('cant_perform_action_until_app_fully_updated'),
        ('base_url_required'),
        ('please_login_to_flag'),
-       ('please_login'),
-       ('error_php_version');
+       ('please_login');
