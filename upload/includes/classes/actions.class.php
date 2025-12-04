@@ -497,7 +497,7 @@ class cbactions
             $fields = [
                 'last_update' => NOW(),
                 'runtime'     => $item['runtime'] - $video['duration'],
-                'total_items' => $item['total_items'] - 1
+                'total_items' => '|f|total_items-1'
             ];
 
             if ($fields['runtime'] <= 0) {
