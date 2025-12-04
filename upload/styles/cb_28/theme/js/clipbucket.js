@@ -241,30 +241,28 @@
 			$('#playlist_form_result').css('display','block').html(this.loading);
 			switch(mode)
 			{
-				case 'add':
-					$.post(page,
-						{
-							mode : 'add_playlist',
-							id : vid,
-							objtype : objtype,
-							pid : $('#playlist_id option:selected').val()
-						},
-						function(data)
-						{
-							if(!data){
-								alert('No data');
-							} else {
-								if(data.err !== '') {
-									$('#playlist_form_result').css('display','block').html(data.err);
-								}
+                case 'add':
+                    $.post(page, {
+                            mode: 'add_playlist',
+                            id: vid,
+                            objtype: objtype,
+                            pid: $('#playlist_id option:selected').val()
+                        },
+                        function (data) {
+                            if (!data) {
+                                alert('No data');
+                            } else {
+                                if (data.err !== '') {
+                                    $('#playlist_form_result').css('display', 'block').html(data.err);
+                                }
 
-								if(data.msg !== '') {
-									$('#playlist_form_result').css('display','block').html(data.msg);
-									$('#'+form_id).css('display','none');
-								}
-							}
-						},'json');
-					break;
+                                if (data.msg !== '') {
+                                    $('#playlist_form_result').css('display', 'block').html(data.msg);
+                                    $('#' + form_id).css('display', 'none');
+                                }
+                            }
+                        }, 'json');
+                    break;
 
 				case 'new':
 					$.post(page,
@@ -927,6 +925,9 @@
                                 var msg = $(cleanedHtml).find('div.alert').html();
                                 curObj.throwHeadMsg('success', msg, 5000, true);
                                 $('#addPlaylistCont').toggle();
+                            }
+                            if (typeof data.total_items !== 'undefined') {
+                                $('#option_playlist_' + val).html(data.total_items);
                             }
                         }
                         $('#playlist_form_result').hide();

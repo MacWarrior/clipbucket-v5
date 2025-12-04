@@ -515,6 +515,7 @@ if (!empty($mode)) {
                 CBvideo::getInstance()->action->add_playlist_item($pid, $id);
                 updateObjectStats('plist', 'video', $id);
 
+                $playlist = Playlist::getInstance()->getOne($pid);
                 $error = errorhandler::getInstance()->get_error();
                 $warning = errorhandler::getInstance()->get_warning();
                 $message = errorhandler::getInstance()->get_message();
@@ -532,6 +533,7 @@ if (!empty($mode)) {
 
                 $ajax['msg'] = $msg ? $msg : '';
                 $ajax['err'] = $err ? $err : '';
+                $ajax['total_items'] = $playlist['total_items'];
 
                 echo json_encode($ajax);
             }

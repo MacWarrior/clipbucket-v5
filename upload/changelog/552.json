@@ -1,6 +1,6 @@
 {
   "version":"5.5.2",
-  "revision":"180",
+  "revision":"181",
   "status":"stable",
   "detail":[
     {
@@ -196,6 +196,7 @@
         ,"Fix wrong variable usage in email"
         ,"Fix possible phishing attack (Thanks @Takumi142857 !)"
         ,"Fix typo in email template"
+        ,"Fix playlist item counter"
       ]
     },
     {
