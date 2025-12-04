@@ -117,7 +117,7 @@ if (php_sapi_name() == 'cli') {
 }
 
 $regex_version = '(\d+\.\d+\.\d+)';
-$mysqlReq = '5.6.0';
+$mysqlReq = System::MIN_MYSQL_VERSION;
 assign('mysqlReq', $mysqlReq);
 $cmd = 'mysql --version';
 exec($cmd, $mysql_client_output);

@@ -136,9 +136,9 @@ assign('datetime_datas_cli', $datetime_datas_cli);
 assign('hosting_ok', ($max_upload_size_ok && $upload_max_size_ok && $memory_limit_ok && $max_execution_time_ok && $phpWebExec && $phpWebShellExec && $phpCliExec && $phpCliShellExec && $check_time_cli && $check_ffi_cli && $check_ffi_web));
 
 //SERVICES
-$phpVersionReq = '8.0.0';
+$phpVersionReq = System::MIN_PHP_VERSION;
 assign('phpVersionReq', $phpVersionReq);
-$php_web_version = System::get_software_version('php_web', false, null, true);
+$php_web_version = System::getPHPVersionWeb();
 assign('phpVersionWeb', $php_web_version);
 $phpVersionWebOK = $php_web_version >= $phpVersionReq;
 assign('phpVersionWebOK', $phpVersionWebOK);
@@ -172,7 +172,7 @@ if (is_array($git_version) && array_key_exists('err',$git_version)) {
 }
 assign('git_version', $git_version);
 
-$mysqlReq = '5.6.0';
+$mysqlReq = System::MIN_MYSQL_VERSION;
 $serverMySqlVersion = getMysqlServerVersion()[0]['@@version'];
 $regex_version = '(\d+\.\d+\.\d+)';
 preg_match($regex_version, $serverMySqlVersion, $match_mysql);
@@ -181,7 +181,7 @@ assign('serverMySqlVersion', $serverMySqlVersion);
 $serverMySqlVersionOk = (version_compare($serverMySqlVersion, $mysqlReq) >= 0);
 assign('serverMySqlVersionOk', $serverMySqlVersionOk);
 
-$phpVersionCli = System::get_software_version('php_cli');
+$phpVersionCli = System::get_software_version('php_cli', version_only: true);
 
 assign('phpVersionCli', $phpVersionCli);
 $phpVersionCliOK = $phpVersionCli >= $phpVersionReq;
