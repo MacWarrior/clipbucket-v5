@@ -138,7 +138,7 @@ assign('hosting_ok', ($max_upload_size_ok && $upload_max_size_ok && $memory_limi
 //SERVICES
 $phpVersionReq = '8.0.0';
 assign('phpVersionReq', $phpVersionReq);
-$php_web_version = System::get_software_version('php_web', false, null, true);
+$php_web_version = System::getPHPVersionWeb();
 assign('phpVersionWeb', $php_web_version);
 $phpVersionWebOK = $php_web_version >= $phpVersionReq;
 assign('phpVersionWebOK', $phpVersionWebOK);

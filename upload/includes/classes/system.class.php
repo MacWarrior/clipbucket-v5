@@ -706,7 +706,7 @@ class System{
 
         // Services
         $phpVersionReq = '8.0.0';
-        $php_web_version = System::get_software_version('php_web', false, null, true);
+        $php_web_version = System::getPHPVersionWeb();
         if ($php_web_version < $phpVersionReq) {
             self::displayConfigError('error config : php web');
             return false;
@@ -1084,6 +1084,11 @@ class System{
     public static function isCli(): bool
     {
         return php_sapi_name() == 'cli';
+    }
+
+    public static function getPHPVersionWeb()
+    {
+        return self::get_software_version('php_web', false, null, true);
     }
 
 }

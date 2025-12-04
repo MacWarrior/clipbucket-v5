@@ -41,14 +41,17 @@ define('TEMPLATE', config('template_dir'));
 
 require_once TEMPLATEDIR . DIRECTORY_SEPARATOR . 'header.php';
 
-if( !defined('IS_AJAX') && !defined('IS_SSE') && php_sapi_name() != 'cli' ){
+if (!defined('IS_AJAX') && !defined('IS_SSE') && php_sapi_name() != 'cli') {
     $check_global = System::check_global_configs();
-    if( $check_global !== 1 ){
-        if ($check_global === -1 ) {
+    if ($check_global !== 1) {
+        if ($check_global === -1) {
             e(lang('error_server_config', DirPath::getUrl('admin_area') . 'setting_advanced.php#config_hosting'), 'w', false);
         } else {
             e(lang('error_server_config', DirPath::getUrl('admin_area') . 'system_info.php#hosting'), 'w', false);
         }
+    }
+    if (System::getPHPVersionWeb() < '8.1' && !Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.2', '999')) {
+        e(lang('error_php_version', System::getPHPVersionWeb()), 'w');
     }
 }
 
