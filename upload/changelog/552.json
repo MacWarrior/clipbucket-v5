@@ -1,6 +1,6 @@
 {
   "version":"5.5.2",
-  "revision":"181",
+  "revision":"182",
   "status":"stable",
   "detail":[
     {
@@ -99,6 +99,7 @@
         ,"Update photo upload & edition display"
         ,"Update email change procedure"
         ,"Update collection creation from video"
+        ,"Update channel search display"
         ,"Hide banned users from channels page, search results & popular user"
         ,"Drop remote upload"
         ,"Prevent user actions if base URL is not correctly set"
