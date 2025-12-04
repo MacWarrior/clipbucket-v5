@@ -1191,9 +1191,26 @@ function thumbs_res_settings_28(): array
  */
 function get_high_res_file($vdetails): string
 {
-    $custom_video_file_funcs_retun = exec_custom_video_file_funcs($vdetails);
-    if ($custom_video_file_funcs_retun) {
-        return $custom_video_file_funcs_retun;
+    $custom_video_file_funcs_return = exec_custom_video_file_funcs($vdetails);
+    if ($custom_video_file_funcs_return) {
+        return $custom_video_file_funcs_return;
+    }
+
+    if ($vdetails['status'] !== 'Successful') {
+        $conversion_path = DirPath::get('conversion_queue') . $vdetails['file_name'];
+
+        switch ($vdetails['file_type']) {
+            case 'mp4':
+            default:
+                $glob_files = glob($conversion_path . '.*');
+                $orig_file = $glob_files ? $glob_files[0] : false;
+                break;
+            case 'hls':
+                $orig_file = $conversion_path . DIRECTORY_SEPARATOR . $vdetails['file_name'] . '.m3u8';
+                break;
+        }
+
+        return $orig_file;
     }
 
     $video_qualities = json_decode($vdetails['video_files']);
@@ -1212,11 +1229,7 @@ function get_high_res_file($vdetails): string
         }
     }
 
-    if ($vdetails['status'] == 'Successful') {
-        $filepath = DirPath::get('videos') . $vdetails['file_directory'] . DIRECTORY_SEPARATOR;
-    } else {
-        $filepath = DirPath::get( 'conversion_queue') . $vdetails['file_directory'] . DIRECTORY_SEPARATOR;
-    }
+    $filepath = DirPath::get('videos') . $vdetails['file_directory'] . DIRECTORY_SEPARATOR;
     switch ($vdetails['file_type']) {
         default:
         case 'mp4':
@@ -1470,12 +1483,12 @@ function isReconvertAble($vdetails): bool
                 }
                 $vid_files = glob($path);
                 if (empty($vid_files) && $vdetails['status'] == 'Failed') {
-                    if (!empty($fileDirectory)) {
-                        $path = DirPath::get('conversion_queue') . $fileDirectory . DIRECTORY_SEPARATOR . $fileName . '*';
-                    } else {
-                        $path = DirPath::get('conversion_queue') . $fileName . '*';
-                    }
+                    $path = DirPath::get('conversion_queue') . $fileName . '*';
                     $vid_files = glob($path);
+                    if (empty($vid_files)) {
+                        $path = DirPath::get('conversion_queue') . $fileDirectory . DIRECTORY_SEPARATOR . $fileName . '*';
+                        $vid_files = glob($path);
+                    }
                 }
                 if (!empty($vid_files) && is_array($vid_files)) {
                     $is_convertable = true;
