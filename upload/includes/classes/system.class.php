@@ -6,7 +6,7 @@ class System{
     static array $configsCli = [];
     static $is_in_dev = null;
 
-    const MIN_PHP_VERSION = '9.0.0';
+    const MIN_PHP_VERSION = '8.0.0';
     const MIN_MYSQL_VERSION = '5.6.0';
 
     private static function init_php_extensions($type, $custom_filepath = null): array
