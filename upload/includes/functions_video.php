@@ -1527,20 +1527,25 @@ function reConvertVideos($data = ''): void
     }
 
     // Loop through all video ids
-    foreach ($videos as $daVideo) {
+    foreach ($videos as $video_id) {
         // get details of single video
-        $vdetails = CBvideo::getInstance()->get_video($daVideo);
+        $vdetails = CBvideo::getInstance()->get_video($video_id);
 
+        $link = '<a href="'.DirPath::getUrl('admin_area').'edit_video.php?video='.$video_id.'">"' . $vdetails['title'] . '"</a>';
+        if ($vdetails['status'] == 'Waiting') {
+            e(lang('video_is_already_waiting', $link), 'w', false);
+            continue;
+        }
+        if (!empty(VideoConversionQueue::getOne(['videoid' => $video_id, 'not_complete' => 1]))) {
+            e(lang('video_is_already_processing', $link), 'w', false);
+            continue;
+        }
         if (!isReconvertAble($vdetails)) {
-            e(lang('video_is_not_convertable', $daVideo));
-            continue;
-        }
-        if (!empty(VideoConversionQueue::getOne(['videoid' => $daVideo, 'not_complete' => 1]))) {
-            e(lang('video_is_already_processing', $daVideo));
+            e(lang('video_is_not_convertable', $link), 'w', false);
             continue;
         }
 
-        setVideoStatus($daVideo, 'Waiting');
+        setVideoStatus($video_id, 'Waiting');
 
         if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '279')) {
             $fields = ['convert_percent'];
@@ -1587,7 +1592,7 @@ function reConvertVideos($data = ''): void
         $logFile = DirPath::get('logs') . $vdetails['file_directory'] . DIRECTORY_SEPARATOR . $vdetails['file_name'] . '.log';
         $log = new SLog($logFile);
         $log->newSection('Reconvert launched from ' . $file_used );
-        e(lang('reconversion_started_for_x', display_clean($vdetails['title'])), 'm');
+        e(lang('reconversion_started_for_x', $link), 'm', false);
 
         if (empty(errorhandler::getInstance()->get_error())) {
             errorhandler::getInstance()->flush();
@@ -1742,7 +1747,8 @@ function remove_empty_directory($path, string $stop_path)
     if ($path == $stop_path) {
         return;
     }
-    $current_dir_content = array_diff((scandir($path)??[]), ['..', '.']);
+    $files = scandir($path);
+    $current_dir_content = array_diff((!empty($files) ? $files : []), ['..', '.']);
     if (count($current_dir_content) <= 0) {
         rmdir($path);
         remove_empty_directory(dirname($path), $stop_path);
