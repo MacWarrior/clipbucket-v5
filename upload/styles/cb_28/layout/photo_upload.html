@@ -41,7 +41,7 @@
                             {else}
                                 <div class="row">
                                     <div id="SelectionDIV" class="col-md-9">
-                                        {include file="$style_dir/blocks/collection_select_upload.html" }
+                                        {include file="$style_dir/blocks/collection_select_upload.html"}
                                     </div>
                                     {if User::getInstance()->hasPermission('allow_create_collection')}
                                         <div class="col-md-3 text-center" {if $collections}style='margin-top: 14px;'{/if}>
@@ -126,6 +126,6 @@
     var max_file_size ="{config('max_upload_size')}Mb";
     var chunk_upload ="{config('enable_chunk_upload') == 'yes'}";
     var collection_id = '{$selected_collection.collection_id}';
-    var available_tags = JSON.parse('{$available_tags|json_encode|replace:"'": "\'"}');
-    var available_collection_tags = JSON.parse('{$available_collection_tags|json_encode|replace:"'": "\'"}');
+    var available_tags = JSON.parse('{$available_tags|json_encode|escape:'javascript'}');
+    var available_collection_tags = JSON.parse('{$available_collection_tags|json_encode|escape:'javascript'}');
 </script>

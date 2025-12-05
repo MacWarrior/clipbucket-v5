@@ -9,9 +9,15 @@ $videos = Video::getInstance()->getAll([
 $all_complete = true;
 
 switch ($_POST['output']) {
+    case 'videos':
     case 'home':
-        assign('popup_video', config('popup_video') == 'yes');
-        if (config('homepage_recent_video_style') == 'modern') {
+        if ( $_POST['output'] == 'home') {
+            $config = 'homepage_recent_video_style';
+            assign('popup_video', config('popup_video') == 'yes');
+        } else {
+            $config = 'videos_video_style';
+        }
+        if (config($config) == 'modern') {
             assign('width', 270);
             $template = "blocks/videos/video-modern.html";
         } else {
@@ -80,7 +86,7 @@ if( config('enable_quicklist') == 'yes' && Session::isCookieConsent('fast_qlist'
 foreach ($videos as $video) {
     assign('video', $video);
     $data = ['videoid' => $video['videoid'], 'status'=>$video['status']];
-    if ($video['status'] !='Successful') {
+    if( !in_array($video['status'], ['Successful', 'Failed']) ){
         $all_complete = false;
         if ($video['status'] == 'Processing') {
             $data['percent'] = $video['convert_percent'];
@@ -92,6 +98,24 @@ foreach ($videos as $video) {
 
         $return['player']['html'] = ob_get_clean();
         $return['player']['id'] = $video['videoid'];
+    }
+    if (!empty($_POST['display_thumbs'])) {
+        assign('v', $video);
+        assign('vidthumbs', get_thumb($video,TRUE,'168x105','auto'));
+        assign('vidthumbs_custom', get_thumb($video,TRUE,'168x105','custom'));
+        $data['thumbs'] = getTemplate('blocks/videos/thumb_form.html');
+    }
+    if (!empty($_POST['display_subtitles'])) {
+        //TODO check config
+        assign('videoid', $video['videoid']);
+        assign('vstatus', $video['status'] );
+        assign('subtitle_list',get_video_subtitles($video) ?: []);
+        $data['subtitles'] = '<div class="formSection clear">
+                                    <h4>'.lang('video_subtitle_management').'<i class="glyphicon glyphicon-chevron-down pull-right"></i></h4>
+                                    <div class="sectionContent" style="display: none;" id="subtitles_'.$video['videoid'].'">
+                                        '.getTemplate('blocks/subtitle_list.html').'
+                                    </div>
+                                </div>';
     }
     $data['html'] = getTemplate($template);
     $return['videos'][] = $data;

@@ -2,9 +2,10 @@
 
 class CMS
 {
-    private static $CMS;
-    private $content;
-    private $params;
+    private static array $CMS;
+    private string $content;
+    private string $content_cleaned;
+    private array $params;
 
     public function __construct(string $content, array $params = []){
         $this->content = $content;
@@ -22,14 +23,14 @@ class CMS
 
     private function generateLinks(): void
     {
-        if (preg_match_all("#(^|\s|\()((http(s?)://)|(www\.))(\w+[^\s\)\<]+)#i", $this->content, $matches)) {
+        if (preg_match_all("#(^|\s|\()((http(s?)://)|(www\.))(\w+[^\s\)\<]+)#i", $this->content_cleaned, $matches)) {
             for ($i = 0; $i < count($matches['0']); $i++) {
                 $period = '';
                 if (preg_match("|\.$|", $matches['6'][$i])) {
                     $period = '.';
                     $matches['6'][$i] = substr($matches['6'][$i], 0, -1);
                 }
-                $this->content = str_replace($matches['0'][$i],
+                $this->content_cleaned = str_replace($matches['0'][$i],
                     $matches['1'][$i] . '<a href="http' .
                     $matches['4'][$i] . '://' .
                     $matches['5'][$i] .
@@ -37,7 +38,7 @@ class CMS
                     $matches['4'][$i] . '://' .
                     $matches['5'][$i] .
                     $matches['6'][$i] . '</a>' .
-                    $period, $this->content);
+                    $period, $this->content_cleaned);
             }
         }
     }
@@ -47,17 +48,20 @@ class CMS
         $censored_words = explode(',',config('censored_words'));
         foreach ($censored_words as $word) {
             $word = trim($word);
-            $this->content = str_ireplace($word, str_repeat('*', strlen($word)), $this->content);
+            $this->content_cleaned = str_ireplace($word, str_repeat('*', strlen($word)), $this->content_cleaned);
         }
     }
 
     private function clean(): void
     {
-        $this->content = display_clean($this->content);
+        $this->content_cleaned = display_clean($this->content);
     }
 
     public function getClean(): string
     {
+        if (!empty($this->content_cleaned)) {
+            return $this->content_cleaned;
+        }
         $this->clean();
 
         if( !empty($this->params['links']) ){
@@ -72,12 +76,12 @@ class CMS
             $func_list = ClipBucket::getInstance()->getFunctionList($this->params['functionList']);
             if (is_array($func_list) && count($func_list) > 0) {
                 foreach ($func_list as $func) {
-                    $this->content = $func($this->content);
+                    $this->content_cleaned = $func($this->content_cleaned);
                 }
             }
         }
 
-        return nl2br($this->content);
+        return nl2br($this->content_cleaned);
     }
 
 }

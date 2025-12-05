@@ -55,36 +55,38 @@ $(document).ready(function(){
     });
 
     // Account deletion
-    let dropButton = document.getElementById('drop_account');
-    let modalElement = document.getElementById('confirmDropAccountModal');
-    let confirmButton = document.getElementById('confirmDropAccountBtn');
+    let dropButton = document.querySelector('#drop_account:not(.disabled)');
     let target = null;
+    let modalElement = document.getElementById('confirmDropAccountModal');
 
-    dropButton.addEventListener('click', function (e) {
-        e.preventDefault();
-        target = this;
-        modalElement.classList.add('in');
-        modalElement.style.display = 'block';
-        modalElement.setAttribute('aria-hidden', 'false');
-        document.body.classList.add('modal-open');
-        let backdrop = document.createElement('div');
-        backdrop.className = 'modal-backdrop fade in';
-        document.body.appendChild(backdrop);
-        modalElement.querySelectorAll('[data-dismiss="modal"]').forEach(function (btn) {
-            btn.addEventListener('click', closeModal);
+    if (dropButton) {
+        let confirmButton = document.getElementById('confirmDropAccountBtn');
+        dropButton.addEventListener('click', function (e) {
+            e.preventDefault();
+            target = this;
+            modalElement.classList.add('in');
+            modalElement.style.display = 'block';
+            modalElement.setAttribute('aria-hidden', 'false');
+            document.body.classList.add('modal-open');
+            let backdrop = document.createElement('div');
+            backdrop.className = 'modal-backdrop fade in';
+            document.body.appendChild(backdrop);
+            modalElement.querySelectorAll('[data-dismiss="modal"]').forEach(function (btn) {
+                btn.addEventListener('click', closeModal);
+            });
         });
-    });
+        confirmButton.addEventListener('click', function () {
+            document.querySelector('input[type="hidden"][name="drop_account"]').removeAttribute('disabled');
+            closeModal();
+            document.querySelectorAll('.taskHandler').forEach(function (el) {
+                el.style.display = '';
+            });
+            if (target) {
+                target.form.submit();
+            }
+        });
+    }
 
-    confirmButton.addEventListener('click', function () {
-        document.querySelector('input[type="hidden"][name="drop_account"]').removeAttribute('disabled');
-        closeModal();
-        document.querySelectorAll('.taskHandler').forEach(function(el) {
-            el.style.display = '';
-        });
-        if (target) {
-            target.form.submit();
-        }
-    });
 
     function closeModal() {
         modalElement.classList.remove('in');
@@ -96,4 +98,27 @@ $(document).ready(function(){
             backdrop.remove();
         }
     }
+
+    var confirmEmailButton = document.getElementById('confirmEmailBtn');
+    if (confirmEmailButton) {
+        confirmEmailButton.addEventListener('click', function (e) {
+            e.preventDefault();
+            fetch(baseurl + 'actions/user_confirm_email.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.msg) {
+                        const pageContent = document.querySelector('.manage-page');
+                        if (pageContent) {
+                            pageContent.insertAdjacentHTML('afterbegin', data.msg);
+                        }
+                    }
+                })
+                .catch(error => console.error(error))
+                .finally(hideSpinner);
+        })
+    }
+
 });

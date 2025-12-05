@@ -178,8 +178,8 @@ class Comments
             return false;
         }
 
-        $user_id = user_id();
-        if( !$user_id ){
+        $user_id = User::getInstance()->getCurrentUserID();
+        if( !User::getInstance()->isUserConnected()){
             return false;
         }
 
@@ -285,7 +285,7 @@ class Comments
             return false;
         }
 
-        if( $comment['userid'] == $user_id || ( empty($comment['userid']) && config('anonym_comments') && Network::get_remote_ip() == $comment['comment_ip']) ){
+        if( $comment['userid'] == $user_id || ( empty($comment['userid']) && config('anonym_comments')!='yes' && Network::get_remote_ip() == $comment['comment_ip']) ){
             e(lang('no_own_commen_spam'));
             return false;
         }
@@ -366,12 +366,7 @@ class Comments
                 return false;
             }
 
-            if (empty(trim($anonym_email))) {
-                e(lang('please_enter_your_email'));
-                return false;
-            }
-
-            if( !isValidEmail($anonym_email)){
+            if( !Email::isValid($anonym_email)){
                 e(lang('invalid_email'));
                 return false;
             }
@@ -448,7 +443,7 @@ class Comments
         e(lang('grp_comment_msg'), 'm');
 
         $owner_email = userquery::getInstance()->get_user_field($owner_id, 'email')['email'];
-        if( config('send_comment_notification') == 'yes' && isValidEmail($owner_email) ){
+        if( config('send_comment_notification') == 'yes' && Email::isValid($owner_email) ){
             $email_params = [
                 'sender_username' => $user_name,
                 'object'          => $type_label,
@@ -468,7 +463,7 @@ class Comments
                     $reply_to = $comment['anonym_email'];
                 }
 
-                if (isValidEmail($reply_to)) {
+                if (Email::isValid($reply_to)) {
                     EmailTemplate::sendMail('user_reply', $reply_to, $email_params);
                 }
             }

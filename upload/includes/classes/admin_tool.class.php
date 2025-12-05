@@ -1,13 +1,14 @@
 <?php
 
 require_once DirPath::get('classes') . 'cron_expression.class.php';
+require_once DirPath::get('classes') . 'sLog.php';
 
 class AdminTool
 {
     private static $_instance = null;
     private static $temp;
 
-    CONST CODE_UPDATE_DATABASE_VERSION = 'update_database_version';
+    const CODE_UPDATE_DATABASE_VERSION = 'update_database_version';
 
     private $id_histo;
     private $id_tool;
@@ -89,9 +90,10 @@ class AdminTool
                 $complement_select = ',tools.is_automatable, tools.is_disabled, tools.frequency';
             }
 
-            $sql = /** @lang MySQL */ 'SELECT tools.id_tool, language_key_label, language_key_description, elements_total, elements_done, COALESCE(NULLIF(language_key_title, \'\'), \'ready\') as language_key_title, function_name, code,
+            $sql = /** @lang MySQL */
+                'SELECT tools.id_tool, language_key_label, language_key_description, elements_total, elements_done, COALESCE(NULLIF(language_key_title, \'\'), \'ready\') as language_key_title, function_name, code,
                    CASE WHEN elements_total IS NULL OR elements_total = 0 THEN 0 ELSE elements_done * 100 / elements_total END AS pourcentage_progress, tools_histo.id_histo
-                    '.$complement_select.'
+                    ' . $complement_select . '
                 FROM ' . cb_sql_table('tools') . '
                 LEFT JOIN (
                     SELECT id_tool, MAX(date_start) AS max_date
@@ -124,7 +126,7 @@ class AdminTool
     public function setToolInProgress(): bool
     {
         if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.0', '367')) {
-           return $this->setToolInProgressNew();
+            return $this->setToolInProgressNew();
         } else {
             Clipbucket_db::getInstance()->update(tbl('tools'), ['id_tools_status'], ['|no_mc||f|(SELECT id_tools_status FROM ' . tbl('tools_status') . ' WHERE language_key_title like \'in_progress\')'], 'id_tool = ' . mysql_clean($this->id_tool));
         }
@@ -149,7 +151,7 @@ class AdminTool
      */
     public function updateIsDisabled(bool $value): void
     {
-        Clipbucket_db::getInstance()->update(tbl('tools'), ['is_disabled'], [(int) $value], 'id_tool = ' . mysql_clean($this->id_tool));
+        Clipbucket_db::getInstance()->update(tbl('tools'), ['is_disabled'], [(int)$value], 'id_tool = ' . mysql_clean($this->id_tool));
     }
 
     /**
@@ -161,7 +163,7 @@ class AdminTool
     {
         /** check si le format cron is ok */
         $expression = new \CronExpression($frequency);
-        if($expression->isValid() === false && !empty($frequency)) {
+        if ($expression->isValid() === false && !empty($frequency)) {
             throw new Exception('Format cron invalid');
         }
 
@@ -471,7 +473,7 @@ class AdminTool
             unset($thumbs);
 
             //SUBTITLES
-            $subtitles = new GlobIterator(DirPath::get('subtitles')  . '[0-9]*' . DIRECTORY_SEPARATOR . '[0-9]*' . DIRECTORY_SEPARATOR . '[0-9]*' . DIRECTORY_SEPARATOR . '*.srt');
+            $subtitles = new GlobIterator(DirPath::get('subtitles') . '[0-9]*' . DIRECTORY_SEPARATOR . '[0-9]*' . DIRECTORY_SEPARATOR . '[0-9]*' . DIRECTORY_SEPARATOR . '*.srt');
             foreach ($subtitles as $subtitle) {
                 $vid_file_name = explode('-', basename($subtitle, '.srt'))[0];
                 $insert_values = [
@@ -501,7 +503,7 @@ class AdminTool
             foreach ($avatars as $avatar) {
                 $insert_values = [
                     'type'   => 'avatar',
-                    'data' => DirPath::getFromProjectRoot($avatar->getPathname()),
+                    'data'   => DirPath::getFromProjectRoot($avatar->getPathname()),
                     'avatar' => basename($avatar)
                 ];
                 $this->insertTaskData([$insert_values]);
@@ -513,7 +515,7 @@ class AdminTool
             foreach ($backgrounds as $background) {
                 $insert_values = [
                     'type'       => 'background',
-                    'data' => DirPath::getFromProjectRoot($background->getPathname()),
+                    'data'       => DirPath::getFromProjectRoot($background->getPathname()),
                     'background' => basename($background)
                 ];
                 $this->insertTaskData([$insert_values]);
@@ -533,11 +535,11 @@ class AdminTool
             unset($logos);
 
             //CATEGORY THUMBS
-            $category_thumbs = new GlobIterator(DirPath::get('category_thumbs') . '*'.DIRECTORY_SEPARATOR .'[0-9]*.*');
+            $category_thumbs = new GlobIterator(DirPath::get('category_thumbs') . '*' . DIRECTORY_SEPARATOR . '[0-9]*.*');
             foreach ($category_thumbs as $category_thumb) {
                 $insert_values = [
-                    'type' => 'category_thumbs',
-                    'data' => DirPath::getFromProjectRoot($category_thumb->getPathname()),
+                    'type'  => 'category_thumbs',
+                    'data'  => DirPath::getFromProjectRoot($category_thumb->getPathname()),
                     'thumb' => basename($category_thumb)
                 ];
                 $this->insertTaskData([$insert_values]);
@@ -573,7 +575,6 @@ class AdminTool
             delete_empty_directories($folder);
         }
         $this->addLog(lang('x_orphan_files_have_been_deleted', $this->tasks_processed ?? 0));
-
     }
 
     /**
@@ -606,7 +607,7 @@ class AdminTool
     private function updateCore(): void
     {
         $this->tasks = ['updateGit'];
-        $this->executeTool('Update::updateGitSources');
+        $this->executeTool('Update::updateGitSources', true);
     }
 
     /**
@@ -655,7 +656,7 @@ class AdminTool
                     } catch (\Exception $e) {
                         e($e->getMessage());
                         if ($stop_on_error) {
-//                            $this->addLog(lang('tool_stopped'));
+//                        $this->addLog(lang('tool_stopped'));
                             //trigger error handler
                             throw new Exception($e->getMessage());
                         }
@@ -674,10 +675,15 @@ class AdminTool
                 }
             } while (empty($has_to_stop) && !empty($tasks) && $this->tasks_index < $element_totals);
         }
+        $this->end();
+    }
+
+    private function end(): void
+    {
         if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.0', '367')) {
             $this->updateToolHisto(['id_tools_histo_status', 'date_end'], ['|no_mc||f|(SELECT id_tools_histo_status FROM ' . tbl('tools_histo_status') . ' WHERE language_key_title like \'ready\')', '|f|NOW()']);
         } else {
-            Clipbucket_db::getInstance()->update(tbl('tools'), ['id_tools_status', 'elements_total', 'elements_done'], [1, '|f|null', '|f|null'], 'id_tool = ' . $secureIdTool);
+            Clipbucket_db::getInstance()->update(tbl('tools'), ['id_tools_status', 'elements_total', 'elements_done'], [1, '|f|null', '|f|null'], 'id_tool = ' . (int)$this->id_tool);
         }
     }
 
@@ -714,7 +720,7 @@ class AdminTool
      */
     public function addLog(string $msg): void
     {
-        if( !empty($this->id_histo) ){
+        if (!empty($this->id_histo)) {
             Clipbucket_db::getInstance()->insert(tbl('tools_histo_log'), ['id_histo', 'datetime', 'message'], [mysql_clean($this->id_histo), '|f|NOW()', $msg]);
         }
     }
@@ -729,7 +735,7 @@ class AdminTool
         $logs = Clipbucket_db::getInstance()->select(tbl('tools_histo_log'), 'datetime ,message', ' id_histo = ' . (!empty($this->id_histo) ? mysql_clean($this->id_histo) : '0') . ' AND id_log > ' . mysql_clean($max_id));
         $max_id_log = Clipbucket_db::getInstance()->select(tbl('tools_histo_log'), 'MAX(id_log) as max_id_log', ' id_histo = ' . (!empty($this->id_histo) ? mysql_clean($this->id_histo) : '0'));
         return [
-            'logs' => $logs,
+            'logs'       => $logs,
             'max_id_log' => $max_id_log[0]['max_id_log'] ?? 0
         ];
     }
@@ -742,7 +748,7 @@ class AdminTool
      */
     public function updateToolHisto(array $fields, array $values): void
     {
-        if( !empty($this->id_histo) ){
+        if (!empty($this->id_histo)) {
             Clipbucket_db::getInstance()->update(tbl('tools_histo'), $fields, $values, 'id_tool = ' . mysql_clean($this->id_tool) . ' AND id_histo = ' . mysql_clean($this->id_histo));
         }
     }
@@ -754,7 +760,7 @@ class AdminTool
     public function recalculVideoFile(): void
     {
         $videos = Video::getInstance()->getAll();
-        $this->tasks=$videos;
+        $this->tasks = $videos;
         $this->executeTool('update_video_files');
     }
 
@@ -765,7 +771,7 @@ class AdminTool
     public function cleanSessionTable(): void
     {
         $res = Clipbucket_db::getInstance()->select(tbl('sessions'), 'session_id', 'session_date < DATE_SUB(NOW(), INTERVAL 1 MONTH);');
-        $this->tasks=array_column($res, 'session_id');
+        $this->tasks = array_column($res, 'session_id');
         $this->executeTool('Session::deleteById');
     }
 
@@ -793,7 +799,7 @@ class AdminTool
             ,'get_detail' => true
         ]);
 
-        if( !empty($videos) ){
+        if (!empty($videos)) {
             $this->tasks = array_column($videos, 'videoid');
         }
 
@@ -805,15 +811,15 @@ class AdminTool
      */
     public function deleteUnusedResolutionFile(): void
     {
-        Clipbucket_db::getInstance()->execute('SET @disabled_res = (SELECT CONCAT(\'[\', GROUP_CONCAT(height),\']\') FROM '.tbl('video_resolution').' WHERE enabled = false);');
+        Clipbucket_db::getInstance()->execute('SET @disabled_res = (SELECT CONCAT(\'[\', GROUP_CONCAT(height),\']\') FROM ' . tbl('video_resolution') . ' WHERE enabled = false);');
         $sql = 'SELECT V.videoid
-                    FROM '.tbl('video').' V
+                    FROM ' . tbl('video') . ' V
                     WHERE  JSON_CONTAINS_PATH(
                         CONCAT(\'{"a":\',video_files,\', "b":\', @disabled_res,\'}\')
                         ,\'one\', \'$.a\', \'$.b\'
                     );';
         $videos = Clipbucket_db::getInstance()->_select($sql);
-        if( !empty($videos) ){
+        if (!empty($videos)) {
             $this->tasks = array_column($videos, 'videoid');
         }
         $this->executeTool('Video::deleteUnusedVideoFiles');
@@ -826,7 +832,7 @@ class AdminTool
     {
         if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.0', '367')) {
             $this->updateToolHisto(['id_tools_histo_status', 'date_end'], ['|no_mc||f|(SELECT id_tools_histo_status FROM ' . tbl('tools_histo_status') . ' WHERE language_key_title like \'on_error\')', '|f|NOW()']);
-            if ( $force) {
+            if ($force) {
                 $this->addLog(lang('tool_forced_to_error'));
             } else {
                 $this->addLog(lang('tool_ended'));
@@ -843,10 +849,13 @@ class AdminTool
     {
         if (config('enable_storage_history') == 'yes') {
             $users = User::getInstance()->getAll([
-                'condition'=>' users.userid != ' . mysql_clean(userquery::getInstance()->get_anonymous_user()) . ' AND usr_status like \'ok\''
+                'condition' => ' users.userid != ' . mysql_clean(userquery::getInstance()->get_anonymous_user()) . ' AND usr_status like \'ok\''
             ]) ?: [];
-            $this->tasks = array_column($users, 'userid') ;
+            $this->tasks = array_column($users, 'userid');
             $this->executeTool('User::calcUserStorage');
+        } else {
+            $this->addLog(lang('tool_disabled'));
+            $this->end();
         }
     }
 
@@ -855,31 +864,32 @@ class AdminTool
      * @return array
      * @throws Exception
      */
-    public static function getToolsReadyForLaunch($id_tool = null) :array
+    public static function getToolsReadyForLaunch($id_tool = null): array
     {
         $where = '';
-        if(!empty($id_tool)){
-            $where = ' AND tools.id_tool = '. $id_tool;
+        if (!empty($id_tool)) {
+            $where = ' AND tools.id_tool = ' . $id_tool;
         }
 
         /** get all tools with frequency */
-        $query = /** @lang MySQL */'SELECT 
+        $query = /** @lang MySQL */
+            'SELECT 
                         tools.*
                         , tools_histo.date_start AS last_date_start
-                    FROM '.cb_sql_table('tools').' 
+                    FROM ' . cb_sql_table('tools') . ' 
 
                     -- exclude tools already running and get date_start
                     INNER JOIN (
                         SELECT MAX(tools_histo.date_start) AS date_start, tools.id_tool
-                        FROM '.cb_sql_table('tools').'
-                        LEFT JOIN '.cb_sql_table('tools_histo').' ON tools_histo.id_tool = tools.id_tool
+                        FROM ' . cb_sql_table('tools') . '
+                        LEFT JOIN ' . cb_sql_table('tools_histo') . ' ON tools_histo.id_tool = tools.id_tool
                         WHERE tools.id_tool NOT IN (
                             SELECT DISTINCT tools.id_tool
-                            FROM '.cb_sql_table('tools').'
-                            INNER JOIN '.cb_sql_table('tools_histo').' ON tools_histo.id_tool = tools.id_tool
-                            INNER JOIN '.cb_sql_table('tools_histo_status').' ON tools_histo_status.id_tools_histo_status = tools_histo.id_tools_histo_status
-                            WHERE tools_histo_status.language_key_title IN (\'in_progress\',\'stopping\') '.$where.'
-                        ) '.$where.'
+                            FROM ' . cb_sql_table('tools') . '
+                            INNER JOIN ' . cb_sql_table('tools_histo') . ' ON tools_histo.id_tool = tools.id_tool
+                            INNER JOIN ' . cb_sql_table('tools_histo_status') . ' ON tools_histo_status.id_tools_histo_status = tools_histo.id_tools_histo_status
+                            WHERE tools_histo_status.language_key_title IN (\'in_progress\',\'stopping\') ' . $where . '
+                        ) ' . $where . '
                         GROUP BY tools.id_tool
                     ) tools_histo ON tools.id_tool = tools_histo.id_tool
                     
@@ -887,18 +897,18 @@ class AdminTool
                       AND COALESCE(tools.previous_calculated_datetime, \'\') != \'\'
                       AND tools.is_automatable = true
                       AND tools.is_disabled = false
-                      '.$where.';';
+                      ' . $where . ';';
         $array_tools = Clipbucket_db::getInstance()->_select($query);
         $array_tools_ready = [];
 
         foreach ($array_tools as $tool) {
 
-            if(empty($tool['previous_calculated_datetime'])) {
+            if (empty($tool['previous_calculated_datetime'])) {
                 continue;
             }
 
             /** check if a tool should be launch */
-            if( self::shouldCronBeExecuted($tool['frequency'], $tool['last_date_start'], $tool['previous_calculated_datetime'], $tool['id_tool']) ){
+            if (self::shouldCronBeExecuted($tool['frequency'], $tool['last_date_start'], $tool['previous_calculated_datetime'], $tool['id_tool'])) {
                 $array_tools_ready[] = $tool;
             }
         }
@@ -912,9 +922,9 @@ class AdminTool
      */
     public function checkAndStartToolsByFrequency(): void
     {
-        if( !Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '99') ){
+        if (!Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '99')) {
             $this->setToolError($this->id_tool);
-            return ;
+            return;
         }
 
         $details = [];
@@ -922,14 +932,14 @@ class AdminTool
         if (config('automate_launch_mode') == 'disabled') {
             $this->addLog(lang('automate_launch_disabled_in_config'));
             $this->setToolError($this->id_tool);
-            return ;
+            return;
         } elseif (System::isDateTimeSynchro($details) === false) {
             $error = lang('datetime_synchro_error');
             e($error);
             $this->addLog($error);
-            DiscordLog::sendDump($error.' '.print_r($details, true));
+            DiscordLog::sendDump($error . ' ' . print_r($details, true));
             $this->setToolError($this->id_tool);
-            return ;
+            return;
         }
 
         $this->tasks = self::getToolsReadyForLaunch();
@@ -945,7 +955,7 @@ class AdminTool
     public function automate(array $tool): void
     {
         /** start tools from CLI */
-        $this->addLog(lang('launch_tool' , lang($tool['language_key_label'])));
+        $this->addLog(lang('launch_tool', lang($tool['language_key_label'])));
         self::launchCli($tool['id_tool']);
     }
 
@@ -959,8 +969,8 @@ class AdminTool
      */
     public static function shouldCronBeExecuted(string $cron, $last_date_start, string $previous_calculated_datetime, $id_tool = null): bool
     {
-        if( !empty($last_date_start) && $last_date_start < $previous_calculated_datetime){
-            if($previous_calculated_datetime > date('Y-m-d H:i:s')){
+        if (!empty($last_date_start) && $last_date_start < $previous_calculated_datetime) {
+            if ($previous_calculated_datetime > date('Y-m-d H:i:s')) {
                 /* should not run because next_date is futur */
                 return false;
             }
@@ -970,7 +980,7 @@ class AdminTool
         }
 
         $data_task_date = self::getDateStat($cron, $last_date_start, $previous_calculated_datetime, $id_tool);
-        return ( empty($last_date_start) || $last_date_start < $data_task_date['next_date']) && $data_task_date['next_date'] <= date('Y-m-d H:i:s');
+        return (empty($last_date_start) || $last_date_start < $data_task_date['next_date']) && $data_task_date['next_date'] <= date('Y-m-d H:i:s');
     }
 
     /**
@@ -983,7 +993,7 @@ class AdminTool
      */
     public static function getDateStat(string $cron, $last_date_start, string $date_previsionnel_precedente_source, $id_tool = null): array
     {
-        $next_date =null;
+        $next_date = null;
         $date_previsionnel_precedente = null;
         do {
 
@@ -1029,10 +1039,10 @@ class AdminTool
          */
         $cron = trim($cron);
         $e = explode(' ', $cron ?? '');
-        if($e[2] == 'L'){
+        if ($e[2] == 'L') {
             $last_day_of_month = date('t');
             $current_day = date('j');
-            if($current_day < 28){
+            if ($current_day < 28) {
                 $e[2] = '28-31';
             } else {
                 $e[2] = $last_day_of_month;
@@ -1040,24 +1050,24 @@ class AdminTool
             $cron = implode(' ', $e);
         }
 
-        $date = \DateTime::createFromFormat('Y-m-d H:i:s',$date);
+        $date = \DateTime::createFromFormat('Y-m-d H:i:s', $date);
 
-        try{
+        try {
             $expression = new \CronExpression($cron);
-            $next_date = \DateTime::createFromFormat('Y-m-d H:i:s',$date_previsionnel);
+            $next_date = \DateTime::createFromFormat('Y-m-d H:i:s', $date_previsionnel);
 
-            do{
+            do {
                 $next_date = $expression->getNext($next_date);
-                if($next_date < $date->getTimestamp()){
+                if ($next_date < $date->getTimestamp()) {
                     $date_pre = new \DateTime();
                     $date_pre->setTimeStamp($next_date);
                     $last_previsionnel_date = $date_pre->format('Y-m-d H:i:s');
                 }
 
-            }while($next_date < $date->getTimestamp());
+            } while ($next_date < $date->getTimestamp());
 
             return $next_date;
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             return false;
         }
     }
@@ -1067,12 +1077,12 @@ class AdminTool
      * @return bool
      * @throws Exception
      */
-    public function isReadyForAutomaticLaunch() :bool
+    public function isReadyForAutomaticLaunch(): bool
     {
         /** check if tool should be launch in cli mode */
         $found = false;
         foreach (self::getToolsReadyForLaunch($this->id_tool) as $tool) {
-            if($found === false && $tool['id_tool'] == $this->id_tool) {
+            if ($found === false && $tool['id_tool'] == $this->id_tool) {
                 $found = true;
             }
         }
@@ -1084,15 +1094,17 @@ class AdminTool
      * @return bool
      * @throws Exception
      */
-    public function isAlreadyLaunch() :bool
+    public function isAlreadyLaunch(): bool
     {
         if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.0', '367')) {
 
             /** get all running tools */
-            $query = /** @lang MySQL */'SELECT DISTINCT tools_histo.id_tool
-                            FROM '.cb_sql_table('tools_histo').'
-                            INNER JOIN '.cb_sql_table('tools_histo_status').' ON tools_histo_status.id_tools_histo_status = tools_histo.id_tools_histo_status
-                            WHERE tools_histo_status.language_key_title IN (\'in_progress\',\'stopping\') AND tools_histo.id_tool = '.( (int) $this->id_tool);
+            $query = /** @lang MySQL */
+                'SELECT DISTINCT tools_histo.id_tool
+                            FROM ' . cb_sql_table('tools_histo') . '
+                            INNER JOIN ' . cb_sql_table('tools_histo_status') . ' ON tools_histo_status.id_tools_histo_status = tools_histo.id_tools_histo_status
+                            WHERE tools_histo_status.language_key_title IN (\'in_progress\',\'stopping\') AND tools_histo.id_tool = ' . ((int)$this->id_tool) . '
+                            AND tools_histo.date_start = (select max(date_start) from ' . cb_sql_table('tools_histo') . ' where id_tool = ' . ((int)$this->id_tool) . ' )';
         } else {
             $query = /** @lang MySQL */
                 'SELECT DISTINCT tools.id_tool
@@ -1108,12 +1120,13 @@ class AdminTool
      * @return string
      * @throws Exception
      */
-    public function getLastStart() :string
+    public function getLastStart(): string
     {
         /** get all running tools */
-        $query = /** @lang MySQL */'SELECT tools_histo.date_start
-                            FROM '.cb_sql_table('tools_histo').'
-                            WHERE tools_histo.id_tool = '.( (int) $this->id_tool).'
+        $query = /** @lang MySQL */
+            'SELECT tools_histo.date_start
+                            FROM ' . cb_sql_table('tools_histo') . '
+                            WHERE tools_histo.id_tool = ' . ((int)$this->id_tool) . '
                             ORDER BY tools_histo.date_start DESC LIMIT 1';
         $rs = Clipbucket_db::getInstance()->_select($query);
         return $rs[0]['date_start'] ?? '2000-01-01 00:00:01';
@@ -1130,7 +1143,10 @@ class AdminTool
      */
     public function assignDefaultThumbForCollections(): void
     {
-        $collections = Collection::getInstance()->getAll(['thumb_objectid' => true, 'allow_children'=>true]);
+        $collections = Collection::getInstance()->getAll([
+            'thumb_objectid' => true,
+            'allow_children' => true
+        ]);
         if (!empty($videos)) {
             $this->tasks = array_column($collections, 'collection_id');
         }
@@ -1142,7 +1158,7 @@ class AdminTool
      */
     public function getTaskData($step): array
     {
-        $results = Clipbucket_db::getInstance()->_select('SELECT * FROM ' . tbl('tools_tasks') . ' WHERE id_histo =' .mysql_clean($this->id_histo) . ' AND loop_index >= ' . mysql_clean($this->tasks_index) . ' LIMIT ' . $step);
+        $results = Clipbucket_db::getInstance()->_select('SELECT * FROM ' . tbl('tools_tasks') . ' WHERE id_histo =' . mysql_clean($this->id_histo) . ' AND loop_index >= ' . mysql_clean($this->tasks_index) . ' LIMIT ' . $step);
         $data = [];
         foreach (array_column($results, 'data') as $result) {
             $data[] = json_decode($result, true);
@@ -1151,9 +1167,11 @@ class AdminTool
     }
 
     /**
+     * @param array $datas
+     * @return bool|mysqli_result
      * @throws Exception
      */
-    public function insertTaskData($datas)
+    public function insertTaskData(array $datas)
     {
         if (empty($datas)) {
             return false;
@@ -1162,7 +1180,7 @@ class AdminTool
             $sql_insert = 'INSERT INTO ' . tbl('tools_tasks') . ' (id_histo, loop_index, data) VALUES ';
             $inserted_values = [];
             foreach ($datas as $data) {
-                $inserted_values[] = '(' . $this->id_histo . ', ' . ($this->tasks_total++) . ', \'' . json_encode($data) .'\')';
+                $inserted_values[] = '(' . $this->id_histo . ', ' . ($this->tasks_total++) . ', \'' . addslashes(json_encode($data)) . '\')';
             }
             return Clipbucket_db::getInstance()->execute($sql_insert . implode(', ', $inserted_values));
         } else {
@@ -1190,7 +1208,7 @@ class AdminTool
             FROM ' . tbl('tools_histo') . ' th
             inner join ' . tbl('tools_tasks') . ' CTLD ON th.id_histo = CTLD.id_histo
             where id_tool = ' . mysql_clean($this->id_tool) . '
-                and id_tools_histo_status != (SELECT id_tools_histo_status FROM '.tbl('tools_histo_status').' WHERE language_key_title = \'in_progress\')
+                and id_tools_histo_status != (SELECT id_tools_histo_status FROM ' . tbl('tools_histo_status') . ' WHERE language_key_title = \'in_progress\')
             GROUP BY (th.id_histo)'
         );
     }
@@ -1201,13 +1219,584 @@ class AdminTool
      */
     private function changeDataHisto(): void
     {
-        Clipbucket_db::getInstance()->execute('UPDATE ' . tbl('tools_tasks') . ' SET id_histo = ' . $this->id_histo .' WHERE id_histo = (
+        Clipbucket_db::getInstance()->execute('UPDATE ' . tbl('tools_tasks') . ' SET id_histo = ' . $this->id_histo . ' WHERE id_histo = (
         SELECT A.id_histo FROM (SELECT th.id_histo FROM ' . tbl('tools_histo') . ' th
          inner join ' . tbl('tools_tasks') . ' CTLD ON th.id_histo = CTLD.id_histo
          WHERE id_tool = ' . mysql_clean($this->id_tool) . '
-                AND id_tools_histo_status != (SELECT id_tools_histo_status FROM '.tbl('tools_histo_status').' WHERE language_key_title = \'in_progress\')
+                AND id_tools_histo_status != (SELECT id_tools_histo_status FROM ' . tbl('tools_histo_status') . ' WHERE language_key_title = \'in_progress\')
                 AND CTLD.id_histo IS NOT NULL 
                    GROUP BY th.id_histo
         ) A )');
     }
+
+    /**
+     * @return AdminTool
+     * @throws Exception
+     */
+    public static function getUpdateDbTool()
+    {
+        $db_tool = new AdminTool();
+        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.0', '367')) {
+            $db_tool->initByCode(AdminTool::CODE_UPDATE_DATABASE_VERSION);
+        } else {
+            $db_tool->initById('5');
+        }
+        return $db_tool;
+    }
+
+    /**
+     * @return AdminTool
+     * @throws Exception
+     */
+    public static function getUpdateCoreTool()
+    {
+        $core_tool = new AdminTool();
+        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.0', '367')) {
+            $core_tool->initByCode('update_core');
+        } else {
+            $core_tool->initById('11');
+        }
+        return $core_tool;
+    }
+
+    /**
+     * @return AdminTool
+     * @throws Exception
+     */
+    public static function getLastestToolUpdate()
+    {
+        $core_tool = self::getUpdateCoreTool();
+        $db_toool = self::getUpdateDbTool();
+        if ( $core_tool->getLastStart() > $db_toool->getLastStart() ) {
+            return $core_tool;
+        }
+        return $db_toool;
+    }
+
+    /**
+     * @return bool
+     * @throws Exception
+     */
+    public function isToolInError(): bool
+    {
+        return !empty(Clipbucket_db::getInstance()->_select(
+            'SELECT id_tool FROM ' . tbl('tools_histo') . ' 
+        WHERE id_tools_histo_status = (SELECT id_tools_histo_status FROM ' . tbl('tools_histo_status') . ' WHERE language_key_title like \'on_error\') 
+        AND id_tool = ' .mysql_clean($this->id_tool)));
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function anonymousStats()
+    {
+        if (!Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.2', '100') || config('enable_anonymous_stats') != 'yes') {
+            $this->end();
+            return true;
+        }
+        if (empty($this->tasks_total)) {
+            Clipbucket_db::getInstance()->execute('TRUNCATE TABLE '.  tbl('temp_stats_data') );
+            $this->tasks_total = 0;
+            $this->tasks_processed = 0;
+            $this->tasks = [];
+            //Toutes les configurations allow_stat TRUE
+            $this->insertTaskData([
+                'configs',
+                'count_videos',
+                'count_photos',
+                'count_users',
+                'count_collections',
+                'count_playlists',
+                'count_thumbs_auto',
+                'count_thumbs_manual',
+                'count_posters',
+                'count_backdrop',
+                'count_subtitles',
+                'sum_duration',
+                'average_duration',
+                'sum_videos_views',
+                'average_videos_views',
+                'sum_photos_views',
+                'average_photos_views',
+                'sum_channel_views',
+                'average_channel_views',
+                'max_video_duration',
+                'max_video_views',
+                'max_photo_views',
+                'max_channel_views',
+                'count_uploaders',
+                'average_uploaders_uploads',
+                'count_3d_videos',
+                'count_age_restricted_videos',
+                'count_age_restricted_photos',
+                'count_active_plugins',
+                'get_php_mysql_version',
+                'get_CB_version',
+                'actives_tools',
+                'count_not_default_pages',
+                'count_not_default_user_profil',
+                'count_users_per_user_profil',
+                'count_categories_per_types',
+                'count_comments',
+                'count_comments_per_type',
+                'average_comments_per_type',
+                'count_social_networks',
+                'count_private_messages'
+            ]);
+
+        }
+        $this->executeTool('AdminTool::fill_json_stats');
+
+        //send json
+        try {
+            $curl = new \Classes\Curl('https://stats.clipbucket.fr', '');
+            //get data from table
+            $data =  Clipbucket_db::getInstance()->_select('SELECT value FROM '.  tbl('temp_stats_data') ) ?? [];
+            $content = '';
+            foreach ($data as $key => $value) {
+                $is_first = ($key == 0);
+                $is_last  = (($key + 1) == count($data));
+
+
+                if ($is_first) {
+                    // Start the JSON object
+                    $content .= '{' . substr($value['value'], 1, -1);
+                } else {
+                    // Prefix with comma for subsequent items
+                    $content .= ',' . substr($value['value'], 1, -1);
+                }
+
+                if ($is_last) {
+                    // Close the JSON object on last item
+                    $content .= '}';
+                }
+            }
+            $response = $curl->execPost('', $content );
+            if (!empty($response['error'])) {
+                throw new Exception($response['error']);
+            }
+        } catch (Exception $e) {
+            $this->addLog($e->getMessage());
+        }
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function fill_json_stats($task)
+    {
+        switch ($task) {
+            case 'configs':
+                //all configs with allow_stat TRUE
+                $sql = 'SELECT name, value FROM ' . tbl('config') . ' WHERE allow_stat = 1';
+                $res = Clipbucket_db::getInstance()->_select($sql);
+                $flatConfig = [];
+                foreach ($res ?: [] as $row) {
+                    if (isset($row['name'], $row['value'])) {
+                        $flatConfig[$row['name']] = $row['value'];
+                    }
+                }
+
+                $value = [$task => $flatConfig];
+                break;
+            case 'count_videos':
+                $total = Video::getInstance()->getAll(['count' => true]);
+                $value = [$task => $total];
+                break;
+            case 'count_photos':
+                $total = Photo::getInstance()->getAll(['count' => true]);
+                $value = [$task => $total];
+                break;
+            case 'count_users':
+                $total = User::getInstance()->getAll(['count' => true]);
+                $value = [$task => $total];
+                break;
+            case 'count_collections':
+                $total = Collection::getInstance()->getAll(['count' => true]);
+                $value = [$task => $total];
+                break;
+            case 'count_playlists':
+                $total = Playlist::getInstance()->getAll(['count' => true]);
+                $value = [$task => $total];
+                break;
+            case 'count_thumbs_auto':
+                $sql = 'SELECT count(DISTINCT(CONCAT( videoid, \'-\', num))) as count FROM ' . tbl('video_thumbs') . ' WHERE type = \'auto\' AND resolution = \'original\'';
+                $res = Clipbucket_db::getInstance()->_select($sql);
+                $total = $res[0]['count'] ?? 0;
+                $value = [$task => $total];
+                break;
+            case 'count_thumbs_manual':
+                $sql = 'SELECT count(DISTINCT(CONCAT( videoid, \'-\', num))) as count FROM ' . tbl('video_thumbs') . ' WHERE type = \'custom\' AND resolution = \'original\'';
+                $res = Clipbucket_db::getInstance()->_select($sql);
+                $total = $res[0]['count'] ?? 0;
+                $value = [$task => $total];
+                break;
+            case 'count_posters':
+                $sql = 'SELECT count(DISTINCT(CONCAT( videoid, \'-\', num))) as count FROM ' . tbl('video_thumbs') . ' WHERE type = \'poster\' AND resolution = \'original\'';
+                $res = Clipbucket_db::getInstance()->_select($sql);
+                $total = $res[0]['count'] ?? 0;
+                $value = [$task => $total];
+                break;
+            case 'count_backdrop':
+                $sql = 'SELECT count(DISTINCT(CONCAT( videoid, \'-\', num))) as count FROM ' . tbl('video_thumbs') . ' WHERE type = \'backdrop\' AND resolution = \'original\'';
+                $res = Clipbucket_db::getInstance()->_select($sql);
+                $total = $res[0]['count'] ?? 0;
+                $value = [$task => $total];
+                break;
+            case 'count_subtitles':
+                $sql = 'SELECT count(*) as count FROM ' . tbl('video_subtitle') . ' ';
+                $res = Clipbucket_db::getInstance()->_select($sql);
+                $total = $res[0]['count'] ?? 0;
+                $value = [$task => $total];
+                break;
+            case 'sum_duration':
+                //Sum video duration
+                $sql = 'SELECT SUM(duration) as sum FROM ' . tbl('video') . ' WHERE status = \'Successful\'';
+                $res = Clipbucket_db::getInstance()->_select($sql);
+                $total = $res[0]['sum'] ?? 0;
+                $value = [$task => $total];
+                break;
+            case 'average_duration':
+                //average video duration (Sum duration / nb videos)
+                $sql = 'SELECT SUM(duration) / count(videoid) as average FROM ' . tbl('video') . ' WHERE status = \'Successful\'';
+                $res = Clipbucket_db::getInstance()->_select($sql);
+                $total = $res[0]['average'] ?? 0;
+                $value = [$task => $total];
+                break;
+            case 'sum_videos_views':
+                //total video views
+                $sql = 'SELECT SUM(views) as sum FROM ' . tbl('video') . ' WHERE status = \'Successful\'';
+                $res = Clipbucket_db::getInstance()->_select($sql);
+                $total = $res[0]['sum'] ?? 0;
+                $value = [$task => $total];
+                break;
+            case 'average_videos_views':
+                //average views per video
+                $sql = 'SELECT SUM(views) / count(videoid) as average FROM ' . tbl('video') . ' WHERE status = \'Successful\'';
+                $res = Clipbucket_db::getInstance()->_select($sql);
+                $total = $res[0]['average'] ?? 0;
+                $value = [$task => $total];
+                break;
+            case 'sum_photos_views':
+                //total photo views
+                $sql = 'SELECT SUM(views) as sum FROM ' . tbl('photos');
+                $res = Clipbucket_db::getInstance()->_select($sql);
+                $total = $res[0]['sum'] ?? 0;
+                $value = [$task => $total];
+                break;
+            case 'average_photos_views':
+                //average views per photo
+                $sql = 'SELECT SUM(views) / count(photo_id) as average FROM ' . tbl('photos');
+                $res = Clipbucket_db::getInstance()->_select($sql);
+                $total = $res[0]['average'] ?? 0;
+                $value = [$task => $total];
+                break;
+            case 'sum_channel_views':
+                //total channel views
+                $sql = 'SELECT SUM(profile_hits ) as sum FROM ' . tbl('users');
+                $res = Clipbucket_db::getInstance()->_select($sql);
+                $total = $res[0]['sum'] ?? 0;
+                $value = [$task => $total];
+                break;
+            case 'average_channel_views':
+                //average views per channel
+                $sql = 'SELECT SUM(profile_hits) / count(userid) as average FROM ' . tbl('users');
+                $res = Clipbucket_db::getInstance()->_select($sql);
+                $total = $res[0]['average'] ?? 0;
+                $value = [$task => $total];
+                break;
+            case 'max_video_duration':
+                //Max video duration
+                $sql = 'SELECT MAX(duration) as max FROM ' . tbl('video') . ' WHERE status = \'Successful\'';
+                $res = Clipbucket_db::getInstance()->_select($sql);
+                $total = $res[0]['max'] ?? 0;
+                $value = [$task => $total];
+                break;
+            case 'max_video_views':
+                //Max views for a video
+                $sql = 'SELECT MAX(views) as max FROM ' . tbl('video') . ' WHERE status = \'Successful\'';
+                $res = Clipbucket_db::getInstance()->_select($sql);
+                $total = $res[0]['max'] ?? 0;
+                $value = [$task => $total];
+                break;
+            case 'max_photo_views':
+                //Max views for a photo
+                $sql = 'SELECT MAX(views) as max FROM ' . tbl('photos');
+                $res = Clipbucket_db::getInstance()->_select($sql);
+                $total = $res[0]['max'] ?? 0;
+                $value = [$task => $total];
+                break;
+            case 'max_channel_views':
+                //Max views for a channel
+                $sql = 'SELECT MAX(profile_hits ) as max FROM ' . tbl('users');
+                $res = Clipbucket_db::getInstance()->_select($sql);
+                $total = $res[0]['max'] ?? 0;
+                $value = [$task => $total];
+                break;
+            case 'count_uploaders':
+                //number of user with at least one uploaded video
+                $sql = 'SELECT count(DISTINCT (U.userid)) as count FROM  ' . tbl('video') . ' V
+                INNER JOIN ' . tbl('users') . ' U ON U.userid = V.userid';
+                $res = Clipbucket_db::getInstance()->_select($sql);
+                $total = $res[0]['count'] ?? 0;
+                $value = [$task => $total];
+                break;
+            case 'average_uploaders_uploads':
+                //average number of user with at least one uploaded video
+                $sql = 'SELECT count(DISTINCT (V.videoid)) / count(DISTINCT (U.userid)) as average FROM  ' . tbl('video') . ' V
+                INNER JOIN ' . tbl('users') . ' U ON U.userid = V.userid';
+                $res = Clipbucket_db::getInstance()->_select($sql);
+                $total = $res[0]['average'] ?? 0;
+                $value = [$task => $total];
+                break;
+            case 'count_3d_videos':
+                //number 3D videos
+                $value = [$task => Video::getInstance()->getAll(['count'=>true, 'condition'=>' fov IS NOT NULL'])];
+                break;
+            case 'count_age_restricted_videos':
+                //count age restricted videos
+                $sql = 'SELECT count(DISTINCT (videoid)) as count FROM  ' . tbl('video') . ' where age_restriction IS NOT NULL OR age_restriction != \'\'';
+                $res = Clipbucket_db::getInstance()->_select($sql);
+                $total = $res[0]['count'] ?? 0;
+                $value = [$task => $total];
+                break;
+            case 'count_age_restricted_photos':
+                //count age restricted photos
+                $sql = 'SELECT count(DISTINCT (photo_id)) as count FROM  ' . tbl('photos') . ' where age_restriction IS NOT NULL OR age_restriction != \'\'';
+                $res = Clipbucket_db::getInstance()->_select($sql);
+                $total = $res[0]['count'] ?? 0;
+                $value = [$task => $total];
+                break;
+            case 'count_active_plugins':
+                //count acitves plugins
+                $sql = 'SELECT count(DISTINCT (plugin_id)) as count FROM  ' . tbl('plugins') . ' where plugin_active = \'yes\'';
+                $res = Clipbucket_db::getInstance()->_select($sql);
+                $total = $res[0]['count'] ?? 0;
+                $value = [$task => $total];
+                break;
+            case 'get_php_mysql_version':
+                //version of PHP web, PHP CLI, MySQL
+                $serverMySqlVersion = getMysqlServerVersion()[0]['@@version'];
+                $regex_version = '(\d+\.\d+\.\d+)';
+                preg_match($regex_version, $serverMySqlVersion, $match_mysql);
+                $serverMySqlVersion = $match_mysql[0] ?? false;
+                $value = [
+                    $task => [
+                        'php_web'       => System::get_software_version('php_web', false, null, true),
+                        'php_cli'       => System::get_software_version('php_cli'),
+                        'mysql_version' => $serverMySqlVersion
+                    ]
+                ];
+                break;
+            case 'get_CB_version':
+                //CB version & revision
+                $value = [$task => Update::getInstance()->getDBVersion()];
+                break;
+            case 'actives_tools':
+                //list of active tools with their frequency
+                $sql = 'SELECT code, frequency FROM ' . tbl('tools') . ' WHERE is_disabled != TRUE';
+                $res = Clipbucket_db::getInstance()->_select($sql);
+                $value = [$task => $res ?: []];
+                break;
+            case 'count_not_default_pages':
+                //count not default pages
+                $sql = 'SELECT count(DISTINCT (page_id)) as count FROM  ' . tbl('pages') . ' where delete_able != \'no\'';
+                $res = Clipbucket_db::getInstance()->_select($sql);
+                $total = $res[0]['count'] ?? 0;
+                $value = [$task => $total];
+                break;
+            case 'count_not_default_user_profil':
+                //Le nombre de profils utilisateurs qui ne sont pas par défaut (hors anonyme quoi)
+                $value = [
+                    $task => UserLevel::getAll([
+                        'count'        => true,
+                        'is_origine'   => 'no',
+                        'no_anonymous' => true
+                    ])
+                ];
+                break;
+            case 'count_users_per_user_profil':
+                //count users per user profil
+                $sql = 'SELECT ul.user_level_name, COUNT(u.userid) AS count
+                    FROM ' . tbl('user_levels') . ' ul
+                             LEFT JOIN ' . tbl('users') . ' u ON u.level = ul.user_level_id
+                             where ul.user_level_name not like \'%Anonymous%\'
+                    GROUP BY ul.user_level_id';
+                $res = Clipbucket_db::getInstance()->_select($sql);
+                $value = [$task => $res ?: []];
+                break;
+            case 'count_categories_per_types':
+                //count categories per types
+                $sql = 'SELECT ct.name, COUNT(c.category_id) AS count
+                    FROM ' . tbl('categories_type') . ' ct
+                             LEFT JOIN ' . tbl('categories') . ' c ON ct.id_category_type = c.id_category_type
+                    GROUP BY c.id_category_type';
+                $res = Clipbucket_db::getInstance()->_select($sql);
+                $value = [$task => $res ?: []];
+                break;
+            case 'count_comments':
+                //count comments
+                $value = [$task => Comments::getAll(['count'=>true])];
+                break;
+            case 'count_comments_per_type':
+                //count comments per type
+                $sql = 'SELECT case 
+                            when type = \'v\' then \'video\'
+                            when type = \'p\' then \'photo\'
+                            when type = \'cl\' then \'collection\'
+                            ELSE type
+                        END as type
+                        , count(DISTINCT comment_id) FROM ' . tbl('comments') . ' as count
+                        GROUP BY type';
+                $res = Clipbucket_db::getInstance()->_select($sql);
+                $value = [$task => $res ?: []];
+                break;
+            case 'average_comments_per_type':
+                //average comments per type
+                $sql = 'SELECT count(DISTINCT comment_id)/count( distinct(type)) AS average FROM ' . tbl('comments') ;
+                $res = Clipbucket_db::getInstance()->_select($sql);
+                $value = [$task => $res[0]['average'] ?? 0];
+                break;
+            case 'count_social_networks':
+                //count social networks links
+                $sql = 'SELECT count(DISTINCT(id_social_networks_link )) as count FROM ' . tbl('social_networks_links') ;
+                $res = Clipbucket_db::getInstance()->_select($sql);
+                $value = [$task => $res[0]['count'] ?? 0];
+                break;
+            case 'count_private_messages':
+                $sql = 'SELECT count(DISTINCT(message_id )) as count FROM ' . tbl('messages') . ' WHERE message_box = \'out\'' ;
+                $res = Clipbucket_db::getInstance()->_select($sql);
+                $value = [$task => $res[0]['count'] ?? 0];
+                break;
+            default:
+                throw new Exception(lang('unknown_task_x', [$task]));
+        }
+        $encoded = json_encode($value);
+        $this->addLog($encoded);
+        $sql = 'INSERT INTO ' . tbl('temp_stats_data') . ' (key_name, value) VALUES (\''.$task.'\',\''.$encoded.'\' )';
+        Clipbucket_db::getInstance()->execute($sql);
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function launchVideoConversion()
+    {
+        if (!Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.2', '148') ) {
+            $this->end();
+            return true;
+        }
+        if (empty($this->tasks_total)) {
+            $this->tasks_total = 0;
+            $this->tasks_processed = 0;
+            $this->tasks = [];
+            $sql = 'SELECT VCQ.videoid, VCQ.id, V.file_name, V.file_type, VCQ.date_started FROM ' . tbl('video_conversion_queue') . ' AS VCQ 
+            INNER JOIN '.tbl('video').' AS V ON V.videoid = VCQ.videoid 
+            WHERE is_completed =  FALSE
+            ORDER BY VCQ.date_added ASC LIMIT ' . config('max_conversion');
+            $videos_to_convert = Clipbucket_db::getInstance()->_select($sql);
+            $datas = [];
+            $max_conversion = config('max_conversion');
+            $nb_lock = count(glob(DirPath::get('temp') . 'conv_lock*.loc'));
+            foreach ($videos_to_convert as $video) {
+                if ($max_conversion >= $nb_lock && empty($video['date_started'])) {
+                    $datas[] = $video;
+                    $nb_lock++;
+                }
+            }
+            $this->insertTaskData($datas);
+        }
+        $this->executeTool('AdminTool::convert_videos');
+        return true;
+    }
+
+    /**
+     * @throws Exception
+     */
+    public static function convert_videos($video)
+    {
+        $logFile = DirPath::get('logs') . $video['file_directory'] . DIRECTORY_SEPARATOR . $video['file_name'] . '.log';
+        $log = new SLog($logFile);
+        $cmd = FFmpeg::launchConversion($video['file_name'] );
+        if( System::isInDev() ){
+            $log->writeLine(date('Y-m-d H:i:s').' - Conversion command : ' . $cmd);
+        }
+
+        if ($cmd) {
+            Clipbucket_db::getInstance()->update(tbl('video_conversion_queue'), ['date_started'],['|no_mc||f|NOW()'], 'id = ' . mysql_clean($video['id']));
+            $log->writeLine(date('Y-m-d H:i:s').' - Video Conversion File executed successfully with Target File > ' . DirPath::get('temp') . $video['file_name']);
+        }
+
+    }
+
+    /**
+     * @return void
+     * @throws Exception
+     */
+    public function installMissingConfigs()
+    {
+        if (empty($this->tasks_total)) {
+            $this->tasks_total = 0;
+            $this->tasks_processed = 0;
+            $this->tasks = [];
+            $config_install_file = DirPath::get('sql') . 'configs.sql';
+            if (!file_exists($config_install_file)) {
+                throw new Exception('Missing config file');
+            }
+            $lines = file($config_install_file);
+            $requests = [];
+            $templine = '';
+            foreach ($lines as $line) {
+                $templine .= $line;
+                if (str_ends_with(trim($line), ';')) {
+                    $requests[] = $templine;
+                    $templine = '';
+                }
+            }
+            $this->insertTaskData($requests);
+        }
+        $this->executeTool('AdminTool::executeSqlRequestsIgnore');
+    }
+
+    /**
+     * @return void
+     * @throws Exception
+     */
+    public function installMissingTranslations()
+    {
+        if (empty($this->tasks_total)) {
+            $this->tasks_total = 0;
+            $this->tasks_processed = 0;
+            $this->tasks = [];
+            //@remind : if you update $files, don't forget to update $files in upload/cb_install/ajax.php mode=sitesettings
+            $files = [
+                DirPath::get('sql') . 'languages.sql',
+                DirPath::get('sql') . 'language_ENG.sql',
+                DirPath::get('sql') . 'language_FRA.sql',
+                DirPath::get('sql') . 'language_DEU.sql',
+                DirPath::get('sql') . 'language_POR.sql',
+                DirPath::get('sql') . 'language_ESP.sql'
+            ];
+            $requests = [];
+            foreach ($files as $item) {
+                $requests = array_merge(getSQLRequestsFromFile($item), $requests);
+            }
+            $this->insertTaskData($requests);
+        }
+        $this->executeTool('AdminTool::executeSqlRequestsIgnore');
+    }
+
+    /**
+     * @param string $request
+     * @return bool
+     * @throws Exception
+     */
+    public static function executeSqlRequestsIgnore(string $request): bool
+    {
+        require_once DirPath::get('classes') . 'migration' . DIRECTORY_SEPARATOR . 'migration.class.php';
+        $request = \Migration::prepare($request);
+        $request = preg_replace('/INSERT INTO/', 'INSERT IGNORE INTO', $request);
+        return (bool)Clipbucket_db::getInstance()->execute($request);
+    }
 }
+

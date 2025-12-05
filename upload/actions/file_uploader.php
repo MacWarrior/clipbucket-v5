@@ -4,6 +4,11 @@ include('../includes/config.inc.php');
 
 require_once DirPath::get('classes') . 'sLog.php';
 
+if (!Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.2', '148')) {
+    upload_error('Sorry, you cannot upload new videos until the application has been fully updated by an administrator');
+    die();
+}
+
 if( !User::getInstance()->hasPermission('allow_video_upload') ){
     upload_error(lang('insufficient_privileges_loggin'));
     die();
@@ -23,6 +28,17 @@ if ($_POST['getForm']) {
 switch ($mode) {
     case 'update_video':
         CBvideo::getInstance()->update_video();
+        if (empty(errorhandler::getInstance()->get_error()) && !empty($_POST['videoid'])) {
+            if( !empty($_POST['default_thumb']) ){
+                Video::getInstance()->setDefautThumb($_POST['default_thumb'], 'thumb', $_POST['videoid']);
+            }
+            if (config('enable_video_poster') == 'yes' && !empty($_POST['default_poster'])) {
+                Video::getInstance()->setDefautThumb($_POST['default_poster'], 'poster', $_POST['videoid']);
+            }
+            if (config('enable_video_backdrop') == 'yes' && !empty($_POST['default_backdrop'])) {
+                Video::getInstance()->setDefautThumb($_POST['default_backdrop'], 'backdrop', $_POST['videoid']);
+            }
+        }
 
         if (error()) {
             echo json_encode(['error' => error('single')]);
@@ -78,7 +94,7 @@ switch ($mode) {
             'mimeType'            => 'video',
             'destinationFilePath' => $targetFile,
             'keepExtension'       => true,
-            'maxFileSize'         => config('max_upload_size'),
+            'maxFileSize'         => !empty((int)config('max_upload_size')) ? config('max_upload_size') : 1000,
             'allowedExtensions'   => config('allowed_video_types')
         ];
 
@@ -112,6 +128,7 @@ switch ($mode) {
             , 'file_name'       => $file_name
             , 'file_directory'  => $file_directory
             , 'description'     => $filename_without_ext
+            , 'file_type'       => $extension
             , 'category'        => $category
             , 'userid'          => user_id()
             , 'allow_comments'  => 'yes'
@@ -134,14 +151,7 @@ switch ($mode) {
         if (!empty($_POST['collection_id'])) {
             Collection::getInstance()->addCollectionItem($vid, $_POST['collection_id'], 'videos');
         }
-        Upload::getInstance()->add_conversion_queue($file_name . '.' . $extension);
-
-        $cmd = FFmpeg::launchConversion($file_name);
-        if( System::isInDev() ){
-            $log->writeLine(date('Y-m-d H:i:s').' - Conversion command : ' . $cmd);
-        }
-
-        $log->writeLine(date('Y-m-d H:i:s').' - Video Converson File executed successfully with Target File > ' . $DestinationFilePath);
+        VideoConversionQueue::insert($vid);
 
         echo json_encode(['success' => 'yes', 'file_name' => $file_name, 'videoid'=>$vid]);
         die();

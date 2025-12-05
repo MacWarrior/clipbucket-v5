@@ -39,9 +39,11 @@ class formObj
             case 'dropdown':
                 $fields = $this->createDropDown($field, $multi, $skipall);
                 break;
+
             case 'dropdown_group':
                 $fields = $this->createDropDownWithOptionGroups($field, $multi, $skipall);
                 break;
+
             case 'checkboxv2':
                 $fields = $this->createCheckBoxV2($field);
                 break;
@@ -101,6 +103,17 @@ class formObj
         }
         if (!empty($field['rows']) && $field['type'] == 'textarea') {
             $textField .= ' rows="' . $field['rows'] . '"';
+        }
+
+        if (!empty($field['max_length'])) {
+            $textField .= ' maxlength="' . $field['max_length']. '"';
+        }
+        if (!empty($field['min_length'])) {
+            $textField .= ' minlength="' . $field['min_length']. '"';
+        }
+
+        if (!empty($field['required']) && $field['required'] == 'yes') {
+            $textField .= ' required';
         }
 
         if (!empty($field['extra_tags'])) {
@@ -231,7 +244,7 @@ class formObj
                 $disabled = ' disabled';
             }
 
-            echo '<label ' . $label_class . '> <input name="' . $field_name . '" type="checkbox" value="' . $key . '" ' . $field_id . ' ' . $checked . ' '.$disabled.' ' . $field['extra_tags'] . '> ' . $value . '</label>';
+            echo '<label ' . $label_class . '> <input name="' . $field_name . '" type="checkbox" value="' . $key . '" ' . $field_id . ' ' . $checked . ' '.$disabled.' ' . $field['extra_tags'] . '> ' . display_clean($value) . '</label>';
 
             if ($field['wrapper_class']) {
                 echo '</div>';
@@ -401,7 +414,7 @@ class formObj
                 $disabled = ' disabled';
             }
 
-            echo '<label ' . $label_class . '> <input name="' . $field_name . '" type="radio" value="' . $key . '" ' . $field_id . ' ' . $class . ' ' . $title . ' ' . $checked . ' ' . $disabled . ' ' . $field['extra_tags'] . '>' . $value . '</label>';
+            echo '<label ' . $label_class . '> <input name="' . $field_name . '" type="radio" value="' . $key . '" ' . $field_id . ' ' . $class . ' ' . $title . ' ' . $checked . ' ' . $disabled . ' ' . $field['extra_tags'] . '>' . display_clean($value) . '</label>';
 
             if ($field['wrapper_class']) {
                 echo '</div>';
@@ -502,12 +515,16 @@ class formObj
                     }
                     $count++;
                 }
-                $fieldOpts .= '<option value="' . $key . '" ' . $checked . ' ' . $field['extra_option_tags'] . '>' . $value . '</option>';
+                $fieldOpts .= '<option value="' . $key . '" ' . $checked . ' ' . $field['extra_option_tags'] . '>' . display_clean($value) . '</option>';
             }
         }
         $ddFieldEnd = '</select>';
         echo $hidden . $ddFieldStart . $fieldOpts . $ddFieldEnd;
     }
+
+    /**
+     * @throws Exception
+     */
     function createDropDownWithOptionGroups($field, $multi = false, $skipall = false)
     {
         if (!$multi) {
@@ -546,10 +563,13 @@ class formObj
         $fieldOpts = '';
         $fieldOptsNull= '';
 
+        $already_secured = (isset($field['already_secured']) && $field['already_secured'] == true);
+
         $is_checked = false;
         if (is_array($field['value'])) {
             foreach ($field['value'] as $group => $group_values) {
                 $fieldOpts .= '<optgroup label="' . lang($group) . '">';
+                $count = 0;
                 foreach ($group_values as $key => $value) {
                     if ((is_array($_REQUEST) && !empty($_REQUEST[$arrayName])) || !empty($field['checked'])) {
                         if ((is_array($_REQUEST) && $_REQUEST[$arrayName] == $key) || $field['checked'] == $key) {
@@ -567,7 +587,7 @@ class formObj
                         }
                         $count++;
                     }
-                    $fieldOpts .= '<option value="' . $key . '" ' . $checked . ' ' . $field['extra_option_tags'] . '>' . $value . '</option>';
+                    $fieldOpts .= '<option value="' . $key . '" ' . $checked . ' ' . $field['extra_option_tags'] . '>' . ($already_secured ? $value : display_clean($value)) . '</option>';
                 }
                 $fieldOpts .= '</optgroup>';
             }

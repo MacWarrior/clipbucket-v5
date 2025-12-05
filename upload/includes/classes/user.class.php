@@ -82,6 +82,13 @@ class User
         if( Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '313') ){
             $this->fields[] = 'active_theme';
         }
+        if( Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.2', '131') ){
+            $this->fields[] = 'email_confirmed';
+            $this->fields[] = 'multi_factor_auth';
+            $this->fields[] = 'email_temp';
+            $this->fields[] = 'mfa_code';
+            $this->fields[] = 'mfa_date';
+        }
 
         $this->tablename_profile = 'user_profile';
         $this->fields_profile = [
@@ -362,7 +369,9 @@ class User
         $param_search = $params['search'] ?? false;
         $param_channel_enable = $params['channel_enable'] ?? false;
         $param_email = $params['email'] ?? false;
+        $param_email_strict = $params['email_strict'] ?? false;
         $param_username = $params['username'] ?? false;
+        $param_username_strict = $params['username_strict'] ?? false;
         $param_status = $params['status'] ?? false;
         $param_ban_status = $params['ban_status'] ?? false;
         $param_featured = $params['featured'] ?? false;
@@ -396,11 +405,16 @@ class User
         if( $param_email ){
             $conditions[] = 'users.email LIKE \'%' . mysql_clean($param_email) . '%\'';
         }
+        if( $param_email_strict ){
+            $conditions[] = 'users.email = \'' . mysql_clean($param_email_strict) . '\'';
+        }
 
         if( $param_username ){
             $conditions[] = 'users.username LIKE \'%' . mysql_clean($param_username) . '%\'';
         }
-
+        if( $param_username_strict ){
+            $conditions[] = 'users.username LIKE \'' . mysql_clean( $param_username_strict) . '\'';
+        }
         if( $param_status ){
             $conditions[] = 'users.usr_status = \'' . mysql_clean($param_status) . '\'';
         }
@@ -616,6 +630,9 @@ class User
         }
     }
 
+    /**
+     * @throws Exception
+     */
     public static function redirectToLogin(): void
     {
         redirect_to(cblink(['name' => 'signin']));
@@ -816,7 +833,7 @@ class User
     }
 
     /**
-     * @param int|string $userid
+     * @param int $userid
      * @param string $date_start
      * @param string $date_end
      * @return int
@@ -978,7 +995,7 @@ class User
      * @return void
      * @throws Exception
      */
-    public static function redirectAfterLogin()
+    public static function redirectAfterLogin(): void
     {
         if (User::getInstance()->isUserMustRenewMembership(userquery::getInstance()->userid) && !User::getInstance()->hasAdminAccess()) {
             redirect_to(Network::get_server_url()  . 'manage_membership.php');
@@ -1127,7 +1144,7 @@ class User
         // Delete user playlists
         $playlists = Playlist::getInstance()->getAll(['userid' => $uid]);
         foreach ($playlists as $playlist) {
-            CBvideo::getInstance()->action->delete_playlist($playlist['playlist_id']);;
+            CBvideo::getInstance()->action->delete_playlist($playlist['playlist_id']);
         }
         // Delete user photos
         $photos = \Photo::getInstance()->getAll(['userid' => $uid]);
@@ -1168,6 +1185,10 @@ class User
         Clipbucket_db::getInstance()->execute('DELETE FROM ' . tbl('users') . ' WHERE userid =' . (int)$uid);
     }
 
+    /**
+     * @return int
+     * @throws Exception
+     */
     public function getNotificationInbox()
     {
         if (empty($this->user_notification_inbox)) {
@@ -1176,12 +1197,114 @@ class User
         return $this->user_notification_inbox;
     }
 
+    /**
+     * @return array|bool
+     * @throws Exception
+     */
     public function getNotificationContact()
     {
         if (empty($this->user_notification_contact)) {
             $this->user_notification_contact = userquery::getInstance()->get_pending_contacts($this->getCurrentUserID(), count_only: true);
         }
         return $this->user_notification_contact;
+    }
+
+    /**
+     * @param $username
+     * @return bool
+     * @throws \PHPMailer\PHPMailer\Exception
+     * @throws Exception
+     */
+    public static function checkAndSendMFAmail($username): bool
+    {
+        if( in_array(config('enable_multi_factor_authentification'), ['allowed']) ){
+            $user = User::getInstance()->getOne(['username_strict' => $username]);
+            if (!empty($user) && $user['email_confirmed'] && $user['multi_factor_auth']=='allowed_email' && config('disable_email') != 'yes') {
+                $mfa_code = str_pad(rand(0, 999999), 6, '0', STR_PAD_LEFT);
+                Clipbucket_db::getInstance()->update(tbl('users'), ['mfa_code', 'mfa_date'],[$mfa_code, '|f|NOW()'],  'userid = '.$user['userid']);
+                EmailTemplate::sendMail('mfa_code', $user['userid'], ['mfa_code'=>$mfa_code]);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * @throws Exception
+     */
+    public static function confirmEmail(string $username, string $avcode): bool
+    {
+        if( empty($avcode) ){
+            e(lang('avcode_incorrect'));
+            return false;
+        }
+
+        $user = User::getInstance()->getOne(['username_strict' => $username]);
+        if( $user['ban_status'] == 'yes' ){
+            e(lang('ban_status'));
+            return false;
+        }
+
+        if( $user['avcode'] != $avcode ){
+            e(lang('avcode_incorrect'));
+            return false;
+        }
+
+        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.2', '131') ) {
+            $field = ['email_confirmed', 'avcode'];
+            $value = ['|f|true', RandomString(10)];
+            if( !empty($user['email_temp']) ) {
+                $field[] = 'email';
+                $value[] = $user['email_temp'];
+                $field[] = 'email_temp';
+                $value[] = 'null';
+            }
+            Clipbucket_db::getInstance()->update(tbl('users'), $field, $value, ' userid=' . $user['userid'] );
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * @throws Exception
+     */
+    public static function confirmAccount(string $username, string $avcode): bool
+    {
+        if( empty($avcode) ){
+            e(lang('avcode_incorrect'));
+            return false;
+        }
+
+        $user = User::getInstance()->getOne(['username_strict' => $username]);
+        if( $user['ban_status'] == 'yes' ){
+            e(lang('ban_status'));
+            return false;
+        }
+
+        if( $user['avcode'] != $avcode ){
+            e(lang('avcode_incorrect'));
+            return false;
+        }
+
+        self::confirmEmail($username, $avcode);
+        userquery::getInstance()->action('activate', $user['userid']);
+        if( $user['welcome_email_sent'] == 'no' ){
+            EmailTemplate::sendMail('welcome_message', $user['userid']);
+            Clipbucket_db::getInstance()->update(tbl(User::getInstance()->getTableName()), ['welcome_email_sent'], ['yes'], ' userid=' . (int)$user['userid']);
+        }
+        sessionMessageHandler::add_message(lang('usr_activation_msg'), 'm',  DirPath::getUrl('root'));
+        return true;
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function refreshAvcode(): string
+    {
+        $userid = (int)$this->get('userid');
+        $avcode = RandomString(10);
+        Clipbucket_db::getInstance()->update(tbl(User::getInstance()->getTableName()), ['avcode'], [$avcode], ' userid=' . $userid);
+        return $avcode;
     }
 
 }
@@ -1253,8 +1376,6 @@ class userquery extends CBCategory
      */
     function init(): void
     {
-        global $sess;
-
         $this->sessions = $this->get_sessions();
 
         if ($this->sessions['smart_sess']) {
@@ -1288,7 +1409,7 @@ class userquery extends CBCategory
                 }
             }
 
-            if ($sess->get('dummy_username') == '') {
+            if (Session::getInstance()->get('dummy_username') == '') {
                 $this->UpdateLastActive(user_id());
             }
         }
@@ -1415,8 +1536,6 @@ class userquery extends CBCategory
      */
     function login_user($username, $password, $remember = false): bool
     {
-        global $sess;
-
         //First we will check weather user is already logged in or not
         if (User::getInstance()->isUserConnected()) {
             $msg[] = e(lang('you_already_logged'));
@@ -1430,7 +1549,11 @@ class userquery extends CBCategory
                 $msg = e(lang('usr_ban_err'));
             } else {
                 if ($remember) {
-                    $sess->timeout = 86400 * 7;
+                    Session::getInstance()->timeout = 86400 * 7;
+                }
+                //reset MFA code
+                if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.2', '131') ) {
+                    Clipbucket_db::getInstance()->update(tbl('users'), ['mfa_code', 'mfa_date'], ['null','null'], 'username = \''.$username.'\'');
                 }
                 return $this->init_session($udetails);
             }
@@ -1458,26 +1581,26 @@ class userquery extends CBCategory
         $user = $this->get_user_id($username);
         if (!$user) {
             return false;
-        } else {
-            $uid = $user['userid'];
-            $pass = pass_code($password, $uid);
-            $udetails = $this->get_user_with_pass($username, $pass);
+        }
 
-            // This code is used to update user password hash, may be deleted someday
-            if (!$udetails) // Let's try old password method
-            {
-                $oldpass = pass_code_unsecure($password);
-                $udetails = $this->get_user_with_pass($username, $oldpass);
+        $uid = $user['userid'];
+        $pass = pass_code($password, $uid);
+        $udetails = $this->get_user_with_pass($username, $pass);
 
-                // This account still use old password method, let's update it
-                if ($udetails) {
-                        if( Update::IsCurrentDBVersionIsHigherOrEqualTo('5.0.0', '1') ){
-                            Clipbucket_db::getInstance()->update(tbl('users'), ['password'], [$pass], ' userid=\'' . (int)$uid . '\'');
-                    }
+        // This code is used to update user password hash, may be deleted someday
+        if (!$udetails) // Let's try old password method
+        {
+            $oldpass = pass_code_unsecure($password);
+            $udetails = $this->get_user_with_pass($username, $oldpass);
+
+            // This account still use old password method, let's update it
+            if ($udetails) {
+                if( Update::IsCurrentDBVersionIsHigherOrEqualTo('5.0.0', '1') ){
+                    Clipbucket_db::getInstance()->update(tbl('users'), ['password'], [$pass], ' userid=' . (int)$uid);
                 }
             }
-
         }
+
         return $udetails ?? false;
     }
 
@@ -1486,16 +1609,15 @@ class userquery extends CBCategory
      */
     function init_session($udetails)
     {
-        global $sess;
         //Starting special sessions for security
         $session_salt = RandomString(5);
                     $_SESSION['sess_salt'] = $session_salt;
-        $sess->set('PHPSESSID', $sess->id);
+        Session::getInstance()->set('PHPSESSID',  Session::getInstance()->id);
 
         $smart_sess = md5($udetails['user_session_key'] . $session_salt);
 
-        Clipbucket_db::getInstance()->delete(tbl('sessions'), ['session', 'session_string'], [$sess->id, 'guest']);
-        $sess->add_session($udetails['userid'], 'smart_sess', $smart_sess);
+        Clipbucket_db::getInstance()->delete(tbl('sessions'), ['session', 'session_string'], [ Session::getInstance()->id, 'guest']);
+        Session::getInstance()->add_session($udetails['userid'], 'smart_sess', $smart_sess);
 
         //Setting Vars
         $this->userid = $udetails['userid'];
@@ -1738,7 +1860,7 @@ class userquery extends CBCategory
         if( Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.0', '331') ){
             $query .= ' LEFT JOIN ' . cb_sql_table('users_categories') . ' ON users.userid = users_categories.id_user';
         }
-        $query .= " WHERE users.$select_field = '$id'";
+        $query .= ' WHERE users.' . $select_field . ' = \'' . mysql_clean($id) . '\'';
 
         $result = select($query, 60);
 
@@ -1762,31 +1884,6 @@ class userquery extends CBCategory
     }
 
     /**
-     * @throws Exception
-     */
-    function activate_user_with_avcode($user, $avcode): void
-    {
-        $data = $this->get_user_details($user);
-        if (!$data || !$user) {
-            e(lang("usr_exist_err"));
-        } elseif ($data['usr_status'] == 'Ok') {
-            e(lang('usr_activation_err'));
-        } elseif ($data['ban_status'] == 'yes') {
-            e(lang('ban_status'));
-        } elseif ($data['avcode'] != $avcode) {
-            e(lang('avcode_incorrect'));
-        } else {
-            $this->action('activate', $data['userid']);
-            errorhandler::getInstance()->flush();
-            e(lang("usr_activation_msg"), "m");
-
-            if ($data['welcome_email_sent'] == 'no') {
-                $this->send_welcome_email($data, true);
-            }
-        }
-    }
-
-    /**
      * Function used to send activation code
      * to user
      *
@@ -1798,18 +1895,13 @@ class userquery extends CBCategory
     {
         $udetails = $this->get_user_details($email);
 
-        if (!$udetails || !$email) {
-            e(lang('usr_exist_err'));
-        } elseif ($udetails['usr_status'] == 'Ok') {
-            e(lang('usr_activation_err'));
-        } elseif ($udetails['ban_status'] == 'yes') {
-            e(lang('ban_status'));
-        } else {
-            $var = ['avcode'   => $udetails['avcode']];
+        if ($udetails && $email && $udetails['usr_status'] != 'Ok' && $udetails['ban_status'] != 'yes') {
+            $avcode = User::getInstance($udetails['userid'])->refreshAvcode();
+            $var = ['avcode' => $avcode];
             //Now Finally Sending Email
             EmailTemplate::sendMail('avcode_request', $udetails['userid'],  $var);
-            e(lang('usr_activation_em_msg'), 'm');
         }
+        e(lang('if_email_exist_been_sent'), 'm');
     }
 
     /**
@@ -1865,47 +1957,30 @@ class userquery extends CBCategory
     /**
      * Function used to add contact
      *
-     * @param $uid
-     * @param $fid
+     * @param $sender_id
+     * @param $friend_id
      *
      * @throws Exception
      */
-    function add_contact($uid, $fid): void
+    function add_contact($sender_id, $friend_id): void
     {
-        $friend = $this->get_user_details($fid);
-        $sender = $this->get_user_details($uid);
+        $friend = User::getInstance()->getOne(['userid' => $friend_id]);
+        $sender = User::getInstance()->getOne(['userid' => $sender_id]);
 
         if (!$friend) {
             e(lang('usr_exist_err'));
-        } elseif ($this->is_requested_friend($uid, $fid)) {
+        } elseif ($this->is_requested_friend($sender_id, $friend_id)) {
             e(lang('you_already_sent_frend_request'));
-        } elseif ($this->is_requested_friend($uid, $fid, 'in')) {
-            $this->confirm_friend($fid, $uid);
+        } elseif ($this->is_requested_friend($sender_id, $friend_id, 'in')) {
+            $this->confirm_friend($friend_id, $sender_id);
             e(lang('friend_added'));
-        } elseif ($uid == $fid) {
+        } elseif ($sender_id == $friend_id) {
             e(lang('friend_add_himself_error'));
         } else {
             Clipbucket_db::getInstance()->insert(tbl($this->dbtbl['contacts']), ['userid', 'contact_userid', 'date_added', 'request_type'],
-                [$uid, $fid, now(), 'out']);
-            $insert_id = Clipbucket_db::getInstance()->insert_id();
-
+                [$sender_id, $friend_id, now(), 'out']);
             e(lang('friend_request_sent'), 'm');
-
-            //Sending friendship request email
-            $tpl = CBEmail::getInstance()->get_template('friend_request');
-
-            $var = [
-                '{reciever}'     => $friend['username'],
-                '{sender}'       => $sender['username'],
-                '{sender_link}'  => $this->profile_link($sender),
-                '{request_link}' => '/manage_contacts.php?mode=request&confirm=' . $uid
-            ];
-
-            $subj = CBEmail::getInstance()->replace($tpl['email_template_subject'], $var);
-            $msg = nl2br(CBEmail::getInstance()->replace($tpl['email_template'], $var));
-
-            //Now Finally Sending Email
-            #cbmail(['to'=>$friend['email'],'from'=>WEBSITE_EMAIL,'subject'=>$subj,'content'=>$msg]);
+            Email::send_friend_request($friend['email'], $sender['username']);
         }
 
     }
@@ -2166,6 +2241,9 @@ class userquery extends CBCategory
         }
     }
 
+    /**
+     * @throws Exception
+     */
     function unsubscrib_no_friends($user_id)
     {
 
@@ -2372,77 +2450,44 @@ class userquery extends CBCategory
     }
 
     /**
-     * Function used to reset user password
-     * it has two steps
-     * 1 to send confirmation
-     * 2 to reset the password
-     *
-     * @param      $step
-     * @param      $input
-     * @param null $code
-     *
+     * @param $input
+     * @param bool $check_is_connected
      * @return bool
      * @throws \PHPMailer\PHPMailer\Exception
      * @throws Exception
      */
-    function reset_password($step, $input, $code = null): bool
+    function reset_password($input, bool $check_is_connected = true): bool
     {
-        if (User::getInstance()->isUserConnected()) {
+        if ($check_is_connected && User::getInstance()->isUserConnected()) {
             return false;
         }
 
-        switch ($step) {
-            case 1:
-                $udetails = $this->get_user_details($input);
-                if (!$udetails) {
-                    e(lang('usr_exist_err'));
-                } elseif (!verify_captcha()) {
-                    e(lang('recap_verify_failed'));
-                } else {
-                    //Sending confirmation email
-                    $avcode = $udetails['avcode'];
-                    if (!$udetails['avcode']) {
-                        $avcode = RandomString(10);
-                        Clipbucket_db::getInstance()->update(tbl($this->dbtbl['users']), ['avcode'], [$avcode], " userid='" . $udetails['userid'] . "'");
-                    }
-
-                    $var = [
-                        'reset_password_link' => DirPath::getUrl('root') . 'forgot.php?mode=reset_pass&user=' . $udetails['userid'] . '&avcode=' . $avcode,
-                    ];
-                    //Now Finally Sending Email
-                    if (EmailTemplate::sendMail('password_reset_request', $udetails['userid'], $var)) {
-                        e(lang('usr_rpass_email_msg'), 'm');
-                    }
-                    return true;
-                }
-                break;
-
-            case 2:
-                $udetails = $this->get_user_details($input);
-                if (!$udetails) {
-                    e(lang('usr_exist_err'));
-                } elseif ($udetails['avcode'] != $code) {
-                    e(lang('recap_verify_failed'));
-                } else {
-                    $newpass = RandomString(6);
-                    $pass = pass_code($newpass, $udetails['userid']);
-                    $avcode = RandomString(10);
-                    Clipbucket_db::getInstance()->update(tbl($this->dbtbl['users']), ['password', 'avcode'], [$pass, $avcode], " userid='" . $udetails['userid'] . "'");
-                    //Sending confirmation email
-                    $var = [
-                        'url'      => DirPath::getUrl('root') . 'login.php',
-                        'password' => $newpass
-                    ];
-
-                    //Now Finally Sending Email
-                    EmailTemplate::sendMail('password_reset_details',  $udetails['email'], $var);
-                    e(lang('usr_pass_email_msg'), 'm');
-                    return true;
-                }
-                break;
+        if (empty($input) || !Email::isValid($input)) {
+            e(lang('invalid_email'));
+            return false;
         }
 
-        return false;
+        if (!verify_captcha()) {
+            e(lang('recap_verify_failed'));
+            return false;
+        }
+
+        $user = User::getInstance()->getOne(['email' => $input]);
+        if (empty($user)) {
+            e(lang('if_email_exist_been_sent'), 'm');
+            return true;
+        }
+
+        $avcode = User::getInstance($user['userid'])->refreshAvcode();
+        $var = [
+            'reset_password_link' => DirPath::getUrl('root') . 'forgot.php?mode=reset_pass&email=' . $user['email'] . '&avcode=' . $avcode,
+            'avcode'              => $avcode
+        ];
+        //Now Finally Sending Email
+        if (EmailTemplate::sendMail('password_reset_request', $user['userid'], $var)) {
+            e(lang('if_email_exist_been_sent'), 'm');
+        }
+        return true;
     }
 
     /**
@@ -2451,17 +2496,18 @@ class userquery extends CBCategory
      */
     function recover_username($email): void
     {
-        $udetails = $this->get_user_details($email);
-        if (!$udetails) {
-            e(lang('no_user_associated_with_email'));
-        } elseif (!verify_captcha()) {
-            e(lang('recap_verify_failed'));
-        } else {
-            //Now Finally Sending Email
-            if (EmailTemplate::sendMail('forgot_username_request', $udetails['userid'], [])) {
-                e(lang("usr_uname_email_msg"), 'm');
-            }
+        if (empty($email) || !Email::isValid($email)) {
+            e(lang('invalid_email'));
+            return;
         }
+
+        $udetails = $this->get_user_details($email);
+        if ( $udetails && verify_captcha()) {
+            //Now Finally Sending Email
+            EmailTemplate::sendMail('forgot_username_request', $udetails['userid'], []);
+        }
+        e(lang('if_email_exist_been_sent'), 'm');
+
     }
 
     //FUNCTION USED TO UPDATE LAST ACTIVE FOR OF USER
@@ -2609,13 +2655,13 @@ class userquery extends CBCategory
     /**
      * This function will return
      * user field without array
+     * @throws Exception
      */
     function get_user_field_only($uid, $field)
     {
         $fields = $this->get_user_field($uid, $field);
         return $fields[$field];
     }
-
 
     /**
      * Function used to get all levels
@@ -2803,6 +2849,7 @@ class userquery extends CBCategory
 
     /**
      * Function used to get logged in username
+     * @throws Exception
      */
     function get_logged_username()
     {
@@ -2811,6 +2858,7 @@ class userquery extends CBCategory
 
     /**
      * FUnction used to get username from userid
+     * @throws Exception
      */
     function get_username($uid)
     {
@@ -2951,7 +2999,6 @@ class userquery extends CBCategory
             $select[] = 'UP.' . $field;
         }
 
-
         if( Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.0', '264') ){
             $group = $select;
             $select[] = 'GROUP_CONCAT( DISTINCT(T.name) SEPARATOR \',\') as profile_tags';
@@ -3066,7 +3113,7 @@ class userquery extends CBCategory
             //Checking Email
             if (empty($array['email'])) {
                 e(lang('usr_email_err1'));
-            } elseif (!is_valid_syntax('email', $array['email'])) {
+            } elseif (!Email::isValid($array['email'])) {
                 e(lang('usr_email_err2'));
             } elseif (email_exists($array['email']) && $array['email'] != $array['demail']) {
                 e(lang('usr_email_err3'));
@@ -3221,6 +3268,21 @@ class userquery extends CBCategory
             }
         }
 
+        if ($array['multi_factor_auth'] ) {
+            if (!in_array($array['multi_factor_auth'], ['allowed_email', 'disabled'])) {
+                e(lang('multi_factor_auth_err'));
+            } else {
+                $user = User::getInstance()->getOne(['userid' => $array['userid']]);
+                if ($array['multi_factor_auth'] == 'allowed_email' && config('disable_email') == 'yes') {
+                    e(lang('cannot_activate_auth_email_if_email_disabled'));
+                } elseif ($array['multi_factor_auth'] == 'allowed_email' && !$user['email_confirmed']) {
+                    e(lang('cant_activate_multi_factor_auth_with_no_confirmed_email'));
+                } else {
+                    $uquery_field[] = 'multi_factor_auth';
+                    $uquery_val[] = $array['multi_factor_auth'];
+                }
+            }
+        }
         //Adding Custom Field
         if (is_array($custom_signup_fields)) {
             foreach ($custom_signup_fields as $field) {
@@ -3705,7 +3767,7 @@ class userquery extends CBCategory
     function change_email($array): void
     {
         //function used to change user email
-        if (!isValidEmail($array['new_email']) || $array['new_email'] == '') {
+        if (!Email::isValid($array['new_email']) || $array['new_email'] == '') {
             e(lang("usr_email_err2"));
         } elseif ($array['new_email'] != $array['cnew_email']) {
             e(lang('user_email_confirm_email_err'));
@@ -3714,8 +3776,33 @@ class userquery extends CBCategory
         } elseif ($this->email_exists($array['new_email'])) {
             e(lang('usr_email_err3'));
         } else {
-            Clipbucket_db::getInstance()->update(tbl($this->dbtbl['users']), ['email'], [$array['new_email']], " userid='" . $array['userid'] . "'");
-            e(lang('email_change_msg'), 'm');
+            $msg = lang('email_change_msg');
+            if (config('email_verification')) {
+                $fields = ['email_temp'];
+                if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.2', '131')) {
+                    EmailTemplate::sendMail('verify_email', [
+                        'mail' => $array['new_email'],
+                        'name' => User::getInstance()->get('username')
+                    ], [
+                        'user_email' => $array['new_email'],
+                        'user_username' => User::getInstance()->get('username'),
+                        'user_avatar' => User::getInstance()->get('avatar_url'),
+                        'avcode'=>User::getInstance()->get('avcode')
+                    ]);
+                    $msg = lang('user_email_verify_msg');
+                }
+            } else {
+                $fields = ['email'];
+
+            }
+            $values = [$array['new_email']];
+            if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.2', '131')) {
+                $fields[] = 'email_confirmed';
+                $values[] = 0;
+            }
+
+            Clipbucket_db::getInstance()->update(tbl($this->dbtbl['users']), $fields, $values, " userid='" . $array['userid'] . "'");
+            e($msg, 'm');
         }
     }
 
@@ -3907,7 +3994,7 @@ class userquery extends CBCategory
                 'db_value_check_func' => 'email_exists',
                 'db_value_exists'     => false,
                 'db_value_err'        => lang('usr_email_err3'),
-                'validate_function'   => 'isValidEmail',
+                'validate_function'   => 'Email::isValid',
                 'constraint_func'     => 'check_email_domain',
                 'constraint_err'      => lang('signup_error_email_unauthorized')
             ],
@@ -4059,12 +4146,11 @@ class userquery extends CBCategory
      * Function used to validate signup form
      *
      * @param null $array
-     * @param bool $send_signup_email
      *
      * @return bool|mixed
      * @throws Exception
      */
-    function signup_user($array = null, $send_signup_email = true)
+    function signup_user($array = null)
     {
         $isSocial = false;
         if (isset($array['social_account_id'])) {
@@ -4280,10 +4366,10 @@ class userquery extends CBCategory
 
             Clipbucket_db::getInstance()->insert(tbl(userquery::getInstance()->dbtbl['user_profile']), $fields_list, $fields_data);
 
-            if (!User::getInstance()->hasPermission('admin_access') && config('email_verification') && $send_signup_email) {
+            if (!User::getInstance()->hasPermission('admin_access') && config('email_verification')) {
                 $var = ['avcode' => $avcode];
                 EmailTemplate::sendMail('verify_account', $insert_id, $var);
-            } elseif (!User::getInstance()->hasPermissionOrRedirect('admin_access', true) && $send_signup_email) {
+            } elseif (!User::getInstance()->hasPermissionOrRedirect('admin_access', true)) {
                 $this->send_welcome_email($insert_id);
             }
 
@@ -4540,8 +4626,7 @@ class userquery extends CBCategory
             case 'activate':
             case 'av':
             case 'a':
-                $avcode = RandomString(10);
-                Clipbucket_db::getInstance()->update($tbl, ['usr_status', 'avcode'], ['Ok', $avcode], " userid='$uid' ");
+                Clipbucket_db::getInstance()->update($tbl, ['usr_status', 'avcode'], ['Ok', ''], " userid='$uid' ");
                 e(lang('usr_ac_msg'), 'm');
                 break;
 
@@ -4549,8 +4634,8 @@ class userquery extends CBCategory
             case 'deactivate':
             case 'dav':
             case 'd':
-                $avcode = RandomString(10);
-                Clipbucket_db::getInstance()->update($tbl, ['usr_status', 'avcode'], ['ToActivate', $avcode], " userid='$uid' ");
+
+                Clipbucket_db::getInstance()->update($tbl, ['usr_status', 'avcode'], ['ToActivate', ''], " userid='$uid' ");
                 e(lang('usr_dac_msg'), 'm');
                 break;
 
@@ -5563,15 +5648,14 @@ class userquery extends CBCategory
      */
     function get_sessions(): array
     {
-        global $sess;
-        $sessions = $sess->get_sessions();
+        $sessions =  Session::getInstance()->get_sessions();
         $new_sessions = [];
         if ($sessions) {
             foreach ($sessions as $session) {
                 $new_sessions[$session['session_string']] = $session;
             }
         } else {
-            $sess->add_session(0, 'guest', 'guest');
+            Session::getInstance()->add_session(0, 'guest', 'guest');
         }
 
         return $new_sessions;

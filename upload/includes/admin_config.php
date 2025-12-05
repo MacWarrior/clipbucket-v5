@@ -10,6 +10,10 @@ if( THIS_PAGE != 'admin_login' && php_sapi_name() !== 'cli'){
         redirect_to('login.php');
     }
 
+    if( defined('IS_AJAX') && IS_AJAX ){
+        User::getInstance()->hasPermissionAjax('admin_access');
+    }
+
     if( !User::getInstance()->hasPermission('admin_access') ){
         redirect_to(cblink(['name' => 'error_403']));
     }

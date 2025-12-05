@@ -34,7 +34,6 @@
 {$vidMode = lang('videos')|lower}
 {$photoMode = lang('photos')|lower}
 {$channelsMode = lang('channels')|lower}
-
 <header id="header" class="clearfix">
     <nav class="navbar navbar-default">
         <div class="container-fluid">
@@ -116,10 +115,31 @@
                                 {if user_id()}
                                     {if (isSectionEnabled('videos') && !empty(Upload::getInstance()->get_upload_options()) && User::getInstance()->hasPermission('allow_video_upload')) || (isSectionEnabled('photos') && config('enable_photo_file_upload') == 'yes' && User::getInstance()->hasPermission('allow_photo_upload'))}
                                         <li class="dropdown upload_link">
-                                            <a href="{cblink name='upload'}" class="dropdown-toggle btn-upload btn btn-default" data-toggle="dropdown"><i class="icon-upload"></i><span>{lang code="upload"}</span><b class="icon-down-arrow"></b></a>
+                                            <a class="dropdown-toggle btn-upload btn btn-default"
+                                                {if (!Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.2', '148') && !(isSectionEnabled('photos') && config('enable_photo_file_upload') == 'yes' && User::getInstance()->hasPermission('allow_photo_upload')))}
+                                                    href="javascript:void(0);"
+                                                    disabled="disabled" title="Sorry, you cannot upload new videos until the application has been fully updated by an administrator"
+                                                {else}
+                                                    href="{cblink name='upload'}"
+                                                    data-toggle="dropdown"
+                                                {/if}
+                                            >
+                                                <i class="icon-upload"></i><span>{lang code="upload"}</span><b class="icon-down-arrow"></b></a>
                                             <ul role="menu" class="dropdown-menu">
                                                 {if User::getInstance()->hasPermission('allow_video_upload') && isSectionEnabled('videos') && !empty(Upload::getInstance()->get_upload_options())}
-                                                    <li class="up_vid"><a href="{cblink name='upload'}">{lang code="upload_video"}<i class="icon-video visible-xs"></i></a></li>
+                                                    <li class="up_vid">
+                                                        <a
+                                                            {if (!Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.2', '148'))}
+                                                                href="javascript:void(0);"
+                                                                class="disabled"
+                                                                disabled="disabled" title="Sorry, you cannot upload new videos until the application has been fully updated by an administrator"
+                                                            {else}
+                                                                href="{cblink name='upload'}"
+                                                            {/if}
+                                                        >
+                                                            {lang code="upload_video"}<i class="icon-video visible-xs"></i>
+                                                        </a>
+                                                    </li>
                                                 {/if}
                                                 {if User::getInstance()->hasPermission('allow_photo_upload') && isSectionEnabled('photos') && config('enable_photo_file_upload') == 'yes'}
                                                     <li class="up_img"><a href="{cblink name='photo_upload'}">{lang code="upload_photo"}<i class="icon-photo visible-xs"></i></a></li>
@@ -166,8 +186,9 @@
                                 {else}
 
                                     {if config('allow_registeration')}
-                                        <li class="navbar-sm-login-links">
-                                            <a class="btn btn-default btn-newacc" href="{cblink name='signup'}"><span class="big">{lang code='create_new_account'}</span><span class="little" style="display:none;">{lang code='signup'}</span></a>
+                                        <li class="navbar-sm-login-links" {if $base_url_empty}title="{lang('cant_perform_action_until_app_fully_updated')}{/if}">
+                                            <a class="btn btn-default btn-newacc {if $base_url_empty}disabled{/if}" href="{cblink name='signup'}">
+                                                {lang code='create_new_account'}</a>
                                         </li>
                                     {/if}
                                     <li class="navbar-sm-login-links">

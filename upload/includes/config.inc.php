@@ -33,7 +33,6 @@ if (config('closed') && THIS_PAGE != 'ajax' && !$in_bg_cron && THIS_PAGE != 'cb_
 
 //Configuring Uploader
 uploaderDetails();
-isSectionEnabled(PARENT_PAGE, true);
 
 //setting quicklist
 cb_call_functions('clipbucket_init_completed');
@@ -42,4 +41,15 @@ if (!$in_bg_cron && !in_array(THIS_PAGE, ClipBucket::getInstance()->public_pages
     if (ClipBucket::getInstance()->configs['access_to_logged_in'] == 'yes') {
         User::getInstance()->isUserConnectedOrRedirect();
     }
+}
+
+if( config('enable_video_file_upload') == 'yes' ){
+    ClipBucket::getInstance()->upload_opt_list['file_upload_div'] = [
+        'title'    => lang('upload_file'),
+        'function' => 'enable_video_file_upload'
+    ];
+}
+
+if( config('enable_video_remote_play') == 'yes' ){
+    new remote_play();
 }

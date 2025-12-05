@@ -33,17 +33,11 @@ if (!$cdetails || (!isSectionEnabled($cdetails['type']) && !User::getInstance()-
 
 $page = $_GET['page'];
 $get_limit = create_query_limit($page, config('collection_items_page'));
-if (config('enable_sub_collection') == 'yes') {
-    $params = [];
-    $params['collection_id_parent'] = $collection_id;
-    $params['limit'] = $get_limit;
-    $collections = Collection::getInstance()->getAll($params);
-    assign('collections', $collections);
-}
+
 
 $params = [];
 $params['collection_id'] = $collection_id;
-$params['limit'] = $get_limit;
+$params['limit_item'] = $get_limit;
 $sort_id = $_GET['sort_id']?? $cdetails['sort_type'];
 assign('sort_id', $sort_id);
 $sort_label = SortType::getSortLabelById($sort_id) ?? '';
@@ -52,18 +46,29 @@ $items = Collection::getInstance()->getItems($params);
 
 if( empty($items) ){
     $total_items = 0;
-} else if( count($items) < config('collection_items_page') ){
+} else if( count($items) < config('collection_items_page') && $page == 1 ){
     $total_items = count($items);
 } else {
-    unset($params['limit']);
-    $params['count'] = true;
+    unset($params['limit_item']);
+    $params['count_items_only'] = true;
     $total_items = Collection::getInstance()->getItems($params);
+}
+
+if (config('enable_sub_collection') == 'yes') {
+    $params = [
+        'collection_id_parent' => $collection_id
+        ,'with_items'          => true
+        ,'with_sub_items'      => true
+    ];
+
+    $collections = Collection::getInstance()->getAll($params);
+    assign('collections', $collections);
 }
 
 // Calling necessary function for view collection
 call_view_collection_functions($cdetails);
-
 $total_pages = count_pages($total_items, config('collection_items_page'));
+
 //Pagination
 pages::getInstance()->paginate($total_pages, $page);
 

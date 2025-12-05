@@ -18,6 +18,9 @@ $breadcrumb[1] = ['title' => lang('languages_settings'), 'url' => DirPath::getUr
 $ll = Language::getInstance()->get_langs(false, true);
 foreach ($ll as &$language) {
     $language['pourcentage_traduction'] = $language['nb_trads'] * 100 / $language['nb_codes'];
+    if ($language['language_code'] == 'en' && $language['pourcentage_traduction'] < 100) {
+        e(lang('error_missing_translation_please_use_tool', DirPath::getUrl('admin_area') . 'admin_tool.php?code_tool=install_missing_translation'),'w',false);
+    }
 }
 
 $restorable_langs = get_restorable_languages($ll);

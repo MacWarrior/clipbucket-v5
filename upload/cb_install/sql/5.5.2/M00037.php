@@ -37,7 +37,5 @@ class M00037 extends \Migration
             'table'  => 'user_profile',
             'column' => 'profile_title'
         ]);
-
-
     }
 }

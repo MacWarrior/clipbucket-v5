@@ -99,7 +99,8 @@ CREATE TABLE `{tbl_prefix}comments` (
 CREATE TABLE `{tbl_prefix}config` (
   `configid` int(20) NOT NULL,
   `name` varchar(100) NOT NULL DEFAULT '',
-  `value` mediumtext NOT NULL
+  `value` mediumtext NOT NULL,
+  `allow_stat` BOOL DEFAULT TRUE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_520_ci;
 
 CREATE TABLE `{tbl_prefix}contacts` (
@@ -110,17 +111,6 @@ CREATE TABLE `{tbl_prefix}contacts` (
   `contact_group_id` int(255) NOT NULL DEFAULT 0,
   `request_type` enum('in','out') NOT NULL,
   `date_added` datetime NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_520_ci;
-
-CREATE TABLE `{tbl_prefix}conversion_queue` (
-  `cqueue_id` int(11) NOT NULL,
-  `cqueue_name` varchar(32) NOT NULL,
-  `cqueue_ext` varchar(5) NOT NULL,
-  `cqueue_tmp_ext` varchar(3) NOT NULL,
-  `cqueue_conversion` enum('yes','no','p') NOT NULL DEFAULT 'no',
-  `date_added` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  `time_started` varchar(32) NOT NULL DEFAULT '0',
-  `time_completed` varchar(32) NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_520_ci;
 
 CREATE TABLE `{tbl_prefix}counters` (
@@ -394,7 +384,12 @@ CREATE TABLE `{tbl_prefix}users` (
   `album_privacy` enum('public','private','friends') NOT NULL DEFAULT 'private',
   `likes` int(11) NOT NULL DEFAULT 0,
   `is_live` enum('yes','no') NOT NULL DEFAULT 'no',
-  `active_theme` VARCHAR(15) NULL
+  `active_theme` VARCHAR(15) NULL,
+  `email_confirmed` BOOL DEFAULT FALSE,
+  `email_temp` VARCHAR( 255 ) ,
+  `multi_factor_auth` ENUM('allowed_email','disabled') NOT NULL DEFAULT 'disabled' ,
+  `mfa_code` VARCHAR( 255 ) NULL ,
+  `mfa_date` DATETIME NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_520_ci;
 
 CREATE TABLE `{tbl_prefix}user_levels` (
@@ -539,7 +534,6 @@ CREATE TABLE `{tbl_prefix}video` (
   `file_server_path` text NULL DEFAULT NULL,
   `video_version` varchar(8) NOT NULL DEFAULT '5.5.1',
   `thumbs_version` varchar(8) NOT NULL DEFAULT '5.5.1',
-  `re_conv_status` tinytext NULL DEFAULT NULL,
   `is_castable` tinyint(1) NOT NULL DEFAULT 0,
   `bits_color` tinyint(4) DEFAULT NULL,
   `subscription_email` enum('pending','sent') NOT NULL DEFAULT 'pending',
@@ -548,7 +542,8 @@ CREATE TABLE `{tbl_prefix}video` (
   `default_backdrop` int(3) NULL DEFAULT NULL,
   `fov` varchar(3) NULL DEFAULT NULL,
   `convert_percent` FLOAT NULL DEFAULT 0,
-  `aspect_ratio` DECIMAL(10,6) NULL DEFAULT NULL
+  `aspect_ratio` DECIMAL(10,6) NULL DEFAULT NULL,
+  `remote_play_url` TEXT NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_520_ci;
 
 CREATE TABLE `{tbl_prefix}video_views` (
@@ -558,6 +553,11 @@ CREATE TABLE `{tbl_prefix}video_views` (
     `view_date`     DATETIME NOT NULL,
     PRIMARY KEY (`id_video_view`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_520_ci;
+
+CREATE TABLE IF NOT EXISTS `{tbl_prefix}temp_stats_data` (
+    key_name VARCHAR(255) NOT NULL PRIMARY KEY ,
+    value TEXT not null
+);
 
 ALTER TABLE `{tbl_prefix}action_log`
   ADD PRIMARY KEY (`action_id`);
@@ -593,10 +593,6 @@ ALTER TABLE `{tbl_prefix}config`
 
 ALTER TABLE `{tbl_prefix}contacts`
   ADD PRIMARY KEY (`contact_id`);
-
-ALTER TABLE `{tbl_prefix}conversion_queue`
-  ADD PRIMARY KEY (`cqueue_id`),
-  ADD KEY `cqueue_conversion` (`cqueue_conversion`);
 
 ALTER TABLE `{tbl_prefix}counters`
   ADD PRIMARY KEY (`counter_id`),
@@ -716,9 +712,6 @@ ALTER TABLE `{tbl_prefix}config`
 
 ALTER TABLE `{tbl_prefix}contacts`
   MODIFY `contact_id` int(225) NOT NULL AUTO_INCREMENT;
-
-ALTER TABLE `{tbl_prefix}conversion_queue`
-  MODIFY `cqueue_id` int(11) NOT NULL AUTO_INCREMENT;
 
 ALTER TABLE `{tbl_prefix}counters`
   MODIFY `counter_id` int(100) NOT NULL AUTO_INCREMENT;
@@ -878,7 +871,7 @@ CREATE TABLE `{tbl_prefix}tools`(
 
 CREATE TABLE `{tbl_prefix}tools_histo_status`(
     `id_tools_histo_status`    INT          NOT NULL AUTO_INCREMENT,
-    `language_key_title` VARCHAR(128) NOT NULL,
+    `language_key_title` VARCHAR(128) UNIQUE NOT NULL,
     PRIMARY KEY (`id_tools_histo_status`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_520_ci;
 
@@ -969,7 +962,8 @@ CREATE TABLE IF NOT EXISTS `{tbl_prefix}categories`
     `category_desc`    TEXT              NULL     DEFAULT NULL,
     `date_added`       DATETIME          NOT NULL DEFAULT CURRENT_TIMESTAMP,
     `category_thumb`   MEDIUMTEXT        NULL,
-    `is_default`        ENUM ('yes','no') NOT NULL DEFAULT 'no'
+    `is_default`        ENUM ('yes','no') NOT NULL DEFAULT 'no',
+    UNIQUE KEY (`category_name`,`id_category_type`)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4
   COLLATE utf8mb4_unicode_520_ci;
@@ -980,7 +974,7 @@ ALTER TABLE `{tbl_prefix}categories` ADD FULLTEXT KEY `categorie` (`category_nam
 CREATE TABLE IF NOT EXISTS `{tbl_prefix}categories_type`
 (
     `id_category_type` INT         NOT NULL AUTO_INCREMENT,
-    `name`             VARCHAR(32) NOT NULL,
+    `name`             VARCHAR(32) NOT NULL UNIQUE ,
     PRIMARY KEY (`id_category_type`)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4
@@ -1274,6 +1268,41 @@ ALTER TABLE `{tbl_prefix}subscriptions`
 ALTER TABLE `{tbl_prefix}subscriptions`
     ADD CONSTRAINT `subscriptions_userid_fk` FOREIGN KEY (`userid`) REFERENCES `{tbl_prefix}users` (`userid`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
+CREATE TABLE `{tbl_prefix}video_embed` (
+  `id_video_embed` int(11) NOT NULL,
+  `videoid` bigint(20) NOT NULL,
+  `id_fontawesome_icon` int(11) DEFAULT NULL,
+  `title` varchar(64) NOT NULL,
+  `html` text NOT NULL,
+  `order` smallint(6) NOT NULL DEFAULT 0,
+  `enabled` tinyint(1) NOT NULL DEFAULT 1
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
+
+ALTER TABLE `{tbl_prefix}video_embed`
+  ADD PRIMARY KEY (`id_video_embed`),
+  ADD KEY `videoid` (`videoid`),
+  ADD KEY `id_fontawesome_icon` (`id_fontawesome_icon`);
+
+ALTER TABLE `{tbl_prefix}video_embed`
+  MODIFY `id_video_embed` int(11) NOT NULL AUTO_INCREMENT;
+
+ALTER TABLE `{tbl_prefix}video_embed`
+  ADD CONSTRAINT `video_embed_ibfk_1` FOREIGN KEY (`videoid`) REFERENCES `{tbl_prefix}video` (`videoid`),
+  ADD CONSTRAINT `video_embed_ibfk_2` FOREIGN KEY (`id_fontawesome_icon`) REFERENCES `{tbl_prefix}fontawesome_icons` (`id_fontawesome_icon`);
+
+CREATE TABLE `{tbl_prefix}video_conversion_queue`
+(
+    `id`           INT(11)    NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `videoid`      BIGINT(20) NOT NULL,
+    `date_added`   DATETIME   NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `date_started` DATETIME            DEFAULT NULL,
+    `date_ended`   DATETIME            DEFAULT NULL,
+    `is_completed` BOOLEAN             DEFAULT 0 NOT NULL,
+    INDEX (is_completed)
+);
+
+ALTER TABLE `{tbl_prefix}video_conversion_queue`
+    ADD CONSTRAINT `video_conversion_fk` FOREIGN KEY (`videoid`) REFERENCES `{tbl_prefix}video` (`videoid`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 CREATE TABLE `{tbl_prefix}currency`
 (
     `id_currency` INT(20) NOT NULL AUTO_INCREMENT PRIMARY KEY,

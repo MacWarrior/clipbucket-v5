@@ -121,7 +121,7 @@ class EmailTemplate
             switch ($field) {
                 case 'is_deletable':
                 case 'disabled':
-                    $value = (bool)$value;
+                    $value = (bool)$value ? 'true' : 'false';
                     break;
                 case 'content':
                     $value = '\'' . mysql_clean($value) . '\'';
@@ -532,20 +532,21 @@ class EmailTemplate
      */
     public static function deleteEmail(int $id_email): bool
     {
-        $template = self::getOneEmail([
-            'id_email_template' => $id_email,
-            'has_histo'         => true
+        $email = self::getOneEmail([
+            'id_email'  => $id_email,
+            'has_histo' => true
         ]);
-        if (empty($template)) {
+        if (empty($email)) {
             e(lang('template_dont_exist'));
             return false;
         }
-        if ($template['has_histo']) {
+        if ($email['has_histo']) {
             self::updateEmail([
                 'id_email' => $id_email,
                 'disabled' => true
             ]);
         } else {
+            Clipbucket_db::getInstance()->delete(tbl(self::$tableNameEmailVariableLink), ['id_email'], [$id_email]);
             Clipbucket_db::getInstance()->delete(tbl(self::$tableNameEmail), ['id_email'], [$id_email]);
         }
         return true;
@@ -640,7 +641,7 @@ class EmailTemplate
         $mail = new PHPMailer();
         $mail->CharSet = PHPMailer::CHARSET_UTF8;
         $mail->isHTML();
-        if (!isValidEmail($sender_email)) {
+        if (!Email::isValid($sender_email)) {
             return lang('invalid_email_sender');
         }
         $mail->setFrom($sender_email, $sender_name, false);
@@ -662,14 +663,15 @@ class EmailTemplate
 
         if (is_array($to) && empty($to['name'])) {
             foreach ($to as $email) {
-                if (isValidEmail($email)) {
+                if (Email::isValid($email)) {
                     self::addAddressAndNameIfExist($mail, $email);
                 } else {
                     return lang('invalid_email_recipient');
                 }
             }
         } else {
-            if (isValidEmail($to) || isValidEmail($to['mail'])) {
+            $to_email = is_array($to) ? $to['mail'] : $to;
+            if (Email::isValid($to_email)) {
                 self::addAddressAndNameIfExist($mail, $to);
             } else {
                 return lang('invalid_email_recipient');

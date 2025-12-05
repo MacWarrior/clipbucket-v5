@@ -244,6 +244,29 @@ class FFMpeg
         }
     }
 
+    static function unlockAll()
+    {
+        $max_conversion = config('max_conversion');
+        for ($i = 0; $i < $max_conversion; $i++) {
+            $conv_file = DirPath::get('temp') . 'conv_lock' . $i . '.loc';
+            if (file_exists($conv_file)) {
+                unlink($conv_file);
+            }
+        }
+    }
+
+    static function isThereAnyConversionLocks()
+    {
+        $max_conversion = config('max_conversion');
+        for ($i = 0; $i < $max_conversion; $i++) {
+            $conv_file = DirPath::get('temp') . 'conv_lock' . $i . '.loc';
+            if (file_exists($conv_file)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     /**
      * @throws Exception
      */
@@ -302,9 +325,10 @@ class FFMpeg
                     $max_key = $key;
                 }
             }
-            $resolutions = [ $resolutions[$max_key] ];
+            if (!empty( $resolutions[$max_key] )) {
+                $resolutions = [ $resolutions[$max_key] ];
+            }
         }
-
         $this->log->newSection('FFMpeg '.strtoupper($this->conversion_type).' conversion');
         if (!empty($resolutions)) {
             switch ($this->conversion_type) {
@@ -350,7 +374,7 @@ class FFMpeg
         }
 
         $this->log->writeLine('Conversion_status : '.$conversion_status);
-        setVideoStatus($this->file_name, $video_status, false, true);
+        setVideoStatus($this->file_name, $video_status, true);
 
         $this->unLock();
     }
@@ -405,7 +429,7 @@ class FFMpeg
                 if (System::isInDev()) {
                     $this->log->writeLine('<div class="showHide"><p class="title glyphicon-chevron-right">Output : </p><p class="content">'.$output.'</p></div>', false, true);
                 }
-                Clipbucket_db::getInstance()->insert(tbl('video_subtitle'), ['videoid', 'number', 'title'], [$video['videoid'], $display_count, $data['title']], null, true);;
+                Clipbucket_db::getInstance()->insert(tbl('video_subtitle'), ['videoid', 'number', 'title'], [$video['videoid'], $display_count, $data['title']], null, true);
             }
         } else {
             $this->log->writeLine('No subtitle to extract');
@@ -678,7 +702,7 @@ class FFMpeg
             $this->log->writeLine('<div class="showHide"><p class="title glyphicon-chevron-right">Output : </p><p class="content">'.$output.'</p></div>', false, true);
         }
 
-        if (file_exists($this->output_file) && filesize($this->output_file) > 0 && strpos($output, 'Conversion failed!') === false) {
+        if (file_exists($this->output_file) && filesize($this->output_file) > 0 && !str_contains($output, 'Conversion failed!')) {
             $this->log->writeLine(date('Y-m-d H:i:s').' => Video converted');
         } else {
             $this->log->writeLine(date('Y-m-d H:i:s').' => Conversion failed');
@@ -1252,25 +1276,9 @@ class FFMpeg
     /**
      * @throws Exception
      */
-    public static function launchResume(string $filename)
+    public static function launchConversion(string $filename, string $audio_track = '')
     {
-        return self::launchConversion($filename, '', '', 'resume');
-    }
-
-    /**
-     * @throws Exception
-     */
-    public static function launchReconvert(string $filename)
-    {
-        return self::launchConversion($filename, '', 'reconvert', '');
-    }
-
-    /**
-     * @throws Exception
-     */
-    public static function launchConversion(string $filename, string $audio_track = '', string $reconvert = '', string $resume = '')
-    {
-        $video = Video::getInstance()->getOne(['file_name' => $filename]);
+        $video = Video::getInstance()->getOne(['file_name' => $filename, 'disable_generic_constraints'=>true]);
         if( empty($video) ){
             e(lang('class_vdo_del_err'));
             return;
@@ -1279,8 +1287,6 @@ class FFMpeg
         $cmd = System::get_binaries('php') . ' -q ' . DirPath::get('actions') . 'video_convert.php ' . $filename;
 
         $cmd .= !empty($audio_track) ? ' ' . $audio_track : ' \'\'';
-        $cmd .= !empty($reconvert) ? ' ' . $reconvert : ' \'\'';
-        $cmd .= !empty($resume) ? ' ' . $resume : ' \'\'';
 
         if (stristr(PHP_OS, 'WIN')) {
             $complement = '';

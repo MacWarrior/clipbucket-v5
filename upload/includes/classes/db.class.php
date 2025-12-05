@@ -285,12 +285,13 @@ class Clipbucket_db
     /**
      * Update database fields { table, fields, values style }
      *
-     * @param      string $tbl
-     * @param      array $flds
-     * @param      array $vls
-     * @param      string $cond
+     * @param string $tbl
+     * @param array $flds
+     * @param array $vls
+     * @param string $cond
      * @param null $ep
      *
+     * @return mysqli_result|bool
      * @throws Exception
      * @internal param $ : { string } { $tbl } { table to ujpdate values in }
      * @internal param $ : { array } { $flds } { array of fields you want to update }
@@ -298,7 +299,7 @@ class Clipbucket_db
      * @internal param $ : { string } { $cond } { mysql condition for query }
      * @internal param $ : { string } { $ep } { extra parameter after condition }
      */
-    function update($tbl, $flds, $vls, $cond, $ep = null): void
+    function update($tbl, $flds, $vls, $cond, $ep = null): mysqli_result|bool
     {
         $this->ping();
 
@@ -334,7 +335,7 @@ class Clipbucket_db
         //Complete Query
         $query = 'UPDATE ' . $tbl . ' SET ' . $fields_query . ' WHERE ' . $cond . ' ' . $ep;
 
-        $this->execute($query, 'update');
+        return $this->execute($query, 'update');
     }
 
     /**
@@ -551,7 +552,10 @@ class Clipbucket_db
                 DiscordLog::sendDump('ERROR : ' . $this->getError());
                 throw new \Exception('missing_table');
             }
-
+            $backstack = debug_backtrace_string();
+            if (preg_match('/classes\/migration\/migration\.class.*->start\(\)/', $backstack)) {
+                throw new \Exception($this->getError());
+            }
             if (System::isInDev()) {
                 e('SQL : ' . $query);
                 e('ERROR : ' . $this->getError());
@@ -560,7 +564,7 @@ class Clipbucket_db
                 error_log(debug_backtrace_string());
                 DiscordLog::sendDump('SQL : ```' . $query . '```');
                 DiscordLog::sendDump('ERROR : ' . $this->getError());
-                DiscordLog::sendDump(debug_backtrace_string());
+                DiscordLog::sendDump($backstack);
             } else {
                 e(lang('technical_error'));
             }

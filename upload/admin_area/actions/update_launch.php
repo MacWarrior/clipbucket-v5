@@ -3,7 +3,6 @@ const THIS_PAGE = 'admin_launch_update';
 const IS_AJAX = true;
 require_once dirname(__FILE__, 3) . '/includes/admin_config.php';
 
-User::getInstance()->hasPermissionAjax('admin_access');
 $core_tool = new AdminTool();
 
 $error_init = [];
@@ -15,28 +14,74 @@ if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.0', '367')) {
     $error_init['db'] = AdminTool::getInstance()->initById(5);
 }
 
-if(($error_init['core'] === false && $_POST['type'] == 'core' )|| $error_init['db'] === false) {
+if (($error_init['core'] === false && $_POST['type'] == 'core') || $error_init['db'] === false) {
     echo json_encode([
-        'success' => false
-        ,'error_msg' => System::isInDev() ? 'Failed to find tools for update' : lang('technical_error')
+        'success'   => false
+        ,
+        'error_msg' => System::isInDev() ? 'Failed to find tools for update' : lang('technical_error')
     ]);
     die();
 }
 
-sendClientResponseAndContinue(function () use ($core_tool) {
+sendClientResponseAndContinue(function () {
+    ob_start();
+    Update::getInstance()->displayGlobalSQLUpdateAlert($_POST['type'], true);
     echo json_encode([
-        'success' => true
+        'success' => true,
+        'html'=>ob_get_clean()
     ]);
 });
 
-if ($_POST['type'] == 'core' && $core_tool->isAlreadyLaunch() === false) {
+
+if (file_exists(DirPath::get('temp') . 'update_core_tmp.php')) {
+    unlink(DirPath::get('temp') . 'update_core_tmp.php');
+}
+$tmp_file = fopen(DirPath::get('temp') . 'update_core_tmp.php', 'w');
+$data = /** @lang PHP */
+'<?php
+if (php_sapi_name() != \'cli\') {
+    die;
+}
+const THIS_PAGE = \'update_core_tmp\';
+include_once \'' . DirPath::get('includes') . 'admin_config.php' . '\';
+$type = \'' . $_POST['type'] . '\';
+$core_tool = AdminTool::getUpdateCoreTool();
+if (empty($core_tool)) {
+    echo  \'false\';
+    die;
+}
+if (Update::IsCurrentDBVersionIsHigherOrEqualTo(\'5.5.0\', \'367\')) {
+    AdminTool::getInstance()->initByCode(\'update_database_version\');
+} else {
+    AdminTool::getInstance()->initById(5);
+}
+if (empty(AdminTool::getInstance())) {
+    echo  \'false\';
+    die;
+}
+if ($type == \'core\' && $core_tool->isAlreadyLaunch() === false) {
     $core_tool->setToolInProgress();
     $core_tool->launch();
 }
-
-// TODO : Here, instead of continuing, we should start a new PHP process to avoid core modifications issue while already loaded by this current script
 Update::getInstance()->flush();
-if (($_POST['type'] == 'core' || $_POST['type'] == 'db') && AdminTool::getInstance()->isAlreadyLaunch() === false ) {
+
+if (($type == \'core\' || $type == \'db\') && AdminTool::getInstance()->isAlreadyLaunch() === false) {
     AdminTool::getInstance()->setToolInProgress();
     AdminTool::getInstance()->launch();
 }
+?>';
+fwrite($tmp_file, $data);
+fclose($tmp_file);
+chdir(DirPath::get('root'));
+$cmd = System::get_binaries('php') . ' -q ' . DirPath::get('temp') . 'update_core_tmp.php';
+if (stristr(PHP_OS, 'WIN')) {
+    $complement = '';
+} elseif (stristr(PHP_OS, 'darwin')) {
+    $complement = ' </dev/null >/dev/null &';
+} else { // for ubuntu or linux
+    $complement = ' > /dev/null &';
+}
+
+$cmd .= $complement;
+shell_exec($cmd);
+die;

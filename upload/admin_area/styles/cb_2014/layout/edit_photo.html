@@ -1,6 +1,6 @@
 <form method="post" name="edit_photo" id="edit_photo">
     <div class="heading clearfix">
-        <h2 class="pull-left paddingLeftLarge">Editing <small>&gt; {$data.photo_title|truncate:40}</small>
+        <h2 class="pull-left paddingLeftLarge">Editing <small>&gt; {display_clean($data.photo_title)|truncate:40}</small>
             <div class="btn-group">
                 <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
                     Actions <span class="caret caret_margin"></span>
@@ -39,7 +39,7 @@
                     {if $data.collection_id != null}
                     <li>
                         <a href="{DirPath::getUrl('admin_area')}edit_collection.php?collection={$data.collection_id}">
-                            {lang('edit_collection')} ({$data.collection_id|get_collection_field})
+                            {lang('edit_collection')} ({display_clean($collection_name)})
                         </a>
                     </li>
                     {/if}
@@ -54,7 +54,7 @@
         <div class="col-md-6">
             <div class="userInformation">
                 <div>
-                    <h4>User : <a href="{DirPath::getUrl('admin_area')}view_user.php?uid={$data.userid}">{$data.userid|get_username}</a></h4>
+                    <h4>{lang code='user'} : <a href="{DirPath::getUrl('admin_area')}view_user.php?uid={$data.userid}">{$data.userid|get_username}</a></h4>
                 </div>
             </div>
             <div class="photoPreview">
@@ -247,6 +247,6 @@
     </div>
 </form>
 <script>
-    var available_tags = JSON.parse('{$available_tags|json_encode|replace:"'": "\'"}');
+    var available_tags = JSON.parse('{$available_tags|json_encode|escape:'javascript'}');
     let text_confirm_comment = '{lang('text_confirm_comment')}';
 </script>

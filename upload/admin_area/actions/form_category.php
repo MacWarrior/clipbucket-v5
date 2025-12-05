@@ -3,8 +3,6 @@ const THIS_PAGE = 'form_category';
 const IS_AJAX = true;
 require_once dirname(__FILE__, 3) . '/includes/admin_config.php';
 
-User::getInstance()->hasPermissionAjax('admin_access');
-
 $type = mysql_clean($_POST['type'] ?? '');
 
 if (!empty($_POST['category_id'])) {

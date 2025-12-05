@@ -8,66 +8,15 @@
 		this.loading_img = "<img alt='loading' style='vertical-align:middle' src='" + imageurl + "/ajax-loader-big.gif'/>";
 		this.loading = this.loading_img+' Loading...';
 		this.download = 0;
-		this.total_size = 0;
-		this.cur_speed = 0;
-
-		this.status_refesh = 1 //in seconds
-		this.result_page = baseurl+'actions/file_results.php';
-		this.download_page = baseurl+'actions/file_downloader.php';
 		this.count = 0;
 
 		this.hasLoaded = false;
-		this.perc_download = 0;
-
-
-		this.force_stop = false;
-		this.remoteObjID = '';
 
 		this.current_menu = '';
 
 		this.collectionID = false;
 
-		this.keyStr = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=';
-
 		this.ua = navigator.userAgent.toLowerCase();
-
-		if (this.ua.indexOf(' chrome/') >= 0 || this.ua.indexOf(' firefox/') >= 0 || this.ua.indexOf(' gecko/') >= 0) {
-			var StringMaker = function () {
-				this.str = '';
-				this.length = 0;
-				this.append = function (s) {
-					this.str += s;
-					this.length += s.length;
-				}
-				this.prepend = function (s) {
-					this.str = s + this.str;
-					this.length += s.length;
-				}
-				this.toString = function () {
-					return this.str;
-				}
-			}
-		} else {
-			var StringMaker = function () {
-				this.parts = [];
-				this.length = 0;
-				this.append = function (s) {
-					this.parts.push(s);
-					this.length += s.length;
-				}
-				this.prepend = function (s) {
-					this.parts.unshift(s);
-					this.length += s.length;
-				}
-				this.toString = function () {
-					return this.parts.join('');
-				}
-			}
-		}
-
-		this.setRemoteId = function(){
-			this.remoteObjID = this.randomString();
-		};
 
 		this.Confirm_Delete = function(delUrl){
 			if (confirm('Are you sure you want to delete')) {
@@ -89,11 +38,6 @@
 			return false;
 		};
 
-		this.reloadImage = function(captcha_src,imgid){
-			img = document.getElementById(imgid);
-			img.src = captcha_src+'?'+Math.random();
-		};
-
 		this.randomString = function(){
 			var chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz';
 			var string_length = 8;
@@ -103,255 +47,6 @@
 				randomstring += chars.substring(rnum,rnum+1);
 			}
 			return randomstring;
-		};
-
-		this.check_remote_url = function(){
-			var self = this;
-			var file = $('#remote_file_url').val();
-			var $uploadButton = $('#remoteUploadBttn'); // upload button
-			var $cancelButton = $('#remoteUploadBttnStop'); // cancel upload button
-			this.force_stop = false;
-			if(file.match(/^e.g/) || typeof file === 'undefined' || file.length === 0){
-				// given url is not valid
-				$('#error_msgs').html('<div class="alert alert-danger" role="alert">Given URL is invalid!</div>');
-				return false;
-			}
-
-			// these functions will only be used in remote upload
-			// they manage the UI changes
-			var remoteUploadStart = function(){
-				$('.downloadStatusContainer').removeClass('hidden');
-				$uploadButton.attr('disabled','disabled').hide();
-				$cancelButton.show();
-			};
-
-			var remoteUploadStop = function(){
-				$('.downloadStatusContainer').addClass('hidden');
-				$cancelButton.removeAttr('disabled').hide();
-				$uploadButton.removeAttr('disabled').show();
-			};
-
-			remoteUploadStart();
-
-			var ajaxCall = $.ajax({
-				url: self.download_page,
-				type: 'post',
-				data: ({file:file,file_name:file_name}),
-				dataType : 'JSON',
-				beforeSend : function(){
-					self.remoteUploadStatusUpdate();
-					var remoteFileName = self.getName(file);
-					$('#loading').html('Downloading');
-					$('#remoteFileName').replaceWith('"'+remoteFileName+'"');
-				},
-				success: function(data){
-					self.force_stop = true;
-					if(data.error){
-						remoteUploadStop();
-						$('#error_msgs').html('<div class="alert alert-danger" role="alert"> File Type Not Allowed!</div>');
-						return false;
-					}
-					remoteUploadStop();
-					$('#loading').html('');
-					var vid = data.vid;
-					$.post(baseurl+'actions/getVideoDetails.php', {
-						'file_name':file_name,
-						'vid' : vid,
-					},function(data){
-						var oneFileForm = $('#updateVideoInfoForm').clone();
-						$(oneFileForm).find('input[name=title]').val(data.title);
-						$(oneFileForm).find('textarea#desc').val(data.description);
-						$(oneFileForm).find("input[name='category[]']:first").attr('checked', 'checked');
-
-						// creating the hidden form fields
-						var hiddenVideoIdField = document.createElement('input');
-						hiddenVideoIdField.name = 'videoid';
-						hiddenVideoIdField.type = 'hidden';
-						hiddenVideoIdField.value = vid;
-
-						$(oneFileForm).append(hiddenVideoIdField);
-
-						$('#remoteForm').html('');
-						$(oneFileForm).removeClass('hidden')
-							.attr('id', 'uploadFormContainer_remote')
-							.appendTo('#remoteForm');
-						$(oneFileForm).find('form').on({
-							submit: function(e){
-								e.preventDefault();
-
-								var form = $(this);
-
-								var formData = $(form).serialize();
-								formData += '&updateVideo=yes';
-
-								$.ajax({
-									url : baseurl+'actions/file_uploader.php',
-									type : 'post',
-									data : formData,
-									success: function(data){
-										msg = $.parseJSON(data);
-										$('#uploadMessage').removeClass('hidden');
-										if(msg.error){
-											$('#uploadMessage').html(msg.error).attr('class', 'alert alert-danger');
-										}else{
-											$('#uploadMessage').html(msg.msg).attr('class', 'alert alert-success');
-										}
-										setTimeout(function(){
-											$('#uploadMessage').addClass('hidden');
-										}, 5000);
-									}
-								});
-							}
-						});
-						$('.formSection h4').on({
-							click: function(e){
-								e.preventDefault();
-								if($(this).find('i').hasClass('glyphicon-chevron-down')){
-									$(this).find('i').removeClass('glyphicon-chevron-down').addClass('glyphicon-chevron-up');
-									$(this).next().toggleClass('hidden');
-								}else{
-									$(this).find('i').removeClass('glyphicon-chevron-up').addClass('glyphicon-chevron-down');
-									$(this).next().toggleClass('hidden');
-								}
-							}
-						});
-						$(oneFileForm).on({
-							submit: function(e){
-								e.preventDefault();
-								var data = $(this).serialize();
-								data += '&updateVideo=yes';
-								$.ajax({
-									url : baseurl+'actions/file_uploader.php',
-									type : 'post',
-									data : data,
-									dataType: 'json',
-									success: function(msg){
-										$('#uploadMessage').removeClass('hidden');
-										if(msg.error){
-											$('#uploadMessage').html(msg.error).attr('class', "alert alert-danger");
-										} else {
-											$('#uploadMessage').html(msg.msg).attr('class', "alert alert-success");
-										}
-										setTimeout(function(){
-											$('#uploadMessage').addClass('hidden');
-										}, 5000);
-									}
-								}).fail(function(err){
-									console.log(err);
-								});
-							}
-						});
-					},'json');
-				}
-			});
-
-			$('#remoteUploadBttnStop').click(function() {
-				ajaxCall.abort();
-				this.force_stop=true;
-				$('#loading').html('');
-				$('#remoteDownloadStatus').hide();
-				$(this).hide();
-				$('#remoteUploadBttn').attr('disabled','').show();
-			});
-		};
-
-		this.remoteUploadStatusUpdate = function(){
-			var self = this;
-			var ajaxCall = $.ajax({
-				url: self.result_page,
-				type: 'post',
-				data:({file_name:file_name}),
-				dataType: 'json',
-				success: function(serverResponse){
-					if(false === self.force_stop){
-						self.updateProgress(serverResponse);
-						setTimeout(function(){
-							self.remoteUploadStatusUpdate();
-						}, self.status_refesh*1000);
-					}
-				}
-			});
-		};
-
-		this.updateProgress = function(serverResponse){
-			if(typeof serverResponse !== 'undefined' && serverResponse !== null){
-				var downloaded = (serverResponse.downloaded/1048576).toFixed(2);
-				var total = (serverResponse.total_size/1048576).toFixed(2);
-				var progress = (serverResponse.downloaded/serverResponse.total_size) * 100;
-				$('#downloadStatus').find('#downloaded').text(downloaded+' Mb');
-				$('#downloadStatus').find('#totalSize').text(total+' Mb');
-				$('#prog_bar').css('width', progress+'%');
-			}
-		};
-
-		this.status_update = function(){
-			var self = this;
-			var ajaxCall = $.ajax({
-				url: self.result_page,
-				type: 'post',
-				data:({file_name:file_name}),
-				dataType: 'json',
-				success: function(data){
-					if(data){
-						var total = parseFloat(data.total_size);
-						var download = parseFloat(data.downloaded);
-						var total_fm = parseFloat(data.total_size_fm);
-						var download_fm = parseFloat(data.downloaded_fm);
-						var speed = parseFloat(data.speed_download);
-						var eta = parseFloat(data.time_eta);
-						var eta_fm = parseFloat(data.time_eta_fm);
-						var time_took = parseFloat(data.time_took);
-						var time_took_fm = parseFloat(data.time_took_fm);
-						var theSpeed;
-						if(speed/1024/1024 > 1){
-							theSpeed = Math.round(speed / 1024/1024) + ' Mbps';
-						} else {
-							theSpeed = Math.round(speed/ 1024 ) + ' Kbps';
-						}
-						self.perc_download = Math.round(download/total*100);
-						if(isNaN(download_fm)){
-							$('#remoteDownloadStatus').show();
-							$('#prog_bar').html('Loading');
-							$('#dspeed').html('Loading');
-							$('#eta').html('Loading');
-							$('#status').html('Loading');
-						} else {
-							$('#remoteDownloadStatus').show();
-							//$('#prog_bar').width(this.perc_download+'%');
-							$('#prog_bar').html(self.perc_download+'%').animate({width:self.perc_download+'%'},1000);
-							$('#dspeed').html(theSpeed);
-							$('#eta').html(eta_fm);
-							$('#status').html(download_fm+' of '+total_fm);
-						}
-					}
-					var intval = self.status_refesh*1000;
-					if(self.perc_download > 99){
-						self.force_stop = true;
-					}
-					if(!self.force_stop){
-						setTimeout(function(){
-							self.status_update()
-						},intval);
-					} else if(self.perc_download==100 && total>1){
-						$('#time_took').html('Time Took : '+ time_took_fm);
-					}
-				}
-			});
-		};
-
-		this.upload_file = function(Val,file_name){
-			var page =baseurl+'actions/file_downloader.php';
-			$.post(page, {
-					file_url : Val,
-					file_name : file_name
-				},
-				function(data){
-					if(!data){
-						alert('No data');
-					} else {
-						submit_upload_form();
-					}
-				},'text');
 		};
 
 		/**
@@ -384,34 +79,6 @@
 				},'text');
 		};
 
-		/**
-		 * functio used to get photos through ajax
-		 */
-		this.getAjaxPhoto = function(type,div){
-			var self = this;
-			$(div).css('display','block');
-			var preservedHTML = $(div).html();
-			$.ajax({
-				url : self.page,
-				type : 'POST',
-				dataType : 'json',
-				data : ({ mode : 'loadAjaxPhotos', 'photosType' : type }),
-				beforeSend : function ()
-				{
-					$(div).html(this.loading);
-				},
-				success : function (data)
-				{
-					if(data['failed']) {
-						$(div).html(preservedHTML);
-					}
-
-					if(data['completed']) {
-						$(div).html(data['photoBlocks']);
-					}
-				}
-			});
-		};
 
 
 		this.rating_over = function(msg,disable){
@@ -773,32 +440,6 @@
 			document.locati= url;
 		};
 
-		this.get_item = function(obj,ci_id,cid,type,direction){
-			var btn_text = $(obj).html();
-			$(obj).html(this.loading);
-
-			$.post(page,
-				{
-					mode : 'get_item',
-					ci_id: ci_id,
-					cid : cid,
-					type: type,
-					direction: direction
-				},
-				function(data)
-				{
-					if(!data)
-					{
-						alert('No '+type+' returned');
-						$(obj).text(btn_text);
-					} else {
-						var jsArray = new Array(type,data['cid'],data['key']);
-						construct_url(jsArray);
-						$('#collectionItemView').html(data['content']);
-					}
-				},'json')
-		};
-
 		this.construct_url = function(jsArr){
 			var url;
 			if(Seo === 'yes')
@@ -853,7 +494,7 @@
 				type: 'post',
 				dataType: 'json',
 				data: {
-					mode: 'moreItems',
+					mode: 'more_items',
 					page : pageNumber,
 					cid: cid,
 					type: type
@@ -903,18 +544,6 @@
 					}
 				}
 			});
-		};
-
-		this.getDetails = function(obj){
-			var forms = getInputs(obj), ParamArray = new Array(forms.length);
-
-			$.each(forms,function(index,form) {
-				query = $('#'+form.id+' *').serialize();
-				query += '&mode=ajaxPhotos';
-				ParamArray[index] = query;
-			})
-
-			return ParamArray;
 		};
 
 		this.getName = function(File){
@@ -985,68 +614,7 @@
 			}
 		};
 
-		this.loadObject = function(currentDOM,type,objID,container){
-			var self = this;
-			var object = new Array(4);
-			object['this'] = currentDOM, object['type'] = type,
-				object['objID'] = objID, object['container'] = container;
-
-			var obj = $(object['this']);
-
-			{
-				obj.parent().css('position','relative');
-
-				$.ajax({
-					url : self.page,
-					type : 'POST',
-					dataType : 'json',
-					data  : ({ mode : 'channelFeatured',
-						contentType : object['type'],
-						objID : object['objID']
-					}),
-					beforeSend : function()
-					{
-						obj.find('img').animate({ opacity : .5 });
-						$('#'+object['container']).animate({ opacity : .5 });
-					},
-					success : function(data)
-					{
-						if(data['error']) {
-							obj.find('img').animate({ opacity : 1 });
-							$('#'+object['container']).animate({ opacity : 1 });
-							alert(data['error']);
-						} else {
-							obj.parent().children('.selected').removeClass('selected');
-							obj.addClass('selected');
-							obj.find('img').animate({ opacity : 1 });
-							$('#'+object['container']).html(data['data']).animate({ opacity : 1 });
-						}
-					}
-				})
-			}
-		};
-
 		var comments_voting = 'no';
-		this.getComments = function(type,type_id,last_update,pageNum,total,object_type,admin){
-			var self = this;
-			$('#comments').html("<div style='padding:5px 0;'>"+this.loading+'</div>');
-			$.ajax({
-				type: 'POST',
-				url: self.page,
-				data:  {mode:'getComments',
-					page:pageNum,type:type,
-					type_id:type_id,
-					object_type : object_type,
-					last_update : last_update,
-					total_comments : total,
-					comments_voting : comments_voting,admin : admin},
-				success: function(data)
-				{
-					$('#comments').hide().html(data).fadeIn('slow');
-				},
-				dataType: 'text'
-			});
-		};
 
 		/**
 		 * Function used to rate object
@@ -1116,35 +684,6 @@
 			});
 		};
 
-		this.getCommentsNew = function(type,type_id,last_update,pageNum,total,object_type,admin){
-			$.ajax({
-				type: 'POST',
-				url: page,
-				data: {
-					mode:'getCommentsNew',
-					page:pageNum,
-					type:type,
-					type_id:type_id,
-					object_type : object_type,
-					last_update : last_update,
-					total_comments : total,
-					comments_voting : comments_voting,
-					admin : admin
-				},
-				beforeSend: function() {
-					$(document).find('#load-more-comments').text(lang_loading);
-				},
-				success: function(comments){
-					if (comments === 'none') {
-						$('#load-more-comments').text('End of comments list').attr('disabled','disabled');
-					} else {
-						$('#userCommentsList').append(comments);
-						$(document).find('#load-more-comments').text(lang_load_more);
-					}
-				},
-				dataType: 'text'
-			});
-		};
 
 		this.addToFav = function(type,id){
 			$('#messageFav').show();
@@ -1485,6 +1024,5 @@
 	};
 
 	window._cb = new _cb();
-	window._cb.setRemoteId();
 
 })(window);

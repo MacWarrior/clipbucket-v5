@@ -30,7 +30,7 @@ $(function () {
         }
 
         $.ajax({
-            url: "charts/reports/daily_activity_reports.php",
+            url: admin_url + 'charts/reports/daily_activity_reports.php',
             type: "POST",
             data: "videos=videos",
             dataType: "json",
@@ -53,7 +53,7 @@ $(function () {
         }
 
         $.ajax({
-            url: "charts/reports/weekly_activity_reports.php",
+            url: admin_url + 'charts/reports/weekly_activity_reports.php',
             type: "POST",
             data: "videos=videos",
             dataType: "json",
@@ -75,7 +75,7 @@ $(function () {
         }
 
         $.ajax({
-            url: "charts/reports/monthly_activity_reports.php",
+            url: admin_url + 'charts/reports/monthly_activity_reports.php',
             type: "POST",
             data: "videos=videos",
             dataType: "json",

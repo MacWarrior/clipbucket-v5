@@ -1301,3 +1301,8 @@ textarea[disabled]{
 
     100% {transform: rotate(0deg);}
 }
+
+.empty_table{
+    text-align: center;
+    font-style: italic;
+}

@@ -158,6 +158,18 @@ if (isset($_POST['update'])) {
         , 'enable_cookie_banner'
         , 'enable_public_video_page'
         , 'can_upload_subtitles'
+        , 'enable_anonymous_stats'
+        , 'enable_video_embed_players'
+        , 'videos_enable_fullwidth'
+        , 'collections_enable_fullwidth'
+        , 'collection_enable_fullwidth'
+        , 'autoplay_video'
+        , 'autoplay_embed'
+        , 'contextual_menu_disabled'
+        , 'control_bar_logo'
+        , 'enable_360_video'
+        , 'chromecast'
+        , 'player_thumbnails'
         , 'enable_membership'
         , 'enable_public_video_page'
     ];
@@ -184,6 +196,7 @@ if (isset($_POST['update'])) {
         , 'show_collapsed_checkboxes'
         , 'activation'
         , 'photo_activation'
+        , 'player_subtitles'
     ];
 
     $rows = [
@@ -424,6 +437,14 @@ if (isset($_POST['update'])) {
         'enable_public_video_page',
         'can_upload_subtitles',
         'videos_video_style',
+        'enable_anonymous_stats',
+        'enable_video_embed_players',
+        'enable_anonymous_stats',
+        'enable_multi_factor_authentification',
+        'videos_enable_fullwidth',
+        'collections_enable_fullwidth',
+        'collection_enable_fullwidth',
+        'videos_video_style',
         'enable_360_video',
         'video_thumbs_preview_count',
         'allow_tag_space',
@@ -488,12 +509,13 @@ if (isset($_POST['update'])) {
         'max_collection_categories'
     ];
 
+    $has_missing_config = false;
     foreach ($rows as $field) {
         $value = ($_POST[$field]);
         if (in_array($field, $num_array)) {
             if ($field == 'min_age_reg' && ($value > 99 || $value <= 0 || !is_numeric($value) )) {
                 e(lang('error_age_restriction_save'));
-                break;
+                continue;
             }
             if (($value <= 0 || !is_numeric($value)) && !in_array($field, ['video_categories', 'max_collection_categories', 'max_photo_categories']) ) {
                 $value = 1;
@@ -502,7 +524,7 @@ if (isset($_POST['update'])) {
 
         if ($field=='date_format' && !validatePHPDateFormat($value)) {
             e(lang('invalid_date_format'));
-            break;
+            continue;
         }
         if (in_array($field, $config_booleans)) {
             if ($value != 'yes') {
@@ -515,7 +537,24 @@ if (isset($_POST['update'])) {
             }
         }
 
-        myquery::getInstance()->Set_Website_Details($field, $value);
+        if (!isset(myquery::getInstance()->Get_Website_Details()[$field])) {
+            if( !$has_missing_config ){
+                e(lang('error_missing_config_please_use_tool', DirPath::getUrl('admin_area') . 'admin_tool.php?code_tool=install_missing_config'),'w',false);
+                $has_missing_config = true;
+            }
+            if( System::isInDev() ){
+                $tmp_text = 'Missing config: '.$field;
+                error_log($tmp_text);
+                DiscordLog::sendDump($tmp_text);
+            }
+            continue;
+        }
+
+        if( !is_null($value) ){
+            myquery::getInstance()->Set_Website_Details($field, $value);
+        } else {
+            DiscordLog::sendDump('Missing value for config: '.$field);
+        }
     }
 
     if (!empty($_FILES['upload_logo']['name'])) {

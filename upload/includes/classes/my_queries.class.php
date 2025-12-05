@@ -14,13 +14,18 @@ class myquery
     static $video_resolutions = [];
 
     /**
+     * @param $name
+     * @param $value
+     * @return int
      * @throws Exception
      */
-    function Set_Website_Details($name, $value): void
+    function Set_Website_Details($name, $value): int
     {
-        Clipbucket_db::getInstance()->update(tbl('config'), ['value'], [$value], " name = '" . $name . "'");
+        $return = Clipbucket_db::getInstance()->update(tbl('config'), ['value'], [$value], " name = '" . $name . "'");
+
         ClipBucket::getInstance()->configs[$name] = $value;
         static::$website_details[$name] = $value;
+        return Clipbucket_db::getInstance()->Affected_Rows();
     }
 
     /**
@@ -315,60 +320,4 @@ class myquery
         return false;
     }
 
-    /**
-     * Function used to get list of items in conversion queue
-     * @params $Cond, $limit,$order
-     *
-     * @param null $cond
-     * @param null $limit
-     * @param string $order
-     *
-     * @return array
-     * @throws Exception
-     */
-    function get_conversion_queue($cond = null, $limit = null, string $order = 'date_added DESC'): array
-    {
-        $result = Clipbucket_db::getInstance()->select(tbl('conversion_queue'), '*', $cond, $limit, $order);
-        if (count($result) > 0) {
-            return $result;
-        }
-        return [];
-    }
-
-    /**
-     * function used to remove queue
-     *
-     * @param $action
-     * @param $id
-     * @throws Exception
-     */
-    function queue_action($action, $id): void
-    {
-        switch ($action) {
-            case 'delete':
-                Clipbucket_db::getInstance()->execute('DELETE FROM ' . tbl('conversion_queue') . ' WHERE cqueue_id = ' . (int)$id);
-                break;
-
-            case 'resume':
-                $conversion_queue = self::get_conversion_queue('cqueue_id = '. (int)$id);
-                if( empty($conversion_queue) || empty($conversion_queue[0]['cqueue_name']) ){
-                    e(lang('conversion_not_found_x', $id));
-                    break;
-                }
-
-                $file_name = $conversion_queue[0]['cqueue_name'];
-                $video = Video::getInstance()->getOne(['file_name'=>$file_name]);
-                if( empty($video) ){
-                    e(lang('video_not_found_with_filename_x', $file_name), 'w');
-                    break;
-                }
-                if( !in_array(strtolower($video['status']), ['waiting', 'processing']) ){
-                    e(lang('conversion_x_cannot_be_resumed', display_clean($video['title'])), 'w');
-                    break;
-                }
-
-                FFmpeg::launchResume($file_name);;
-                break;
-        }
-    }
 }

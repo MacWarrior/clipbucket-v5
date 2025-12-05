@@ -43,8 +43,8 @@ function parse_and_attach_video($att): void
  */
 function video_attachment_form(): array
 {
-    $vid_array = ['user' => user_id(), 'order' => 'date_added DESC', 'limit' => 15];
-    $videos = CBvideo::getInstance()->get_videos($vid_array);
+    $params = ['userid' => user_id(), 'order' => 'date_added DESC', 'limit' => 15];
+    $videos = Video::getInstance()->getAll($params);
     $vids_array = ['' => lang('no_video')];
 
     if ($videos) {
@@ -455,15 +455,16 @@ class cb_pm
     {
         $to = post('to');
         $to = $to ? $to : get('to');
-
+        $hint_tags = config('allow_username_spaces') =='yes' ? '<span class="fa fa-question-circle tips" style="margin-left: 5px;" title=\''.lang('use_tab_tag').'\'></span>' : '';
         $array = [
             'to'      => [
                 'title'    => lang('to'),
-                'type'     => 'textfield',
+                'type'     => 'hidden',
                 'name'     => 'to',
                 'id'       => 'to',
                 'value'    => $to,
-                'required' => 'yes'
+                'required' => 'yes',
+                'hint_1' => $hint_tags
             ],
             'subj'    => [
                 'title'    => lang('subject'),

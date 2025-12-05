@@ -4,7 +4,6 @@ const THIS_PAGE = 'check_timezone';
 const IS_AJAX = true;
 require_once dirname(__FILE__, 3) . '/includes/admin_config.php';
 
-User::getInstance()->hasPermissionAjax('admin_access');
 $success = true;
 if (empty($_POST['timezone'])) {
     $success = false;

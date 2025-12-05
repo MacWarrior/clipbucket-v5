@@ -238,7 +238,7 @@
     </div>
 </form>
 <script>
-    var available_tags = JSON.parse('{$available_tags|json_encode|replace:"'": "\'"}');
+    var available_tags = JSON.parse('{$available_tags|json_encode|escape:'javascript'}');
     var text_confirm_comment = '{lang('text_confirm_comment')}';
     var text_no_comment = '{lang('no_comments',strtolower(lang('collection')))}';
     let visual_editor_comments_enabled = "{config('enable_visual_editor_comments') == 'yes'}";

@@ -1,3 +1,4 @@
+
 {if $msg}
     <div class="alert alert-block alert-info">
         {$msg}
@@ -65,7 +66,7 @@
 <script type="text/javascript">
     var uploadScriptPath ='{$uploaderDetails.uploadScriptPath}';
     var max_upload_size ="{Clipbucket::getInstance()->getMaxUploadSize()}Mb";
-    var max_file_size ="{config('max_upload_size')}Mb";
+    var max_file_size ="{(!empty(config('max_upload_size')|intval)) ? config('max_upload_size') : 1000}Mb";
     var chunk_upload ="{config('enable_chunk_upload') == 'yes'}";
     var video_extensions = '{ClipBucket::getInstance()->get_extensions('video')}';
     var theme = '{$theme}';
@@ -74,9 +75,10 @@
     var date_format_time = "{date(config('date_format'),time())}";
     var get_default_cid = "{$default_category_id}";
     var stay_mp4 = "{config('stay_mp4')}";
-    var available_tags = JSON.parse('{$available_tags|json_encode|replace:"'": "\'"}');
+    var available_tags = JSON.parse('{$available_tags|json_encode|escape:'javascript'}');
     var pourcent_completed = '{$pourcent_completed}';
     var cancel_uploading = '{$cancel_uploading}';
+    let text_confirm_sub_file = '{lang code = "confirm_delete_subtitle_file"}';
     {if $selected_collection}
     var collection_id = '{$selected_collection.collection_id}';
     {/if}

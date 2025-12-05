@@ -341,7 +341,12 @@ class Photo
         }
 
         if( $param_collection_id ){
-            $join[] = 'INNER JOIN ' . cb_sql_table($collection_items_table) . ' ON ' . $collection_items_table . '.collection_id = ' . $param_collection_id . ' AND photos.photo_id = ' . $collection_items_table . '.object_id';
+            if( is_array($param_collection_id) ){
+                $tmp_cond = ' IN (' . implode(',', $param_collection_id) . ')';
+            } else {
+                $tmp_cond = ' = ' . $param_collection_id;
+            }
+            $join[] = 'INNER JOIN ' . cb_sql_table($collection_items_table) . ' ON ' . $collection_items_table . '.collection_id' . $tmp_cond . ' AND photos.photo_id = ' . $collection_items_table . '.object_id';
         } else {
             $join[] = 'LEFT JOIN  ' . cb_sql_table($collection_items_table) . ' ON  photos.photo_id = ' . $collection_items_table . '.object_id AND ' . $collection_items_table . '.type = \'photos\'';
         }
@@ -1905,7 +1910,7 @@ class CBPhotos
                 'title'       => lang('photo_title'),
                 'name'        => 'photo_title',
                 'type'        => 'textfield',
-                'value'       => display_clean($title),
+                'value'       => $title,
                 'db_field'    => 'photo_title',
                 'required'    => 'yes',
                 'invalid_err' => lang('photo_title_err')
@@ -1914,7 +1919,7 @@ class CBPhotos
                 'title'         => lang('photo_caption'),
                 'name'          => 'photo_description',
                 'type'          => 'textarea',
-                'value'         => display_clean($description),
+                'value'         => $description,
                 'db_field'      => 'photo_description',
                 'anchor_before' => 'before_desc_compose_box',
                 'required'      => 'yes',
@@ -1927,19 +1932,20 @@ class CBPhotos
                 'id'                => 'tags',
                 'value'             => genTags($tags),
                 'required'          => 'no',
-                'hint_1'              =>$hint_tags,
+                'hint_1'            => $hint_tags,
                 'validate_function' => 'genTags'
             ],
             'collection' => [
-                'title'       => lang('collection'),
-                'name'        => 'collection_id',
-                'id'          => 'collection_id',
-                'type'        => 'dropdown_group',
-                'value'       => $cl_array,
-                'checked'     => $collection,
-                'invalid_err' => lang('collection_not_found'),
-                'required'    => 'yes',
-                'null_option' => ' ',
+                'title'                => lang('collection'),
+                'name'                 => 'collection_id',
+                'id'                   => 'collection_id',
+                'type'                 => 'dropdown_group',
+                'already_secured'      => true,
+                'value'                => $cl_array,
+                'checked'              => $collection,
+                'invalid_err'          => lang('collection_not_found'),
+                'required'             => 'yes',
+                'null_option'          => ' ',
                 'null_option_disabled' => true,
             ]
         ];
@@ -2805,15 +2811,14 @@ class CBPhotos
      *
      * @param      $id
      * @param bool $return_array
-     * @param bool $show_all
      *
      * @return bool|mixed
      * @throws Exception
      */
-    function photo_voters($id, $return_array = false, $show_all = false)
+    function photo_voters($id, $return_array = false)
     {
-        $p = $this->get_photo($id);
-        if ((!empty($p) && $p['userid'] == user_id()) || $show_all === true) {
+        $p = Photo::getInstance()->getOne(['photo_id'=>$id]);
+        if (!empty($p) && $p['userid'] == User::getInstance()->getCurrentUserID() || User::getInstance()->hasAdminAccess()) {
             $voters = $p['voters'];
             $voters = json_decode($voters, true);
 
@@ -2826,7 +2831,7 @@ class CBPhotos
                     $username = get_username($id);
                     $output = '<li id=\'user' . $id . $p['photo_id'] . '\' class=\'PhotoRatingStats\'>';
                     $output .= '<a href=\'' . userquery::getInstance()->profile_link($id) . '\'>' . display_clean($username) . '</a>';
-                    $output .= ' rated <strong>' . $details['rate'] / 2 . '</strong> stars <small>(';
+                    $output .= ' rated <strong>' . $details['rating'] / 2 . '</strong> stars <small>(';
                     $output .= niceTime($details['time']) . ')</small>';
                     $output .= '</li>';
                     echo $output;

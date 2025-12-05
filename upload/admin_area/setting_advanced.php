@@ -26,32 +26,34 @@ if (@$_GET['msg']) {
 
 if (isset($_POST['update'])) {
     $config_booleans = [
-        'stay_mp4',
-        'delete_mass_upload',
-        'enable_video_file_upload',
-        'enable_video_remote_upload',
-        'enable_photo_file_upload',
-        'send_comment_notification',
-        'approve_video_notification',
-        'smtp_auth',
-        'proxy_enable',
-        'proxy_auth',
-        'cache_enable',
-        'cache_auth',
-        'disable_email',
-        'only_keep_max_resolution',
-        'enable_chunk_upload',
-        'photo_enable_nsfw_check',
-        'video_enable_nsfw_check',
-        'store_guest_session'
+        'stay_mp4'
+        , 'delete_mass_upload'
+        , 'enable_video_file_upload'
+        , 'enable_video_remote_play'
+        , 'enable_photo_file_upload'
+        , 'send_comment_notification'
+        , 'approve_video_notification'
+        , 'smtp_auth'
+        , 'proxy_enable'
+        , 'proxy_auth'
+        , 'cache_enable'
+        , 'cache_auth'
+        , 'disable_email'
+        , 'only_keep_max_resolution'
+        , 'enable_chunk_upload'
+        , 'photo_enable_nsfw_check'
+        , 'video_enable_nsfw_check'
+        , 'store_guest_session'
+        , 'allow_conversion_1_percent'
     ];
 
     $config_booleans_to_refactor = [
-        'chromecast_fix',
-        'force_8bits',
-        'keep_audio_tracks',
-        'keep_subtitles',
-        'extract_subtitles'
+        'chromecast_fix'
+        , 'force_8bits'
+        , 'keep_audio_tracks'
+        , 'keep_subtitles'
+        , 'extract_subtitles'
+        , 'photo_crop'
     ];
 
     $rows = [
@@ -97,7 +99,7 @@ if (isset($_POST['update'])) {
         'delete_mass_upload',
         'stay_mp4',
         'enable_video_file_upload',
-        'enable_video_remote_upload',
+        'enable_video_remote_play',
         'enable_photo_file_upload',
 
         'allow_conversion_1_percent',
@@ -132,10 +134,7 @@ if (isset($_POST['update'])) {
         'video_nsfw_check_model',
         'email_sender_address',
         'email_sender_name',
-        'photo_nsfw_check_model',
-        'video_nsfw_check_model',
         'base_url',
-        'video_nsfw_check_model',
         'thumb_background_color',
         'subtitle_format',
         'store_guest_session',
@@ -165,6 +164,7 @@ if (isset($_POST['update'])) {
         'option_maximum_allowed_subtitle_size'
     ];
 
+    $has_missing_config = false;
     foreach ($rows as $field) {
         $value = ($_POST[$field]);
         if (in_array($field, $num_array)) {
@@ -183,15 +183,46 @@ if (isset($_POST['update'])) {
             }
         }
 
-        myquery::getInstance()->Set_Website_Details($field, $value);
+        if ($field == 'base_url' && (trim($value) ==='' || empty($value) || !filter_var($value, FILTER_VALIDATE_URL))) {
+            e(lang('base_url_required'));
+            continue;
+        }
+
+        if (!isset(myquery::getInstance()->Get_Website_Details()[$field])) {
+            if( !$has_missing_config ){
+                e(lang('error_missing_config_please_use_tool', DirPath::getUrl('admin_area') . 'admin_tool.php?code_tool=install_missing_config'),'w',false);
+                $has_missing_config = true;
+            }
+            if( System::isInDev() ){
+                $tmp_text = 'Missing config: '.$field;
+                error_log($tmp_text);
+                DiscordLog::sendDump($tmp_text);
+            }
+            continue;
+        }
+        if( !is_null($value) ){
+            myquery::getInstance()->Set_Website_Details($field, $value);
+        } else {
+            DiscordLog::sendDump('Missing value for config: '.$field);
+        }
     }
 
     //clear cache
     CacheRedis::flushAll();
     unset($_SESSION['check_global_configs']);
-
-    myquery::getInstance()->saveVideoResolutions($_POST);
-    e('Website settings have been updated', 'm');
+    $find = false;
+    foreach (array_keys($_POST) as $item) {
+        if (str_starts_with($item, 'gen_') && $_POST[$item] == 'yes') {
+            myquery::getInstance()->saveVideoResolutions($_POST);
+            $find = true;
+            break;
+        }
+    }
+    if (!$find) {
+        e(lang('at_least_one_resolution'));
+    } else {
+        e('Website settings have been updated', 'm');
+    }
 
     //reset permissions check cache
     if (isset($_SESSION['folder_access'])) {
@@ -250,6 +281,8 @@ if (!empty($tool)) {
     $cron_line = '* * * * * ' . System::get_binaries('php_cli') . ' -q ' . DirPath::get('admin_actions') . 'tool_launch.php id_tool=' . (int)$id_tool_automate;
 }
 assign('cron_copy_paste', $cron_line ?? '');
+
+assign('is_there_conversion_lock', FFMpeg::isThereAnyConversionLocks());
 
 $allTimezone = [];
 if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '99')) {

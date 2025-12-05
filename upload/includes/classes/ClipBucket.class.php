@@ -10,7 +10,7 @@ class ClipBucket
         return self::$instance;
     }
 
-    public $custom_video_file_funcs;
+    private $custom_video_file_funcs;
 
     var $JSArray = [];
     var $AdminJSArray = [];
@@ -67,6 +67,8 @@ class ClipBucket
 
     //This array contains the public pages name for private access to website 
     var $public_pages = ["signup", "view_page"];
+
+    public const DEFAULT_TEMPLATE = 'cb_28';
 
     /**
      * @throws Exception
@@ -166,6 +168,9 @@ class ClipBucket
         }
     }
 
+    /**
+     * @throws Exception
+     */
     public function getCacheKey()
     {
         if(System::isInDev()){
@@ -241,7 +246,7 @@ class ClipBucket
      *
      * @param $place
      *
-     * @return bool|mixed
+     * @return array|false
      */
     function get_anchor_function_list($place)
     {
@@ -511,10 +516,6 @@ class ClipBucket
                         , 'url' => DirPath::getUrl('admin_area') . 'action_logs.php?type=login'
                     ]
                     , [
-                        'title' => 'Conversion Queue Manager'
-                        , 'url' => DirPath::getUrl('admin_area') . 'cb_conversion_queue.php'
-                    ]
-                    , [
                         'title' => 'ReIndexer'
                         , 'url' => DirPath::getUrl('admin_area') . 'reindex_cb.php'
                     ]
@@ -622,7 +623,7 @@ class ClipBucket
             $template = $this->template;
         } else {
             // Fallback to default template
-            $template = 'cb_28';
+            $template = self::DEFAULT_TEMPLATE;
         }
         require_once DirPath::get('styles') . $template . DIRECTORY_SEPARATOR . 'header.php';
 
@@ -767,7 +768,7 @@ class ClipBucket
      * @return array|void
      * @throws Exception
      */
-    function foot_menu($params = null)
+    public function foot_menu($params = null)
     {
         $pages = cbpage::getInstance()->get_pages(['active' => 'yes', 'display_only' => 'yes', 'order' => 'page_order ASC']);
 
@@ -787,7 +788,7 @@ class ClipBucket
     /**
      * Function used to clean requests
      */
-    function clean_requests(): void
+    private function clean_requests(): void
     {
         $posts = $_POST;
         $gets = $_GET;
@@ -833,7 +834,7 @@ class ClipBucket
         }
     }
 
-    function getMaxUploadSize($suffix = ''): string
+    public function getMaxUploadSize($suffix = ''): string
     {
         $list_upload_limits = [];
 
@@ -844,7 +845,7 @@ class ClipBucket
         $list_upload_limits[] = (float)$upload_max_filesize * pow(1024, stripos('KMGT', strtoupper(substr($upload_max_filesize, -1)))) / 1024;
 
         if( config('enable_chunk_upload') == 'yes' ){
-            $list_upload_limits[] = (float)config('chunk_upload_size');
+            $list_upload_limits[] = !empty((float)config('chunk_upload_size')) ? (float)config('chunk_upload_size') : 2;
         }
 
         if( Network::is_cloudflare() ){
@@ -852,6 +853,28 @@ class ClipBucket
         }
 
         return (min($list_upload_limits)-0.01).$suffix;
+    }
+
+    public function get_custom_video_file_funcs()
+    {
+        return $this->custom_video_file_funcs;
+    }
+
+    public function register_custom_video_file_func($method, $class = null): bool
+    {
+        if (empty($method)) {
+            return false;
+        }
+
+        if (empty($class)) {
+            $this->custom_video_file_funcs[] = $method;
+        } else {
+            $this->custom_video_file_funcs[] = [
+                'class'    => $class
+                , 'method' => $method
+            ];
+        }
+        return true;
     }
 
 }

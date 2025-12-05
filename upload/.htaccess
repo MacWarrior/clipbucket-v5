@@ -9,13 +9,14 @@ RewriteRule ^(.*/)?403$                             $1403.php [L]
 RewriteRule ^(.*/)?404$                             $1404.php [L]
 
 # Forbidden access
-RewriteRule ^(.*/)\.(git|github|idea|gitignore|htaccess)$ $1403 [NC,R=302,L]
-RewriteRule ^(.*/)?(includes|changelog)/.*$ $1403 [NC,R=302,L]
+RewriteRule ^(.*/)\.(git|github|idea|gitignore|htaccess)$ $1/403 [NC,R=302,L]
+RewriteRule ^(.*/)?(includes|changelog)/.*$ $1/403 [NC,R=302,L]
+RewriteRule ^(.*/)?files/temp/.*$ $1/403 [NC,R=302,L]
 
 # Direct acces to files
 RewriteCond %{REQUEST_URI} ^(.*/)?/files/ [NC]
 RewriteCond %{REQUEST_FILENAME} !-f
-RewriteRule ^ $1404 [NC,R=301,L]
+RewriteRule ^ $1/404 [NC,R=301,L]
 
 RewriteCond %{REQUEST_URI} \.(css|js|jpe?g|png|gif|webp|svg|ico|woff2?|ttf|eot|otf|mp4|m3u8|ts|srt|webm|ogg|mp3)(\?.*)?$ [NC]
 RewriteCond %{REQUEST_FILENAME} -f
@@ -23,7 +24,7 @@ RewriteRule ^ - [L]
 
 RewriteCond %{REQUEST_URI} ^(.*/)?[^/]+\.(css|js|jpe?g|png|gif|webp|svg|ico|woff2?|ttf|eot|otf|mp4|m3u8|ts|srt|webm|ogg|mp3)(\?.*)?$ [NC]
 RewriteCond %{REQUEST_FILENAME} !-f
-RewriteRule ^ %1404 [R=302,L]
+RewriteRule ^ %1/404 [R=302,L]
 
 # External use
 RewriteRule ^(.*/)?sitemap.xml$                     $1sitemap.php?%{QUERY_STRING [L]

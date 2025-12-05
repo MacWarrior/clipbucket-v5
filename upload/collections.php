@@ -8,14 +8,14 @@ if( config('collectionsSection') != 'yes' || (config('videosSection') != 'yes' &
     redirect_to(DirPath::getUrl('root'));
 }
 
+User::getInstance()->hasPermissionOrRedirect('view_collections');
+pages::getInstance()->page_redir();
+
 $child_ids = false;
 if ($_GET['cat'] && is_numeric($_GET['cat'])) {
     $child_ids = Category::getInstance()->getChildren($_GET['cat'], true);
     $child_ids[] = mysql_clean($_GET['cat']);
 }
-
-User::getInstance()->hasPermissionOrRedirect('view_collections');
-pages::getInstance()->page_redir();
 
 $page = mysql_clean($_GET['page']);
 $get_limit = create_query_limit($page, config('collection_per_page'));
@@ -23,6 +23,9 @@ $sort_label = SortType::getSortLabelById($_GET['sort']) ?? '';
 $params = Collection::getInstance()->getFilterParams($sort_label, []);
 $params = Collection::getInstance()->getFilterParams($_GET['time'] ?? '', $params);
 $params['limit'] = $get_limit;
+$params['with_items'] = true;
+$params['with_sub_items'] = true;
+$params['count_items_only'] = true;
 if( $child_ids ){
     $params['category'] = $child_ids;
 }
@@ -30,8 +33,11 @@ $collections = Collection::getInstance()->getAll($params);
 assign('collections', $collections);
 
 $params = [
-    'limit'   => config('collection_home_top_collections')
-    , 'order' => 'COUNT(CASE WHEN collections.type = \'videos\' THEN video.videoid ELSE photos.photo_id END) DESC'
+    'limit'             => config('collection_home_top_collections')
+    ,'order'            => 'COUNT(CASE WHEN collections.type = \'videos\' THEN video.videoid ELSE photos.photo_id END) DESC'
+    ,'with_items'       => true
+    ,'with_sub_items'   => true
+    ,'count_items_only' => true
 ];
 
 assign('top_collections', Collection::getInstance()->getAll($params));
@@ -50,6 +56,9 @@ if( empty($collections) ){
 } else {
     unset($params['limit']);
     unset($params['order']);
+    unset($params['with_items']);
+    unset($params['with_sub_items']);
+    unset($params['count_items_only']);
     $params['count'] = true;
     $count = Collection::getInstance()->getAll($params);
 }

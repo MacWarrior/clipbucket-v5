@@ -63,6 +63,7 @@ if ($mode == 'dataimport' || !empty($result['err'])) {
 if ($mode == 'sitesettings') {
 
     $step = $_POST['step'];
+    //@remind : if you update $files, don't forget to update $files in \AdminTool::installMissingTranslations
     $files = [
         'structure'       => ['file'=>'structure.sql', 'msg'=>'Creating database structure...'],
         'version'         => ['file'=>'table_version.sql', 'msg'=>'Creating versionning...'],
@@ -145,7 +146,7 @@ if ($mode == 'sitesettings') {
                 if( !empty($_POST[$key . '_filepath']) ){
                     $filepath = $_POST[$key . '_filepath'];
                 } else {
-                    $filepath = System::get_binaries($key);;
+                    $filepath = System::get_binaries($key);
                 }
 
                 $sql = 'UPDATE ' . $dbprefix . 'config SET value = "' . $cnnct->real_escape_string($filepath) . '" WHERE name = "' . $config['config'] . '"';

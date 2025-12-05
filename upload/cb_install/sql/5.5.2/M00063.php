@@ -16,6 +16,6 @@ class M00063 extends \Migration
         ]);
 
         $sql = 'UPDATE `{tbl_prefix}collections` SET `public_upload` = \'no\' ';
-        self::query($sql);;
+        self::query($sql);
     }
 }

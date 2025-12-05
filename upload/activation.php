@@ -4,26 +4,13 @@ const PARENT_PAGE = 'signup';
 
 require 'includes/config.inc.php';
 
-if( userquery::getInstance()->udetails['usr_status'] == 'Ok' ){
+if( User::getInstance()->isUserConnected() ){
     redirect_to(DirPath::getUrl('root'));
 }
 
-/**
- * Activating user account
- */
-if (isset($_REQUEST['av_username']) || isset($_POST['activate_user'])) {
-    $user = mysql_clean($_REQUEST['av_username']);
-    $avcode = $_REQUEST['avcode'];
-    userquery::getInstance()->activate_user_with_avcode($user, $avcode);
+if( !empty($_GET['av_username']) && !empty($_GET['avcode']) ){
+    User::confirmAccount($_GET['av_username'], $_GET['avcode']);
 }
 
-/**
- * Requesting Activation Code
- */
-if (isset($_POST['request_avcode'])) {
-    $email = mysql_clean($_POST['av_email']);
-    userquery::getInstance()->send_activation_code($email);
-}
-
-template_files('activation.html');
+template_files('pages/user_activation.html');
 display_it();

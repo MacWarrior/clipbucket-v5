@@ -2,9 +2,6 @@
 const THIS_PAGE = 'dashboard';
 
 require_once dirname(__FILE__, 2) . '/includes/admin_config.php';
-if( !User::getInstance()->hasPermission('admin_access') ){
-    redirect_to('login.php');
-}
 
 /* Generating breadcrumb */
 global $breadcrumb;

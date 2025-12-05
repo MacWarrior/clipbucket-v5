@@ -3,11 +3,9 @@ const THIS_PAGE = 'update_check_before_launch';
 const IS_AJAX = true;
 require_once dirname(__FILE__, 3) . '/includes/admin_config.php';
 
-User::getInstance()->hasPermissionAjax('admin_access');
-
-$response['core_checked'] = $_POST['core_checked'] ??false;
-$response['db_checked'] = $_POST['db_checked'] ??false;
-$response['conversion_checked'] = $_POST['conversion_checked'] ??false;
+$response['core_checked'] = $_POST['core_checked'] ?? false;
+$response['db_checked'] = $_POST['db_checked'] ?? false;
+$response['conversion_checked'] = $_POST['conversion_checked'] ?? false;
 $response['confirm_message'] = '';
 
 if (!$response['core_checked'])  {
@@ -36,7 +34,7 @@ if (!$response['db_checked'])  {
 }
 if (!$response['conversion_checked'])  {
     /** @var AdminTool $core_tool */
-    if (!empty(myquery::getInstance()->get_conversion_queue(' time_completed is null or time_completed = \'\' or time_completed = 0'))) {
+    if (!empty(VideoConversionQueue::get_conversion_queue(['not_complete'=>true]))) {
         $response['confirm_message_conv'] = lang('alert_video_conversion_ongoing');
         echo json_encode($response);
         die;

@@ -18,7 +18,7 @@ if( empty($u) ){
 
 $params_user = [
     'channel_enable' => true
-    ,'username' => $u
+    ,'username_strict' => $u
 ];
 
 $udetails = User::getInstance()->getOne($params_user);
@@ -181,7 +181,8 @@ if( isSectionEnabled('videos') ){
 if( isSectionEnabled('photos') && User::getInstance($udetails['userid'])->get('show_my_photos') == 'yes' ){
     $photos = Photo::getInstance()->getAll([
         'userid'=>$udetails['userid'],
-        'limit'=>config('photo_channel_page')
+        'limit'=>config('photo_channel_page'),
+        'order'=>'date_added DESC'
     ]);
     assign('photos', $photos);
 }

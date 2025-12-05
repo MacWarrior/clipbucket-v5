@@ -186,18 +186,27 @@ function SetTime($sec, $padHours = true): string
     return $hms;
 }
 
-/**
- * Checks if provided email is valid or not
- *
- * @param : { string } { $email } { email address to check }
- *
- * @return mixed
- */
-function isValidEmail($email)
-{
-    return filter_var($email, FILTER_VALIDATE_EMAIL);
-}
 
+function isValidHTML(string $html): bool {
+    if (!extension_loaded('libxml') || !class_exists('DOMDocument')) {
+        return true;
+    }
+
+    if (!preg_match('/<[^>]+>/', $html)) {
+        return false;
+    }
+
+    libxml_use_internal_errors(true);
+
+    $dom = new DOMDocument();
+
+    $loaded = $dom->loadHTML($html, LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
+
+    $errors = libxml_get_errors();
+    libxml_clear_errors();
+
+    return $loaded !== false && empty($errors);
+}
 
 /**
  * Get Directory Size - get_video_file($vdata,$no_video,false);
@@ -581,8 +590,11 @@ function is_valid_syntax($code, $text): bool
  */
 function is_valid_value($func, $val): bool
 {
-    if (!function_exists($func)) {
-        return true;
+    if (!is_callable($func)) {
+        if(System::isInDev()) {
+            DiscordLog::sendDump('function not found : ' . $func);
+        }
+        return false;
     }
     if ($func($val)===false) {
         return false;
@@ -616,8 +628,6 @@ function apply_func($func, $val)
  * Function used to validate YES or NO input
  *
  * @param : { string } { $input } { field to be checked }
- *
- * @param $return
  *
  * @return string
  */
@@ -1441,65 +1451,89 @@ function call_view_collection_functions($cdetails): void
  * @param      $id
  * @param null $type
  *
+ * @return bool
  * @throws Exception
  * @internal param $ : { string } { $type } { type of object e.g video, user } { $type } { type of object e.g video, user }
  * @action : database updating
  * @internal param $ : { integer } { $id } { id of element to update views for } { $id } { id of element to update views for }
  */
-function increment_views($id, $type = null): void
+function increment_views($id, $type = null): bool
 {
-    $userid = user_id();
+    $session_key = $type . '_' . $id;
 
     switch ($type) {
         case 'video':
         default:
-            $vdetails = get_video_details($id);
-            $sessionTime =  ($vdetails['duration'] ?? 3600);
-            if (!isset($_SESSION[$type . '_' . $id]) || ( time() - $_SESSION[$type . '_' . $id]  > $sessionTime) && $vdetails['status'] == 'Successful') {
-                Clipbucket_db::getInstance()->update(tbl('video'), ['views', 'last_viewed'], ['|f|views+1', '|f|NOW()'], " videokey='$id'");
-                if (config('enable_video_view_history') == 'yes') {
-                    Clipbucket_db::getInstance()->insert(tbl('video_views'), ['id_video', 'id_user', 'view_date'], [$id, ($userid ?: 0), '|f|NOW()']);
-                }
-                $_SESSION[$type . '_' . $id] = time();
+            if( is_numeric($id) ) {
+                $video = Video::getInstance()->getOne(['videoid' => $id]);
+            } else if( is_array($id) ){
+                $video = $id;
+            }
 
+            if( empty($video) ) {
+                $return = false;
+                break;
+            }
+
+            $sessionTime = (int) (($video['duration'] ?? 3600) * 0.9);
+            if (!isset($_SESSION[$session_key]) || ( time() - $_SESSION[$session_key] > $sessionTime) && $video['status'] == 'Successful') {
+                $userid = user_id();
+                Clipbucket_db::getInstance()->update(tbl('video'), ['views', 'last_viewed'], ['|f|views+1', '|f|NOW()'], ' videoid='. (int)$video['videoid']);
+                if (config('enable_video_view_history') == 'yes') {
+                    Clipbucket_db::getInstance()->insert(tbl('video_views'), ['id_video', 'id_user', 'view_date'], [(int)$video['videoid'], ($userid ?: 0), '|f|NOW()']);
+                }
 
                 if ($userid) {
                     $log_array = [
                         'success'       => 'NULL',
-                        'action_obj_id' => $id,
+                        'action_obj_id' => $video['videoid'],
                         'userid'        => $userid,
-                        'details'       => $vdetails['title']
+                        'details'       => $video['title']
                     ];
                     insert_log('Watch a video', $log_array);
                 }
+                $return = true;
+            } else {
+                $return = false;
             }
             break;
 
         case 'channel':
             $sessionTime = 3600;
-            if( !isset($_SESSION[$type . '_' . $id]) || ( time() - $_SESSION[$type . '_' . $id]  > $sessionTime) ){
+            if( !isset($_SESSION[$session_key]) || ( time() - $_SESSION[$session_key]  > $sessionTime) ){
                 Clipbucket_db::getInstance()->update(tbl('users'), ['profile_hits'], ['|f|profile_hits+1'], ' userid= ' . (int)$id);
-                $_SESSION[$type . '_' . $id] = time();
+                $return = true;
+            } else {
+                $return = false;
             }
             break;
 
         case 'photo':
             $sessionTime = 3600;
-            if( !isset($_SESSION[$type . '_' . $id]) || ( time() - $_SESSION[$type . '_' . $id]  > $sessionTime) ){
+            if( !isset($_SESSION[$session_key]) || ( time() - $_SESSION[$session_key]  > $sessionTime) ){
                 Clipbucket_db::getInstance()->update(tbl('photos'), ['views', 'last_viewed'], ['|f|views+1', NOW()], ' photo_id = ' . (int)$id);
-                $_SESSION[$type . '_' . $id] = time();
+                $return = true;
+            } else {
+                $return = false;
             }
             break;
 
         case 'playlist':
             $sessionTime = 3600;
-            if( !isset($_SESSION[$type . '_' . $id]) || ( time() - $_SESSION[$type . '_' . $id]  > $sessionTime) ){
+            if( !isset($_SESSION[$session_key]) || ( time() - $_SESSION[$session_key]  > $sessionTime) ){
                 Clipbucket_db::getInstance()->update(tbl('playlists'), ['played'], ['|f|played+1'], ' playlist_id = ' . (int)$id);
-                $_SESSION[$type . '_' . $id] = time();
+                $return = true;
+            } else {
+                $return = false;
             }
             break;
     }
 
+    if( $return ){
+        $_SESSION[$session_key] = time();
+    }
+
+    return $return;
 }
 
 /**
@@ -1672,7 +1706,6 @@ function validate_cb_form($input, $array): void
     //Check the Collpase Category Checkboxes
     if (is_array($input)) {
         foreach ($input as $field) {
-            $funct_err = false;
             $field['name'] = formObj::rmBrackets($field['name']);
             $title = $field['title'];
             $val = $array[$field['name']];
@@ -1704,13 +1737,12 @@ function validate_cb_form($input, $array): void
                 } else {
                     $block = false;
                 }
-            } else {
-                //if field not required and empty it's valid
-                $funct_err = true;
             }
-            if (!empty($val) || $val === '0') {
-                //don't test validity if field is empty
+            if (!empty($val) && !empty($field['validate_function'])) {
+                //don't test validity if field or validate function is empty
                 $funct_err = is_valid_value($field['validate_function'], $val);
+            } else {
+                $funct_err = true;
             }
             if (!$block) {
                 //Checking Syntax
@@ -3625,7 +3657,32 @@ function save_subtitle_ajax()
 
     $response['success'] = $success;
     $response['msg'] = getTemplateMsg();
+    if (!empty($_POST['is_for_upload'])) {
+        $subtitle_list = get_video_subtitles($video);
+        assign('videoid', $video['videoid']);
+        assign('vstatus', $video['status']);
+        assign('subtitle_list', $subtitle_list);
+        $response['html_list'] = getTemplate('blocks/subtitle_list.html');
+    }
     echo json_encode($response);
+}
+
+function getSQLRequestsFromFile($file)
+{
+    $requests = [];
+        if (!file_exists($file)) {
+            throw new Exception('Missing config file');
+        }
+        $lines = file($file);
+        $templine = '';
+        foreach ($lines as $line) {
+            $templine .= $line;
+            if (str_ends_with(trim($line), ';')) {
+                $requests[] = $templine;
+                $templine = '';
+            }
+        }
+        return $requests;
 }
 
 include('functions_db.php');

@@ -15,13 +15,17 @@ $player = str_replace('..', '', $player);
 
 if ($folder && $file) {
     if (!$player) {
-        $file = DirPath::get('plugins') . $folder . DIRECTORY_SEPARATOR . $file;
+        $file_path = DirPath::get('plugins') . $folder . DIRECTORY_SEPARATOR . $file;
     } else {
-        $file = DirPath::get('player') . $folder . DIRECTORY_SEPARATOR . $file;
+        $file_path = DirPath::get('player') . $folder . DIRECTORY_SEPARATOR . $file;
     }
-
-    if (file_exists($file)) {
-        require_once($file);
+    $plugin = Plugin::getInstance()->getAll([
+        'plugin_folder' => $folder,
+        'plugin_file'   => $file,
+        'first_only'    => true
+    ]);
+    if (file_exists($file_path) && !empty($plugin) && $plugin['plugin_active'] == 'yes') {
+        require_once($file_path);
         display_it();
         exit();
     }

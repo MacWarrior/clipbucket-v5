@@ -116,7 +116,7 @@ $(document).ready(function () {
         }
         e.preventDefault();
         $.ajax({
-            url: "actions/tmdb_test.php",
+            url: admin_url + 'actions/tmdb_test.php',
             type: "POST",
             data: {token: $('#tmdb_token').val()},
             dataType: 'json',
@@ -238,7 +238,7 @@ $(document).ready(function () {
             $('.alert-dismissable').remove();
             $(select_timezone).removeClass('has-error');
             $('#spinner-content').show();
-            $.post('actions/timezone_check.php',{timezone: $(this).val()} ,function(data) {
+            $.post(admin_url + 'actions/timezone_check.php',{timezone: $(this).val()} ,function(data) {
                 if (data.success) {
                     $('.btn-primary').prop('disabled', false);
                 } else {
@@ -252,4 +252,37 @@ $(document).ready(function () {
     }
 
     $('#timezone').select2();
+
+    $('input[name^="gen_"]').on('change', function (event) {
+        var elem = $(this);
+        if ($('input[name^="gen_"]:checked').length < 1) {
+            event.preventDefault();
+            alert(lang['at_least_one_resolution']);
+            elem.prop('checked', true);
+        }
+    });
+
+    $('.delete_conversion_lock').on('click', function (e) {
+        e.preventDefault();
+        var button = $(this);
+        showSpinner();
+        $.post({
+            url:admin_url + 'actions/conversion_delete_lock.php',
+            dataType: 'json',
+            success: function (response) {
+                $(".page-content").prepend(response.msg);
+                button.prop('disabled', true).prop('title', response.lang_title);
+                hideSpinner();
+
+            }
+        })
+    });
+
+    $('#update').on('click',function (e) {
+        var base_url = $('#base_url');
+        if (base_url.val().trim() === '') {
+            $('a[href="#config_hosting"]').trigger('click');
+            base_url.trigger('focus');
+        }
+    });
 });

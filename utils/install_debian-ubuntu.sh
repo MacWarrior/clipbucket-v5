@@ -13,7 +13,7 @@ echo "| |   | | | '_ \|  _ \| | | |/ __| |/ / _ \ __\ \ / /|___ \\"
 echo "| |___| | | |_) | |_) | |_| | (__|   <  __/ |_ \ V /  ___) |"
 echo " \____|_|_| .__/|____/ \__,_|\___|_|\_\___|\__| \_/  |____/"
 echo "          |_|            Installation script for"
-echo "                    Debian 10-12 & Ubuntu 22.04-24.10"
+echo "                    Debian 10-13 & Ubuntu 22.04-25.04"
 echo ""
 echo "Disclaimer : This easy installation script is only"
 echo "             made to configure local / dev environments."
@@ -42,6 +42,9 @@ case ${OS_NAME} in
     "Debian GNU/Linux 12 (bookworm)")
         OS="DEBIAN12"
         ;;
+    "Debian GNU/Linux 13 (trixie)")
+        OS="DEBIAN13"
+        ;;
 
     "Ubuntu 22.04.3 LTS"|"Ubuntu 22.04.2 LTS"|"Ubuntu 22.04.1 LTS"|"Ubuntu 22.04 LTS"|"Ubuntu 22.04")
         OS="UBUNTU2204"
@@ -58,6 +61,9 @@ case ${OS_NAME} in
     "Ubuntu 24.10")
         OS="UBUNTU2410"
         ;;
+    "Ubuntu 25.04")
+        OS="UBUNTU2504"
+        ;;
     *)
         echo ""
         echo ""
@@ -66,11 +72,13 @@ case ${OS_NAME} in
         echo " - Debian 10"
         echo " - Debian 11"
         echo " - Debian 12"
+        echo " - Debian 13"
         echo " - Ubuntu 22.04"
         echo " - Ubuntu 23.04"
         echo " - Ubuntu 23.10"
         echo " - Ubuntu 24.04"
         echo " - Ubuntu 24.10"
+        echo " - Ubuntu 24.05"
         read -p "Which operating system do you use ? " READ_OS
         case ${READ_OS} in
             "Debian 10"|"debian 10")
@@ -79,8 +87,11 @@ case ${OS_NAME} in
             "Debian 11"|"debian 11")
                 OS="DEBIAN11"
                 ;;
-            "Debian"|"debian"|"Debian 12"|"debian 12")
+            "Debian 12"|"debian 12")
                 OS="DEBIAN12"
+                ;;
+            "Debian"|"debian"|"Debian 13"|"debian 13")
+                OS="DEBIAN13"
                 ;;
             "Ubuntu 22.04"|"ubuntu 22.04")
                 OS="UBUNTU2204"
@@ -94,8 +105,11 @@ case ${OS_NAME} in
             "Ubuntu 24.04"|"ubuntu 24.04")
                 OS="UBUNTU2404"
                 ;;
-            "Ubuntu"|"ubuntu"|"Ubuntu 24.10"|"ubuntu 24.10")
+            "Ubuntu 24.10"|"ubuntu 24.10")
                 OS="UBUNTU2410"
+                ;;
+            "Ubuntu"|"ubuntu"|"Ubuntu 25.04"|"ubuntu 25.04")
+                OS="UBUNTU2504"
                 ;;
             *)
                 echo "Unknown system, please select Debian or Ubuntu"
@@ -201,6 +215,10 @@ case ${OS} in
         esac
         ;;
 
+    "DEBIAN13")
+        PHP_VERSION="8.4"
+        ;;
+
     "UBUNTU2304"|"UBUNTU2204")
         PHP_VERSION="8.1"
         ;;
@@ -209,6 +227,9 @@ case ${OS} in
         ;;
     "UBUNTU2404"|"UBUNTU2410")
         PHP_VERSION="8.3"
+        ;;
+    "UBUNTU2504")
+        PHP_VERSION="8.4"
         ;;
 esac
 
@@ -304,6 +325,9 @@ server {
         return 302 $1403;
     }
     location ~* ^(.*/)?(includes|changelog)/ {
+        return 302 $1403;
+    }
+    location ~* ^(.*/)?files/temp/ {
         return 302 $1403;
     }
 

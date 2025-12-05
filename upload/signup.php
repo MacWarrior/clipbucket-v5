@@ -7,6 +7,10 @@ if (User::getInstance()->isUserConnected()) {
     redirect_to(DirPath::getUrl('root'));
 }
 
+if ((empty(trim(config('base_url'))) || !filter_var(config('base_url'), FILTER_VALIDATE_URL)) && (($_GET['mode'] ?? '') != 'login')) {
+    sessionMessageHandler::add_message(lang('cant_perform_action_until_app_fully_updated'), 'e', User::getInstance()->getDefaultHomepageFromUserLevel());
+}
+
 /**
  * Function used to call all signup functions
  */
@@ -49,7 +53,6 @@ if (isset($_POST['signup'])) {
         }
     }
 }
-
 //Login User
 if (isset($_POST['login'])) {
     $username = mysql_clean($_POST['username']);
@@ -71,9 +74,13 @@ if (!isset($_POST['login']) && !isset($_POST['signup'])) {
         $msg = lang('usr_ban_err');
     }
 }
-
+$min_suffixe = System::isInDev() ? '' : '.min';
 if($_GET['mode'] ?? '' == 'login'){
     subtitle(lang('login'));
+
+    ClipBucket::getInstance()->addJS([
+        'pages/login/login' . $min_suffixe . '.js'        => 'admin'
+    ]);
     template_files('pages/login.html');
 } else {
     subtitle(lang('signup'));
@@ -82,7 +89,7 @@ if($_GET['mode'] ?? '' == 'login'){
         $datepicker_js_lang = '_languages/datepicker-'.Language::getInstance()->getLang();
     }
 
-    $min_suffixe = System::isInDev() ? '' : '.min';
+
     ClipBucket::getInstance()->addJS([
         'jquery_plugs/datepicker'.$datepicker_js_lang.'.js' => 'global',
         'pages/signup/signup' . $min_suffixe . '.js'        => 'admin'
