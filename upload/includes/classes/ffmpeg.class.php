@@ -357,6 +357,7 @@ class FFMpeg
             }
         } else {
             $this->log->writeLine('<b>Video resolution is lower than lower resolution enabled : no video resolution available for conversion</b>');
+            unset($this->input_file);
         }
 
         $this->end_time_check();
