@@ -1531,7 +1531,7 @@ function reConvertVideos($data = ''): void
         // get details of single video
         $vdetails = CBvideo::getInstance()->get_video($video_id);
 
-        $link = '<a href="'.DirPath::getUrl('admin_area').'edit_video.php?video='.$video_id.'">"' . $vdetails['title'] . '"</a>';
+        $link = '<a href="'.DirPath::getUrl('admin_area').'edit_video.php?video='.$video_id.'">' . $vdetails['title'] . '</a>';
         if ($vdetails['status'] == 'Waiting') {
             e(lang('video_is_already_waiting', $link), 'w', false);
             continue;
@@ -1592,12 +1592,11 @@ function reConvertVideos($data = ''): void
         $logFile = DirPath::get('logs') . $vdetails['file_directory'] . DIRECTORY_SEPARATOR . $vdetails['file_name'] . '.log';
         $log = new SLog($logFile);
         $log->newSection('Reconvert launched from ' . $file_used );
-        e(lang('reconversion_started_for_x', $link), 'm', false);
 
         if (empty(errorhandler::getInstance()->get_error())) {
             errorhandler::getInstance()->flush();
         }
-
+        e(lang('reconversion_started_for_x', $link), 'm', false);
     }
 }
 

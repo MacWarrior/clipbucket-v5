@@ -1,6 +1,6 @@
 {
   "version":"5.5.2",
-  "revision":"184",
+  "revision":"185",
   "status":"stable",
   "detail":[
     {
@@ -34,6 +34,7 @@
         ,"Update new member form access"
         ,"Update FFI module warning"
         ,"Update required version notice"
+        ,"Update video reconvertion (Thanks @McArrow !) <i>(#695)</i>"
         ,"Fix code mode on page edition <i>(#595)</i>"
         ,"Fix email sending error catching <i>(#587)</i>"
         ,"Fix incorrect frontend URL <i>(#529)</i>"
