@@ -42,7 +42,7 @@ try{
         $serverMySqlVersion = $data[0]['@@version'];
         preg_match($regex_version, $serverMySqlVersion, $match_mysql);
         $serverMySqlVersion = $match_mysql[0] ?? $data[0]['@@version'];
-        $mysqlReq='5.6.0';
+        $mysqlReq=System::MIN_MYSQL_VERSION;
         if (version_compare($serverMySqlVersion, $mysqlReq) < 0) {
             $result['err'] = '<span class="alert">MySql Server (v'.$serverMySqlVersion.') is outdated : version ' . $mysqlReq . ' minimal is required</span>';
         }

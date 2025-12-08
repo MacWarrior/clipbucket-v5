@@ -1582,7 +1582,7 @@ class AdminTool
                 $serverMySqlVersion = $match_mysql[0] ?? false;
                 $value = [
                     $task => [
-                        'php_web'       => System::get_software_version('php_web', false, null, true),
+                        'php_web'       => System::getPHPVersionWeb(),
                         'php_cli'       => System::get_software_version('php_cli'),
                         'mysql_version' => $serverMySqlVersion
                     ]

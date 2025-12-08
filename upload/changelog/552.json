@@ -1,6 +1,6 @@
 {
   "version":"5.5.2",
-  "revision":"182",
+  "revision":"183",
   "status":"stable",
   "detail":[
     {
@@ -33,6 +33,7 @@
         ,"Update core update error handling"
         ,"Update new member form access"
         ,"Update FFI module warning"
+        ,"Update required version notice"
         ,"Fix code mode on page edition <i>(#595)</i>"
         ,"Fix email sending error catching <i>(#587)</i>"
         ,"Fix incorrect frontend URL <i>(#529)</i>"
