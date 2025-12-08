@@ -1,5 +1,4 @@
 {lang code='channel' assign='object_type'}
-{$loadMoreLang ={lang code="load_more"}}
 
 {$total_videos = $user.total_videos}
 {$total_photos = $user.total_photos}
@@ -170,13 +169,11 @@
                             {if !empty($photos)}
                                 <div id="usr-photos" class="clearfix row user_photos">
                                     {foreach from=$photos item=p_list}
-                                        <div class="item-photo col-lg-4 col-md-4 col-sm-6 col-xs-12">
-                                            {include file="$style_dir/blocks/photo.html" photo=$p_list display_type = "default_photo"}
-                                        </div>
+                                        {include file="$style_dir/blocks/photo.html" photo=$p_list display_type = "view_channelAjax" show=true}
                                     {/foreach}
                                     {if $user.total_photos > config('photo_channel_page') && count($photos) == config('photo_channel_page')}
-                                        <div class="clearfix text-center">
-                                            <button id="more-channel-photos" class="btn btn-loadmore" dataLimit="{config('photo_channel_page')}" dataHit="2">{lang code='load_more'}</button>
+                                        <div class="clearfix text-center col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                            <button id="more-channel-photos" class="btn btn-loadmore"  dataHit="2">{lang code='load_more'}</button>
                                         </div>
                                     {/if}
                                 </div>
@@ -233,7 +230,8 @@
     var channelId = "{$user['userid']}";
     var totalVids = "{$total_videos}";
     var totalPhotos = "{$total_photos}";
-    var loadMoreLang = "{$loadMoreLang}";
+    var loadMoreLang = "{lang('load_more')}";
+    var loading = "{lang('loading')}";
     var libelle_type_channel = "{Comments::$libelle_type_channel}";
     var chunk_upload = "{config('enable_chunk_upload') == 'yes'}";
     var max_upload_size = "{Clipbucket::getInstance()->getMaxUploadSize()}Mb";

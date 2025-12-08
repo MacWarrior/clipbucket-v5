@@ -20,11 +20,15 @@
 
                 <input id="login_btn" type="submit" name="login" value="{lang code='login'}" class="btn btn-primary btn-lg btn-block">
                 {if config('disable_email') == 'no'}
-                    <div style="font-size:0.75em;text-align:center;">
-                        <a href="{$baseurl}forgot.php?mode=recover_username">{lang code='user_forgot_username'}</a>
-                        - <a href="{$baseurl}forgot.php">{lang code='user_forgot_message'}</a>
+                    {assign var=base_url_empty value=(empty(trim(config('base_url'))) || !filter_var(config('base_url'), FILTER_VALIDATE_URL))}
+                    <div style="font-size:0.75em;text-align:center;{if $base_url_empty} cursor: not-allowed;" title="{lang('cant_perform_action_until_app_fully_updated')}{/if}">
+                        <a href="{$baseurl}forgot.php?mode=recover_username" {if $base_url_empty} style="pointer-events: none;  opacity: 0.65;"{/if}>
+                            {lang code='user_forgot_username'}</a>
+                        - <a href="{$baseurl}forgot.php" {if $base_url_empty}class="disabled" style="pointer-events: none;  opacity: 0.65;"{/if}>
+                            {lang code='user_forgot_message'}</a>
                         {if config('email_verification') == '1'}
-                        - <a href="{$baseurl}email_confirm.php?mode=request">{lang code='usr_actiavation_msg1'}</a>
+                        - <a href="{$baseurl}email_confirm.php?mode=request" {if $base_url_empty}class="disabled" style="pointer-events: none;  opacity: 0.65;"{/if}>
+                            {lang code='usr_actiavation_msg1'}</a>
                         {/if}
                     </div>
                 {/if}

@@ -34,7 +34,6 @@
 {$vidMode = lang('videos')|lower}
 {$photoMode = lang('photos')|lower}
 {$channelsMode = lang('channels')|lower}
-
 <header id="header" class="clearfix">
     <nav class="navbar navbar-default">
         <div class="container-fluid">
@@ -184,8 +183,9 @@
                                 {else}
 
                                     {if config('allow_registeration')}
-                                        <li class="navbar-sm-login-links">
-                                            <a class="btn btn-default btn-newacc" href="{cblink name='signup'}"><span class="big">{lang code='create_new_account'}</span><span class="little" style="display:none;">{lang code='signup'}</span></a>
+                                        <li class="navbar-sm-login-links" {if $base_url_empty}title="{lang('cant_perform_action_until_app_fully_updated')}{/if}">
+                                            <a class="btn btn-default btn-newacc {if $base_url_empty}disabled{/if}" href="{cblink name='signup'}">
+                                                {lang code='create_new_account'}</a>
                                         </li>
                                     {/if}
                                     <li class="navbar-sm-login-links">

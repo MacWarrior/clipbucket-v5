@@ -63,6 +63,7 @@ if ($mode == 'dataimport' || !empty($result['err'])) {
 if ($mode == 'sitesettings') {
 
     $step = $_POST['step'];
+    //@remind : if you update $files, don't forget to update $files in \AdminTool::installMissingTranslations
     $files = [
         'structure'       => ['file'=>'structure.sql', 'msg'=>'Creating database structure...'],
         'version'         => ['file'=>'table_version.sql', 'msg'=>'Creating versionning...'],

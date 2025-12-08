@@ -670,7 +670,8 @@ class EmailTemplate
                 }
             }
         } else {
-            if (Email::isValid($to) || Email::isValid($to['mail'])) {
+            $to_email = is_array($to) ? $to['mail'] : $to;
+            if (Email::isValid($to_email)) {
                 self::addAddressAndNameIfExist($mail, $to);
             } else {
                 return lang('invalid_email_recipient');

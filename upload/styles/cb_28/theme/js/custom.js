@@ -634,7 +634,7 @@ function updateCookieBannerPosition() {
 }
 
 function showCookieBanner() {
-    if (!cookieConsent) {
+    if (typeof cookieConsent !== 'undefined' && !cookieConsent ) {
         let banner = document.getElementById('cookie-banner');
         if (banner) {
             banner.style.display = '';
@@ -645,14 +645,14 @@ function showCookieBanner() {
 function hideCookieBanner() {
     document.getElementById('cookie-banner').style.display = 'none';
 }
-function showModal() {
+function showCookieModal() {
     let modal = document.getElementById('cookieListModal');
     modal.classList.add('in');
     modal.style.display = 'block';
     if (!document.querySelector('.modal-backdrop')) {
         let backdrop = document.createElement('div');
         backdrop.className = 'modal-backdrop fade in';
-        backdrop.onclick = closeModal;
+        backdrop.onclick = closeCookieModal;
         document.body.appendChild(backdrop);
     }
     document.body.classList.add('modal-open');
@@ -679,7 +679,7 @@ function showModal() {
         saveCookiePreferences();
     };
 }
-function closeModal() {
+function closeCookieModal() {
     let modal = document.getElementById('cookieListModal');
     modal.classList.remove('in');
     modal.style.display = 'none';
@@ -698,7 +698,7 @@ function renderCookieList() {
                 let response = JSON.parse(xhr.responseText);
                 if (response && response.template) {
                     document.getElementById('cookie-list-content').innerHTML = response.template;
-                    showModal();
+                    showCookieModal();
                 } else {
                     document.getElementById('cookie-list-content').innerHTML = '<div class="alert alert-danger">Erreur lors de la récupération du contenu.</div>';
                 }
@@ -823,7 +823,7 @@ function saveCookiePreferences() {
         data[input.name] = input.checked ? 1 : 0;
     });
     ajaxSetConsent(JSON.stringify(data), function(response) {
-        closeModal();
+        closeCookieModal();
         hideCookieBanner();
         checkDisabledFeatured(data);
     });
@@ -842,13 +842,13 @@ document.addEventListener('DOMContentLoaded', function() {
                 renderCookieList();
             };
         }
-        document.getElementById('modal-close-btn').onclick = closeModal;
+        document.getElementById('modal-close-btn').onclick = closeCookieModal;
 
         let acceptButtons = document.querySelectorAll('.accept-cookies');
         acceptButtons.forEach(function(btn) {
             btn.onclick = function() {
                 ajaxSetConsent('all', function() {
-                    closeModal();
+                    closeCookieModal();
                     hideCookieBanner();
                 });
             };
@@ -857,7 +857,7 @@ document.addEventListener('DOMContentLoaded', function() {
             if (e.key === 'Escape') {
                 let modal = document.getElementById('cookieListModal');
                 if (modal && window.getComputedStyle(modal).display !== 'none') {
-                    closeModal();
+                    closeCookieModal();
                 }
             }
         });

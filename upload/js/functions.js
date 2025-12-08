@@ -108,32 +108,6 @@ function get_video(type,div)
     );
 }
 
-/**
- * functio used to get photos through ajax
- */
-function getAjaxPhoto(type,div)
-{
-    $(div).css('display','block');
-    var preservedHTML = $(div).html();
-    $.ajax({
-        url : page,
-        type : 'POST',
-        dataType : 'json',
-        data : ({ mode : 'loadAjaxPhotos', 'photosType' : type }),
-        beforeSend : function () {
-            $(div).html(loading);
-        },
-        success : function (data) {
-            if(data['failed']) {
-                $(div).html(preservedHTML);
-            }
-
-            if(data['completed']) {
-                $(div).html(data['photoBlocks']);
-            }
-        }
-    })
-}
 
 
 function rating_over(msg,disable)
@@ -372,8 +346,7 @@ function swap_auto_play()
 
 function collection_actions(form,mode,objID,result_con,type,cid)
 {
-    $(result_con).css('display','block');
-    $(result_con).html(loading);
+    showSpinner();
     switch(mode) {
         case 'add_new_item':
             const value = $('#'+form+' #collection').val();
@@ -381,28 +354,26 @@ function collection_actions(form,mode,objID,result_con,type,cid)
                  $(result_con).html('No Data returned');
                  return false;
             }
-            $.post(baseurl+'actions/add_to_collection.php', {
-                mode: mode,
-                cid: value,
-                obj_id: objID,
-                type: type
-            },
-            function(data) {
-                if(!data){
-                    alert('No Data returned');
-                } else {
-                    if(data.msg){
-                        $(result_con).html(data.msg);
-                        $(result_con).find('.container').css({
-                            'maxWidth' : '100%'
-                        });
+            $.post(baseurl + 'actions/add_to_collection.php', {
+                    mode: mode,
+                    cid: value,
+                    obj_id: objID,
+                    type: type
+                }, function (data) {
+                    if (!data) {
+                        alert('No Data returned');
+                    } else {
+                        if (data.msg) {
+                            $(result_con).html(data.msg).slideDown(350);
+                            $(result_con).find('.container').css({
+                                'maxWidth': '100%'
+                            });
+                        }
                     }
-                }
-            },'json');
+                }, 'json');
             break;
 
         case 'remove_collection_item':
-            $('#'+form).hide();
             $.post(page, {
                 mode: mode,
                 obj_id: objID,
@@ -418,17 +389,16 @@ function collection_actions(form,mode,objID,result_con,type,cid)
                     if(data.err) {
                         alert(data.err);
                         $(result_con+'_'+objID).hide();
-                        $('#'+form+objID).show();
                     }
-
                     if(data.msg) {
-                        $(result_con).html(data.msg);
-                        $('#'+form+'_'+objID).slideUp(350);
+                        $(result_con).html(data.msg).slideDown(350);
+                        $('#'+form).slideUp(350);
                     }
                 }
             },'json');
             break;
     }
+    hideSpinner();
 }
 
 // Simple function to open url with javascript
@@ -436,29 +406,6 @@ function openURL(url) {
     document.location = url;
 }
 
-function get_item(obj,ci_id,cid,type,direction)
-{
-    var btn_text = $(obj).html();
-    $(obj).html(loading);
-
-    $.post(page, {
-        mode : 'get_item',
-        ci_id: ci_id,
-        cid : cid,
-        type: type,
-        direction: direction
-    },
-    function(data) {
-        if(!data) {
-            alert('No '+type+' returned');
-            $(obj).text(btn_text);
-        } else {
-            var jsArray = new Array(type,data['cid'],data['key']);
-            construct_url(jsArray);
-            $('#collectionItemView').html(data['content']);
-        }
-    },'json')
-}
 
 function construct_url(jsArr)
 {
@@ -510,7 +457,7 @@ function pagination(object,cid,type,pageNumber)
             type: 'post',
             dataType: 'json',
             data: {
-                mode: 'moreItems',
+                mode: 'more_items',
                 page:pageNumber,
                 cid: cid,
                 type: type
@@ -563,21 +510,6 @@ function ajax_add_collection(obj)
             }
         }
     });
-}
-
-
-
-function getDetails(obj)
-{
-    var forms = getInputs(obj), ParamArray = new Array(forms.length);
-
-    $.each(forms,function(index,form) {
-        query = $('#'+form.id+' *').serialize();
-        query += '&mode=ajaxPhotos';
-        ParamArray[index] = query;
-    })
-
-    return ParamArray;
 }
 
 function getName(File)
@@ -646,71 +578,7 @@ function toggleCategory(object,perPage)
     }
 }
 
-function loadObject(currentDOM,type,objID,container)
-{
-    var object = new Array(4);
-    object['this'] = currentDOM, object['type'] = type,
-        object['objID'] = objID, object['container'] = container;
-
-    var obj = $(object['this']);
-
-    obj.parent().css('position','relative');
-
-    $.ajax({
-        url : page,
-        type : 'POST',
-        dataType : 'json',
-        data  : ({
-            mode : 'channelFeatured',
-            contentType : object['type'],
-            objID : object['objID']
-        }),
-        beforeSend : function() {
-            obj.find('img').animate({ opacity : .5 });
-            $('#'+object['container']).animate({ opacity : .5 });
-        },
-        success : function(data) {
-            if(data['error']) {
-                obj.find('img').animate({ opacity : 1 });
-                $("#"+object['container']).animate({ opacity : 1 });
-                alert(data['error']);
-            } else {
-                obj.parent().children('.selected').removeClass('selected');
-                obj.addClass('selected');
-                obj.find('img').animate({ opacity : 1 });
-                $('#'+object['container']).html(data['data']);
-                $('#'+object['container']).animate({ opacity : 1 });
-            }
-        }
-    });
-}
-
 var comments_voting = 'no';
-function getComments(type,type_id,last_update,pageNum,total,object_type,admin)
-{
-    $('#comments').html("<div style='padding:5px 0px;'>"+loading+"</div>");
-    $.ajax({
-        type: 'POST',
-        url: page,
-        data:  {
-            mode:'getComments',
-            page:pageNum,
-            type:type,
-            type_id:type_id,
-            object_type : object_type,
-            last_update : last_update,
-            total_comments : total,
-            comments_voting : comments_voting,
-            admin : admin
-        },
-        success: function(data) {
-            $('#comments').hide();
-            $('#comments').html(data);
-            $('#comments').fadeIn('slow');
-        },
-        dataType: 'text'
-    });
-}
 
 function getAllComments(type,type_id,last_update,pageNum,total,object_type,admin){
     $('#userCommentsList').html("<div style='padding:5px 0px;'>"+loading+"</div>");

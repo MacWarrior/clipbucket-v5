@@ -83,8 +83,18 @@ class Tmdb
     {
         $results = $this->requestAPI('movie/' . $movie_id . '/release_dates')['response']['results'];
         $restriction = array_search(strtoupper($this->language), array_column($results, 'iso_3166_1'));
+        if (empty($restriction) && $this->language == 'en') {
+            $restriction = array_search('US', array_column($results, 'iso_3166_1'));
+        }
         if ($restriction !== false) {
-            return (!empty($results[$restriction]['release_dates'][0]['certification']) ? $results[$restriction]['release_dates'][0]['certification'] : 0);
+            foreach ($results[$restriction]['release_dates'] as $certification) {
+                if (!empty($certification['certification'])) {
+                    if ($certification['certification'] == 'R') {
+                        return 17;
+                    }
+                    return $certification['certification'];
+                }
+            }
         }
         return 0;
     }
@@ -310,6 +320,7 @@ class Tmdb
                     $credentials = $this->seriesCurrentLanguageAgeRestriction($tmdb_id);
                     break;
             }
+            $credentials = preg_replace('/\D/', '',$credentials);
             $video_info['age_restriction'] = $credentials;
             if (!$credentials && config('enable_tmdb_mature_content') == 'yes' && $details['adult']) {
                 $video_info['age_restriction'] = config('tmdb_mature_content_age');
@@ -407,7 +418,7 @@ class Tmdb
         if (config('tmdb_get_actors') == 'yes' && config('enable_video_actor') == 'yes') {
             $actors_tags = [];
             foreach ($credits['cast'] as $actor) {
-                $actors_tags[] = trim($actor['name']);
+                $actors_tags[] = str_replace(',','.',trim($actor['name']));
             }
             Tags::saveTags(implode(',', $actors_tags), 'actors', $_POST['videoid']);
         }
@@ -419,17 +430,17 @@ class Tmdb
         foreach ($credits['crew'] as $crew) {
             switch (strtolower($crew['job'])) {
                 case 'producer':
-                    $producer_tags[] = trim($crew['name']);
+                    $producer_tags[] = str_replace(',','.',trim($crew['name']));
                     break;
                 case 'executive producer':
-                    $executive_producer_tags[] = trim($crew['name']);
+                    $executive_producer_tags[] = str_replace(',','.',trim($crew['name']));
                     break;
                 case 'director':
                 case 'co-director':
-                    $director_tags[] = trim($crew['name']);
+                    $director_tags[] = str_replace(',','.',trim($crew['name']));
                     break;
                 default:
-                    $crew_tags[] = trim($crew['name']);
+                    $crew_tags[] = str_replace(',','.',trim($crew['name']));
                     break;
             }
         }

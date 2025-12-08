@@ -1,6 +1,7 @@
 <?php
 const THIS_PAGE = 'manage_channels';
 const PARENT_PAGE = 'channels';
+const IS_AJAX = true;
 
 require_once dirname(__FILE__, 2) . '/includes/config.inc.php';
 
@@ -11,6 +12,8 @@ if (!isSectionEnabled('channels') || (!User::getInstance()->hasPermission('view_
     e(lang('error'));
 } elseif (!User::getInstance()->getCurrentUserID()) {
     e(lang('you_not_logged_in'));
+} elseif ((empty(trim(config('base_url'))) || !filter_var(config('base_url'), FILTER_VALIDATE_URL)) && $_POST['mode'] == 'add_friend' || $_POST['mode'] == 'accept_request') {
+    e(lang('cant_perform_action_until_app_fully_updated'));
 } else {
     $friend_id = $friend_details['userid'];
     assign('user', $friend_details);
