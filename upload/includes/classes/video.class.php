@@ -1890,7 +1890,13 @@ class CBvideo extends CBCategory
                 #THIS SHOULD NOT BE REMOVED :O
                 //list of functions to perform while deleting a video
                 $del_vid_funcs = $this->video_delete_functions;
-
+                /*
+                 register_action_remove_video('remove_video_thumbs');
+                register_action_remove_video('remove_video_subtitles');
+                register_action_remove_video('remove_video_embed');
+                register_action_remove_video('remove_video_log');
+                register_action_remove_video('remove_video_files');
+                */
                 if (is_array($del_vid_funcs)) {
                     foreach ($del_vid_funcs as $func) {
                         if (function_exists($func)) {
@@ -1969,6 +1975,7 @@ class CBvideo extends CBCategory
         if (file_exists($file1) && is_file($file1)) {
             unlink($file1);
         }
+        remove_empty_directory(DirPath::get('logs') . $str, DirPath::get('logs'));
         e(lang('vid_log_delete_msg'), 'm');
     }
 
@@ -2065,6 +2072,11 @@ class CBvideo extends CBCategory
         //Calling Video Delete Functions
         call_delete_video_function($vdetails);
 
+        $conversion_queue_path = DirPath::get('video_conversion_queue') . $vdetails['file_name'] . '*';
+        $conversion_queue_files = glob($conversion_queue_path);
+        foreach ($conversion_queue_files as $file) {
+            unlink($file);
+        }
         if ($vdetails['file_type'] === 'mp4') {
             $files = json_decode($vdetails['video_files']);
 
@@ -2081,6 +2093,7 @@ class CBvideo extends CBCategory
                 rmdir($directory_path);
             }
         }
+        remove_empty_directory(DirPath::get('videos') . $vdetails['file_directory'], DirPath::get('videos'));
         e(lang('vid_files_removed_msg'), 'm');
     }
 

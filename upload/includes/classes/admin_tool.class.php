@@ -1582,7 +1582,7 @@ class AdminTool
                 $serverMySqlVersion = $match_mysql[0] ?? false;
                 $value = [
                     $task => [
-                        'php_web'       => System::get_software_version('php_web', false, null, true),
+                        'php_web'       => System::getPHPVersionWeb(),
                         'php_cli'       => System::get_software_version('php_cli'),
                         'mysql_version' => $serverMySqlVersion
                     ]
@@ -1692,14 +1692,14 @@ class AdminTool
             $this->tasks = [];
             $sql = 'SELECT VCQ.videoid, VCQ.id, V.file_name, V.file_type, VCQ.date_started FROM ' . tbl('video_conversion_queue') . ' AS VCQ 
             INNER JOIN '.tbl('video').' AS V ON V.videoid = VCQ.videoid 
-            WHERE is_completed =  FALSE AND date_started IS NULL
+            WHERE is_completed =  FALSE
             ORDER BY VCQ.date_added ASC LIMIT ' . config('max_conversion');
             $videos_to_convert = Clipbucket_db::getInstance()->_select($sql);
             $datas = [];
             $max_conversion = config('max_conversion');
             $nb_lock = count(glob(DirPath::get('temp') . 'conv_lock*.loc'));
             foreach ($videos_to_convert as $video) {
-                if ($max_conversion >= $nb_lock) {
+                if ($max_conversion >= $nb_lock && empty($video['date_started'])) {
                     $datas[] = $video;
                     $nb_lock++;
                 }
