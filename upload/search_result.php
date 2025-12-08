@@ -77,7 +77,7 @@ if (get('query')) {
     if ($squery == 'clipbucket') {
         subtitle('Awesomeness...!!');
     } else {
-        subtitle(lang($type) . ' : ' . display_clean($_GET['query']));
+        subtitle(lang($type) . ' : ' . $_GET['query']);
     }
 }
 

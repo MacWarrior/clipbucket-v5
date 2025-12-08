@@ -847,11 +847,11 @@ class Update
             return;
         }
 
-        $php_web_version = System::get_software_version('php_web', false, null, true);
+        $php_web_version = System::getPHPVersionWeb();
         $php_cli_version = System::get_software_version('php_cli', false, null, true);
 
         foreach($php_version as $version => $min_version){
-            if( $php_web_version < $min_version && $php_cli_version < $min_version ){
+            if( $php_web_version < $min_version || $php_cli_version < $min_version ){
                 e(lang('warning_php_version', [$php_web_version, $version, $min_version]), 'w', false);
                 return;
             }

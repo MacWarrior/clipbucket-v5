@@ -325,9 +325,10 @@ class FFMpeg
                     $max_key = $key;
                 }
             }
-            $resolutions = [ $resolutions[$max_key] ];
+            if (!empty( $resolutions[$max_key] )) {
+                $resolutions = [ $resolutions[$max_key] ];
+            }
         }
-
         $this->log->newSection('FFMpeg '.strtoupper($this->conversion_type).' conversion');
         if (!empty($resolutions)) {
             switch ($this->conversion_type) {
@@ -356,6 +357,7 @@ class FFMpeg
             }
         } else {
             $this->log->writeLine('<b>Video resolution is lower than lower resolution enabled : no video resolution available for conversion</b>');
+            unset($this->input_file);
         }
 
         $this->end_time_check();

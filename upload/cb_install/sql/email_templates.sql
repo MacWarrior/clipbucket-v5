@@ -102,7 +102,7 @@ INSERT INTO `{tbl_prefix}email` (`code`, `id_email_template`, `is_deletable`, `t
     Thanks for registering on <a href="{{baseurl}}">{{website_title}}</a> !<br/>
     In order to verify your email address, please validate your account by <a href="{{baseurl}}activation.php?av_username={{user_username}}&avcode={{avcode}}">clicking here !</a>
     <br/><br/>
-    If somehow above link isn\'t working, please go TO : <a href="{{baseurl}}activation.php">{{baseurl}}activation.php</a><br/>
+    If somehow above link isn\'t working, please go to : <a href="{{baseurl}}activation.php">{{baseurl}}activation.php</a><br/>
     And use your activation code : <b>{{avcode}}</b>
     <br/><br/>
     Welcome aboard !', 0),
