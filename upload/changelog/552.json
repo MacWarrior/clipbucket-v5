@@ -1,6 +1,6 @@
 {
   "version":"5.5.2",
-  "revision":"183",
+  "revision":"184",
   "status":"stable",
   "detail":[
     {
@@ -166,6 +166,7 @@
         ,"Fix possible cookie banner JS error <i>(#695)</i>"
         ,"Fix user channel infos display"
         ,"Fix possible JS on comment visual editor"
+        ,"Fix search page title"
       ]
     },
     {
