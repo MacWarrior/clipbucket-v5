@@ -1690,7 +1690,7 @@ class AdminTool
             $this->tasks_total = 0;
             $this->tasks_processed = 0;
             $this->tasks = [];
-            if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.2', '999')) {
+            if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.2', '186')) {
                 $select_audio_track = ', VCQ.audio_track';
             } else {
                 $select_audio_track = '';
