@@ -330,4 +330,20 @@ class CBTemplate
         $dir->close();
         return md5(implode('', $files));
     }
+
+    /**
+     * @param string $template
+     * @return bool
+     */
+    public static function remove_template(string $template): bool
+    {
+        $template = str_replace('.','',$template);
+        $template = str_replace('..','',$template);
+        $dir = DirPath::get('styles') . $template;
+
+        if(is_dir($dir) && $template != ClipBucket::DEFAULT_TEMPLATE && str_contains(realpath($dir), DirPath::get('styles'))) {
+            return delete_directories_recursive($dir);
+        }
+        return false;
+    }
 }

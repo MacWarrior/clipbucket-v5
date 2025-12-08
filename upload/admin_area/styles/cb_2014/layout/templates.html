@@ -16,12 +16,30 @@
     <div class="availableTemplates">
         <div>
             <div class="row">
-                {foreach from=$templates item=template}
+                {foreach from=$templates item=template name=template_loop}
                     {if $selected != $template.dir}
-                        {include file="$layout_dir/blocks/template.html" template=$template selected=false}
+                        {include file="$layout_dir/blocks/template.html" template=$template selected=false index=$smarty.foreach.template_loop.iteration}
                     {/if}
                 {/foreach}
             </div>
         </div>
     </div>
 {/if}
+<div class="modal fade" id="delete_code_modal" role="dialog" >
+    <div class="modal-dialog" style="width:80%; max-width: 550px;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                            <h4 class="modal-title">{lang('confirm')}</h4>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="delete_num" value="">
+                {lang code='delete_template_confirmation'}
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary confirm_delete"> {lang('confirm')}</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">{lang('cancel')}</button>
+            </div>
+        </div>
+    </div>
+</div>

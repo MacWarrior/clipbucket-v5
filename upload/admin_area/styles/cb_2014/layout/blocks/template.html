@@ -17,6 +17,12 @@
                 {if $template.name == CBTemplate::DEFAULT_TEMPLATE_NAME}
                     <i class="glyphicon glyphicon-copy copy_default_theme" style="float: right; cursor:pointer;" title="{lang('create_copy')}"></i>
                 {/if}
+                {if preg_match('/.*_\d{2,3}_\d{1,3}_\d{14}$/',$template.path)}
+                    <input type="hidden" name="path_{$index}" id="path_{$index}" value="{$template.dir}">
+
+                    <i data-num="{$index}" class="glyphicon glyphicon-remove delete_default_theme text-danger paddingLeftSmall" style="float: right; cursor:pointer;" title="{lang('delete_copy')}"></i>
+                    <i class="glyphicon glyphicon-edit edit_default_theme text-primary" style="float: right; cursor:pointer;" title="{lang('edit_copy')}"></i>
+                {/if}
             </div>
         </div>
     </div>
