@@ -1,6 +1,6 @@
 {
   "version":"5.5.2",
-  "revision":"180",
+  "revision":"184",
   "status":"stable",
   "detail":[
     {
@@ -33,6 +33,7 @@
         ,"Update core update error handling"
         ,"Update new member form access"
         ,"Update FFI module warning"
+        ,"Update required version notice"
         ,"Fix code mode on page edition <i>(#595)</i>"
         ,"Fix email sending error catching <i>(#587)</i>"
         ,"Fix incorrect frontend URL <i>(#529)</i>"
@@ -99,6 +100,7 @@
         ,"Update photo upload & edition display"
         ,"Update email change procedure"
         ,"Update collection creation from video"
+        ,"Update channel search display"
         ,"Hide banned users from channels page, search results & popular user"
         ,"Drop remote upload"
         ,"Prevent user actions if base URL is not correctly set"
@@ -164,6 +166,7 @@
         ,"Fix possible cookie banner JS error <i>(#695)</i>"
         ,"Fix user channel infos display"
         ,"Fix possible JS on comment visual editor"
+        ,"Fix search page title"
       ]
     },
     {
@@ -196,6 +199,7 @@
         ,"Fix wrong variable usage in email"
         ,"Fix possible phishing attack (Thanks @Takumi142857 !)"
         ,"Fix typo in email template"
+        ,"Fix playlist item counter"
       ]
     },
     {

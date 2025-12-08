@@ -1,36 +1,3 @@
 <div class="item-channel col-lg-3 col-md-3 col-sm-4 col-xs-12">
-	<div class="channel-holder">
-		<a href="{User::getInstance($user.userid)->getLink('channel')}" id="user-{$user.userid}" class="user-block">
-			<img class="avatar" src="{userquery::getInstance()->getUserThumb($user)}"/>
-			<h2>{display_clean(User::getInstance($user.userid)->get('username'))}</h2>
-		</a>
-		<div class="info clearfix">
-			<div class="col">
-				<strong>
-					{lang code="views"}
-					<span>{$user.profile_hits|number_format}</span>
-				</strong>
-				{if isSectionEnabled('videos') && User::getInstance($user.userid)->get('show_my_videos') == 'yes'}
-				<strong>
-					{lang code="videos"}
-					<span>{User::getInstance($user.userid)->get('total_videos')|number_format}</span>
-				</strong>
-				{/if}
-			</div>
-			<div class="col">
-				{if User::getInstance($user.userid)->get('show_my_subscribers') == 'yes'}
-				<strong>
-					{lang code="subscribers"}
-					<span>{User::getInstance($user.userid)->get('subscribers')|number_format}</span>
-				</strong>
-				{/if}
-				{if isSectionEnabled('photos') && User::getInstance($user.userid)->get('show_my_photos') == 'yes'}
-				<strong>
-					{lang code="photos"}
-					<span>{User::getInstance($user.userid)->get('total_photos')|number_format}</span>
-				</strong>
-				{/if}
-			</div>
-		</div>
-	</div>
+    {include file="$style_dir/blocks/channels.html"}
 </div>
