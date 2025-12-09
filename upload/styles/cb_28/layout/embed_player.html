@@ -1,13 +1,16 @@
 {include file="$style_dir/global_header.html"}
 
 <body>
-{if Video::getInstance()->isToBlur($video['videoid'])}
-    <div class="slider-video-containe">
+{if must_check_age()}
+    {include file="$style_dir/blocks/popin_age_restrict/popin.html"}
+{/if}
+{if $isToBlur}
+    <div class="slider-video-container" style="width: 100%;margin:0;">
         <div class="thumb-video-padding">
-            <div class="thumb-video video-link{if $popup_video && $video.status|lower == 'successful'} cd-popup-trigger{/if}" data-videoid="{$video.videoid}" data-href="{video_link($video)}" title="{display_clean($video.title)|title}">
-                <img src="{getThumb vdetails=$video size=768x432}" loading="lazy" class="{if Video::getInstance()->isToBlur($video['videoid'])}blur{/if}" style="width: 100%;"/>
+            <div class="thumb-video video-link{if $video.status|lower == 'successful'} cd-popup-trigger{/if}" data-videoid="{$video.videoid}" data-href="{video_link($video)}" title="{display_clean($video.title)|title}">
+                <img src="{$thumb}" loading="lazy" class="{if isToBlur}blur{/if}" style="width: 100%;"/>
                 <div class="status"></div>
-                {ANCHOR place='in_video_thumb' data=$video}
+                {$restricted_span}
             </div>
         </div>
     </div>
@@ -16,5 +19,26 @@
         {show_player vdetails=$video autoplay=$autoplay}
     </div>
 {/if}
+{if !empty($message)}
+    <div class="cd-popup is-visible" role="alert">
+        <div class="cb-popup-container clearfix">
+            <div class="modal-inset">
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 col my-modal-content">
+                    <div class="alert alert-warning">{$message}</div>
+                </div>
+            </div>
+        </div>
+    </div>
+{/if}
 </body>
 </html>
+<script>
+    {if must_check_age()}
+        $(function (){
+            $('.video-js').addClass('blur');
+        });
+        document.addEventListener('hide_age_disclaimer', function(){
+            $('.video-js').removeClass('blur');
+        });
+    {/if}
+</script>
