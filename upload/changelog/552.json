@@ -1,6 +1,6 @@
 {
   "version":"5.5.2",
-  "revision":"185",
+  "revision":"186",
   "status":"stable",
   "detail":[
     {
@@ -213,6 +213,7 @@
         ,"Fix wrong extension check"
         ,"Fix possible error during video conversion"
         ,"Fix possible multiple video conversion"
+        ,"Fix default audio track selection"
       ]
     },
     {

@@ -1690,7 +1690,12 @@ class AdminTool
             $this->tasks_total = 0;
             $this->tasks_processed = 0;
             $this->tasks = [];
-            $sql = 'SELECT VCQ.videoid, VCQ.id, V.file_name, V.file_type, VCQ.date_started FROM ' . tbl('video_conversion_queue') . ' AS VCQ 
+            if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.2', '186')) {
+                $select_audio_track = ', VCQ.audio_track';
+            } else {
+                $select_audio_track = '';
+            }
+            $sql = 'SELECT VCQ.videoid, VCQ.id, V.file_name, V.file_type, VCQ.date_started ' . $select_audio_track . ' FROM ' . tbl('video_conversion_queue') . ' AS VCQ 
             INNER JOIN '.tbl('video').' AS V ON V.videoid = VCQ.videoid 
             WHERE is_completed =  FALSE
             ORDER BY VCQ.date_added ASC LIMIT ' . config('max_conversion');
@@ -1717,7 +1722,7 @@ class AdminTool
     {
         $logFile = DirPath::get('logs') . $video['file_directory'] . DIRECTORY_SEPARATOR . $video['file_name'] . '.log';
         $log = new SLog($logFile);
-        $cmd = FFmpeg::launchConversion($video['file_name'] );
+        $cmd = FFmpeg::launchConversion($video['file_name'] , $video['audio_track'] ?? '');
         if( System::isInDev() ){
             $log->writeLine(date('Y-m-d H:i:s').' - Conversion command : ' . $cmd);
         }
