@@ -274,7 +274,7 @@ class Category
             e(lang('cat_exist_error'));
             return;
         }
-        if ($cat_details['is_default'] == 'yes') { //Checking if category is default or not
+        if ($cat_details['is_default']) { //Checking if category is default or not
             e(lang('cat_default_err'));
             return;
         }
@@ -339,7 +339,7 @@ class Category
         }
         return $this->getAll([
             'category_type'    => $categ_type_id,
-            'category_default' => 'yes',
+            'category_default' => '1',
             'first_only'       => true
         ]);
     }
@@ -409,9 +409,9 @@ class Category
             return false;
         }
         if (!empty($this->getById($category_id))) {
-            $sql = 'UPDATE ' . cb_sql_table($this->tablename) . ' SET is_default = \'no\' WHERE id_category_type = ' . mysql_clean($categ_type_id);
+            $sql = 'UPDATE ' . cb_sql_table($this->tablename) . ' SET is_default = NULL WHERE id_category_type = ' . mysql_clean($categ_type_id);
             Clipbucket_db::getInstance()->execute($sql);
-            $sql = 'UPDATE ' . cb_sql_table($this->tablename) . ' SET is_default = \'yes\' WHERE category_id = ' . mysql_clean($category_id);
+            $sql = 'UPDATE ' . cb_sql_table($this->tablename) . ' SET is_default = TRUE WHERE category_id = ' . mysql_clean($category_id);
             Clipbucket_db::getInstance()->execute($sql);
             e(lang('cat_set_default_ok'), 'm');
         } else {
