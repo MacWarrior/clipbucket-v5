@@ -25,7 +25,7 @@ assign('video', $video);
 $message = '';
 $isToBlur = false;
 $restricted_span = '';
-if (config('enable_video_embed_players') != 'yes') {
+if (!config('video_embed') ) {
     $isToBlur = true;
     $message = lang('embed_player_disabled');
     $thumb = get_thumb(false , false, '768x432');
@@ -36,7 +36,7 @@ if (config('enable_video_embed_players') != 'yes') {
 }elseif (Video::getInstance()->isToBlur($video['videoid'])) {
     $isToBlur = true;
     $message = lang(User::getInstance()->isUserConnected() ? 'error_age_restriction' : 'restrict_content_login');
-    $restricted_span = '<span class="restricted" style="right: 5em; top: 3em;" title="' . lang('access_forbidden_under_age', $video['age_restriction']) . '">-' . $video['age_restriction'] . '</span>';
+    $restricted_span = '<span class="restricted" style="right: 5em; top: 3em; z-index: 110;" title="' . lang('access_forbidden_under_age', $video['age_restriction']) . '">-' . $video['age_restriction'] . '</span>';
 }
 if (empty($thumb)) {
     $thumb = get_thumb($video , false, '768x432');
