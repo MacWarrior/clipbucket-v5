@@ -3,11 +3,19 @@
         <div class="col-md-10 col-md-offset-1">
             <div class="well alignCenter">
                 <img src="{$cbtpl->get_preview_thumb($template.dir)}" class="img-thumbnail">
-                <h3>{$template.name}</h3>
+                <h3 id="name_text_{$index}">{$template.name}</h3>
+                <div class="input-group hidden" id="name_group_{$index}" style="width: 100%;">
+                    <input type="text" name="name_{$index}" id="name_{$index}" value="{$template.name}" style="width: 100%; height: 34px;">
+                    <span data-num="{$index}" style="height: 34px; width: 40px;" class="input-group-addon glyphicon glyphicon-save save_name save_template_field" id="save_name_{$index}"></span>
+                </div>
                 <em>
                     <a href="{$template.website.link}"><strong>{$template.author}</strong></a>
                 </em>
-                <p>{$template.description}</p>
+                <p id="description_text_{$index}">{$template.description}</p>
+                <div class="input-group hidden" id="description_group_{$index}" style="width: 100%;">
+                    <input type="text" name="description_{$index}" id="description_{$index}" value="{$template.description}" style="width: 100%; height: 34px;">
+                    <span data-num="{$index}" style="height: 34px; width: 40px;" class="input-group-addon glyphicon glyphicon-save save_description save_template_field" id="save_description_{$index}"></span>
+                </div>
                 <p>Version : {$template.version}, Released on {$template.released|date_format}</p>
                 <p>Website : <a href="{$template.website.link}">{$template.website.title}</a></p>
                 {if !$selected}
@@ -19,9 +27,8 @@
                 {/if}
                 {if preg_match('/.*_\d{2,3}_\d{1,3}_\d{14}$/',$template.path)}
                     <input type="hidden" name="path_{$index}" id="path_{$index}" value="{$template.dir}">
-
                     <i data-num="{$index}" class="glyphicon glyphicon-remove delete_default_theme text-danger paddingLeftSmall" style="float: right; cursor:pointer;" title="{lang('delete_copy')}"></i>
-                    <i class="glyphicon glyphicon-edit edit_default_theme text-primary" style="float: right; cursor:pointer;" title="{lang('edit_copy')}"></i>
+                    <i data-num="{$index}" class="glyphicon glyphicon-edit edit_theme text-primary" style="float: right; cursor:pointer;" title="{lang('edit_copy')}"></i>
                 {/if}
             </div>
         </div>

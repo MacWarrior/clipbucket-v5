@@ -18,7 +18,7 @@ if ($_GET['change']) {
     myquery::getInstance()->set_template($_GET['change']);
 }
 
-$min_in_dev = System::isInDev() ? '.min' : '';
+$min_in_dev = !System::isInDev() ? '.min' : '';
 ClipBucket::getInstance()->addAdminJS([
     'pages/templates/templates' . $min_in_dev . '.js' => 'admin'
 ]);

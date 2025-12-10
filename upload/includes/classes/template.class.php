@@ -8,6 +8,23 @@ class CBTemplate
     }
 
     const DEFAULT_TEMPLATE_NAME = 'ClipbucketV5 official';
+
+    public static function save(string $field, string $value, string $path):bool
+    {
+        if (!in_array($field, ['name','description'])) {
+           return false;
+        }
+        $dir = self::secureTemplatePath($path);
+        $template_xml = $dir. DIRECTORY_SEPARATOR . 'template.xml';
+        if (!file_exists($template_xml)) {
+            throw new Exception('template.xml not found');
+        }
+        $xml = simplexml_load_file($template_xml);
+        $xml->$field = $value;
+        $xml->saveXML($template_xml);
+        return true;
+    }
+
     /**
      * Function used to set Smarty Functions
      */
@@ -90,7 +107,7 @@ class CBTemplate
             $tpl_details = CBTemplate::get_template_details($tpl_dir);
             //TODO check if is copy
             if ($tpl_details && $tpl_details['name'] != '') {
-                $tpls[$tpl_details['name']] = $tpl_details;
+                $tpls[] = $tpl_details;
             }
         }
 
@@ -337,12 +354,23 @@ class CBTemplate
      */
     public static function remove_template(string $template): bool
     {
-        $template = str_replace('.','',$template);
-        $template = str_replace('..','',$template);
-        $dir = DirPath::get('styles') . $template;
+        $dir = self::secureTemplatePath($template);
+        if (empty($dir)) {
+            return false;
+        }
+        return delete_directories_recursive($dir);
+    }
 
+    /**
+     * @param string $template
+     * @return bool|string
+     */
+    private static function secureTemplatePath(string $template): bool|string
+    {
+        $template = str_replace('.','',str_replace('..','',$template));
+        $dir = DirPath::get('styles') . $template;
         if(is_dir($dir) && $template != ClipBucket::DEFAULT_TEMPLATE && str_contains(realpath($dir), DirPath::get('styles'))) {
-            return delete_directories_recursive($dir);
+            return $dir;
         }
         return false;
     }

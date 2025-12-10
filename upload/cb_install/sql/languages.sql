@@ -1738,4 +1738,10 @@ VALUES ('ongoing_conversion'),
        ('base_url_required'),
        ('please_login_to_flag'),
        ('please_login'),
-       ('video_is_already_waiting');
+       ('video_is_already_waiting'),
+       ('active_template'),
+       ('available_templates'),
+       ('create_copy'),
+       ('delete_copy'),
+       ('edit_copy'),
+       ('delete_template_confirmation');
