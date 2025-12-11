@@ -1,7 +1,7 @@
 <h2>{lang('active_template')}</h2>
 
-{assign var="selected" value=ClipBucket::getInstance()->configs.template_dir}
-{assign var="curtpl" value=$cbtpl->get_template_details($selected)}
+{assign var="selected" value=CBTemplate::getSelectedTemplate()}
+{assign var="curtpl" value=CBTemplate::getInstance()->get_template_details($selected)}
 
 <div class="selectedTemplate">
 
@@ -37,7 +37,7 @@
                 {lang code='delete_template_confirmation'}
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-primary confirm_delete"> {lang('confirm')}</button>
+                <button type="button" class="btn btn-primary confirm_delete" data-dismiss="modal"> {lang('confirm')}</button>
                 <button type="button" class="btn btn-default" data-dismiss="modal">{lang('cancel')}</button>
             </div>
         </div>

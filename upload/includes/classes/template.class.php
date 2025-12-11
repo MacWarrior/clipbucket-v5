@@ -2,20 +2,21 @@
 
 class CBTemplate
 {
-    public static function getInstance(){
+    public static function getInstance()
+    {
         global $cbtpl;
         return $cbtpl;
     }
 
     const DEFAULT_TEMPLATE_NAME = 'ClipbucketV5 official';
 
-    public static function save(string $field, string $value, string $path):bool
+    public static function save(string $field, string $value, string $path): bool
     {
-        if (!in_array($field, ['name','description'])) {
-           return false;
+        if (!in_array($field, ['name', 'description'])) {
+            return false;
         }
         $dir = self::secureTemplatePath($path);
-        $template_xml = $dir. DIRECTORY_SEPARATOR . 'template.xml';
+        $template_xml = $dir . DIRECTORY_SEPARATOR . 'template.xml';
         if (!file_exists($template_xml)) {
             throw new Exception('template.xml not found');
         }
@@ -267,7 +268,7 @@ class CBTemplate
     public static function duplicate_default_theme(): bool
     {
         $source = DirPath::get('styles') . ClipBucket::DEFAULT_TEMPLATE;
-        $dest = DirPath::get('styles') . ClipBucket::DEFAULT_TEMPLATE . '_' . str_replace('.','',Update::getInstance()->getCurrentCoreVersion()) . '_' . Update::getInstance()->getCurrentCoreRevision() . '_' . date('YmdHis');
+        $dest = DirPath::get('styles') . ClipBucket::DEFAULT_TEMPLATE . '_' . str_replace('.', '', Update::getInstance()->getCurrentCoreVersion()) . '_' . Update::getInstance()->getCurrentCoreRevision() . '_' . date('YmdHis');
         $permissions = 0755;
         //Copy all folders and files recursively
         self::xcopy($source, $dest, $permissions);
@@ -355,6 +356,10 @@ class CBTemplate
     public static function remove_template(string $template): bool
     {
         $dir = self::secureTemplatePath($template);
+        if ($template == self::getSelectedTemplate()) {
+            e(lang('selected_template_cannot_be_deleted'));
+            return false;
+        }
         if (empty($dir)) {
             return false;
         }
@@ -367,11 +372,19 @@ class CBTemplate
      */
     private static function secureTemplatePath(string $template): bool|string
     {
-        $template = str_replace('.','',str_replace('..','',$template));
+        $template = str_replace('.', '', str_replace('..', '', $template));
         $dir = DirPath::get('styles') . $template;
-        if(is_dir($dir) && $template != ClipBucket::DEFAULT_TEMPLATE && str_contains(realpath($dir), DirPath::get('styles'))) {
+        if (is_dir($dir) && $template != ClipBucket::DEFAULT_TEMPLATE && str_contains(realpath($dir), DirPath::get('styles'))) {
             return $dir;
         }
         return false;
+    }
+
+    /**
+     * @return bool|string
+     */
+    public static function getSelectedTemplate(): bool|string
+    {
+        return config('template_dir');
     }
 }

@@ -5,7 +5,7 @@ require_once dirname(__FILE__, 3) . '/includes/admin_config.php';
 User::getInstance()->hasPermissionAjax('manage_template_access');
 $success = true;
 try {
-    CBTemplate::remove_template($_POST['template_path']);
+    $success = CBTemplate::remove_template($_POST['template_path']);
 } catch (Exception $exception) {
     $success = false;
 }

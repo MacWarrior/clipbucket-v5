@@ -40,6 +40,10 @@ class MWIP extends \Migration
             'en'=>'Are you sure you want to delete this template ?'
         ]);
 
+        self::generateTranslation('selected_template_cannot_be_deleted', [
+            'fr'=>'Impossible de supprimer le template actif. Veuillez en sélectionner un autre avant de supprimer ce dernier.',
+            'en'=>'Cannot delete active template. Please select another one before deleting this one.'
+        ]);
     }
 
 }

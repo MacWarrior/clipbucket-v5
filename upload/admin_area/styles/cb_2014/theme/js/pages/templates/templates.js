@@ -29,7 +29,12 @@ $(function () {
             dataType: 'json',
             success: function (result) {
                 $('.page-content').prepend(result['msg']);
-                window.location.reload();
+                hideSpinner();
+                if (result['success']) {
+                    const urlObj = new URL(window.location);
+                    urlObj.search = '';
+                    window.location = urlObj.toString();
+                }
             }
         });
     });
@@ -45,8 +50,8 @@ $(function () {
         } else {
             $('#description_group_' + num).addClass('hidden');
             $('#name_group_' + num).addClass('hidden');
-            $('#description_text_' + num).html($('#description_' + num).val()).removeClass('hidden');
-            $('#name_text_' + num).html($('#name_' + num).val()).removeClass('hidden');
+            $('#description_text_' + num).text($('#description_' + num).val()).removeClass('hidden');
+            $('#name_text_' + num).text($('#name_' + num).val()).removeClass('hidden');
             $('#save_description_' + num+',#save_name_' + num).removeClass('glyphicon-ok glyphicon-remove').addClass('glyphicon-save');
             $(this).addClass('text-primary');
         }
