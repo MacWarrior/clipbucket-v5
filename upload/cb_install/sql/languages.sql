@@ -1738,4 +1738,5 @@ VALUES ('ongoing_conversion'),
        ('base_url_required'),
        ('please_login_to_flag'),
        ('please_login'),
-       ('video_is_already_waiting');
+       ('video_is_already_waiting'),
+       ('confirmation_upgrade_core_php_version_require');
