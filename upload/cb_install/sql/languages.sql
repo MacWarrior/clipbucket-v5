@@ -1744,4 +1744,5 @@ VALUES ('ongoing_conversion'),
        ('create_copy'),
        ('delete_copy'),
        ('edit_copy'),
-       ('delete_template_confirmation');
+       ('delete_template_confirmation'),
+       ('selected_template_cannot_be_deleted');
