@@ -25,6 +25,7 @@ if (config('closed') && THIS_PAGE != 'ajax' && !$in_bg_cron && THIS_PAGE != 'cb_
     e(config('closed_msg'), 'w');
     if (!User::getInstance()->hasAdminAccess()) {
         template('global_header.html');
+        errorhandler::getInstance()->flush_error();
         template('msg.html');
         exit();
     }

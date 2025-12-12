@@ -692,17 +692,28 @@ class Video
             return false;
         }
 
-        if( !User::getInstance()->isUserConnected() ){
-            return true;
+
+        if (config('enable_global_age_restriction')=='yes'&&  Session::isCookieConsent('age_restrict')) {
+            $age_restriction = !User::getInstance()->isUserConnected()
+                ? config('min_age_reg')
+                : (User::getInstance()->getCurrentUserAge() > config('min_age_reg') ? config('min_age_reg') : User::getInstance()->getCurrentUserAge());
+            if( $age_restriction < $video['age_restriction'] ){
+                return true;
+            }
+        } else {
+            if( !User::getInstance()->isUserConnected() ){
+                return true;
+            }
+
+            if( User::getInstance()->getCurrentUserID() == $video['userid'] ){
+                return false;
+            }
+
+            if( User::getInstance()->getCurrentUserAge() < $video['age_restriction'] ){
+                return true;
+            }
         }
 
-        if( User::getInstance()->getCurrentUserID() == $video['userid'] ){
-            return false;
-        }
-
-        if( User::getInstance()->getCurrentUserAge() < $video['age_restriction'] ){
-            return true;
-        }
         return false;
     }
 

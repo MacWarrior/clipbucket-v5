@@ -1739,4 +1739,6 @@ VALUES ('ongoing_conversion'),
        ('please_login_to_flag'),
        ('please_login'),
        ('video_is_already_waiting'),
+       ('embed_player_disabled'),
+       ('restrict_content_login'),
        ('confirmation_upgrade_core_php_version_require');
