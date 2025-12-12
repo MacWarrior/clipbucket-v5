@@ -1738,4 +1738,6 @@ VALUES ('ongoing_conversion'),
        ('base_url_required'),
        ('please_login_to_flag'),
        ('please_login'),
-       ('video_is_already_waiting');
+       ('video_is_already_waiting'),
+       ('embed_player_disabled'),
+       ('restrict_content_login');
