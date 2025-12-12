@@ -33,7 +33,7 @@
             {/if}
             <td>{if $category[list].category_desc}{display_clean($category[list].category_desc)}{else}<em>N/A</em>{/if}</td>
             <td>
-                <input value="{$category[list].category_id}" {if $category[list].is_default=='yes'}checked disabled{/if} name="make_default" type="checkbox" class="ace ace-switch ace-switch-5"/>
+                <input value="{$category[list].category_id}" {if $category[list].is_default}checked disabled{/if} name="make_default" type="checkbox" class="ace ace-switch ace-switch-5"/>
                 <span class="lbl"></span></td>
             <td>
                 <div class="lead dropdown">
@@ -44,7 +44,7 @@
                         <li role="presentation">
                             <a role="menuitem" tabindex="-1" href="" onclick="addOrEdit('{$category[list].category_id}'); return false;">{lang code='edit'}</a>
                         </li>
-                        {if $category[list].is_default != "yes"}
+                        {if !$category[list].is_default }
                             <li role="presentation">
                                 <a role="menuitem" tabindex="-1" href="?type={$type}&delete_category={$category[list].category_id}">{lang code="delete"}</a>
                             </li>
