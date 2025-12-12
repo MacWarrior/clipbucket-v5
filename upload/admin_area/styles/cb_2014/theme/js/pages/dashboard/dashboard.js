@@ -395,11 +395,17 @@ $(document).ready(function(){
 });
 
 function updateListeners () {
-    $('.update_core').on('click', function () {
-        update('core')
+    $('.update_core').on('click', async function () {
+        if (message_php !== '') {
+            if (await popinConfirm._confirm_it({message: message_php, title: lang['update']})) {
+                update('core');
+            }
+        } else {
+            update('core');
+        }
     });
     $('.update_db').on('click', function () {
-        update('db')
+        update('db');
     });
 
     $('.launch_wip').on('click', async function () {
