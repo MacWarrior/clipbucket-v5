@@ -311,7 +311,7 @@ class formObj
             foreach ($cats as $cat) {
                 $checked = '';
                 //checking value
-                if (in_array($cat['category_id'], $values) || ($cat['is_default'] && empty($values))) {
+                if (in_array($cat['category_id'], $values) || ($cat['is_default'] == (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.2', '999') ? 1 : 'yes') && empty($values))) {
                     $checked = 'checked';
                 }
 
