@@ -841,7 +841,7 @@ class Update
         foreach ($php_version as $version => $min_version) {
             if ($php_web_version < $min_version || $php_cli_version < $min_version) {
                 e(lang('warning_php_version', [$php_web_version, $version, $min_version]), 'w', false);
-                return ['php_version'=>$php_web_version, 'version'=>$this->getWebVersion(), 'revision'=>$this->getWebRevision()];
+                return ['php_version'=>$php_web_version, 'version_update'=>preg_replace('/(\d)(\d)(\d)/','$1.$2.$3',$this->getWebVersion()), 'revision_update'=>$this->getWebRevision(), 'cb_version_min'=>$version];
             }
         }
         return false;
