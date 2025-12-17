@@ -1747,4 +1747,12 @@ VALUES ('ongoing_conversion'),
        ('delete_copy'),
        ('edit_copy'),
        ('delete_template_confirmation'),
-       ('selected_template_cannot_be_deleted');
+       ('selected_template_cannot_be_deleted'),
+       ('save'),
+       ('error_occurred'),
+       ('saved_success'),
+       ('html_files'),
+       ('css_files'),
+       ('select_theme_to_edit'),
+       ('edit_template'),
+       ('editing_template');

@@ -6,7 +6,7 @@
 <div class="selectedTemplate">
 
     <div class="row">
-        {include file="$layout_dir/blocks/template.html" template=$curtpl selected=true}
+        {include file="$layout_dir/blocks/template.html" template=$curtpl selected=true index=0}
     </div>
 </div>
 
@@ -43,3 +43,13 @@
         </div>
     </div>
 </div>
+<script>
+    const format_date_js = '{get_date_js()}';
+    const language = '{$lang_obj->getLang()}';
+    const format_display = $.datepicker.regional[language].dateFormat.replace(/\W/g, ' ').replace('mm', 'M');
+    let lang=[];
+    lang['save'] = '{lang('save')}';
+    lang['error_occurred'] = '{lang('error_occurred')}';
+    lang['saved_success'] = '{lang('saved_success')}';
+
+</script>

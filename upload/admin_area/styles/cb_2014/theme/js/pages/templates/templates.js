@@ -1,5 +1,26 @@
 var loading_img = "<img style='vertical-align:middle' src='" + imageurl + "/ajax-loader.gif'>";
+
+function format_date_to_display(date) {
+    return $.datepicker.formatDate(format_display, date);
+}
+
 $(function () {
+
+    $('.toDatepicker').datepicker({
+        showOtherMonths: true,
+        selectOtherMonths: false,
+        changeMonth: true,
+        dateFormat: format_date_js,
+        changeYear: true,
+        yearRange: "-99y:+0",
+        regional: language
+    });
+
+
+    $('[id^="released_text_"]').each(function (index, elem) {
+        const date = new Date($(this).siblings('.hidden_released').val());
+        $(this).text(format_date_to_display(date));
+    });
     $('.copy_default_theme').on('click', function (e) {
         showSpinner();
         $.ajax({
@@ -42,34 +63,41 @@ $(function () {
     $('.edit_theme').on('click', function (e) {
         const num = $(this).data('num');
         if ($('#description_group_' + num).hasClass('hidden')) {
-            $('#description_group_' + num).removeClass('hidden');
-            $('#description_text_' + num).addClass('hidden');
-            $('#name_group_' + num).removeClass('hidden');
-            $('#name_text_' + num).addClass('hidden');
+            $('.input-group[id$=' + num + ']').removeClass('hidden');
+            $('[id$="text_' + num + '"]').addClass('hidden');
             $(this).removeClass('text-primary');
         } else {
-            $('#description_group_' + num).addClass('hidden');
-            $('#name_group_' + num).addClass('hidden');
-            $('#description_text_' + num).text($('#description_' + num).val()).removeClass('hidden');
-            $('#name_text_' + num).text($('#name_' + num).val()).removeClass('hidden');
-            $('#save_description_' + num+',#save_name_' + num).removeClass('glyphicon-ok glyphicon-remove').addClass('glyphicon-save');
+            $('.input-group[id$=' + num + ']').each(function (index, elem) {
+                const field = $(this).attr('id').match(/(\w+)_group_\d+/)[1];
+                let val = $(this).find('input').val();
+                if (field === 'released') {
+                    val = format_date_to_display(new Date(val));
+                }
+
+                $(this).addClass('hidden');
+                const text_element = $('#' + field + '_text_' + num + '');
+                if (field === 'author') {
+
+                }
+                if (field === 'link') {
+                    text_element.attr('href', val);
+                    $('#author_text_' + num).attr('href', val);
+                } else {
+                    text_element.text(val);
+                }
+                text_element.removeClass('hidden');
+                $('.save_'+field).removeClass('glyphicon-ok glyphicon-remove').addClass('glyphicon-save').attr('title', lang['save']);
+            });
             $(this).addClass('text-primary');
         }
     });
 
-    $('.save_name').on('click', function (e) {
+    $('.save_template_field').on('click', function (e) {
         if ($(this).hasClass('disabled')) {
             return;
         }
         e.preventDefault();
-        saveField($(this), 'name');
-    });
-    $('.save_description').on('click', function (e) {
-        if ($(this).hasClass('disabled')) {
-            return;
-        }
-        e.preventDefault();
-        saveField($(this), 'description');
+        saveField($(this), $(this).attr('id').match(/save_(\w+)_\d+/)[1]);
     });
 
     function saveField(button, field) {

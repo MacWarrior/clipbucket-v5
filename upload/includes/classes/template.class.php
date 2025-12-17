@@ -2,6 +2,8 @@
 
 class CBTemplate
 {
+
+    public static $allowed_fields = ['name', 'description', 'title', 'link', 'version','released', 'authors'];
     public static function getInstance()
     {
         global $cbtpl;
@@ -12,7 +14,7 @@ class CBTemplate
 
     public static function save(string $field, string $value, string $path): bool
     {
-        if (!in_array($field, ['name', 'description'])) {
+        if (!in_array($field, self::$allowed_fields)) {
             return false;
         }
         $dir = self::secureTemplatePath($path);
@@ -20,8 +22,18 @@ class CBTemplate
         if (!file_exists($template_xml)) {
             throw new Exception('template.xml not found');
         }
+        if($field == 'link') {
+            $field = 'website';
+        }
         $xml = simplexml_load_file($template_xml);
-        $xml->$field = $value;
+        if (empty($xml->$field)) {
+            return false;
+        }
+        if ($field == 'title') {
+            $xml->website->attributes()['title'] = $value;
+        } else {
+            $xml->$field = $value;
+        }
         $xml->saveXML($template_xml);
         return true;
     }

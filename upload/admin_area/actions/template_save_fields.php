@@ -5,7 +5,7 @@ require_once dirname(__FILE__, 3) . '/includes/admin_config.php';
 User::getInstance()->hasPermissionAjax('manage_template_access');
 $success = true;
 
-if (!in_array($_POST['field'], ['name','description'])) {
+if (!in_array($_POST['field'], CBTemplate::$allowed_fields)) {
     e(lang('invalid_field'));
     $success = false;
 }

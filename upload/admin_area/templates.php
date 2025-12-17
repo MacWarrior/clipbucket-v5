@@ -23,6 +23,12 @@ ClipBucket::getInstance()->addAdminJS([
     'pages/templates/templates' . $min_in_dev . '.js' => 'admin'
 ]);
 
+$datepicker_js_lang = '';
+if( Language::getInstance()->getLang() != 'en'){
+    $datepicker_js_lang = '_languages/datepicker-'.Language::getInstance()->getLang();
+}
+ClipBucket::getInstance()->addAdminJS(['jquery_plugs/datepicker'.$datepicker_js_lang.'.js' => 'global']);
+
 assign('templates', CBTemplate::getInstance()->get_templates());
 subtitle('Template Manager');
 template_files('templates.html');
