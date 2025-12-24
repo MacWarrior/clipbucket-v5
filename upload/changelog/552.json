@@ -1,6 +1,6 @@
 {
   "version":"5.5.2",
-  "revision":"182",
+  "revision":"188",
   "status":"stable",
   "detail":[
     {
@@ -33,6 +33,8 @@
         ,"Update core update error handling"
         ,"Update new member form access"
         ,"Update FFI module warning"
+        ,"Update required version notice"
+        ,"Update video reconvertion (Thanks @McArrow !) <i>(#695)</i>"
         ,"Fix code mode on page edition <i>(#595)</i>"
         ,"Fix email sending error catching <i>(#587)</i>"
         ,"Fix incorrect frontend URL <i>(#529)</i>"
@@ -100,6 +102,7 @@
         ,"Update email change procedure"
         ,"Update collection creation from video"
         ,"Update channel search display"
+        ,"Update video embedding securities check"
         ,"Hide banned users from channels page, search results & popular user"
         ,"Drop remote upload"
         ,"Prevent user actions if base URL is not correctly set"
@@ -165,6 +168,7 @@
         ,"Fix possible cookie banner JS error <i>(#695)</i>"
         ,"Fix user channel infos display"
         ,"Fix possible JS on comment visual editor"
+        ,"Fix search page title"
       ]
     },
     {
@@ -210,6 +214,7 @@
         ,"Fix wrong extension check"
         ,"Fix possible error during video conversion"
         ,"Fix possible multiple video conversion"
+        ,"Fix default audio track selection"
       ]
     },
     {
@@ -264,10 +269,10 @@
       "title": "External components",
       "description": [
         "Update psr/log to 3.0.2"
-        ,"Update filp/whoops to 2.18.3"
+        ,"Update filp/whoops to 2.18.4"
         ,"Update oxygenzsas/composer_lib_discord to 0.3.5"
-        ,"Update predis/predis to 3.0.1"
-        ,"Update phpmailer/phpmailer to 6.10.0"
+        ,"Update predis/predis to 3.3.0"
+        ,"Update phpmailer/phpmailer to 7.0.1"
         ,"Update psr/http-message to 1.1"
         ,"Update VideoJS to version 8.23.4"
         ,"Update summernote to version 0.9.1"

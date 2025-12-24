@@ -1428,6 +1428,7 @@ class CBPhotos
             errorhandler::getInstance()->flush_msg();
             //finally removing from Database
             $this->delete_from_db($photo);
+            remove_empty_directory(DirPath::get('photos') . $photo['file_directory'], DirPath::get('photos'));
         } else {
             e(lang('photo_not_exist'));
         }
