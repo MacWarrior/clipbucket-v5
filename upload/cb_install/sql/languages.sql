@@ -1740,4 +1740,7 @@ VALUES ('ongoing_conversion'),
        ('please_login'),
        ('video_is_already_waiting'),
        ('embed_player_disabled'),
-       ('restrict_content_login');
+       ('restrict_content_login'),
+       ('option_enable_allow_alias_email'),
+       ('option_enable_allow_alias_email_hint'),
+       ('error_alias_email_not_allowed');
