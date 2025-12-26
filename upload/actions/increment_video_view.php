@@ -23,6 +23,7 @@ if( !video_playable($video) ){
 
 if( !increment_views($video, 'video') ){
     echo json_encode(['success' => false]);
+    exit;
 }
 
 echo json_encode(['success' => true]);
