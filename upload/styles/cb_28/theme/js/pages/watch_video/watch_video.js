@@ -139,6 +139,8 @@ $(document).ready(function () {
                             }
                         } else {
                             $('.player-holder').html(video.html);
+                            let images = document.querySelectorAll("img[data-thumbs]")
+                            listenerPreviewThumbs(images);
                         }
                     });
 

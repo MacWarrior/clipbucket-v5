@@ -617,6 +617,8 @@ function progressVideoCheckHome(ids_to_check_progress, displayType, interval_nam
                     }
                     AddingListenerModernThumbVideo();
                     AddingListenerModernThumbVideoPopinView();
+                    let images = document.querySelectorAll("img[data-thumbs]")
+                    listenerPreviewThumbs(images);
                 }
             })
         }, 60000);

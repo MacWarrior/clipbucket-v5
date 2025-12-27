@@ -490,10 +490,7 @@ $(window).resize(function(){
     loginHeight();
     headerFooter();
 });
-
-document.addEventListener("DOMContentLoaded", function () {
-    /* Thumbs preview */
-    let images = document.querySelectorAll("img[data-thumbs]");
+function listenerPreviewThumbs (images) {
     images.forEach(img => {
         let thumbnails;
         try {
@@ -525,7 +522,13 @@ document.addEventListener("DOMContentLoaded", function () {
             index = 0;
         });
     });
+}
+document.addEventListener("DOMContentLoaded", function () {
     /* Thumbs preview */
+    let images = document.querySelectorAll("img[data-thumbs]");
+
+    /* Thumbs preview */
+    listenerPreviewThumbs(images);
 
     /* Theme switch */
     function postThemeSwitch(selected_theme){

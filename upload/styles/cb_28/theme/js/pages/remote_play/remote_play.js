@@ -166,6 +166,8 @@ $(function() {
                                             }
                                         } else {
                                             $('#remote_play_form').find('.player-holder').html(video.html);
+                                            let images = document.querySelectorAll("img[data-thumbs]")
+                                            listenerPreviewThumbs(images);
                                         }
                                     });
 
