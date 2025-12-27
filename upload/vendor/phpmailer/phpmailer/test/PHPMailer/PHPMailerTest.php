@@ -253,7 +253,7 @@ EOT;
         $PHPMailer = new PHPMailer();
         $reflection = new \ReflectionClass($PHPMailer);
         $property = $reflection->getProperty('message_type');
-        $property->setAccessible(true);
+        (\PHP_VERSION_ID < 80100) && $property->setAccessible(true);
         $property->setValue($PHPMailer, 'inline');
         self::assertIsString($PHPMailer->createBody());
 
@@ -278,6 +278,8 @@ EOT;
 
     /**
      * Send a message containing ISO-8859-1 text.
+     *
+     * @requires extension mbstring
      */
     public function testHtmlIso8859()
     {
@@ -595,6 +597,7 @@ EOT;
      */
     public function testEmbeddedImage()
     {
+        $this->Mail->From = '';
         $this->Mail->msgHTML('<!DOCTYPE html>
 <html lang="en">
   <head>
@@ -608,6 +611,32 @@ EOT;
         $this->Mail->preSend();
         self::assertStringContainsString(
             'Content-ID: <bb229a48bee31f5d54ca12dc9bd960c6@phpmailer.0>',
+            $this->Mail->getSentMIMEMessage(),
+            'Embedded image header encoding incorrect.'
+        );
+    }
+
+    /**
+     * An embedded attachment test with custom cid domain.
+     */
+    public function testEmbeddedImageCustomCidDomain()
+    {
+        $result = $this->Mail->setFrom('test@example.com');
+        self::assertTrue($result, 'setFrom failed');
+
+        $this->Mail->msgHTML('<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>E-Mail Inline Image Test</title>
+  </head>
+  <body>
+    <p><img src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="></p>
+  </body>
+</html>', '', false);
+        $this->Mail->preSend();
+        self::assertStringContainsString(
+            'Content-ID: <bb229a48bee31f5d54ca12dc9bd960c6@example.com>',
             $this->Mail->getSentMIMEMessage(),
             'Embedded image header encoding incorrect.'
         );
@@ -1121,7 +1150,7 @@ EOT;
     public function testConvertEncoding()
     {
         if (!PHPMailer::idnSupported()) {
-            self::markTestSkipped('intl and/or mbstring extensions are not available');
+            self::markTestSkipped('Both intl and mbstring extensions are required.');
         }
 
         $this->Mail->clearAllRecipients();
@@ -1166,7 +1195,7 @@ EOT;
     public function testDuplicateIDNRemoved()
     {
         if (!PHPMailer::idnSupported()) {
-            self::markTestSkipped('intl and/or mbstring extensions are not available');
+            self::markTestSkipped('Both intl and mbstring extensions are required.');
         }
 
         $this->Mail->clearAllRecipients();
@@ -1243,7 +1272,7 @@ EOT;
 
         //Beyond this point we need UTF-8 support
         if (!PHPMailer::idnSupported()) {
-            self::markTestSkipped('intl and/or mbstring extensions are not available');
+            self::markTestSkipped('Both intl and mbstring extensions are required.');
         }
 
         //Using a punycodable domain does not need SMTPUTF8
