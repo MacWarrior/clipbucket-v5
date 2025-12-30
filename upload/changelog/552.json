@@ -1,6 +1,6 @@
 {
   "version":"5.5.2",
-  "revision":"188",
+  "revision":"189",
   "status":"stable",
   "detail":[
     {
@@ -169,6 +169,7 @@
         ,"Fix user channel infos display"
         ,"Fix possible JS on comment visual editor"
         ,"Fix search page title"
+        ,"Fix video display through SSE"
       ]
     },
     {
