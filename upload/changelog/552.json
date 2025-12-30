@@ -1,6 +1,6 @@
 {
   "version":"5.5.2",
-  "revision":"189",
+  "revision":"190",
   "status":"stable",
   "detail":[
     {
@@ -170,6 +170,7 @@
         ,"Fix possible JS on comment visual editor"
         ,"Fix search page title"
         ,"Fix video display through SSE"
+        ,"Fix video view increment (Thanks @McArrow !) <i>(#695)</i>"
       ]
     },
     {
