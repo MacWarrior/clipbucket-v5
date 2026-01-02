@@ -95,8 +95,11 @@
         ,currency: "{$paypal->getCurrency()}"
         ,url_paiement: "{$paypal->getUrlBack()}"
     };
-</script>
 
+    /** error message for the front end if issue with paypal init */
+    var lang_paypal_init_issue = "{lang code='paypal_init_issue'}";
+    var lang_no_subscription_found = "{lang code='no_subscription_found'}";
+</script>
 {/if}
 {if !empty($memberships)}
     <h2>{lang code='membership_history'}</h2>

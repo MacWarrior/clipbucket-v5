@@ -17,7 +17,7 @@ $paypal = new Paypal(
     , 'https://api-m.sandbox.paypal.com' /* url API sandox vs prod */
     , 'EUR' /* devise */
     , 'https://sandbox.paypal.com/sdk/js' /* url sdk js */
-    ,'http://clipbucket.local/manage_membership.php' /* url de la page unique de paiement */
+    ,DirPath::getUrl('root').'/manage_membership.php' /* url de la page unique de paiement */
     , true /* active SSL */
     , tbl('paypal_transactions')
     , tbl('paypal_transactions_logs')
@@ -60,12 +60,9 @@ foreach ($available_memberships as $key => $available_membership) {
 }
 
 $min_suffixe = System::isInDev() ? '' : '.min';
-/** load js from composer vendor
- *
- * @todo corriger le systeme pour supporter le dirpath
- */
-//ClipBucket::getInstance()->addJS([DirPath::get('vendor').'oxygenzsas'.DIRECTORY_SEPARATOR.'composer_lib_paypal'.DIRECTORY_SEPARATOR.'js'.DIRECTORY_SEPARATOR.'script.js' => 'admin']);
-ClipBucket::getInstance()->addJS(['../../../../vendor/oxygenzsas/composer_lib_paypal/js/script.js' => 'admin']);
+
+/** load js from composer vendor */
+ClipBucket::getInstance()->addJS(['oxygenzsas'.DIRECTORY_SEPARATOR.'composer_lib_paypal'.DIRECTORY_SEPARATOR.'js'.DIRECTORY_SEPARATOR.'script.js' => 'vendor']);
 
 /** load js and css */
 ClipBucket::getInstance()->addJS(['payment' . $min_suffixe . '.js'  => 'admin']);
