@@ -125,3 +125,20 @@
 	left: 5px;
 }
 /* Channels page slogans */
+.watch-rating-inline {
+	display: inline-block;
+	white-space: nowrap;
+}
+
+.watch-rating-icon {
+	color: #e74c3c;
+	font-size: 18px;
+	line-height: 1;
+	margin-right: 8px;
+	vertical-align: middle;
+}
+
+.watch-rating-inline .rating {
+	display: inline-block;
+	vertical-align: middle;
+}

@@ -152,6 +152,8 @@ if( config('enable_comments_video') == 'yes' ) {
     }
 }
 
+assign('is_favorite', Video::isFavorite($vdo['videoid']));
+
 if (config('enable_video_categories')!='no') {
     $category_links = [];
     foreach (json_decode($vdo['category_list'],true) as $video_category) {

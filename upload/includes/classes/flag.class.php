@@ -1,11 +1,11 @@
 <?php
 
-class Flag
+class Flag extends Objects
 {
     private static $flag_types = [];
     private static $flag_element_types = [];
     private static $tableName = 'flags';
-    private static $tableNameElementType = 'flag_element_type';
+    private static $tableNameElementType = 'object_type';
     private static $tableNameType = 'flag_type';
 
     private static $fields = [

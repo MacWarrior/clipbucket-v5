@@ -151,6 +151,15 @@ $(document).ready(function () {
             })
         }, 60000);
     }
+
+    $('.manage_favorite').on('click', function (e) {
+        if ($(this).hasClass('glyphicon-heart')) {
+            //remove fav
+
+        } else {
+            _cb.add_to_favNew('video', videoid);
+        }
+    });
 });
 
 function getViewHistory(video_id, page) {
@@ -179,4 +188,3 @@ function showSpinner() {
 function hideSpinner() {
     $('.taskHandler').hide();
 }
-
