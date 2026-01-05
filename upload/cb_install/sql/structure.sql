@@ -397,7 +397,16 @@ CREATE TABLE `{tbl_prefix}user_levels` (
   `user_level_active` enum('yes','no') NOT NULL DEFAULT 'yes',
   `user_level_name` varchar(100) NOT NULL,
   `user_level_is_origin` ENUM('yes','no') NOT NULL DEFAULT 'no',
-  `user_level_is_default` ENUM('yes','no') NOT NULL DEFAULT 'no'
+  `user_level_is_default` ENUM('yes','no') NOT NULL DEFAULT 'no',
+  `default_homepage` ENUM (
+      'homepage'
+      ,'videos'
+      ,'public_videos'
+      ,'photos'
+      ,'collections'
+      ,'channels'
+      ,'my_account'
+  )
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_520_ci;
 ALTER TABLE `{tbl_prefix}user_levels`
     ADD PRIMARY KEY (`user_level_id`);
@@ -1295,3 +1304,65 @@ CREATE TABLE `{tbl_prefix}video_conversion_queue`
 
 ALTER TABLE `{tbl_prefix}video_conversion_queue`
     ADD CONSTRAINT `video_conversion_fk` FOREIGN KEY (`videoid`) REFERENCES `{tbl_prefix}video` (`videoid`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+CREATE TABLE `{tbl_prefix}currency`
+(
+    `id_currency` INT(20) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `country` VARCHAR(64) NOT NULL,
+    `code` VARCHAR(3) NOT NULL UNIQUE,
+    `symbol` VARCHAR(5) NOT NULL
+) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE utf8mb4_unicode_520_ci;
+
+CREATE TABLE `{tbl_prefix}memberships`
+(
+    `id_membership`          INT     NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `user_level_id`          INT(20) NOT NULL,
+    `id_currency`            INT(20) NOT NULL,
+    `frequency`              ENUM ('daily', 'weekly', 'monthly', 'yearly'),
+    `base_price`             DECIMAL DEFAULT 0,
+    `description`            VARCHAR(512),
+    `storage_quota_included` INT     DEFAULT 0,
+    `storage_price_per_go`   DECIMAL DEFAULT 0,
+    `disabled`               BOOLEAN DEFAULT FALSE,
+    `allowed_emails`         TEXT,
+    `only_visible_eligible`  BOOLEAN DEFAULT FALSE
+) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE utf8mb4_unicode_520_ci;
+
+ALTER TABLE `{tbl_prefix}memberships`
+    ADD UNIQUE KEY `user_frequency` (`frequency`, `user_level_id`);
+ALTER TABLE `{tbl_prefix}memberships`
+    ADD CONSTRAINT `user_level_membership` FOREIGN KEY (`user_level_id`) REFERENCES `{tbl_prefix}user_levels` (`user_level_id`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+ALTER TABLE `{tbl_prefix}memberships`
+    ADD CONSTRAINT `user_level_currency` FOREIGN KEY (`id_currency`) REFERENCES `{tbl_prefix}currency` (`id_currency`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+
+CREATE TABLE IF NOT EXISTS `{tbl_prefix}user_memberships_status`
+(
+    `id_user_memberships_status` INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `language_key_title`         VARCHAR(256)
+) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE utf8mb4_unicode_520_ci;
+
+CREATE TABLE `{tbl_prefix}user_memberships`
+(
+    `id_user_membership`         INT      NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `userid`                     BIGINT   NOT NULL,
+    `id_membership`              INT      NOT NULL,
+    `id_user_memberships_status` INT      NOT NULL,
+    `date_start`                 DATETIME NOT NULL,
+    `date_end`                   DATETIME NULL,
+    `price`                      DECIMAL  NOT NULL
+) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE utf8mb4_unicode_520_ci;
+ALTER TABLE `{tbl_prefix}user_memberships`
+    ADD CONSTRAINT `user_membership_user` FOREIGN KEY (`userid`) REFERENCES `{tbl_prefix}users` (`userid`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+ALTER TABLE `{tbl_prefix}user_memberships`
+    ADD CONSTRAINT `user_membership_membership` FOREIGN KEY (`id_membership`) REFERENCES `{tbl_prefix}memberships` (`id_membership`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+ALTER TABLE `{tbl_prefix}user_memberships`
+    ADD CONSTRAINT `user_membership_membership_status` FOREIGN KEY (`id_user_memberships_status`) REFERENCES `{tbl_prefix}user_memberships_status` (`id_user_memberships_status`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+
+CREATE TABLE IF NOT EXISTS `{tbl_prefix}user_memberships_transactions`
+(
+    `id_user_membership` INT NOT NULL,
+    `id_paypal_transaction`        INT NOT NULL
+) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE utf8mb4_unicode_520_ci;
+ALTER TABLE `{tbl_prefix}user_memberships_transactions`
+    ADD CONSTRAINT `pkey_user_memberships_transactions` PRIMARY KEY (`id_user_membership`, `id_paypal_transaction`);
+ALTER TABLE `{tbl_prefix}user_memberships_transactions`
+    ADD CONSTRAINT `user_memberships_transactions_user_membership` FOREIGN KEY (`id_user_membership`) REFERENCES `{tbl_prefix}user_memberships` (`id_user_membership`) ON DELETE RESTRICT ON UPDATE RESTRICT;

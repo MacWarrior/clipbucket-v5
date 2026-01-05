@@ -170,6 +170,8 @@ if (isset($_POST['update'])) {
         , 'enable_360_video'
         , 'chromecast'
         , 'player_thumbnails'
+        , 'enable_membership'
+        , 'enable_public_video_page'
     ];
 
     $config_booleans_to_refactor = [
@@ -441,7 +443,16 @@ if (isset($_POST['update'])) {
         'enable_multi_factor_authentification',
         'videos_enable_fullwidth',
         'collections_enable_fullwidth',
-        'collection_enable_fullwidth'
+        'collection_enable_fullwidth',
+        'videos_video_style',
+        'enable_360_video',
+        'video_thumbs_preview_count',
+        'allow_tag_space',
+        'email_sender_name',
+        'number_featured_video',
+        'video_list_view_video_history',
+        'enable_membership',
+        'enable_public_video_page'
     ];
 
     //Numeric Array

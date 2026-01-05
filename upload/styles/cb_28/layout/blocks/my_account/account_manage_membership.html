@@ -1,0 +1,131 @@
+{if User::getInstance()->isUserMustRenewMembership() && $can_renew_membership}
+    <h2>{lang code='renew_membership'}</h2>
+    <button class="btn-primary btn mb-2">{lang('renew')}</button>
+{/if}
+{if User::getInstance()->isUserMustRenewMembership()}
+    <h2>{lang code='available_memberships'}</h2>
+
+    <div class="plans-main-container">
+        <div class="left-detail"></div>
+        <div class="plans-main-container-flex">
+            {foreach from=$available_memberships item=membership}
+            <label for="radio_{$membership.id_membership}" class="plans-container">
+
+                <div class="top">
+
+                    <div class="badge-custom">
+                        {if 1 != 0}
+                        <span class="badge-actif">active</span>
+                        {/if}
+
+                        {if 1 != 0}
+                        <span class="badge-popular">popular</span>
+                        {/if}
+                    </div>
+
+                    <div class="name">
+                        <input class="radio" id="radio_{$membership.id_membership}" type="radio" name="subscribe_option" value="" checked="checked">
+                        {$membership.user_level_name}
+                    </div>
+                    <div class="price-tag">
+                        <div class="price">
+                            {if $membership.base_price != 0}
+                                {$membership.base_price} {$membership.symbol}
+                            {else}
+                                {lang('free')}
+                            {/if}
+                        </div>
+                        <div class="frequence">{lang('frequency_'|cat:$membership.frequency)}</div>
+                    </div>
+                    <button class="btn btn-default btn-primary btn_subscribe ">{lang('bouton_souscrire_abonnement')}</button>
+                </div>
+
+                <div class="bottom_and_quota">
+                    <div class="bottom">
+                        <div class="feature-title"> {lang('plans_features_title')} </div>
+                        <div class="description" >{nl2br($membership.description)}</div>
+                    </div>
+                    <div class="quota">
+                        <div class="left">
+                            <i class="fa fa-hdd-o"></i>
+                        </div>
+                        <div class="right">
+
+                            <div class="infos">
+                                <span>{lang('storage_quota')} :</span>
+                                {if $membership.storage_quota_included != 0}
+                                    {$membership.storage_quota_included} {lang('gb')}
+                                {else}
+                                    {lang('none')}
+                                {/if}
+
+                            </div>
+
+                            <div class="infos">
+                                <span>{lang('storage_price')} :</span>
+                                {if $membership.storage_price_per_go != 0}
+                                    {$membership.storage_price_per_go} {$membership.symbol} {lang('per_gb')}
+                                {else}
+                                    {lang('free')}
+                                {/if}
+                            </div>
+                        </div>
+                    </div>
+                    <button class="btn btn-default btn-primary btn_subscribe ">{lang('bouton_souscrire_abonnement')}</button>
+
+                </div>
+
+            </label>
+            {/foreach}
+        </div>
+    </div>
+
+
+<style>
+    .payment_container {
+        display: inline-block;
+    }
+</style>
+
+<div class="payment_container" id="payment_options"></div>
+<script>
+    var Paypal = {
+        paypal_sdk_url: "{$paypal->getUrlJsSdk()}"
+        ,client_id: "{$paypal->getClientID()}"
+        ,currency: "{$paypal->getCurrency()}"
+        ,url_paiement: "{$paypal->getUrlBack()}"
+    };
+
+    /** error message for the front end if issue with paypal init */
+    var lang_paypal_init_issue = "{lang code='paypal_init_issue'}";
+    var lang_no_subscription_found = "{lang code='no_subscription_found'}";
+</script>
+{/if}
+{if !empty($memberships)}
+    <h2>{lang code='membership_history'}</h2>
+    <table class="table table-bordered table-striped">
+        <tr>
+            <th class="col-md-2" style="cursor:pointer;">{lang('date_start')} </th>
+            <th class="col-md-2" style="cursor:pointer;">{lang('date_end')}</th>
+            <th class="col-md-2" style="cursor:pointer;">{lang('status')}</th>
+            <th class="col-md-2" style="cursor:pointer;">{lang('user_levels')}</th>
+            <th class="col-md-1" style="cursor:pointer;">{lang('price')}</th>
+            {if config('enable_storage_history' == 'yes')}
+                <th class="col-md-2" style="cursor:pointer;">{lang('max_period_storage')}</th>
+            {/if}
+        </tr>
+        {section name=sub loop=$memberships}
+            <tr>
+                <td><span>{display_clean($memberships[sub].date_start)}</span></td>
+                <td><span>{if $memberships[sub].date_end}{display_clean($memberships[sub].date_end)}{else}{lang('never')}{/if}</span></td>
+                <td><span>{lang($memberships[sub].language_key_title)}</span></td>
+                <td><span>{lang($memberships[sub].user_level_name|strtolower|replace:' ':'_')} - {lang('frequency_'|cat:$memberships[sub].frequency)}</span></td>
+                <td><span>{display_clean($memberships[sub].price)} {display_clean($memberships[sub].symbol)}</span></td>
+                {if config('enable_storage_history' == 'yes')}
+                    {if $memberships[sub].date_end  == null}{assign var=date_end value='2999-01-01 00:00:00'}{else}{assign var=date_end value=$memberships[sub].date_end}{/if}
+                    <td><span>{System::get_readable_filesize(User::getInstance()->getPeriodMaxStorageUseByUser($memberships[sub].userid, $memberships[sub].date_start, $date_end),2)}</span></td>
+                {/if}
+            </tr>
+        {/section}
+    </table>
+{/if}

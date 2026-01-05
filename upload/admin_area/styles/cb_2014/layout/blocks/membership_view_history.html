@@ -1,0 +1,50 @@
+{if $modal === true}
+<div class="modal-dialog" style="width:80%">
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+            <h4 class="modal-title">{lang code='history'}</h4>
+        </div>
+        <div class="modal-body ">
+{/if}
+            <table class="table table-bordered table-striped">
+                <tr>
+                    <th class="col-md-1" style="cursor:pointer;" >{lang('date_start')} </th>
+                    <th class="col-md-2" style="cursor:pointer;" >{lang('date_end')}</th>
+                    <th class="col-md-2" style="cursor:pointer;" >{lang('status')}</th>
+                    <th class="col-md-2" style="cursor:pointer;" >{lang('user_levels')}</th>
+                    <th class="col-md-2" style="cursor:pointer;" >{lang('price')}</th>
+                    {if config('enable_storage_history' == 'yes')}
+                        <th class="col-md-2" style="cursor:pointer;" >{lang('max_period_storage')}</th>
+                    {/if}
+                </tr>
+                {section name=sub loop=$results}
+                    <tr>
+                        <td><span>{display_clean($results[sub].date_start)}</span></td>
+                        <td><span>{if $results[sub].date_end}{display_clean($results[sub].date_end)}{else}{lang('never')}{/if}</span></td>
+                        <td><span>{lang($results[sub].language_key_title)}</span></td>
+                        <td><span>{lang($results[sub].user_level_name|strtolower|replace:' ':'_')} - {lang('frequency_'|cat:$results[sub].frequency)}</span></td>
+                        <td><span>{display_clean($results[sub].price)} {display_clean($results[sub].symbol)}</span></td>
+                        {if config('enable_storage_history' == 'yes')}
+                            {if $results[sub].date_end  == null}{assign var=date_end value='2999-01-01 00:00:00'}{else}{assign var=date_end value=$results[sub].date_end}{/if}
+                            <td><span>{System::get_readable_filesize(User::getInstance()->getPeriodMaxStorageUseByUser($results[sub].userid, $results[sub].date_start, $date_end),2)}</span></td>
+                        {/if}
+                    </tr>
+                {/section}
+            </table>
+            {include file="$style_dir/blocks/pagination.html"}
+{if $modal === true}
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">{lang code='cancel'}</button>
+            <input type="hidden" value="{$userid}" id="modal_userid">
+        </div>
+    </div>
+</div>
+<script>
+    var userid;
+    $(function () {
+        userid = $('#modal_userid').val();
+    });
+</script>
+{/if}

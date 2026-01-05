@@ -41,7 +41,17 @@ switch ($mode) {
     case 'edit':
         //Updating Level permissions
         if (!empty($_POST)) {
-            UserLevel::updateUserLevel($user_level_id, $_POST['level_name'], $_POST['permission_value'], $_POST['user_level_is_default']);
+            if ( config('enable_membership') == 'yes'
+                && $_POST['user_level_is_default'] == 'yes'
+                && (Membership::getInstance()->getAll([
+                        'user_level_id' => $_POST['user_level_id'],
+                        'count'         => true
+                    ]) > 0)
+            ) {
+                e(lang('default_user_cant_have_membership'));
+            } else {
+                UserLevel::updateUserLevel($user_level_id, $_POST['level_name'], $_POST['permission_value'], $_POST['user_level_is_default']);
+            }
         }
 
         //Getting Details of $level
@@ -63,7 +73,6 @@ switch ($mode) {
         Assign('level_perms', $level_perms);
         Assign('view', 'edit');
         break;
-
     case 'add':
         $level_perms = UserLevel::getAllPermissions(['no_values' => true]);
 
