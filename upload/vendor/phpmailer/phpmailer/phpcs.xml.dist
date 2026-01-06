@@ -27,16 +27,26 @@
         <exclude name="PSR2.Methods.MethodDeclaration.Underscore"/>
         <exclude name="PSR12.Properties.ConstantVisibility.NotFound"/>
     </rule>
-    <rule ref="PHPCompatibility">
-        <exclude name="PHPCompatibility.Constants.NewConstants.stream_crypto_method_tlsv1_1_clientFound"/>
-        <exclude name="PHPCompatibility.Constants.NewConstants.stream_crypto_method_tlsv1_2_clientFound"/>
-        <exclude name="PHPCompatibility.Constants.RemovedConstants.intl_idna_variant_2003Deprecated"/>
-        <exclude name="PHPCompatibility.FunctionUse.NewFunctions.random_bytesFound"/>
-        <exclude name="PHPCompatibility.IniDirectives.RemovedIniDirectives.mbstring_func_overloadDeprecated"/>
-        <exclude name="PHPCompatibility.ParameterValues.NewIDNVariantDefault.NotSet"/>
-    </rule>
+    <rule ref="PHPCompatibility"/>
+
+
+    <!--
+    #############################################################################
+    SELECTIVE EXCLUSIONS
+    Exclude specific files for specific sniffs and/or exclude sub-groups in sniffs.
+    #############################################################################
+    -->
 
     <rule ref="Generic.Files.LineLength.TooLong">
         <exclude-pattern>*/language/phpmailer\.lang*\.php$</exclude-pattern>
     </rule>
+
+	<!-- Excludes related to linting ignore comment for one specific test file. -->
+    <rule ref="PSR12.Files.OpenTag.NotAlone">
+        <exclude-pattern>*/test/Fixtures/LocalizationTest/phpmailer.lang-yz\.php</exclude-pattern>
+    </rule>
+    <rule ref="PSR12.Files.FileHeader.SpacingAfterBlock">
+        <exclude-pattern>*/test/Fixtures/LocalizationTest/phpmailer.lang-yz\.php</exclude-pattern>
+    </rule>
+
 </ruleset>
