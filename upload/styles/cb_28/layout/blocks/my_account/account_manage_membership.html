@@ -87,7 +87,15 @@
     }
 </style>
 
-<div class="payment_container" id="payment_options"></div>
+<div id="paypal-card-form">
+    <div id="card-name"></div>
+    <div id="card-number"></div>
+    <div id="card-expiry"></div>
+    <div id="card-cvv"></div>
+
+    <button id="card-submit">Payer</button>
+</div>
+
 <script>
     var Paypal = {
         paypal_sdk_url: "{$paypal->getUrlJsSdk()}"

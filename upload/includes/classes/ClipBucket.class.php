@@ -407,6 +407,10 @@ class ClipBucket
                     [
                         'title'=>lang('subscribers'),
                         'url' =>DirPath::getUrl('admin_area') . 'users_memberships.php'
+                    ],
+                    [
+                        'title'=>lang('transactions'),
+                        'url' =>DirPath::getUrl('admin_area') . 'transactions_memberships.php'
                     ]
                 ]
             ];
