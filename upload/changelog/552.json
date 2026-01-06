@@ -1,6 +1,6 @@
 {
   "version":"5.5.2",
-  "revision":"188",
+  "revision":"191",
   "status":"stable",
   "detail":[
     {
@@ -169,6 +169,8 @@
         ,"Fix user channel infos display"
         ,"Fix possible JS on comment visual editor"
         ,"Fix search page title"
+        ,"Fix video display through SSE"
+        ,"Fix video view increment (Thanks @McArrow !) <i>(#695)</i>"
       ]
     },
     {
@@ -192,7 +194,7 @@
         ,"Fix URL issue when base_url config is not correctly set"
         ,"Fix typo <i>(#596)</i>"
         ,"Fix Nginx vhost <i>(#604)</i>"
-        ,"Fix possible SQL injection"
+        ,"Fix possible SQL injection (Thanks @quirmz !)"
         ,"Fix access to temp files"
         ,"Fix sessions"
         ,"Fix sub-directory links"
