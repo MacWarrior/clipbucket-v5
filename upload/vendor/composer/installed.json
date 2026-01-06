@@ -235,17 +235,17 @@
         },
         {
             "name": "oxygenzsas/composer_lib_paypal",
-            "version": "0.3.1",
-            "version_normalized": "0.3.1.0",
+            "version": "0.4.1",
+            "version_normalized": "0.4.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/OxygenzSAS/composer_lib_paypal.git",
-                "reference": "4a48feb7fad484d7d97547f4dd881f0c97e04202"
+                "reference": "405158fcb582a5dcb5f304f44fdc5aa91e107fd0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/OxygenzSAS/composer_lib_paypal/zipball/4a48feb7fad484d7d97547f4dd881f0c97e04202",
-                "reference": "4a48feb7fad484d7d97547f4dd881f0c97e04202",
+                "url": "https://api.github.com/repos/OxygenzSAS/composer_lib_paypal/zipball/405158fcb582a5dcb5f304f44fdc5aa91e107fd0",
+                "reference": "405158fcb582a5dcb5f304f44fdc5aa91e107fd0",
                 "shasum": ""
             },
             "require": {
@@ -254,7 +254,7 @@
                 "ext-pdo": "*",
                 "php": ">=7.0"
             },
-            "time": "2025-02-13T17:28:45+00:00",
+            "time": "2026-01-06T15:58:33+00:00",
             "type": "library",
             "installation-source": "dist",
             "autoload": {
@@ -279,7 +279,7 @@
             ],
             "support": {
                 "issues": "https://github.com/OxygenzSAS/composer_lib_paypal/issues",
-                "source": "https://github.com/OxygenzSAS/composer_lib_paypal/tree/0.3.1"
+                "source": "https://github.com/OxygenzSAS/composer_lib_paypal/tree/0.4.1"
             },
             "install-path": "../oxygenzsas/composer_lib_paypal"
         },
@@ -829,6 +829,6 @@
             "install-path": "../veka-server/onnx-php"
         }
     ],
-    "dev": false,
+    "dev": true,
     "dev-package-names": []
 }

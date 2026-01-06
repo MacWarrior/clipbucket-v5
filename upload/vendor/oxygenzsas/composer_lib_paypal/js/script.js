@@ -13,7 +13,7 @@ class PaypalCustom {
     init = function () {
         let instance = this;
         // Charger le SDK PayPal
-        instance.url_to_head(instance.paypal_sdk_url + "?client-id=" + instance.client_id + "&currency=" + instance.currency + "&intent=capture&commit=true")
+        instance.url_to_head(instance.paypal_sdk_url + "?client-id=" + instance.client_id + "&currency=" + instance.currency + "&intent=capture&commit=true&components=card-fields")
             .then(() => {
                 instance.afterInitSDK();
             })
@@ -25,11 +25,7 @@ class PaypalCustom {
     afterInitSDK() {
         let instance = this;
 
-        let paypal_buttons = paypal.Buttons({
-            onClick: (data) => {
-                // Custom JS
-            },
-            style: instance.buttonStyle, // Utiliser le style dynamique passé au constructeur
+        const cardFields = paypal.CardFields({
 
             createOrder: function (data, actions) {
                 return fetch(instance.url_paiement, {
@@ -46,7 +42,6 @@ class PaypalCustom {
                         instance.triggerEvent('paypalError', { message: error });
                     });
             },
-
             onApprove: function (data, actions) {
                 let order_id = data.orderID;
                 return fetch(instance.url_paiement, {
@@ -76,7 +71,17 @@ class PaypalCustom {
             }
         });
 
-        paypal_buttons.render(instance.boutonContainerSelector); // Utiliser le sélecteur dynamique
+        if (cardFields.isEligible()) {
+            cardFields.NameField().render('#card-name');
+            cardFields.NumberField().render('#card-number');
+            cardFields.ExpiryField().render('#card-expiry');
+            cardFields.CVVField().render('#card-cvv');
+
+            document
+                .getElementById('card-submit')
+                .addEventListener('click', () => cardFields.submit());
+
+        }
 
         // Déclenchement de l'événement après l'initialisation des boutons
         instance.triggerEvent('paypalButtonsInitialized');

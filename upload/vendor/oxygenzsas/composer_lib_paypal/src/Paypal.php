@@ -38,41 +38,38 @@ abstract class Paypal
     }
 
     // Crée une commande et renvoie la réponse en JSON.
-    public function createOrder($amount, $devise)
+    public function createOrder($amount, $devise, $name, $adress_line_1, $adress_line_2, $admin_area_2, $admin_area_1, $postal_code, $country_code )
     {
         try {
             $accessToken = $this->getAccessToken();
 
+            // ✅ VERSION BACKEND 100% CORRECTE (AVEC TOKEN)
             $orderData = [
                 'intent' => 'CAPTURE',
-
-                    "payment_source" => [
-                        "paypal"=> [
-                            "attributes"=> [
-                                "vault"=> [
-                                    "store_in_vault"=> "ON_SUCCESS",
-                                    "usage_type"=> "MERCHANT",
-                                    "customer_type"=> "CONSUMER"
-
-                                ]
+                'purchase_units' => [[
+                    'amount' => [
+                        'currency_code' => $devise,
+                        'value' => number_format($amount, 2, '.', '')
+                    ]
+                ]],
+                "payment_source" => [
+                    "card" => [
+                        "name"=> $name,
+                        "billing_address"=> [
+                            "address_line_1"=> $adress_line_1,
+                            "address_line_2"=> $adress_line_2,
+                            "admin_area_2"=> $admin_area_2,
+                            "admin_area_1"=> $admin_area_1,
+                            "postal_code"=> $postal_code,
+                            "country_code"=> $country_code
+                        ],
+                        "attributes" => [
+                            "vault" => [
+                                "store_in_vault" => "ON_SUCCESS"
+                            ],
+                            "verification" => [
+                                "method" => "SCA_ALWAYS"
                             ]
-
-                              ,"experience_context"=> [
-                                    "return_url"=> $this->url_back,
-                                    "cancel_url"=> $this->url_back
-                              ]
-
-                        ]
-                    ],
-                "application_context" => [
-                    "shipping_preference"=> "NO_SHIPPING"
-                ],
-
-                'purchase_units' => [
-                    [
-                        'amount' => [
-                            'currency_code' => $devise,
-                            'value' => $amount
                         ]
                     ]
                 ]
@@ -179,7 +176,7 @@ abstract class Paypal
                 ':amount' => $json['purchase_units'][0]['payments']['captures'][0]['amount']['value'],
                 ':net_amount' => $json['purchase_units'][0]['payments']['captures'][0]['seller_receivable_breakdown']['net_amount']['value'],
                 ':paypal_fee' => $json['purchase_units'][0]['payments']['captures'][0]['seller_receivable_breakdown']['paypal_fee']['value'],
-                ':update_time' => $json['purchase_units'][0]['payments']['captures'][0]['update_time']
+                ':update_time' => $this->convertPayPalDateToMySQL($json['purchase_units'][0]['payments']['captures'][0]['update_time'])
             ]);
             $id_paypal_transaction = Database::getInstance()->getLastInsertId();
             $this->addLog($response, $id_paypal_transaction);
@@ -224,6 +221,20 @@ abstract class Paypal
 
             $json = json_decode($response, true);
 
+            /** recup des donnéer issue d'un paiement de Paypal button */
+            if(isset($json['payment_source']['paypal'])) {
+                $vault_id = $json['payment_source']['paypal']['attributes']['vault']['id'] ?? null;
+                $customer_id = $json['payment_source']['paypal']['attributes']['vault']['customer']['id'] ?? null;
+            }
+            /** recup des donnéer issue d'un paiement de CardFields */
+            elseif(isset($json['payment_source']['card'])) {
+                $vault_id = '';
+                if($json['payment_source']['card']['attributes']['vault']['status'] == 'VAULTED') {
+                    $vault_id = $json['payment_source']['card']['attributes']['vault']['id'] ?? null;
+                }
+                $customer_id = $json['payment_source']['card']['attributes']['vault']['customer']['id'] ?? null;
+            }
+
             Database::getInstance()->query(/** @lang SQL */'
                 UPDATE '.$this->table_name_paypal_transaction.' SET status = :status
                                 , amount = :amount
@@ -238,8 +249,8 @@ abstract class Paypal
                 WHERE paypal_order_id = :paypal_order_id
             ', [
                 ':paypal_order_id' =>  $json['id'],
-                ':paypal_customer_id' => $json['payment_source']['paypal']['attributes']['vault']['customer']['id'] ?? '',
-                ':paypal_vault_id' =>  $json['payment_source']['paypal']['attributes']['vault']['id'] ?? '',
+                ':paypal_customer_id' => $customer_id ?? '',
+                ':paypal_vault_id' => $vault_id ?? '',
                 ':paypal_capture_id' =>  $json['purchase_units'][0]['payments']['captures'][0]['id'],
                 ':paypal_account_id' => $json['payer']['payer_id'],
                 ':status' => $json['status'],
@@ -247,7 +258,7 @@ abstract class Paypal
                 ':amount' => $json['purchase_units'][0]['payments']['captures'][0]['amount']['value'],
                 ':net_amount' => $json['purchase_units'][0]['payments']['captures'][0]['seller_receivable_breakdown']['net_amount']['value'],
                 ':paypal_fee' => $json['purchase_units'][0]['payments']['captures'][0]['seller_receivable_breakdown']['paypal_fee']['value'],
-                ':update_time' => $json['purchase_units'][0]['payments']['captures'][0]['update_time']
+                ':update_time' => $this->convertPayPalDateToMySQL($json['purchase_units'][0]['payments']['captures'][0]['update_time'])
             ]);
 
             // Requête SELECT pour récupérer la ligne mise à jour
@@ -470,7 +481,8 @@ abstract class Paypal
         switch($_POST['action'] ?? null) {
             case 'create_order':
                 $amount = $this->getAmountFromAttribute($_POST['attributes']);
-                call_user_func_array(array($this, 'createOrder'), [$amount, $this->currency]);
+                $adress_facturation =  $this->getAdressFromAttribute($_POST['attributes']);
+                call_user_func_array(array($this, 'createOrder'), [$amount, $this->currency, $adress_facturation['name'], $adress_facturation['adress_line_1'], $adress_facturation['adress_line_2'], $adress_facturation['admin_area_2'], $adress_facturation['admin_area_1'], $adress_facturation['postal_code'], $adress_facturation['country_code'] ]);
                 die();
                 /*
             case 'createOrderFromToken':
@@ -512,6 +524,30 @@ abstract class Paypal
         return $this->currency;
     }
 
+    // Fonction pour convertir le format ISO 8601 de PayPal en format MySQL
+    public function convertPayPalDateToMySQL($paypalDate) {
+        if (empty($paypalDate)) {
+            return null;
+        }
+
+        // Convertir "2026-01-05T15:47:54Z" en "2026-01-05 15:47:54"
+        $timestamp = strtotime($paypalDate);
+        return date('Y-m-d H:i:s', $timestamp);
+    }
+
+    public function getTableNamePaypalTransactionLogs() :mixed
+    {
+        return $this->table_name_paypal_transaction_logs;
+    }
+
+    public function getTableNamePaypalTransaction() :mixed
+    {
+        return $this->table_name_paypal_transaction;
+    }
+
     /** doit retourner un montant */
     abstract protected function getAmountFromAttribute(string $attribute) :int ;
+
+    /** doit retourner un tableau contenant l'adresse de facturation */
+    abstract protected function getAdressFromAttribute(string $attribute) :array ;
 }
