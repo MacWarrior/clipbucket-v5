@@ -10,13 +10,13 @@ class M00194 extends \Migration
      */
     public function start()
     {
-        self::alterTable('ALTER TABLE `cb_categories` CHANGE `is_default` `is_default` ENUM(\'yes\',\'no\') CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_520_ci NULL',[
+        self::alterTable('ALTER TABLE `{tbl_prefix}categories` CHANGE `is_default` `is_default` ENUM(\'yes\',\'no\') CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_520_ci NULL',[
             'table' => 'categories',
             'column'=>'is_default'
         ]);
         $sql = 'UPDATE `{tbl_prefix}categories` SET is_default=NULL WHERE is_default=\'no\'';
         self::query($sql);
-        self::alterTable('ALTER TABLE `cb_categories` CHANGE `is_default` `is_default` BOOLEAN NULL',[
+        self::alterTable('ALTER TABLE `{tbl_prefix}categories` CHANGE `is_default` `is_default` BOOLEAN NULL',[
             'table' => 'categories',
             'column'=>'is_default'
         ]);
