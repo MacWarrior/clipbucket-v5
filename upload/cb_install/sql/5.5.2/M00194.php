@@ -3,14 +3,13 @@
 namespace V5_5_2;
 require_once \DirPath::get('classes') . DIRECTORY_SEPARATOR . 'migration' . DIRECTORY_SEPARATOR . 'migration.class.php';
 
-class MWIP extends \Migration
+class M00194 extends \Migration
 {
     /**
      * @throws \Exception
      */
     public function start()
     {
-
         self::alterTable('ALTER TABLE `cb_categories` CHANGE `is_default` `is_default` ENUM(\'yes\',\'no\') CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_520_ci NULL',[
             'table' => 'categories',
             'column'=>'is_default'
@@ -37,7 +36,6 @@ class MWIP extends \Migration
                 'table' => 'categories'
             ]
         ]);
-
     }
 
 }
