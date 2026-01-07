@@ -2453,6 +2453,7 @@
                                 </div>
                                 <div class="col-md-8">
                                     <input class="form-control" name="player_logo_url" type="text" id="player_logo_url" value="{$row.player_logo_url}" {if $row.control_bar_logo!='yes' }disabled{/if}/>
+                                    <input value="{$row.player_logo_url}" name="player_logo_url" id="player_logo_url_hidden" type="hidden" {if $row.control_bar_logo=='yes'}disabled{/if}/>
                                 </div>
                             </div>
                             <hr/>

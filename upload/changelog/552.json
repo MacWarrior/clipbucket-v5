@@ -1,6 +1,6 @@
 {
   "version":"5.5.2",
-  "revision":"193",
+  "revision":"194",
   "status":"stable",
   "detail":[
     {
@@ -206,6 +206,7 @@
         ,"Fix typo in email template"
         ,"Fix playlist item counter"
         ,"Fix missing function"
+        ,"Fix possible duplicated default categories"
       ]
     },
     {
