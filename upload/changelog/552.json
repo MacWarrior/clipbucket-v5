@@ -1,6 +1,6 @@
 {
   "version":"5.5.2",
-  "revision":"192",
+  "revision":"193",
   "status":"stable",
   "detail":[
     {
@@ -205,6 +205,7 @@
         ,"Fix possible phishing attack (Thanks @Takumi142857 !)"
         ,"Fix typo in email template"
         ,"Fix playlist item counter"
+        ,"Fix missing function"
       ]
     },
     {
