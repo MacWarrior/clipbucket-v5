@@ -5,6 +5,26 @@ abstract class Objects
 
     private static array $type_array = [];
 
+    protected static function getTableNameObjectType(): string
+    {
+        //TODO optimiser pour ne pas faire le test à chaque appel
+        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.2', '999')) {
+            return 'object_type';
+        } else {
+            return 'categories_type';
+        }
+    }
+
+    protected static function getIdFieldObjectType(): string
+    {
+        //TODO optimiser pour ne pas faire le test à chaque appel
+        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.2', '999')) {
+            return 'id_object_type';
+        } else {
+            return 'id_category_type';
+        }
+    }
+
     /**
      * @return int
      * @throws Exception
@@ -12,9 +32,10 @@ abstract class Objects
     public static function getTypeId(): int
     {
         if (empty(self::$type_array[static::TYPE])) {
-            $sql = 'SELECT id_object_type FROM ' . tbl('object_type') . ' WHERE name = "' . static::TYPE . '"';
+            $id_field = static::getIdFieldObjectType();
+            $sql = 'SELECT '.$id_field.' FROM ' . tbl(self::getTableNameObjectType()) . ' WHERE name = "' . static::TYPE . '"';
             $res = Clipbucket_db::getInstance()->_select($sql);
-            self::$type_array[static::TYPE] = $res[0]['id_object_type'] ?? 0;
+            self::$type_array[static::TYPE] = $res[0][$id_field] ?? 0;
         }
         return self::$type_array[static::TYPE];
     }

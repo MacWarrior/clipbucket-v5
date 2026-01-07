@@ -166,6 +166,9 @@ class Category
      */
     private function getAllCategoryTypes(): array
     {
+        if (!Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.2', '999')) {
+            return Clipbucket_db::getInstance()->_select('SELECT id_category_type, name FROM ' . cb_sql_table('categories_type'));
+        }
         return Clipbucket_db::getInstance()->_select('SELECT id_object_type AS id_category_type, name FROM ' . cb_sql_table('object_type'));
     }
 
