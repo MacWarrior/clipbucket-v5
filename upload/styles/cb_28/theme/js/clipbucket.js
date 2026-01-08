@@ -874,6 +874,26 @@
 					}
 				},'text');
 		};
+		this.remove_from_fav = function(type,id){
+			var curObj = this;
+			$('#video_action_result_cont').css('display','block').html(curObj.loading);
+
+			$.post(page,
+				{
+					mode : 'remove_from_favorites',
+					type : type,
+					id : id
+				},
+				function(data)
+				{
+					if(!data){
+						alert('No data');
+					} else {
+						$('#video_action_result_cont').hide();
+						curObj.showMeTheMsg(data, true);
+					}
+				},'text');
+		};
 
 		this.flag_objectNew = function(form_id,id,type){
 			var curObj = this;

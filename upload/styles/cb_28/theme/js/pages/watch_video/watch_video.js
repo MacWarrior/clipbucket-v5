@@ -1,7 +1,7 @@
 var cookieToSave, commentDataCheck;
 var link_type = "videos";
 
-$(document).ready(function () {
+$(function () {
     cookieToSave = 'comment_data_u' + userid + "v" + current_video;
     commentDataCheck = $.cookie(cookieToSave);
     if (commentDataCheck !== 'null') {
@@ -155,9 +155,13 @@ $(document).ready(function () {
     $('.manage_favorite').on('click', function (e) {
         if ($(this).hasClass('glyphicon-heart')) {
             //remove fav
-
+            _cb.remove_from_fav('video', videoid);
+            $(this).removeClass('glyphicon-heart').addClass('glyphicon-heart-empty');
+            $(this).attr('title', lang['remove_from_favorites']);
         } else {
             _cb.add_to_favNew('video', videoid);
+            $(this).removeClass('glyphicon-heart-empty').addClass('glyphicon-heart');
+            $(this).attr('title', lang['add_to_my_favorites']);
         }
     });
 });

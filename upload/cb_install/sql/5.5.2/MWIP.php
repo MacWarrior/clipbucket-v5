@@ -44,26 +44,84 @@ class MWIP extends \Migration
                 INNER JOIN `{tbl_prefix}object_type` OT ON OT.`name` = FET.`name`
                 SET F.`id_flag_element_type` = OT.`id_object_type`';
         self::constrainedQuery($sql, [], [
-            'table' => 'flags',
             'constraint' => [
                 'type' => 'FOREIGN KEY',
-                'name' => 'fk_id_flag_element_type'
+                'name' => 'fk_id_flag_element_type_new'
             ]
         ]);
-//        self::query($sql);
         $sql = 'ALTER TABLE `{tbl_prefix}flags`
-                            ADD CONSTRAINT `fk_id_flag_element_type` FOREIGN KEY (`id_flag_element_type`) REFERENCES `{tbl_prefix}object_type` (`id_object_type`) ON DELETE NO ACTION ON UPDATE NO ACTION';
+                            ADD CONSTRAINT `fk_id_flag_element_type_new` FOREIGN KEY (`id_flag_element_type`) REFERENCES `{tbl_prefix}object_type` (`id_object_type`) ON DELETE NO ACTION ON UPDATE NO ACTION';
         self::alterTable($sql, [
             'table'  => 'flags',
             'column' => 'id_flag_element_type'
         ], [
             'constraint' => [
                 'type' => 'FOREIGN KEY',
-                'name' => 'fk_id_flag_element_type'
+                'name' => 'fk_id_flag_element_type_new'
             ]
         ]);
 
         $sql = 'DROP TABLE IF EXISTS `{tbl_prefix}flag_element_type`';
-        self::query( $sql);
+        self::query($sql);
+
+        $sql = 'ALTER TABLE `{tbl_prefix}favorites` ADD COLUMN `id_type` INT(11) NOT NULL AFTER `favorite_id`';
+        self::alterTable($sql, [
+            'table'  => 'favorites'
+        ], [
+            'table'  => 'favorites',
+            'column' => 'id_type'
+        ]);
+
+        $sql = 'UPDATE `{tbl_prefix}favorites` SET `id_type` = (SELECT `id_object_type` FROM `{tbl_prefix}object_type` WHERE `name` = \'video\') WHERE type LIKE \'v\'';
+        self::constrainedQuery($sql, [
+            'table'=>'favorites',
+            'column'=>'type'
+        ]);
+        $sql = 'UPDATE `{tbl_prefix}favorites` SET `id_type` = (SELECT `id_object_type` FROM `{tbl_prefix}object_type` WHERE `name` = \'photo\') WHERE type LIKE \'p\'';
+        self::constrainedQuery($sql, [
+            'table'=>'favorites',
+            'column'=>'type'
+        ]);
+        $sql = 'UPDATE `{tbl_prefix}favorites` SET `id_type` = (SELECT `id_object_type` FROM `{tbl_prefix}object_type` WHERE `name` = \'collection\') WHERE type LIKE \'cl\'';
+        self::constrainedQuery($sql, [
+            'table'=>'favorites',
+            'column'=>'type'
+        ]);
+
+        $sql = 'ALTER TABLE `{tbl_prefix}favorites`
+                    ADD CONSTRAINT `fk_id_favorite_type` FOREIGN KEY (`id_type`) REFERENCES `{tbl_prefix}object_type` (`id_object_type`) ON DELETE NO ACTION ON UPDATE NO ACTION';
+        self::alterTable($sql, [
+            'table'  => 'favorites',
+            'column' => 'id_type'
+        ], [
+            'constraint' => [
+                'type' => 'FOREIGN KEY',
+                'name' => 'fk_id_favorite_type'
+            ]
+        ]);
+
+        $sql = 'ALTER TABLE `{tbl_prefix}favorites`
+                    MODIFY COLUMN `userid` bigint(20) NOT NULL';
+        self::alterTable($sql, [
+            'table'  => 'favorites',
+            'column' => 'userid'
+        ]);
+        $sql = 'ALTER TABLE `{tbl_prefix}favorites`
+                    ADD CONSTRAINT `fk_favorites_userid` FOREIGN KEY (`userid`) REFERENCES `{tbl_prefix}users` (`userid`) ON DELETE NO ACTION ON UPDATE NO ACTION';
+        self::alterTable($sql, [
+            'table'  => 'favorites',
+            'column' => 'userid'
+        ], [
+            'constraint' => [
+                'type' => 'FOREIGN KEY',
+                'name' => 'fk_favorites_userid'
+            ]
+        ]);
+
+        $sql = 'ALTER TABLE `{tbl_prefix}favorites` DROP COLUMN `type` ';
+        self::alterTable($sql, [
+            'table'  => 'favorites',
+            'column' => 'type'
+        ]);
     }
 }

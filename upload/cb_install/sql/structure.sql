@@ -139,12 +139,16 @@ CREATE TABLE `{tbl_prefix}email_templates` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_520_ci;
 
 CREATE TABLE `{tbl_prefix}favorites` (
-  `favorite_id` int(225) NOT NULL,
-  `type` varchar(4) NOT NULL,
-  `id` int(225) NOT NULL,
-  `userid` int(225) NOT NULL,
-  `date_added` datetime NOT NULL
+  `favorite_id` INT(225) NOT NULL,
+  `id_type` INT(225) NOT NULL,
+  `id` INT(225) NOT NULL,
+  `userid` BIGINT(20) NOT NULL,
+  `date_added` DATETIME NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_520_ci;
+
+ALTER TABLE `{tbl_prefix}favorites`
+    ADD CONSTRAINT `fk_id_favorite_type` FOREIGN KEY (`id_type`) REFERENCES `{tbl_prefix}object_type` (`id_object_type`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+    ADD CONSTRAINT `fk_favorites_userid` FOREIGN KEY (`userid`) REFERENCES `{tbl_prefix}users` (`userid`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 CREATE TABLE `{tbl_prefix}flags`
 (
@@ -155,13 +159,6 @@ CREATE TABLE `{tbl_prefix}flags`
     `id_flag_type`         INT        NOT NULL,
     `date_added`           DATETIME   NOT NULL,
     PRIMARY KEY (`flag_id`)
-) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE utf8mb4_unicode_520_ci;
-
-CREATE TABLE IF NOT EXISTS `{tbl_prefix}flag_element_type`
-(
-    `id_flag_element_type` INT         NOT NULL AUTO_INCREMENT,
-    `name`                 VARCHAR(32) NOT NULL UNIQUE ,
-    PRIMARY KEY (`id_flag_element_type`)
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE utf8mb4_unicode_520_ci;
 
 CREATE TABLE IF NOT EXISTS `{tbl_prefix}flag_type`
@@ -963,17 +960,17 @@ ALTER TABLE `{tbl_prefix}categories`
     ADD CONSTRAINT `categorie_parent` FOREIGN KEY (`parent_id`) REFERENCES `{tbl_prefix}categories` (`category_id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 ALTER TABLE `{tbl_prefix}categories` ADD FULLTEXT KEY `categorie` (`category_name`);
 
-CREATE TABLE IF NOT EXISTS `{tbl_prefix}categories_type`
+CREATE TABLE IF NOT EXISTS `{tbl_prefix}object_type`
 (
-    `id_category_type` INT         NOT NULL AUTO_INCREMENT,
+    `id_object_type`   INT         NOT NULL AUTO_INCREMENT,
     `name`             VARCHAR(32) NOT NULL UNIQUE ,
-    PRIMARY KEY (`id_category_type`)
+    PRIMARY KEY (`id_object_type`)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4
   COLLATE utf8mb4_unicode_520_ci;
 
 ALTER TABLE `{tbl_prefix}categories`
-    ADD CONSTRAINT `categorie_type` FOREIGN KEY (`id_category_type`) REFERENCES `{tbl_prefix}categories_type` (`id_category_type`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+    ADD CONSTRAINT `categorie_type` FOREIGN KEY (`id_category_type`) REFERENCES `{tbl_prefix}object_type` (`id_object_type`) ON DELETE RESTRICT ON UPDATE RESTRICT;
 
 CREATE TABLE IF NOT EXISTS `{tbl_prefix}videos_categories`
 (
@@ -1213,7 +1210,7 @@ ALTER TABLE `{tbl_prefix}email_variable_link`
     ADD CONSTRAINT `email_variable_link_email_variable_email_fk` FOREIGN KEY (`id_email_variable`) REFERENCES `{tbl_prefix}email_variable` (`id_email_variable`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 ALTER TABLE `{tbl_prefix}flags`
-    ADD CONSTRAINT `fk_id_flag_element_type` FOREIGN KEY (`id_flag_element_type`) REFERENCES `{tbl_prefix}flag_element_type` (`id_flag_element_type`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+    ADD CONSTRAINT `fk_id_flag_element_type_new` FOREIGN KEY (`id_flag_element_type`) REFERENCES `{tbl_prefix}object_type` (`id_object_type`) ON DELETE NO ACTION ON UPDATE NO ACTION,
     ADD CONSTRAINT `fk_id_flag_type` FOREIGN KEY (`id_flag_type`) REFERENCES `{tbl_prefix}flag_type` (`id_flag_type`) ON DELETE NO ACTION ON UPDATE NO ACTION,
     ADD CONSTRAINT `fk_flag_userid` FOREIGN KEY (`userid`) REFERENCES `{tbl_prefix}users` (`userid`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 

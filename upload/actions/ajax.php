@@ -208,9 +208,11 @@ if (!empty($mode)) {
             break;
 
         case 'add_to_fav':
-            if (!User::getInstance()->isUserConnected()) {
+            if (!Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.2', '999')) {
+                e(lang('cant_perform_action_until_app_fully_updated'));
+            } elseif (!User::getInstance()->isUserConnected()) {
                 e(lang('please_login'));
-            }elseif (empty($_POST['type']) || empty($_POST['id'])) {
+            } elseif (empty($_POST['type']) || empty($_POST['id'])) {
                 e(lang('missing_params'));
             } else {
 
@@ -220,19 +222,19 @@ if (!empty($mode)) {
                     case 'v':
                     case 'video':
                     default:
-                        CBvideo::getInstance()->action->add_to_fav($id);
+                        Video::getInstance()->addToFavorites($id);
                         updateObjectStats('fav', 'video', $id); // Increment in total favs
                         break;
 
                     case 'p':
                     case 'photo':
-                        CBPhotos::getInstance()->action->add_to_fav($id);
+                        Photo::getInstance()->addToFavorites($id);
                         updateObjectStats('fav', 'photo', $id); // Increment in total favs
                         break;
 
                     case 'cl':
                     case 'collection':
-                        Collections::getInstance()->action->add_to_fav($id);
+                        Collection::getInstance()->addToFavorites($id);
                         break;
                 }
 
@@ -255,9 +257,11 @@ if (!empty($mode)) {
             }
             break;
         case 'remove_from_favorites':
-            if (!User::getInstance()->isUserConnected()) {
+            if (!Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.2', '999')) {
+                e(lang('cant_perform_action_until_app_fully_updated'));
+            } elseif (!User::getInstance()->isUserConnected()) {
                 e(lang('please_login'));
-            }elseif (empty($_POST['type']) || empty($_POST['id'])) {
+            } elseif (empty($_POST['type']) || empty($_POST['id'])) {
                 e(lang('missing_params'));
             } else {
                 $type = strtolower($_POST['type']);
@@ -266,21 +270,21 @@ if (!empty($mode)) {
                     case 'v':
                     case 'video':
                     default:
-                        CBvideo::getInstance()->action->add_to_fav($id);
+                        Video::getInstance()->removeFromFavorites($id);
                         updateObjectStats('fav', 'video', $id, '-'); // Increment in total favs
                         $funcs = cb_get_functions('favorite_video');
                         break;
 
                     case 'p':
                     case 'photo':
-                        CBPhotos::getInstance()->action->add_to_fav($id);
+                        Photo::getInstance()->removeFromFavorites($id);
                         updateObjectStats('fav', 'photo', $id, '-'); // Increment in total favs
                         $funcs = cb_get_functions('favorite_photo');
                         break;
 
                     case 'cl':
                     case 'collection':
-                        Collections::getInstance()->action->add_to_fav($id);
+                        Collection::getInstance()->removeFromFavorites($id);
                         $funcs = cb_get_functions('favorite_collection');
                         break;
                 }
