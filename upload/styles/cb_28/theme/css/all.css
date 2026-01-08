@@ -7097,3 +7097,11 @@ li:has(a.disabled) {
     filter: alpha(opacity=65);
     opacity: .65;
 }
+
+.glyphicon-heart-empty:hover:before  {
+  content: "\e005";
+}
+
+.glyphicon-heart:hover:before {
+  content: "\e143";
+}
