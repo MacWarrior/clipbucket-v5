@@ -122,7 +122,7 @@ if (config('enable_comments_video') != 'yes' && config('enable_comments_photo') 
     $comments = false;
 } else {
     $comments = Comments::getAll($params);
-    if( empty($comments) ){
+    if( empty($comments) ) {
         $comments = [];
     }
 
@@ -145,7 +145,11 @@ if( config('enable_update_checker') == '1' ){
 
 ClipBucket::getInstance()->addAdminJS(['pages/dashboard/dashboard'.$min_suffixe.'.js' => 'admin']);
 
-Update::getInstance()->CheckPHPVersion();
-
+$info_php = Update::getInstance()->CheckPHPVersion();
+$message_php = '';
+if (!empty($info_php) && $info_php['version_update'] >= $info_php['cb_version_min']) {
+    $message_php = lang('confirmation_upgrade_core_php_version_require', ['<b>' . $info_php['php_version'] . '</b>', '<b>' . $info_php['version_update'] . ' - ' . ($info_php['revision_update']?:'1') . '</b>']);
+}
+assign('message_php', $message_php);
 template_files('index.html');
 display_it();

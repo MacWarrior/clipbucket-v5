@@ -611,6 +611,8 @@ function getUpdate() {
                             if (parent.hasClass('active') && parent.find('.player-holder video').length <= 0) {
                                 parent.find('.player-holder').html(video.html);
                             }
+                            let images = document.querySelectorAll("img[data-thumbs]")
+                            listenerPreviewThumbs(images);
                         }
                     });
 

@@ -57,8 +57,10 @@ if( !Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.0', '323') ){
         } elseif (!empty($_POST['category_id'])) {
             $id_category = $_POST['category_id'];
             if (isset($_POST['update_category'])) {
-                Category::getInstance()->update($_POST);
-                if ($_POST['is_default'] == 'yes') {
+                $params = $_POST;
+                unset($params['is_default']);
+                Category::getInstance()->update($params);
+                if ($_POST['is_default']) {
                     Category::getInstance()->makeDefault($type, $_POST['category_id']);
                 }
             }
@@ -67,9 +69,10 @@ if( !Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.0', '323') ){
             $params['id_category_type'] = Category::getInstance()->getIdsCategoriesType($type);
             $next_order_place = Category::getInstance()->getNextOrderForParent($type, $_POST['parent_id']);
             $params['category_order'] = $next_order_place;
+            unset($params['is_default']);
             $inserted_id = Category::getInstance()->insert($params);
             $id_category = $inserted_id;
-            if ($_POST['is_default'] == 'yes') {
+            if ($_POST['is_default'] ) {
                 Category::getInstance()->makeDefault($type, $inserted_id);
             }
         }

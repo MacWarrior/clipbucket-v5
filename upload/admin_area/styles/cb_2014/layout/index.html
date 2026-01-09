@@ -153,8 +153,8 @@
 
 <script type="text/javascript">
     let visual_editor_comments_enabled = "{config('enable_visual_editor_comments') == 'yes'}";
-    let is_update_processing = `{$is_update_processing}`;
-    let can_sse = `{$can_sse}`;
+    let is_update_processing = {$is_update_processing};
+    let can_sse = {$can_sse};
 
     let piechart_users = '{User::getInstance()->getAll(['count'=>'yes','not_userid'=>userquery::getInstance()->get_anonymous_user()])}';
     let piechart_photos = '{Photo::getInstance()->getAll(['count'=>'yes'])}';
@@ -190,4 +190,7 @@
     lang['video_statistics'] = "{lang('video_statistics')}";
     lang['reported'] = "{lang('reported')}";
     lang['confirm_mark_as_failed'] = "{lang('confirm_mark_as_failed')}";
+    lang['confirm_mark_as_failed'] = "{lang('confirm_mark_as_failed')}";
+    lang['update'] = "{lang('update')}";
+    var message_php = '{$message_php}';
 </script>

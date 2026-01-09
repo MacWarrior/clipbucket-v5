@@ -1776,7 +1776,7 @@ class userquery extends CBCategory
         } else {
             $field = 'username';
         }
-        $result = Clipbucket_db::getInstance()->count(tbl($this->dbtbl['users']), 'userid', $field.'=\'' . $id . '\'', '',60);
+        $result = Clipbucket_db::getInstance()->count(tbl($this->dbtbl['users']), 'userid', $field.'=\'' . mysql_clean($id) . '\'', '',60);
 
         if ($result > 0) {
             return true;
