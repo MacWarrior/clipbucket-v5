@@ -332,7 +332,6 @@ INSERT INTO `{tbl_prefix}config` (`configid`, `name`, `value`) VALUES
     (NULL, 'collections_enable_fullwidth', 'yes'),
     (NULL, 'collection_enable_fullwidth', 'yes'),
     (NULL, 'enable_user_profil_censor', 'no'),
-    (NULL, 'videos_video_style', 'modern'),
     (NULL, 'enable_membership', 'no');
 
 INSERT INTO `{tbl_prefix}video_resolution` (`title`, `ratio`, `enabled`, `width`, `height`, `video_bitrate`) VALUES
