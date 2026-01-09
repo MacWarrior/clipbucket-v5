@@ -115,7 +115,8 @@ abstract class Objects
             return false;
         }
         Clipbucket_db::getInstance()->delete(tbl('favorites'), ['userid', 'id_type', 'id'], [$user_id, static::getTypeId(), $object_id]);
-        e(lang('fav_remove_msg', ucfirst(lang(static::TYPE))), 'm');
+        //must keep div alert to be displayed
+        e('<div class="alert alert-success">' . lang('fav_remove_msg', ucfirst(lang(static::TYPE))). '</div>', 'm');
         return true;
     }
 

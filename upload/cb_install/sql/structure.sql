@@ -138,17 +138,22 @@ CREATE TABLE `{tbl_prefix}email_templates` (
   `email_template` text NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_520_ci;
 
+CREATE TABLE IF NOT EXISTS `{tbl_prefix}object_type`
+(
+    `id_object_type`   INT         NOT NULL AUTO_INCREMENT,
+    `name`             VARCHAR(32) NOT NULL UNIQUE ,
+    PRIMARY KEY (`id_object_type`)
+) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE utf8mb4_unicode_520_ci;
+
 CREATE TABLE `{tbl_prefix}favorites` (
   `favorite_id` INT(225) NOT NULL,
-  `id_type` INT(225) NOT NULL,
+  `id_type` INT NOT NULL,
   `id` INT(225) NOT NULL,
   `userid` BIGINT(20) NOT NULL,
   `date_added` DATETIME NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_520_ci;
 
-ALTER TABLE `{tbl_prefix}favorites`
-    ADD CONSTRAINT `fk_id_favorite_type` FOREIGN KEY (`id_type`) REFERENCES `{tbl_prefix}object_type` (`id_object_type`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-    ADD CONSTRAINT `fk_favorites_userid` FOREIGN KEY (`userid`) REFERENCES `{tbl_prefix}users` (`userid`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
 
 CREATE TABLE `{tbl_prefix}flags`
 (
@@ -1293,3 +1298,7 @@ CREATE TABLE `{tbl_prefix}video_conversion_queue`
 
 ALTER TABLE `{tbl_prefix}video_conversion_queue`
     ADD CONSTRAINT `video_conversion_fk` FOREIGN KEY (`videoid`) REFERENCES `{tbl_prefix}video` (`videoid`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+ALTER TABLE `{tbl_prefix}favorites`
+    ADD CONSTRAINT `fk_id_favorite_type` FOREIGN KEY (`id_type`) REFERENCES `{tbl_prefix}object_type` (`id_object_type`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+    ADD CONSTRAINT `fk_favorites_userid` FOREIGN KEY (`userid`) REFERENCES `{tbl_prefix}users` (`userid`) ON DELETE NO ACTION ON UPDATE NO ACTION;

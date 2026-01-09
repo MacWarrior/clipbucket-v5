@@ -817,13 +817,14 @@
 		}
 
 		this.showMeTheMsg = function(data, alertDiv) {
-			curObj = this;
+			let curObj = this;
+			let isOk;
 			if (alertDiv == true) {
 				isOk = $(data).filter('div.msg').find('div.alert').html();
 			} else {
 				isOk = $(data).filter('div.msg').html();
 			}
-			isError = $(data).filter('div.error').html();
+			let isError = $(data).filter('div.error').html();
 
 			if (isError) {
 				if (isError.length > 2) {
@@ -857,27 +858,30 @@
 		this.add_to_favNew = function(type,id){
 			var curObj = this;
 			$('#video_action_result_cont').css('display','block').html(curObj.loading);
-
-			$.post(page,
-				{
-					mode : 'add_to_fav',
-					type : type,
-					id : id
-				},
-				function(data)
-				{
-					if(!data){
-						alert('No data');
-					} else {
-						$('#video_action_result_cont').hide();
-						curObj.showMeTheMsg(data, true);
-					}
-				},'text');
+			return new Promise((resolve, reject) => {
+				$.post(page,
+					{
+						mode: 'add_to_fav',
+						type: type,
+						id: id
+					},
+					function (data) {
+						if (!data) {
+							alert('No data');
+							reject(data);
+						} else {
+							$('#video_action_result_cont').hide();
+							curObj.showMeTheMsg(data, true);
+							resolve(data);
+						}
+					}, 'text');
+			});
 		};
 		this.remove_from_fav = function(type,id){
 			var curObj = this;
 			$('#video_action_result_cont').css('display','block').html(curObj.loading);
 
+			return new Promise((resolve, reject) => {
 			$.post(page,
 				{
 					mode : 'remove_from_favorites',
@@ -888,11 +892,14 @@
 				{
 					if(!data){
 						alert('No data');
+						reject(data);
 					} else {
 						$('#video_action_result_cont').hide();
 						curObj.showMeTheMsg(data, true);
+						resolve(data);
 					}
 				},'text');
+			});
 		};
 
 		this.flag_objectNew = function(form_id,id,type){

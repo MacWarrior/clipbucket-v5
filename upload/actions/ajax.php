@@ -289,6 +289,21 @@ if (!empty($mode)) {
                         break;
                 }
             }
+            $error = errorhandler::getInstance()->get_error();
+            $warning = errorhandler::getInstance()->get_warning();
+            $message = errorhandler::getInstance()->get_message();
+
+            if ($error) {
+                echo '<div class="error">' . $error[0]['val'] . '</div>';
+            } else {
+                if ($warning) {
+                    echo '<div class="warning">' . $warning[0]['val'] . '</div>';
+                } else {
+                    if ($message) {
+                        echo '<div class="msg">' . $message[0]['val'] . '</div>';
+                    }
+                }
+            }
             break;
         case 'flag_object':
             $type = strtolower($_POST['type']);
