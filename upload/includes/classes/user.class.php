@@ -1246,6 +1246,7 @@ class User
             Clipbucket_db::getInstance()->update(tbl(User::getInstance()->getTableName()), ['welcome_email_sent'], ['yes'], ' userid=' . (int)$user['userid']);
         }
         sessionMessageHandler::add_message(lang('usr_activation_msg'), 'm',  DirPath::getUrl('root'));
+        return true;
     }
 
     /**
@@ -1775,7 +1776,7 @@ class userquery extends CBCategory
         } else {
             $field = 'username';
         }
-        $result = Clipbucket_db::getInstance()->count(tbl($this->dbtbl['users']), 'userid', $field.'=\'' . $id . '\'', '',60);
+        $result = Clipbucket_db::getInstance()->count(tbl($this->dbtbl['users']), 'userid', $field.'=\'' . mysql_clean($id) . '\'', '',60);
 
         if ($result > 0) {
             return true;
@@ -1909,47 +1910,30 @@ class userquery extends CBCategory
     /**
      * Function used to add contact
      *
-     * @param $uid
-     * @param $fid
+     * @param $sender_id
+     * @param $friend_id
      *
      * @throws Exception
      */
-    function add_contact($uid, $fid): void
+    function add_contact($sender_id, $friend_id): void
     {
-        $friend = $this->get_user_details($fid);
-        $sender = $this->get_user_details($uid);
+        $friend = User::getInstance()->getOne(['userid' => $friend_id]);
+        $sender = User::getInstance()->getOne(['userid' => $sender_id]);
 
         if (!$friend) {
             e(lang('usr_exist_err'));
-        } elseif ($this->is_requested_friend($uid, $fid)) {
+        } elseif ($this->is_requested_friend($sender_id, $friend_id)) {
             e(lang('you_already_sent_frend_request'));
-        } elseif ($this->is_requested_friend($uid, $fid, 'in')) {
-            $this->confirm_friend($fid, $uid);
+        } elseif ($this->is_requested_friend($sender_id, $friend_id, 'in')) {
+            $this->confirm_friend($friend_id, $sender_id);
             e(lang('friend_added'));
-        } elseif ($uid == $fid) {
+        } elseif ($sender_id == $friend_id) {
             e(lang('friend_add_himself_error'));
         } else {
             Clipbucket_db::getInstance()->insert(tbl($this->dbtbl['contacts']), ['userid', 'contact_userid', 'date_added', 'request_type'],
-                [$uid, $fid, now(), 'out']);
-            $insert_id = Clipbucket_db::getInstance()->insert_id();
-
+                [$sender_id, $friend_id, now(), 'out']);
             e(lang('friend_request_sent'), 'm');
-
-            //Sending friendship request email
-            $tpl = CBEmail::getInstance()->get_template('friend_request');
-
-            $var = [
-                '{reciever}'     => $friend['username'],
-                '{sender}'       => $sender['username'],
-                '{sender_link}'  => $this->profile_link($sender),
-                '{request_link}' => '/manage_contacts.php?mode=request&confirm=' . $uid
-            ];
-
-            $subj = CBEmail::getInstance()->replace($tpl['email_template_subject'], $var);
-            $msg = nl2br(CBEmail::getInstance()->replace($tpl['email_template'], $var));
-
-            //Now Finally Sending Email
-            #cbmail(['to'=>$friend['email'],'from'=>WEBSITE_EMAIL,'subject'=>$subj,'content'=>$msg]);
+            Email::send_friend_request($friend['email'], $sender['username']);
         }
 
     }

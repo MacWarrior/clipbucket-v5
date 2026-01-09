@@ -144,19 +144,23 @@ $(document).ready(function () {
         , 'enable_video_backdrop': 'tmdb_get_backdrop'
         , 'enable_tmdb': 'tmdb_token'
         , 'enable_tmdb_mature_content': 'tmdb_mature_content_age'
+        , 'control_bar_logo' : ['player_logo_url','upload_player-logo']
         , 'keep_ratio_photo': 'ratio_photo'
 
     }, function (index, value) {
 
         $('#'+index).change(function () {
-            let input_to_disable = [value];
-            if( $(this).prop('checked') ) {
-                $('#' + input_to_disable).prop('disabled', false).attr('title','');
-                $('#' + input_to_disable + '_hidden').prop('disabled', true);
-            } else {
-                $('#' + input_to_disable).prop('disabled', true);
-                $('#' + input_to_disable + '_hidden').prop('disabled', false);
-            }
+            const input_to_disable = Array.isArray(value) ? value : [value];
+            const initial_input = $(this)
+            $(input_to_disable).each( function( index, elem) {
+                if (initial_input.prop('checked')) {
+                    $('#' + elem).prop('disabled', false).attr('title', '');
+                    $('#' + elem + '_hidden').prop('disabled', true);
+                } else {
+                    $('#' + elem).prop('disabled', true);
+                    $('#' + elem + '_hidden').prop('disabled', false);
+                }
+            })
         })
     });
 
@@ -277,5 +281,13 @@ $(document).ready(function () {
 
             }
         })
+    });
+
+    $('#update').on('click',function (e) {
+        var base_url = $('#base_url');
+        if (base_url.val().trim() === '') {
+            $('a[href="#config_hosting"]').trigger('click');
+            base_url.trigger('focus');
+        }
     });
 });

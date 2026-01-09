@@ -11,6 +11,9 @@ $required_php_extensions = System::get_php_extensions_list();
 $required_php_fonctions = get_php_functions();
 $required_softwares = get_required_softwares();
 $skippable_option = get_skippable_options();
+if (System::getPHPVersionWeb() < '8.1' ) {
+    echo  '<span class="msg warning " style="text-align: center; margin-left: 24%; margin-top: 1em;"> Your current PHP version ('.System::getPHPVersionWeb().') is deprecated and won’t be compatible with future ClipBucketV5 versions, please update to at least PHP 8.1 (8.3 recommanded) </span>';
+}
 ?>
 
 <div id="sub_container" class="grey-text">

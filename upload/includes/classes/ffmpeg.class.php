@@ -326,9 +326,10 @@ class FFMpeg
                     $max_key = $key;
                 }
             }
-            $resolutions = [ $resolutions[$max_key] ];
+            if (!empty( $resolutions[$max_key] )) {
+                $resolutions = [ $resolutions[$max_key] ];
+            }
         }
-
         $this->log->newSection('FFMpeg '.strtoupper($this->conversion_type).' conversion');
         if (!empty($resolutions)) {
             switch ($this->conversion_type) {
@@ -357,6 +358,7 @@ class FFMpeg
             }
         } else {
             $this->log->writeLine('<b>Video resolution is lower than lower resolution enabled : no video resolution available for conversion</b>');
+            unset($this->input_file);
         }
 
         $this->end_time_check();
@@ -599,9 +601,14 @@ class FFMpeg
                 // Keeping video map
                 $video_track_id = self::get_media_stream_id('video', $this->input_file);
                 $cmd .= ' -map 0:' . $video_track_id;
+                $audio_output_index = 0;
+
                 // Making selected audio track the primary one
                 if ($this->audio_track >= 0) {
                     $cmd .= ' -map 0:' . $this->audio_track;
+
+                    $cmd .= ' -disposition:a:' . $audio_output_index . ' default';
+                    $audio_output_index++;
                 }
                 // Keeping audio tracks
                 if (config('keep_audio_tracks')) {
@@ -609,6 +616,11 @@ class FFMpeg
                     foreach ($audio_tracks as $track_id) {
                         if ($track_id != $this->audio_track) {
                             $cmd .= ' -map 0:' . $track_id;
+
+                            if ($this->audio_track >= 0) {
+                                $cmd .= ' -disposition:a:' . $audio_output_index . ' 0';
+                                $audio_output_index++;
+                            }
                         }
                     }
                 }

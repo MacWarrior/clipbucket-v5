@@ -420,11 +420,11 @@ class Video
         }
 
         if( $param_tags && Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.0', '264') ){
-            $conditions[] = 'MATCH(tags.name) AGAINST (\'' . mysql_clean($param_search) . '\' IN NATURAL LANGUAGE MODE) OR LOWER(tags.name) LIKE \'%' . mysql_clean($param_search) . '%\'';
+            $conditions[] = '(MATCH(tags.name) AGAINST (\'' . mysql_clean($param_search) . '\' IN NATURAL LANGUAGE MODE) OR LOWER(tags.name) LIKE \'%' . mysql_clean($param_search) . '%\' )';
         }
 
         if ($param_title) {
-            $conditions[] = 'MATCH(video.title) AGAINST (\'' . mysql_clean($param_title) . '\' IN NATURAL LANGUAGE MODE) OR LOWER(' . $this->getTableName() . '.title) LIKE \'%' . mysql_clean($param_title) . '%\'';
+            $conditions[] = '(MATCH(video.title) AGAINST (\'' . mysql_clean($param_title) . '\' IN NATURAL LANGUAGE MODE) OR LOWER(' . $this->getTableName() . '.title) LIKE \'%' . mysql_clean($param_title) . '%\' )';
         }
 
         if (!User::getInstance()->hasAdminAccess() && !$param_exist && !$param_disable_generic_constraints) {
@@ -697,17 +697,28 @@ class Video
             return false;
         }
 
-        if( !User::getInstance()->isUserConnected() ){
-            return true;
+
+        if (config('enable_global_age_restriction')=='yes'&&  Session::isCookieConsent('age_restrict')) {
+            $age_restriction = !User::getInstance()->isUserConnected()
+                ? config('min_age_reg')
+                : (User::getInstance()->getCurrentUserAge() > config('min_age_reg') ? config('min_age_reg') : User::getInstance()->getCurrentUserAge());
+            if( $age_restriction < $video['age_restriction'] ){
+                return true;
+            }
+        } else {
+            if( !User::getInstance()->isUserConnected() ){
+                return true;
+            }
+
+            if( User::getInstance()->getCurrentUserID() == $video['userid'] ){
+                return false;
+            }
+
+            if( User::getInstance()->getCurrentUserAge() < $video['age_restriction'] ){
+                return true;
+            }
         }
 
-        if( User::getInstance()->getCurrentUserID() == $video['userid'] ){
-            return false;
-        }
-
-        if( User::getInstance()->getCurrentUserAge() < $video['age_restriction'] ){
-            return true;
-        }
         return false;
     }
 
@@ -1927,7 +1938,13 @@ class CBvideo extends CBCategory
                 #THIS SHOULD NOT BE REMOVED :O
                 //list of functions to perform while deleting a video
                 $del_vid_funcs = $this->video_delete_functions;
-
+                /*
+                 register_action_remove_video('remove_video_thumbs');
+                register_action_remove_video('remove_video_subtitles');
+                register_action_remove_video('remove_video_embed');
+                register_action_remove_video('remove_video_log');
+                register_action_remove_video('remove_video_files');
+                */
                 if (is_array($del_vid_funcs)) {
                     foreach ($del_vid_funcs as $func) {
                         if (function_exists($func)) {
@@ -2003,6 +2020,7 @@ class CBvideo extends CBCategory
         if (file_exists($file1) && is_file($file1)) {
             unlink($file1);
         }
+        remove_empty_directory(DirPath::get('logs') . $str, DirPath::get('logs'));
         e(lang('vid_log_delete_msg'), 'm');
     }
 
@@ -2099,6 +2117,11 @@ class CBvideo extends CBCategory
         //Calling Video Delete Functions
         call_delete_video_function($vdetails);
 
+        $conversion_queue_path = DirPath::get('video_conversion_queue') . $vdetails['file_name'] . '*';
+        $conversion_queue_files = glob($conversion_queue_path);
+        foreach ($conversion_queue_files as $file) {
+            unlink($file);
+        }
         if ($vdetails['file_type'] === 'mp4') {
             $files = json_decode($vdetails['video_files']);
 
@@ -2115,6 +2138,7 @@ class CBvideo extends CBCategory
                 rmdir($directory_path);
             }
         }
+        remove_empty_directory(DirPath::get('videos') . $vdetails['file_directory'], DirPath::get('videos'));
         e(lang('vid_files_removed_msg'), 'm');
     }
 
@@ -2939,6 +2963,9 @@ class CBvideo extends CBCategory
         $query = 'SELECT ' . table_fields($fields) . ' FROM ' . cb_sql_table('playlist_items');
         $query .= ' LEFT JOIN ' . cb_sql_table('playlists') . ' ON playlist_items.playlist_id = playlists.playlist_id';
         $query .= ' LEFT JOIN ' . cb_sql_table('video') . ' ON playlist_items.object_id = video.videoid';
+        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.2', '72')) {
+            $query .= ' LEFT JOIN ' . cb_sql_table('video_users') . ' ON video_users.videoid = video.videoid';
+        }
         $query .= ' WHERE playlist_items.playlist_id = \'' . $playlist_id . '\'' . $where;
 
         if (!is_null($order)) {

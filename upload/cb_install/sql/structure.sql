@@ -846,7 +846,7 @@ CREATE TABLE `{tbl_prefix}tools`(
 
 CREATE TABLE `{tbl_prefix}tools_histo_status`(
     `id_tools_histo_status`    INT          NOT NULL AUTO_INCREMENT,
-    `language_key_title` VARCHAR(128) NOT NULL,
+    `language_key_title` VARCHAR(128) UNIQUE NOT NULL,
     PRIMARY KEY (`id_tools_histo_status`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_520_ci;
 
@@ -937,7 +937,9 @@ CREATE TABLE IF NOT EXISTS `{tbl_prefix}categories`
     `category_desc`    TEXT              NULL     DEFAULT NULL,
     `date_added`       DATETIME          NOT NULL DEFAULT CURRENT_TIMESTAMP,
     `category_thumb`   MEDIUMTEXT        NULL,
-    `is_default`        ENUM ('yes','no') NOT NULL DEFAULT 'no'
+    `is_default`       BOOLEAN           DEFAULT NULL,
+    UNIQUE KEY (`category_name`,`id_category_type`),
+    UNIQUE KEY (`is_default`, `id_category_type`)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4
   COLLATE utf8mb4_unicode_520_ci;
@@ -948,7 +950,7 @@ ALTER TABLE `{tbl_prefix}categories` ADD FULLTEXT KEY `categorie` (`category_nam
 CREATE TABLE IF NOT EXISTS `{tbl_prefix}categories_type`
 (
     `id_category_type` INT         NOT NULL AUTO_INCREMENT,
-    `name`             VARCHAR(32) NOT NULL,
+    `name`             VARCHAR(32) NOT NULL UNIQUE ,
     PRIMARY KEY (`id_category_type`)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4
@@ -1266,12 +1268,13 @@ ALTER TABLE `{tbl_prefix}video_embed`
 
 CREATE TABLE `{tbl_prefix}video_conversion_queue`
 (
-    `id`           INT(11)    NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    `videoid`      BIGINT(20) NOT NULL,
-    `date_added`   DATETIME   NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    `date_started` DATETIME            DEFAULT NULL,
-    `date_ended`   DATETIME            DEFAULT NULL,
-    `is_completed` BOOLEAN             DEFAULT 0 NOT NULL,
+    `id`           INT(11)      NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `videoid`      BIGINT(20)   NOT NULL,
+    `date_added`   DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `date_started` DATETIME              DEFAULT NULL,
+    `date_ended`   DATETIME              DEFAULT NULL,
+    `is_completed` BOOLEAN               DEFAULT 0 NOT NULL,
+    `audio_track`  VARCHAR(255) NULL,
     INDEX (is_completed)
 );
 

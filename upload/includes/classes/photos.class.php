@@ -1418,6 +1418,7 @@ class CBPhotos
             errorhandler::getInstance()->flush_msg();
             //finally removing from Database
             $this->delete_from_db($photo);
+            remove_empty_directory(DirPath::get('photos') . $photo['file_directory'], DirPath::get('photos'));
         } else {
             e(lang('photo_not_exist'));
         }
@@ -1723,6 +1724,7 @@ class CBPhotos
                 'name'                 => 'collection_id',
                 'id'                   => 'collection_id',
                 'type'                 => 'dropdown_group',
+                'already_secured'      => true,
                 'value'                => $cl_array,
                 'checked'              => $collection,
                 'invalid_err'          => lang('collection_not_found'),
@@ -2365,15 +2367,14 @@ class CBPhotos
      *
      * @param      $id
      * @param bool $return_array
-     * @param bool $show_all
      *
      * @return bool|mixed
      * @throws Exception
      */
-    function photo_voters($id, $return_array = false, $show_all = false)
+    function photo_voters($id, $return_array = false)
     {
-        $p = $this->get_photo($id);
-        if ((!empty($p) && $p['userid'] == user_id()) || $show_all === true) {
+        $p = Photo::getInstance()->getOne(['photo_id'=>$id]);
+        if (!empty($p) && $p['userid'] == User::getInstance()->getCurrentUserID() || User::getInstance()->hasAdminAccess()) {
             $voters = $p['voters'];
             $voters = json_decode($voters, true);
 
@@ -2386,7 +2387,7 @@ class CBPhotos
                     $username = get_username($id);
                     $output = '<li id=\'user' . $id . $p['photo_id'] . '\' class=\'PhotoRatingStats\'>';
                     $output .= '<a href=\'' . userquery::getInstance()->profile_link($id) . '\'>' . display_clean($username) . '</a>';
-                    $output .= ' rated <strong>' . $details['rate'] / 2 . '</strong> stars <small>(';
+                    $output .= ' rated <strong>' . $details['rating'] / 2 . '</strong> stars <small>(';
                     $output .= niceTime($details['time']) . ')</small>';
                     $output .= '</li>';
                     echo $output;

@@ -94,7 +94,7 @@ switch ($mode) {
             'mimeType'            => 'video',
             'destinationFilePath' => $targetFile,
             'keepExtension'       => true,
-            'maxFileSize'         => config('max_upload_size'),
+            'maxFileSize'         => !empty((int)config('max_upload_size')) ? config('max_upload_size') : 1000,
             'allowedExtensions'   => config('allowed_video_types')
         ];
 
@@ -165,8 +165,3 @@ switch ($mode) {
         die();
 }
 
-//function used to display error
-function upload_error($error)
-{
-    echo json_encode(['error' => $error]);
-}

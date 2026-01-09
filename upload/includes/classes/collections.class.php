@@ -251,6 +251,7 @@ class Collection
         $param_with_items = $params['with_items'] ?? false;
         $param_with_sub_items = $params['with_sub_items'] ?? false;
         $param_count_items_only = $params['count_items_only'] ?? false;
+        $param_limit_item = $params['limit_item'] ?? false;
 
         $conditions = [];
         if( $param_collection_id !== false ){
@@ -328,7 +329,7 @@ class Collection
             }
 
             /** USER */
-            $like_user = ' lower(users.username) LIKE \'' . $param_search . '\'';
+            $like_user = ' lower(users.username) LIKE \'' . mysql_clean($param_search) . '\'';
             $cond .= ' OR ' . $like_user;
             $order_search .= ', CASE WHEN ' . $like_user . ' THEN 1 ELSE 0 END DESC ';
 
@@ -503,7 +504,7 @@ class Collection
             $count = 0;
             foreach($result AS &$collection){
 
-                $params = [];
+                $params_item = [];
 
                 if( $need_collection_enfant && $param_with_sub_items && !empty($collection['nb_childs']) ){
                     $sql_childs = 'WITH RECURSIVE descendants AS (
@@ -527,33 +528,36 @@ class Collection
                         FROM descendants
                         WHERE depth > 0;';
                     $collection_child_list = Clipbucket_db::getInstance()->_select($sql_childs, 60, 'collection_childrens_'. $collection['collection_id']);
-                    $params['collection_id'] = array_map(fn($item) => $item['collection_id'], $collection_child_list);
-                    $params['collection_id'][] = $collection['collection_id'];
+                    $params_item['collection_id'] = array_map(fn($item) => $item['collection_id'], $collection_child_list);
+                    $params_item['collection_id'][] = $collection['collection_id'];
                 } else {
-                    $params['collection_id'] = $collection['collection_id'];
+                    $params_item['collection_id'] = $collection['collection_id'];
                 }
 
-                $params['show_unlisted'] = true;
+                $params_item['show_unlisted'] = true;
                 if( $param_count_items_only ){
-                    $params['count'] = true;
+                    $params_item['count'] = true;
+                }
+                if ($param_limit_item) {
+                    $params_item['limit'] = $param_limit_item;
                 }
                 $order_item = '';
                 if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '299')) {
                     $order_item = SortType::getSortLabelById($param_order_item ?: $collection['sort_type']);
                 }
                 if ($collection['type'] == 'videos') {
-                    $params['order'] = Video::getInstance()->getFilterParams($order_item, [])['order'] ?? null;
-                    if (empty($params['order'])) {
-                        $params['order'] = $this->getTableNameItems() . '.date_added ASC';
+                    $params_item['order'] = Video::getInstance()->getFilterParams($order_item, [])['order'] ?? null;
+                    if (empty($params_item['order'])) {
+                        $params_item['order'] = $this->getTableNameItems() . '.date_added ASC';
                     }
-                    $params['get_detail'] = true;
-                    $collection['items'] = Video::getInstance()->getAll($params);
+                    $params_item['get_detail'] = true;
+                    $collection['items'] = Video::getInstance()->getAll($params_item);
                 } else {
-                    $params['order'] = Photo::getInstance()->getFilterParams($order_item, [])['order'] ?? null;
-                    if (empty($params['order'])) {
-                        $params['order'] = $this->getTableNameItems() . '.date_added ASC';
+                    $params_item['order'] = Photo::getInstance()->getFilterParams($order_item, [])['order'] ?? null;
+                    if (empty($params_item['order'])) {
+                        $params_item['order'] = $this->getTableNameItems() . '.date_added ASC';
                     }
-                    $collection['items'] = Photo::getInstance()->getAll($params);
+                    $collection['items'] = Photo::getInstance()->getAll($params_item);
                 }
 
                 if( $param_count_items_only ){
@@ -887,6 +891,8 @@ class Collection
 
     /**
      * @param array $params
+     * @param int $level
+     * @param bool $display_group
      * @return array
      * @throws Exception
      */
@@ -914,14 +920,14 @@ class Collection
                     $group = 'public_collections';
                 }
                 if ($parent['user_username'] != $last_user && $parent['is_user_collection'] == 0) {
-                    $last_user = $parent['user_username'];
+                    $last_user = display_clean($parent['user_username']);
                 }
             }
             if (User::getInstance()->getCurrentUserID() != $parent['userid'] && !empty($last_user)) {
                 $display_user = $last_user . ': ';
             }
             if ($level == 0) {
-                $parent['collection_name'] = $display_user . $parent['collection_name'];
+                $parent['collection_name'] = $display_user . display_clean($parent['collection_name']);
             }
             if ($display_group && $level==0 && !empty($group)) {
                 $indentList[$group][] = $parent;
@@ -932,7 +938,7 @@ class Collection
             $params['collection_id_parent'] = $parent['collection_id'];
             $children = $this->getAllIndent($params, $level + 1);
             foreach ($children as &$child) {
-                $child['collection_name'] = $display_user . '&nbsp&nbsp&nbsp' . $child['collection_name'];
+                $child['collection_name'] = $display_user . '&nbsp&nbsp&nbsp' . display_clean($child['collection_name']);
                 if ($level == 0 && $display_group) {
                     $indentList[$group][] = $child;
                 } else {
@@ -970,6 +976,31 @@ class Collection
         }
 
         return $list_collection_display;
+    }
+
+    public static function removeItemFromCollection($collection_id, $item_id, $type)
+    {
+        $item_id = mysql_clean($item_id);
+        $collection_id = mysql_clean($collection_id);
+        if (!user_id()) {
+            e(lang('you_not_logged_in'));
+            return false;
+        }
+        if (!self::getInstance()->isValidType($type)) {
+            e(lang('unknown_type'));
+            return false;
+        }
+        $collection = self::getInstance()->getOne(['collection_id' => $collection_id]);
+        if (!$collection['userid'] == User::getInstance()->getCurrentUserID() && !User::getInstance()->hasAdminAccess() && !User::getInstance()->hasPermission('view_collections')) {
+            e(lang('cant_perform_action_collect'));
+            return false;
+        }
+
+        $sql = 'DELETE FROM ' . tbl('collection_items') . ' WHERE collection_id = ' . $collection_id . ' AND object_id = ' . $item_id . ' AND type = \'' . $type . '\'';
+        Clipbucket_db::getInstance()->execute($sql);
+        e(lang('collect_item_removed', $type), 'm');
+        return true;
+
     }
 }
 
@@ -1536,15 +1567,16 @@ class Collections extends CBCategory
             }
             $list_parent_categories = Collection::getInstance()->getAvailableParents($collection_id, ($default['type'] ?? array_keys($this->types)[0]), true);
             $data['parent'] = [
-                'title'       => lang('collection_parent'),
-                'type'        => 'dropdown_group',
-                'name'        => 'collection_id_parent',
-                'id'          => 'collection_id_parent',
-                'value'       => $list_parent_categories,
-                'db_field'    => 'collection_id_parent',
-                'required'    => 'yes',
-                'checked'     => $collection_id_parent,
-                'null_option' => lang('collection_no_parent')
+                'title'           => lang('collection_parent'),
+                'type'            => 'dropdown_group',
+                'already_secured' => true,
+                'name'            => 'collection_id_parent',
+                'id'              => 'collection_id_parent',
+                'value'           => $list_parent_categories,
+                'db_field'        => 'collection_id_parent',
+                'required'        => 'yes',
+                'checked'         => $collection_id_parent,
+                'null_option'     => lang('collection_no_parent')
             ];
         }
 
@@ -1919,36 +1951,6 @@ class Collections extends CBCategory
         e(lang('collection_deleted'), 'm');
     }
 
-    /**
-     * Function used to delete collection items
-     *
-     * @param $id
-     * @param $cid
-     *
-     * @return bool|void
-     * @throws Exception
-     */
-    function remove_item($id, $cid)
-    {
-        $id = mysql_clean($id);
-        $cid = mysql_clean($cid);
-
-        if (!$this->collection_exists($cid)) {
-            e(lang('collect_not_exists'));
-            return false;
-        }
-
-        if (!user_id()) {
-            e(lang('you_not_logged_in'));
-        } elseif (!$this->object_in_collection($id, $cid)) {
-            e(lang('object_not_in_collect', $this->objName));
-        } elseif (!$this->is_collection_owner($cid) && !User::getInstance()->hasAdminAccess()) {
-            e(lang('cant_perform_action_collect'));
-        } else {
-            Clipbucket_db::getInstance()->execute('DELETE FROM ' . tbl($this->items) . ' WHERE object_id = ' . $id . ' AND collection_id = ' . $cid);
-            e(lang('collect_item_removed', $this->objName), 'm');
-        }
-    }
 
     /**
      * Function used to count collection items
@@ -2391,7 +2393,6 @@ class Collections extends CBCategory
                     return $base_url . 'view_item.php?item=' . $details['photo_key'] . '&amp;collection=' . $details['collection_id'];
                 case 'load_more':
                 case 'more_items':
-                case 'moreItems':
                     if (empty($details['collection_id'])) {
                         return $base_url;
                     }

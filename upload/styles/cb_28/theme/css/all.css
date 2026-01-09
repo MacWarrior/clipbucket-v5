@@ -2364,10 +2364,6 @@ h1 {
   margin: 0 0 10px;
 }
 
-.fav-repo .photoStats .btn:first-child {
-  margin: 0 10px 0 0;
-}
-
 .fav-repo input[type="button"] {
   margin: 0 0 16px;
 }
@@ -3595,8 +3591,8 @@ textarea#comment_box {
 
 #updateVideoInfo .formSection h4 {
   background: #f5f5f5;
-  margin: 0;
   padding: 10px;
+  margin: 0 0 5px;
 }
 
 .form_result,
@@ -7083,6 +7079,12 @@ li.up_vid > a[disabled] {
     opacity: .65;
     -webkit-box-shadow: none;
     box-shadow: none;
+}
+
+li:has(a.disabled) {
+    cursor: not-allowed;
+    filter: alpha(opacity=65);
+    opacity: .65;
 }
 
 :root {

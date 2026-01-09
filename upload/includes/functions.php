@@ -3652,6 +3652,32 @@ function save_subtitle_ajax()
     }
     echo json_encode($response);
 }
+
+function getSQLRequestsFromFile($file)
+{
+    $requests = [];
+        if (!file_exists($file)) {
+            throw new Exception('Missing config file');
+        }
+        $lines = file($file);
+        $templine = '';
+        foreach ($lines as $line) {
+            $templine .= $line;
+            if (str_ends_with(trim($line), ';')) {
+                $requests[] = $templine;
+                $templine = '';
+            }
+        }
+        return $requests;
+}
+
+
+//function used to display error
+function upload_error($error)
+{
+    echo json_encode(['error' => $error]);
+}
+
 include('functions_db.php');
 include('functions_filter.php');
 include('functions_player.php');

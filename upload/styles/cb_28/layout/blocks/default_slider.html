@@ -1,7 +1,7 @@
 <section class="clearfix default-slider"{if $video_ratio !== false} data-ratio="{$video_ratio}"{/if}>
 <h1>
     {if !empty($main_link)}
-    <a href="{$main_link}">{$title}</a>
+    <a href="{$main_link}">{display_clean($title)}</a>
     {else}
         {$title}
     {/if}

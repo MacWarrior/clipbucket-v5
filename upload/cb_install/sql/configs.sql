@@ -124,10 +124,10 @@ INSERT INTO `{tbl_prefix}config` (`configid`, `name`, `value`) VALUES
 	(NULL, 'embed_player_width', '300'),
 	(NULL, 'autoplay_embed', 'no'),
 	(NULL, 'playlistsSection', 'yes'),
-	(NULL, 'photo_main_list', '10'),
+	(NULL, 'photo_main_list', '9'),
 	(NULL, 'photo_home_tabs', '30'),
 	(NULL, 'photo_search_result', '28'),
-	(NULL, 'photo_channel_page', '10'),
+	(NULL, 'photo_channel_page', '9'),
 	(NULL, 'photo_user_photos', '20'),
 	(NULL, 'photo_user_favorites', '20'),
 	(NULL, 'photo_other_limit', '8'),
@@ -331,6 +331,7 @@ INSERT INTO `{tbl_prefix}config` (`configid`, `name`, `value`) VALUES
     (NULL, 'videos_enable_fullwidth', 'yes'),
     (NULL, 'collections_enable_fullwidth', 'yes'),
     (NULL, 'collection_enable_fullwidth', 'yes'),
+    (NULL, 'enable_user_profil_censor', 'no'),
     (NULL, 'keep_ratio_photo', 'yes'),
     (NULL, 'ratio_photo', 1.7777);
 
@@ -367,7 +368,9 @@ INSERT INTO `{tbl_prefix}tools` (`language_key_label`, `language_key_description
     ('assign_default_thumb_label', 'assign_default_thumb_description', 'AdminTool::assignDefaultThumbForCollections', 'assign_default_thumb', NULL, CURRENT_TIMESTAMP, '0', '0'),
     ('update_aspect_ratio_label', 'update_aspect_ratio_description', 'AdminTool::updateAspectRatio', 'update_aspect_ratio', NULL, NULL, '1', '1'),
     ('anonymous_stats_label', 'anonymous_stats_description', 'AdminTool::anonymousStats', 'anonymous_stats', '0 1 * * 7', CURRENT_TIMESTAMP, '1', '0'),
-    ('launch_video_conversion_label', 'launch_video_conversion_description', 'AdminTool::launchVideoConversion', 'launch_video_conversion', '* * * * *', CURRENT_TIMESTAMP, '1', '0');
+    ('launch_video_conversion_label', 'launch_video_conversion_description', 'AdminTool::launchVideoConversion', 'launch_video_conversion', '* * * * *', CURRENT_TIMESTAMP, '1', '0'),
+    ('install_missing_config_label', 'install_missing_config_description', 'AdminTool::installMissingConfigs', 'install_missing_config', NULL, NULL, '1', '0'),
+    ('install_missing_translation_label', 'install_missing_translation_description', 'AdminTool::installMissingTranslations', 'install_missing_translation', NULL, NULL, '1', '0');
 
 INSERT INTO `{tbl_prefix}tags_type` (`name`) VALUES ('video'), ('photo'), ('collection'), ('profile'), ('playlist'), ('actors'), ('producer'), ('executive_producer'), ('director'), ('crew'), ('genre');
 
@@ -400,12 +403,12 @@ SET @type_photo = (
 );
 
 INSERT INTO `{tbl_prefix}categories` (`id_category_type`, `category_name`, `category_thumb`, `is_default`) VALUES
-    (@type_collection, 'Uncategorized', '', 'yes'),
-    (@type_user, 'Basic User', '', 'yes'),
-    (@type_user, 'Gurus', '', 'no'),
-    (@type_user, 'Comedian', '', 'no'),
-    (@type_video, 'Uncategorized','', 'yes'),
-    (@type_photo, 'Uncategorized','', 'yes');
+    (@type_collection, 'Uncategorized', '', TRUE),
+    (@type_user, 'Basic User', '', TRUE),
+    (@type_user, 'Gurus', '', NULL),
+    (@type_user, 'Comedian', '', NULL),
+    (@type_video, 'Uncategorized','', TRUE),
+    (@type_photo, 'Uncategorized','', TRUE);
 
 
 INSERT IGNORE INTO `{tbl_prefix}timezones` (`timezone`) VALUES

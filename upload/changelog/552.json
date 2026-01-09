@@ -1,6 +1,6 @@
 {
   "version":"5.5.2",
-  "revision":"149",
+  "revision":"196",
   "status":"stable",
   "detail":[
     {
@@ -18,18 +18,24 @@
         ,"Implement stucked update detection"
         ,"Implement anonymous statistics"
         ,"Implement alternative embed players"
+        ,"Implement Fix missing configs & Fix missing translations tools"
         ,"Refactor conversion queue manager"
         ,"Refactor user levels management"
         ,"Add empty page title error"
         ,"Add collection mass broadcast update"
         ,"Add users and collections to dashboard flagged objects chart <i>(#74)</i>"
         ,"Add notice when editing default template"
+        ,"Add min & max length and required fields attributes to forms"
+        ,"Add base URL checks & constraints"
         ,"Update configs organisation"
         ,"Update collection management display"
         ,"Update data refresh after core update"
         ,"Update core update error handling"
         ,"Update new member form access"
         ,"Update FFI module warning"
+        ,"Update required version notice"
+        ,"Update video reconvertion (Thanks @McArrow !) <i>(#695)</i>"
+        ,"Update future PHP version check"
         ,"Fix code mode on page edition <i>(#595)</i>"
         ,"Fix email sending error catching <i>(#587)</i>"
         ,"Fix incorrect frontend URL <i>(#529)</i>"
@@ -53,10 +59,16 @@
         ,"Fix PHP error when trying to access missing log file"
         ,"Fix user storage calculation tool staying stuck in ongoing state"
         ,"Fix possibility to disable all conversion resolutions <i>(#664)</i>"
-        ,"Fix possible SQL injection (Thanks @Takumi142857 !)"
+        ,"Fix possible SQL injection (Thanks @Takumi142857 & @nzaar9 !)"
         ,"Fix possible XSS injection"
         ,"Fix possible arbitraty file access (Thanks @Takumi142857 !)"
         ,"Fix TMDB import error"
+        ,"Fix settings saving issues"
+        ,"Fix missing config warning"
+        ,"Fix TMDB tags import"
+        ,"Fix TMDB age restriction import"
+        ,"Fix video edition display (Thanks @McArrow !) <i>(#695)</i>"
+        ,"Fix playlist management missing template (Thanks @McArrow !) <i>(#695)</i>"
       ]
     },
     {
@@ -84,12 +96,17 @@
         ,"Refactor friends requests & management"
         ,"Refactor collection selections"
         ,"Refactor password reset"
+        ,"Add min & max length and required fields attributes to forms"
         ,"Update video & photos management pages display"
         ,"Update video edition display"
         ,"Update photo upload & edition display"
         ,"Update email change procedure"
+        ,"Update collection creation from video"
+        ,"Update channel search display"
+        ,"Update video embedding securities check"
         ,"Hide banned users from channels page, search results & popular user"
         ,"Drop remote upload"
+        ,"Prevent user actions if base URL is not correctly set"
         ,"Fix collection privacy on photos page"
         ,"Fix visual editor theme change <i>(#590)</i>"
         ,"Fix manage collection list"
@@ -127,7 +144,7 @@
         ,"Fix TMDB search"
         ,"Fix processing videos display"
         ,"Fix search engine"
-        ,"Fix default theme CSS"
+        ,"Fix default, dark & light themes CSS"
         ,"Fix video thumb saving from video upload form"
         ,"Fix internal messaging reply action"
         ,"Fix default thumb selection on video upload form"
@@ -137,8 +154,24 @@
         ,"Fix channel links on homepage"
         ,"Fix collection creation <i>(#667)</i>"
         ,"Fix TMDB import <i>(#679)</i>"
-        ,"Fix possible XSS injection (Thanks @Takumi142857 !)"
+        ,"Fix possible XSS injection (Thanks @Takumi142857, @satoki !)"
         ,"Fix photo edition from upload form"
+        ,"Fix collection items management"
+        ,"Fix possible upload issue with missing configs"
+        ,"Fix collection pagination"
+        ,"Fix load more photos on channel page"
+        ,"Fix possible unauthorized actions (Thanks @nzaar9 !)"
+        ,"Fix possible error on add to playlist"
+        ,"Fix account creation button"
+        ,"Fix cookies settings on login page"
+        ,"Fix SSE on video upload page"
+        ,"Fix similar videos display"
+        ,"Fix possible cookie banner JS error <i>(#695)</i>"
+        ,"Fix user channel infos display"
+        ,"Fix possible JS on comment visual editor"
+        ,"Fix search page title"
+        ,"Fix video display through SSE"
+        ,"Fix video view increment (Thanks @McArrow !) <i>(#695)</i>"
       ]
     },
     {
@@ -162,11 +195,18 @@
         ,"Fix URL issue when base_url config is not correctly set"
         ,"Fix typo <i>(#596)</i>"
         ,"Fix Nginx vhost <i>(#604)</i>"
-        ,"Fix possible SQL injection"
+        ,"Fix possible SQL injection (Thanks @quirmz !)"
         ,"Fix access to temp files"
         ,"Fix sessions"
         ,"Fix sub-directory links"
         ,"Fix port usage detection"
+        ,"Fix possible configs & translations duplicates"
+        ,"Fix wrong variable usage in email"
+        ,"Fix possible phishing attack (Thanks @Takumi142857 !)"
+        ,"Fix typo in email template"
+        ,"Fix playlist item counter"
+        ,"Fix missing function"
+        ,"Fix possible duplicated default categories"
       ]
     },
     {
@@ -176,6 +216,10 @@
         ,"Refactor video conversion script"
         ,"Refactor video conversion queue management"
         ,"Fix HLS video reconversion"
+        ,"Fix wrong extension check"
+        ,"Fix possible error during video conversion"
+        ,"Fix possible multiple video conversion"
+        ,"Fix default audio track selection"
       ]
     },
     {
@@ -192,12 +236,14 @@
         ,"Fix core update when using mounted directory as storage"
         ,"Fix stuck update notice"
         ,"Fix SQL error catching during update"
+        ,"Fix missing config in installation script"
       ]
     },
     {
       "title": "Translations",
       "description": [
         "Translate hardcoded texts"
+        ,"Update translation"
         ,"Fix translation"
       ]
     },
@@ -206,6 +252,7 @@
       "description": [
         "Update compatibility notice to 5.5.2"
         ,"Drop remote play"
+        ,"Drop custom field"
       ]
     },
     {
@@ -227,10 +274,10 @@
       "title": "External components",
       "description": [
         "Update psr/log to 3.0.2"
-        ,"Update filp/whoops to 2.18.3"
+        ,"Update filp/whoops to 2.18.4"
         ,"Update oxygenzsas/composer_lib_discord to 0.3.5"
-        ,"Update predis/predis to 3.0.1"
-        ,"Update phpmailer/phpmailer to 6.10.0"
+        ,"Update predis/predis to 3.3.0"
+        ,"Update phpmailer/phpmailer to 7.0.1"
         ,"Update psr/http-message to 1.1"
         ,"Update VideoJS to version 8.23.4"
         ,"Update summernote to version 0.9.1"

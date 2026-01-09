@@ -980,9 +980,26 @@ function get_video_files($vdetails, $with_path = true, $multi = false, $count_on
  */
 function get_high_res_file($vdetails): string
 {
-    $custom_video_file_funcs_retun = exec_custom_video_file_funcs($vdetails);
-    if ($custom_video_file_funcs_retun) {
-        return $custom_video_file_funcs_retun;
+    $custom_video_file_funcs_return = exec_custom_video_file_funcs($vdetails);
+    if ($custom_video_file_funcs_return) {
+        return $custom_video_file_funcs_return;
+    }
+
+    if ($vdetails['status'] !== 'Successful') {
+        $conversion_path = DirPath::get('conversion_queue') . $vdetails['file_name'];
+
+        switch ($vdetails['file_type']) {
+            case 'mp4':
+            default:
+                $glob_files = glob($conversion_path . '.*');
+                $orig_file = $glob_files ? $glob_files[0] : false;
+                break;
+            case 'hls':
+                $orig_file = $conversion_path . DIRECTORY_SEPARATOR . $vdetails['file_name'] . '.m3u8';
+                break;
+        }
+
+        return $orig_file;
     }
 
     $video_qualities = json_decode($vdetails['video_files']);
@@ -1001,11 +1018,7 @@ function get_high_res_file($vdetails): string
         }
     }
 
-    if ($vdetails['status'] == 'Successful') {
-        $filepath = DirPath::get('videos') . $vdetails['file_directory'] . DIRECTORY_SEPARATOR;
-    } else {
-        $filepath = DirPath::get( 'conversion_queue') . $vdetails['file_directory'] . DIRECTORY_SEPARATOR;
-    }
+    $filepath = DirPath::get('videos') . $vdetails['file_directory'] . DIRECTORY_SEPARATOR;
     switch ($vdetails['file_type']) {
         default:
         case 'mp4':
@@ -1259,12 +1272,12 @@ function isReconvertAble($vdetails): bool
                 }
                 $vid_files = glob($path);
                 if (empty($vid_files) && $vdetails['status'] == 'Failed') {
-                    if (!empty($fileDirectory)) {
-                        $path = DirPath::get('conversion_queue') . $fileDirectory . DIRECTORY_SEPARATOR . $fileName . '*';
-                    } else {
-                        $path = DirPath::get('conversion_queue') . $fileName . '*';
-                    }
+                    $path = DirPath::get('conversion_queue') . $fileName . '*';
                     $vid_files = glob($path);
+                    if (empty($vid_files)) {
+                        $path = DirPath::get('conversion_queue') . $fileDirectory . DIRECTORY_SEPARATOR . $fileName . '*';
+                        $vid_files = glob($path);
+                    }
                 }
                 if (!empty($vid_files) && is_array($vid_files)) {
                     $is_convertable = true;
@@ -1303,20 +1316,25 @@ function reConvertVideos($data = ''): void
     }
 
     // Loop through all video ids
-    foreach ($videos as $daVideo) {
+    foreach ($videos as $video_id) {
         // get details of single video
-        $vdetails = CBvideo::getInstance()->get_video($daVideo);
+        $vdetails = CBvideo::getInstance()->get_video($video_id);
 
+        $link = '<a href="'.DirPath::getUrl('admin_area').'edit_video.php?video='.$video_id.'">' . $vdetails['title'] . '</a>';
+        if ($vdetails['status'] == 'Waiting') {
+            e(lang('video_is_already_waiting', $link), 'w', false);
+            continue;
+        }
+        if (!empty(VideoConversionQueue::getOne(['videoid' => $video_id, 'not_complete' => 1]))) {
+            e(lang('video_is_already_processing', $link), 'w', false);
+            continue;
+        }
         if (!isReconvertAble($vdetails)) {
-            e(lang('video_is_not_convertable', $daVideo));
-            continue;
-        }
-        if (!empty(VideoConversionQueue::getOne(['videoid' => $daVideo, 'not_complete' => 1]))) {
-            e(lang('video_is_already_processing', $daVideo));
+            e(lang('video_is_not_convertable', $link), 'w', false);
             continue;
         }
 
-        setVideoStatus($daVideo, 'Waiting');
+        setVideoStatus($video_id, 'Waiting');
 
         if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '279')) {
             $fields = ['convert_percent'];
@@ -1363,12 +1381,11 @@ function reConvertVideos($data = ''): void
         $logFile = DirPath::get('logs') . $vdetails['file_directory'] . DIRECTORY_SEPARATOR . $vdetails['file_name'] . '.log';
         $log = new SLog($logFile);
         $log->newSection('Reconvert launched from ' . $file_used );
-        e(lang('reconversion_started_for_x', display_clean($vdetails['title'])), 'm');
 
         if (empty(errorhandler::getInstance()->get_error())) {
             errorhandler::getInstance()->flush();
         }
-
+        e(lang('reconversion_started_for_x', $link), 'm', false);
     }
 }
 
@@ -1506,7 +1523,8 @@ function remove_empty_directory($path, string $stop_path)
     if ($path == $stop_path) {
         return;
     }
-    $current_dir_content = array_diff((scandir($path)??[]), ['..', '.']);
+    $files = scandir($path);
+    $current_dir_content = array_diff((!empty($files) ? $files : []), ['..', '.']);
     if (count($current_dir_content) <= 0) {
         rmdir($path);
         remove_empty_directory(dirname($path), $stop_path);

@@ -69,8 +69,11 @@ switch ($mode) {
         if( !User::getInstance()->hasPermission('allow_create_collection') ){
             redirect_to(cblink(['name' => 'my_account']));
         }
-
-        $reqFields = Collections::getInstance()->load_required_fields();
+        $params = [];
+        if (!empty($_GET['type']) && Collection::getInstance()->isValidType($_GET['type'])) {
+            $params['type'] = $_GET['type'];
+        }
+        $reqFields = Collections::getInstance()->load_required_fields($params);
         $otherFields = Collections::getInstance()->load_other_fields();
 
         assign('fields', $reqFields);
@@ -128,39 +131,23 @@ switch ($mode) {
     case 'collection_items':
     case 'items':
     case 'manage_items':
-        if( !User::getInstance()->hasPermission('allow_create_collection') ){
+        if (!User::getInstance()->hasPermission('allow_create_collection')) {
             redirect_to(cblink(['name' => 'my_account']));
         }
 
         $type = $_GET['type'];
-        assign('type', $type);
-        $get_limit = create_query_limit($page, config('collection_items_page'));
-
-        $params = [
-            'collection_id' => $collection_id
-            ,'with_items'   => true
-            ,'limit' => $get_limit
-        ];
-        $objs = Collection::getInstance()->getOne($params);
-
-        if( $objs['total_objects'] < config('collection_items_page') && $page == 1 ){
-            $total_rows = $objs['total_objects'];
-        } else {
-            unset($params['limit']);
-            unset($params['with_items']);
-            $total_rows = Collection::getInstance()->getOne($params)['total_objects'];
-        }
-
         switch ($type) {
             default:
             case 'videos':
+                $type = 'videos';
                 if (isset($_POST['delete_selected'])) {
                     $count = count($_POST['check_item']);
                     for ($i = 0; $i < $count; $i++) {
-                        CBvideo::getInstance()->collection->remove_item($_POST['check_item'][$i], $collection_id);
+                        Collection::removeItemFromCollection($collection_id, $_POST['check_item'][$i], $type);
                     }
                     errorhandler::getInstance()->flush();
-                    e(lang('selected_items_removed', 'videos'), 'm');
+                    e(lang('collect_item_removed', $type), 'm');
+
                 }
                 break;
 
@@ -168,19 +155,37 @@ switch ($mode) {
                 if (isset($_POST['delete_selected'])) {
                     $count = count($_POST['check_item']);
                     for ($i = 0; $i < $count; $i++) {
-                        CBPhotos::getInstance()->collection->remove_item($_POST['check_item'][$i], $collection_id);
+                        Collection::removeItemFromCollection($collection_id, $_POST['check_item'][$i], $type);
                         CBPhotos::getInstance()->make_photo_orphan($collection_id, $_POST['check_item'][$i]);
                     }
                     errorhandler::getInstance()->flush();
-                    e(lang('selected_items_removed', 'photos'), 'm');
+                    e(lang('collect_item_removed', $type), 'm');
                 }
                 break;
+        }
+
+        assign('type', $type);
+        $get_limit = create_query_limit($page, config('collection_items_page'));
+
+        $params = [
+            'collection_id' => $collection_id,
+            'with_items'    => true,
+            'limit'         => $get_limit
+        ];
+        $objs = Collection::getInstance()->getOne($params);
+
+        if ($objs['total_objects'] < config('collection_items_page') && $page == 1) {
+            $total_rows = $objs['total_objects'];
+        } else {
+            unset($params['limit']);
+            unset($params['with_items']);
+            $total_rows = Collection::getInstance()->getOne($params)['total_objects'];
         }
 
         //Pagination
         $total_pages = count_pages($total_rows, COLLIP);
         pages::getInstance()->paginate($total_pages, $page);
-        $collection = Collection::getInstance()->getOne(['collection_id'=>$collection_id]);
+        $collection = Collection::getInstance()->getOne(['collection_id' => $collection_id]);
 
         assign('c', $collection);
         assign('objs', $objs);
