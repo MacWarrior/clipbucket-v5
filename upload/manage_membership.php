@@ -42,6 +42,16 @@ foreach ($available_memberships as $key => $available_membership) {
     }
 }
 
+
+/** @todo récupération des cartes sauvegardé */
+$cards_saved = [
+    ['last_digit' => 1234, 'expire' => "10/2027", 'type' => 'visa', 'name' => 'John Doe', 'is_default' => false]
+    ,['last_digit' => 4582, 'expire' => "08/2026", 'type' => 'mastercard', 'name' => 'Thomas durand', 'is_default' => true]
+    ,['last_digit' => 3268, 'expire' => "02/2030", 'type' => 'truc', 'name' => 'Mathieu Cardigan', 'is_default' => false]
+];
+assign('cards_saved', $cards_saved);
+
+
 $min_suffixe = System::isInDev() ? '' : '.min';
 
 /** load js from composer vendor */

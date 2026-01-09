@@ -1,0 +1,76 @@
+<h2>{lang code='available_memberships'}</h2>
+
+<div class="plans-main-container">
+    <div class="left-detail"></div>
+    <div class="plans-main-container-flex">
+        {foreach from=$available_memberships item=membership}
+        <label for="radio_{$membership.id_membership}" class="plans-container">
+
+            <div class="top">
+
+                <div class="badge-custom">
+                    {if 1 != 0}
+                    <span class="badge-actif">active</span>
+                    {/if}
+
+                    {if 1 != 0}
+                    <span class="badge-popular">popular</span>
+                    {/if}
+                </div>
+
+                <div class="name">
+                    <input class="radio" id="radio_{$membership.id_membership}" type="radio" name="subscribe_option" value="" checked="checked">
+                    {$membership.user_level_name}
+                </div>
+                <div class="price-tag">
+                    <div class="price">
+                        {if $membership.base_price != 0}
+                            {$membership.base_price} {$membership.symbol}
+                        {else}
+                            {lang('free')}
+                        {/if}
+                    </div>
+                    <div class="frequence">{lang('frequency_'|cat:$membership.frequency)}</div>
+                </div>
+                <button class="btn btn-default btn-primary btn_subscribe" data-id_membership="{display_clean($membership.id_membership)}">{lang('bouton_souscrire_abonnement')}</button>
+            </div>
+
+            <div class="bottom_and_quota">
+                <div class="bottom">
+                    <div class="feature-title"> {lang('plans_features_title')} </div>
+                    <div class="description" >{nl2br($membership.description)}</div>
+                </div>
+                <div class="quota">
+                    <div class="left">
+                        <i class="fa fa-hdd-o"></i>
+                    </div>
+                    <div class="right">
+
+                        <div class="infos">
+                            <span>{lang('storage_quota')} :</span>
+                            {if $membership.storage_quota_included != 0}
+                                {$membership.storage_quota_included} {lang('gb')}
+                            {else}
+                                {lang('none')}
+                            {/if}
+
+                        </div>
+
+                        <div class="infos">
+                            <span>{lang('storage_price')} :</span>
+                            {if $membership.storage_price_per_go != 0}
+                                {$membership.storage_price_per_go} {$membership.symbol} {lang('per_gb')}
+                            {else}
+                                {lang('free')}
+                            {/if}
+                        </div>
+                    </div>
+                </div>
+                <button class="btn btn-default btn-primary btn_subscribe" data-id_membership="{display_clean($membership.id_membership)}">{lang('bouton_souscrire_abonnement')}</button>
+
+            </div>
+
+        </label>
+        {/foreach}
+    </div>
+</div>

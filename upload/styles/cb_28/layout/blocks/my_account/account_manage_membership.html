@@ -3,113 +3,28 @@
     <button class="btn-primary btn mb-2">{lang('renew')}</button>
 {/if}
 {if User::getInstance()->isUserMustRenewMembership()}
-    <h2>{lang code='available_memberships'}</h2>
 
-    <div class="plans-main-container">
-        <div class="left-detail"></div>
-        <div class="plans-main-container-flex">
-            {foreach from=$available_memberships item=membership}
-            <label for="radio_{$membership.id_membership}" class="plans-container">
-
-                <div class="top">
-
-                    <div class="badge-custom">
-                        {if 1 != 0}
-                        <span class="badge-actif">active</span>
-                        {/if}
-
-                        {if 1 != 0}
-                        <span class="badge-popular">popular</span>
-                        {/if}
-                    </div>
-
-                    <div class="name">
-                        <input class="radio" id="radio_{$membership.id_membership}" type="radio" name="subscribe_option" value="" checked="checked">
-                        {$membership.user_level_name}
-                    </div>
-                    <div class="price-tag">
-                        <div class="price">
-                            {if $membership.base_price != 0}
-                                {$membership.base_price} {$membership.symbol}
-                            {else}
-                                {lang('free')}
-                            {/if}
-                        </div>
-                        <div class="frequence">{lang('frequency_'|cat:$membership.frequency)}</div>
-                    </div>
-                    <button class="btn btn-default btn-primary btn_subscribe ">{lang('bouton_souscrire_abonnement')}</button>
-                </div>
-
-                <div class="bottom_and_quota">
-                    <div class="bottom">
-                        <div class="feature-title"> {lang('plans_features_title')} </div>
-                        <div class="description" >{nl2br($membership.description)}</div>
-                    </div>
-                    <div class="quota">
-                        <div class="left">
-                            <i class="fa fa-hdd-o"></i>
-                        </div>
-                        <div class="right">
-
-                            <div class="infos">
-                                <span>{lang('storage_quota')} :</span>
-                                {if $membership.storage_quota_included != 0}
-                                    {$membership.storage_quota_included} {lang('gb')}
-                                {else}
-                                    {lang('none')}
-                                {/if}
-
-                            </div>
-
-                            <div class="infos">
-                                <span>{lang('storage_price')} :</span>
-                                {if $membership.storage_price_per_go != 0}
-                                    {$membership.storage_price_per_go} {$membership.symbol} {lang('per_gb')}
-                                {else}
-                                    {lang('free')}
-                                {/if}
-                            </div>
-                        </div>
-                    </div>
-                    <button class="btn btn-default btn-primary btn_subscribe ">{lang('bouton_souscrire_abonnement')}</button>
-
-                </div>
-
-            </label>
-            {/foreach}
-        </div>
+    {include file="$style_dir/blocks/my_account/account_paiment_stepper.html"}
+    <div id="stepper-step-1">
+        {include file="$style_dir/blocks/my_account/account_select_membership.html"}
     </div>
 
+    <div id="stepper-step-2" style="display: none">
+        {include file="$style_dir/blocks/my_account/account_billing_address.html"}
+    </div>
 
-<style>
-    .payment_container {
-        display: inline-block;
-    }
-</style>
+    <div id="stepper-step-3" style="display: none">
+        {include file="$style_dir/blocks/my_account/account_cb_paiement.html"}
+    </div>
 
-<div id="paypal-card-form">
-    <div id="card-name"></div>
-    <div id="card-number"></div>
-    <div id="card-expiry"></div>
-    <div id="card-cvv"></div>
-
-    <button id="card-submit">Payer</button>
-</div>
-
-<script>
-    var Paypal = {
-        paypal_sdk_url: "{$paypal->getUrlJsSdk()}"
-        ,client_id: "{$paypal->getClientID()}"
-        ,currency: "{$paypal->getCurrency()}"
-        ,url_paiement: "{$paypal->getUrlBack()}"
-    };
-
-    /** error message for the front end if issue with paypal init */
-    var lang_paypal_init_issue = "{lang code='paypal_init_issue'}";
-    var lang_no_subscription_found = "{lang code='no_subscription_found'}";
-</script>
 {/if}
 {if !empty($memberships)}
+
+    <!-- if user has membership actif -->
+    {include file="$style_dir/blocks/my_account/account_affichage_abonement_actif.html"}
+    {include file="$style_dir/blocks/my_account/account_crud_cb.html"}
+    {include file="$style_dir/blocks/my_account/account_billing_address.html"}
+
     <h2>{lang code='membership_history'}</h2>
     <table class="table table-bordered table-striped">
         <tr>
@@ -137,3 +52,11 @@
         {/section}
     </table>
 {/if}
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        let payment = new Payment();
+        payment.enable_step_payment();
+        payment.capture_select_membership();
+    });
+</script>

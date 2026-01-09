@@ -1,0 +1,354 @@
+<style>
+
+    /* Styles pour le bloc de paiement */
+    .payment-section {
+        background: white;
+        border: 1px solid #e0e0e0;
+        border-radius: 4px;
+        padding: 20px;
+        margin-bottom: 24px;
+    }
+
+    .payment-form-container {
+        margin-top: 16px;
+    }
+
+    .payment-amount {
+        margin-bottom: 20px;
+        padding: 16px;
+        background-color: #f8fcfd;
+        border: 1px solid #0891b2;
+        border-radius: 4px;
+        text-align: center;
+    }
+
+    .payment-amount label {
+        display: block;
+        font-size: 13px;
+        color: #666;
+        margin-bottom: 8px;
+        font-weight: 500;
+    }
+
+    .amount-display {
+        font-size: 32px;
+        font-weight: 700;
+        color: #0891b2;
+    }
+
+    .payment-form {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+    }
+
+    .checkbox-group {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 12px;
+        background-color: #f9fafb;
+        border-radius: 4px;
+    }
+
+    .checkbox-group input[type="checkbox"] {
+        width: 18px;
+        height: 18px;
+        cursor: pointer;
+        accent-color: #0891b2;
+    }
+
+    .checkbox-group label {
+        font-size: 14px;
+        color: #333;
+        cursor: pointer;
+        user-select: none;
+    }
+
+    .info-box {
+        display: flex;
+        gap: 12px;
+        padding: 12px;
+        background-color: #e0f2fe;
+        border-left: 3px solid #0891b2;
+        border-radius: 3px;
+    }
+
+    .info-box p {
+        color: #0c4a6e;
+        font-size: 13px;
+        line-height: 1.5;
+        margin: 0;
+    }
+
+    .info-box svg {
+        color: #0891b2;
+        margin-top: 2px;
+    }
+
+    .pay-btn {
+        width: 100%;
+        padding: 16px;
+        background-color: #0891b2;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        font-size: 16px;
+        font-weight: 700;
+        cursor: pointer;
+        transition: background-color 0.2s;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-top: 8px;
+    }
+
+    .pay-btn:hover {
+        background-color: #0e7490;
+    }
+
+    /* Messages d'alerte */
+    .alert {
+        display: flex;
+        align-items: flex-start;
+        gap: 12px;
+        padding: 16px;
+        border-radius: 4px;
+        margin-bottom: 16px;
+        position: relative;
+    }
+
+    .alert-success {
+        background-color: #d1fae5;
+        border: 1px solid #6ee7b7;
+    }
+
+    .alert-success svg {
+        color: #059669;
+    }
+
+    .alert-success strong {
+        color: #065f46;
+    }
+
+    .alert-success p {
+        color: #047857;
+        margin: 4px 0 0 0;
+        font-size: 14px;
+        line-height: 1.5;
+    }
+
+    .alert-error {
+        background-color: #fee2e2;
+        border: 1px solid #fca5a5;
+    }
+
+    .alert-error svg {
+        color: #dc2626;
+    }
+
+    .alert-error strong {
+        color: #991b1b;
+    }
+
+    .alert-error p {
+        color: #b91c1c;
+        margin: 4px 0 0 0;
+        font-size: 14px;
+        line-height: 1.5;
+    }
+
+    .alert > div {
+        flex: 1;
+    }
+
+    .alert-close {
+        padding: 4px;
+        background: none;
+        border: none;
+        cursor: pointer;
+        border-radius: 4px;
+        transition: background-color 0.2s;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: inherit;
+        opacity: 0.6;
+    }
+
+    .alert-close:hover {
+        opacity: 1;
+        background-color: rgba(0, 0, 0, 0.05);
+    }
+
+    @media (max-width: 768px) {
+        .card-content {
+            flex-wrap: wrap;
+        }
+
+        .card-meta {
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .section-header {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 12px;
+        }
+
+        .add-card-btn {
+            width: 100%;
+        }
+    }
+</style>
+
+
+<!-- Bloc de paiement par carte bancaire -->
+<div class="payment-section">
+    <div class="section-header">
+        <h3>Effectuer un paiement</h3>
+    </div>
+
+    <!-- Message de succès (masqué par défaut) -->
+    <div class="alert alert-success" id="successMessage" style="display: none;">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor" style="flex-shrink: 0;">
+            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+        </svg>
+        <div>
+            <strong>Paiement réussi !</strong>
+            <p>Votre paiement de <strong>50,00 €</strong> a été traité avec succès. Vous recevrez un email de confirmation dans quelques instants.</p>
+        </div>
+        <button class="alert-close" onclick="document.getElementById('successMessage').style.display='none'">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+                <path d="M4.293 4.293a1 1 0 011.414 0L8 6.586l2.293-2.293a1 1 0 111.414 1.414L9.414 8l2.293 2.293a1 1 0 01-1.414 1.414L8 9.414l-2.293 2.293a1 1 0 01-1.414-1.414L6.586 8 4.293 5.707a1 1 0 010-1.414z"/>
+            </svg>
+        </button>
+    </div>
+
+    <!-- Message d'erreur (masqué par défaut) -->
+    <div class="alert alert-error" id="errorMessage" style="display: none;">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor" style="flex-shrink: 0;">
+            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/>
+        </svg>
+        <div>
+            <strong>Échec du paiement</strong>
+            <div class="error_msg">Votre paiement n'a pas pu être traité. Raison : <strong>Carte refusée</strong>. Veuillez vérifier vos informations ou utiliser une autre carte.</div>
+        </div>
+        <button class="alert-close" onclick="document.getElementById('errorMessage').style.display='none'">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+                <path d="M4.293 4.293a1 1 0 011.414 0L8 6.586l2.293-2.293a1 1 0 111.414 1.414L9.414 8l2.293 2.293a1 1 0 01-1.414 1.414L8 9.414l-2.293 2.293a1 1 0 01-1.414-1.414L6.586 8 4.293 5.707a1 1 0 010-1.414z"/>
+            </svg>
+        </button>
+    </div>
+
+    <div class="payment-form-container" id="paypal-card-form">
+        <div class="payment-form" id="paymentForm">
+            <div class="payment-amount">
+                <label>Montant à payer</label>
+                <div class="amount-display">50,00 €</div>
+            </div>
+
+            <!-- Sélection du mode de paiement -->
+            <div class="payment-method-selector">
+                <label class="payment-method-option">
+                    <input type="radio" name="paymentMethod" value="saved" id="useSavedCard" checked>
+                    <span>Utiliser une carte enregistrée</span>
+                </label>
+                <label class="payment-method-option">
+                    <input type="radio" name="paymentMethod" value="new" id="useNewCard">
+                    <span>Saisir une nouvelle carte</span>
+                </label>
+            </div>
+
+            <!-- Section carte enregistrée -->
+            <div id="savedCardSection" class="payment-section-content">
+                <label style="font-size: 13px; color: #666; margin-bottom: 12px; display: block; font-weight: 500;">Sélectionnez une carte</label>
+                <div class="saved-cards-list">
+                    <div class="cards-container">
+                        {foreach $cards_saved as $card_saved}
+                            {include file="$style_dir/blocks/my_account/account_card_saved.html"
+                                last_digit=$card_saved.last_digit
+                                expire=$card_saved.expire
+                                type=$card_saved.type
+                                name=$card_saved.name
+                                is_default=$card_saved.is_default
+                                is_removable=false
+                            }
+                        {/foreach}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Section nouvelle carte -->
+            <div id="newCardSection" class="payment-section-content" style="display: none;">
+
+                <div class="form-row">
+                    <div class="form-group" style="flex: 1;">
+                        <label for="payCardNumber">Numéro de carte</label>
+                        <div id="card-number"></div>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group" style="flex: 1;">
+                        <label for="payCardHolder">Titulaire de la carte</label>
+                        <div id="card-name"></div>
+                    </div>
+                </div>
+
+                <div class="form-row" style="gap: 12px;">
+                    <div class="form-group" style="flex: 1;">
+                        <label for="payExpiryYear">Expire</label>
+                        <div id="card-expiry"></div>
+                    </div>
+
+                    <div class="form-group" style="flex: 1;">
+                        <label for="payCvv">CVV</label>
+                        <div id="card-cvv"></div>
+                    </div>
+                </div>
+
+                <div class="checkbox-group">
+                    <input type="checkbox" id="saveCard" name="saveCard">
+                    <label for="saveCard">Enregistrer cette carte pour les prochains paiements. <br/>Vous pourrez la supprimer à tout moment depuis votre compte.</label>
+                </div>
+
+            </div>
+
+            <div class="checkbox-group">
+                <input type="checkbox" id="renewAuto" name="renewAuto">
+                <label for="renewAuto">Renouveller le paiement automatiquement à chaque échéance. <br/>Vous pourrez annuler à tout moment depuis votre compte.</label>
+            </div>
+
+            <div class="info-box">
+                <svg width="18" height="18" viewBox="0 0 18 18" fill="currentColor" style="flex-shrink: 0;">
+                    <path fill-rule="evenodd" d="M9 0a9 9 0 100 18A9 9 0 009 0zM8 4a1 1 0 112 0v5a1 1 0 11-2 0V4zm1 9a1 1 0 100-2 1 1 0 000 2z" clip-rule="evenodd"/>
+                </svg>
+                <p>Lorem ipsum dolor sit amet ... .</p>
+            </div>
+
+            <button type="button" class="pay-btn" id="card-submit">
+                <svg width="18" height="18" viewBox="0 0 18 18" fill="currentColor" style="margin-right: 8px;">
+                    <path d="M4.5 3A1.5 1.5 0 003 4.5v9A1.5 1.5 0 004.5 15h9a1.5 1.5 0 001.5-1.5v-9A1.5 1.5 0 0013.5 3h-9zM6 6a.75.75 0 000 1.5h6a.75.75 0 000-1.5H6zm0 3a.75.75 0 000 1.5h3.75a.75.75 0 000-1.5H6z"/>
+                </svg>
+                Payer 50,00 €
+            </button>
+        </div>
+    </div>
+</div>
+
+<script>
+    var Paypal = {
+        paypal_sdk_url: "{$paypal->getUrlJsSdk()}"
+        ,client_id: "{$paypal->getClientID()}"
+        ,currency: "{$paypal->getCurrency()}"
+        ,url_paiement: "{$paypal->getUrlBack()}"
+    };
+
+    /** error message for the front end if issue with paypal init */
+    var lang_paypal_init_issue = "{lang code='paypal_init_issue'}";
+    var lang_no_subscription_found = "{lang code='no_subscription_found'}";
+    var lang_paypal_paiment_faild_generic = "{lang code='paypal_paiment_faild_generic'}";
+</script>
+

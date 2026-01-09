@@ -1,0 +1,440 @@
+<style>
+
+    /* Styles pour les cartes de paiement */
+    .payment-cards-section {
+        background: white;
+        border: 1px solid #e0e0e0;
+        border-radius: 4px;
+        padding: 20px;
+        margin-bottom: 24px;
+    }
+
+    .section-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+        padding-bottom: 16px;
+        border-bottom: 2px solid #f0f0f0;
+    }
+
+    .section-header h3 {
+        font-size: 18px;
+        font-weight: 600;
+        color: #333;
+        margin: 0;
+    }
+
+    .add-card-btn {
+        padding: 8px 16px;
+        background-color: #0891b2;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        font-size: 13px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background-color 0.2s;
+    }
+
+    .add-card-btn:hover {
+        background-color: #0e7490;
+    }
+
+    .cards-container {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .payment-card {
+        border: 1px solid #e0e0e0;
+        border-radius: 4px;
+        transition: border-color 0.2s;
+    }
+
+    .payment-card:hover {
+        border-color: #0891b2;
+    }
+
+    .card-content {
+        display: flex;
+        align-items: center;
+        padding: 16px;
+        gap: 16px;
+    }
+
+    .card-radio {
+        flex-shrink: 0;
+    }
+
+    .card-radio input[type="radio"] {
+        width: 18px;
+        height: 18px;
+        cursor: pointer;
+        accent-color: #0891b2;
+    }
+
+    .card-info {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        flex: 1;
+    }
+
+    .card-brand {
+        flex-shrink: 0;
+    }
+
+    .card-details {
+        flex: 1;
+    }
+
+    .card-number {
+        font-size: 15px;
+        font-weight: 600;
+        color: #333;
+        margin-bottom: 4px;
+    }
+
+    .card-meta {
+        display: flex;
+        gap: 16px;
+        font-size: 13px;
+        color: #666;
+    }
+
+    .card-actions {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        flex-shrink: 0;
+    }
+
+    .default-badge {
+        padding: 4px 10px;
+        background-color: #d4edda;
+        color: #155724;
+        border-radius: 3px;
+        font-size: 11px;
+        font-weight: 600;
+        text-transform: uppercase;
+    }
+
+    .delete-btn {
+        padding: 6px;
+        background: none;
+        border: none;
+        color: #999;
+        cursor: pointer;
+        border-radius: 4px;
+        transition: all 0.2s;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .delete-btn:hover {
+        background-color: #fee;
+        color: #dc2626;
+    }
+
+    @media (max-width: 768px) {
+        .card-content {
+            flex-wrap: wrap;
+        }
+
+        .card-meta {
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .section-header {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 12px;
+        }
+
+        .add-card-btn {
+            width: 100%;
+        }
+    }
+
+
+    /* Styles pour le formulaire d'ajout de carte */
+    .add-card-form {
+        border: 2px solid #0891b2;
+        background-color: #f8fcfd;
+    }
+
+    .form-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 8px;
+    }
+
+    .close-form-btn {
+        padding: 4px;
+        background: none;
+        border: none;
+        color: #999;
+        cursor: pointer;
+        border-radius: 4px;
+        transition: all 0.2s;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .close-form-btn:hover {
+        background-color: #fee;
+        color: #dc2626;
+    }
+
+    .card-form {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        margin-top: 16px;
+    }
+
+    .form-row {
+        display: flex;
+        gap: 12px;
+    }
+
+    .form-group {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .form-group label {
+        font-size: 13px;
+        color: #666;
+        margin-bottom: 6px;
+        font-weight: 500;
+    }
+
+    .form-group input,
+    .form-group select {
+        padding: 10px 12px;
+        border: 1px solid #e0e0e0;
+        border-radius: 4px;
+        font-size: 14px;
+        color: #333;
+        background-color: white;
+        transition: border-color 0.2s;
+    }
+
+    .form-group input:focus,
+    .form-group select:focus {
+        outline: none;
+        border-color: #0891b2;
+    }
+
+    .form-group input::placeholder {
+        color: #999;
+    }
+
+    .form-actions {
+        display: flex;
+        gap: 12px;
+        margin-top: 8px;
+    }
+
+    .cancel-btn {
+        flex: 1;
+        padding: 12px;
+        background-color: #f5f5f5;
+        color: #666;
+        border: 1px solid #e0e0e0;
+        border-radius: 4px;
+        font-size: 14px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s;
+    }
+
+    .cancel-btn:hover {
+        background-color: #e0e0e0;
+    }
+
+    .save-btn {
+        flex: 1;
+        padding: 12px;
+        background-color: #0891b2;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        font-size: 14px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background-color 0.2s;
+    }
+
+    .save-btn:hover {
+        background-color: #0e7490;
+    }
+
+    @media (max-width: 768px) {
+        .card-content {
+            flex-wrap: wrap;
+        }
+
+        .card-meta {
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .section-header {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 12px;
+        }
+
+        .add-card-btn {
+            width: 100%;
+        }
+    }
+</style>
+
+<script>
+    // JavaScript pour gérer l'affichage du formulaire
+    document.addEventListener('DOMContentLoaded', function() {
+        const addCardBtn = document.querySelector('.add-card-btn');
+        const addCardForm = document.getElementById('addCardForm');
+        const closeFormBtn = document.getElementById('closeFormBtn');
+        const cancelFormBtn = document.getElementById('cancelFormBtn');
+        const cardForm = document.querySelector('.card-form');
+
+        // Ouvrir le formulaire
+        addCardBtn.addEventListener('click', function() {
+            addCardForm.style.display = 'block';
+            addCardForm.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        });
+
+        // Fermer le formulaire
+        function closeForm() {
+            addCardForm.style.display = 'none';
+            cardForm.reset();
+        }
+
+        closeFormBtn.addEventListener('click', closeForm);
+        cancelFormBtn.addEventListener('click', closeForm);
+
+        // Soumission du formulaire
+        cardForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            // Ici vous ajouteriez votre logique d'envoi au serveur
+            alert('Carte ajoutée avec succès !');
+            closeForm();
+        });
+    });
+</script>
+
+<!-- Section Cartes de paiement -->
+<div class="payment-cards-section">
+    <div class="section-header">
+        <h3>Cartes de paiement enregistrées</h3>
+        <button class="add-card-btn">+ Ajouter une carte</button>
+    </div>
+
+    <div class="cards-container">
+
+        <!-- Formulaire d'ajout de carte (masqué par défaut) -->
+        <div class="payment-card add-card-form" id="addCardForm" style="display: none;">
+            <div class="card-content" style="flex-direction: column; align-items: stretch;">
+                <div class="form-header">
+                    <h4 style="margin: 0; font-size: 16px; color: #333;">Ajouter une nouvelle carte</h4>
+                    <button class="close-form-btn" id="closeFormBtn" type="button">
+                        <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+                            <path d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"/>
+                        </svg>
+                    </button>
+                </div>
+
+                <div class="warning-box" style="margin: 16px 0;">
+                    <p><strong>ℹ️ Information :</strong> L'ajout d'une carte déclenchera une demande d'autorisation de paiement de 0,01 €. Ce montant ne sera pas prélevé, il s'agit uniquement d'une vérification de la validité de votre carte.</p>
+                </div>
+
+                <form class="card-form">
+                    <div class="form-row">
+                        <div class="form-group" style="flex: 1;">
+                            <label for="cardNumber">Numéro de carte</label>
+                            <input type="text" id="cardNumber" placeholder="1234 5678 9012 3456" maxlength="19" required>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group" style="flex: 1;">
+                            <label for="cardHolder">Titulaire de la carte</label>
+                            <input type="text" id="cardHolder" placeholder="Jean Dupont" required>
+                        </div>
+                    </div>
+
+                    <div class="form-row" style="gap: 12px;">
+                        <div class="form-group" style="flex: 1;">
+                            <label for="expiryMonth">Mois d'expiration</label>
+                            <select id="expiryMonth" required>
+                                <option value="">MM</option>
+                                <option value="01">01</option>
+                                <option value="02">02</option>
+                                <option value="03">03</option>
+                                <option value="04">04</option>
+                                <option value="05">05</option>
+                                <option value="06">06</option>
+                                <option value="07">07</option>
+                                <option value="08">08</option>
+                                <option value="09">09</option>
+                                <option value="10">10</option>
+                                <option value="11">11</option>
+                                <option value="12">12</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group" style="flex: 1;">
+                            <label for="expiryYear">Année d'expiration</label>
+                            <select id="expiryYear" required>
+                                <option value="">YYYY</option>
+                                <option value="2026">2026</option>
+                                <option value="2027">2027</option>
+                                <option value="2028">2028</option>
+                                <option value="2029">2029</option>
+                                <option value="2030">2030</option>
+                                <option value="2031">2031</option>
+                                <option value="2032">2032</option>
+                                <option value="2033">2033</option>
+                                <option value="2034">2034</option>
+                                <option value="2035">2035</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group" style="flex: 1;">
+                            <label for="cvv">CVV</label>
+                            <input type="text" id="cvv" placeholder="123" maxlength="4" required>
+                        </div>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="button" class="cancel-btn" id="cancelFormBtn">Annuler</button>
+                        <button type="submit" class="save-btn">Enregistrer la carte</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        {foreach $cards_saved as $card_saved}
+            {include file="$style_dir/blocks/my_account/account_card_saved.html"
+                last_digit=$card_saved.last_digit
+                expire=$card_saved.expire
+                type=$card_saved.type
+                name=$card_saved.name
+                is_default=$card_saved.is_default
+                is_removable=true
+            }
+        {/foreach}
+
+    </div>
+</div>

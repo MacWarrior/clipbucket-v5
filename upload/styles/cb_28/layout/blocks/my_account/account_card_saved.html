@@ -1,0 +1,54 @@
+
+<div class="payment-card">
+    <div class="card-content">
+        <div class="card-radio">
+            <input type="radio" name="default-card" id="card1" checked>
+        </div>
+        <div class="card-info">
+            <div class="card-brand">
+
+                {if $type == 'visa'}
+                    <svg width="32" height="24" viewBox="0 0 32 24" fill="none">
+                        <rect width="32" height="24" rx="4" fill="#0066B2"/>
+                        <rect x="8" y="8" width="16" height="8" rx="1" fill="white"/>
+                        <rect x="11" y="10" width="4" height="4" fill="#0066B2"/>
+                        <rect x="17" y="10" width="4" height="4" fill="#F7B600"/>
+                    </svg>
+                {elseif $type == 'mastercard'}
+                    <svg width="32" height="24" viewBox="0 0 32 24" fill="none">
+                        <rect width="32" height="24" rx="4" fill="#1434CB"/>
+                        <circle cx="12" cy="12" r="5" fill="#EB001B"/>
+                        <circle cx="20" cy="12" r="5" fill="#FF5F00"/>
+                    </svg>
+                {else}
+                    <svg width="32" height="24" viewBox="0 0 32 24" fill="none">
+                        <rect width="32" height="24" rx="4" fill="#016FD0"/>
+                        <path d="M8 12h4M20 12h4M12 8v8M20 8v8" stroke="white" stroke-width="2" stroke-linecap="round"/>
+                    </svg>
+                {/if}
+
+            </div>
+            <div class="card-details">
+                <div class="card-number">•••• •••• •••• {display_clean($last_digit)}</div>
+                <div class="card-meta">
+                    <span class="card-expiry">Exp: {display_clean($expire)}</span>
+                    <span class="card-holder">{display_clean($name)}</span>
+                </div>
+            </div>
+        </div>
+        <div class="card-actions">
+
+            {if $is_default == true}
+                <span class="default-badge">Par défaut</span>
+            {/if}
+            {if $is_removable == true}
+                <button class="delete-btn" title="Supprimer">
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+                        <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/>
+                        <path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/>
+                    </svg>
+                </button>
+            {/if}
+        </div>
+    </div>
+</div>
