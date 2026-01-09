@@ -87,15 +87,8 @@ $client->initRoute();
         paypal_sdk_url: "<?php echo $client->getUrlJsSdk(); ?>"
         ,client_id: "<?php echo $client->getClientID(); ?>"
         ,currency: "<?php echo $client->getCurrency(); ?>"
-        ,attributes: {id_transaction: 45623} /** donnée pour identifier le paiement dans la classe paypal */
+        ,attributes: {id_commande: 45623} /** donnée pour identifier le paiement dans la classe paypal */
         ,url_paiement: "<?php echo $client->getUrlBack(); ?>"
-        ,boutonContainerSelector: "#payment_options"
-        ,buttonStyle: {
-            shape: 'rect'
-            ,color: 'gold'
-            ,layout: 'vertical'
-            ,label: 'paypal'
-        }
     });
 
     document.addEventListener('paypalOrderCreated', (event) => {

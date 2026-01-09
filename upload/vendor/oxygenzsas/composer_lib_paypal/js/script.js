@@ -1,12 +1,10 @@
 class PaypalCustom {
-    constructor({ paypal_sdk_url, client_id, currency, attributes, url_paiement, buttonStyle, boutonContainerSelector }) {
+    constructor({ paypal_sdk_url, client_id, currency, attributes, url_paiement}) {
         this.paypal_sdk_url = paypal_sdk_url;
         this.client_id = client_id;
         this.currency = currency;
         this.attributes = attributes;
         this.url_paiement = url_paiement;
-        this.buttonStyle = buttonStyle; // Ajouter le style des boutons en tant que paramètre
-        this.boutonContainerSelector = boutonContainerSelector; // Ajouter le sélecteur dynamique
         this.init();
     }
 
@@ -35,19 +33,19 @@ class PaypalCustom {
                 })
                     .then((response) => response.json())
                     .then((order) => {
+                        if (order.status == 'error') {
+                            throw new Error(order.error || 'Erreur PayPal');
+                        }
                         instance.triggerEvent('paypalOrderCreated', { order });
                         return order.id;
                     })
-                    .catch((error) => {
-                        instance.triggerEvent('paypalError', { message: error });
-                    });
             },
             onApprove: function (data, actions) {
                 let order_id = data.orderID;
                 return fetch(instance.url_paiement, {
                     method: "POST",
                     headers: { "Content-Type": "application/x-www-form-urlencoded" },
-                    body: new URLSearchParams({action: 'complete_order', order_id: order_id}).toString()
+                    body: new URLSearchParams({action: 'complete_order', order_id: order_id, attributes: JSON.stringify(instance.attributes)}).toString()
                 })
                     .then((response) => response.json())
                     .then((order_details) => {
@@ -55,11 +53,7 @@ class PaypalCustom {
                         instance.triggerEvent('paypalOrderCompleted', {
                             amount: order_details,
                         });
-                        paypal_buttons.close();
                     })
-                    .catch((error) => {
-                        instance.triggerEvent('paypalError', { message: error });
-                    });
             },
 
             onCancel: function (data) {
@@ -79,8 +73,14 @@ class PaypalCustom {
 
             document
                 .getElementById('card-submit')
-                .addEventListener('click', () => cardFields.submit());
-
+                .addEventListener('click', () => {
+                    instance.triggerEvent('paypalSubmitClicked');
+                    cardFields
+                        .submit()
+                        .catch(err => {
+                            instance.triggerEvent('paypalError', { message: err });
+                        });
+                });
         }
 
         // Déclenchement de l'événement après l'initialisation des boutons
@@ -105,6 +105,11 @@ class PaypalCustom {
             };
             document.head.appendChild(script);
         });
+    }
+
+    addAtribute = (field_name, value) => {
+        let instance = this;
+        instance.attributes[field_name] = value;
     }
 
 }

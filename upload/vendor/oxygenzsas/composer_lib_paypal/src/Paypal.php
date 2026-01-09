@@ -38,12 +38,11 @@ abstract class Paypal
     }
 
     // Crée une commande et renvoie la réponse en JSON.
-    public function createOrder($amount, $devise, $name, $adress_line_1, $adress_line_2, $admin_area_2, $admin_area_1, $postal_code, $country_code )
+    public function createOrder($amount, $devise, $name, $adress_line_1, $adress_line_2, $admin_area_2, $admin_area_1, $postal_code, $country_code, $isCardSave )
     {
         try {
             $accessToken = $this->getAccessToken();
 
-            // ✅ VERSION BACKEND 100% CORRECTE (AVEC TOKEN)
             $orderData = [
                 'intent' => 'CAPTURE',
                 'purchase_units' => [[
@@ -64,16 +63,17 @@ abstract class Paypal
                             "country_code"=> $country_code
                         ],
                         "attributes" => [
-                            "vault" => [
-                                "store_in_vault" => "ON_SUCCESS"
-                            ],
                             "verification" => [
-                                "method" => "SCA_ALWAYS"
+                                "method" => "SCA_WHEN_REQUIRED"
                             ]
                         ]
                     ]
                 ]
             ];
+
+            if($isCardSave === true) {
+                $orderData['payment_source']['card']['attributes']['vault'] =  ["store_in_vault" => "ON_SUCCESS"];
+            }
 
             $orderDataJson = json_encode($orderData);
 
@@ -96,23 +96,33 @@ abstract class Paypal
             $json = json_decode($response, true);
 
             Database::getInstance()->query(/** @lang SQL */'
-                INSERT INTO '.$this->table_name_paypal_transaction.' (type, paypal_order_id, status, amount, currency) 
-                VALUES (\'payment\', :paypal_order_id, :status, :amount, :currency)
+                INSERT INTO '.$this->table_name_paypal_transaction.' (type, paypal_order_id, status, amount, currency,billing_name, billing_adress_line_1, billing_adress_line_2, billing_admin_area_2, billing_admin_area_1, billing_postal_code, billing_country_code) 
+                VALUES (\'payment\', :paypal_order_id, :status, :amount, :currency, :billing_name, :billing_adress_line_1, :billing_adress_line_2, :billing_admin_area_2, :billing_admin_area_1, :billing_postal_code, :billing_country_code)
             ', [
                 ':paypal_order_id' =>  $json['id'],
                 ':status' => $json['status'],
                 ':amount' => $amount,
                 ':currency' => $devise,
+                ':billing_name' => $name ?? '',
+                ':billing_adress_line_1' => $adress_line_1 ?? '',
+                ':billing_adress_line_2' => $adress_line_2 ?? '',
+                ':billing_admin_area_1' => $admin_area_1 ?? '',
+                ':billing_admin_area_2' => $admin_area_2 ?? '',
+                ':billing_postal_code' => $postal_code ?? '',
+                ':billing_country_code' => $country_code ?? '',
             ]);
 
             $id_paypal_transaction = Database::getInstance()->getLastInsertId();
             $this->addLog($response, $id_paypal_transaction);
 
-            echo json_encode(['id' => $json['id']]);
+            $this->createOrderSuccess($response, $_POST['attributes']);
+
+            echo json_encode(['status' => $json['status'],'id' => $json['id']]);
 
         } catch (\Exception $e) {
+            $this->createOrderError($e, $_POST['attributes']);
             error_log($e->getMessage());
-            echo json_encode(['error' => $e->getMessage()]);
+            echo json_encode(['status' => 'error','error' => $e->getMessage()]);
         }
     }
 
@@ -269,12 +279,15 @@ abstract class Paypal
             ])->fetch(\PDO::FETCH_ASSOC);
             $this->addLog($response, $updated_transaction['id_paypal_transaction']);
 
+            $this->completeOrderSuccess($response, $_POST['attributes']);
+
             // Retourner la réponse à l'utilisateur
-            echo json_encode($json['purchase_units'][0]['payments']['captures'][0]['amount']);
+            echo json_encode([ 'status' => $json['status']]);
 
         } catch (\Exception $e) {
+            $this->completeOrderError($e, $_POST['attributes']);
             error_log($e->getMessage());
-            echo json_encode(['error' => $e->getMessage()]);
+            echo json_encode(['status' => 'error','error' => $e->getMessage()]);
         }
     }
 
@@ -417,7 +430,6 @@ abstract class Paypal
 
     public function initDatabase()
     {
-
         /** Init de la BDD */
         $db = Database::getInstance();
         $db->query(/** @lang SQL */'CREATE TABLE IF NOT EXISTS  '.$this->table_name_paypal_transaction.'  (
@@ -436,7 +448,14 @@ abstract class Paypal
             paypal_fee REAL ,
             currency TEXT,
             created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-            update_time DATETIME,
+            update_time DATETIME,           
+            billing_name TEXT,
+            billing_adress_line_1 TEXT,
+            billing_adress_line_2 TEXT,
+            billing_admin_area_1 TEXT,
+            billing_admin_area_2 TEXT,
+            billing_postal_code TEXT,
+            billing_country_code TEXT,
             CHECK (type IN (\'payment\', \'refund\'))
         );');
 
@@ -480,9 +499,13 @@ abstract class Paypal
         /** Simulation des routes */
         switch($_POST['action'] ?? null) {
             case 'create_order':
+                $this->beforeCreateOrder($_POST['attributes']);
+
                 $amount = $this->getAmountFromAttribute($_POST['attributes']);
                 $adress_facturation =  $this->getAdressFromAttribute($_POST['attributes']);
-                call_user_func_array(array($this, 'createOrder'), [$amount, $this->currency, $adress_facturation['name'], $adress_facturation['adress_line_1'], $adress_facturation['adress_line_2'], $adress_facturation['admin_area_2'], $adress_facturation['admin_area_1'], $adress_facturation['postal_code'], $adress_facturation['country_code'] ]);
+                $isCardSave = $this->isCardShouldBeSaved($_POST['attributes']);
+
+                call_user_func_array(array($this, 'createOrder'), [$amount, $this->currency, $adress_facturation['name'], $adress_facturation['adress_line_1'], $adress_facturation['adress_line_2'], $adress_facturation['admin_area_2'], $adress_facturation['admin_area_1'], $adress_facturation['postal_code'], $adress_facturation['country_code'], $isCardSave ]);
                 die();
                 /*
             case 'createOrderFromToken':
@@ -495,6 +518,7 @@ abstract class Paypal
                 die();
                 */
             case 'complete_order':
+                $this->beforeCompleteOrder($_POST['attributes']);
                 $this->completeOrder($_POST['order_id']);
                 die();
         }
@@ -550,4 +574,14 @@ abstract class Paypal
 
     /** doit retourner un tableau contenant l'adresse de facturation */
     abstract protected function getAdressFromAttribute(string $attribute) :array ;
+
+    abstract protected function beforeCreateOrder(string $attribute) :void;
+    abstract protected function createOrderSuccess($response, string $attribute) : void;
+    abstract protected function createOrderError($error, string $attribute) : void;
+
+    abstract protected function beforeCompleteOrder(string $attribute) :void;
+    abstract protected function completeOrderSuccess($response, string $attribute) : void;
+    abstract protected function completeOrderError($error, string $attribute) : void;
+
+    abstract protected function isCardShouldBeSaved(string $attribute) :bool;
 }
