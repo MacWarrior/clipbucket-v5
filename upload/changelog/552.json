@@ -1,6 +1,6 @@
 {
   "version":"5.5.2",
-  "revision":"187",
+  "revision":"196",
   "status":"stable",
   "detail":[
     {
@@ -35,6 +35,7 @@
         ,"Update FFI module warning"
         ,"Update required version notice"
         ,"Update video reconvertion (Thanks @McArrow !) <i>(#695)</i>"
+        ,"Update future PHP version check"
         ,"Fix code mode on page edition <i>(#595)</i>"
         ,"Fix email sending error catching <i>(#587)</i>"
         ,"Fix incorrect frontend URL <i>(#529)</i>"
@@ -169,6 +170,8 @@
         ,"Fix user channel infos display"
         ,"Fix possible JS on comment visual editor"
         ,"Fix search page title"
+        ,"Fix video display through SSE"
+        ,"Fix video view increment (Thanks @McArrow !) <i>(#695)</i>"
       ]
     },
     {
@@ -192,7 +195,7 @@
         ,"Fix URL issue when base_url config is not correctly set"
         ,"Fix typo <i>(#596)</i>"
         ,"Fix Nginx vhost <i>(#604)</i>"
-        ,"Fix possible SQL injection"
+        ,"Fix possible SQL injection (Thanks @quirmz !)"
         ,"Fix access to temp files"
         ,"Fix sessions"
         ,"Fix sub-directory links"
@@ -202,6 +205,8 @@
         ,"Fix possible phishing attack (Thanks @Takumi142857 !)"
         ,"Fix typo in email template"
         ,"Fix playlist item counter"
+        ,"Fix missing function"
+        ,"Fix possible duplicated default categories"
       ]
     },
     {
@@ -269,10 +274,10 @@
       "title": "External components",
       "description": [
         "Update psr/log to 3.0.2"
-        ,"Update filp/whoops to 2.18.3"
+        ,"Update filp/whoops to 2.18.4"
         ,"Update oxygenzsas/composer_lib_discord to 0.3.5"
-        ,"Update predis/predis to 3.0.1"
-        ,"Update phpmailer/phpmailer to 6.10.0"
+        ,"Update predis/predis to 3.3.0"
+        ,"Update phpmailer/phpmailer to 7.0.1"
         ,"Update psr/http-message to 1.1"
         ,"Update VideoJS to version 8.23.4"
         ,"Update summernote to version 0.9.1"

@@ -953,8 +953,9 @@ CREATE TABLE IF NOT EXISTS `{tbl_prefix}categories`
     `category_desc`    TEXT              NULL     DEFAULT NULL,
     `date_added`       DATETIME          NOT NULL DEFAULT CURRENT_TIMESTAMP,
     `category_thumb`   MEDIUMTEXT        NULL,
-    `is_default`        ENUM ('yes','no') NOT NULL DEFAULT 'no',
-    UNIQUE KEY (`category_name`,`id_category_type`)
+    `is_default`       BOOLEAN           DEFAULT NULL,
+    UNIQUE KEY (`category_name`,`id_category_type`),
+    UNIQUE KEY (`is_default`, `id_category_type`)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4
   COLLATE utf8mb4_unicode_520_ci;

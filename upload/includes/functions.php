@@ -3707,6 +3707,13 @@ function getSQLRequestsFromFile($file)
         return $requests;
 }
 
+
+//function used to display error
+function upload_error($error)
+{
+    echo json_encode(['error' => $error]);
+}
+
 include('functions_db.php');
 include('functions_filter.php');
 include('functions_player.php');

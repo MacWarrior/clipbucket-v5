@@ -1,3 +1,9 @@
+{if Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.2', '194')}
+    {assign var="valid_default" value='1'}
+{else}
+    {assign var="valid_default" value='yes'}
+{/if}
+
 <table class="table table-bordered" width="100%" border="0" align="left" cellpadding="0" cellspacing="0">
     <tr>
         <td width="20"><input type="checkbox" name="checkall" onclick="checkUncheckAll(this);"/></td>
@@ -23,17 +29,18 @@
             </td>
             <td>
                 {display_clean($category[list].category_name)}
-                <a id="thumbs_{$category[list].category_id}" class="label label-danger arrowed popoverButton" data-html="true" data-placement="top" data-toggle="popover" data-content="<img src='{CBvideo::getInstance()->get_category_thumb($category[list], $type)}' height='90' width='90'/>" href="javascript:void(0);">View Thumb</a>
+                <a id="thumbs_{$category[list].category_id}" class="label label-danger arrowed popoverButton" data-html="true" data-placement="top" data-toggle="popover" data-content="<img src='{CBvideo::getInstance()->get_category_thumb($category[list], $type)}' height='90' width='90'/>"
+                   href="javascript:void(0);">View Thumb</a>
             </td>
             <td>
-                <input name="category_order[{$category[list].category_id}]" type="text" id="order_{$category[list].category_id}" style="border:1px solid #999; padding:2px; width:30px" value="{$category[list].category_order}" size="5" maxlength="5" />
+                <input name="category_order[{$category[list].category_id}]" type="text" id="order_{$category[list].category_id}" style="border:1px solid #999; padding:2px; width:30px" value="{$category[list].category_order}" size="5" maxlength="5"/>
             </td>
             {if config('use_subs')==1}
                 <td>{display_clean($p_name)}</td>
             {/if}
             <td>{if $category[list].category_desc}{display_clean($category[list].category_desc)}{else}<em>N/A</em>{/if}</td>
             <td>
-                <input value="{$category[list].category_id}" {if $category[list].is_default=='yes'}checked disabled{/if} name="make_default" type="checkbox" class="ace ace-switch ace-switch-5"/>
+                <input value="{$category[list].category_id}" {if $category[list].is_default == $valid_default}checked disabled{/if} name="make_default" type="checkbox" class="ace ace-switch ace-switch-5"/>
                 <span class="lbl"></span></td>
             <td>
                 <div class="lead dropdown">
@@ -44,7 +51,7 @@
                         <li role="presentation">
                             <a role="menuitem" tabindex="-1" href="" onclick="addOrEdit('{$category[list].category_id}'); return false;">{lang code='edit'}</a>
                         </li>
-                        {if $category[list].is_default != "yes"}
+                        {if $category[list].is_default != $valid_default }
                             <li role="presentation">
                                 <a role="menuitem" tabindex="-1" href="?type={$type}&delete_category={$category[list].category_id}">{lang code="delete"}</a>
                             </li>

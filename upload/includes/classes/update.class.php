@@ -226,10 +226,8 @@ class Update
             if (!isset($changelog['revision'])) {
                 return false;
             }
-
             $this->webRevision = $changelog['revision'];
         }
-
         return $this->webRevision;
     }
 
@@ -830,32 +828,41 @@ class Update
     /**
      * @throws Exception
      */
-    public function CheckPHPVersion(): void
+    public function CheckPHPVersion()
     {
-        $filename = 'php_version.json';
-
-        if( config('enable_update_checker') == '1' ){
-            $php_version = $this->getDistantFile($filename);
-        }
-
-        if( empty($php_version) ){
-            $filepath_php_version = DirPath::get('changelog') . $filename;
-            $php_version = json_decode(file_get_contents($filepath_php_version), true);
-        }
-
-        if( empty($php_version) ){
+        $php_version = $this->getPHPCompatibility();
+        if (empty($php_version)) {
             return;
         }
 
         $php_web_version = System::getPHPVersionWeb();
         $php_cli_version = System::get_software_version('php_cli', false, null, true);
 
-        foreach($php_version as $version => $min_version){
-            if( $php_web_version < $min_version || $php_cli_version < $min_version ){
+        foreach ($php_version as $version => $min_version) {
+            if ($php_web_version < $min_version || $php_cli_version < $min_version) {
                 e(lang('warning_php_version', [$php_web_version, $version, $min_version]), 'w', false);
-                return;
+                return ['php_version'=>$php_web_version, 'version_update'=>preg_replace('/(\d)(\d)(\d)/','$1.$2.$3',$this->getWebVersion()), 'revision_update'=>$this->getWebRevision(), 'cb_version_min'=>$version];
             }
         }
+        return false;
+    }
+
+    /**
+     * @return array
+     */
+    public function getPHPCompatibility(): array
+    {
+        $filename = 'php_version.json';
+
+        if (config('enable_update_checker') == '1') {
+            $php_version = $this->getDistantFile($filename);
+        }
+
+        if (empty($php_version)) {
+            $filepath_php_version = DirPath::get('changelog') . $filename;
+            $php_version = json_decode(file_get_contents($filepath_php_version), true);
+        }
+        return $php_version;
     }
 
 }
