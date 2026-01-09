@@ -1,6 +1,6 @@
 <?php
 
-namespace V5_5_2;
+namespace V5_5_3;
 require_once \DirPath::get('classes') . DIRECTORY_SEPARATOR . 'migration' . DIRECTORY_SEPARATOR . 'migration.class.php';
 
 class MWIP extends \Migration
@@ -643,5 +643,9 @@ class MWIP extends \Migration
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_520_ci';
         self::query($sql);
 
+        self::generateTranslation('transactions', [
+            'fr'=>'Transactions',
+            'en'=>'Transactions'
+        ]);
     }
 }

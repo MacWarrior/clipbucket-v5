@@ -165,8 +165,3 @@ switch ($mode) {
         die();
 }
 
-//function used to display error
-function upload_error($error)
-{
-    echo json_encode(['error' => $error]);
-}

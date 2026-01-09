@@ -1,0 +1,13 @@
+{
+  "version":"5.5.3",
+  "revision":"1",
+  "status":"stable",
+  "detail":[
+    {
+      "title": "Plugins",
+      "description": [
+        "Update compatibility notice to 5.5.3"
+      ]
+    }
+  ]
+}
