@@ -5,7 +5,7 @@
 	Author: Oxygenz
     Author Website: https://clipbucket.oxygenz.fr
     Version: 1.0.1
-	ClipBucket Version: 5.5.2
+	ClipBucket Version: 5.5.3
 	Website: https://github.com/MacWarrior/clipbucket-v5/
 */
 
