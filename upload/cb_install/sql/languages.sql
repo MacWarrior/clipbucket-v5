@@ -1794,4 +1794,5 @@ VALUES ('ongoing_conversion'),
        ('only_visible_eligible'),
        ('email_is_not_valid'),
        ('membership_cant_be_configured_for_default_user_level'),
-       ('default_user_cant_have_membership');
+       ('default_user_cant_have_membership'),
+       ('transactions');
