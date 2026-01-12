@@ -1,8 +1,14 @@
 {
   "version":"5.5.3",
-  "revision":"1",
+  "revision":"2",
   "status":"stable",
   "detail":[
+    {
+      "title": "Back office",
+      "description": [
+        "Implement email alias allow option"
+      ]
+    },
     {
       "title": "Plugins",
       "description": [

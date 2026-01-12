@@ -332,6 +332,7 @@ INSERT INTO `{tbl_prefix}config` (`configid`, `name`, `value`) VALUES
     (NULL, 'collections_enable_fullwidth', 'yes'),
     (NULL, 'collection_enable_fullwidth', 'yes'),
     (NULL, 'enable_user_profil_censor', 'no'),
+    (NULL, 'enable_allow_alias_email', 'yes'),
     (NULL, 'enable_favorite_icon', 'yes');
 
 
