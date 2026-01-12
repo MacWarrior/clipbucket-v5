@@ -1,9 +1,9 @@
 <?php
 
-namespace V5_5_2;
+namespace V5_5_3;
 require_once \DirPath::get('classes') . DIRECTORY_SEPARATOR . 'migration' . DIRECTORY_SEPARATOR . 'migration.class.php';
 
-class MWIP extends \Migration
+class M00002 extends \Migration
 {
     /**
      * @throws \Exception
@@ -26,6 +26,5 @@ class MWIP extends \Migration
             'fr'=>'Les alias d’emails ne sont pas autorisés',
             'en'=>'Emails alias aren\'t allowed'
         ]);
-
     }
 }
