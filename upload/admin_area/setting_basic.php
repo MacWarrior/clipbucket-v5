@@ -170,6 +170,7 @@ if (isset($_POST['update'])) {
         , 'enable_360_video'
         , 'chromecast'
         , 'player_thumbnails'
+        , 'enable_allow_alias_email'
     ];
 
     $config_booleans_to_refactor = [
@@ -441,7 +442,8 @@ if (isset($_POST['update'])) {
         'enable_multi_factor_authentification',
         'videos_enable_fullwidth',
         'collections_enable_fullwidth',
-        'collection_enable_fullwidth'
+        'collection_enable_fullwidth',
+        'enable_allow_alias_email'
     ];
 
     //Numeric Array
