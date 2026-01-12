@@ -1741,4 +1741,7 @@ VALUES ('ongoing_conversion'),
        ('video_is_already_waiting'),
        ('embed_player_disabled'),
        ('restrict_content_login'),
-       ('confirmation_upgrade_core_php_version_require');
+       ('confirmation_upgrade_core_php_version_require'),
+       ('option_enable_allow_alias_email'),
+       ('option_enable_allow_alias_email_hint'),
+       ('error_alias_email_not_allowed');
