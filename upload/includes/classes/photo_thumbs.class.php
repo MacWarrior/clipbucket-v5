@@ -313,13 +313,12 @@ class PhotoThumbs
         }
         foreach (self::$resolution_setting as $resolution_key => $res) {
             if ($resolution_key == 'original') {
-                continue;
+                $new_thumb_path = $original_photo_path;
             } else {
                 $width = $res['width'] ;
+                $new_thumb_path = $thumb_photo_directory . self::getThumbPath($photo['file_directory'], $photo['filename'], $width, $ext, Update::getInstance()->getCurrentCoreVersion());
+                PhotoThumbs::CreateThumb($original_photo_path, $new_thumb_path, $width, $ext, $original_sizes);
             }
-            $new_thumb_path = $thumb_photo_directory . self::getThumbPath($photo['file_directory'], $photo['filename'], $width, $ext, Update::getInstance()->getCurrentCoreVersion());
-
-            PhotoThumbs::CreateThumb($original_photo_path, $new_thumb_path, $width, $ext, $original_sizes);
             if (file_exists($new_thumb_path)) {
                 //watermark
                 if ($res['should_watermark'] && config('watermark_photo')) {
@@ -333,7 +332,7 @@ class PhotoThumbs
                     'is_original_size'
                 ], [
                     $photo['photo_id'],
-                    $res['width'] ?? null,
+                    $res['width'] ?? 0,
                     $ext,
                     Update::getInstance()->getCurrentCoreVersion(),
                     (int)($resolution_key == 'original')
