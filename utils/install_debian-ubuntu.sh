@@ -151,9 +151,10 @@ case ${OS} in
         echo " - 8.2"
         echo " - 8.3"
         echo " - 8.4"
+        echo " - 8.5"
         read -p "Which PHP version do you want to use ? [8.0] " READ_PHP_VERSION
         case ${READ_PHP_VERSION} in
-            "8.0"|"8.1"|"8.2"|"8.3"|"8.4"|*)
+            "8.0"|"8.1"|"8.2"|"8.3"|"8.4"|"8.5"|*)
                 echo ""
                 echo -ne "Configuring PHP ${READ_PHP_VERSION} repo..."
                 apt install apt-transport-https ca-certificates curl wget gnupg2 --yes > /dev/null 2>&1
@@ -175,9 +176,10 @@ case ${OS} in
         echo " - 8.2"
         echo " - 8.3"
         echo " - 8.4"
+        echo " - 8.5"
         read -p "Which PHP version do you want to use ? [8.0] " READ_PHP_VERSION
         case ${READ_PHP_VERSION} in
-            "8.0"|"8.1"|"8.2"|"8.3"|"8.4"|*)
+            "8.0"|"8.1"|"8.2"|"8.3"|"8.4"|"8.5"|*)
                 echo ""
                 echo -ne "Configuring PHP ${READ_PHP_VERSION} repo..."
                 apt install apt-transport-https ca-certificates curl wget gnupg2 --yes > /dev/null 2>&1
@@ -197,9 +199,10 @@ case ${OS} in
         echo " - 8.2 [Default]"
         echo " - 8.3"
         echo " - 8.4"
+        echo " - 8.5"
         read -p "Which PHP version do you want to use ? [8.2] " READ_PHP_VERSION
         case ${READ_PHP_VERSION} in
-            "8.3"|"8.4")
+            "8.3"|"8.4"|"8.5")
                 echo ""
                 echo -ne "Configuring PHP ${READ_PHP_VERSION} repo..."
                 apt install apt-transport-https ca-certificates curl wget gnupg2 --yes > /dev/null 2>&1
