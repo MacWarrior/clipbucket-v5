@@ -170,6 +170,7 @@ if (isset($_POST['update'])) {
         , 'enable_360_video'
         , 'chromecast'
         , 'player_thumbnails'
+        , 'enable_allow_alias_email'
         , 'keep_ratio_photo'
     ];
 
@@ -443,6 +444,7 @@ if (isset($_POST['update'])) {
         'videos_enable_fullwidth',
         'collections_enable_fullwidth',
         'collection_enable_fullwidth',
+        'enable_allow_alias_email',
         'keep_ratio_photo',
         'ratio_photo'
     ];

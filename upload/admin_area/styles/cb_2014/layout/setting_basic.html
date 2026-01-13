@@ -1011,6 +1011,16 @@
                                 </div>
                             </div>
                             <hr/>
+                            <div class="row">
+                                <div class="col-md-8">
+                                    <label class="nowrap" for="pick_geo_country" title="IP Geolocalisation"><span class="fa fa-question-circle tips" title="Replace default country"></span> IP Geolocalisation</label>
+                                </div>
+                                <div class="col-md-4 row-size">
+                                    <input value="1" name="pick_geo_country" id="pick_geo_country" {if $row.pick_geo_country=='1'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+                                    <span class="lbl"></span>
+                                </div>
+                            </div>
+                            <hr/>
 
                         </div>
 
@@ -1026,17 +1036,17 @@
                             <hr/>
                             <div class="row">
                                 <div class="col-md-4">
-                                    <label class="nowrap" for="pick_geo_country" title="IP Geolocalisation"><span class="fa fa-question-circle tips" title="Replace default country"></span> IP Geolocalisation</label>
-                                </div>
-                                <div class="col-md-2 row-size">
-                                    <input value="1" name="pick_geo_country" id="pick_geo_country" {if $row.pick_geo_country=='1'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
-                                    <span class="lbl"></span>
-                                </div>
-                                <div class="col-md-4">
                                     <label class="nowrap" for="email_verification" title="Email verification">Email verification</label>
                                 </div>
                                 <div class="col-md-2 row-size">
                                     <input value="1" name="email_verification" id="email_verification" {if $row.email_verification=='1'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+                                    <span class="lbl"></span>
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="nowrap" for="enable_allow_alias_email" title="{lang code="option_enable_allow_alias_email"}"><span class="fa fa-question-circle tips" title="{lang code='option_enable_allow_alias_email_hint'}"></span>{lang code="option_enable_allow_alias_email"}</label>
+                                </div>
+                                <div class="col-md-2 row-size">
+                                    <input value="yes" name="enable_allow_alias_email" id="enable_allow_alias_email" {if $row.enable_allow_alias_email=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
                                     <span class="lbl"></span>
                                 </div>
                             </div>
