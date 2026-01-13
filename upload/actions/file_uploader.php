@@ -4,7 +4,7 @@ include('../includes/config.inc.php');
 
 require_once DirPath::get('classes') . 'sLog.php';
 
-if (!Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.2', '999')) {
+if (!Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '999')) {
     upload_error('Sorry, you cannot upload new videos until the application has been fully updated by an administrator');
     die();
 }

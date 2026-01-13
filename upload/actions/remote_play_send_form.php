@@ -2,7 +2,7 @@
 const THIS_PAGE = 'remote_play_send_form';
 require_once dirname(__FILE__, 2) . '/includes/config.inc.php';
 
-if (!Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.2', '999')) {
+if (!Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '999')) {
     sessionMessageHandler::add_message('Sorry, you cannot upload new videos until the application has been fully updated by an administrator', 'e', User::getInstance()->getDefaultHomepageFromUserLevel());
 }
 

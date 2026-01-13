@@ -4,7 +4,7 @@ const PARENT_PAGE = 'upload';
 require 'includes/config.inc.php';
 
 User::getInstance()->hasPermissionOrRedirect('allow_photo_upload', true);
-if (!Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.2', '999')) {
+if (!Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '999')) {
     sessionMessageHandler::add_message('Sorry, you cannot upload new photos until the application has been fully updated by an administrator', 'e', User::getInstance()->getDefaultHomepageFromUserLevel());
 }
 

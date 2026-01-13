@@ -30,7 +30,7 @@ if ($vdetails['userid'] != $userid) {
         $_POST['videoid'] = $vid;
         CBvideo::getInstance()->update_video();
         if (empty(errorhandler::getInstance()->get_error())) {
-            if (!Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.2', '999') && (!empty($_POST['default_thumb']) || !empty($_POST['default_poster']) || !empty($_POST['default_backdrop']))) {
+            if (!Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '999') && (!empty($_POST['default_thumb']) || !empty($_POST['default_poster']) || !empty($_POST['default_backdrop']))) {
                 e('Sorry, you cannot change default thumbnail until the application has been fully updated by an administrator');
             } else {
                 if (!empty($_POST['default_thumb'])) {

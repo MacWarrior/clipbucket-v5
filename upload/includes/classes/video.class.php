@@ -90,10 +90,10 @@ class Video
         if (!Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.2', '72')) {
             $this->fields[] = 'video_users';
         }
-        if (!Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.2', '999')) {
+        if (!Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '999')) {
             $this->fields[] = 'thumbs_version';
         }
-        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.2', '999')) {
+        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '999')) {
             $this->fields[] = 'default_thumbnail';
         }
 
@@ -742,7 +742,7 @@ class Video
             e(lang('missing_params'));
             return;
         }
-        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.2', '999')) {
+        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '999')) {
             if (!in_array($type, ['thumbnail', 'poster', 'backdrop']) ) {
                 if( System::isInDev() ){
                     e(lang('unknown_type', $type));
@@ -782,7 +782,7 @@ class Video
     public function resetDefaultPicture($video_id, string $type = 'auto'): void
     {
 
-        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.2', '999')) {
+        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '999')) {
             $allowed_array = [
                 'thumbnail',
                 'poster',
@@ -835,7 +835,7 @@ class Video
      */
     public function dropPictures(array $video_detail, string $type, bool $is_auto = null): void
     {
-        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.2', '999')) {
+        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '999')) {
             $allowed_array = ['thumbnail', 'poster', 'backdrop'];
             $results = VideoThumbs::getAll(['type' => $type, 'videoid' => $video_detail['videoid'], 'is_auto' => $is_auto, 'get_is_default'=>true]);
         } else {
@@ -852,7 +852,7 @@ class Video
         }
         if (!empty($results)) {
             foreach ($results as $result) {
-                if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.2', '999')) {
+                if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '999')) {
                     VideoThumbs::deleteVideoImage($result, false);
                 } else {
                     delete_video_thumb($video_detail, $result['num'], $type);
@@ -1497,7 +1497,7 @@ class CBvideo extends CBCategory
             , 'video_files', 'file_server_path', 'video_version', 'subscription_email'
         ];
 
-        if (!Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.2', '999')) {
+        if (!Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '999')) {
             $basic_fields[] = 'thumbs_version';
         }
 

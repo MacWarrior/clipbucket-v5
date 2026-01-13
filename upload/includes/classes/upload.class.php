@@ -183,7 +183,7 @@ class Upload
         $query_field[] = 'video_version';
         $query_val[] = Update::getInstance()->getCurrentCoreVersion();
 
-        if (!Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.2', '999')) {
+        if (!Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '999')) {
             //thumbs_version
             $query_field[] = 'thumbs_version';
             $query_val[] = Update::getInstance()->getCurrentCoreVersion();

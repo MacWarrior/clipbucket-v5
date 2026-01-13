@@ -467,7 +467,7 @@ class VideoThumbs
                 $this->ffmpeg_instance->log->writeLine('<div class="showHide"><p class="title glyphicon-chevron-right">Output : </p><p class="content">' . $return['output'] . '</p></div>', false, true);
             }
             if (file_exists($file_path)) {
-                if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.2', '999')) {
+                if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '999')) {
                     Clipbucket_db::getInstance()->insert(tbl(self::$tableNameThumb), [
                         'id_video_image',
                         'width',
@@ -514,7 +514,7 @@ class VideoThumbs
     {
         $this->ffmpeg_instance->log->newSection('Removing thumbnails');
         $this->ffmpeg_instance->log->writeLine(date('Y-m-d H:i:s') . ' - Deleting thumbs...');
-        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.2', '999')) {
+        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '999')) {
             $video_images = self::getAll([
                 'videoid' => $this->video['videoid'],
                 'type'    => 'thumbnail',
@@ -565,7 +565,7 @@ class VideoThumbs
                 //pattern must match :  /`file_name`-`size`-`num`.`extension`
                 preg_match('/\/\w*-(\w{1,16})-(\d{1,3})\.(\w{2,4})$/', $thumb, $files_info);
                 if (!empty($files_info)) {
-                    if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.2', '999')) {
+                    if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '999')) {
                         $id_video_image = self::getOne([
                             'videoid' => $this->video['videoid'],
                             'type'    => 'thumbnail',
@@ -697,7 +697,7 @@ class VideoThumbs
         }
 
 
-        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.2', '999')) {
+        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '999')) {
             $params = [
                 'videoid'        => $videoid,
                 'width'          => $width,
@@ -759,7 +759,7 @@ class VideoThumbs
         }
         $thumbs_files = [];
         if (empty($thumbs)) {
-            if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.2', '999') ) {
+            if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '999') ) {
                 $all_thumbs = self::getAllThumbs(['videoid' => $videoid, 'type' => $type, 'is_auto' => true]);
             } else {
                 $all_thumbs = Clipbucket_db::getInstance()->_select('select * from ' . tbl('video_thumbs') . ' where videoid = ' . mysql_clean($videoid) . ' and type = \'' . mysql_clean($type) . '\' and type != \'custom\'');
@@ -770,7 +770,7 @@ class VideoThumbs
                 $instance->ffmpeg_instance->prepare();
                 $instance->importOldThumbFromDisk();
                 $params['limit'] = '1';
-                if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.2', '999')) {
+                if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '999')) {
                     $thumbs = self::getAllThumbs($params);
                 } else {
                     $thumbs = Clipbucket_db::getInstance()->_select($sql);
@@ -782,7 +782,7 @@ class VideoThumbs
                 }
             }
             //try to get olds thumbs with only width (only after migrations)
-            if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.2', '999')) {
+            if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '999')) {
                 $params_for_old = $params;
                 unset($params_for_old['height']);
                 $params_for_old['version'] = '5.5.2';
@@ -1208,7 +1208,7 @@ class VideoThumbs
 
     public static function getAllThumbCountByVideoId($videoid)
     {
-        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.2', '999')) {
+        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '999')) {
             return VideoThumbs::getAllThumbs(['count'=>true, 'videoid'=>$videoid]);
         } else {
             $resVideo = Clipbucket_db::getInstance()->select(tbl('video') . ' AS V INNER JOIN ' . tbl('video_thumbs') . ' AS VT ON VT.videoid = V.videoid ', 'COUNT(V.videoid) as nb_thumbs', 'V.videoid = ' . mysql_clean($videoid));

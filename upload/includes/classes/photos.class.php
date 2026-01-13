@@ -44,7 +44,7 @@ class Photo
             ,'owner_ip'
         ];
 
-        if (!Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.2', '999')) {
+        if (!Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '999')) {
             $this->fields[] = 'photo_details';
         }
         if( Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.0', '305') ){
@@ -539,7 +539,7 @@ class Photo
     public function getUsage($id, string $file_name, string $file_directory, string $extension): int
     {
         $total = 0;
-        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.2', '999')) {
+        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '999')) {
             $photos_thumbs = PhotoThumbs::getAllThumbs(['photo_id' => $id]);
             if (!empty($photos_thumbs)) {
                 foreach ($photos_thumbs as $photos_thumb) {

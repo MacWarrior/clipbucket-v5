@@ -136,7 +136,7 @@ class PhotoThumbs
      */
     public static function getThumbFile(int $photo_id, int|string $width = 150, string $return_type = 'url'): array|string
     {
-        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.2', '999') && $width != 'original') {
+        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '999') && $width != 'original') {
             $thumb_photo_directory_path = DirPath::get('thumbs') . 'photo' . DIRECTORY_SEPARATOR;
         } else {
             $thumb_photo_directory_path = DirPath::get('photos');
@@ -144,7 +144,7 @@ class PhotoThumbs
         switch ($return_type) {
             default:
             case 'url':
-                if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.2', '999') && $width != 'original') {
+                if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '999') && $width != 'original') {
                     $thumb_photo_directory = DirPath::getUrl('thumbs') . 'photo' . DIRECTORY_SEPARATOR;
                 } else {
                     $thumb_photo_directory = DirPath::getUrl('photos');
@@ -155,7 +155,7 @@ class PhotoThumbs
                 break;
         }
 
-        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.2', '999')) {
+        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '999')) {
             $params = [
                 'photo_id'       => $photo_id,
                 'width'          => $width,
