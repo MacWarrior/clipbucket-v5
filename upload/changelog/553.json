@@ -1,6 +1,6 @@
 {
   "version":"5.5.3",
-  "revision":"3",
+  "revision":"4",
   "status":"stable",
   "detail":[
     {
@@ -13,12 +13,19 @@
       "title": "Miscellaneous",
       "description": [
         "Update compatibility to PHP 8.5.X"
+        ,"Drop support for PHP 8.0"
       ]
     },
     {
       "title": "Plugins",
       "description": [
         "Update compatibility notice to 5.5.3"
+      ]
+    },
+    {
+      "title": "External components",
+      "description": [
+        "Update phpmailer/phpmailer to 7.0.2"
       ]
     }
   ]
