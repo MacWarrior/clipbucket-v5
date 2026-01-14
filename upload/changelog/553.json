@@ -1,6 +1,6 @@
 {
   "version":"5.5.3",
-  "revision":"4",
+  "revision":"5",
   "status":"stable",
   "detail":[
     {
@@ -26,6 +26,7 @@
       "title": "External components",
       "description": [
         "Update phpmailer/phpmailer to 7.0.2"
+        ,"Update VideoJS to version 8.23.6"
       ]
     }
   ]
