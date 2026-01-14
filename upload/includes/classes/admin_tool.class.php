@@ -408,19 +408,28 @@ class AdminTool
             $this->tasks = [];
 
             $this->addLog(lang('loading_file_list'));
-
+            $photo_extension = ['jpg', 'jpeg', 'png'];
+            $video_extension = explode(',', config('allowed_video_types'));
             //LOGS
-            $logs = new GlobIterator(DirPath::get('logs') . '[0-9]*' . DIRECTORY_SEPARATOR . '[0-9]*' . DIRECTORY_SEPARATOR . '[0-9]*' . DIRECTORY_SEPARATOR . '*.log');
-            foreach ($logs as $log) {
-                $vid_file_name = basename($log, '.log');
-                $insert_values = [
-                    'type'  => 'log',
-                    'data'  => DirPath::getFromProjectRoot($log->getPathname()),
-                    'video' => $vid_file_name
-                ];
-                $this->insertTaskData([$insert_values]);
+            $logs_path= [
+                '[0-9]*' . DIRECTORY_SEPARATOR . '[0-9]*' . DIRECTORY_SEPARATOR . '[0-9]*' . DIRECTORY_SEPARATOR,
+                '[0-9]*' . DIRECTORY_SEPARATOR . '[0-9]*' . DIRECTORY_SEPARATOR,
+                '[0-9]*' . DIRECTORY_SEPARATOR,
+                ''
+            ];
+            foreach ($logs_path as $path) {
+                $logs = new GlobIterator(DirPath::get('logs') . $path . '*.log');
+                foreach ($logs as $log) {
+                    $vid_file_name = basename($log, '.log');
+                    $insert_values = [
+                        'type'  => 'log',
+                        'data'  => DirPath::getFromProjectRoot($log->getPathname()),
+                        'video' => $vid_file_name
+                    ];
+                    $this->insertTaskData([$insert_values]);
+                }
+                unset($logs);
             }
-            unset($logs);
 
             //VIDEO MP4
             $videos_mp4 = new GlobIterator(DirPath::get('videos') . '[0-9]*' . DIRECTORY_SEPARATOR . '[0-9]*' . DIRECTORY_SEPARATOR . '[0-9]*' . DIRECTORY_SEPARATOR . '*.mp4');
@@ -464,19 +473,33 @@ class AdminTool
             }
             unset($videos_hls);
 
-            //OLD THUMBS
-            $old_thumbs = new GlobIterator(DirPath::get('thumbs') . '[0-9]*' . DIRECTORY_SEPARATOR . '[0-9]*' . DIRECTORY_SEPARATOR . '[0-9]*' . DIRECTORY_SEPARATOR . '*.jpg');
-            foreach ($old_thumbs as $thumb) {
-                $vid_file_name = explode('-', basename($thumb, '.jpg'))[0];
-                $insert_values = [
-                    'type'  => 'old_thumb',
-                    'data'  => DirPath::getFromProjectRoot($thumb->getPathname()),
-                    'video' => $vid_file_name
-                ];
-                $this->insertTaskData([$insert_values]);
-            }
-            unset($old_thumbs);
+            foreach ($photo_extension as $extension) {
+                //OLD THUMBS
+                $old_thumbs = new GlobIterator(DirPath::get('thumbs') . '[0-9]*' . DIRECTORY_SEPARATOR . '[0-9]*' . DIRECTORY_SEPARATOR . '[0-9]*' . DIRECTORY_SEPARATOR . '*.'.$extension);
+                foreach ($old_thumbs as $thumb) {
+                    $vid_file_name = explode('-', basename($thumb, '.'.$extension))[0];
+                    $insert_values = [
+                        'type'  => 'old_thumb',
+                        'data'  => DirPath::getFromProjectRoot($thumb->getPathname()),
+                        'video' => $vid_file_name
+                    ];
+                    $this->insertTaskData([$insert_values]);
+                }
+                unset($old_thumbs);
 
+                //THUMBS
+                $photo_thumbs = new GlobIterator(DirPath::get('thumbs') . 'photo' . DIRECTORY_SEPARATOR . '[0-9]*' . DIRECTORY_SEPARATOR . '[0-9]*' . DIRECTORY_SEPARATOR . '[0-9]*' . DIRECTORY_SEPARATOR .  '[0-9]*' . DIRECTORY_SEPARATOR . '*.'.$extension);
+                foreach ($photo_thumbs as $thumb) {
+                    $vid_file_name = explode('-', basename($thumb, '.'.$extension))[0];
+                    $insert_values = [
+                        'type'  => 'photo_thumb',
+                        'data'  => DirPath::getFromProjectRoot($thumb->getPathname()),
+                        'photo' => $vid_file_name
+                    ];
+                    $this->insertTaskData([$insert_values]);
+                }
+                unset($photo_thumbs);
+            }
             //THUMBS
             $thumbs = new GlobIterator(DirPath::get('thumbs') . 'video' . DIRECTORY_SEPARATOR . '[0-9]*' . DIRECTORY_SEPARATOR . '[0-9]*' . DIRECTORY_SEPARATOR . '[0-9]*' . DIRECTORY_SEPARATOR .  '[0-9]*' . DIRECTORY_SEPARATOR . '*.jpg');
             foreach ($thumbs as $thumb) {
@@ -489,18 +512,6 @@ class AdminTool
                 $this->insertTaskData([$insert_values]);
             }
             unset($thumbs);
-            //THUMBS
-            $photo_thumbs = new GlobIterator(DirPath::get('thumbs') . 'photo' . DIRECTORY_SEPARATOR . '[0-9]*' . DIRECTORY_SEPARATOR . '[0-9]*' . DIRECTORY_SEPARATOR . '[0-9]*' . DIRECTORY_SEPARATOR .  '[0-9]*' . DIRECTORY_SEPARATOR . '*.jpg');
-            foreach ($photo_thumbs as $thumb) {
-                $vid_file_name = explode('-', basename($thumb, '.jpg'))[0];
-                $insert_values = [
-                    'type'  => 'photo_thumb',
-                    'data'  => DirPath::getFromProjectRoot($thumb->getPathname()),
-                    'video' => $vid_file_name
-                ];
-                $this->insertTaskData([$insert_values]);
-            }
-            unset($photo_thumbs);
 
             //SUBTITLES
             $subtitles = new GlobIterator(DirPath::get('subtitles') . '[0-9]*' . DIRECTORY_SEPARATOR . '[0-9]*' . DIRECTORY_SEPARATOR . '[0-9]*' . DIRECTORY_SEPARATOR . '*.srt');
@@ -587,6 +598,49 @@ class AdminTool
                 $this->insertTaskData([$insert_values]);
             }
             unset($video_parts);
+
+            //TEMP VIDEO
+            foreach ($video_extension as $extension) {
+                $temp_videos = new GlobIterator(DirPath::get('temp') . '*.'.$extension);
+                foreach ($temp_videos as $video_part) {
+                    $insert_values = [
+                        'type' => 'video_temp',
+                        'data' => DirPath::getFromProjectRoot($video_part->getPathname()),
+                        'part' => basename($video_part)
+                    ];
+                    $this->insertTaskData([$insert_values]);
+                }
+                unset($video_extension);
+            }
+
+            //CONVERSION QUEUE VIDEO HLS
+            $videos_hls = new GlobIterator(DirPath::get('conversion_queue') . '*', FilesystemIterator::KEY_AS_FILENAME);
+            foreach ($videos_hls as $video) {
+                if ($video->isDir()) {
+                    $vid_file_name = basename($video);
+                    $insert_values = [
+                        'type'  => 'convert_video_hls',
+                        'data'  => DirPath::getFromProjectRoot($video->getPathname()),
+                        'video' => $vid_file_name
+                    ];
+                    $this->insertTaskData([$insert_values]);
+                }
+            }
+            unset($videos_hls);
+            //CONVERSION QUEUE VIDEO MP4
+            $videos_mp4 = new GlobIterator(DirPath::get('conversion_queue') . '*.mp4');
+
+            foreach ($videos_mp4 as $video) {
+                $vid_file_name = explode('-', basename($video, '.mp4'))[0];
+                $insert_values = [
+                    'type'  => 'convert_video_mp4',
+                    'data'  => DirPath::getFromProjectRoot($video->getPathname()),
+                    'video' => $vid_file_name
+                ];
+                $this->insertTaskData([$insert_values]);
+            }
+            unset($videos_mp4);
+
         }
 
         $this->addLog(lang('processing_x_files', $this->tasks_total ?? 0));

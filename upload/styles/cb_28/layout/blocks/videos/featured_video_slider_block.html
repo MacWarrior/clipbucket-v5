@@ -5,7 +5,7 @@
         </span>
     {/if}
     <span class="image-container {if Video::getInstance()->isToBlur($video['videoid'])}blured{/if}">
-        <img src="{VideoThumbs::getDefaultThumbFile($video, 632, 395)}" {Video::get_thumbs_preview($video, '632x395')}/>
+        <img src="{VideoThumbs::getDefaultThumbFile($video['videoid'], 512, 320)}" {Video::get_thumbs_preview($video, '512x320')}/>
     </span>
     {ANCHOR place='in_video_thumb' data=$video}
     <div class="movie-details">

@@ -1543,14 +1543,24 @@ function clean_orphan_files($file): string
         $redis_key = 'clean_orphan_files';
         $tab_redis = CacheRedis::getInstance()->get($redis_key) ?: [];
     }
+    $where_video_status = '';
+    if (in_array($file['type'], ['convert_video_hls', 'convert_video_mp4'])) {
+        $where_video_status = " AND status = 'Successful'";
+    } elseif ($file['type'] === 'video_temp') {
+        $where_video_status = " AND status IN ('Successful','Failed')";
+    }
+
     switch ($file['type']) {
+        case 'convert_video_hls':
+        case 'convert_video_mp4':
+        case 'video_temp':
         case 'video_mp4':
         case 'video_hls':
         case 'thumb':
         case 'video_thumb':
         case 'subtitle':
         case 'log':
-            $query = 'SELECT file_name FROM ' . tbl('video') . ' WHERE file_name = \'' . mysql_clean($file['video']) . '\'';
+            $query = 'SELECT file_name FROM ' . tbl('video') . ' WHERE file_name = \'' . mysql_clean($file['video']) . '\' ' . $where_video_status;
             $filename = $file['video'];
             if (config('cache_enable') == 'yes') {
                 $redis_type_key = 'video';
@@ -1636,6 +1646,7 @@ function clean_orphan_files($file): string
             $stop_path = DirPath::get('logs');
             break;
 
+        case 'convert_video_mp4':
         case 'video_mp4':
             unlink($full_path);
             $stop_path = DirPath::get('videos');
@@ -1648,6 +1659,14 @@ function clean_orphan_files($file): string
             }
             rmdir($full_path);
             $stop_path = DirPath::get('videos');
+            break;
+        case 'convert_video_hls':
+            $files_hls = array_diff(scandir($full_path), ['.', '..']);
+            foreach ($files_hls as $file_hls) {
+                unlink($full_path . DIRECTORY_SEPARATOR . $file_hls);
+            }
+            rmdir($full_path);
+            $stop_path = DirPath::get('conversion_queue');
             break;
 
         case 'old_thumb':

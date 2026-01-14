@@ -51,12 +51,12 @@ if ($vdetails['userid'] != $userid) {
     assign('vidthumbs', VideoThumbs::getAllThumbFiles($vid, '168','105',type: 'thumbnail', is_auto: true, return_with_num: true) ?: [VideoThumbs::getDefaultMissingThumb(return_with_num: true)]);
     assign('vidthumbs_custom', VideoThumbs::getAllThumbFiles($vid, '168','105',type: 'thumbnail', is_auto: false, return_with_num: true));
     if( config('enable_video_poster') == 'yes' ) {
-        assign('vidthumbs_poster', VideoThumbs::getAllThumbFiles($vid, 'original','original',type: 'poster', return_with_num: true));
+        assign('vidthumbs_poster', VideoThumbs::getAllThumbFiles($vid, 90,140,type: 'poster', return_with_num: true));
 
     }
 
     if( config('enable_video_backdrop') == 'yes' ) {
-        assign('vidthumbs_backdrop', VideoThumbs::getAllThumbFiles($vid, 'original','original',type: 'backdrop', return_with_num: true));
+        assign('vidthumbs_backdrop', VideoThumbs::getAllThumbFiles($vid, 168,105,type: 'backdrop', return_with_num: true));
     }
 
 }

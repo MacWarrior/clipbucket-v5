@@ -749,7 +749,7 @@ class VideoThumbs
                     $conditions_old[] = 'resolution = \'' . mysql_clean($width) . 'x' . mysql_clean($height) . '\'';
                 }
             }
-            $sql = 'SELECT *, CASE WHEN num = ' . mysql_clean($video[$default_field]) . ' THEN 1 ELSE 0 END AS is_default, CASE WHEN type != \'custom\' THEN 1 ELSE 0 END AS is_auto
+            $sql = 'SELECT *, CASE WHEN num = ' . mysql_clean($video[$default_field] ?? 0) . ' THEN 1 ELSE 0 END AS is_default, CASE WHEN type != \'custom\' THEN 1 ELSE 0 END AS is_auto
             FROM ' . tbl('video_thumbs') . ' 
             WHERE videoid = ' . mysql_clean($videoid) . ' 
             AND type IN ( ' . $old_type . ' ) '
@@ -959,12 +959,13 @@ class VideoThumbs
      */
     public static function uploadThumb(array $video, $file, $file_array_key, string $type = 'thumbnail', bool $is_auto = false): void
     {
+        $temp_directory = DirPath::get('temp' );
         $thumb_video_directory = DirPath::get('thumbs' ) . 'video' . DIRECTORY_SEPARATOR;
         if (!empty($file['name'])) {
             $ext_original = getExt($file['name'][$file_array_key]);
             $ext_destination = 'jpg';
             $num = self::getLastNum($video['videoid'], $type, $is_auto) + 1;
-            $temp_file_path = $thumb_video_directory . $video['file_name'] . '-' . $num . '-' . $type . '.' . $ext_destination;
+            $temp_file_path = $temp_directory . $video['file_name'] . '-' . $num . '-' . $type . '.' . $ext_destination;
 
             if (self::ValidateImage($file['tmp_name'][$file_array_key], $ext_original)) {
                 $id_video_image = Clipbucket_db::getInstance()->insert(tbl(self::$tableName), [

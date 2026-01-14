@@ -46,8 +46,12 @@ if (myquery::getInstance()->video_exists($video)) {
 
     # Uploading Thumbs
     if (isset($_POST['upload_thumbs'])) {
-//        Upload::getInstance()->upload_thumbs($data['file_name'], $_FILES['vid_thumb'], $data['file_directory'], $_POST['db_type']);
-        VideoThumbs::uploadThumbs($data['videoid'], $_FILES['vid_thumb'], $type, false);
+
+        if (!Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '999')) {
+            e('Sorry, you cannot perform this action until the application has been fully updated by an administrator');
+        } else {
+            VideoThumbs::uploadThumbs($data['videoid'], $_FILES['vid_thumb'], $type, false);
+        }
     }
     switch ($type) {
         case 'thumbnail':
