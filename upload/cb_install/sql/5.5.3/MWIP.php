@@ -288,6 +288,11 @@ class MWIP extends \Migration
             'en'=>'Ratio of photos thumbs'
         ]);
 
+        self::generateTranslation('show_original', [
+            'fr'=>'Afficher l\'original',
+            'en'=>'Show original'
+        ]);
+
         self::generateConfig('ratio_photo', '1.7777');
     }
 

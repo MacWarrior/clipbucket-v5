@@ -16,7 +16,7 @@
     <form action="{DirPath::getUrl('admin_area')}upload_thumbs.php?video={$data.videoid}" method="post" enctype="multipart/form-data" id="thumb_list">
         {include file="$style_dir/blocks/thumb_list.html"}
     </form>
-    {if Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', 999)}
+
         <hr>
         <form action="{DirPath::getUrl('admin_area')}upload_thumbs.php?video={$data.videoid}&type={$type}" method="post" enctype="multipart/form-data" name="form1">
             <h4>
@@ -31,9 +31,10 @@
             <input name="vid_thumb[]" type="file"/>
             <input name="db_type" type="hidden" value="{$db_type}">
             <br/>
-            <input type="submit" name="upload_thumbs" value="{lang code='upload'}" class="btn btn-primary btn-sm"/>
+            <input type="submit" name="upload_thumbs" value="{lang code='upload'}" class="btn btn-primary btn-sm"
+                {if !Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', 999)} disabled="disabled" title="Sorry, you cannot perform this action until the application has been fully updated by an administrator" {/if}
+            />
         </form>
-    {/if}
 {/if}
 
 <script>

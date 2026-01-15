@@ -28,7 +28,9 @@
 
                 <div class="clearfix photo-view">
                     <div id="gallery">
-                        <i id="enlarge" class="fa fa-expand fa-2x" style="float:right;cursor:pointer;" data-toggle="modal" data-target="#myModal"></i>
+                        {if Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '999')}
+                            <i id="enlarge" class="fa fa-expand fa-2x" style="float:right;cursor:pointer;" data-toggle="modal" data-target="#myModal" title="{lang('show_original')}"></i>
+                        {/if}
                         <div class="image-holder">
                             <div class="inner-holder">
                                 {if empty($photo.collection_id)}

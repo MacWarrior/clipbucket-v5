@@ -50,8 +50,12 @@ if (isset($_GET['deactivate'])) {
 
 //Delete
 if (isset($_GET['delete_photo'])) {
-    $id = mysql_clean($_GET['delete_photo']);
-    CBPhotos::getInstance()->delete_photo($id);
+    if (!Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '999')) {
+        e('Sorry, you cannot delete photos until the application has been fully updated by an administrator');
+    } else {
+        $id = mysql_clean($_GET['delete_photo']);
+        CBPhotos::getInstance()->delete_photo($id);
+    }
 }
 
 //Multi-Active
@@ -97,11 +101,15 @@ if (isset($_POST['make_unfeatured_selected']) && is_array($_POST['check_photo'])
 //Multi-delete
 if (isset($_POST['delete_selected']) && is_array($_POST['check_photo'])) {
     $total = count($_POST['check_photo']);
-    for ($i = 0; $i < $total; $i++) {
-        CBPhotos::getInstance()->delete_photo($_POST['check_photo'][$i]);
+    if (!Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '999')) {
+        e('Sorry, you cannot delete photos until the application has been fully updated by an administrator');
+    } else {
+        for ($i = 0; $i < $total; $i++) {
+            CBPhotos::getInstance()->delete_photo($_POST['check_photo'][$i]);
+        }
+        errorhandler::getInstance()->flush();
+        e($total . ' photos has been deleted successfully', 'm');
     }
-    errorhandler::getInstance()->flush();
-    e($total . ' photos has been deleted successfully', 'm');
 }
 
 if (isset($_POST['move_to_selected']) && is_array($_POST['check_photo'])) {
@@ -123,7 +131,7 @@ if (isset($_GET['search'])) {
     $params['extension'] = $_GET['extension'] ?? false;
     $params['active'] = $_GET['active'] ?? false;
 
-    switch($_GET['order']) {
+    switch ($_GET['order']) {
         default:
             break;
 
@@ -135,7 +143,7 @@ if (isset($_GET['search'])) {
     }
 }
 
-if( !empty($params['order']) ){
+if (!empty($params['order'])) {
     $params['order'] = 'photos.date_added DESC';
 }
 
@@ -148,15 +156,17 @@ $params['limit'] = $get_limit;
 $photos = Photo::getInstance()->getAll($params);
 assign('photos', $photos);
 
-if( empty($photos) ){
+if (empty($photos)) {
     $total_rows = 0;
-} else if( count($photos) < config('admin_pages') && ($page == 1 || empty($page)) ){
-    $total_rows = count($photos);
 } else {
-    $params['count'] = true;
-    unset($params['limit']);
-    unset($params['order']);
-    $total_rows = Photo::getInstance()->getAll($params);
+    if (count($photos) < config('admin_pages') && ($page == 1 || empty($page))) {
+        $total_rows = count($photos);
+    } else {
+        $params['count'] = true;
+        unset($params['limit']);
+        unset($params['order']);
+        $total_rows = Photo::getInstance()->getAll($params);
+    }
 }
 
 $total_pages = count_pages($total_rows, config('admin_pages'));
