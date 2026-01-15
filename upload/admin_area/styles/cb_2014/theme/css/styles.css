@@ -1306,3 +1306,8 @@ textarea[disabled]{
     text-align: center;
     font-style: italic;
 }
+
+a[role="menuitem"].disabled {
+    opacity: .35; filter:Alpha(Opacity=35); background-image: none;
+    cursor: not-allowed !important;
+}

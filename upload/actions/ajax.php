@@ -807,7 +807,7 @@ if (!empty($mode)) {
 
         case 'photo_ajax':
             try {
-                if (!User::getInstance()->hasPermission('view_photo')) {
+                if (!User::getInstance()->hasPermission('view_photos')) {
                     throw new Exception(lang('insufficient_privileges'));
                 }
                 if (!empty($_POST['photo_pre']) && !empty($_POST['item'])) {

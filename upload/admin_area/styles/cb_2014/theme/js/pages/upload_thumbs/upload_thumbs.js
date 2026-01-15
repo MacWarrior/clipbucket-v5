@@ -12,9 +12,11 @@ function regenerateThumbs(videoid) {
             $('#auto_thumbs .tools-bottom').hide();
         },
         success: function (response) {
-            $('#thumb_list').html(response['template']);
             $('.page-content').prepend(response['msg']);
-            connectSSE();
+            if (response.success) {
+                $('#thumb_list').html(response['template']);
+                connectSSE();
+            }
             hideSpinner();
         }
     });

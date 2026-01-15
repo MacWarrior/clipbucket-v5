@@ -1,35 +1,39 @@
 {$msg}
 {if $data.title neq ""}
-<h3>{lang('manage_x', lang($translation_type)|lower)}</h3>
+    <h3>{lang('manage_x', lang($translation_type)|lower)}</h3>
     {if $type == 'thumbnail'}
         <div class="lead dropdown">
             <a class="btn btn-primary btn-xs dropdown-toggle pull-right" data-toggle="dropdown" href="">Actions <i class="caret"></i></a>
             <ul class="dropdown-menu pull-right" role="menu" aria-labelledby="dropdownMenu1">
-                <li role="presentation"><a role="menuitem" tabindex="-1" href="javascript:void(0);" onClick="regenerateThumbs({$data.videoid});">Regenerate thumbnails</a></li>
+
+                <li role="presentation"><a role="menuitem" tabindex="-1"
+                                           href="javascript:void(0);" {if Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', 999)} onClick="regenerateThumbs({$data.videoid});" {else} class="disabled" title="Sorry, you cannot perform this action until the application has been fully updated by an administrator" {/if}>
+                        Regenerate thumbnails</a></li>
                 <li role="presentation"><a role="menuitem" tabindex="-1" href="{DirPath::getUrl('admin_area')}edit_video.php?video={$data.videoid}">Back to edit details</a></li>
             </ul>
         </div>
     {/if}
-<form action="{DirPath::getUrl('admin_area')}upload_thumbs.php?video={$data.videoid}" method="post" enctype="multipart/form-data" id="thumb_list">
-    {include file="$style_dir/blocks/thumb_list.html"}
-</form>
-
-<hr>
-<form action="{DirPath::getUrl('admin_area')}upload_thumbs.php?video={$data.videoid}&type={$type}" method="post" enctype="multipart/form-data" name="form1">
-    <h4>
-        {if $type == 'thumbnail'}
-            {lang code="upload_custom_thumbnail"}
-        {elseif $type == 'poster'}
-            {lang code="upload_poster"}
-        {else}
-            {lang code="upload_backdrop"}
-        {/if}
-    </h4>
-    <input name="vid_thumb[]" type="file"/>
-    <input name="db_type" type="hidden" value="{$db_type}">
-    <br/>
-    <input type="submit" name="upload_thumbs" value="{lang code='upload'}" class="btn btn-primary btn-sm"/>
-</form>
+    <form action="{DirPath::getUrl('admin_area')}upload_thumbs.php?video={$data.videoid}" method="post" enctype="multipart/form-data" id="thumb_list">
+        {include file="$style_dir/blocks/thumb_list.html"}
+    </form>
+    {if Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', 999)}
+        <hr>
+        <form action="{DirPath::getUrl('admin_area')}upload_thumbs.php?video={$data.videoid}&type={$type}" method="post" enctype="multipart/form-data" name="form1">
+            <h4>
+                {if $type == 'thumbnail'}
+                    {lang code="upload_custom_thumbnail"}
+                {elseif $type == 'poster'}
+                    {lang code="upload_poster"}
+                {else}
+                    {lang code="upload_backdrop"}
+                {/if}
+            </h4>
+            <input name="vid_thumb[]" type="file"/>
+            <input name="db_type" type="hidden" value="{$db_type}">
+            <br/>
+            <input type="submit" name="upload_thumbs" value="{lang code='upload'}" class="btn btn-primary btn-sm"/>
+        </form>
+    {/if}
 {/if}
 
 <script>

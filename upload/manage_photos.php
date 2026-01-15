@@ -36,17 +36,25 @@ switch ($mode) {
 
         assign('mode', 'uploaded');
         if (isset($_GET['delete_photo'])) {
-            $id = mysql_clean($_GET['delete_photo']);
-            CBPhotos::getInstance()->delete_photo($id);
+            if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '999')) {
+                e('Sorry, you cannot perform this action until the application has been fully updated by an administrator');
+            } else {
+                $id = mysql_clean($_GET['delete_photo']);
+                CBPhotos::getInstance()->delete_photo($id);
+            }
         }
 
         if (isset($_POST['delete_photos']) && is_array($_POST['check_photo'])) {
-            $total = count($_POST['check_photo']);
-            for ($i = 0; $i < $total; $i++) {
-                CBPhotos::getInstance()->delete_photo($_POST['check_photo'][$i]);
+            if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '999')) {
+                e('Sorry, you cannot perform this action until the application has been fully updated by an administrator');
+            } else {
+                $total = count($_POST['check_photo']);
+                for ($i = 0; $i < $total; $i++) {
+                    CBPhotos::getInstance()->delete_photo($_POST['check_photo'][$i]);
+                }
+                errorhandler::getInstance()->flush();
+                e(lang('total_photos_deleted', $total), 'm');
             }
-            errorhandler::getInstance()->flush();
-            e(lang('total_photos_deleted', $total), 'm');
         }
 
         $params = [

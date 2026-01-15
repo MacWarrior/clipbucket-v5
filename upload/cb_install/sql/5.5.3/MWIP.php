@@ -14,6 +14,14 @@ class MWIP extends \Migration
      */
     public function start()
     {
+
+        $sql = 'UPDATE `{tbl_prefix}video_thumbs` SET `version` = \'5.5.2\' WHERE `version` = \'5.5.3\'';
+        self::constrainedQuery($sql, [
+            'table' => 'video_thumbs'
+        ] , [
+            'table'  => 'video_thumb',
+        ]);
+
         $sql = 'CREATE TABLE IF NOT EXISTS `{tbl_prefix}video_image` (
             id_video_image INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
             videoid BIGINT(20) NOT NULL,

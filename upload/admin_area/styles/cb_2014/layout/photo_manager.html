@@ -10,7 +10,9 @@
         {/if}
         <input type="submit" name="make_featured_selected" value="{lang code='make_featured'}" class="btn btn-primary btn-xs"/>
         <input type="submit" name="make_unfeatured_selected" value="{lang code='make_unfeatured'}" class="btn btn-primary btn-xs"/>
-        <input type="submit" name="delete_selected" value="{lang code='delete'}" class="btn btn-primary btn-xs" onclick="return confirm_it('Are you sure you want to delete selected photos(s). This will permanently delete these photos from website.')"/>
+        <input type="submit" name="delete_selected" value="{lang code='delete'}" class="btn btn-primary btn-xs" {if Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '999')} onclick="return confirm_it('Are you sure you want to delete selected photos(s). This will permanently delete these photos from website.')"
+        {else} disabled="disabled" title="Sorry, you cannot perform this action until the application has been fully updated by an administrator" {/if}
+        />
     </div>
     <table class="table table-bordered table-striped manageUsersTable">
         <tr>
@@ -102,7 +104,8 @@
                                         <a href="?make_feature={$photos[list].photo_id}">{lang code='make_featured'}</a>
                                     </li>
                                 {/if}
-                                <li><a role="menuitem" tabindex="-1" id="delete-{$photos[list].photo_id}" href="?delete_photo={$photos[list].photo_id}">{lang code='delete'}</a></li>
+                                <li><a role="menuitem" tabindex="-1" id="delete-{$photos[list].photo_id}" {if Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '999')} href="?delete_photo={$photos[list].photo_id}"
+                                    {else} disabled="disabled" title="Sorry, you cannot perform this action until the application has been fully updated by an administrator" class="disabled" {/if} >{lang code='delete'}</a></li>
                             </ul>
                         </div>
                     </td>
@@ -116,7 +119,8 @@
             {/if}
             <input type="submit" name="make_featured_selected" value="{lang code='make_featured'}" class="btn btn-primary btn-xs"/>
             <input type="submit" name="make_unfeatured_selected" value="{lang code='make_unfeatured'}" class="btn btn-primary btn-xs"/>
-            <input type="submit" name="delete_selected" value="{lang code='delete'}" class="btn btn-primary btn-xs" onclick="return confirm_it('Are you sure you want to delete selected photos(s)')"/>
+            <input type="submit" name="delete_selected" value="{lang code='delete'}" class="btn btn-primary btn-xs" {if Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '999')} onclick="return confirm_it('Are you sure you want to delete selected photos(s). This will permanently delete these photos from website.')"
+                {else} disabled="disabled" title="Sorry, you cannot perform this action until the application has been fully updated by an administrator" {/if}
         </div>
     {else}
         <div align="center"><strong><em>No Photo Found</em></strong></div>

@@ -40,7 +40,11 @@ if (myquery::getInstance()->video_exists($video)) {
         $type='backdrop';
     }
     if ($is_file_to_upload) {
-        VideoThumbs::uploadThumbs($data['videoid'], $files, $type, false);
+        if (!Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '999')) {
+            SessionMessageHandler::add_message('Sorry, you cannot perform this action until the application has been fully updated by an administrator', 'e');
+        } else {
+            VideoThumbs::uploadThumbs($data['videoid'], $files, $type, false);
+        }
     }
 } else {
     $msg[] = lang('class_vdo_del_err');

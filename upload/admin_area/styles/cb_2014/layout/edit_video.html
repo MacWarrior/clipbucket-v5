@@ -141,7 +141,7 @@
                                             </td>
                                             {if config('enable_video_poster') == 'yes' && !empty($data.default_poster)}
                                             <td rowspan="8">
-                                                <span class='default_poster' style="background-image:url({VideoThumbs::getDefaultThumbFile($data['videoid'], 'original', 'original', 'poster')});"></span>
+                                                <span class='default_poster' style="background-image:url({VideoThumbs::getDefaultThumbFile($data['videoid'], 200, 300, 'poster')});"></span>
                                             </td>
                                             {/if}
                                         </tr>

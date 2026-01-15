@@ -16,7 +16,7 @@
                             <div class="input-group form-group">
                                 <input name="query" type="text" class="form-control" id="query" value="{display_clean($smarty.get.query)}"/>
                                 <span class="input-group-btn">
-                                    <button class="btn btn-primary" type="submit" name="input">{lang code='search'}</button>
+                                    <button class="btn btn-primary" type="submit" name="input" >{lang code='search'}</button>
                                 </span>
                             </div>
                         </form>
@@ -26,7 +26,8 @@
                 {if !empty($photos)}
                 <form name="photos_manager" method="post">
                     <div class="marginBottom">
-                        <input type="submit" name="delete_photos" id="delete_photos" value="{lang code='delete'}" class="btn btn-primary btn-sm">
+                        <input type="submit" name="delete_photos" id="delete_photos" value="{lang code='delete'}" class="btn btn-primary btn-sm"
+                            {if !Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3','999')} disabled="disabled" title="Sorry, you cannot perform this action until the application has been fully updated by an administrator" style="cursor:not-allowed;" {/if}>
                     </div>
                     <br>
                     <div class="account_table table-responsive">
