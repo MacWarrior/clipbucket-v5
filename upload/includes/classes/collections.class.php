@@ -840,7 +840,7 @@ class Collection
                  LEFT JOIN ' . tbl('collections') . ' AS childs ON collections.collection_id = childs.collection_id_parent
                  LEFT JOIN ' . tbl('photos') . ' AS photos ON photo_id = items.object_id AND items.type = \'photos\'
                  LEFT JOIN ' . tbl('video') . ' AS videos ON videoid = items.object_id AND items.type = \'videos\'
-            WHERE collections.collection_id = ' . (int)$tested_collection . '
+            WHERE collections.collection_id = ' . (int)$tested_collection . ' 
             ORDER BY items.ci_id
             LIMIT 1 ';
             $res = Clipbucket_db::getInstance()->_select($sql);
@@ -848,11 +848,11 @@ class Collection
             $tested_collection = $res[0]['child_id'] ?? false;
         } while (empty($thumb_num) && !empty($tested_collection));
 
-        if( $thumb_num && Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '145') ){
+        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '145')) {
             $sql = 'UPDATE ' . tbl('collections') . ' SET thumb_objectid = ' . (int)$thumb_num . ' WHERE collection_id = ' . (int)$collection_id;
             Clipbucket_db::getInstance()->execute($sql);
         }
-        return is_numeric($thumb_num) ? $thumb_num: false;
+        return is_numeric($thumb_num) ? $thumb_num : false;
     }
 
     /**

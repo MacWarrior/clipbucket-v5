@@ -1311,3 +1311,18 @@ a[role="menuitem"].disabled {
     opacity: .35; filter:Alpha(Opacity=35); background-image: none;
     cursor: not-allowed !important;
 }
+
+.crop_image {
+    aspect-ratio: var(--crop_ratio);
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+    object-position: center;
+    display: block;
+}
+
+.img-responsive {
+    display: block;
+    max-width: 100%;
+    height: auto;
+}

@@ -50,7 +50,7 @@ class PhotoThumbs
             $select[] = 'COUNT(DISTINCT ' . self::$tableNameThumb . '.id_photo_thumb) AS count';
         }
 
-        if ($param_photo_id) {
+        if ($param_photo_id !== false) {
             $conditions[] = self::$tableNameThumb . '.photo_id = ' . mysql_clean($param_photo_id);
         }
 

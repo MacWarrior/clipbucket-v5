@@ -1558,6 +1558,7 @@ function clean_orphan_files($file): string
         case 'video_hls':
         case 'thumb':
         case 'video_thumb':
+        case 'old_thumb':
         case 'subtitle':
         case 'log':
             $query = 'SELECT file_name FROM ' . tbl('video') . ' WHERE file_name = \'' . mysql_clean($file['video']) . '\' ' . $where_video_status;
@@ -1629,6 +1630,8 @@ function clean_orphan_files($file): string
         case 'video_parts':
             $result = !(time() - filectime(DirPath::get('root') .$file['data']) > 3600);
             break;
+        default:
+            return false;
     }
     if (!empty($result)) {
         if (config('cache_enable') == 'yes' && !(in_array($filename, $tab_redis[$redis_type_key] ?? []))) {
@@ -1717,6 +1720,8 @@ function clean_orphan_files($file): string
             unlink($full_path);
             $stop_path = DirPath::get('temp');
             break;
+        default:
+            return false;
     }
     remove_empty_directory(dirname($full_path), $stop_path);
     return lang('orphan_file_has_been_deleted', $file['data']);
