@@ -67,7 +67,7 @@ abstract class Objects
      * @return bool
      * @throws Exception
      */
-    public function addToFavorites(int $object_id, int $user_id = null): bool
+    public function addToFavorites(int $object_id, int $user_id = 0): bool
     {
         if (empty($user_id)) {
             $user_id = User::getInstance()->getCurrentUserID();
@@ -90,8 +90,7 @@ abstract class Objects
             'action_obj_id'  => $object_id,
             'action_done_id' => Clipbucket_db::getInstance()->insert_id()
         ]);
-
-        e('<div class="alert alert-success">' . lang('add_fav_message', lang(static::TYPE)) . '</div>', 'm');
+        e(lang('add_fav_message', lang(static::TYPE)), 'm');
         return true;
     }
 
@@ -101,7 +100,7 @@ abstract class Objects
      * @return bool
      * @throws Exception
      */
-    public function removeFromFavorites(int $object_id, int $user_id = null): bool
+    public function removeFromFavorites(int $object_id, int $user_id = 0): bool
     {
         if (empty($user_id)) {
             $user_id = User::getInstance()->getCurrentUserID();
@@ -115,8 +114,7 @@ abstract class Objects
             return false;
         }
         Clipbucket_db::getInstance()->delete(tbl('favorites'), ['userid', 'id_type', 'id'], [$user_id, static::getTypeId(), $object_id]);
-        //must keep div alert to be displayed
-        e('<div class="alert alert-success">' . lang('fav_remove_msg', ucfirst(lang(static::TYPE))). '</div>', 'm');
+        e(lang('fav_remove_msg', ucfirst(lang(static::TYPE))), 'm');
         return true;
     }
 
