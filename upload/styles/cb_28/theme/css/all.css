@@ -7073,7 +7073,7 @@ span.tagit-label i.fa {
     width: 100%;
 }
 
-li.up_vid > a[disabled] {
+li.up_vid > a[disabled],li.up_img > a[disabled] {
     cursor: not-allowed;
     filter: alpha(opacity=65);
     opacity: .65;
