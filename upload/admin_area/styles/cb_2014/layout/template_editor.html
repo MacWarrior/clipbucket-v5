@@ -4,15 +4,14 @@
 
 {if $templates}
     <form name="select_template" method="get">
-        <div class="form-group">
-            <label for="$template.id">{lang('select_theme_to_edit')}</label>
-            <select class="form-control" name="dir" id="template_dir">
+        <div class="form-group" style="text-align: center;">
+            <label for="template_dir">{lang('select_theme_to_edit')}</label><br>
+            <select class="form-control" name="dir" id="template_dir" style="width: fit-content; text-align: center; display: inline-block" >
                 {foreach from=$templates item=template}
                     <option value="{$template.dir}" {if $sel_dir==$template.dir} selected{/if}>{$template.name}</option>
                 {/foreach}
             </select>
         </div>
-        <input class="btn btn-primary btn-xs" type="submit" name="select" value="Select"/>
     </form>
 {/if}
 

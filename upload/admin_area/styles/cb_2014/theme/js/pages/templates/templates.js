@@ -50,11 +50,12 @@ $(function () {
             dataType: 'json',
             success: function (result) {
                 $('.page-content').prepend(result['msg']);
-                hideSpinner();
                 if (result['success']) {
                     const urlObj = new URL(window.location);
                     urlObj.search = '';
                     window.location = urlObj.toString();
+                } else {
+                    hideSpinner();
                 }
             }
         });
@@ -71,7 +72,8 @@ $(function () {
                 const field = $(this).attr('id').match(/(\w+)_group_\d+/)[1];
                 let val = $(this).find('input').val();
                 if (field === 'released') {
-                    val = format_date_to_display(new Date(val));
+                    const fixed = val.replace(/(\d{1,2})th/g, '$1');
+                    val = format_date_to_display(new Date(fixed));
                 }
 
                 $(this).addClass('hidden');

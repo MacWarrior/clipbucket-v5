@@ -3,7 +3,7 @@
 class CBTemplate
 {
 
-    public static $allowed_fields = ['name', 'description', 'title', 'link', 'version','released', 'authors'];
+    public static $allowed_fields = ['name', 'description', 'title', 'link', 'version','released', 'author'];
     public static function getInstance()
     {
         global $cbtpl;
@@ -12,6 +12,13 @@ class CBTemplate
 
     const DEFAULT_TEMPLATE_NAME = 'ClipbucketV5 official';
 
+    /**
+     * @param string $field
+     * @param string $value
+     * @param string $path
+     * @return bool
+     * @throws Exception
+     */
     public static function save(string $field, string $value, string $path): bool
     {
         if (!in_array($field, self::$allowed_fields)) {
@@ -26,12 +33,14 @@ class CBTemplate
             $field = 'website';
         }
         $xml = simplexml_load_file($template_xml);
-        if (empty($xml->$field)) {
-            return false;
-        }
         if ($field == 'title') {
             $xml->website->attributes()['title'] = $value;
+        } elseif ($field == 'website' && !filter_var($value, FILTER_VALIDATE_URL) ) {
+            throw new Exception(lang('incorrect_url'));
         } else {
+            if (empty($xml->$field)) {
+                return false;
+            }
             $xml->$field = $value;
         }
         $xml->saveXML($template_xml);

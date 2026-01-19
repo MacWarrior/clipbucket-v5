@@ -15,5 +15,6 @@ try {
     }
 } catch (Exception $exception) {
     $success = false;
+    e($exception->getMessage());
 }
 echo json_encode(['msg' => getTemplateMsg(), 'success' => $success]);

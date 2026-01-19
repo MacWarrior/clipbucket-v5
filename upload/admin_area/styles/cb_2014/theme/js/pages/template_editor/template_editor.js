@@ -6,6 +6,7 @@ function setOrUpdateParam(url, param, value) {
 
 $(function () {
     $('#template_dir').on('change',function(){
+        showSpinner();
         const url = new URL(window.location.href);
         window.location.href = setOrUpdateParam(url, "dir", $(this).val());
     });
