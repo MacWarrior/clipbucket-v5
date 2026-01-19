@@ -1776,7 +1776,7 @@ class userquery extends CBCategory
         } else {
             $field = 'username';
         }
-        $result = Clipbucket_db::getInstance()->count(tbl($this->dbtbl['users']), 'userid', $field.'=\'' . $id . '\'', '',60);
+        $result = Clipbucket_db::getInstance()->count(tbl($this->dbtbl['users']), 'userid', $field.'=\'' . mysql_clean($id) . '\'', '',60);
 
         if ($result > 0) {
             return true;
@@ -3068,6 +3068,8 @@ class userquery extends CBCategory
                 e(lang('usr_email_err1'));
             } elseif (!Email::isValid($array['email'])) {
                 e(lang('usr_email_err2'));
+            } elseif (config('enable_allow_alias_email') != 'yes' && str_contains($array['email'], '+')) {
+                e(lang('error_alias_email_not_allowed'));
             } elseif (email_exists($array['email']) && $array['email'] != $array['demail']) {
                 e(lang('usr_email_err3'));
             } else {
@@ -4152,6 +4154,12 @@ class userquery extends CBCategory
                     }
                 }
 
+                if ($name == 'email') {
+                    if (config('enable_allow_alias_email')!='yes' && str_contains($val,'+')) {
+                        e(lang('error_alias_email_not_allowed'));
+                        return false;
+                    }
+                }
 
                 if (!empty($field['db_field'])) {
                     $query_field[] = $field['db_field'];

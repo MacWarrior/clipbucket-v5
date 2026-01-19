@@ -1737,4 +1737,11 @@ VALUES ('ongoing_conversion'),
        ('cant_perform_action_until_app_fully_updated'),
        ('base_url_required'),
        ('please_login_to_flag'),
-       ('please_login');
+       ('please_login'),
+       ('video_is_already_waiting'),
+       ('embed_player_disabled'),
+       ('restrict_content_login'),
+       ('confirmation_upgrade_core_php_version_require'),
+       ('option_enable_allow_alias_email'),
+       ('option_enable_allow_alias_email_hint'),
+       ('error_alias_email_not_allowed');

@@ -28,13 +28,22 @@ Check out our <a href="https://demo.clipbucket.oxygenz.fr/" target="_blank">live
   </p>
 </details>
 
-# 🔄 Latest release - 5.5.1
-After more than 340 revisions, over a year of development and countless improvements, we're proud to officially release ClipBucketV5 - 5.5.1, our most feature-packed and polished update yet — pushing the platform to a whole new level and laying the groundwork for continuous delivery.
+# 🔄 Latest release - 5.5.2
+After 196 focused revisions, ClipBucketV5 – 5.5.2 stands as a key consolidation release, strengthening stability, security, and overall user experience while accelerating the platform’s path toward long-term robustness and sustainability.
 <p align="center">
-    <a href="https://github.com/MacWarrior/clipbucket-v5/releases/tag/5.5.1">
-      <img src="./upload/images/readme/release-5.5.1.png" alt="ClipbucketV5 update 5.5.1 features list"/>
+    <a href="https://github.com/MacWarrior/clipbucket-v5/releases/tag/5.5.2">
+      <img src="./upload/images/readme/release-5.5.2.png" alt="ClipbucketV5 update 5.5.2 features list"/>
     </a>
 </p>
+<details>
+  <summary>Release 5.5.1</summary>
+  After more than 340 revisions, over a year of development and countless improvements, we're proud to officially release ClipBucketV5 - 5.5.1, our most feature-packed and polished update yet — pushing the platform to a whole new level and laying the groundwork for continuous delivery.
+    <p align="center">
+        <a href="https://github.com/MacWarrior/clipbucket-v5/releases/tag/5.5.1">
+          <img src="./upload/images/readme/release-5.5.1.png" alt="ClipbucketV5 update 5.5.1 features list"/>
+        </a>
+    </p>
+</details>
 <details>
   <summary>Release 5.5.0</summary>
   After more than 370 revisions, we're proud to officially announce the release of ClipBucketV5 - 5.5.0, the biggest update of ClipBucket to this day, implementing tons of new features and preparing it's future.
@@ -46,7 +55,7 @@ After more than 340 revisions, over a year of development and countless improvem
 </details>
 
 # 🌟 Why <a href="https://github.com/MacWarrior/clipbucket-v5">ClipBucket V5</a>
-| PHP 8.0 - 8.4+ compatibility  | MySQL 9+ & strict mode compatibility                              |
+| PHP 8.1 - 8.5+ compatibility  | MySQL 9+ & strict mode compatibility                              |
 |-------------------------------|-------------------------------------------------------------------|
 | UHD video resolutions support | TMDB integration                                                  |
 | Dark & Light theme            | Age restriction                                                   |

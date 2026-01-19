@@ -331,7 +331,8 @@ INSERT INTO `{tbl_prefix}config` (`configid`, `name`, `value`) VALUES
     (NULL, 'videos_enable_fullwidth', 'yes'),
     (NULL, 'collections_enable_fullwidth', 'yes'),
     (NULL, 'collection_enable_fullwidth', 'yes'),
-    (NULL, 'enable_user_profil_censor', 'no');
+    (NULL, 'enable_user_profil_censor', 'no'),
+    (NULL, 'enable_allow_alias_email', 'yes');
 
 
 INSERT INTO `{tbl_prefix}video_resolution` (`title`, `ratio`, `enabled`, `width`, `height`, `video_bitrate`) VALUES
@@ -403,12 +404,12 @@ SET @type_photo = (
 );
 
 INSERT INTO `{tbl_prefix}categories` (`id_category_type`, `category_name`, `category_thumb`, `is_default`) VALUES
-    (@type_collection, 'Uncategorized', '', 'yes'),
-    (@type_user, 'Basic User', '', 'yes'),
-    (@type_user, 'Gurus', '', 'no'),
-    (@type_user, 'Comedian', '', 'no'),
-    (@type_video, 'Uncategorized','', 'yes'),
-    (@type_photo, 'Uncategorized','', 'yes');
+    (@type_collection, 'Uncategorized', '', TRUE),
+    (@type_user, 'Basic User', '', TRUE),
+    (@type_user, 'Gurus', '', NULL),
+    (@type_user, 'Comedian', '', NULL),
+    (@type_video, 'Uncategorized','', TRUE),
+    (@type_photo, 'Uncategorized','', TRUE);
 
 
 INSERT IGNORE INTO `{tbl_prefix}timezones` (`timezone`) VALUES

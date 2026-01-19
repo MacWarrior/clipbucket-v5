@@ -696,6 +696,8 @@ function unset_cookie(name){
 function age_disclaimer(accept) {
     if ( accept) {
         $('#disclaimer').hide();
+        const event = new CustomEvent("hide_age_disclaimer");
+        document.dispatchEvent(event);
         $('#container').removeClass('blur');
         set_cookie_secure('age_restrict','checked');
     } else {
@@ -746,6 +748,8 @@ function progressVideoCheck(ids_to_check_progress, displayType, intervalName) {
                                 AddingListenerModernThumbVideo();
                                 AddingListenerModernThumbVideoPopinView();
                             }
+                            let images = document.querySelectorAll("img[data-thumbs]")
+                            listenerPreviewThumbs(images);
                         }
                     });
 
