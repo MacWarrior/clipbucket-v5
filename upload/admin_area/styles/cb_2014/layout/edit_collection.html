@@ -219,7 +219,7 @@
                     <div id="clpreview" class="tab-pane">
                         <legend>Collection Preview</legend>
                         <div class="form-group">
-                            <img style="padding:2px; border:1px solid #ccc;" src="{Collections::getInstance()->coll_first_thumb($data,'s')}" class="{if config('keep_ratio_photo') && $collections[list].type == 'photos'} crop_image {/if} img-responsive"/>
+                            <img style="padding:2px; border:1px solid #ccc;" src="{Collections::getInstance()->coll_first_thumb($data,'m')}" class="img-responsive{if config('keep_ratio_photo') && $data.type == 'photos'} crop_image_max {/if} "/>
                         </div>
                     </div>
                     {if config('enable_comments_collection') == 'yes'}
