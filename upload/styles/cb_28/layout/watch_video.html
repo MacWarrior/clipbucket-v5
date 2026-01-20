@@ -58,9 +58,14 @@
                     </div>
                     <div class="user-likes-sub clearfix">
                         <div class="clearfix like-rating col-lg-6 col-md-6 col-sm-6 col-xs-12" id="rating_container">
-                            {if config('video_rating')=='1'}
-                                {show_video_rating rating=$vdo.rating ratings=$vdo.rated_by total='10' id=$vdo.videoid type=video}
-                            {/if}
+                            <div class="watch-rating-inline">
+                                {if config('video_rating')=='1'}
+                                    {show_video_rating rating=$vdo.rating ratings=$vdo.rated_by total='10' id=$vdo.videoid type=video}
+                                {/if}
+                                {if config('enable_favorite_icon') == 'yes' && User::getInstance()->isUserConnected()}
+                                    <span class="manage_favorite watch-rating-icon pointer glyphicon glyphicon-heart{if !$is_favorite}-empty " title="{lang('add_to_my_favorites')}{/if}" title="{lang('remove_from_favorites')}" style="font-size: 20px;"></span>
+                                {/if}
+                            </div>
                         </div>
                         <div class="clearfix subscribe-col col-lg-6 col-md-6 col-sm-6 col-xs-12">
                             {if user_id() && $video.userid != user_id() && $video.userid != $anonymous_id}
@@ -226,12 +231,13 @@
                                 {show_share_form id=$vdo.videoid type=video}
                             </div>
                         {/if}
-
-                        {if user_id()}
+                        {if User::getInstance()->isUserConnected()}
                             <div class="tab-pane fade in clearfix" id="cb-item-addto">
                                 <div class="clearfix btn-big">
                                     <div id="video_action_result_cont"></div>
-                                    <a id="addfav" class="btn btn-block btn-primary" href="javascript:void(0);" onclick="_cb.add_to_favNew('video','{$vdo.videoid}');">{lang code='add_to_my_favorites'}</a>
+                                    {if config('enable_favorite_icon') != 'yes'}
+                                        <a id="addfav" class="btn btn-block btn-primary" href="javascript:void(0);" onclick="_cb.add_to_favNew('video','{$vdo.videoid}');">{lang code='add_to_my_favorites'}</a>
+                                    {/if}
                                 </div>
 
                                 {if isSectionEnabled('playlists')}
@@ -367,7 +373,6 @@
 </div>
 <div class="modal fade" id="myModal" role="dialog"></div>
 <script>
-    /*Cookie based comments backup start*/
     var current_video = "{$video.videoid}";
     var playlist_total = "{$total_items}";
     var videoid='{$vdo.videoid}';
@@ -377,4 +382,6 @@
     var userid= '{$video.userid}';
     var ids_to_check_progress = JSON.parse('{$ids_to_check_progress}');
     var please_select_playlist = '{lang('please_select_playlist')}';
+    lang['add_to_my_favorites'] = '{lang('add_to_my_favorites')}';
+    lang['remove_from_favorites'] = '{lang('remove_from_favorites')}';
 </script>

@@ -471,6 +471,16 @@ function homePageVideos(qlist_items)
                 $('#container').find('.total_videos_featured').hide();
                 AddingListenerModernThumbVideo();
                 AddingListenerModernThumbVideoPopinView();
+                $('.manage_favorite').on('click', function(){
+                    const button = $(this);
+                    button.removeClass('glyphicon-heart').html(_cb.loading_img);
+                    _cb.remove_from_fav('video', button.data('id')).then(function (data) {
+                        button.remove();
+                        $('.manage_favorite[data-id="'+button.data('id')+'"]').remove();
+                    }).catch(function (err) {
+                        button.addClass('glyphicon-heart').html('');
+                    });
+                });
             }
         });
     });
