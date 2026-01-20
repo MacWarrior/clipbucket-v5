@@ -1,12 +1,19 @@
 {
   "version":"5.5.3",
-  "revision":"5",
+  "revision":"7",
   "status":"stable",
   "detail":[
     {
       "title": "Back office",
       "description": [
         "Implement email alias allow option"
+        ,"Fix JS error on playlist management page"
+      ]
+    },
+    {
+      "title": "Front office",
+      "description": [
+        "Fix possible JS error on register page"
       ]
     },
     {
