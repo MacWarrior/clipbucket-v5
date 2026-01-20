@@ -27,12 +27,6 @@ switch ($mode) {
             redirect_to(cblink(['name' => 'my_account']));
         }
 
-        if (!empty($_GET['missing_collection'])) {
-            e(lang('collection_not_exist'));
-        }
-        if (!empty($_GET['new_collection'])) {
-            e(lang('collect_added_msg'), 'm');
-        }
 
         if (isset($_GET['delete_collection'])) {
             $collection_id = $_GET['delete_collection'];
@@ -45,7 +39,7 @@ switch ($mode) {
                 Collections::getInstance()->delete_collection($_POST['check_col'][$i]);
             }
             errorhandler::getInstance()->flush();
-            e('selected_collects_del', 'm');
+            e(lang('selected_collects_del'), 'm');
         }
         $collectArray = [
             'userid'  => user_id(),
@@ -82,8 +76,7 @@ switch ($mode) {
         if (!empty($_POST)) {
             Collections::getInstance()->create_collection($_POST);
             if (!error()) {
-                $_POST = '';
-                redirect_to(DirPath::getUrl('root') . 'manage_collections.php?new_collection=1');
+                SessionMessageHandler::add_message(lang('collect_added_msg'), url: DirPath::getUrl('root') . 'manage_collections.php');
             }
         }
         break;
@@ -104,7 +97,7 @@ switch ($mode) {
 
         $collection = Collection::getInstance()->getOne(['collection_id' => $collection_id]);
         if (empty($collection)) {
-            redirect_to(DirPath::getUrl('root') . 'manage_collections.php?missing_collection=1');
+            SessionMessageHandler::add_message(lang('collection_not_exist'), 'e', DirPath::getUrl('root') . 'manage_collections.php');
         }
         $items = Collection::getInstance()->getItemRecursivly(['collection_id' => $collection['collection_id']]);
         if ($collection['type'] == 'videos') {

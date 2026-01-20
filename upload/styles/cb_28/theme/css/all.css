@@ -7097,3 +7097,11 @@ li:has(a.disabled) {
     filter: alpha(opacity=65);
     opacity: .65;
 }
+
+h2 a{
+  color: #337ab7;
+}
+
+input.btn-danger:disabled {
+  cursor: not-allowed;
+}

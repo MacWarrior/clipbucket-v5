@@ -7,11 +7,17 @@
             <div class="mainContent col-md-9 col-sm-9 col-xs-12 " id="updateCollection">
 
                 <form method="post" class="upload_form" name="form1" enctype="multipart/form-data">
+                    <input type="hidden" id="input_delete_selected" name="delete_selected" value="0">
                     {if $mode == "manage" || $mode == ""}
-                        <h2>{lang('manage_x', strtolower(lang('collections')))}</h2>
-                        <div>
-                            <input type="submit" name="delete_selected" id="delete_selected" value="{lang code='delete'}" class="btn btn-primary  " />
-                            <a class="btn-primary btn" href="{cblink(['name' => 'manage_collections', 'extra_params' => 'mode=add_new'])}">{lang('add_new_collection')}</a>
+                        <h2 style="display: inline-block;">{lang('manage_x', strtolower(lang('collections')))}</h2>
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                                Actions <span class="caret caret_margin"></span>
+                            </button>
+                            <ul class="dropdown-menu pull-right" role="menu">
+                                <li><a href="#" id="delete_selected">{lang code='delete'} </a></li>
+                                <li><a href="{cblink(['name' => 'manage_collections', 'extra_params' => 'mode=add_new'])}">{lang('add_new_collection')}</a></li>
+                            </ul>
                         </div>
                         <br>
                         <div class="marginTop">
@@ -29,24 +35,27 @@
 
                                 {section loop=$usr_collects name=clist}
                                     {include file="$style_dir/blocks/manage/account_collections.html" collection=$usr_collects[clist]}
-                                {sectionelse}
+                                    {sectionelse}
                                     <div>
                                         {lang code="no_collection_found"}
                                     </div>
                                 {/section}
                             </table>
                         </div>
-
                         {include file="$style_dir/blocks/pagination.html"}
                     {/if}
 
                     {if $mode == "edit_collection" || $mode == "add_new"}
-                        <div class="page-hidding"><h1>{if $mode == "edit_collection"}{lang code='update_collection'}{else}{lang code='add_new_collection'}{/if}</h1>
-                            <div class="pull-right" style="margin-top:-30px;"><a class="btn btn-primary" href="{$baseurl}manage_collections.php">{lang code="back_to_collection"}</a></div>
+                        <div class="page-hidding">
+                            <h1>{if $mode == "edit_collection"}{lang code='update_collection'}{else}{lang code='add_new_collection'}{/if}</h1>
+                            <div class="clearfix"></div>
+                            {if $c.collection_id}  <div class="pull-left" ><a class="btn btn-primary" href="?mode=manage_items&amp;cid={$c.collection_id}&amp;type={$c.type}"> {lang("manage_items")} </a></div>{/if}
+                            <div class="pull-right" ><a class="btn btn-primary" href="{$baseurl}manage_collections.php">{lang code="back_to_collection"}</a></div>
                         </div>
+                        <div class="clearfix"></div>
                         {if User::getInstance()->hasPermission('allow_create_collection')}
                             <input type="hidden" value="{$c.collection_id}" name="collection_id" id="collection_id">
-                            <div class="upload_info">
+                            <div class="upload_info" style="margin-top: 10px;">
                                 <div class="account_form">
                                     {foreach from=$fields item=field}
                                         <div class="form-group">
@@ -109,32 +118,34 @@
                     {/if}
 
                     {if $mode == "manage_items" || $mode == "collection_items"}
-                        <h2>{lang code='manage_items'} - {display_clean($c.collection_name)}</h2>
-                        <div>
-                            <input type="submit" class="btn btn-danger" name="delete_selected" id="delete_selected" value="{lang code='remove'}" class="small_button" />
+                        <h2>{lang code='manage_items'} - <a href="{$baseurl}manage_collections.php?mode=edit_collection&cid={$c.collection_id}">{display_clean($c.collection_name)}</a></h2>
+                        <div class="clearfix"></div>
+                        <div class="pull-left">
+                            <input type="submit" class="btn btn-danger small_button" name="delete_selected" id="delete_selected" {if empty($objs['items'])} disabled="disabled" {/if}value="{lang code='remove'}" />
                         </div>
-                        <div>
-                            <table class="table table-striped table-bordered" style="margin-bottom:0;">
-                                <tr>
-                                    <th style="width:3%">
-                                        <input type="checkbox" name="checkall" onclick="checkUncheckAll(this);"/>
-                                    </th>
-                                    <th style="width:50%">{lang code='title'}</th>
-                                    <th style="width:15%" align="center">{lang code='date_added'}</th>
-                                    <th style="width:7%" class="last_td" align="center">{lang code='remove'}</th>
-                                </tr>
-
-                                {if empty($objs['items'])}
-                                    <div align="center" style="font:bold 11px Tahoma; margin-top:5px;">{lang code="no_items_found_in_collect"}</div>
-                                {else}
-                                    {foreach $objs['items'] as $item}
-                                        {include file="$style_dir/blocks/manage/account_collections.html" display_type="items" collection=$item}
-                                    {/foreach}
-
-                                {/if}
-                            </table>
+                        <div class="pull-right">
+                            <a class="btn btn-primary" href="{$baseurl}manage_collections.php">{lang code="back_to_collection"}</a>
                         </div>
-                        {include file="$style_dir/blocks/pagination.html"}
+                        <div class="clearfix"></div>
+                        <div>
+                            {if empty($objs['items'])}
+                                <div align="center" style="font:bold 11px Tahoma; margin-top:5px;">{lang code="no_items_found_in_collect"}</div>
+                            {else}
+                                <table class="table table-striped table-bordered" style="margin-bottom:0;">
+                                    <tr>
+                                        <th style="width:3%"><input type="checkbox" name="checkall" onclick="checkUncheckAll(this);"/></th>
+                                        <th style="width:50%">{lang code='title'}</th>
+                                        <th style="width:15%" align="center">{lang code='date_added'}</th>
+                                        <th style="width:7%" class="last_td" align="center">{lang code='remove'}</th>
+                                    </tr>
+
+                                </table>
+                                {foreach $objs['items'] as $item}
+                                    {include file="$style_dir/blocks/manage/account_collections.html" display_type="items" collection=$item}
+                                {/foreach}
+                                {include file="$style_dir/blocks/pagination.html"}
+                            {/if}
+                        </div>
                     {/if}
 
                     {if $mode == "favorite"}
@@ -170,7 +181,7 @@
         </div>
     </div>
 </div>
-<div style="height:20px;"> </div>
+<div style="height:20px;"></div>
 <script>
     var available_tags = JSON.parse('{$available_tags|json_encode|escape:'javascript'}');
 </script>
