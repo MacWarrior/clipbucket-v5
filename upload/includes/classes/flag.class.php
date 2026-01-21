@@ -375,7 +375,7 @@ class Flag
     public static function getTableNameElementType(): string
     {
         if (empty(self::$tableNameElementType)) {
-            self::$tableNameElementType = Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.2', '999') ? 'object_type': 'flag_element_type';
+            self::$tableNameElementType = Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '999') ? 'object_type': 'flag_element_type';
         }
         return self::$tableNameElementType;
     }
@@ -386,7 +386,7 @@ class Flag
     public static function getFieldIdElementType(): string
     {
         if (empty(self::$fieldIdElementType)) {
-            self::$fieldIdElementType = Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.2', '999') ? 'id_object_type': 'id_flag_element_type';
+            self::$fieldIdElementType = Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '999') ? 'id_object_type': 'id_flag_element_type';
         }
         return self::$fieldIdElementType;
     }
