@@ -787,7 +787,14 @@ class VideoThumbs
                 unset($params_for_old['height']);
                 $params_for_old['version'] = '5.5.2';
                 $thumbs = self::getAllThumbs($params_for_old);
+                if (empty($thumbs)) {
+                    $params_not_size = $params;
+                    unset($params_not_size['width']);
+                    unset($params_not_size['height']);
+                    $thumbs = self::getAllThumbs($params_not_size);
+                }
             }
+
 
         }
         foreach ($thumbs as $thumb) {

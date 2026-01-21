@@ -1,7 +1,7 @@
 <div class="slide video-link{if $popup_video && $video.status|lower == 'successful'} cd-popup-trigger-slider{/if}" data-videoid="{$video.videoid}" data-href="{video_link($video)}">
     {if config('enable_video_poster') == 'yes' && !empty($video.default_poster)}
         <span class="image-container {if Video::getInstance()->isToBlur($video['videoid'])}blured{/if}">
-            <img src="{VideoThumbs::getDefaultThumbFile($video['videoid'], 'original', 'original', 'poster')}" class="poster"/>
+            <img src="{VideoThumbs::getDefaultThumbFile($video['videoid'], 200, 300, 'poster')}" class="poster"/>
         </span>
     {/if}
     <span class="image-container {if Video::getInstance()->isToBlur($video['videoid'])}blured{/if}">
