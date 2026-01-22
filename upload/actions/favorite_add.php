@@ -2,14 +2,13 @@
 const THIS_PAGE = 'favorite_add';
 include('../includes/config.inc.php');
 
-User::getInstance()->hasPermissionAjax('view_video');
 
 $success = true;
 try {
     if (!User::getInstance()->isUserConnected()) {
         throw new Exception(lang('please_login'));
     }
-    if (!Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.2', '999')) {
+    if (!Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '999')) {
         throw new Exception(lang('cant_perform_action_until_app_fully_updated'));
     }
     if (empty($_POST['type']) || empty($_POST['id'])) {
@@ -21,18 +20,21 @@ try {
         case 'v':
         case 'video':
         default:
+            User::getInstance()->hasPermissionAjax('view_video');
             $success = Video::getInstance()->addToFavorites($id);
             updateObjectStats('fav', 'video', $id); // Increment in total favs
             break;
 
         case 'p':
         case 'photo':
+            User::getInstance()->hasPermissionAjax('view_photos');
             $success = Photo::getInstance()->addToFavorites($id);
             updateObjectStats('fav', 'photo', $id); // Increment in total favs
             break;
 
         case 'cl':
         case 'collection':
+            User::getInstance()->hasPermissionAjax('view_collections');
             $success = Collection::getInstance()->addToFavorites($id);
             break;
     }
