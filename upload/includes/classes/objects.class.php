@@ -8,7 +8,7 @@ abstract class Objects
     protected static function getTableNameObjectType(): string
     {
         //TODO optimiser pour ne pas faire le test à chaque appel
-        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '999')) {
+        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '8')) {
             return 'object_type';
         } else {
             return 'categories_type';
@@ -18,7 +18,7 @@ abstract class Objects
     protected static function getIdFieldObjectType(): string
     {
         //TODO optimiser pour ne pas faire le test à chaque appel
-        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '999')) {
+        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '8')) {
             return 'id_object_type';
         } else {
             return 'id_category_type';
@@ -51,7 +51,7 @@ abstract class Objects
         if (empty($user_id)) {
             $user_id = User::getInstance()->getCurrentUserID() ?: 0;
         }
-        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '999')) {
+        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '8')) {
             $field = 'id_type';
             $value = static::getTypeId();
         } else {
@@ -140,7 +140,7 @@ abstract class Objects
             $cond = ' AND ' . $cond;
         }
 
-        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '999')) {
+        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '8')) {
             $field = 'id_type';
             $value = static::getTypeId();
         } else {
