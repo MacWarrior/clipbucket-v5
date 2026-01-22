@@ -13,6 +13,9 @@
         <div class="movie-description" title="{display_clean($video.description)}">{display_clean($video.description)}</div>
         <div class="movie-rating">
             <span class="icon-thumbup"></span> {Video::getLike($video)} <span class="icon-thumbdown"></span> {Video::getDislike($video)}
+            {if config('enable_favorite_icon') == 'yes' && User::getInstance()->isUserConnected() && Video::isFavorite($video.videoid)}
+                <span class="manage_favorite watch-rating-icon pointer glyphicon glyphicon-heart " title="{lang('remove_from_favorites')}" data-id="{$video.videoid}"></span>
+            {/if}
         </div>
         <div class="movie-duration">{if $video.duration>1}{$video.duration|SetTime} {/if}<span class="movie-limit">{Video::display_restricted($video)}</span></div>
     </div>

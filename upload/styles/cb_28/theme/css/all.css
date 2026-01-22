@@ -684,6 +684,14 @@ h1 {
   left: 10px;
 }
 
+.item-video .thumb-holder .manage_favorite {
+  position: absolute;
+  z-index: 4;
+  top: auto;
+  bottom: 10px;
+  left: 36px;
+}
+
 .item-video .thumb-holder .duration {
   font-size: 14px;
   line-height: 20px;
@@ -4038,7 +4046,7 @@ textarea#comment_box {
   z-index: 1050;
 }
 
-.alert_messages_holder .alert-messages {
+.alert_messages_holder .alert-messages, .alert_messages_holder .alert-dismissable {
   position: relative;
   width: 300px;
   margin: 0 0 10px;
@@ -6491,6 +6499,21 @@ textarea#comment_box {
   transition: transform .3s; /* Animation */
   cursor: pointer;
 }
+
+.slider-video-container .thumb-video-padding .thumb-video > .manage_favorite {
+  font-size: 20px;
+  width: 24px;
+  height: 21px;
+  padding: 0.2rem 0.5rem;
+  position: absolute;
+  top: auto;
+  left: 33px;
+  bottom: 10px;
+  background: rgba(0, 0, 0, 0.3);
+  text-align: center;
+  transition: transform .3s; /* Animation */
+  cursor: pointer;
+}
  .slider-video-container .thumb-video-padding .thumb-video > .add-playlist:after {
   content:'+';
 }
@@ -7087,15 +7110,28 @@ li:has(a.disabled) {
     opacity: .65;
 }
 
+.glyphicon-heart-empty:hover:before  {
+  content: "\e005";
+}
+
+.glyphicon-heart:hover:before {
+  content: "\e143";
+}
+
+.movie-rating .manage_favorite {
+  padding-left: 5px;
+  bottom: 2px;
+}
+
 :root {
-    --crop_ratio: 16 / 10
+  --crop_ratio: 16 / 10
 }
 
 .crop_image {
-    aspect-ratio: var(--crop_ratio);
-    width: 100%;
-    height: auto;
-    object-fit: cover;
-    object-position: center;
-    display: block;
+  aspect-ratio: var(--crop_ratio);
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+  object-position: center;
+  display: block;
 }

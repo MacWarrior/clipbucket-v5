@@ -1,6 +1,6 @@
 {
   "version":"5.5.3",
-  "revision":"7",
+  "revision":"8",
   "status":"stable",
   "detail":[
     {
@@ -13,13 +13,15 @@
     {
       "title": "Front office",
       "description": [
-        "Fix possible JS error on register page"
+        "Implement video favorite icon"
+        ,"Fix possible JS error on register page"
       ]
     },
     {
       "title": "Miscellaneous",
       "description": [
-        "Update compatibility to PHP 8.5.X"
+        "Refactor favorites storage"
+        ,"Update compatibility to PHP 8.5.X"
         ,"Drop support for PHP 8.0"
       ]
     },

@@ -2530,7 +2530,7 @@ function updateObjectStats($type, $object, $id, $op = '+'): void
         case "favorite":
         case "favourite":
         case "favorites":
-        case "favourties":
+        case "favourites":
         case "fav":
             switch ($object) {
                 case "video":

@@ -333,9 +333,9 @@ INSERT INTO `{tbl_prefix}config` (`configid`, `name`, `value`) VALUES
     (NULL, 'collection_enable_fullwidth', 'yes'),
     (NULL, 'enable_user_profil_censor', 'no'),
     (NULL, 'enable_allow_alias_email', 'yes'),
+    (NULL, 'enable_favorite_icon', 'yes'),
     (NULL, 'keep_ratio_photo', 'yes'),
     (NULL, 'ratio_photo', 1.7777);
-
 
 INSERT INTO `{tbl_prefix}video_resolution` (`title`, `ratio`, `enabled`, `width`, `height`, `video_bitrate`) VALUES
 	('240p', '16/9', 1, 426, 240, 240000),
@@ -375,7 +375,9 @@ INSERT INTO `{tbl_prefix}tools` (`language_key_label`, `language_key_description
 
 INSERT INTO `{tbl_prefix}tags_type` (`name`) VALUES ('video'), ('photo'), ('collection'), ('profile'), ('playlist'), ('actors'), ('producer'), ('executive_producer'), ('director'), ('crew'), ('genre');
 
-INSERT INTO `{tbl_prefix}categories_type` (`name`)
+UPDATE `{tbl_prefix}video_thumbs` SET `type` = 'auto' WHERE `type` IS NULL;
+
+INSERT INTO `{tbl_prefix}object_type` (`name`)
 VALUES ('video'),
        ('photo'),
        ('collection'),
@@ -383,23 +385,23 @@ VALUES ('video'),
        ('playlist');
 
 SET @type_collection = (
-    SELECT id_category_type
-    FROM `{tbl_prefix}categories_type`
+    SELECT id_object_type
+    FROM `{tbl_prefix}object_type`
     WHERE name LIKE 'collection'
 );
 SET @type_user = (
-    SELECT id_category_type
-    FROM `{tbl_prefix}categories_type`
+    SELECT id_object_type
+    FROM `{tbl_prefix}object_type`
     WHERE name LIKE 'user'
 );
 SET @type_video = (
-    SELECT id_category_type
-    FROM `{tbl_prefix}categories_type`
+    SELECT id_object_type
+    FROM `{tbl_prefix}object_type`
     WHERE name LIKE 'video'
 );
 SET @type_photo = (
-    SELECT id_category_type
-    FROM `{tbl_prefix}categories_type`
+    SELECT id_object_type
+    FROM `{tbl_prefix}object_type`
     WHERE name LIKE 'photo'
 );
 
@@ -1688,8 +1690,6 @@ INSERT INTO `{tbl_prefix}fontawesome_icons` (`icon`) VALUES
     ('youtube'),
     ('youtube-play'),
     ('youtube-square');
-
-INSERT IGNORE INTO `{tbl_prefix}flag_element_type` (`name`) SELECT name FROM `{tbl_prefix}categories_type`;
 
 INSERT IGNORE INTO `{tbl_prefix}flag_type` (`language_key`)
 VALUES ('inapp_content'),

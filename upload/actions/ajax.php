@@ -206,63 +206,6 @@ if (!empty($mode)) {
                 }
             }
             break;
-
-        case 'add_to_fav':
-            if (!User::getInstance()->isUserConnected()) {
-                e(lang('please_login'));
-            }elseif (empty($_POST['type']) || empty($_POST['id'])) {
-                e(lang('missing_params'));
-            } else {
-
-                $type = strtolower($_POST['type']);
-                $id = $_POST['id'];
-                switch ($type) {
-                    case 'v':
-                    case 'video':
-                    default:
-                        CBvideo::getInstance()->action->add_to_fav($id);
-                        updateObjectStats('fav', 'video', $id); // Increment in total favs
-                        $funcs = cb_get_functions('favorite_video');
-                        break;
-
-                    case 'p':
-                    case 'photo':
-                        CBPhotos::getInstance()->action->add_to_fav($id);
-                        updateObjectStats('fav', 'photo', $id); // Increment in total favs
-                        $funcs = cb_get_functions('favorite_photo');
-                        break;
-
-                    case 'cl':
-                    case 'collection':
-                        Collections::getInstance()->action->add_to_fav($id);
-                        $funcs = cb_get_functions('favorite_collection');
-                        break;
-                }
-
-                if ($funcs) {
-                    foreach ($funcs as $func) {
-                        $func['func']($id);
-                    }
-                }
-            }
-
-            $error = errorhandler::getInstance()->get_error();
-            $warning = errorhandler::getInstance()->get_warning();
-            $message = errorhandler::getInstance()->get_message();
-
-            if ($error) {
-                echo '<div class="error">' . $error[0]['val'] . '</div>';
-            } else {
-                if ($warning) {
-                    echo '<div class="warning">' . $warning[0]['val'] . '</div>';
-                } else {
-                    if ($message) {
-                        echo '<div class="msg">' . $message[0]['val'] . '</div>';
-                    }
-                }
-            }
-            break;
-
         case 'flag_object':
             $type = strtolower($_POST['type']);
             $id = $_POST['id'];

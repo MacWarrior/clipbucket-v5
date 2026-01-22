@@ -69,6 +69,7 @@ if (file_exists(DirPath::get('includes') . 'config.php')) {
 }
 
 require_once DirPath::get('classes') . 'update.class.php';
+require_once DirPath::get('classes') . 'objects.class.php';
 require_once DirPath::get('classes') . 'plugin.class.php';
 require_once DirPath::get('classes') . 'cli.class.php';
 require_once DirPath::get('classes') . 'columns.class.php';

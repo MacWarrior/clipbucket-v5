@@ -1728,8 +1728,8 @@ class AdminTool
             case 'count_categories_per_types':
                 //count categories per types
                 $sql = 'SELECT ct.name, COUNT(c.category_id) AS count
-                    FROM ' . tbl('categories_type') . ' ct
-                             LEFT JOIN ' . tbl('categories') . ' c ON ct.id_category_type = c.id_category_type
+                    FROM ' . tbl('object_type') . ' ct
+                             LEFT JOIN ' . tbl('categories') . ' c ON ct.id_object_type = c.id_category_type
                     GROUP BY c.id_category_type';
                 $res = Clipbucket_db::getInstance()->_select($sql);
                 $value = [$task => $res ?: []];

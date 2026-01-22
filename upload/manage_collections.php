@@ -202,13 +202,13 @@ switch ($mode) {
 
         if (isset($_GET['remove_fav_collection'])) {
             $collection_id = mysql_clean($_GET['remove_fav_collection']);
-            Collections::getInstance()->action->remove_favorite($collection_id);
+            Collection::getInstance()->removeFromFavorites($collection_id);
         }
 
         if (isset($_POST['remove_selected_favs']) && is_array($_POST['check_col'])) {
             $total = count($_POST['check_col']);
             for ($i = 0; $i < $total; $i++) {
-                Collections::getInstance()->action->remove_favorite($_POST['check_col'][$i]);
+                Collection::getInstance()->removeFromFavorites($_POST['check_col'][$i]);
             }
             errorhandler::getInstance()->flush();
             e(lang('total_fav_collection_removed', $total), 'm');
@@ -220,16 +220,15 @@ switch ($mode) {
         }
 
         $col_arr = [
-            'user'  => user_id(),
             'limit' => $get_limit,
             'order' => tbl('favorites.date_added DESC'),
             'cond'  => $cond
         ];
-        $collections = Collections::getInstance()->action->get_favorites($col_arr);
+        $collections = Collection::getInstance()->getAllFavorites($col_arr);
         assign('collections', $collections);
 
         $col_arr['count_only'] = true;
-        $total_rows = Collections::getInstance()->action->get_favorites($col_arr);
+        $total_rows = Collection::getInstance()->getAllFavorites($col_arr);
         $total_pages = count_pages($total_rows, COLLPP);
 
         //Pagination

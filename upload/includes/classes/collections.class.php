@@ -1,5 +1,5 @@
 <?php
-class Collection
+class Collection extends Objects
 {
     private static $collection;
     private string $tablename = '';
@@ -14,6 +14,8 @@ class Collection
     private array $broadcast_options = [];
 
     private array $type_list= [];
+
+    public const TYPE = 'collection';
 
     /**
      * @throws Exception
@@ -476,8 +478,9 @@ class Collection
         }
 
         if ($param_join_flag && Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '255') && !$param_count) {
-            $join[] = 'LEFT JOIN ' . cb_sql_table(Flag::getTableName()) . ' ON ' . Flag::getTableName() . '.id_element = ' . $this->getTableName() . '.collection_id AND ' . Flag::getTableName() . '.id_flag_element_type = (SELECT id_flag_element_type FROM ' . tbl(Flag::getTableNameElementType()) . ' WHERE name = \'collection\' )';
-            $select[] = 'IF(COUNT(distinct ' . Flag::getTableName() . '.flag_id) > 0, 1, 0) AS is_flagged';
+            $flag_constraint = self::getFlagConstraint();
+            $join[] = $flag_constraint['join'];
+            $select[] = $flag_constraint['select'];
         }
 
         $newline = ' ';

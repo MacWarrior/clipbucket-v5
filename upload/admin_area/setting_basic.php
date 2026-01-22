@@ -171,6 +171,7 @@ if (isset($_POST['update'])) {
         , 'chromecast'
         , 'player_thumbnails'
         , 'enable_allow_alias_email'
+        , 'enable_favorite_icon'
         , 'keep_ratio_photo'
     ];
 
@@ -445,6 +446,7 @@ if (isset($_POST['update'])) {
         'collections_enable_fullwidth',
         'collection_enable_fullwidth',
         'enable_allow_alias_email',
+        'enable_favorite_icon',
         'keep_ratio_photo',
         'ratio_photo'
     ];
