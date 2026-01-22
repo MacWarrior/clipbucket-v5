@@ -893,9 +893,7 @@ class User
      */
     public function getFavoritesVideos(): array
     {
-        $uid = $this->get('userid');
-        $sql = ' SELECT id AS videoid FROM ' . tbl('favorites') . ' WHERE userid = ' . (int)$uid . ' AND type=\'v\'';
-        $results = Clipbucket_db::getInstance()->_select($sql);
+        $results = Video::getInstance()->getAllFavorites();
         if ( empty($results)) {
             return [];
         }

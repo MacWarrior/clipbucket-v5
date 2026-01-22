@@ -751,7 +751,7 @@
 			};
 		}
 
-		this.throwHeadMsg = function(tclass, msg, hideAfter,scroll) {
+		this.throwHeadMsg = function(tclass, msg, hideAfter) {
 			$(document).find('#headErr').remove();
 			hideAfter = parseInt(hideAfter);
 
@@ -764,6 +764,14 @@
 			}
 
 			$('<div id="headErr" class="alert_messages_holder" style="display:none;"><div class="alert alert-'+tclass+' alert-messages alert-ajax" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>'+msg+'</div></div>').insertAfter('#header').fadeIn('slow').delay(hideAfter).fadeOut();
+		};
+		this.throwHeadDivMsg = function(msg, hideAfter) {
+			$(document).find('#headErr').remove();
+			hideAfter = parseInt(hideAfter);
+			if (hideAfter < 10) {
+				hideAfter = 3000;
+			}
+			$('<div id="headErr" class="alert_messages_holder alert-ajax" style="display:none;">'+msg+'</div>').insertAfter('#header').fadeIn('slow').delay(hideAfter).fadeOut();
 		};
 
 		/**
@@ -817,13 +825,14 @@
 		}
 
 		this.showMeTheMsg = function(data, alertDiv) {
-			curObj = this;
+			let curObj = this;
+			let isOk;
 			if (alertDiv == true) {
 				isOk = $(data).filter('div.msg').find('div.alert').html();
 			} else {
 				isOk = $(data).filter('div.msg').html();
 			}
-			isError = $(data).filter('div.error').html();
+			let isError = $(data).filter('div.error').html();
 
 			if (isError) {
 				if (isError.length > 2) {
@@ -854,26 +863,39 @@
 			);
 		};
 
-		this.add_to_favNew = function(type,id){
-			var curObj = this;
-			$('#video_action_result_cont').css('display','block').html(curObj.loading);
+        this.add_to_favNew = function (type, id) {
+            return this.manage_fav('add', type, id);
+        };
+        this.remove_from_fav = function (type, id) {
+            return this.manage_fav('remove', type, id);
+        };
+        this.manage_fav = function (action, type, id) {
+            var curObj = this;
+            let url = '';
+            if (action == 'remove') {
+                url = baseurl + 'actions/favorite_remove.php';
+            } else if (action == 'add') {
+                url = baseurl + 'actions/favorite_add.php';
+            } else {
+                return false;
+            }
+            $('#video_action_result_cont').css('display', 'block').html(curObj.loading);
 
-			$.post(page,
-				{
-					mode : 'add_to_fav',
-					type : type,
-					id : id
-				},
-				function(data)
-				{
-					if(!data){
-						alert('No data');
-					} else {
-						$('#video_action_result_cont').hide();
-						curObj.showMeTheMsg(data, true);
-					}
-				},'text');
-		};
+            return new Promise((resolve, reject) => {
+                $.post(url, {
+                    type: type,
+                    id: id
+                }, function (data) {
+                    if (!data.success) {
+                        reject(data);
+                    } else {
+                        $('#video_action_result_cont').hide();
+                        resolve(data);
+                    }
+                    curObj.throwHeadDivMsg(data.msg, 5000, true)
+                }, 'json');
+            });
+        }
 
 		this.flag_objectNew = function(form_id,id,type){
 			var curObj = this;

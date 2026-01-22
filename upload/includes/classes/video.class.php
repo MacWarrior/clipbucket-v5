@@ -1,6 +1,7 @@
 <?php
 
-class Video
+class Video extends Objects
+
 {
     private static self $video;
     private $tablename = '';
@@ -13,6 +14,7 @@ class Video
     private $search_limit = 0;
     private $broadcast_option = [];
     private $status_list= [];
+    public const TYPE = 'video';
 
     /**
      * @throws Exception
@@ -185,6 +187,11 @@ class Video
     private function getVideoFields($prefix = false): array
     {
         return $this->getSQLFields('video', $prefix);
+    }
+
+    public function getFieldId(): string
+    {
+        return $this->field_id;
     }
 
     private function getCategoriesFields($prefix = false): array
@@ -505,8 +512,9 @@ class Video
         }
 
         if ($param_join_flag && Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '248') && !$param_count) {
-            $join[] = ' LEFT JOIN ' . cb_sql_table(Flag::getTableName()) . ' ON ' . Flag::getTableName() . '.id_element = ' . $this->tablename . '.videoid AND ' . Flag::getTableName() . '.id_flag_element_type = (SELECT id_flag_element_type FROM ' . tbl(Flag::getTableNameElementType()) . ' WHERE name = \'video\' ) ';
-            $select[] = ' IF(COUNT(distinct ' . Flag::getTableName() . '.flag_id) > 0, 1, 0) AS is_flagged ';
+            $flag_constraint = self::getFlagConstraint();
+            $join[] = $flag_constraint['join'];
+            $select[] = $flag_constraint['select'];
 
         }
 
@@ -1273,6 +1281,7 @@ class Video
 
         return Clipbucket_db::getInstance()->insert(tbl('video_embed'), $fields, $values);
     }
+
 }
 
 class CBvideo extends CBCategory
