@@ -7123,6 +7123,14 @@ li:has(a.disabled) {
   bottom: 2px;
 }
 
+h2 a{
+  color: #337ab7;
+}
+
+input.btn-danger:disabled {
+  cursor: not-allowed;
+}
+
 :root {
   --crop_ratio: 16 / 10
 }
