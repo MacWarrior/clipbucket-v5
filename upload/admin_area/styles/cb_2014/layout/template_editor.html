@@ -4,13 +4,14 @@
 
 {if $templates}
     <form name="select_template" method="get">
-        <div class="form-group" style="text-align: center;">
-            <label for="template_dir">{lang('select_theme_to_edit')}</label><br>
-            <select class="form-control" name="dir" id="template_dir" style="width: fit-content; text-align: center; display: inline-block" >
+        <div class="form-group">
+            <label for="template_dir">{lang('select_theme_to_edit')}</label>
+            <select class="form-control" name="dir" id="template_dir" style="width:fit-content;text-align:center;display:inline-block;">
                 {foreach from=$templates item=template}
                     <option value="{$template.dir}" {if $sel_dir==$template.dir} selected{/if}>{$template.name}</option>
                 {/foreach}
             </select>
+            <hr/>
         </div>
     </form>
 {/if}
@@ -34,16 +35,16 @@
                 <div class="tab-content">
                     <div id="html_files" class="tab-pane active">
                         <div class="row">
-                            <ul class="nav nav-pills nav-stacked tabs ">
+                            <ul class="nav nav-pills nav-stacked tabs">
                                 {foreach from=$tpl_files item=tplfile key=folder}
                                     {if !is_array($tplfile)}
-                                        <li {if $smarty.get.file == $tplfile} class="active"{/if}><a href="?dir={$sel_dir}&file={$tplfile}">{$tplfile}</a></li>
+                                        <li{if $smarty.get.file == $tplfile} class="active"{/if}><a href="?dir={$sel_dir}&file={$tplfile}">{$tplfile}</a></li>
                                     {else}
                                         <li>
-                                            <ul class="nav nav-pills nav-stacked tabs ">
+                                            <ul class="nav nav-pills nav-stacked tabs">
                                                 <li><b>/{$folder}/</b></li>
                                                 {foreach from=$tplfile item=file}
-                                                    <li {if $_GET['file'] == $file && $_GET['folder'] == $folder} class="active"{/if}><a href="?dir={$sel_dir}&file={$file}&folder={$folder}">{$file}</a></li>
+                                                    <li{if $_GET['file'] == $file && $_GET['folder'] == $folder} class="active"{/if}><a href="?dir={$sel_dir}&file={$file}&folder={$folder}">{$file}</a></li>
                                                 {/foreach}
                                             </ul>
                                         </li>
@@ -57,7 +58,7 @@
                             <ul class="nav nav-pills nav-stacked tabs">
                                 {foreach from=$css_files item=cssfile}
                                     {if !is_array($cssfile)}
-                                        <li {if $smarty.get.file == $cssfile} class="active"{/if}><a href="?dir={$sel_dir}&file={$cssfile}">{$cssfile}</a></li>
+                                        <li{if $smarty.get.file == $cssfile} class="active"{/if}><a href="?dir={$sel_dir}&file={$cssfile}">{$cssfile}</a></li>
                                     {/if}
                                 {/foreach}
                             </ul>
