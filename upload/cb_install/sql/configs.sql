@@ -375,8 +375,6 @@ INSERT INTO `{tbl_prefix}tools` (`language_key_label`, `language_key_description
 
 INSERT INTO `{tbl_prefix}tags_type` (`name`) VALUES ('video'), ('photo'), ('collection'), ('profile'), ('playlist'), ('actors'), ('producer'), ('executive_producer'), ('director'), ('crew'), ('genre');
 
-UPDATE `{tbl_prefix}video_thumbs` SET `type` = 'auto' WHERE `type` IS NULL;
-
 INSERT INTO `{tbl_prefix}object_type` (`name`)
 VALUES ('video'),
        ('photo'),

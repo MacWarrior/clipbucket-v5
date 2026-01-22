@@ -1311,7 +1311,7 @@ textarea[disabled]{
     font-style: italic;
 }
 
-a[role="menuitem"].disabled {
+a.disabled {
     opacity: .35; filter:Alpha(Opacity=35); background-image: none;
     cursor: not-allowed !important;
 }
@@ -1337,4 +1337,9 @@ a[role="menuitem"].disabled {
     display: block;
     max-width: 100%;
     height: auto;
+}
+
+a:disabled {
+    opacity: .35; filter:Alpha(Opacity=35); background-image: none;
+    cursor: not-allowed !important;
 }

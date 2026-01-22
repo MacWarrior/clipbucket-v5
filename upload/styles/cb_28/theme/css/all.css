@@ -7135,3 +7135,12 @@ li:has(a.disabled) {
   object-position: center;
   display: block;
 }
+
+h4.disabled {
+  opacity: .35; filter:Alpha(Opacity=35); background-image: none;
+  cursor: not-allowed !important;
+}
+
+h4:has(i) {
+  cursor: pointer;
+}

@@ -1,6 +1,8 @@
 {ANCHOR place="before_edit_video_form_thumbs"}
 <div class="formSection clear">
-    <h4>{lang code='thumbs'} <i class="glyphicon glyphicon-chevron-down pull-right"></i></h4>
+    <h4 {if !Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3','999')} title="{lang('cant_perform_action_until_app_fully_updated')}" class="disabled" {/if}>
+        {lang('thumbs')|ucfirst} {if Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3','999')}<i class="glyphicon glyphicon-chevron-down pull-right"></i>{/if}
+    </h4>
     <div class="sectionContent" style="display: none;">
         <div class="row">
             <h5>{lang code="extracted_thumbs"}</h5>
