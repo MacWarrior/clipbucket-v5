@@ -21,6 +21,6 @@ class M00129 extends \Migration
         ]);
 
         $sql_update = 'UPDATE ' . tbl('tools_histo') . ' SET id_tools_histo_status = 1 WHERE id_tool IN(SELECT id_tool FROM ' . tbl('tools') . ' WHERE code = \'calc_user_storage\') AND id_tools_histo_status != 1;';
-        self::query($sql_update);;
+        self::query($sql_update);
     }
 }

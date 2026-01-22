@@ -34,12 +34,12 @@ try {
         case 'cl':
         case 'collection':
             User::getInstance()->hasPermissionAjax('view_collections');
-            Collection::ratingUpdate($id, $rating);;
+            Collection::ratingUpdate($id, $rating);
             break;
 
         case 'user':
             User::getInstance()->hasPermissionAjax('view_channel');
-            User::ratingUpdate($id, $rating);;
+            User::ratingUpdate($id, $rating);
             break;
     }
     update_user_voted([
