@@ -139,10 +139,10 @@
                                         <th style="width:7%" class="last_td" align="center">{lang code='remove'}</th>
                                     </tr>
 
+                                    {foreach $objs['items'] as $item}
+                                        {include file="$style_dir/blocks/manage/account_collections.html" display_type="items" collection=$item}
+                                    {/foreach}
                                 </table>
-                                {foreach $objs['items'] as $item}
-                                    {include file="$style_dir/blocks/manage/account_collections.html" display_type="items" collection=$item}
-                                {/foreach}
                                 {include file="$style_dir/blocks/pagination.html"}
                             {/if}
                         </div>
