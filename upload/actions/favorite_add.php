@@ -2,7 +2,6 @@
 const THIS_PAGE = 'favorite_add';
 include('../includes/config.inc.php');
 
-
 $success = true;
 try {
     if (!User::getInstance()->isUserConnected()) {
