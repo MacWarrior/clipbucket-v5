@@ -1,6 +1,6 @@
 {
   "version":"5.5.3",
-  "revision":"9",
+  "revision":"10",
   "status":"stable",
   "detail":[
     {
@@ -15,6 +15,7 @@
       "description": [
         "Implement video favorite icon"
         ,"Update media rating"
+        ,"Update collection management"
         ,"Fix possible JS error on register page"
       ]
     },
