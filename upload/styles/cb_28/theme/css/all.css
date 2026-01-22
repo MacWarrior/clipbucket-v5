@@ -7131,6 +7131,5 @@ li:has(a.disabled) {
 
 .movie-rating .manage_favorite {
   padding-left: 5px;
-  top: auto;
   bottom: 2px;
 }

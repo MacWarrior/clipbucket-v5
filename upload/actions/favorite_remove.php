@@ -2,8 +2,6 @@
 const THIS_PAGE = 'favorite_add';
 include('../includes/config.inc.php');
 
-User::getInstance()->hasPermissionAjax('view_video');
-
 $success = true;
 try {
     if (!User::getInstance()->isUserConnected()) {
@@ -21,6 +19,7 @@ try {
         case 'v':
         case 'video':
         default:
+            User::getInstance()->hasPermissionAjax('view_video');
             $success = Video::getInstance()->removeFromFavorites($id);
             updateObjectStats('fav', 'video', $id, '-'); // Increment in total favs
             $funcs = cb_get_functions('favorite_video');
@@ -28,6 +27,7 @@ try {
 
         case 'p':
         case 'photo':
+            User::getInstance()->hasPermissionAjax('view_photos');
             $success = Photo::getInstance()->removeFromFavorites($id);
             updateObjectStats('fav', 'photo', $id, '-'); // Increment in total favs
             $funcs = cb_get_functions('favorite_photo');
@@ -35,6 +35,7 @@ try {
 
         case 'cl':
         case 'collection':
+            User::getInstance()->hasPermissionAjax('view_collections');
             $success = Collection::getInstance()->removeFromFavorites($id);
             $funcs = cb_get_functions('favorite_collection');
             break;

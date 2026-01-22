@@ -203,7 +203,9 @@
                                 <div class="tab-pane fade in clearfix" id="cb-item-addto">
                                     <div class="clearfix btn-fav">
                                         <div id="video_action_result_cont"></div>
-                                        <a id="addfav" class="btn btn-block btn-primary" href="javascript:void(0);" onclick="_cb.add_to_favNew('photo','{$photo.photo_id}');">{lang code='add_to_my_favorites'}</a>
+                                        <a id="addfav" class="btn btn-block btn-primary" href="javascript:void(0);"  {if Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '999')} onclick="_cb.add_to_favNew('photo','{$photo.photo_id}');"
+                                                {else} disabled="disabled" title="{lang('cant_perform_action_until_app_fully_updated')}" {/if}>
+                                            {lang code='add_to_my_favorites'}</a>
                                     </div>
                                     {if isSectionEnabled('collections') && empty($photo.collection_id)}
                                         <div class="clearfix btn-big">
