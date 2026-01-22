@@ -1,10 +1,10 @@
 <?php
-if( !defined('THIS_PAGE') ){
+if (!defined('THIS_PAGE')) {
     define('THIS_PAGE', 'videos_core');
 }
 require 'includes/config.inc.php';
 
-if( THIS_PAGE == 'videos_core' ){
+if (THIS_PAGE == 'videos_core') {
     redirect_to(cblink(['name' => 'error_403']));
 }
 
@@ -15,7 +15,7 @@ if (PARENT_PAGE == 'videos_public') {
     User::getInstance()->hasPermissionOrRedirect('view_videos');
 }
 
-if( !isSectionEnabled('videos') ){
+if (!isSectionEnabled('videos')) {
     redirect_to(Network::get_server_url());
 }
 if (config('enable_public_video_page') != 'yes' && PARENT_PAGE == 'videos_public') {
@@ -32,9 +32,9 @@ $page = mysql_clean($_GET['page']);
 $get_limit = create_query_limit($page, config('videos_list_per_page'));
 $sort_label = SortType::getSortLabelById($_GET['sort']) ?? '';
 $params = Video::getInstance()->getFilterParams($sort_label, []);
-$params = Video::getInstance()->getFilterParams($_GET['time']??'', $params);
+$params = Video::getInstance()->getFilterParams($_GET['time'] ?? '', $params);
 $params['limit'] = $get_limit;
-if( $child_ids ){
+if ($child_ids) {
     $params['category'] = $child_ids;
 }
 if (config('enable_public_video_page') == 'yes') {
@@ -54,19 +54,21 @@ $videos = Video::getInstance()->getAll($params);
 assign('videos', $videos);
 
 assign('sort_list', display_sort_lang_array(Video::getInstance()->getSortList()));
-assign('sort_link', $_GET['sort']??0);
+assign('sort_link', $_GET['sort'] ?? 0);
 assign('default_sort', SortType::getDefaultByType('videos'));
 assign('time_list', time_links());
 
-if( empty($videos) ){
+if (empty($videos)) {
     $count = 0;
-} else if( count($videos) < config('videos_list_per_page') && $page == 1 ){
-    $count = count($videos);
 } else {
-    unset($params['limit']);
-    unset($params['order']);
-    $params['count'] = true;
-    $count = Video::getInstance()->getAll($params);
+    if (count($videos) < config('videos_list_per_page') && $page == 1) {
+        $count = count($videos);
+    } else {
+        unset($params['limit']);
+        unset($params['order']);
+        $params['count'] = true;
+        $count = Video::getInstance()->getAll($params);
+    }
 }
 assign('anonymous_id', userquery::getInstance()->get_anonymous_user());
 $total_pages = count_pages($count, config('videos_list_per_page'));
@@ -77,7 +79,10 @@ foreach ($videos as $video) {
     }
 }
 Assign('ids_to_check_progress', json_encode($ids_to_check_progress));
-
+$min_suffixe = System::isInDev() ? '' : '.min';
+ClipBucket::getInstance()->addJS([
+    'pages/videos/videos' . $min_suffixe . '.js' => 'admin',
+]);
 //Pagination
 $extra_params = null;
 $tag = '<li><a #params#>#page#</a><li>';

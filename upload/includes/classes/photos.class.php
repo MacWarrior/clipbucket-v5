@@ -1,5 +1,5 @@
 <?php
-class Photo
+class Photo extends Objects
 {
     private static $photo;
     private $tablename = '';
@@ -7,6 +7,8 @@ class Photo
     private $display_block = '';
     private $search_limit = 0;
     private $display_var_name = '';
+
+    public const TYPE = 'photo';
 
     /**
      * @throws Exception
@@ -366,8 +368,9 @@ class Photo
         }
 
         if ($param_join_flag && Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '255') && !$param_count) {
-            $join[] = ' LEFT JOIN ' . cb_sql_table(Flag::getTableName()) . ' ON ' . Flag::getTableName() . '.id_element = ' . $this->tablename . '.photo_id AND ' . Flag::getTableName() . '.id_flag_element_type = (SELECT id_flag_element_type FROM ' . tbl(Flag::getTableNameElementType()) . ' WHERE name = \'photo\' ) ';
-            $select[] = ' IF(COUNT(distinct ' . Flag::getTableName() . '.flag_id) > 0, 1, 0) AS is_flagged ';
+            $flag_constraint = self::getFlagConstraint();
+            $join[] = $flag_constraint['join'];
+            $select[] = $flag_constraint['select'];
         }
 
         if( $param_group ){

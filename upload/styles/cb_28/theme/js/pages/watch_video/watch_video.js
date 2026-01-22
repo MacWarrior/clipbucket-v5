@@ -1,7 +1,7 @@
 var cookieToSave, commentDataCheck;
 var link_type = "videos";
 
-$(document).ready(function () {
+$(function () {
     cookieToSave = 'comment_data_u' + userid + "v" + current_video;
     commentDataCheck = $.cookie(cookieToSave);
     if (commentDataCheck !== 'null') {
@@ -151,6 +151,28 @@ $(document).ready(function () {
             })
         }, 60000);
     }
+
+    $('.manage_favorite').on('click', function (e) {
+        let button = $(this);
+        if (button.hasClass('glyphicon-heart')) {
+            button.removeClass('glyphicon-heart').html(_cb.loading_img);
+            //remove fav
+            _cb.remove_from_fav('video', videoid).then(function (data) {
+                button.html('').addClass('glyphicon-heart-empty');
+                button.attr('title', lang['remove_from_favorites']);
+            }).catch(function (error) {
+                button.addClass('glyphicon-heart').html('');
+            });
+        } else {
+            button.removeClass('glyphicon-heart-empty').html(_cb.loading_img);
+            _cb.add_to_favNew('video', videoid).then(function (data) {
+                button.html('').addClass('glyphicon-heart');
+                button.attr('title', lang['add_to_my_favorites']);
+            }).catch(function (error) {
+                button.addClass('glyphicon-heart-empty').html('');
+            });
+        }
+    });
 });
 
 function getViewHistory(video_id, page) {
@@ -179,4 +201,3 @@ function showSpinner() {
 function hideSpinner() {
     $('.taskHandler').hide();
 }
-

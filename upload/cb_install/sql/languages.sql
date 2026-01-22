@@ -1744,4 +1744,6 @@ VALUES ('ongoing_conversion'),
        ('confirmation_upgrade_core_php_version_require'),
        ('option_enable_allow_alias_email'),
        ('option_enable_allow_alias_email_hint'),
-       ('error_alias_email_not_allowed');
+       ('error_alias_email_not_allowed'),
+       ('option_enable_favorite_icon'),
+       ('option_enable_favorite_icon_hint');
