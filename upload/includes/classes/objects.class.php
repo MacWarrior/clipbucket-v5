@@ -268,7 +268,7 @@ abstract class Objects
                 $newrate = 10;
             }
         }
-        if ($histo_value != $rating) {
+        if ($histo_value !== $rating) {
             $histo[User::getInstance()->getCurrentUserID()] = [
                 'userid'   => User::getInstance()->getCurrentUserID(),
                 'username' => User::getInstance()->get('username'),
