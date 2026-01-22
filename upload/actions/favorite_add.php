@@ -7,7 +7,7 @@ try {
     if (!User::getInstance()->isUserConnected()) {
         throw new Exception(lang('please_login'));
     }
-    if (!Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '999')) {
+    if (!Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '8')) {
         throw new Exception(lang('cant_perform_action_until_app_fully_updated'));
     }
     if (empty($_POST['type']) || empty($_POST['id'])) {

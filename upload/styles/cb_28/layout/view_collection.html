@@ -111,7 +111,7 @@
             <div class="clearfix fav-repo">
                 <div class="show clearfix photoStats">
                     {if User::getInstance()->getCurrentUserID()}
-                        <a class="btn btn-ghost" id="addToFav" {if Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '999')} onclick="slide_up_watch_video('#video_action_result_cont');_cb.add_to_favNew('collection','{$c.collection_id}');"
+                        <a class="btn btn-ghost" id="addToFav" {if Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '8')} onclick="slide_up_watch_video('#video_action_result_cont');_cb.add_to_favNew('collection','{$c.collection_id}');"
                                 {else} disabled="disabled" title="{lang('cant_perform_action_until_app_fully_updated')}" {/if}>
                             {lang code='add_to_my_favorites'}</a>
                         {if User::getInstance()->getCurrentUserID() != $photo.userid}
