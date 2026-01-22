@@ -10,10 +10,8 @@ class MWIP extends \Migration
      */
     public function start()
     {
-
         self::deleteTranslation('you_have_already_voted_channel');
         self::deleteTranslation('you_hv_already_rated_vdo');
         self::deleteTranslation('you_hv_already_rated_photo');
-
     }
 }
