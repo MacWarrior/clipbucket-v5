@@ -27,12 +27,6 @@ switch ($mode) {
             redirect_to(cblink(['name' => 'my_account']));
         }
 
-        if (!empty($_GET['missing_collection'])) {
-            e(lang('collection_not_exist'));
-        }
-        if (!empty($_GET['new_collection'])) {
-            e(lang('collect_added_msg'), 'm');
-        }
 
         if (isset($_GET['delete_collection'])) {
             $collection_id = $_GET['delete_collection'];
@@ -45,7 +39,7 @@ switch ($mode) {
                 Collections::getInstance()->delete_collection($_POST['check_col'][$i]);
             }
             errorhandler::getInstance()->flush();
-            e('selected_collects_del', 'm');
+            e(lang('selected_collects_del'), 'm');
         }
         $collectArray = [
             'userid'  => user_id(),
@@ -82,8 +76,7 @@ switch ($mode) {
         if (!empty($_POST)) {
             Collections::getInstance()->create_collection($_POST);
             if (!error()) {
-                $_POST = '';
-                redirect_to(DirPath::getUrl('root') . 'manage_collections.php?new_collection=1');
+                SessionMessageHandler::add_message(lang('collect_added_msg'), url: DirPath::getUrl('root') . 'manage_collections.php');
             }
         }
         break;
@@ -104,7 +97,7 @@ switch ($mode) {
 
         $collection = Collection::getInstance()->getOne(['collection_id' => $collection_id]);
         if (empty($collection)) {
-            redirect_to(DirPath::getUrl('root') . 'manage_collections.php?missing_collection=1');
+            SessionMessageHandler::add_message(lang('collection_not_exist'), 'e', DirPath::getUrl('root') . 'manage_collections.php');
         }
         $items = Collection::getInstance()->getItemRecursivly(['collection_id' => $collection['collection_id']]);
         if ($collection['type'] == 'videos') {
@@ -202,13 +195,13 @@ switch ($mode) {
 
         if (isset($_GET['remove_fav_collection'])) {
             $collection_id = mysql_clean($_GET['remove_fav_collection']);
-            Collections::getInstance()->action->remove_favorite($collection_id);
+            Collection::getInstance()->removeFromFavorites($collection_id);
         }
 
         if (isset($_POST['remove_selected_favs']) && is_array($_POST['check_col'])) {
             $total = count($_POST['check_col']);
             for ($i = 0; $i < $total; $i++) {
-                Collections::getInstance()->action->remove_favorite($_POST['check_col'][$i]);
+                Collection::getInstance()->removeFromFavorites($_POST['check_col'][$i]);
             }
             errorhandler::getInstance()->flush();
             e(lang('total_fav_collection_removed', $total), 'm');
@@ -220,16 +213,15 @@ switch ($mode) {
         }
 
         $col_arr = [
-            'user'  => user_id(),
             'limit' => $get_limit,
             'order' => tbl('favorites.date_added DESC'),
             'cond'  => $cond
         ];
-        $collections = Collections::getInstance()->action->get_favorites($col_arr);
+        $collections = Collection::getInstance()->getAllFavorites($col_arr);
         assign('collections', $collections);
 
         $col_arr['count_only'] = true;
-        $total_rows = Collections::getInstance()->action->get_favorites($col_arr);
+        $total_rows = Collection::getInstance()->getAllFavorites($col_arr);
         $total_pages = count_pages($total_rows, COLLPP);
 
         //Pagination

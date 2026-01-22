@@ -1,6 +1,7 @@
 <?php
 
-class Video
+class Video extends Objects
+
 {
     private static self $video;
     private $tablename = '';
@@ -13,6 +14,7 @@ class Video
     private $search_limit = 0;
     private $broadcast_option = [];
     private $status_list= [];
+    public const TYPE = 'video';
 
     /**
      * @throws Exception
@@ -185,6 +187,11 @@ class Video
     private function getVideoFields($prefix = false): array
     {
         return $this->getSQLFields('video', $prefix);
+    }
+
+    public function getFieldId(): string
+    {
+        return $this->field_id;
     }
 
     private function getCategoriesFields($prefix = false): array
@@ -505,8 +512,9 @@ class Video
         }
 
         if ($param_join_flag && Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '248') && !$param_count) {
-            $join[] = ' LEFT JOIN ' . cb_sql_table(Flag::getTableName()) . ' ON ' . Flag::getTableName() . '.id_element = ' . $this->tablename . '.videoid AND ' . Flag::getTableName() . '.id_flag_element_type = (SELECT id_flag_element_type FROM ' . tbl(Flag::getTableNameElementType()) . ' WHERE name = \'video\' ) ';
-            $select[] = ' IF(COUNT(distinct ' . Flag::getTableName() . '.flag_id) > 0, 1, 0) AS is_flagged ';
+            $flag_constraint = self::getFlagConstraint();
+            $join[] = $flag_constraint['join'];
+            $select[] = $flag_constraint['select'];
 
         }
 
@@ -1273,6 +1281,7 @@ class Video
 
         return Clipbucket_db::getInstance()->insert(tbl('video_embed'), $fields, $values);
     }
+
 }
 
 class CBvideo extends CBCategory
@@ -2785,109 +2794,6 @@ class CBvideo extends CBCategory
         assign('disable', $params['disable']);
 
         Template('blocks/common/rating.html');
-    }
-
-    /**
-     * Function used to rate video
-     *
-     * @param $id
-     * @param $rating
-     *
-     * @return array
-     * @throws Exception
-     */
-    function rate_video($id, $rating): array
-    {
-        if (!is_numeric($rating) || $rating <= 9) {
-            $rating = 0;
-        }
-        if ($rating >= 10) {
-            $rating = 10;
-        }
-
-        $rating_details = $this->get_video_rating($id);
-        $voter_id = $rating_details['voter_ids'];
-
-        $new_by = $rating_details['rated_by'];
-        $newrate = $rating_details['rating'];
-
-        $Oldvoters = explode('|', $voter_id);
-
-        if (is_array($Oldvoters) && count($Oldvoters) > 2) {
-            foreach ($Oldvoters as $voter) {
-                if ($voter) {
-                    $voters[$voter] = [
-                        'userid' => $voter,
-                        'time'   => now(),
-                        'method' => 'old'
-                    ];
-                }
-            }
-        } else {
-            if (!empty($js)) {
-                $voters = $js->json_decode($voter_id, true);
-            } else {
-                $voters = json_decode($voter_id, true);
-            }
-        }
-
-        if (!empty($voters)) {
-            $already_voted = array_key_exists(user_id(), $voters);
-        }
-
-        if (!user_id()) {
-            e(lang('please_login_to_rate'));
-        } elseif (user_id() == $rating_details['userid'] && !config('own_video_rating')) {
-            e(lang('you_cant_rate_own_video'));
-        } elseif (!empty($already_voted)) {
-            e(lang('you_hv_already_rated_vdo'));
-        } elseif (!config('video_rating') || $rating_details['allow_rating'] != 'yes') {
-            e(lang('vid_rate_disabled'));
-        } else {
-            $voters[user_id()] = [
-                'userid'   => user_id(),
-                'username' => user_name(),
-                'time'     => now(),
-                'rating'   => $rating
-            ];
-
-            $total_voters = count($voters);
-
-            if (!empty($js)) {
-                $voters = $js->json_encode($voters);
-            } else {
-                $voters = json_encode($voters);
-            }
-
-            $t = $rating_details['rated_by'] * $rating_details['rating'];
-            $new_by = $total_voters;
-
-            $newrate = ($t + $rating) / $new_by;
-            if ($newrate > 10) {
-                $newrate = 10;
-            }
-            Clipbucket_db::getInstance()->update(tbl($this->dbtbl['video']), ['rating', 'rated_by', 'voter_ids'], [$newrate, $new_by, '|no_mc|' . $voters], ' videoid=\'' . mysql_clean($id) . '\'');
-            $userDetails = [
-                'object_id' => $id,
-                'type'      => 'video',
-                'time'      => now(),
-                'rating'    => $rating,
-                'userid'    => user_id(),
-                'username'  => user_name()
-            ];
-            /* Updating user details */
-            update_user_voted($userDetails);
-            e(lang('thnx_for_voting'), 'm');
-        }
-
-        return [
-            'rating'    => $newrate
-            , 'ratings' => $new_by
-            , 'total'   => 10
-            , 'id'      => $id
-            , 'type'    => 'video'
-            , 'disable' => 'disabled'
-        ];
     }
 
     /**

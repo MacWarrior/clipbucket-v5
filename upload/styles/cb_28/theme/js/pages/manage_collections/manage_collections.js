@@ -65,4 +65,10 @@ document.addEventListener('DOMContentLoaded', function () {
     $('#collection_id_parent').select2({
         width: '100%'
     });
+
+    $('#delete_selected').on('click', function (e) {
+        e.preventDefault();
+        $('#input_delete_selected').val('1');
+        $(this).closest('form').submit();
+    })
 });

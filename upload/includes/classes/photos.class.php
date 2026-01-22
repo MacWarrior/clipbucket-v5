@@ -1,5 +1,5 @@
 <?php
-class Photo
+class Photo extends Objects
 {
     private static $photo;
     private $tablename = '';
@@ -7,6 +7,8 @@ class Photo
     private $display_block = '';
     private $search_limit = 0;
     private $display_var_name = '';
+
+    public const TYPE = 'photo';
 
     /**
      * @throws Exception
@@ -366,8 +368,9 @@ class Photo
         }
 
         if ($param_join_flag && Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '255') && !$param_count) {
-            $join[] = ' LEFT JOIN ' . cb_sql_table(Flag::getTableName()) . ' ON ' . Flag::getTableName() . '.id_element = ' . $this->tablename . '.photo_id AND ' . Flag::getTableName() . '.id_flag_element_type = (SELECT id_flag_element_type FROM ' . tbl(Flag::getTableNameElementType()) . ' WHERE name = \'photo\' ) ';
-            $select[] = ' IF(COUNT(distinct ' . Flag::getTableName() . '.flag_id) > 0, 1, 0) AS is_flagged ';
+            $flag_constraint = self::getFlagConstraint();
+            $join[] = $flag_constraint['join'];
+            $select[] = $flag_constraint['select'];
         }
 
         if( $param_group ){
@@ -2867,72 +2870,6 @@ class CBPhotos
         return false;
     }
 
-    /**
-     * Used to rate photo
-     *
-     * @param $id
-     * @param $rating
-     *
-     * @return array
-     * @throws Exception
-     */
-    function rate_photo($id, $rating): array
-    {
-        if (!is_numeric($rating) || $rating <= 9) {
-            $rating = 0;
-        }
-        if ($rating >= 10) {
-            $rating = 10;
-        }
-
-        $c_rating = $this->current_rating($id);
-        $voters = $c_rating['voters'];
-
-        $new_rate = $c_rating['rating'];
-        $rated_by = $c_rating['rated_by'];
-
-        $voters = json_decode($voters, true);
-
-        if (!empty($voters)) {
-            $already_voted = array_key_exists(user_id(), $voters);
-        }
-
-        if (!user_id()) {
-            e(lang('please_login_to_rate'));
-        } elseif (user_id() == $c_rating['userid'] && config('own_photo_rating') != 'yes') {
-            e(lang('you_cannot_rate_own_photo'));
-        } elseif (!empty($already_voted)) {
-            e(lang('you_hv_already_rated_photo'));
-        } elseif ($c_rating['allow_rating'] == 'no' || config('photo_rating') != 'yes') {
-            e(lang('photo_rate_disabled'));
-        } else {
-            $voters[user_id()] = [
-                'userid'   => user_id(),
-                'username' => user_name(),
-                'time'     => now(),
-                'rating'   => $rating
-            ];
-            $voters = json_encode($voters);
-
-            $t = $c_rating['rated_by'] * $c_rating['rating'];
-            $rated_by = $c_rating['rated_by'] + 1;
-            $new_rate = ($t + $rating) / $rated_by;
-            Clipbucket_db::getInstance()->update(tbl('photos'), ['rating', 'rated_by', 'voters'], ["$new_rate", "$rated_by", "|no_mc|$voters"], ' photo_id = ' . $id);
-            $userDetails = [
-                "object_id" => $id,
-                "type"      => 'photo',
-                "time"      => now(),
-                "rating"    => $rating,
-                "userid"    => user_id(),
-                "username"  => user_name()
-            ];
-            /* Updating user details */
-            update_user_voted($userDetails);
-            e(lang('thnx_for_voting'), 'm');
-        }
-
-        return ['rating' => $new_rate, 'rated_by' => $rated_by, 'total' => 10, 'id' => $id, 'type' => 'photo', 'disable' => 'disabled'];
-    }
 
     /**
      * Used to generate different

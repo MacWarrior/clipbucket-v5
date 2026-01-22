@@ -332,7 +332,8 @@ INSERT INTO `{tbl_prefix}config` (`configid`, `name`, `value`) VALUES
     (NULL, 'collections_enable_fullwidth', 'yes'),
     (NULL, 'collection_enable_fullwidth', 'yes'),
     (NULL, 'enable_user_profil_censor', 'no'),
-    (NULL, 'enable_allow_alias_email', 'yes');
+    (NULL, 'enable_allow_alias_email', 'yes'),
+    (NULL, 'enable_favorite_icon', 'yes');
 
 
 INSERT INTO `{tbl_prefix}video_resolution` (`title`, `ratio`, `enabled`, `width`, `height`, `video_bitrate`) VALUES
@@ -375,7 +376,7 @@ INSERT INTO `{tbl_prefix}tags_type` (`name`) VALUES ('video'), ('photo'), ('coll
 
 UPDATE `{tbl_prefix}video_thumbs` SET `type` = 'auto' WHERE `type` IS NULL;
 
-INSERT INTO `{tbl_prefix}categories_type` (`name`)
+INSERT INTO `{tbl_prefix}object_type` (`name`)
 VALUES ('video'),
        ('photo'),
        ('collection'),
@@ -383,23 +384,23 @@ VALUES ('video'),
        ('playlist');
 
 SET @type_collection = (
-    SELECT id_category_type
-    FROM `{tbl_prefix}categories_type`
+    SELECT id_object_type
+    FROM `{tbl_prefix}object_type`
     WHERE name LIKE 'collection'
 );
 SET @type_user = (
-    SELECT id_category_type
-    FROM `{tbl_prefix}categories_type`
+    SELECT id_object_type
+    FROM `{tbl_prefix}object_type`
     WHERE name LIKE 'user'
 );
 SET @type_video = (
-    SELECT id_category_type
-    FROM `{tbl_prefix}categories_type`
+    SELECT id_object_type
+    FROM `{tbl_prefix}object_type`
     WHERE name LIKE 'video'
 );
 SET @type_photo = (
-    SELECT id_category_type
-    FROM `{tbl_prefix}categories_type`
+    SELECT id_object_type
+    FROM `{tbl_prefix}object_type`
     WHERE name LIKE 'photo'
 );
 
@@ -1688,8 +1689,6 @@ INSERT INTO `{tbl_prefix}fontawesome_icons` (`icon`) VALUES
     ('youtube'),
     ('youtube-play'),
     ('youtube-square');
-
-INSERT IGNORE INTO `{tbl_prefix}flag_element_type` (`name`) SELECT name FROM `{tbl_prefix}categories_type`;
 
 INSERT IGNORE INTO `{tbl_prefix}flag_type` (`language_key`)
 VALUES ('inapp_content'),
