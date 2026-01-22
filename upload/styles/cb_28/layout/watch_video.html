@@ -236,7 +236,9 @@
                                 <div class="clearfix btn-big">
                                     <div id="video_action_result_cont"></div>
                                     {if config('enable_favorite_icon') != 'yes'}
-                                        <a id="addfav" class="btn btn-block btn-primary" href="javascript:void(0);" onclick="_cb.add_to_favNew('video','{$vdo.videoid}');">{lang code='add_to_my_favorites'}</a>
+                                        <a id="addfav" class="btn btn-block btn-primary" href="javascript:void(0);" {if Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '999')} onclick="_cb.add_to_favNew('video','{$vdo.videoid}');"
+                                                {else} disabled="disabled" title="{lang('cant_perform_action_until_app_fully_updated')}" {/if}>
+                                            {lang code='add_to_my_favorites'}</a>
                                     {/if}
                                 </div>
 
