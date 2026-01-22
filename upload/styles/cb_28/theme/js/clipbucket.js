@@ -780,49 +780,63 @@
 		 * @author: Saqib Razzaq
 		 */
 
-		this.rateNew = function (id,rating,type) {
-			curObj = this;
-			var page = baseurl+'actions/ajax.php';
-			$.post(page, {
-					mode : 'rating',
-					id:id,
-					rating:rating,
-					type:type
-				},
-				function(data)
-				{
-					if(!data) {
-						alert('No data');
-					} else {
-						likesSect = $('.likes').find('span:nth-child(2)').html();
-						dislikesSect = $('.dislikes').find('span:nth-child(2)').html();
-						currLikes = parseInt(likesSect);
-						currDislikes = parseInt(dislikesSect);
-
-						isError = $(data).find('span.error').html();
-						isOk = $(data).find('span.msg').html();
-						if (isError) {
-							if (isError.length > 2) {
-								curObj.throwHeadMsg('danger',isError, 5000, true);
-							}
-						} else if (isOk) {
-							if (isOk.length > 2) {
-								if (rating == 5) {
-									newRating = currLikes + 1;
-									$('.likes').addClass('rated').find('span:nth-child(2)').html(newRating);
-								} else {
-									newRating = currDislikes + 1;
-									if (newRating < 0) {
-										newRating = 0;
-									}
-									$('.dislikes').addClass('rated').find('span:nth-child(2)').html(newRating);
-								}
-								curObj.throwHeadMsg('success',isOk, 5000, true);
-							}
-						}
-					}
-				},'text');
-		}
+        this.rateNew = function (id, rating, type) {
+            curObj = this;
+            var page = baseurl + 'actions/rating_update.php';
+            $.post(page, {
+                    id: id,
+                    rating: rating,
+                    type: type
+                },
+                function (data) {
+                    if (!data.success) {
+                        alert('No data');
+                    } else {
+                        const currLikes = parseInt($('.likes').find('span:nth-child(2)').html());
+                        const currDislikes = parseInt($('.dislikes').find('span:nth-child(2)').html());
+                        let newRating;
+                        if (rating == 5) {
+                            if ($('.likes').hasClass('rated')) {
+                                newRating = currLikes - 1;
+                                if (newRating < 0) {
+                                    newRating = 0;
+                                }
+                                $('.likes').removeClass('rated').find('span:nth-child(2)').html(newRating);
+                            } else {
+                                newRating = currLikes + 1;
+                                $('.likes').addClass('rated').find('span:nth-child(2)').html(newRating);
+                                if ($('.dislikes').hasClass('rated')) {
+                                    newRating = currDislikes - 1;
+                                    if (newRating < 0) {
+                                        newRating = 0;
+                                    }
+                                    $('.dislikes').removeClass('rated').find('span:nth-child(2)').html(newRating);
+                                }
+                            }
+                        } else {
+                            if ($('.dislikes').hasClass('rated')) {
+                                newRating = currDislikes - 1;
+                                if (newRating < 0) {
+                                    newRating = 0;
+                                }
+                                $('.dislikes').removeClass('rated').find('span:nth-child(2)').html(newRating);
+                            } else {
+                                newRating = currDislikes + 1;
+                                $('.dislikes').addClass('rated').find('span:nth-child(2)').html(newRating);
+                                if ($('.likes').hasClass('rated')) {
+                                    newRating = currLikes - 1;
+                                    if (newRating < 0) {
+                                        newRating = 0;
+                                    }
+                                    $('.likes').removeClass('rated').find('span:nth-child(2)').html(newRating);
+                                }
+                            }
+                        }
+                    }
+                    curObj.throwHeadDivMsg(data.msg, 5000, true);
+                }, 'json'
+            );
+        }
 
 		this.showMeTheMsg = function(data, alertDiv) {
 			let curObj = this;
