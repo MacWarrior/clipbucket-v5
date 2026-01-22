@@ -1,5 +1,5 @@
 <?php
-class User
+class User extends Objects
 {
     private static $user;
     private $tablename = '';
@@ -15,6 +15,7 @@ class User
     private $user_notification_contact;
 
     private $default_homepage_list = [];
+    public const TYPE = 'user';
 
     /**
      * @throws Exception
@@ -5443,72 +5444,6 @@ class userquery extends CBCategory
     }
 
     /**
-     * Used to rate photo
-     *
-     * @param $id
-     * @param $rating
-     *
-     * @return array
-     * @throws Exception
-     */
-    function rate_user($id, $rating): array
-    {
-        if (!is_numeric($rating) || $rating <= 9) {
-            $rating = 0;
-        }
-        if ($rating >= 10) {
-            $rating = 10;
-        }
-
-        $c_rating = $this->current_rating($id);
-        $voters = $c_rating['voters'];
-        $new_rate = $c_rating['rating'];
-        $rated_by = $c_rating['rated_by'];
-
-        $voters = json_decode($voters, true);
-
-        if (!empty($voters)) {
-            $already_voted = array_key_exists(user_id(), $voters);
-        }
-
-        if (!user_id()) {
-            e(lang('please_login_to_rate'));
-        } elseif (user_id() == $c_rating['userid'] && !config('own_channel_rating')) {
-            e(lang('you_cant_rate_own_channel'));
-        } elseif (!empty($already_voted)) {
-            e(lang('you_have_already_voted_channel'));
-        } elseif ($c_rating['allow_ratings'] == 'no' || !config('channel_rating')) {
-            e(lang('channel_rating_disabled'));
-        } else {
-            $voters[user_id()] = [
-                'userid'   => user_id(),
-                'username' => user_name(),
-                'time'     => now(),
-                'rating'   => $rating
-            ];
-            $voters = json_encode($voters);
-
-            $t = $c_rating['rated_by'] * $c_rating['rating'];
-            $rated_by = $c_rating['rated_by'] + 1;
-            $new_rate = ($t + $rating) / $rated_by;
-            Clipbucket_db::getInstance()->update(tbl('user_profile'), ['rating', 'rated_by', 'voters'], ["$new_rate", "$rated_by", "|no_mc|$voters"], ' userid = ' . $id . '');
-            $userDetails = [
-                'object_id' => $id,
-                'type'      => 'user',
-                'time'      => now(),
-                'rating'    => $rating,
-                'userid'    => user_id(),
-                'username'  => user_name()
-            ];
-            /* Updating user details */
-            update_user_voted($userDetails);
-            e(lang('thnx_for_voting'), 'm');
-        }
-
-        return ['rating' => $new_rate, 'rated_by' => $rated_by, 'total' => 10, 'id' => $id, 'type' => 'user', 'disable' => 'disabled'];
-    }
-
-    /**
      * Used to get current rating
      *
      * @param $id
@@ -5630,18 +5565,9 @@ class userquery extends CBCategory
             $voted = '';
             $votedDetails = Clipbucket_db::getInstance()->select(tbl('users'), 'voted', " userid = '$userid'");
             if (!empty($votedDetails)) {
-                if (!empty($js)) {
-                    $voted = $js->json_decode($votedDetails[0]['voted'], true);
-                } else {
-                    $voted = json_decode($votedDetails[0]['voted'], true);
-                }
+                $voted = json_decode($votedDetails[0]['voted'], true);
             }
-
-            if (!empty($js)) {
-                $votedEncode = $js->json_encode($voted);
-            } else {
-                $votedEncode = json_encode($voted);
-            }
+            $votedEncode = json_encode($voted);
 
             if (!empty($votedEncode)) {
                 Clipbucket_db::getInstance()->update(tbl('users'), ['voted'], ["|no_mc|$votedEncode"], " userid='$userid'");
