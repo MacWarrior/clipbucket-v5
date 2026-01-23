@@ -75,15 +75,13 @@ $(function () {
                     const fixed = val.replace(/(\d{1,2})th/g, '$1');
                     val = format_date_to_display(new Date(fixed));
                 }
-
                 $(this).addClass('hidden');
                 const text_element = $('#' + field + '_text_' + num + '');
-                if (field === 'author') {
-
-                }
                 if (field === 'link') {
                     text_element.attr('href', val);
                     $('#author_text_' + num).attr('href', val);
+                } else if (field === 'title') {
+                    $('#link_text_' + num).text(val);
                 } else {
                     text_element.text(val);
                 }

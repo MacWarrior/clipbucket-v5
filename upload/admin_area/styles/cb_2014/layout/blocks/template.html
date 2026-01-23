@@ -5,40 +5,40 @@
                 <img src="{$cbtpl->get_preview_thumb($template.dir)}" class="img-thumbnail">
                 <h3 id="name_text_{$index}">{$template.name}</h3>
                 <div class="input-group hidden" id="name_group_{$index}" style="width: 100%;">
-                    <input type="text" name="name_{$index}" id="name_{$index}" value="{$template.name}" style="width: 100%; height: 34px;">
+                    <input type="text" name="name_{$index}" id="name_{$index}" value="{$template.name}" style="width: 100%; height: 34px;" placeholder="{lang('my_amazing_template')}">
                     <span title="{lang('save')}" data-num="{$index}" style="height: 34px; width: 40px;" class="input-group-addon glyphicon glyphicon-save save_name save_template_field" id="save_name_{$index}"></span>
                 </div>
                 <em>
                     <a id="author_text_{$index}" href="{$template.website.link}"><strong>{$template.author}</strong></a>
                     <div class="input-group hidden" id="author_group_{$index}" style="width: 100%;">
-                        <input type="text" name="author_{$index}" id="author_{$index}" value="{$template.author}" style="width: 100%; height: 34px;">
+                        <input type="text" name="author_{$index}" id="author_{$index}" value="{$template.author}" style="width: 100%; height: 34px;" placeholder="{lang('author_name')}">
                         <span title="{lang('save')}" data-num="{$index}" style="height: 34px; width: 40px;" class="input-group-addon glyphicon glyphicon-save save_author save_template_field" id="save_author_{$index}"></span>
                     </div>
                 </em>
                 <p id="description_text_{$index}">{$template.description}</p>
                 <div class="input-group hidden" id="description_group_{$index}" style="width: 100%;">
-                    <input type="text" name="description_{$index}" id="description_{$index}" value="{$template.description}" style="width: 100%; height: 34px;">
+                    <input type="text" name="description_{$index}" id="description_{$index}" value="{$template.description}" style="width: 100%; height: 34px;" placeholder="{lang('this_is_my_amazing_template')}">
                     <span title="{lang('save')}" data-num="{$index}" style="height: 34px; width: 40px;" class="input-group-addon glyphicon glyphicon-save save_description save_template_field" id="save_description_{$index}"></span>
                 </div>
                 <div>Version : <span id="version_text_{$index}">{$template.version}</span>
                     <div class="input-group hidden" id="version_group_{$index}" style="width: 100%;">
-                        <input type="text" name="version_{$index}" id="version_{$index}" value="{$template.version}" style="width: 100%; height: 34px;">
+                        <input type="text" name="version_{$index}" id="version_{$index}" value="{$template.version}" style="width: 100%; height: 34px;" placeholder="5.5.3">
                         <span data-num="{$index}" style="height: 34px; width: 40px;" class="input-group-addon glyphicon glyphicon-save save_version save_template_field" id="save_version_{$index}"></span>
                     </div>
                     , Released on <span id="released_text_{$index}">{$template.released}</span>
                     <input type="hidden" class="hidden_released" value="{$template.released|date_format}">
                     <div class="input-group hidden" id="released_group_{$index}" style="width: 100%;">
-                        <input type="text" name="released_{$index}" class="form-control toDatepicker" id="released_{$index}" value="{$template.released}" style="width: 100%; height: 34px;">
+                        <input type="text" name="released_{$index}" class="form-control toDatepicker" id="released_{$index}" value="{$template.released}" style="width: 100%; height: 34px;" placeholder="2026-01-01">
                         <span title="{lang('save')}" data-num="{$index}" style="height: 34px; width: 40px;" class="input-group-addon glyphicon glyphicon-save save_released save_template_field" id="save_released_{$index}"></span>
                     </div>
                 </div>
                 <p>Website : <a id="link_text_{$index}" href="{$template.website.link}">{$template.website.title}</a>
                     <div class="input-group hidden" id="link_group_{$index}" style="width: 100%;">
-                        <input type="text" name="link_{$index}" id="link_{$index}" value="{$template.website.link}" style="width: 100%; height: 34px;">
+                        <input type="text" name="link_{$index}" id="link_{$index}" value="{$template.website.link}" style="width: 100%; height: 34px;" placeholder="http://mywebsite.com">
                         <span title="{lang('save')}" data-num="{$index}" style="height: 34px; width: 40px;" class="input-group-addon glyphicon glyphicon-save save_link save_template_field" id="save_link_{$index}"></span>
                     </div>
                     <div class="input-group hidden" id="title_group_{$index}" style="width: 100%;">
-                        <input type="text" name="title_{$index}" id="title_{$index}" value="{$template.website.title}" style="width: 100%; height: 34px;">
+                        <input type="text" name="title_{$index}" id="title_{$index}" value="{$template.website.title}" style="width: 100%; height: 34px;" placeholder="{lang('my_amazing_website')}">
                         <span title="{lang('save')}" data-num="{$index}" style="height: 34px; width: 40px;" class="input-group-addon glyphicon glyphicon-save save_title save_template_field" id="save_title_{$index}"></span>
                     </div>
                 </p>

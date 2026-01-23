@@ -9,6 +9,10 @@ if (!in_array($_POST['field'], CBTemplate::$allowed_fields)) {
     e(lang('invalid_field'));
     $success = false;
 }
+if (empty($_POST['value'])) {
+    e(lang('field_cannot_be_empty'));
+    $success = false;
+}
 try {
     if ($success) {
         CBTemplate::save($_POST['field'], $_POST['value'], $_POST['path']);

@@ -84,6 +84,31 @@ class MWIP extends \Migration
             'fr' => 'Édition de %s',
             'en' => 'Editing %s'
         ]);
+
+        self::generateTranslation('field_cannot_be_empty', [
+            'fr'=>'Le champs ne peut pas être vide',
+            'en'=>'Field cannot be empty'
+        ]);
+
+        self::generateTranslation('my_amazing_template', [
+            'fr'=>'Mon super thème',
+            'en'=>'My amazing template'
+        ]);
+
+        self::generateTranslation('author_name', [
+            'fr'=>'Nom de l\'auteur',
+            'en'=>'Author name'
+        ]);
+
+        self::generateTranslation('this_is_my_amazing_template', [
+            'fr'=>'Ceci est mon super thème',
+            'en'=>'This is my amazing template'
+        ]);
+
+        self::generateTranslation('my_amazing_website', [
+            'fr'=>'Mon super site internet',
+            'en'=>'My amazing website'
+        ]);
     }
 
 }

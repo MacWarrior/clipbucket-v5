@@ -1758,4 +1758,9 @@ VALUES ('ongoing_conversion'),
        ('css_files'),
        ('select_theme_to_edit'),
        ('edit_template'),
-       ('editing_template');
+       ('editing_template'),
+       ('field_cannot_be_empty'),
+       ('my_amazing_template'),
+       ('author_name'),
+       ('this_is_my_amazing_template'),
+       ('my_amazing_website');

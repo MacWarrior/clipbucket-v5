@@ -32,6 +32,9 @@ class CBTemplate
         if($field == 'link') {
             $field = 'website';
         }
+        if ($field == 'released' && preg_match('/[a-zA-Z]/', $value)) {
+            throw new Exception(lang('error_format_date'));
+        }
         $xml = simplexml_load_file($template_xml);
         if ($field == 'title') {
             $xml->website->attributes()['title'] = $value;
