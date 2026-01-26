@@ -1743,4 +1743,6 @@ VALUES ('ongoing_conversion'),
        ('option_enable_allow_alias_email_hint'),
        ('error_alias_email_not_allowed'),
        ('option_enable_favorite_icon'),
-       ('option_enable_favorite_icon_hint');
+       ('option_enable_favorite_icon_hint'),
+       ('option_enable_favorite_icon_hint_photo'),
+       ('option_enable_favorite_icon_hint_collection');
