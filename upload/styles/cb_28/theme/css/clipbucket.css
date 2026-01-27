@@ -130,7 +130,7 @@
 	white-space: nowrap;
 }
 
-.watch-rating-icon {
+.watch-rating-icon, .item-photo .photo-info span.watch-rating-icon {
 	color: #e74c3c;
 	font-size: 18px;
 	line-height: 1;

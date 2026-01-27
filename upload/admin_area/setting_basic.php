@@ -172,6 +172,8 @@ if (isset($_POST['update'])) {
         , 'player_thumbnails'
         , 'enable_allow_alias_email'
         , 'enable_favorite_icon'
+        , 'enable_favorite_icon_photo'
+        , 'enable_favorite_icon_collection'
     ];
 
     $config_booleans_to_refactor = [
@@ -445,7 +447,9 @@ if (isset($_POST['update'])) {
         'collections_enable_fullwidth',
         'collection_enable_fullwidth',
         'enable_allow_alias_email',
-        'enable_favorite_icon'
+        'enable_favorite_icon',
+        'enable_favorite_icon_photo',
+        'enable_favorite_icon_collection'
     ];
 
     //Numeric Array

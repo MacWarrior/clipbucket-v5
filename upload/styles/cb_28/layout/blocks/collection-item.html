@@ -14,6 +14,9 @@
                 <span>{$collection.total_objects}</span>{lang code=$collection.type}
             </div>
         </a>
+        {if config('enable_favorite_icon_collection') == 'yes' && User::getInstance()->isUserConnected() && Collection::isFavorite($collection.collection_id)}
+            <span class="manage_favorite watch-rating-icon pointer glyphicon glyphicon-heart " title="{lang('remove_from_favorites')}" data-id="{$collection.collection_id}" style="position: absolute; bottom: 5px; right: 5px; top: auto;"></span>
+        {/if}
     </div>
     <img src="{$theme}/images/photo-bg.png" alt="" class="photo-bg no_select"/>
 </div>

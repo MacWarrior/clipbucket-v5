@@ -24,4 +24,6 @@ $(document).ready(function(){
         url.search = params.toString();
         window.location = url.toString();
     });
+
+    _cb.listener_favorite('collection', collection_id);
 });

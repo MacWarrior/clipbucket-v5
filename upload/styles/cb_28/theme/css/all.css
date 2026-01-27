@@ -7141,3 +7141,7 @@ h2 a{
 input.btn-danger:disabled {
   cursor: not-allowed;
 }
+
+.collections-grid .manage_favorite {
+  display: none;
+}
