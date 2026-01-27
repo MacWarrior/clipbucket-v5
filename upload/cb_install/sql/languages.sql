@@ -1743,4 +1743,8 @@ VALUES ('ongoing_conversion'),
        ('option_enable_allow_alias_email_hint'),
        ('error_alias_email_not_allowed'),
        ('option_enable_favorite_icon'),
-       ('option_enable_favorite_icon_hint');
+       ('option_enable_favorite_icon_hint'),
+       ('confirmation_upgrade_core_breaking_version'),
+       ('maintenance_recommended'),
+       ('do_want_to_update'),
+       ('website_closed');
