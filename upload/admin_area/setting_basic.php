@@ -172,6 +172,7 @@ if (isset($_POST['update'])) {
         , 'player_thumbnails'
         , 'enable_allow_alias_email'
         , 'enable_favorite_icon'
+        , 'random_video_order'
     ];
 
     $config_booleans_to_refactor = [
@@ -445,7 +446,8 @@ if (isset($_POST['update'])) {
         'collections_enable_fullwidth',
         'collection_enable_fullwidth',
         'enable_allow_alias_email',
-        'enable_favorite_icon'
+        'enable_favorite_icon',
+        'random_video_order'
     ];
 
     //Numeric Array
