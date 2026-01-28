@@ -1,6 +1,6 @@
 {
   "version":"5.5.3",
-  "revision":"10",
+  "revision":"12",
   "status":"stable",
   "detail":[
     {
@@ -16,6 +16,7 @@
         "Implement video favorite icon"
         ,"Update media rating"
         ,"Update collection management"
+        ,"Add signup date of birth calendar icon"
         ,"Fix possible JS error on register page"
       ]
     },
@@ -26,6 +27,7 @@
         ,"Update compatibility to PHP 8.5.X"
         ,"Cleanup code"
         ,"Drop support for PHP 8.0"
+        ,"Fix possible PHP error with discord logs"
       ]
     },
     {
