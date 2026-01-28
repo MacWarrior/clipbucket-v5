@@ -53,8 +53,8 @@
                             {include file="$style_dir/blocks/videos/thumb_form.html"}
                             {if config('enable_video_poster') == 'yes'}
                                 <div class="formSection clear">
-                                    <h4 {if !Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3','999')} title="{lang('cant_perform_action_until_app_fully_updated')}" class="disabled" {/if}>
-                                        {lang('posters')|ucfirst} {if Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3','999')}<i class="glyphicon glyphicon-chevron-down pull-right"></i>{/if}
+                                    <h4 {if !Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3','14')} title="{lang('cant_perform_action_until_app_fully_updated')}" class="disabled" {/if}>
+                                        {lang('posters')|ucfirst} {if Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3','14')}<i class="glyphicon glyphicon-chevron-down pull-right"></i>{/if}
                                     </h4>
                                     <div class="sectionContent" style="display: none;">
                                         <div class="row">
@@ -76,7 +76,7 @@
                                             <label for="upload_thumbs_poster"></label>
                                             <div class="form-group pull-right">
                                                 <input type="submit" id="upload_thumbs_poster" value="{lang code='upload'}" class="btn btn-primary btn-sm"
-                                                       {if !Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '999')} disabled="disabled" title="Sorry, you cannot perform this action until the application has been fully updated by an administrator"{/if}
+                                                       {if !Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '14')} disabled="disabled" title="Sorry, you cannot perform this action until the application has been fully updated by an administrator"{/if}
                                                 />
                                             </div>
                                         </div>
@@ -86,8 +86,8 @@
                             {/if}
                             {if config('enable_video_backdrop') == 'yes' }
                                 <div class="formSection clear">
-                                    <h4 {if !Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3','999')} title="{lang('cant_perform_action_until_app_fully_updated')}" class="disabled" {/if}>
-                                        {lang('backdrop')|ucfirst} {if Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3','999')}<i class="glyphicon glyphicon-chevron-down pull-right"></i>{/if}
+                                    <h4 {if !Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3','14')} title="{lang('cant_perform_action_until_app_fully_updated')}" class="disabled" {/if}>
+                                        {lang('backdrop')|ucfirst} {if Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3','14')}<i class="glyphicon glyphicon-chevron-down pull-right"></i>{/if}
                                     </h4>
                                     <div class="sectionContent" style="display: none;">
                                         <div class="row">
@@ -109,7 +109,7 @@
                                             <label for="upload_thumbs_backdrop"></label>
                                             <div class="form-group pull-right">
                                                 <input type="submit" id="upload_thumbs_backdrop" value="{lang code='upload'}" class="btn btn-primary btn-sm"
-                                                       {if !Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '999')} disabled="disabled" title="Sorry, you cannot perform this action until the application has been fully updated by an administrator"{/if}
+                                                       {if !Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '14')} disabled="disabled" title="Sorry, you cannot perform this action until the application has been fully updated by an administrator"{/if}
                                                 />
                                             </div>
                                         </div>

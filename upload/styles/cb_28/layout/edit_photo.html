@@ -10,7 +10,7 @@
                 <div>
                     <a href="{CBPhotos::getInstance()->photo_links($p,'view_item')}" target="_blank" class="btn btn-primary">{lang('watch')}</a>
                     <button class="btn btn-primary" type="button" onClick="viewRatings(this,'{$p.photo_id}');">View Ratings</button>
-                    <button class="btn btn-primary" type="button" href="javascript:void(0);" {if Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '999')} onmousedown="delete_item('delete_icon_a','{$photo.photo_id}','{lang code="confirm_del_photo"}','manage_photos.php?mode=uploaded&amp;delete_photo={$p.photo_id}')"
+                    <button class="btn btn-primary" type="button" href="javascript:void(0);" {if Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '14')} onmousedown="delete_item('delete_icon_a','{$photo.photo_id}','{lang code="confirm_del_photo"}','manage_photos.php?mode=uploaded&amp;delete_photo={$p.photo_id}')"
                             {else} disabled="disabled" title="Sorry, you cannot perform this action until the application has been fully updated by an administrator"{/if}
                             id="delete_icon_a-{$photo.photo_id}">{lang code='delete'}</button>
                 </div>

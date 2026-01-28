@@ -27,7 +27,7 @@
                 <form name="photos_manager" method="post">
                     <div class="marginBottom">
                         <input type="submit" name="delete_photos" id="delete_photos" value="{lang code='delete'}" class="btn btn-primary btn-sm"
-                            {if !Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3','999')} disabled="disabled" title="Sorry, you cannot perform this action until the application has been fully updated by an administrator" style="cursor:not-allowed;" {/if}>
+                            {if !Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3','14')} disabled="disabled" title="Sorry, you cannot perform this action until the application has been fully updated by an administrator" style="cursor:not-allowed;" {/if}>
                     </div>
                     <br>
                     <div class="account_table table-responsive">

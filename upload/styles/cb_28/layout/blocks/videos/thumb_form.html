@@ -1,7 +1,7 @@
 {ANCHOR place="before_edit_video_form_thumbs"}
 <div class="formSection clear">
-    <h4 {if !Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3','999')} title="{lang('cant_perform_action_until_app_fully_updated')}" class="disabled" {/if}>
-        {lang('thumbs')|ucfirst} {if Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3','999')}<i class="glyphicon glyphicon-chevron-down pull-right"></i>{/if}
+    <h4 {if !Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3','14')} title="{lang('cant_perform_action_until_app_fully_updated')}" class="disabled" {/if}>
+        {lang('thumbs')|ucfirst} {if Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3','14')}<i class="glyphicon glyphicon-chevron-down pull-right"></i>{/if}
     </h4>
     <div class="sectionContent" style="display: none;">
         <div class="row">
@@ -47,7 +47,7 @@
             <h5>{lang code='upload_custom_thumbnail'}</h5>
             <input name="vid_thumb[]" id="new_thumbs" type="file" />
             <div class="form-group pull-right">
-                <input type="submit" id="upload_thumbs" value="{lang code='upload'}" class="btn btn-primary btn-sm" {if !Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '999')} disabled="disabled" title="Sorry, you cannot perform this action until the application has been fully updated by an administrator" {/if}/>
+                <input type="submit" id="upload_thumbs" value="{lang code='upload'}" class="btn btn-primary btn-sm" {if !Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '14')} disabled="disabled" title="Sorry, you cannot perform this action until the application has been fully updated by an administrator" {/if}/>
             </div>
         </div>
         {ANCHOR place="after_edit_video_form_thumbs_upload"}

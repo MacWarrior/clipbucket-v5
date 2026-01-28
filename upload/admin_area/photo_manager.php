@@ -50,7 +50,7 @@ if (isset($_GET['deactivate'])) {
 
 //Delete
 if (isset($_GET['delete_photo'])) {
-    if (!Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '999')) {
+    if (!Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '14')) {
         e('Sorry, you cannot delete photos until the application has been fully updated by an administrator');
     } else {
         $id = mysql_clean($_GET['delete_photo']);
@@ -101,7 +101,7 @@ if (isset($_POST['make_unfeatured_selected']) && is_array($_POST['check_photo'])
 //Multi-delete
 if (isset($_POST['delete_selected']) && is_array($_POST['check_photo'])) {
     $total = count($_POST['check_photo']);
-    if (!Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '999')) {
+    if (!Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '14')) {
         e('Sorry, you cannot delete photos until the application has been fully updated by an administrator');
     } else {
         for ($i = 0; $i < $total; $i++) {

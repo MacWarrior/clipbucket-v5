@@ -333,7 +333,7 @@ class Tmdb
             CBvideo::getInstance()->update_video($video_info);
         }
 
-        if (config('tmdb_get_poster') == 'yes' && config('enable_video_poster') == 'yes' && Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '999')) {
+        if (config('tmdb_get_poster') == 'yes' && config('enable_video_poster') == 'yes' && Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '14')) {
             Video::getInstance()->dropPictures($video_info, 'poster', true);
 
             switch ($type) {
@@ -373,7 +373,7 @@ class Tmdb
             }
         }
 
-        if (config('tmdb_get_backdrop') == 'yes' && config('enable_video_backdrop') == 'yes' && Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '999')) {
+        if (config('tmdb_get_backdrop') == 'yes' && config('enable_video_backdrop') == 'yes' && Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '14')) {
             Video::getInstance()->dropPictures($video_info, 'backdrop',true);
 
             switch ($type) {

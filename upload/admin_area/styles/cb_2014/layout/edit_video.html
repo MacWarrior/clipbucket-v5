@@ -35,18 +35,18 @@
                             {/if}
                         {/if}
                         <li role="presentation"><a role="menuitem"
-                                                   tabindex="-1" {if Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '999')} href="{DirPath::getUrl('admin_area')}upload_thumbs.php?video={$data.videoid}&type=thumbnail" {else} href="#" disabled="disabled" class="disabled" title="{lang('cant_perform_action_until_app_fully_updated')}"{/if}>
+                                                   tabindex="-1" {if Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '14')} href="{DirPath::getUrl('admin_area')}upload_thumbs.php?video={$data.videoid}&type=thumbnail" {else} href="#" disabled="disabled" class="disabled" title="{lang('cant_perform_action_until_app_fully_updated')}"{/if}>
                                 {lang('manage_x', lang('thumbs')|lower)}</a>
                         </li>
                         {if config('enable_video_poster') == 'yes'}
                             <li role="presentation"><a role="menuitem"
-                                                       tabindex="-1" {if Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '999')} href="{DirPath::getUrl('admin_area')}upload_thumbs.php?video={$data.videoid}&type=poster" {else} href="#" disabled="disabled" class="disabled" title="{lang('cant_perform_action_until_app_fully_updated')}"{/if}>
+                                                       tabindex="-1" {if Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '14')} href="{DirPath::getUrl('admin_area')}upload_thumbs.php?video={$data.videoid}&type=poster" {else} href="#" disabled="disabled" class="disabled" title="{lang('cant_perform_action_until_app_fully_updated')}"{/if}>
                                     {lang('manage_x', lang('posters')|lower)}</a>
                             </li>
                         {/if}
                         {if config('enable_video_backdrop') == 'yes'}
                             <li role="presentation"><a role="menuitem"
-                                                       tabindex="-1" {if Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '999')} href="{DirPath::getUrl('admin_area')}upload_thumbs.php?video={$data.videoid}&type=backdrop" {else} href="#" disabled="disabled" class="disabled" title="{lang('cant_perform_action_until_app_fully_updated')}"{/if}>
+                                                       tabindex="-1" {if Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '14')} href="{DirPath::getUrl('admin_area')}upload_thumbs.php?video={$data.videoid}&type=backdrop" {else} href="#" disabled="disabled" class="disabled" title="{lang('cant_perform_action_until_app_fully_updated')}"{/if}>
                                     {lang('manage_x', lang('backdrops')|lower)}</a>
                             </li>
                         {/if}
@@ -532,20 +532,20 @@
                             </a>
                         </li>
                         <li>
-                            <a {if Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '999')} data-toggle="tab" href="#thumbnails" {else} class="disabled" disabled="disabled" title="{lang('cant_perform_action_until_app_fully_updated')}" {/if}>
+                            <a {if Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '14')} data-toggle="tab" href="#thumbnails" {else} class="disabled" disabled="disabled" title="{lang('cant_perform_action_until_app_fully_updated')}" {/if}>
                                 <i class="glyphicon glyphicon-picture"></i> {lang('default_x',lang('thumbnail'))|ucfirst}
                             </a>
                         </li>
                         {if config('enable_video_poster') == 'yes'}
                         <li>
-                            <a {if Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '999')} data-toggle="tab" href="#posters" {else} class="disabled" disabled="disabled" title="{lang('cant_perform_action_until_app_fully_updated')}" {/if}>
+                            <a {if Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '14')} data-toggle="tab" href="#posters" {else} class="disabled" disabled="disabled" title="{lang('cant_perform_action_until_app_fully_updated')}" {/if}>
                                 <i class="glyphicon glyphicon-picture"></i> {lang('default_x',lang('poster'))|ucfirst}
                             </a>
                         </li>
                         {/if}
                         {if config('enable_video_backdrop') == 'yes'}
                         <li>
-                            <a {if Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '999')} data-toggle="tab" href="#backdrops" {else} class="disabled" disabled="disabled" title="{lang('cant_perform_action_until_app_fully_updated')}" {/if}>
+                            <a {if Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '14')} data-toggle="tab" href="#backdrops" {else} class="disabled" disabled="disabled" title="{lang('cant_perform_action_until_app_fully_updated')}" {/if}>
                                 <i class="glyphicon glyphicon-picture"></i> {lang('default_x',lang('backdrop'))|ucfirst}
                             </a>
                         </li>

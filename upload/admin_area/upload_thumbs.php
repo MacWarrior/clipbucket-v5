@@ -6,7 +6,7 @@ User::getInstance()->hasPermissionOrRedirect('video_moderation', true);
 pages::getInstance()->page_redir();
 
 $video = mysql_clean($_GET['video']);
-if (!Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '999')) {
+if (!Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '14')) {
     sessionMessageHandler::add_message('Sorry, you cannot change default thumbnail,poster or backdrop until the application has been fully updated by an administrator', 'e',  DirPath::getUrl('admin_area') . 'edit_video.php?video=' . display_clean($video));
 }
 $data = get_video_details($video);
@@ -49,7 +49,7 @@ if (myquery::getInstance()->video_exists($video)) {
     # Uploading Thumbs
     if (isset($_POST['upload_thumbs'])) {
 
-        if (!Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '999')) {
+        if (!Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '14')) {
             e('Sorry, you cannot perform this action until the application has been fully updated by an administrator');
         } else {
             VideoThumbs::uploadThumbs($data['videoid'], $_FILES['vid_thumb'], $type, false);

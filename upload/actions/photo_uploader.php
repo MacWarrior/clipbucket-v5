@@ -2,7 +2,7 @@
 const THIS_PAGE = 'photo_uploader';
 include('../includes/config.inc.php');
 
-if (!Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '999')) {
+if (!Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '14')) {
     upload_error('Sorry, you cannot upload new photos until the application has been fully updated by an administrator');
     die();
 }

@@ -1504,7 +1504,7 @@ class AdminTool
                 $value = [$task => $total];
                 break;
             case 'count_thumbs_auto':
-                if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '999')) {
+                if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '14')) {
                     $total = VideoThumbs::getAll(['count' => true, 'is_auto' => true, 'type' => 'thumbnail']);
                 } else {
                     $sql = 'SELECT count(DISTINCT(CONCAT( videoid, \'-\', num))) as count FROM ' . tbl('video_thumbs') . ' WHERE type = \'auto\' AND resolution = \'original\'';
@@ -1514,7 +1514,7 @@ class AdminTool
                 $value = [$task => $total];
                 break;
             case 'count_thumbs_manual':
-                if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '999')) {
+                if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '14')) {
                     $total = VideoThumbs::getAll(['count' => true, 'is_auto' => false, 'type' => 'thumbnail']);
                 } else {
                     $sql = 'SELECT count(DISTINCT(CONCAT( videoid, \'-\', num))) as count FROM ' . tbl('video_thumbs') . ' WHERE type = \'custom\' AND resolution = \'original\'';
@@ -1524,7 +1524,7 @@ class AdminTool
                 $value = [$task => $total];
                 break;
             case 'count_posters':
-                if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '999')) {
+                if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '14')) {
                     $total = VideoThumbs::getAll(['count' => true, 'type' => 'poster']);
                 } else {
                     $sql = 'SELECT count(DISTINCT(CONCAT( videoid, \'-\', num))) as count FROM ' . tbl('video_thumbs') . ' WHERE type = \'poster\' AND resolution = \'original\'';
@@ -1534,7 +1534,7 @@ class AdminTool
                 $value = [$task => $total];
                 break;
             case 'count_backdrop':
-                if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '999')) {
+                if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '14')) {
                     $total = VideoThumbs::getAll(['count' => true, 'type' => 'backdrop']);
                 } else {
                     $sql = 'SELECT count(DISTINCT(CONCAT( videoid, \'-\', num))) as count FROM ' . tbl('video_thumbs') . ' WHERE type = \'backdrop\' AND resolution = \'original\'';

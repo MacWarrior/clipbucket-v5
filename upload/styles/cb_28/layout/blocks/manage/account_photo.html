@@ -13,7 +13,7 @@
 				<a class="btn btn-primary btn-sm" href="{CBPhotos::getInstance()->photo_links($photo,'view_item')}">{lang code='watch'}</a>
 				<a class="btn btn-primary btn-sm" href="{$baseurl}edit_photo.php?photo={$photo.photo_id}">{lang code='edit'}</a>
 				<a class="btn btn-primary btn-sm" href="javascript:void(0);"
-				   {if Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '999')} onmousedown="delete_item('delete_icon_a','{$photo.photo_id}','{lang code="confirm_del_photo"}','?mode=uploaded&amp;delete_photo={$photo.photo_id}')"
+				   {if Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '14')} onmousedown="delete_item('delete_icon_a','{$photo.photo_id}','{lang code="confirm_del_photo"}','?mode=uploaded&amp;delete_photo={$photo.photo_id}')"
 				   {else} disabled="disabled" title="Sorry, you cannot perform this action until the application has been fully updated by an administrator"{/if}
 				   id="delete_icon_a-{$photo.photo_id}">{lang code='delete'}</a>
 			</span>

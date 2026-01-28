@@ -29,7 +29,7 @@
                 <div class="clearfix photo-view">
                     <div id="gallery">
 
-                            <i id="enlarge" class="fa fa-expand fa-2x" style="float:right; {if Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '999')} cursor:pointer;" data-toggle="modal" data-target="#myModal" title="{lang('show_original')}"  {else} cursor: not-allowed" title="{lang('cant_perform_action_until_app_fully_updated')}" disabled="disabled" {/if}></i>
+                            <i id="enlarge" class="fa fa-expand fa-2x" style="float:right; {if Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '14')} cursor:pointer;" data-toggle="modal" data-target="#myModal" title="{lang('show_original')}"  {else} cursor: not-allowed" title="{lang('cant_perform_action_until_app_fully_updated')}" disabled="disabled" {/if}></i>
                         <div class="image-holder">
                             <div class="inner-holder">
                                 {if empty($photo.collection_id)}

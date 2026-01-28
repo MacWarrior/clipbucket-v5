@@ -36,7 +36,7 @@ switch ($mode) {
 
         assign('mode', 'uploaded');
         if (isset($_GET['delete_photo'])) {
-            if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '999')) {
+            if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '14')) {
                 e('Sorry, you cannot perform this action until the application has been fully updated by an administrator');
             } else {
                 $id = mysql_clean($_GET['delete_photo']);
@@ -45,7 +45,7 @@ switch ($mode) {
         }
 
         if (isset($_POST['delete_photos']) && is_array($_POST['check_photo'])) {
-            if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '999')) {
+            if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '14')) {
                 e('Sorry, you cannot perform this action until the application has been fully updated by an administrator');
             } else {
                 $total = count($_POST['check_photo']);

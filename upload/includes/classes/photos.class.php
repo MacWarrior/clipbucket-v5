@@ -46,7 +46,7 @@ class Photo extends Objects
             ,'owner_ip'
         ];
 
-        if (!Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '999')) {
+        if (!Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '14')) {
             $this->fields[] = 'photo_details';
         }
         if( Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.0', '305') ){
@@ -542,7 +542,7 @@ class Photo extends Objects
     public function getUsage($id, string $file_name, string $file_directory, string $extension): int
     {
         $total = 0;
-        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '999')) {
+        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '14')) {
             $photos_thumbs = PhotoThumbs::getAllThumbs(['photo_id' => $id]);
             if (!empty($photos_thumbs)) {
                 foreach ($photos_thumbs as $photos_thumb) {
@@ -718,7 +718,7 @@ class CBPhotos
             'last_commented', 'total_comments'
         ];
 
-        if (!Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.2','999')) {
+        if (!Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.2','14')) {
             $basic_fields[] = 'photo_details';
         }
         if( Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.0', '305') ){

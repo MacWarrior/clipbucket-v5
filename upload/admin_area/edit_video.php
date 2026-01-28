@@ -16,7 +16,7 @@ if (isset($_POST['update'])) {
     CBvideo::getInstance()->update_video();
     if (empty(errorhandler::getInstance()->get_error())) {
 
-        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '999')) {
+        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '14')) {
             if (!empty($_POST['default_thumb'])) {
                 Video::getInstance()->setDefaultPicture($video_id, $_POST['default_thumb'], 'thumbnail');
             }

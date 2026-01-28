@@ -7,14 +7,13 @@ use OxygenzSAS\Discord\Discord;
 require_once \DirPath::get('classes') . DIRECTORY_SEPARATOR . 'migration' . DIRECTORY_SEPARATOR . 'migration.class.php';
 require_once \DirPath::get('classes') . 'sLog.php';
 
-class MWIP extends \Migration
+class M00014 extends \Migration
 {
     /**
      * @throws \Exception
      */
     public function start()
     {
-
         $sql = 'UPDATE `{tbl_prefix}video_thumbs` SET `version` = \'5.5.2\' WHERE `version` = \'5.5.3\'';
         self::constrainedQuery($sql, [
             'table' => 'video_thumbs'
@@ -101,8 +100,6 @@ class MWIP extends \Migration
             ]
         ]);
 
-
-        //migrer les thumbs
         $limit = 1;
         $offset = 0;
         do {
@@ -224,7 +221,6 @@ class MWIP extends \Migration
             'en'=>'All photos thumbs will have the same ratio to be displayed as a grid'
         ]);
 
-        //migrer les thumbs
         $limit = 1;
         $offset = 0;
         do {

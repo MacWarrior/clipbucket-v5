@@ -7,7 +7,7 @@
             <ul class="dropdown-menu pull-right" role="menu" aria-labelledby="dropdownMenu1">
 
                 <li role="presentation"><a role="menuitem" tabindex="-1"
-                                           href="javascript:void(0);" {if Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', 999)} onClick="regenerateThumbs({$data.videoid});" {else} class="disabled" title="Sorry, you cannot perform this action until the application has been fully updated by an administrator" {/if}>
+                                           href="javascript:void(0);" {if Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '14')} onClick="regenerateThumbs({$data.videoid});" {else} class="disabled" title="Sorry, you cannot perform this action until the application has been fully updated by an administrator" {/if}>
                         Regenerate thumbnails</a></li>
                 <li role="presentation"><a role="menuitem" tabindex="-1" href="{DirPath::getUrl('admin_area')}edit_video.php?video={$data.videoid}">Back to edit details</a></li>
             </ul>
@@ -32,7 +32,7 @@
             <input name="db_type" type="hidden" value="{$db_type}">
             <br/>
             <input type="submit" name="upload_thumbs" value="{lang code='upload'}" class="btn btn-primary btn-sm"
-                {if !Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', 999)} disabled="disabled" title="Sorry, you cannot perform this action until the application has been fully updated by an administrator" {/if}
+                {if !Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '14')} disabled="disabled" title="Sorry, you cannot perform this action until the application has been fully updated by an administrator" {/if}
             />
         </form>
 {/if}

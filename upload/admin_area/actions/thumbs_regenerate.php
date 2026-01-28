@@ -3,7 +3,7 @@ const THIS_PAGE = 'regenerate_thumbs';
 const IS_AJAX = true;
 require_once dirname(__FILE__, 3) . '/includes/admin_config.php';
 
-if (!Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '999')) {
+if (!Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '14')) {
     e('Sorry, you cannot perform this action until the application has been fully updated by an administrator');
     echo json_encode(['success' => false, 'msg'=>getTemplateMsg()]);
     die();
