@@ -66,7 +66,8 @@ $(function () {
         if ($('#description_group_' + num).hasClass('hidden')) {
             $('.input-group[id$=' + num + ']').removeClass('hidden');
             $('[id$="text_' + num + '"]').addClass('hidden');
-            $(this).removeClass('text-primary');
+            $(this).removeClass('text-primary').attr('title', lang['end_edition']);
+            $(this).siblings('.delete_default_theme').addClass('hidden');
         } else {
             $('.input-group[id$=' + num + ']').each(function (index, elem) {
                 const field = $(this).attr('id').match(/(\w+)_group_\d+/)[1];
@@ -88,7 +89,8 @@ $(function () {
                 text_element.removeClass('hidden');
                 $('.save_'+field).removeClass('glyphicon-ok glyphicon-remove').addClass('glyphicon-save').attr('title', lang['save']);
             });
-            $(this).addClass('text-primary');
+            $(this).addClass('text-primary').attr('title', lang['edit_copy']);
+            $(this).siblings('.delete_default_theme').removeClass('hidden');
         }
     });
 

@@ -1763,4 +1763,5 @@ VALUES ('ongoing_conversion'),
        ('my_amazing_template'),
        ('author_name'),
        ('this_is_my_amazing_template'),
-       ('my_amazing_website');
+       ('my_amazing_website'),
+       ('end_edition');

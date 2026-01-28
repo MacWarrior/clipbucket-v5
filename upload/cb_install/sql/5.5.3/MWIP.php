@@ -109,6 +109,11 @@ class MWIP extends \Migration
             'fr'=>'Mon super site internet',
             'en'=>'My amazing website'
         ]);
+
+        self::generateTranslation('end_edition', [
+            'fr'=>'Terminer l\'édition',
+            'en'=>'End edition'
+        ]);
     }
 
 }
