@@ -394,12 +394,51 @@ $(document).ready(function(){
     });
 });
 
+function setMaintenance() {
+    return new Promise((resolve, reject) => {
+        showSpinner();
+        $.ajax({
+            url: admin_url + 'actions/update_set_maintenance.php',
+            type: "post",
+            dataType: "json",
+            success: function (data) {
+                hideSpinner();
+                if (data.success == false) {
+                    $(".page-content").prepend(data.msg)
+                }
+                resolve(true);
+            },
+            error: function (data) {
+                hideSpinner();
+                reject(false);
+            }
+        });
+    });
+}
+
 function updateListeners () {
     $('.update_core').on('click', async function () {
+
         if (message_php !== '') {
             if (await popinConfirm._confirm_it({message: message_php, title: lang['update']})) {
                 update('core');
             }
+        } else if (message_breaking_version !== '') {
+            const wantsMaintenance = await popinConfirm._confirm_it({
+                message: message_breaking_version,
+                title: lang['update']
+            });
+
+            if (wantsMaintenance) {
+                await setMaintenance();
+            }
+
+            const okUpdate = await popinConfirm._confirm_it({
+                message: lang['do_want_to_update'],
+                title: lang['update']
+            });
+
+            if (okUpdate) update('core');
         } else {
             update('core');
         }
