@@ -729,16 +729,6 @@
                                             </div>
                                         </div>
                                         <hr/>
-                                        <div class="row">
-                                            <div class="col-md-4">
-                                                <label class="nowrap" for="random_video_order" title="{lang code='option_random_video_order'}">{lang code='option_random_video_order'}</label>
-                                            </div>
-                                            <div class="col-md-2 row-size">
-                                                <input value="yes" name="random_video_order" id="random_video_order" {if $row.random_video_order=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
-                                                <span class="lbl"></span>
-                                            </div>
-                                        </div>
-                                        <hr/>
                                     </div>
                                 </div>
                             </div>
@@ -854,6 +844,18 @@
                                             </div>
                                             <div class="col-md-2 no_padding">
                                                 <input value="yes" name="videos_enable_fullwidth" id="videos_enable_fullwidth"{if $row.videos_enable_fullwidth=='yes'} checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+                                                <span class="lbl"></span>
+                                            </div>
+                                        </div>
+                                        <hr/>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="row">
+                                            <div class="col-md-10">
+                                                <label class="nowrap" for="random_video_order" title="{lang code='option_random_video_order'}">{lang code='option_random_video_order'}</label>
+                                            </div>
+                                            <div class="col-md-2 row-size">
+                                                <input value="yes" name="random_video_order" id="random_video_order" {if $row.random_video_order=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
                                                 <span class="lbl"></span>
                                             </div>
                                         </div>
