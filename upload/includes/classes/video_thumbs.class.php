@@ -11,7 +11,6 @@ class VideoThumbs
 
     private string $thumb_dir = '';
 
-
     /**
      * @var array
      * resolutions are in 16:10 ratio
@@ -128,8 +127,6 @@ class VideoThumbs
         if ($param_order) {
             $order = ' ORDER BY  ' . $param_order;
         }
-
-
 
         $sql = 'SELECT ' . implode(', ', $select) . '
                     FROM ' . cb_sql_table(self::$tableName)
@@ -312,7 +309,6 @@ class VideoThumbs
         }, self::$fieldsThumb);
     }
 
-
     /**
      * @param int $videoid
      * @param FFMpeg|null $ffmpeg_instance
@@ -380,6 +376,7 @@ class VideoThumbs
     }
 
     /**
+     * @param bool $regenerate
      * @return void
      * @throws Exception
      */
@@ -429,7 +426,6 @@ class VideoThumbs
             }
         }
     }
-
 
     /**
      * @param int $id_video_image
@@ -538,7 +534,6 @@ class VideoThumbs
             }
         }
     }
-
 
     /**
      * @return array
@@ -794,7 +789,6 @@ class VideoThumbs
                     $thumbs = self::getAllThumbs($params_not_size);
                 }
             }
-
 
         }
         foreach ($thumbs as $thumb) {
@@ -1062,7 +1056,7 @@ class VideoThumbs
      * @param bool $aspect_ratio
      * @return void
      */
-    public static function CreateThumb(string $file, string $des, int $dim, string $ext, int $dim_h = null, bool $aspect_ratio = true)
+    public static function CreateThumb(string $file, string $des, int $dim, string $ext, int $dim_h = null, bool $aspect_ratio = true): void
     {
         $array = getimagesize($file);
         $width_orig = $array[0];
@@ -1135,19 +1129,13 @@ class VideoThumbs
         return true;
     }
 
-
-    public static function deleteVideoImageById(int $id_video_image)
-    {
-        self::deleteVideoImage(self::getOne(['id_video_image' => $id_video_image, 'get_is_default'=>true]));
-    }
-
     /**
      * @param array $image
      * @param bool $msg
      * @return void
      * @throws Exception
      */
-    public static function deleteVideoImage(array $image, bool $msg = true)
+    public static function deleteVideoImage(array $image, bool $msg = true): void
     {
         if (empty($image)) {
             return;
@@ -1171,7 +1159,10 @@ class VideoThumbs
         }
     }
 
-    public static function deleteVideoThumb(array $thumb)
+    /**
+     * @throws Exception
+     */
+    public static function deleteVideoThumb(array $thumb): void
     {
         $thumb_path = DirPath::get('thumbs') . 'video' . DIRECTORY_SEPARATOR . self::getThumbPath($thumb['type'], $thumb['file_directory'], $thumb['file_name'], $thumb['is_auto'], $thumb['num'], ($thumb['is_original_size'] ? 'original' : ''), $thumb['width'], $thumb['height'], $thumb['extension'], $thumb['version']);
         if (file_exists($thumb_path)) {
@@ -1181,21 +1172,10 @@ class VideoThumbs
     }
 
     /**
-     * @param int $id_video_thumb
-     * @return void
-     * @throws Exception
-     */
-    public static function deleteVideoThumbById(int $id_video_thumb)
-    {
-        $thumb = self::getOneThumb(['id_video_thumb' => $id_video_thumb,'get_video_directory'=>true, 'get_video_file_name'=>true]);
-        self::deleteVideoThumb($thumb);
-    }
-
-    /**
      * @param $size
      * @return array|string[]
      */
-    public static function getWidthHeightFromSize($size)
+    public static function getWidthHeightFromSize($size): array
     {
         $preg_matches = [];
         preg_match_all('/(\d+)x(\d+)/', $size, $preg_matches);
@@ -1207,6 +1187,9 @@ class VideoThumbs
         ];
     }
 
+    /**
+     * @throws Exception
+     */
     public function generateAllMissingThumbs(): void
     {
         if (empty(self::getAll(['videoid' => $this->video['videoid']]))) {

@@ -1,6 +1,6 @@
 {
   "version":"5.5.3",
-  "revision":"14",
+  "revision":"15",
   "status":"stable",
   "detail":[
     {
@@ -30,6 +30,7 @@
         ,"Cleanup code"
         ,"Drop support for PHP 8.0"
         ,"Fix possible PHP error with discord logs"
+        ,"Fix possible issue with migration 5.5.3 - 14"
       ]
     },
     {

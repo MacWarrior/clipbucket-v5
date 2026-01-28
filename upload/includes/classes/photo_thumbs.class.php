@@ -6,14 +6,12 @@ class PhotoThumbs
 
     private static string $tableNameThumb = 'photo_thumb';
 
-
     private static array $resolution_setting = [
         'original' => ['size_tag' => 'original', 'should_watermark' => true],
         'large'    => ['width' => 900, 'height' => 562, 'should_watermark' => true],
         'thumb'    => ['width' => 150, 'height' => 94, 'should_watermark' => false],
         'small'    => ['width' => 300, 'height' => 188, 'should_watermark' => false],
         'medium'   => ['width' => 550, 'height' => 344, 'should_watermark' => false]
-        //150 300 550 (900)
     ];
 
     private static array $fieldsThumb = [
@@ -100,7 +98,6 @@ class PhotoThumbs
         return self::getAllThumbs($params);
     }
 
-
     /**
      * @return array
      */
@@ -114,17 +111,6 @@ class PhotoThumbs
     public static function getTableNameThumb(): string
     {
         return self::$tableNameThumb;
-    }
-
-
-
-    /**
-     * TODO
-     * @return array
-     */
-    public function getPhotoDimension(): array
-    {
-
     }
 
     /**
@@ -214,16 +200,10 @@ class PhotoThumbs
         return $filepath;
     }
 
-
     /**
-     * @param $type
      * @param $photo_file_directory
      * @param $photo_file_name
-     * @param $thumb_is_auto
-     * @param $thumb_num
-     * @param $thumb_resolution
      * @param $thumb_width
-     * @param $thumb_height
      * @param $thumb_extension
      * @param $thumb_version
      * @return string
@@ -239,13 +219,8 @@ class PhotoThumbs
     }
 
     /**
-     * @param $type
      * @param $photo_file_name
-     * @param $thumb_is_auto
-     * @param $thumb_num
-     * @param $thumb_resolution
      * @param $thumb_width
-     * @param $thumb_height
      * @param $thumb_extension
      * @param $thumb_version
      * @return string
@@ -286,13 +261,9 @@ class PhotoThumbs
         return $return_with_num ? ['thumb' => default_thumb($return_type), 'thumb_id' => 0, 'thumb_num' => 0] : default_thumb($return_type);
     }
 
-
     /**
      * @param array $photo
-     * @param $file
-     * @param $file_array_key
-     * @param string $type
-     * @param bool $is_auto
+     * @param bool $ignore
      * @return void
      * @throws Exception
      */
@@ -363,13 +334,10 @@ class PhotoThumbs
         );
     }
 
-    //Resize the following image
-
     /**
      * @param string $original_file_path
      * @param string $destination_path
      * @param int|string $destination_width
-     * @param int $destination_height
      * @param string $extension
      * @param array $original_sizes
      * @return void
@@ -456,12 +424,12 @@ class PhotoThumbs
 
 
     /**
-     * @param array $image
+     * @param int $photo_id
      * @param bool $msg
      * @return void
      * @throws Exception
      */
-    public static function deleteThumbs(int $photo_id, bool $msg = true)
+    public static function deleteThumbs(int $photo_id, bool $msg = true): void
     {
         $thumbs = self::getAllThumbs(['photo_id' => $photo_id, 'get_photo_info'=>true]);
         foreach ($thumbs as $thumb) {
@@ -472,7 +440,10 @@ class PhotoThumbs
         }
     }
 
-    public static function deletePhotoThumb(array $thumb)
+    /**
+     * @throws Exception
+     */
+    public static function deletePhotoThumb(array $thumb): void
     {
         $thumb_path = DirPath::get('thumbs') . 'photo' . DIRECTORY_SEPARATOR . self::getThumbPath($thumb['file_directory'], $thumb['filename'], ($thumb['is_original_size'] ? 'original' : $thumb['width']), $thumb['extension'], $thumb['version']);
         if (file_exists($thumb_path)) {
@@ -480,7 +451,6 @@ class PhotoThumbs
         }
         Clipbucket_db::getInstance()->delete(tbl(self::$tableNameThumb), ['id_photo_thumb'],[$thumb['id_photo_thumb']]);
     }
-
 
     /**
      * @param int $photo_id
@@ -536,7 +506,7 @@ class PhotoThumbs
     /**
      * Used to get watermark file
      */
-    public static function watermark_file()
+    public static function watermark_file(): bool|string
     {
         if (file_exists(DirPath::get('images') . 'photo_watermark.png')) {
             return DirPath::getUrl('images') . 'photo_watermark.png';
