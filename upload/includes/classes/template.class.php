@@ -3,8 +3,8 @@
 class CBTemplate
 {
 
-    public static $allowed_fields = ['name', 'description', 'title', 'link', 'version','released', 'author'];
-    public static function getInstance()
+    public static array $allowed_fields = ['name', 'description', 'title', 'link', 'version','released', 'author'];
+    public static function getInstance(): self
     {
         global $cbtpl;
         return $cbtpl;
@@ -347,7 +347,6 @@ class CBTemplate
         return true;
     }
 
-
     /**
      * In case of coping a directory inside itself, there is a need to hash check the directory otherwise and infinite loop of coping is generated
      * @param $directory
@@ -376,6 +375,7 @@ class CBTemplate
     /**
      * @param string $template
      * @return bool
+     * @throws Exception
      */
     public static function remove_template(string $template): bool
     {
