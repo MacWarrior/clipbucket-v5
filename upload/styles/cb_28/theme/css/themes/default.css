@@ -369,7 +369,7 @@ a:hover{
 .signup-block h2{
     color: var(--color-02);
 }
-.signup-block .form-control{
+.signup-block .form-control, .input-group > .input-group-addon{
     background-color: var(--color-03);
     color: var(--color-02);
 }
@@ -716,4 +716,18 @@ a:hover{
     10%  { transform: rotate(0deg); }
 
     100% {transform: rotate(0deg);}
+}
+
+.input-group > .input-group-addon {
+    font-size: 15px;
+    line-height: 20px;
+    padding: 13px 20px;
+    margin: 0;
+    height: 51px;
+    top: auto;
+    border: 1px solid var(--color-03);
+    border-left: 0;
+    border-radius: 0 4px 4px 0;
+    color: #999;
+    cursor: pointer;
 }
