@@ -145,6 +145,7 @@ $(document).ready(function () {
         , 'enable_tmdb': 'tmdb_token'
         , 'enable_tmdb_mature_content': 'tmdb_mature_content_age'
         , 'control_bar_logo' : ['player_logo_url','upload_player-logo']
+        , 'keep_ratio_photo': 'ratio_photo'
 
     }, function (index, value) {
 

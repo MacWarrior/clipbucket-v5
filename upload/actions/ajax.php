@@ -750,7 +750,7 @@ if (!empty($mode)) {
 
         case 'photo_ajax':
             try {
-                if (!User::getInstance()->hasPermission('view_photo')) {
+                if (!User::getInstance()->hasPermission('view_photos')) {
                     throw new Exception(lang('insufficient_privileges'));
                 }
                 if (!empty($_POST['photo_pre']) && !empty($_POST['item'])) {
@@ -759,7 +759,8 @@ if (!empty($mode)) {
                     $ci_id = $photo['ci_id'];
                     $collection = $photo['collection_id'];    // collection id.
                     $link = Collections::getInstance()->get_next_prev_item($ci_id, $collection, $items, $limit = 1, $check_only = false); // getting Previous item
-                    $srcString = '/files/photos/' . $link[0]['file_directory'] . '/' . $link[0]['filename'] . '.' . $link[0]['ext']; // Image Source...
+                    $srcString = PhotoThumbs::getThumbFile($link[0]['photo_id'], 'original');
+                    $photo_key = $link[0]['photo_key']; // Image Key.
                     $response['photo'] = $link;
                     $response['photo_key'] = $link[0]['photo_key'];
                     $response['src_string'] = $srcString; // Image source.

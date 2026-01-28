@@ -333,8 +333,9 @@ INSERT INTO `{tbl_prefix}config` (`configid`, `name`, `value`) VALUES
     (NULL, 'collection_enable_fullwidth', 'yes'),
     (NULL, 'enable_user_profil_censor', 'no'),
     (NULL, 'enable_allow_alias_email', 'yes'),
-    (NULL, 'enable_favorite_icon', 'yes');
-
+    (NULL, 'enable_favorite_icon', 'yes'),
+    (NULL, 'keep_ratio_photo', 'yes'),
+    (NULL, 'ratio_photo', 1.7777);
 
 INSERT INTO `{tbl_prefix}video_resolution` (`title`, `ratio`, `enabled`, `width`, `height`, `video_bitrate`) VALUES
 	('240p', '16/9', 1, 426, 240, 240000),
@@ -373,8 +374,6 @@ INSERT INTO `{tbl_prefix}tools` (`language_key_label`, `language_key_description
     ('install_missing_translation_label', 'install_missing_translation_description', 'AdminTool::installMissingTranslations', 'install_missing_translation', NULL, NULL, '1', '0');
 
 INSERT INTO `{tbl_prefix}tags_type` (`name`) VALUES ('video'), ('photo'), ('collection'), ('profile'), ('playlist'), ('actors'), ('producer'), ('executive_producer'), ('director'), ('crew'), ('genre');
-
-UPDATE `{tbl_prefix}video_thumbs` SET `type` = 'auto' WHERE `type` IS NULL;
 
 INSERT INTO `{tbl_prefix}object_type` (`name`)
 VALUES ('video'),

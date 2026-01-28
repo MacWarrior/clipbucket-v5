@@ -1,6 +1,6 @@
 {
   "version":"5.5.3",
-  "revision":"13",
+  "revision":"14",
   "status":"stable",
   "detail":[
     {
@@ -25,6 +25,7 @@
       "title": "Miscellaneous",
       "description": [
         "Refactor favorites storage"
+        ,"Refactor thumbs"
         ,"Update compatibility to PHP 8.5.X"
         ,"Cleanup code"
         ,"Drop support for PHP 8.0"

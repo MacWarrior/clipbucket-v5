@@ -172,6 +172,7 @@ if (isset($_POST['update'])) {
         , 'player_thumbnails'
         , 'enable_allow_alias_email'
         , 'enable_favorite_icon'
+        , 'keep_ratio_photo'
     ];
 
     $config_booleans_to_refactor = [
@@ -445,7 +446,9 @@ if (isset($_POST['update'])) {
         'collections_enable_fullwidth',
         'collection_enable_fullwidth',
         'enable_allow_alias_email',
-        'enable_favorite_icon'
+        'enable_favorite_icon',
+        'keep_ratio_photo',
+        'ratio_photo'
     ];
 
     //Numeric Array
@@ -499,7 +502,8 @@ if (isset($_POST['update'])) {
         'video_thumbs_preview_count',
 
         'max_photo_categories',
-        'max_collection_categories'
+        'max_collection_categories',
+        'ratio_photo'
     ];
 
     $has_missing_config = false;
