@@ -1,6 +1,6 @@
 {
   "version":"5.5.3",
-  "revision":"16",
+  "revision":"17",
   "status":"stable",
   "detail":[
     {
@@ -8,6 +8,7 @@
       "description": [
         "Implement email alias allow option"
         ,"Fix JS error on playlist management page"
+        ,"Fix missing video thumbs tool"
       ]
     },
     {
