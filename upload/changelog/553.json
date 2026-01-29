@@ -1,6 +1,6 @@
 {
   "version":"5.5.3",
-  "revision":"17",
+  "revision":"18",
   "status":"stable",
   "detail":[
     {
@@ -33,6 +33,7 @@
         ,"Fix possible PHP error with discord logs"
         ,"Fix possible issue with migration 5.5.3 - 14"
         ,"Fix SQL error on video deletion"
+        ,"Fix pre-5.5.1 videos thumbs"
       ]
     },
     {
