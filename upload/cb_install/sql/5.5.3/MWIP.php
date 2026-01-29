@@ -12,6 +12,11 @@ class MWIP extends \Migration
      */
     public function start()
     {
+        self::alterTable('ALTER TABLE `{tbl_prefix}video` CHANGE `video_version` `video_version` VARCHAR(8) NOT NULL DEFAULT \'5.5.3\'',[
+            'table' => 'video'
+            , 'column' => 'video_version'
+        ]);
+
         $sql = '
             SELECT V.* FROM ' . tbl('video') . ' V
             INNER JOIN ' . tbl('video_image') .' VI ON VI.videoid = V.videoid 

@@ -524,7 +524,7 @@ CREATE TABLE `{tbl_prefix}video` (
   `uploader_ip` varchar(45) NOT NULL DEFAULT '',
   `video_files` tinytext NULL DEFAULT NULL,
   `file_server_path` text NULL DEFAULT NULL,
-  `video_version` varchar(8) NOT NULL DEFAULT '5.5.1',
+  `video_version` varchar(8) NOT NULL DEFAULT '5.5.3',
   `is_castable` tinyint(1) NOT NULL DEFAULT 0,
   `bits_color` tinyint(4) DEFAULT NULL,
   `subscription_email` enum('pending','sent') NOT NULL DEFAULT 'pending',
