@@ -846,7 +846,7 @@ class VideoThumbs
      * @return array
      * @throws Exception
      */
-    public static function getAllThumbFiles(int $videoid, int|string $width = 168, int|string $height = 105, string $type = 'thumbnail', $is_auto = null, bool $is_default = null, string $return_type = 'url', bool $return_with_num = false): array
+    public static function getAllThumbFiles(int $videoid, int|string $width = 168, int|string $height = 105, string $type = 'thumbnail', $is_auto = null, $is_default = null, string $return_type = 'url', bool $return_with_num = false): array
     {
         return self::getThumbsFile(true, $videoid, $width, $height, $type, $is_auto, $is_default, $return_type, $return_with_num);
     }
