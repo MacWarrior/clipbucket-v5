@@ -238,10 +238,38 @@ abstract class Objects
                 break;
         }
         if (User::getInstance()->getCurrentUserID() == $current_rating['userid'] && !config($config_own_rate)) {
-            throw new Exception(lang('you_cant_rate_own_' . static::TYPE));
+            switch (static::TYPE) {
+                case 'photo':
+                    $lang = 'you_cant_rate_own_photo';
+                    break;
+                case 'collection':
+                    $lang = 'you_cant_rate_own_collection';
+                    break;
+                case 'user':
+                    $lang = 'you_cant_rate_own_channel';
+                    break;
+                case 'video':
+                    $lang = 'you_cant_rate_own_video';
+                    break;
+            }
+            throw new Exception(lang($lang));
         }
         if ($current_rating['allow_rating'] =='no' || !config($config_rating)) {
-            throw new Exception(lang( static::TYPE . '_rate_disabled' ));
+            switch (static::TYPE) {
+                case 'photo':
+                    $lang = 'photo_rate_disabled';
+                    break;
+                case 'collection':
+                    $lang = 'collection_rate_disabled';
+                    break;
+                case 'user':
+                    $lang = 'channel_rate_disabled';
+                    break;
+                case 'video':
+                    $lang = 'vid_rate_disabled';
+                    break;
+            }
+            throw new Exception(lang( $lang ));
         }
         $Old_histo = explode('|', $current_rating[$voters_key]);
         if (!empty($Old_histo) && is_array($Old_histo) && count($Old_histo) > 1) {
