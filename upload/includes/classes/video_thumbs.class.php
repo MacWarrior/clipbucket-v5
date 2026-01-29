@@ -318,7 +318,7 @@ class VideoThumbs
      * @param FFMpeg|null $ffmpeg_instance
      * @throws Exception
      */
-    public function __construct(int $videoid, FFMpeg $ffmpeg_instance = null)
+    public function __construct(int $videoid, $ffmpeg_instance = null)
     {
         $this->video = Video::getInstance()->getOne([
             'videoid'                     => $videoid,
@@ -669,7 +669,7 @@ class VideoThumbs
      * @return array|string
      * @throws Exception
      */
-    private static function getThumbsFile(bool $is_multi, int $videoid, int|string $width, int|string $height, string $type = 'thumbnail', bool $is_auto = null, bool $is_default = null, string $return_type = 'url', bool $return_with_num = false): array|string
+    private static function getThumbsFile(bool $is_multi, int $videoid, int|string $width, int|string $height, string $type = 'thumbnail', $is_auto = null, $is_default = null, string $return_type = 'url', bool $return_with_num = false): array|string
     {
         if (!in_array($type, [
             'thumbnail',
@@ -829,7 +829,7 @@ class VideoThumbs
      * @return string
      * @throws Exception
      */
-    public static function getDefaultThumbFile(int $videoid, int|string $width = 168, int|string $height = 105, string $type = 'thumbnail', bool $is_auto = null, string $return_type = 'url', bool $return_with_num = false): string
+    public static function getDefaultThumbFile(int $videoid, int|string $width = 168, int|string $height = 105, string $type = 'thumbnail', $is_auto = null, string $return_type = 'url', bool $return_with_num = false): string
     {
         return self::getThumbsFile(false, $videoid, $width, $height, $type, $is_auto, true, $return_type, $return_with_num);
     }
@@ -846,7 +846,7 @@ class VideoThumbs
      * @return array
      * @throws Exception
      */
-    public static function getAllThumbFiles(int $videoid, int|string $width = 168, int|string $height = 105, string $type = 'thumbnail', bool $is_auto = null, bool $is_default = null, string $return_type = 'url', bool $return_with_num = false): array
+    public static function getAllThumbFiles(int $videoid, int|string $width = 168, int|string $height = 105, string $type = 'thumbnail', $is_auto = null, bool $is_default = null, string $return_type = 'url', bool $return_with_num = false): array
     {
         return self::getThumbsFile(true, $videoid, $width, $height, $type, $is_auto, $is_default, $return_type, $return_with_num);
     }
@@ -918,7 +918,7 @@ class VideoThumbs
      * @param string|null $version
      * @return string
      */
-    private static function generateThumbNum(int $num, string $version = null): string
+    private static function generateThumbNum(int $num, $version = null): string
     {
         if ($version >= '5.5.3' || empty($version)) {
             $pad = 5;
@@ -1073,7 +1073,7 @@ class VideoThumbs
      * @param bool $aspect_ratio
      * @return void
      */
-    public static function CreateThumb(string $file, string $des, int $dim, string $ext, int $dim_h = null, bool $aspect_ratio = true): void
+    public static function CreateThumb(string $file, string $des, int $dim, string $ext, $dim_h = null, bool $aspect_ratio = true): void
     {
         $array = getimagesize($file);
         $width_orig = $array[0];
