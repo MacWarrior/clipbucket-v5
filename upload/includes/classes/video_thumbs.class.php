@@ -771,12 +771,14 @@ class VideoThumbs
             if (empty($all_thumbs)) {
                 $instance = new VideoThumbs($videoid);
                 $instance->ffmpeg_instance->prepare();
-                $instance->importOldThumbFromDisk();
-                $params['limit'] = '1';
-                if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '14')) {
-                    $thumbs = self::getAllThumbs($params);
-                } else {
-                    $thumbs = Clipbucket_db::getInstance()->_select($sql);
+                if ($type == 'thumbnail') {
+                    $instance->importOldThumbFromDisk();
+                    $params['limit'] = '1';
+                    if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '14')) {
+                        $thumbs = self::getAllThumbs($params);
+                    } else {
+                        $thumbs = Clipbucket_db::getInstance()->_select($sql);
+                    }
                 }
                 if (!empty($thumbs)) {
                     return self::getThumbsFile($is_multi, $videoid, $width, $height, $type, $is_auto, $is_default, $return_type, $return_with_num);
