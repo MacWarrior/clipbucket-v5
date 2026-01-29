@@ -1,6 +1,6 @@
 {
   "version":"5.5.3",
-  "revision":"15",
+  "revision":"16",
   "status":"stable",
   "detail":[
     {
@@ -31,6 +31,7 @@
         ,"Drop support for PHP 8.0"
         ,"Fix possible PHP error with discord logs"
         ,"Fix possible issue with migration 5.5.3 - 14"
+        ,"Fix SQL error on video deletion"
       ]
     },
     {
