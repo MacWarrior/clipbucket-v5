@@ -1,11 +1,10 @@
 <?php
 
 namespace V5_5_3;
-use VideoThumbs;
-
 require_once \DirPath::get('classes') . DIRECTORY_SEPARATOR . 'migration' . DIRECTORY_SEPARATOR . 'migration.class.php';
 
-class MWIP extends \Migration
+require_once \DirPath::get('classes') . 'video_thumbs.class.php';
+class M00018 extends \Migration
 {
     /**
      * @throws \Exception
@@ -26,7 +25,7 @@ class MWIP extends \Migration
         $videos = self::req($sql);
 
         foreach ($videos as $video) {
-            $video_thumb = new VideoThumbs($video['videoid']);
+            $video_thumb = new \VideoThumbs($video['videoid']);
             $video_thumb->importOldThumbFromDisk(true);
         }
     }

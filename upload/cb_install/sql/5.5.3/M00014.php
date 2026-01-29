@@ -1,12 +1,9 @@
 <?php
 
 namespace V5_5_3;
-
-use OxygenzSAS\Discord\Discord;
-
 require_once \DirPath::get('classes') . DIRECTORY_SEPARATOR . 'migration' . DIRECTORY_SEPARATOR . 'migration.class.php';
-require_once \DirPath::get('classes') . 'sLog.php';
 
+require_once \DirPath::get('classes') . 'sLog.php';
 require_once \DirPath::get('classes') . 'video_thumbs.class.php';
 require_once \DirPath::get('classes') . 'photo_thumbs.class.php';
 
