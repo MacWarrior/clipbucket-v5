@@ -119,6 +119,16 @@ abstract class Objects
     }
 
     /**
+     * @param int $object_id
+     * @return void
+     * @throws Exception
+     */
+    public function removeFromFavoritesForAllUsers(int $object_id): void
+    {
+        Clipbucket_db::getInstance()->delete(tbl('favorites'), ['id_type', 'id'], [static::getTypeId(), $object_id]);
+    }
+
+    /**
      * Get Used Favorites
      *
      * @param array $params
