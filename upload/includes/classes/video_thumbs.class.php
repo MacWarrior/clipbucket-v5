@@ -177,6 +177,7 @@ class VideoThumbs
         $param_get_video_directory = $params['get_video_directory'] ?? false;
         $param_get_video_file_name = $params['get_video_file_name'] ?? false;
         $param_version = $params['version'] ?? false;
+        $param_version_inf_or_eq = $params['param_version_inf_or_eq'] ?? false;
 
         $conditions = [];
         $join = [];
@@ -245,6 +246,9 @@ class VideoThumbs
         }
         if ($param_version) {
             $conditions[] = self::$tableNameThumb . '.version = \'' . mysql_clean($param_version) . '\'';
+        }
+        if ($param_version_inf_or_eq) {
+            $conditions[] = self::$tableNameThumb . '.version <= \'' . mysql_clean($param_version_inf_or_eq) . '\'';
         }
 
         //JOINS
@@ -545,11 +549,13 @@ class VideoThumbs
             'height' => $this->ffmpeg_instance->input_details['video_height'] ?? ''
         ];
     }
+
     /**
+     * @param bool $ignore
      * @return void
      * @throws Exception
      */
-    public function importOldThumbFromDisk(): void
+    public function importOldThumbFromDisk(bool $ignore = false): void
     {
         //check files
         $glob = DirPath::get('thumbs') . $this->ffmpeg_instance->file_directory . DIRECTORY_SEPARATOR . $this->ffmpeg_instance->file_name . '*';
@@ -561,12 +567,12 @@ class VideoThumbs
                 preg_match('/\/\w*-(\w{1,16})-(\d{1,3})\.(\w{2,4})$/', $thumb, $files_info);
                 if (!empty($files_info)) {
                     if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '14')) {
-                        $id_video_image = self::getOne([
+                        $video_image = self::getOne([
                             'videoid' => $this->video['videoid'],
                             'type'    => 'thumbnail',
                             'num'     => (int)$files_info[2]
                         ]);
-                        if (empty($id_video_image)) {
+                        if (empty($video_image)) {
                             $id_video_image = Clipbucket_db::getInstance()->insert(tbl(self::$tableName), [
                                 'videoid',
                                 'type',
@@ -576,6 +582,8 @@ class VideoThumbs
                                 'thumbnail',
                                 (int)$files_info[2]
                             ]);
+                        } else {
+                            $id_video_image = $video_image['id_video_image'];
                         }
                         if ($files_info[1] == 'original') {
                             $sizes['width'] = $this->ffmpeg_instance->input_details['video_width'] ?? '';
@@ -595,9 +603,9 @@ class VideoThumbs
                             $sizes['width'] ?? null,
                             $sizes['height'] ?? null,
                             $files_info[3],
-                            Update::getInstance()->getCurrentCoreVersion(),
+                            $this->video['video_version'],
                             (int)($files_info[1] == 'original')
-                        ]);
+                        ], ignore: $ignore);
 
                     } else {
                         Clipbucket_db::getInstance()->insert(tbl('video_thumbs'), [
@@ -611,8 +619,8 @@ class VideoThumbs
                             $files_info[1],
                             $files_info[2],
                             $files_info[3],
-                            Update::getInstance()->getCurrentCoreVersion()
-                        ]);
+                            $this->video['video_version']
+                        ], ignore: $ignore);
                     }
                 }
             }
@@ -780,7 +788,7 @@ class VideoThumbs
             if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '14')) {
                 $params_for_old = $params;
                 unset($params_for_old['height']);
-                $params_for_old['version'] = '5.5.2';
+                $params_for_old['param_version_inf_or_eq'] = '5.5.2';
                 $thumbs = self::getAllThumbs($params_for_old);
                 if (empty($thumbs)) {
                     $params_not_size = $params;
@@ -896,7 +904,7 @@ class VideoThumbs
             }
             $filename = $video_file_name . '-'
                 . (empty($thumb_resolution) ? $thumb_width . 'x' . $thumb_height : $thumb_resolution) . '-'
-                . self::generateThumbNum($thumb_num, true)
+                . self::generateThumbNum($thumb_num, $thumb_version)
                 . ($old_type != 'auto' ? '-' . array_search($old_type, Upload::getInstance()->types_thumb) : '')
                 . '.' . $thumb_extension;
         }
@@ -905,12 +913,19 @@ class VideoThumbs
 
     /**
      * @param int $num
-     * @param bool $old
+     * @param string|null $version
      * @return string
      */
-    private static function generateThumbNum(int $num, bool $old = false): string
+    private static function generateThumbNum(int $num, string $version = null): string
     {
-        return str_pad((string)$num, !($old) ? 5 : 4, '0', STR_PAD_LEFT);
+        if ($version >= '5.5.3' || empty($version)) {
+            $pad = 5;
+        } elseif ($version >= '5.5.1') {
+            $pad = 4;
+        } else {
+            $pad = 2;
+        }
+        return str_pad((string)$num, $pad, '0', STR_PAD_LEFT);
     }
 
     /**
