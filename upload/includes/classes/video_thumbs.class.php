@@ -769,9 +769,9 @@ class VideoThumbs
             }
             //generation of missing thumbs if no automatic thumbs are found
             if (empty($all_thumbs)) {
-                $instance = new VideoThumbs($videoid);
-                $instance->ffmpeg_instance->prepare();
-                if ($type == 'thumbnail') {
+                if ($type == 'thumbnail' && $is_auto &&Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '999')) {
+                    $instance = new VideoThumbs($videoid);
+                    $instance->ffmpeg_instance->prepare();
                     $instance->importOldThumbFromDisk();
                     $params['limit'] = '1';
                     if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '14')) {
@@ -807,7 +807,16 @@ class VideoThumbs
             $thumb_suffix = $thumb['version'] > '5.5.2' ? 'video' . DIRECTORY_SEPARATOR : '';
             $filepath = $thumb_video_directory . $thumb_suffix . $thumb_path;
             if (!file_exists($thumb_video_directory_path . $thumb_suffix . $thumb_path)) {
-                $filepath = self::getDefaultMissingThumb($return_type);
+                if ($thumb['version'] <= '5.5.0') {
+                    $old_thumb_path = self::getThumbPath($type, $video['file_directory'], $video['file_name'], $thumb['is_auto'], $thumb['num'], $resolution, $thumb['width'], $thumb['height'], $thumb['extension'], 0);
+                    if (!file_exists($thumb_video_directory_path . $thumb_suffix . $old_thumb_path)) {
+                        $filepath = self::getDefaultMissingThumb($return_type);
+                    } else {
+                        $filepath = $thumb_video_directory . $thumb_suffix . $old_thumb_path;
+                    }
+                } else {
+                    $filepath = self::getDefaultMissingThumb($return_type);
+                }
             }
             $thumbs_files[] = $return_with_num ? [
                 'thumb'     => $filepath,
@@ -920,12 +929,14 @@ class VideoThumbs
      */
     private static function generateThumbNum(int $num, $version = null): string
     {
-        if ($version >= '5.5.3' || empty($version)) {
+        if ($version >= '5.5.3' || $version === null) {
             $pad = 5;
         } elseif ($version >= '5.5.1') {
             $pad = 4;
-        } else {
+        } elseif ($version >= '5.5.0')  {
             $pad = 2;
+        } else {
+            $pad = 0;
         }
         return str_pad((string)$num, $pad, '0', STR_PAD_LEFT);
     }
