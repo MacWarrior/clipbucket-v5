@@ -784,10 +784,15 @@ class VideoThumbs
                 $params_for_old['param_version_inf_or_eq'] = '5.5.2';
                 $thumbs = self::getAllThumbs($params_for_old);
                 if (empty($thumbs)) {
-                    $params_not_size = $params;
-                    unset($params_not_size['width']);
-                    unset($params_not_size['height']);
-                    $thumbs = self::getAllThumbs($params_not_size);
+                    $params_for_video_image = $params;
+                    unset($params_for_video_image['height']);
+                    unset($params_for_video_image['width']);
+                    $video_image = self::getOne($params_for_video_image);
+                    $resolutions = self::getNearestResolutionThumb($video_image['id_video_image'], $width, $height);
+                    $thumbs_files = self::getThumbsFile($is_multi, $videoid, $resolutions['width'], $resolutions['height'], $type, $is_auto, $is_default, $return_type, $return_with_num);
+                    if (!empty($thumbs_files)) {
+                        return $thumbs_files;
+                    }
                 }
             }
 
@@ -1230,4 +1235,29 @@ class VideoThumbs
         }
     }
 
+    /**
+     * @param $id_video_image
+     * @param $requested_width
+     * @param $requested_height
+     * @return array
+     * @throws Exception
+     */
+    public static function getNearestResolutionThumb($id_video_image, $requested_width, $requested_height): array
+    {
+        //search for a resolution that exists
+        //the biggest resolution that is smaller than the requested one
+        $sql = 'SELECT width, height FROM ' . tbl(self::$tableNameThumb) . ' WHERE id_video_image = ' . $id_video_image . ' AND width < '.mysql_clean($requested_width).' AND height < '.mysql_clean($requested_height).' ORDER BY width DESC LIMIT 1';
+        $resolutions = Clipbucket_db::getInstance()->_select($sql);
+        if (!empty($resolutions[0]) && !empty($resolutions[0]['width'])) {
+            return $resolutions[0];
+        }
+        //if no resolution is found, return the smaller resolution that is bigger than the requested one
+        $sql = 'SELECT width, height FROM ' . tbl(self::$tableNameThumb) . ' WHERE id_video_image = ' . $id_video_image . ' AND width > '.mysql_clean($requested_width).' AND height > '.mysql_clean($requested_height).' ORDER BY width ASC LIMIT 1';
+        $resolutions = Clipbucket_db::getInstance()->_select($sql);
+        if (!empty($resolutions[0]) && !empty($resolutions[0]['width'])) {
+            return $resolutions[0];
+        }
+        //if nothing is found return original
+        return ['width' => 'original', 'height' => 'original'];
+    }
 }
