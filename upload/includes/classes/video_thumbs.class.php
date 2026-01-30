@@ -763,7 +763,7 @@ class VideoThumbs
             if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '14') ) {
                 $all_thumbs = self::getAllThumbs(['videoid' => $videoid, 'type' => $type, 'is_auto' => true]);
             } else {
-                $all_thumbs = Clipbucket_db::getInstance()->_select('select * from ' . tbl('video_thumbs') . ' where videoid = ' . $videoid . ' and type = \'' . mysql_clean($type) . '\' and type != \'custom\'');
+                $all_thumbs = Clipbucket_db::getInstance()->_select('SELECT * FROM ' . tbl('video_thumbs') . ' WHERE videoid = ' . $videoid . ' AND type = \'' . mysql_clean($type) . '\' AND type != \'custom\'');
             }
             //generation of missing thumbs if no automatic thumbs are found
             if (empty($all_thumbs)) {
