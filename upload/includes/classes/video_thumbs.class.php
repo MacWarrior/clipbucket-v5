@@ -694,12 +694,13 @@ class VideoThumbs
             case 'url':
                 $thumb_video_directory = DirPath::getUrl('thumbs') ;
                 break;
+
             case 'filepath':
                 $thumb_video_directory = $thumb_video_directory_path;
                 break;
         }
 
-
+        $params = [];
         if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '14')) {
             $params = [
                 'videoid'        => $videoid,
@@ -736,6 +737,7 @@ class VideoThumbs
                     $default_field = 'default_poster';
                     $old_type = '\'' . mysql_clean($type) . '\'';
                     break;
+
                 case 'backdrop':
                     $default = $video['default_backdrop'];
                     $default_field = 'default_backdrop';
@@ -754,7 +756,7 @@ class VideoThumbs
             }
             $sql = 'SELECT *, CASE WHEN num = ' . mysql_clean($video[$default_field] ?? 0) . ' THEN 1 ELSE 0 END AS is_default, CASE WHEN type != \'custom\' THEN 1 ELSE 0 END AS is_auto
             FROM ' . tbl('video_thumbs') . ' 
-            WHERE videoid = ' . mysql_clean($videoid) . ' 
+            WHERE videoid = ' . $videoid . ' 
             AND type IN ( ' . $old_type . ' ) '
             . (!empty($conditions_old) ? ' AND ' : '') . implode(' AND ', $conditions_old)
             . (!$is_multi ? ' LIMIT 1 ' : '');
@@ -765,11 +767,11 @@ class VideoThumbs
             if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '14') ) {
                 $all_thumbs = self::getAllThumbs(['videoid' => $videoid, 'type' => $type, 'is_auto' => true]);
             } else {
-                $all_thumbs = Clipbucket_db::getInstance()->_select('select * from ' . tbl('video_thumbs') . ' where videoid = ' . mysql_clean($videoid) . ' and type = \'' . mysql_clean($type) . '\' and type != \'custom\'');
+                $all_thumbs = Clipbucket_db::getInstance()->_select('select * from ' . tbl('video_thumbs') . ' where videoid = ' . $videoid . ' and type = \'' . mysql_clean($type) . '\' and type != \'custom\'');
             }
             //generation of missing thumbs if no automatic thumbs are found
             if (empty($all_thumbs)) {
-                if ($type == 'thumbnail' && $is_auto &&Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '999')) {
+                if ($type == 'thumbnail' && $is_auto && Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '18')) {
                     $instance = new VideoThumbs($videoid);
                     $instance->ffmpeg_instance->prepare();
                     $instance->importOldThumbFromDisk();
@@ -782,9 +784,8 @@ class VideoThumbs
                 }
                 if (!empty($thumbs)) {
                     return self::getThumbsFile($is_multi, $videoid, $width, $height, $type, $is_auto, $is_default, $return_type, $return_with_num);
-                } else {
-                    return $is_multi ? $thumbs_files : ($thumbs_files[0] ?? self::getDefaultMissingThumb($return_type, $return_with_num));
                 }
+                return $is_multi ? $thumbs_files : ($thumbs_files[0] ?? self::getDefaultMissingThumb($return_type, $return_with_num));
             }
             //try to get olds thumbs with only width (only after migrations)
             if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '14')) {
