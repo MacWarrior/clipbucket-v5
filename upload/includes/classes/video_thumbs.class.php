@@ -803,7 +803,7 @@ class VideoThumbs
 
         }
         foreach ($thumbs as $thumb) {
-            $resolution = $thumb['resolution'] ?? ($thumb['is_original_size'] ?'original':false);
+            $resolution = $thumb['resolution'] ?? ($thumb['is_original_size'] ? 'original' : false);
             $thumb_path = self::getThumbPath($type, $video['file_directory'], $video['file_name'], $thumb['is_auto'], $thumb['num'], $resolution, $thumb['width'], $thumb['height'], $thumb['extension'], $thumb['version']);
             $thumb_suffix = $thumb['version'] > '5.5.2' ? 'video' . DIRECTORY_SEPARATOR : '';
             $filepath = $thumb_video_directory . $thumb_suffix . $thumb_path;
