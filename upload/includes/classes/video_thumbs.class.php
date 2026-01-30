@@ -926,10 +926,10 @@ class VideoThumbs
             $pad = 5;
         } elseif ($version >= '5.5.1') {
             $pad = 4;
-        } elseif ($version >= '5.5.0')  {
-            $pad = 2;
-        } else {
+        } elseif ($version == '0')  {
             $pad = 0;
+        } else {
+            $pad = 2;
         }
         return str_pad((string)$num, $pad, '0', STR_PAD_LEFT);
     }
