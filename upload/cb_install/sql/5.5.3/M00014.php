@@ -186,6 +186,11 @@ class M00014 extends \Migration
 
         } while (!empty($videos));
 
+        $sql = 'UPDATE ' . tbl('video') . ' SET default_poster = NULL WHERE default_poster = 0';
+        \Clipbucket_db::getInstance()->execute($sql);
+        $sql = 'UPDATE ' . tbl('video') . ' SET default_backdrop = NULL WHERE default_backdrop = 0';
+        \Clipbucket_db::getInstance()->execute($sql);
+
         self::alterTable('ALTER TABLE `{tbl_prefix}video` ADD CONSTRAINT `video_default_poster_ibfk_1` FOREIGN KEY (default_poster) REFERENCES `{tbl_prefix}video_image` (id_video_image) ON DELETE SET NULL;', [
             'table'  => 'video_image',
             'column' => 'id_video_image'

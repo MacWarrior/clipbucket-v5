@@ -641,16 +641,12 @@ class VideoThumbs
                 . '*[!-cpb]-'
                 . $video_image['num']
                 . '.*';
-            $glob = glob($pattern);
-            foreach ($glob as $thumb) {
-                unlink($thumb);
-            }
         } else {
             $pattern = DirPath::get('thumbs') . $this->ffmpeg_instance->file_directory . DIRECTORY_SEPARATOR . $this->ffmpeg_instance->file_name . '*[!-cpb].*';
-            $glob = glob($pattern);
-            foreach ($glob as $thumb) {
-                unlink($thumb);
-            }
+        }
+        $glob = glob($pattern);
+        foreach ($glob as $thumb) {
+            unlink($thumb);
         }
         Clipbucket_db::getInstance()->delete(tbl(self::$tableNameThumb), ['id_video_image'], [$video_image['id_video_image']]);
         Clipbucket_db::getInstance()->delete(tbl(self::$tableName), ['id_video_image'], [$video_image['id_video_image']]);
@@ -694,12 +690,13 @@ class VideoThumbs
             case 'url':
                 $thumb_video_directory = DirPath::getUrl('thumbs') ;
                 break;
+
             case 'filepath':
                 $thumb_video_directory = $thumb_video_directory_path;
                 break;
         }
 
-
+        $params = [];
         if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '14')) {
             $params = [
                 'videoid'        => $videoid,
@@ -736,6 +733,7 @@ class VideoThumbs
                     $default_field = 'default_poster';
                     $old_type = '\'' . mysql_clean($type) . '\'';
                     break;
+
                 case 'backdrop':
                     $default = $video['default_backdrop'];
                     $default_field = 'default_backdrop';
@@ -747,14 +745,12 @@ class VideoThumbs
             }
             if ($width == 'original' || $height == 'original') {
                 $conditions_old[] = 'resolution = \'original\'';
-            } else {
-                if ($width && $height) {
-                    $conditions_old[] = 'resolution = \'' . mysql_clean($width) . 'x' . mysql_clean($height) . '\'';
-                }
+            } else if ($width && $height) {
+                $conditions_old[] = 'resolution = \'' . mysql_clean($width) . 'x' . mysql_clean($height) . '\'';
             }
             $sql = 'SELECT *, CASE WHEN num = ' . mysql_clean($video[$default_field] ?? 0) . ' THEN 1 ELSE 0 END AS is_default, CASE WHEN type != \'custom\' THEN 1 ELSE 0 END AS is_auto
             FROM ' . tbl('video_thumbs') . ' 
-            WHERE videoid = ' . mysql_clean($videoid) . ' 
+            WHERE videoid = ' . $videoid . ' 
             AND type IN ( ' . $old_type . ' ) '
             . (!empty($conditions_old) ? ' AND ' : '') . implode(' AND ', $conditions_old)
             . (!$is_multi ? ' LIMIT 1 ' : '');
@@ -765,26 +761,21 @@ class VideoThumbs
             if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '14') ) {
                 $all_thumbs = self::getAllThumbs(['videoid' => $videoid, 'type' => $type, 'is_auto' => true]);
             } else {
-                $all_thumbs = Clipbucket_db::getInstance()->_select('select * from ' . tbl('video_thumbs') . ' where videoid = ' . mysql_clean($videoid) . ' and type = \'' . mysql_clean($type) . '\' and type != \'custom\'');
+                $all_thumbs = Clipbucket_db::getInstance()->_select('SELECT * FROM ' . tbl('video_thumbs') . ' WHERE videoid = ' . $videoid . ' AND type = \'' . mysql_clean($type) . '\' AND type != \'custom\'');
             }
             //generation of missing thumbs if no automatic thumbs are found
             if (empty($all_thumbs)) {
-                $instance = new VideoThumbs($videoid);
-                $instance->ffmpeg_instance->prepare();
-                if ($type == 'thumbnail') {
+                if ($type == 'thumbnail' && $is_auto && Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '18')) {
+                    $instance = new VideoThumbs($videoid);
+                    $instance->ffmpeg_instance->prepare();
                     $instance->importOldThumbFromDisk();
                     $params['limit'] = '1';
-                    if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '14')) {
-                        $thumbs = self::getAllThumbs($params);
-                    } else {
-                        $thumbs = Clipbucket_db::getInstance()->_select($sql);
-                    }
+                    $thumbs = self::getAllThumbs($params);
                 }
                 if (!empty($thumbs)) {
                     return self::getThumbsFile($is_multi, $videoid, $width, $height, $type, $is_auto, $is_default, $return_type, $return_with_num);
-                } else {
-                    return $is_multi ? $thumbs_files : ($thumbs_files[0] ?? self::getDefaultMissingThumb($return_type, $return_with_num));
                 }
+                return $is_multi ? [] : self::getDefaultMissingThumb($return_type, $return_with_num);
             }
             //try to get olds thumbs with only width (only after migrations)
             if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '14')) {
@@ -793,21 +784,35 @@ class VideoThumbs
                 $params_for_old['param_version_inf_or_eq'] = '5.5.2';
                 $thumbs = self::getAllThumbs($params_for_old);
                 if (empty($thumbs)) {
-                    $params_not_size = $params;
-                    unset($params_not_size['width']);
-                    unset($params_not_size['height']);
-                    $thumbs = self::getAllThumbs($params_not_size);
+                    $params_for_video_image = $params;
+                    unset($params_for_video_image['height']);
+                    unset($params_for_video_image['width']);
+                    $video_image = self::getOne($params_for_video_image);
+                    $resolutions = self::getNearestResolutionThumb($video_image['id_video_image'], $width, $height);
+                    $thumbs_files = self::getThumbsFile($is_multi, $videoid, $resolutions['width'], $resolutions['height'], $type, $is_auto, $is_default, $return_type, $return_with_num);
+                    if (!empty($thumbs_files)) {
+                        return $thumbs_files;
+                    }
                 }
             }
 
         }
         foreach ($thumbs as $thumb) {
-            $resolution = $thumb['resolution'] ?? ($thumb['is_original_size'] ?'original':false);
+            $resolution = $thumb['resolution'] ?? ($thumb['is_original_size'] ? 'original' : false);
             $thumb_path = self::getThumbPath($type, $video['file_directory'], $video['file_name'], $thumb['is_auto'], $thumb['num'], $resolution, $thumb['width'], $thumb['height'], $thumb['extension'], $thumb['version']);
             $thumb_suffix = $thumb['version'] > '5.5.2' ? 'video' . DIRECTORY_SEPARATOR : '';
             $filepath = $thumb_video_directory . $thumb_suffix . $thumb_path;
             if (!file_exists($thumb_video_directory_path . $thumb_suffix . $thumb_path)) {
-                $filepath = self::getDefaultMissingThumb($return_type);
+                if ($thumb['version'] <= '5.5.0') {
+                    $old_thumb_path = self::getThumbPath($type, $video['file_directory'], $video['file_name'], $thumb['is_auto'], $thumb['num'], $resolution, $thumb['width'], $thumb['height'], $thumb['extension'], 0);
+                    if (!file_exists($thumb_video_directory_path . $thumb_suffix . $old_thumb_path)) {
+                        $filepath = self::getDefaultMissingThumb($return_type);
+                    } else {
+                        $filepath = $thumb_video_directory . $thumb_suffix . $old_thumb_path;
+                    }
+                } else {
+                    $filepath = self::getDefaultMissingThumb($return_type);
+                }
             }
             $thumbs_files[] = $return_with_num ? [
                 'thumb'     => $filepath,
@@ -920,10 +925,12 @@ class VideoThumbs
      */
     private static function generateThumbNum(int $num, $version = null): string
     {
-        if ($version >= '5.5.3' || empty($version)) {
+        if ($version >= '5.5.3' || $version === null) {
             $pad = 5;
         } elseif ($version >= '5.5.1') {
             $pad = 4;
+        } elseif ($version == '0')  {
+            $pad = 0;
         } else {
             $pad = 2;
         }
@@ -962,7 +969,7 @@ class VideoThumbs
             e(lang('upload_vid_thumbs_msg'), 'm');
         } else {
             $file = $file_array;
-            self::uploadThumb($video, $file, $key = 0, $type, $is_auto);
+            self::uploadThumb($video, $file, 0, $type, $is_auto);
         }
     }
 
@@ -1228,4 +1235,29 @@ class VideoThumbs
         }
     }
 
+    /**
+     * @param $id_video_image
+     * @param $requested_width
+     * @param $requested_height
+     * @return array
+     * @throws Exception
+     */
+    public static function getNearestResolutionThumb($id_video_image, $requested_width, $requested_height): array
+    {
+        //search for a resolution that exists
+        //the biggest resolution that is smaller than the requested one
+        $sql = 'SELECT width, height FROM ' . tbl(self::$tableNameThumb) . ' WHERE id_video_image = ' . $id_video_image . ' AND width < '.mysql_clean($requested_width).' AND height < '.mysql_clean($requested_height).' ORDER BY width DESC LIMIT 1';
+        $resolutions = Clipbucket_db::getInstance()->_select($sql);
+        if (!empty($resolutions[0]) && !empty($resolutions[0]['width'])) {
+            return $resolutions[0];
+        }
+        //if no resolution is found, return the smaller resolution that is bigger than the requested one
+        $sql = 'SELECT width, height FROM ' . tbl(self::$tableNameThumb) . ' WHERE id_video_image = ' . $id_video_image . ' AND width > '.mysql_clean($requested_width).' AND height > '.mysql_clean($requested_height).' ORDER BY width ASC LIMIT 1';
+        $resolutions = Clipbucket_db::getInstance()->_select($sql);
+        if (!empty($resolutions[0]) && !empty($resolutions[0]['width'])) {
+            return $resolutions[0];
+        }
+        //if nothing is found return original
+        return ['width' => 'original', 'height' => 'original'];
+    }
 }
