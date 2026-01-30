@@ -641,16 +641,12 @@ class VideoThumbs
                 . '*[!-cpb]-'
                 . $video_image['num']
                 . '.*';
-            $glob = glob($pattern);
-            foreach ($glob as $thumb) {
-                unlink($thumb);
-            }
         } else {
             $pattern = DirPath::get('thumbs') . $this->ffmpeg_instance->file_directory . DIRECTORY_SEPARATOR . $this->ffmpeg_instance->file_name . '*[!-cpb].*';
-            $glob = glob($pattern);
-            foreach ($glob as $thumb) {
-                unlink($thumb);
-            }
+        }
+        $glob = glob($pattern);
+        foreach ($glob as $thumb) {
+            unlink($thumb);
         }
         Clipbucket_db::getInstance()->delete(tbl(self::$tableNameThumb), ['id_video_image'], [$video_image['id_video_image']]);
         Clipbucket_db::getInstance()->delete(tbl(self::$tableName), ['id_video_image'], [$video_image['id_video_image']]);
@@ -776,16 +772,12 @@ class VideoThumbs
                     $instance->ffmpeg_instance->prepare();
                     $instance->importOldThumbFromDisk();
                     $params['limit'] = '1';
-                    if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '14')) {
-                        $thumbs = self::getAllThumbs($params);
-                    } else {
-                        $thumbs = Clipbucket_db::getInstance()->_select($sql);
-                    }
+                    $thumbs = self::getAllThumbs($params);
                 }
                 if (!empty($thumbs)) {
                     return self::getThumbsFile($is_multi, $videoid, $width, $height, $type, $is_auto, $is_default, $return_type, $return_with_num);
                 }
-                return $is_multi ? $thumbs_files : ($thumbs_files[0] ?? self::getDefaultMissingThumb($return_type, $return_with_num));
+                return $is_multi ? [] : self::getDefaultMissingThumb($return_type, $return_with_num);
             }
             //try to get olds thumbs with only width (only after migrations)
             if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '14')) {
@@ -974,7 +966,7 @@ class VideoThumbs
             e(lang('upload_vid_thumbs_msg'), 'm');
         } else {
             $file = $file_array;
-            self::uploadThumb($video, $file, $key = 0, $type, $is_auto);
+            self::uploadThumb($video, $file, 0, $type, $is_auto);
         }
     }
 
