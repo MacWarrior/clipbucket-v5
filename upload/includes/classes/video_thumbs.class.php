@@ -745,10 +745,8 @@ class VideoThumbs
             }
             if ($width == 'original' || $height == 'original') {
                 $conditions_old[] = 'resolution = \'original\'';
-            } else {
-                if ($width && $height) {
-                    $conditions_old[] = 'resolution = \'' . mysql_clean($width) . 'x' . mysql_clean($height) . '\'';
-                }
+            } else if ($width && $height) {
+                $conditions_old[] = 'resolution = \'' . mysql_clean($width) . 'x' . mysql_clean($height) . '\'';
             }
             $sql = 'SELECT *, CASE WHEN num = ' . mysql_clean($video[$default_field] ?? 0) . ' THEN 1 ELSE 0 END AS is_default, CASE WHEN type != \'custom\' THEN 1 ELSE 0 END AS is_auto
             FROM ' . tbl('video_thumbs') . ' 
