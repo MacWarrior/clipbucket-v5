@@ -1,6 +1,6 @@
 {
   "version":"5.5.3",
-  "revision":"19",
+  "revision":"20",
   "status":"stable",
   "detail":[
     {
@@ -34,6 +34,7 @@
         ,"Fix possible issue with migration 5.5.3 - 14"
         ,"Fix SQL error on video deletion"
         ,"Fix pre-5.5.1 videos thumbs"
+        ,"Fix clean orphan files tool"
       ]
     },
     {

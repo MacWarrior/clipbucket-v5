@@ -179,6 +179,7 @@ function default_thumb($return_type = 'url'): string
             default:
             case 'url':
                 return TEMPLATEURL . '/images/thumbs/processing.png';
+
             case 'filepath':
                 return TEMPLATEDIR . '/images/thumbs/processing.png';
         }
@@ -188,6 +189,7 @@ function default_thumb($return_type = 'url'): string
         default:
         case 'url':
             return DirPath::getUrl('thumbs') . 'processing.jpg';
+
         case 'filepath':
             return DirPath::get('thumbs') . 'processing.jpg';
     }
@@ -199,11 +201,11 @@ function default_thumb($return_type = 'url'): string
  * @param      $vdetails
  * @param null $type
  * @param bool $is_public
- * @return string
+ * @return string|void
  * @throws Exception
  * @internal param video $ARRAY details
  */
-function video_link($vdetails, $type = null, $is_public = false):string
+function video_link($vdetails, $type = null, bool $is_public = false)
 {
     $base_url = DirPath::getUrl('root');
     #checking what kind of input we have
@@ -1486,7 +1488,7 @@ function getHlsFilesInfo($resolution, $data): array
  * @param $log_file
  * @return void
  */
-function reset_video_log($log_file)
+function reset_video_log($log_file): void
 {
     $file_to_delete = '';
     $base = basename($log_file, '.log');
@@ -1507,7 +1509,7 @@ function reset_video_log($log_file)
  * @param $path
  * @return void
  */
-function remove_empty_directory_log($path)
+function remove_empty_directory_log($path): void
 {
     remove_empty_directory($path, DirPath::get('logs'));
 }
@@ -1518,7 +1520,7 @@ function remove_empty_directory_log($path)
  * @param string $stop_path path where function has to stop
  * @return void
  */
-function remove_empty_directory($path, string $stop_path)
+function remove_empty_directory($path, string $stop_path): void
 {
     if ($path == $stop_path) {
         return;
@@ -1533,8 +1535,9 @@ function remove_empty_directory($path, string $stop_path)
 
 /**
  * @param $file
- * @return void
- * @throws Exception
+ * @return string
+ * @throws \Predis\Connection\ConnectionException
+ * @throws \Predis\Response\ServerException
  */
 function clean_orphan_files($file): string
 {
@@ -1596,8 +1599,9 @@ function clean_orphan_files($file): string
                 $result = Clipbucket_db::getInstance()->_select($query);
             }
             break;
-        case'avatar';
-        case'background';
+
+        case'avatar':
+        case'background':
             $search_name = str_replace('-small', '', $file[$file['type']]);
             $query = 'SELECT userid FROM ' . tbl('users') . ' WHERE ' . $file['type'] . ' = \'' . mysql_clean($search_name) . '\'';
             $filename = str_replace(' ','_',$search_name);
@@ -1630,6 +1634,7 @@ function clean_orphan_files($file): string
         case 'video_parts':
             $result = !(time() - filectime(DirPath::get('root') .$file['data']) > 3600);
             break;
+
         default:
             return false;
     }
