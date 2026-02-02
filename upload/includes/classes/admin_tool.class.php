@@ -171,10 +171,13 @@ class AdminTool
     }
 
     /**
+     * @param $e
+     * @return bool
      * @throws Exception
      */
     public function toolErrorHandler($e): bool
     {
+        Clipbucket_db::getInstance()->rollback();
         $this->addLog('Error : ' . $e->getMessage());
         $this->setToolError($this->id_tool);
         return false;
@@ -188,9 +191,9 @@ class AdminTool
     public function launch()
     {
         $whoops = WhoopsManager::getInstance();
-        $whoops->pushHandler([$this, 'toolErrorHandler']);
-
+        $whoops->prependHandler([$this, 'toolErrorHandler']);
         $whoops->register();
+
         if (empty($this->tool)) {
             e(lang('class_error_occured'));
             return false;

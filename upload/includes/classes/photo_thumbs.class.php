@@ -2,7 +2,6 @@
 
 class PhotoThumbs
 {
-    private static string $tableName = 'photo_image';
 
     private static string $tableNameThumb = 'photo_thumb';
 
@@ -276,19 +275,34 @@ class PhotoThumbs
         if (!file_exists($thumb_photo_directory . $photo['file_directory'] . DIRECTORY_SEPARATOR . $photo['filename'] . DIRECTORY_SEPARATOR) ) {
             mkdir($thumb_photo_directory. $photo['file_directory'] . DIRECTORY_SEPARATOR . $photo['filename'] . DIRECTORY_SEPARATOR, 0755, true);
         }
-        $ext = $photo['ext'];
-        $original_photo_path = DirPath::get('photos') . $photo['file_directory'] . DIRECTORY_SEPARATOR . $photo['filename'] . '.' . $ext;
+        $original_photo_path = DirPath::get('photos') . $photo['file_directory'] . DIRECTORY_SEPARATOR . $photo['filename'] . '.' . $photo['ext'];
         $original_sizes = getimagesize($original_photo_path);
         if (empty($original_sizes)) {
             return;
+        }
+        $mime_type = self::getMimeType($original_sizes['mime']);
+        if (empty($mime_type)) {
+            throw new Exception(lang('remote_play_invalid_extension'));
+        }
+        if ( $mime_type != strtolower($photo['ext'])) {
+            $temp_thumb_path = DirPath::get('photos') . $photo['file_directory'] . DIRECTORY_SEPARATOR . $photo['filename'] . '.' . $mime_type;
+            rename($original_photo_path, $temp_thumb_path);
+            $original_photo_path = $temp_thumb_path;
+            if ( file_exists($original_photo_path)) {
+                $sql = 'UPDATE ' . tbl(Photo::getInstance()->getTableName()) . ' SET ext = \'' . $mime_type . '\' WHERE photo_id = ' . mysql_clean($photo['photo_id']);
+                Clipbucket_db::getInstance()->execute($sql);
+            } else {
+                e(lang('error_uploading_thumb'));
+                return;
+            }
         }
         foreach (self::$resolution_setting as $resolution_key => $res) {
             if ($resolution_key == 'original') {
                 $new_thumb_path = $original_photo_path;
             } else {
                 $width = $res['width'] ;
-                $new_thumb_path = $thumb_photo_directory . self::getThumbPath($photo['file_directory'], $photo['filename'], $width, $ext, Update::getInstance()->getCurrentCoreVersion());
-                PhotoThumbs::CreateThumb($original_photo_path, $new_thumb_path, $width, $ext, $original_sizes);
+                $new_thumb_path = $thumb_photo_directory . self::getThumbPath($photo['file_directory'], $photo['filename'], $width, $mime_type, Update::getInstance()->getCurrentCoreVersion());
+                PhotoThumbs::CreateThumb($original_photo_path, $new_thumb_path, $width, $mime_type, $original_sizes);
             }
             if (file_exists($new_thumb_path)) {
                 //watermark
@@ -304,7 +318,7 @@ class PhotoThumbs
                 ], [
                     $photo['photo_id'],
                     $res['width'] ?? 0,
-                    $ext,
+                    $mime_type,
                     Update::getInstance()->getCurrentCoreVersion(),
                     (int)($resolution_key == 'original')
                 ], ignore: $ignore);
@@ -349,7 +363,7 @@ class PhotoThumbs
         $org_height = $original_sizes[1];
 
         if ($org_width > $destination_width && !empty($destination_width) && $destination_width != 'original') {
-            if( stristr(PHP_OS, 'WIN') ) {
+            if (stristr(PHP_OS, 'WIN')) {
                 // On Windows hosts, imagecreatefromX functions consumes lots of RAM
                 $memory_needed = PhotoThumbs::getMemoryNeededForImage($original_file_path);
                 $memory_limit = ini_get('memory_limit');
@@ -372,32 +386,33 @@ class PhotoThumbs
 
             $image_r = imagecreatetruecolor($width, $height);
 
-            switch ($extension) {
-                case 'jpeg':
-                case 'jpg':
-                case 'JPG':
-                case 'JPEG':
-                    $image = imagecreatefromjpeg($original_file_path);
-                    imagecopyresampled($image_r, $image, 0, 0, 0, 0, $width, $height, $org_width, $org_height);
-                    imagejpeg($image_r, $destination_path, 90);
-                    break;
+            try {
+                switch ($extension) {
+                    case 'jpeg':
+                        $image = imagecreatefromjpeg($original_file_path);
+                        imagecopyresampled($image_r, $image, 0, 0, 0, 0, $width, $height, $org_width, $org_height);
+                        imagejpeg($image_r, $destination_path, 90);
+                        break;
 
-                case 'png':
-                case 'PNG':
-                    $image = imagecreatefrompng($original_file_path);
-                    imagecopyresampled($image_r, $image, 0, 0, 0, 0, $width, $height, $org_width, $org_height);
-                    imagepng($image_r, $destination_path, 9);
-                    break;
+                    case 'png':
+                        $image = imagecreatefrompng($original_file_path);
+                        imagecopyresampled($image_r, $image, 0, 0, 0, 0, $width, $height, $org_width, $org_height);
+                        imagepng($image_r, $destination_path, 9);
+                        break;
 
-                case 'gif':
-                case 'GIF':
-                    $image = imagecreatefromgif($original_file_path);
-                    imagecopyresampled($image_r, $image, 0, 0, 0, 0, $width, $height, $org_width, $org_height);
-                    imagegif($image_r, $destination_path, 90);
-                    break;
+                    case 'gif':
+                        $image = imagecreatefromgif($original_file_path);
+                        imagecopyresampled($image_r, $image, 0, 0, 0, 0, $width, $height, $org_width, $org_height);
+                        imagegif($image_r, $destination_path, 90);
+                        break;
+                    default:
+                        throw new Exception(lang('remote_play_invalid_extension'));
+                }
+                imagedestroy($image_r);
+                imagedestroy($image);
+            } catch (Exception $e) {
+                e($e->getMessage());
             }
-            imagedestroy($image_r);
-            imagedestroy($image);
         } else {
             if (!file_exists($destination_path)) {
                 if (!is_dir($original_file_path)) {
@@ -422,6 +437,22 @@ class PhotoThumbs
         return true;
     }
 
+    /**
+     * @param $mime_type
+     * @return string
+     */
+    public static function getMimeType($mime_type): string
+    {
+        return match ($mime_type) {
+            'image/jpeg' => 'jpeg',
+            'image/png'  => 'png',
+            'image/gif'  => 'gif',
+            'image/webp' => 'webp',
+            'image/bmp'  => 'bmp',
+            'image/tiff' => 'tiff',
+            default      => null,
+        };
+    }
 
     /**
      * @param int $photo_id

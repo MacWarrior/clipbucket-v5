@@ -788,7 +788,13 @@ class VideoThumbs
                     unset($params_for_video_image['height']);
                     unset($params_for_video_image['width']);
                     $video_image = self::getOne($params_for_video_image);
+                    if (empty($video_image)) {
+                        return $is_multi ? [] : self::getDefaultMissingThumb($return_type, $return_with_num);
+                    }
                     $resolutions = self::getNearestResolutionThumb($video_image['id_video_image'], $width, $height);
+                    if (empty($resolutions)) {
+                        return $is_multi ? [] : self::getDefaultMissingThumb($return_type, $return_with_num);
+                    }
                     $thumbs_files = self::getThumbsFile($is_multi, $videoid, $resolutions['width'], $resolutions['height'], $type, $is_auto, $is_default, $return_type, $return_with_num);
                     if (!empty($thumbs_files)) {
                         return $thumbs_files;
@@ -1221,7 +1227,12 @@ class VideoThumbs
         }
     }
 
-    public static function getAllThumbCountByVideoId($videoid)
+    /**
+     * @param $videoid
+     * @return array|int|mixed
+     * @throws Exception
+     */
+    public static function getAllThumbCountByVideoId($videoid): mixed
     {
         if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '14')) {
             return VideoThumbs::getAllThumbs(['count'=>true, 'videoid'=>$videoid]);
@@ -1244,6 +1255,9 @@ class VideoThumbs
      */
     public static function getNearestResolutionThumb($id_video_image, $requested_width, $requested_height): array
     {
+        if(empty($id_video_image) ) {
+            return [];
+        }
         //search for a resolution that exists
         //the biggest resolution that is smaller than the requested one
         $sql = 'SELECT width, height FROM ' . tbl(self::$tableNameThumb) . ' WHERE id_video_image = ' . $id_video_image . ' AND width < '.mysql_clean($requested_width).' AND height < '.mysql_clean($requested_height).' ORDER BY width DESC LIMIT 1';
