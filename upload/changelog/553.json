@@ -1,6 +1,6 @@
 {
   "version":"5.5.3",
-  "revision":"21",
+  "revision":"22",
   "status":"stable",
   "detail":[
     {
@@ -34,7 +34,7 @@
         ,"Drop support for PHP 8.0"
         ,"Fix possible PHP error with discord logs"
         ,"Fix possible issue with migration 5.5.3 - 14"
-        ,"Fix SQL error on video deletion"
+        ,"Fix SQL error on video, photo & collection deletion"
         ,"Fix pre-5.5.1 videos thumbs"
         ,"Fix clean orphan files tool"
         ,"Fix tools error handling"

@@ -1417,7 +1417,7 @@ class CBPhotos
             Comments::delete($params);
 
             //Removing Photo From Favorites
-            Clipbucket_db::getInstance()->delete(tbl('favorites'), ['type', 'id'], ['p', $photo['photo_id']]);
+            Photo::getInstance()->removeFromFavoritesForAllUsers($photo['photo_id']);
             errorhandler::getInstance()->flush_msg();
             //finally removing from Database
             $this->delete_from_db($photo);
