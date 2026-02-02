@@ -1001,6 +1001,8 @@ class Collection extends Objects
 
         $sql = 'DELETE FROM ' . tbl('collection_items') . ' WHERE collection_id = ' . $collection_id . ' AND object_id = ' . $item_id . ' AND type = \'' . $type . '\'';
         Clipbucket_db::getInstance()->execute($sql);
+
+        Collection::assignDefaultThumb($collection_id);
         e(lang('collect_item_removed', $type), 'm');
         return true;
 
