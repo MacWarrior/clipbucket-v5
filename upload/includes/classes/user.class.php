@@ -1132,9 +1132,9 @@ class User extends Objects
         //Finally Removing Database entry of user
         Clipbucket_db::getInstance()->execute('DELETE FROM ' . tbl('users_storage_histo') . ' WHERE id_user =' . (int)$uid);
         Clipbucket_db::getInstance()->execute('DELETE FROM ' . tbl('email_histo') . ' WHERE userid =' . (int)$uid);
-        Clipbucket_db::getInstance()->execute('DELETE FROM ' . tbl('favorites') . ' WHERE userid =' . (int)$uid);
         Clipbucket_db::getInstance()->execute('DELETE FROM ' . tbl('user_profile') . ' WHERE userid =' . (int)$uid);
         Clipbucket_db::getInstance()->execute('DELETE FROM ' . tbl('users') . ' WHERE userid =' . (int)$uid);
+        User::getInstance()->removeFromFavoritesForAllUsers((int)$uid);
     }
 
     /**
@@ -1718,7 +1718,7 @@ class userquery extends CBCategory
         Clipbucket_db::getInstance()->delete(tbl('video_users'), ['userid'], [(int)$uid]);
         Clipbucket_db::getInstance()->execute('DELETE FROM ' . tbl('users_storage_histo') . ' WHERE id_user =' . (int)$uid);
         Clipbucket_db::getInstance()->execute('DELETE FROM ' . tbl('email_histo') . ' WHERE userid =' . (int)$uid);
-        Clipbucket_db::getInstance()->execute('DELETE FROM ' . tbl('favorites') . ' WHERE userid =' . (int)$uid);
+        User::getInstance()->removeFromFavoritesForAllUsers((int)$uid);
         Clipbucket_db::getInstance()->execute('DELETE FROM ' . tbl('user_profile') . ' WHERE userid =' . (int)$uid);
         Clipbucket_db::getInstance()->execute('DELETE FROM ' . tbl('users') . ' WHERE userid =' . (int)$uid);
 
