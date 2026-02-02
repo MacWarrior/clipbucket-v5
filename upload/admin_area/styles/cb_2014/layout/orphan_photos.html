@@ -24,7 +24,7 @@
         <td>
             <div class="row">
             <div class="AdminPhotoThumb col-md-3">
-                {get_photo details=$photos[list] id='photo' style='padding:2px; border:1px solid #ccc' output='html'}
+                {PhotoThumbs::getHtmlThumbFile($photos[list].photo_id, 150,['style'=>'padding:2px; border:1px solid #ccc'])}
             </div>
         <td>
             <div class="col-md-9">

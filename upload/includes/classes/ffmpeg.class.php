@@ -270,7 +270,7 @@ class FFMpeg
     /**
      * @throws Exception
      */
-    function ClipBucket(): void
+    function ClipBucket(int $videoid): void
     {
         $this->log->newSection('Conversion lock');
         while($this->isLocked()){
@@ -302,7 +302,8 @@ class FFMpeg
 
         if (file_exists($this->input_file)) {
             try {
-                $this->generateAllThumbs();
+                $videoConverion = new VideoThumbs($videoid, $this);
+                $videoConverion->generateAutomaticThumbs();
             } catch (\Exception $e) {
                 $this->log->writeLine(date('Y-m-d H:i:s').' - Error occured : ' . $e->getMessage());
             }
@@ -884,44 +885,6 @@ class FFMpeg
         }
     }
 
-    /**
-     * @return void
-     * @throws Exception
-     */
-    public function generateAllThumbs(): void
-    {
-        $this->log->newSection('Thumbs generation');
-
-        $thumbs_res_settings = thumbs_res_settings_28();
-
-        $thumbs_settings = [];
-        $thumbs_settings['duration'] = $this->input_details['duration'];
-        $thumbs_settings['num'] = config('num_thumbs');
-
-        $video_info = Video::getInstance()->getOne([
-            'file_name' => $this->file_name
-            ,'disable_generic_constraints' => true
-        ]);
-
-        if( empty($video_info) ){
-            $this->log->writeLine(date('Y-m-d H:i:s') . ' - ' . lang('technical_error'));
-            return;
-        }
-
-        $thumbs_settings['videoid'] = $video_info['videoid'];
-
-        //delete olds thumbs from db and on disk
-        $this->log->writeLine(date('Y-m-d H:i:s').' - Deleting old thumbs...');
-        Clipbucket_db::getInstance()->delete(tbl('video_thumbs'), ['videoid','type'], [$video_info['videoid'],'auto']);
-        $pattern = DirPath::get('thumbs') . $this->file_directory . DIRECTORY_SEPARATOR . $this->file_name . '*[!-cpb].*';
-        $glob = glob($pattern);
-        foreach ($glob as $thumb) {
-            unlink($thumb);
-        }
-
-        //reset default thumb
-        $this->generateDefaultsThumbs($video_info['videoid'], $thumbs_res_settings, $thumbs_settings);
-    }
 
     public static function extractVideoThumbnail(array $params): array
     {
@@ -940,97 +903,6 @@ class FFMpeg
         ];
     }
 
-    /**
-     * @param $array
-     * @return void
-     * @throws Exception
-     */
-    public function generateThumbs($array): void
-    {
-        $duration = $array['duration'];
-        $size_tag = $array['size_tag'];
-        $num = $array['num'];
-
-        $this->log->writeLine(date('Y-m-d H:i:s').' - Generating '.$size_tag.'...');
-
-        if ($num > $duration) {
-            $num = (int)$duration;
-        }
-
-        $thumb_dir = DirPath::get('thumbs') . $this->file_directory;
-        if (!is_dir($thumb_dir)) {
-            mkdir($thumb_dir, 0755, true);
-        }
-
-        $videoid = $array['videoid'];
-
-        $extension = 'jpg';
-        if ($num >= 1) {
-            $division = $duration / $num;
-
-            for ($count = 1; $count <= $num; $count++) {
-                $thumb_file_number = str_pad((string)$count, 4, '0', STR_PAD_LEFT);
-                $file_name = $this->file_name . '-' . $size_tag . '-' . $thumb_file_number . '.' . $extension;
-                $file_path = $thumb_dir . $file_name;
-                $time_sec = (int)($division * $count);
-
-                $this->log->writeLine(date('Y-m-d H:i:s').' => Generating '.$file_name.'...');
-
-                $return = self::extractVideoThumbnail([
-                    'timecode' => $time_sec
-                    ,'input_path' => $this->input_file
-                    ,'size_tag' => $array['size_tag']
-                    ,'width' => $array['width']
-                    ,'height' => $array['height']
-                    ,'output_path' => $file_path
-                ]);
-
-                if(System::isInDev()){
-                    $this->log->writeLine('<div class="showHide"><p class="title glyphicon-chevron-right">Command : </p><p class="content">'.$return['command'].'</p></div>', false, true);
-                    $this->log->writeLine('<div class="showHide"><p class="title glyphicon-chevron-right">Output : </p><p class="content">'.$return['output'].'</p></div>', false, true);
-                }
-
-                if (file_exists($file_path)) {
-                    Clipbucket_db::getInstance()->insert(tbl('video_thumbs'), ['videoid', 'resolution', 'num', 'extension', 'version', 'type'], [$videoid, $size_tag, $thumb_file_number, $extension, Update::getInstance()->getCurrentCoreVersion(), 'auto']);
-                } else {
-                    $this->log->writeLine(date('Y-m-d H:i:s').' => Error generating '.$file_name.'...');
-                }
-            }
-        } else {
-            $this->log->writeLine(date('Y-m-d H:i:s').' - Thumbs num can\'t be '.$num.'...');
-        }
-    }
-
-    /**
-     * @throws Exception
-     */
-    public function generateAllMissingThumbs(): void
-    {
-        $thumbs_res_settings = thumbs_res_settings_28();
-
-        $thumbs_settings = [];
-        $thumbs_settings['duration'] = $this->input_details['duration'];
-        $thumbs_settings['num'] = config('num_thumbs');
-        $rs = Clipbucket_db::getInstance()->select(tbl('video'), '*', 'file_name LIKE \'' . $this->file_name . '\'');
-
-        if( empty($rs) ){
-            e(lang('technical_error'));
-            return;
-        }
-
-        $video_details = $rs[0];
-
-        $thumbs_settings['videoid'] = $video_details['videoid'];
-
-        $thumbs = get_thumb($video_details, true);
-        //si rien en base
-        if (empty($thumbs) || $thumbs[0] == default_thumb()) {
-            Video::getInstance()->deletePictures($video_details, 'auto');
-
-            //generate default thumb
-            $this->generateDefaultsThumbs($video_details['videoid'], $thumbs_res_settings, $thumbs_settings);
-        }
-    }
 
     private function check_subtitle_track(int $track_id): bool
     {
@@ -1231,38 +1103,6 @@ class FFMpeg
         return $max_resolution;
     }
 
-    /**
-     * @param $videoid
-     * @param array $thumbs_res_settings
-     * @param array $thumbs_settings
-     * @return void
-     * @throws Exception
-     */
-    public function generateDefaultsThumbs($videoid, array $thumbs_res_settings, array $thumbs_settings): void
-    {
-        foreach ($thumbs_res_settings as $key => $thumbs_size) {
-            $height_setting = $thumbs_size[1];
-            $width_setting = $thumbs_size[0];
-
-            if ($key == 'original') {
-                $thumbs_settings['size_tag'] = $key;
-            } else {
-                $thumbs_settings['size_tag'] = $width_setting . 'x' . $height_setting;
-                $thumbs_settings['width'] = $width_setting;
-                $thumbs_settings['height'] = $height_setting;
-            }
-
-            $this->generateThumbs($thumbs_settings);
-        }
-
-        $res = Clipbucket_db::getInstance()->select(tbl('video') . ' AS V LEFT JOIN ' . tbl('video_thumbs') . ' AS VT ON VT.videoid = V.videoid '
-            , 'num'
-            , ' V.videoid = ' . mysql_clean($videoid). ' AND type=\'custom\' AND V.default_thumb = VT.num'
-        );
-        if (empty($res)) {
-            Clipbucket_db::getInstance()->update(tbl('video'), ['default_thumb'], [1], ' videoid = ' . mysql_clean($videoid));
-        }
-    }
 
     public static function getFileType($filepath): string
     {

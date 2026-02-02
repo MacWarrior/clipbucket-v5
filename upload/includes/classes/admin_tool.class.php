@@ -171,10 +171,13 @@ class AdminTool
     }
 
     /**
+     * @param $e
+     * @return bool
      * @throws Exception
      */
     public function toolErrorHandler($e): bool
     {
+        Clipbucket_db::getInstance()->rollback();
         $this->addLog('Error : ' . $e->getMessage());
         $this->setToolError($this->id_tool);
         return false;
@@ -188,9 +191,9 @@ class AdminTool
     public function launch()
     {
         $whoops = WhoopsManager::getInstance();
-        $whoops->pushHandler([$this, 'toolErrorHandler']);
-
+        $whoops->prependHandler([$this, 'toolErrorHandler']);
         $whoops->register();
+
         if (empty($this->tool)) {
             e(lang('class_error_occured'));
             return false;
@@ -271,7 +274,18 @@ class AdminTool
     public function generateMissingThumbs(): void
     {
         //get list of video without thumbs
-        $this->tasks = Clipbucket_db::getInstance()->select(tbl('video') . ' AS V LEFT JOIN ' . tbl('video_thumbs') . ' AS VT ON V.videoid = VT.videoid', 'V.*', ' 1 GROUP by videoid HAVING COUNT(VT.videoid) = 0');
+
+        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '1')) {
+            $this->tasks = Clipbucket_db::getInstance()->select(tbl('video') . ' AS V 
+                LEFT JOIN ' . tbl('video_image') . ' AS VT ON V.videoid = VT.videoid AND VT.type = \'thumbnail\' AND is_auto = TRUE', 'V.*'
+                , ' 1 GROUP by videoid HAVING COUNT(VT.videoid) = 0'
+            );
+        } else {
+            $this->tasks = Clipbucket_db::getInstance()->select(tbl('video') . ' AS V 
+                LEFT JOIN ' . tbl('video_thumbs') . ' AS VT ON V.videoid = VT.videoid AND VT.type = \'auto\'', 'V.*'
+                , ' 1 GROUP by videoid HAVING COUNT(VT.videoid) = 0'
+            );
+        }
         $this->executeTool('generatingMoreThumbs');
     }
 
@@ -403,19 +417,28 @@ class AdminTool
             $this->tasks = [];
 
             $this->addLog(lang('loading_file_list'));
-
+            $photo_extension = ['jpg', 'jpeg', 'png'];
+            $video_extension = explode(',', config('allowed_video_types'));
             //LOGS
-            $logs = new GlobIterator(DirPath::get('logs') . '[0-9]*' . DIRECTORY_SEPARATOR . '[0-9]*' . DIRECTORY_SEPARATOR . '[0-9]*' . DIRECTORY_SEPARATOR . '*.log');
-            foreach ($logs as $log) {
-                $vid_file_name = basename($log, '.log');
-                $insert_values = [
-                    'type'  => 'log',
-                    'data'  => DirPath::getFromProjectRoot($log->getPathname()),
-                    'video' => $vid_file_name
-                ];
-                $this->insertTaskData([$insert_values]);
+            $logs_path= [
+                '[0-9]*' . DIRECTORY_SEPARATOR . '[0-9]*' . DIRECTORY_SEPARATOR . '[0-9]*' . DIRECTORY_SEPARATOR,
+                '[0-9]*' . DIRECTORY_SEPARATOR . '[0-9]*' . DIRECTORY_SEPARATOR,
+                '[0-9]*' . DIRECTORY_SEPARATOR,
+                ''
+            ];
+            foreach ($logs_path as $path) {
+                $logs = new GlobIterator(DirPath::get('logs') . $path . '*.log');
+                foreach ($logs as $log) {
+                    $vid_file_name = basename($log, '.log');
+                    $insert_values = [
+                        'type'  => 'log',
+                        'data'  => DirPath::getFromProjectRoot($log->getPathname()),
+                        'video' => $vid_file_name
+                    ];
+                    $this->insertTaskData([$insert_values]);
+                }
+                unset($logs);
             }
-            unset($logs);
 
             //VIDEO MP4
             $videos_mp4 = new GlobIterator(DirPath::get('videos') . '[0-9]*' . DIRECTORY_SEPARATOR . '[0-9]*' . DIRECTORY_SEPARATOR . '[0-9]*' . DIRECTORY_SEPARATOR . '*.mp4');
@@ -459,12 +482,39 @@ class AdminTool
             }
             unset($videos_hls);
 
+            foreach ($photo_extension as $extension) {
+                //OLD THUMBS
+                $old_thumbs = new GlobIterator(DirPath::get('thumbs') . '[0-9]*' . DIRECTORY_SEPARATOR . '[0-9]*' . DIRECTORY_SEPARATOR . '[0-9]*' . DIRECTORY_SEPARATOR . '*.'.$extension);
+                foreach ($old_thumbs as $thumb) {
+                    $vid_file_name = explode('-', basename($thumb, '.'.$extension))[0];
+                    $insert_values = [
+                        'type'  => 'old_thumb',
+                        'data'  => DirPath::getFromProjectRoot($thumb->getPathname()),
+                        'video' => $vid_file_name
+                    ];
+                    $this->insertTaskData([$insert_values]);
+                }
+                unset($old_thumbs);
+
+                //THUMBS
+                $photo_thumbs = new GlobIterator(DirPath::get('thumbs') . 'photo' . DIRECTORY_SEPARATOR . '[0-9]*' . DIRECTORY_SEPARATOR . '[0-9]*' . DIRECTORY_SEPARATOR . '[0-9]*' . DIRECTORY_SEPARATOR .  '[0-9]*' . DIRECTORY_SEPARATOR . '*.'.$extension);
+                foreach ($photo_thumbs as $thumb) {
+                    $vid_file_name = explode('-', basename($thumb, '.'.$extension))[0];
+                    $insert_values = [
+                        'type'  => 'photo_thumb',
+                        'data'  => DirPath::getFromProjectRoot($thumb->getPathname()),
+                        'photo' => $vid_file_name
+                    ];
+                    $this->insertTaskData([$insert_values]);
+                }
+                unset($photo_thumbs);
+            }
             //THUMBS
-            $thumbs = new GlobIterator(DirPath::get('thumbs') . '[0-9]*' . DIRECTORY_SEPARATOR . '[0-9]*' . DIRECTORY_SEPARATOR . '[0-9]*' . DIRECTORY_SEPARATOR . '*.jpg');
+            $thumbs = new GlobIterator(DirPath::get('thumbs') . 'video' . DIRECTORY_SEPARATOR . '[0-9]*' . DIRECTORY_SEPARATOR . '[0-9]*' . DIRECTORY_SEPARATOR . '[0-9]*' . DIRECTORY_SEPARATOR .  '[0-9]*' . DIRECTORY_SEPARATOR . '*.jpg');
             foreach ($thumbs as $thumb) {
                 $vid_file_name = explode('-', basename($thumb, '.jpg'))[0];
                 $insert_values = [
-                    'type'  => 'thumb',
+                    'type'  => 'video_thumb',
                     'data'  => DirPath::getFromProjectRoot($thumb->getPathname()),
                     'video' => $vid_file_name
                 ];
@@ -557,6 +607,49 @@ class AdminTool
                 $this->insertTaskData([$insert_values]);
             }
             unset($video_parts);
+
+            //TEMP VIDEO
+            foreach ($video_extension as $extension) {
+                $temp_videos = new GlobIterator(DirPath::get('temp') . '*.'.$extension);
+                foreach ($temp_videos as $video_part) {
+                    $insert_values = [
+                        'type' => 'video_temp',
+                        'data' => DirPath::getFromProjectRoot($video_part->getPathname()),
+                        'part' => basename($video_part)
+                    ];
+                    $this->insertTaskData([$insert_values]);
+                }
+                unset($video_extension);
+            }
+
+            //CONVERSION QUEUE VIDEO HLS
+            $videos_hls = new GlobIterator(DirPath::get('conversion_queue') . '*', FilesystemIterator::KEY_AS_FILENAME);
+            foreach ($videos_hls as $video) {
+                if ($video->isDir()) {
+                    $vid_file_name = basename($video);
+                    $insert_values = [
+                        'type'  => 'convert_video_hls',
+                        'data'  => DirPath::getFromProjectRoot($video->getPathname()),
+                        'video' => $vid_file_name
+                    ];
+                    $this->insertTaskData([$insert_values]);
+                }
+            }
+            unset($videos_hls);
+            //CONVERSION QUEUE VIDEO MP4
+            $videos_mp4 = new GlobIterator(DirPath::get('conversion_queue') . '*.mp4');
+
+            foreach ($videos_mp4 as $video) {
+                $vid_file_name = explode('-', basename($video, '.mp4'))[0];
+                $insert_values = [
+                    'type'  => 'convert_video_mp4',
+                    'data'  => DirPath::getFromProjectRoot($video->getPathname()),
+                    'video' => $vid_file_name
+                ];
+                $this->insertTaskData([$insert_values]);
+            }
+            unset($videos_mp4);
+
         }
 
         $this->addLog(lang('processing_x_files', $this->tasks_total ?? 0));
@@ -786,7 +879,7 @@ class AdminTool
             $photos = [];
         }
         $this->tasks = array_column($photos, 'photo_id');
-        $this->executeTool('Photo::generatePhoto');
+        $this->executeTool('PhotoThumb::generatePhoto');
     }
 
     /**
@@ -1420,27 +1513,43 @@ class AdminTool
                 $value = [$task => $total];
                 break;
             case 'count_thumbs_auto':
-                $sql = 'SELECT count(DISTINCT(CONCAT( videoid, \'-\', num))) as count FROM ' . tbl('video_thumbs') . ' WHERE type = \'auto\' AND resolution = \'original\'';
-                $res = Clipbucket_db::getInstance()->_select($sql);
-                $total = $res[0]['count'] ?? 0;
+                if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '14')) {
+                    $total = VideoThumbs::getAll(['count' => true, 'is_auto' => true, 'type' => 'thumbnail']);
+                } else {
+                    $sql = 'SELECT count(DISTINCT(CONCAT( videoid, \'-\', num))) as count FROM ' . tbl('video_thumbs') . ' WHERE type = \'auto\' AND resolution = \'original\'';
+                    $res = Clipbucket_db::getInstance()->_select($sql);
+                    $total = $res[0]['count'] ?? 0;
+                }
                 $value = [$task => $total];
                 break;
             case 'count_thumbs_manual':
-                $sql = 'SELECT count(DISTINCT(CONCAT( videoid, \'-\', num))) as count FROM ' . tbl('video_thumbs') . ' WHERE type = \'custom\' AND resolution = \'original\'';
-                $res = Clipbucket_db::getInstance()->_select($sql);
-                $total = $res[0]['count'] ?? 0;
+                if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '14')) {
+                    $total = VideoThumbs::getAll(['count' => true, 'is_auto' => false, 'type' => 'thumbnail']);
+                } else {
+                    $sql = 'SELECT count(DISTINCT(CONCAT( videoid, \'-\', num))) as count FROM ' . tbl('video_thumbs') . ' WHERE type = \'custom\' AND resolution = \'original\'';
+                    $res = Clipbucket_db::getInstance()->_select($sql);
+                    $total = $res[0]['count'] ?? 0;
+                }
                 $value = [$task => $total];
                 break;
             case 'count_posters':
-                $sql = 'SELECT count(DISTINCT(CONCAT( videoid, \'-\', num))) as count FROM ' . tbl('video_thumbs') . ' WHERE type = \'poster\' AND resolution = \'original\'';
-                $res = Clipbucket_db::getInstance()->_select($sql);
-                $total = $res[0]['count'] ?? 0;
+                if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '14')) {
+                    $total = VideoThumbs::getAll(['count' => true, 'type' => 'poster']);
+                } else {
+                    $sql = 'SELECT count(DISTINCT(CONCAT( videoid, \'-\', num))) as count FROM ' . tbl('video_thumbs') . ' WHERE type = \'poster\' AND resolution = \'original\'';
+                    $res = Clipbucket_db::getInstance()->_select($sql);
+                    $total = $res[0]['count'] ?? 0;
+                }
                 $value = [$task => $total];
                 break;
             case 'count_backdrop':
-                $sql = 'SELECT count(DISTINCT(CONCAT( videoid, \'-\', num))) as count FROM ' . tbl('video_thumbs') . ' WHERE type = \'backdrop\' AND resolution = \'original\'';
-                $res = Clipbucket_db::getInstance()->_select($sql);
-                $total = $res[0]['count'] ?? 0;
+                if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '14')) {
+                    $total = VideoThumbs::getAll(['count' => true, 'type' => 'backdrop']);
+                } else {
+                    $sql = 'SELECT count(DISTINCT(CONCAT( videoid, \'-\', num))) as count FROM ' . tbl('video_thumbs') . ' WHERE type = \'backdrop\' AND resolution = \'original\'';
+                    $res = Clipbucket_db::getInstance()->_select($sql);
+                    $total = $res[0]['count'] ?? 0;
+                }
                 $value = [$task => $total];
                 break;
             case 'count_subtitles':

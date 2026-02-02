@@ -3,7 +3,7 @@ const THIS_PAGE = 'upload';
 const PARENT_PAGE = 'upload';
 require 'includes/config.inc.php';
 
-if (!Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.2', '148')) {
+if (!Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '14')) {
     sessionMessageHandler::add_message('Sorry, you cannot upload new videos until the application has been fully updated by an administrator', 'e', User::getInstance()->getDefaultHomepageFromUserLevel());
 }
 

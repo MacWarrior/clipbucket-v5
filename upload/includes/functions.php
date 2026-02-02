@@ -6,7 +6,6 @@ include_once 'upload_forms.php';
 /**
  * This function is for Securing Password, you may change its combination for security reason but
  * make sure do not change once you made your script run
- * TODO : Multiple md5/sha1 is useless + this is totally unsecure, must be replaced by sha512 + salt
  *
  * @param $string
  *
@@ -294,19 +293,6 @@ function getAd($params): string
         $data .= '</div>';
     }
     return $data;
-}
-
-/**
- * FUNCTION USED TO GET THUMBNAIL, MADE FOR SMARTY
- *
- * @param : { array } { $params } { array of parameters }
- *
- * @return mixed
- * @throws Exception
- */
-function getSmartyThumb($params)
-{
-    return get_thumb($params['vdetails'], $params['multi'], $params['size']);
 }
 
 /**

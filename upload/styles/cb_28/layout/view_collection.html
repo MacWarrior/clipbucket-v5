@@ -56,7 +56,8 @@
                         {if (User::getInstance()->hasPermission($upload_permission) && $c.public_upload == 'yes')
                         || (User::getInstance()->isUserConnected() && User::getInstance()->get('userid') == $c.userid)
                         || User::getInstance()->hasAdminAccess()}
-                            <a href="{$link_add_more}" class="btn btn-success pull-right">{lang('add_more')}</a>
+                            <a {if !Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3','14')} disabled="disabled" href="#" title="Sorry, you cannot perform this action until the application has been fully updated by an administrator"
+                            {else}href="{$link_add_more}"{/if}  class="btn btn-success pull-right" >{lang('add_more')}</a>
                         {/if}
                     </div>
                 </div>
