@@ -1,6 +1,6 @@
 {
   "version":"5.5.3",
-  "revision":"20",
+  "revision":"22",
   "status":"stable",
   "detail":[
     {
@@ -9,6 +9,7 @@
         "Implement email alias allow option"
         ,"Fix JS error on playlist management page"
         ,"Fix missing video thumbs tool"
+        ,"Fix possible PHP error on video edition page"
       ]
     },
     {
@@ -20,6 +21,7 @@
         ,"Add signup date of birth calendar icon"
         ,"Fix possible JS error on register page"
         ,"Fix possible display issues on login & signup pages"
+        ,"Fix possible error during photo upload"
       ]
     },
     {
@@ -32,9 +34,10 @@
         ,"Drop support for PHP 8.0"
         ,"Fix possible PHP error with discord logs"
         ,"Fix possible issue with migration 5.5.3 - 14"
-        ,"Fix SQL error on video deletion"
+        ,"Fix SQL error on video, photo & collection deletion"
         ,"Fix pre-5.5.1 videos thumbs"
         ,"Fix clean orphan files tool"
+        ,"Fix tools error handling"
       ]
     },
     {

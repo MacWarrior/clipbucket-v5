@@ -1946,9 +1946,8 @@ class Collections extends CBCategory
         $params['type_id'] = $cid;
         Comments::delete($params, false);
 
-        //Removing video From Favorites
-        Clipbucket_db::getInstance()->delete(tbl('favorites'), ['type', 'id'], ['cl', $cid]);
-
+        //Removing collection From Favorites
+        Collection::getInstance()->removeFromFavoritesForAllUsers($cid);
         Clipbucket_db::getInstance()->delete(tbl($this->section_tbl), ['collection_id'], [$cid]);
         //Decrementing users total collection
         Clipbucket_db::getInstance()->update(tbl('users'), ['total_collections'], ['|f|total_collections-1'], ' userid=\'' . $cid . '\'');
