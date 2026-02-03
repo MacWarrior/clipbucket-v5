@@ -5,24 +5,26 @@ abstract class Objects
 
     private static array $type_array = [];
 
+    /**
+     * @return string
+     */
     protected static function getTableNameObjectType(): string
     {
-        //TODO optimiser pour ne pas faire le test à chaque appel
         if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '8')) {
             return 'object_type';
-        } else {
-            return 'categories_type';
         }
+        return 'categories_type';
     }
 
+    /**
+     * @return string
+     */
     protected static function getIdFieldObjectType(): string
     {
-        //TODO optimiser pour ne pas faire le test à chaque appel
         if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '8')) {
             return 'id_object_type';
-        } else {
-            return 'id_category_type';
         }
+        return 'id_category_type';
     }
 
     /**
@@ -188,6 +190,9 @@ abstract class Objects
         ];
     }
 
+    /**
+     * @return array
+     */
     protected static function getObjectTableAndFieldId(): array
     {
         //TODO optimiser pour supprimer le switch
@@ -210,7 +215,13 @@ abstract class Objects
         return ['table_name' => $tablename, 'field_id' => $object_id];
     }
 
-    public static function ratingUpdate($object_id, $rating)
+    /**
+     * @param $object_id
+     * @param $rating
+     * @return void
+     * @throws Exception
+     */
+    public static function ratingUpdate($object_id, $rating): void
     {
         if (!User::getInstance()->isUserConnected()) {
             throw new Exception(lang('please_login_to_rate'));
@@ -261,6 +272,8 @@ abstract class Objects
                 case 'video':
                     $lang = 'you_cant_rate_own_video';
                     break;
+                default:
+                    $lang = '';
             }
             throw new Exception(lang($lang));
         }
@@ -278,6 +291,8 @@ abstract class Objects
                 case 'video':
                     $lang = 'vid_rate_disabled';
                     break;
+                default:
+                    $lang = '';
             }
             throw new Exception(lang( $lang ));
         }
