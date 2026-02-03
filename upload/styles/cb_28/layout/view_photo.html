@@ -90,9 +90,9 @@
                             </div>
                         </div>
                         <div class="user-likes-sub clearfix">
-                            {if config('photo_rating') == 'yes' && ($photo.userid != user_id() || config('own_photo_rating') == 'yes') }
+                            {if config('photo_rating') == 'yes'}
                             <div class="clearfix like-rating col-lg-6 col-md-6 col-sm-6 col-xs-12" id="rating_container">
-                                {show_video_rating rating=$photo.rating ratings=$photo.rated_by total='10' id=$photo.photo_id type=photo}
+                                {show_video_rating rating=$photo.rating ratings=$photo.rated_by total='10' id=$photo.photo_id type=photo disable=($photo.userid == User::getInstance()->getCurrentUserID() && config('own_photo_rating') != 'yes')}
                             </div>
                             <div class="clearfix subscribe-col col-lg-6 col-md-6 col-sm-6 col-xs-12">
                                 {else}

@@ -111,10 +111,9 @@
 
             <div class="clearfix fav-repo">
                 <div class="show clearfix photoStats">
-                    {if User::getInstance()->getCurrentUserID() && ($user.userid != User::getInstance()->getCurrentUserID() || config('own_collection_rating'))
-                    && config('collection_rating') == '1' }
+                    {if User::getInstance()->getCurrentUserID() && config('collection_rating') == '1' }
                         <div class="user-ratting" id="rating_container" style="display:inline-block;">
-                            {show_video_rating rating=$c.rating ratings=$c.rated_by total='10' id=$c.collection_id type=collection}
+                            {show_video_rating rating=$c.rating ratings=$c.rated_by total='10' id=$c.collection_id type=collection disable=($c.userid == User::getInstance()->getCurrentUserID() && !config('own_collection_rating'))}
                         </div>
                     {/if}
                     {if User::getInstance()->getCurrentUserID()}
