@@ -30,7 +30,7 @@ switch ($mode) {
         CBvideo::getInstance()->update_video();
         if (empty(errorhandler::getInstance()->get_error()) && !empty($_POST['videoid'])) {
             if( !empty($_POST['default_thumb']) ){
-                Video::getInstance()->setDefaultPicture($_POST['videoid'], $_POST['default_thumb'], 'thumb');
+                Video::getInstance()->setDefaultPicture($_POST['videoid'], $_POST['default_thumb'], 'thumbnail');
             }
             if (config('enable_video_poster') == 'yes' && !empty($_POST['default_poster'])) {
                 Video::getInstance()->setDefaultPicture($_POST['videoid'], $_POST['default_poster'], 'poster');

@@ -761,7 +761,7 @@ class Video extends Objects
             }
             //check if poster is valable ID
             if (!empty(VideoThumbs::getOne(['id_video_image' => (int)$poster]))) {
-                Clipbucket_db::getInstance()->update(tbl('video'), ['default_' . $type], [$poster], ' videoid=\'' . mysql_clean($video_id) . '\'');
+                Clipbucket_db::getInstance()->update(tbl('video'), ['default_' . $type], [$poster], ' videoid=' . (int)$video_id);
             }
         } else {
             if (!in_array($type, ['auto', 'custom', 'poster', 'backdrop']) ) {
@@ -781,7 +781,7 @@ class Video extends Objects
             if( empty($num) ){
                 return;
             }
-            Clipbucket_db::getInstance()->update(tbl('video'), ['default_' . $type], [$num], ' videoid=\'' . mysql_clean($video_id) . '\'');
+            Clipbucket_db::getInstance()->update(tbl('video'), ['default_' . $type], [$num], ' videoid=' . (int)$video_id);
         }
     }
     /**
@@ -967,8 +967,10 @@ class Video extends Objects
                         $total += filesize($file);
                     }
                     break;
+
                 default:
-                    e(lang('unknown_type'));
+                    e(lang('unknown_type', $file_type));
+                    break;
             }
         }
         return $total;

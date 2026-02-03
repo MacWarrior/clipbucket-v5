@@ -3283,7 +3283,7 @@ function upload_image($type = 'logo')
 {
     $file_post = 'upload_' . $type;
     if (!in_array($type, ['logo', 'favicon', 'player-logo'])) {
-        e(lang('unknown_type'));
+        e(lang('unknown_type', $type));
         return false;
     }
 
