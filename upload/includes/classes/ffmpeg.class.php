@@ -885,9 +885,12 @@ class FFMpeg
         }
     }
 
-
     public static function extractVideoThumbnail(array $params): array
     {
+        if ( empty($params['output_format']) || !in_array($params['output_format'], ['jpg', 'webp'], true) ) {
+            $params['output_format'] = 'webp';
+        }
+
         $size = '';
         if( $params['size_tag'] != 'original' ){
             $color = self::convertHexToFFmpeg(config('thumb_background_color'));
@@ -895,14 +898,19 @@ class FFMpeg
             $height = $params['height'];
             $size .= '-vf "scale=\'if(gt(a,' . $width . '/' . $height . '),' . $width . ',-1)\':\'if(gt(a,' . $width . '/' . $height . '),-1,' . $height . ')\',pad=' . $width . ':' . $height . ':(' . $width . '-iw)/2:(' . $height . '-ih)/2:' . $color . '"';
         }
-        $command = config('ffmpegpath') . ' -ss ' . $params['timecode'] . ' -i ' . $params['input_path'] . ' -pix_fmt yuvj422p -an -r 1 ' . $size . ' -y -f image2 -vframes 1 ' . $params['output_path'] . ' 2>&1';
+
+        $codecOptions = '-c:v libwebp';
+        if( $params['output_format'] == 'jpg' ){
+            $codecOptions = '-c:v mjpeg';
+        }
+
+        $command = config('ffmpegpath') . ' -ss ' . $params['timecode'] . ' -i ' . $params['input_path'] . ' -pix_fmt yuvj422p -an -r 1 ' . $size . ' ' . $codecOptions . ' -y -f image2 -vframes 1 ' . $params['output_path'] . ' 2>&1';
 
         return [
             'command' => $command
             ,'output' => shell_exec($command)
         ];
     }
-
 
     private function check_subtitle_track(int $track_id): bool
     {

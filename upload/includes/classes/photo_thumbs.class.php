@@ -403,8 +403,9 @@ class PhotoThumbs
                     case 'gif':
                         $image = imagecreatefromgif($original_file_path);
                         imagecopyresampled($image_r, $image, 0, 0, 0, 0, $width, $height, $org_width, $org_height);
-                        imagegif($image_r, $destination_path, 90);
+                        imagegif($image_r, $destination_path);
                         break;
+
                     default:
                         throw new Exception(lang('remote_play_invalid_extension'));
                 }

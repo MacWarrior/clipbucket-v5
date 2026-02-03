@@ -189,7 +189,6 @@ require_once DirPath::get('classes') . 'reindex.class.php';
 require_once DirPath::get('classes') . 'collections.class.php';
 require_once DirPath::get('classes') . 'photos.class.php';
 require_once DirPath::get('classes') . 'cbfeeds.class.php';
-require_once DirPath::get('classes') . 'resizer.class.php';
 require_once DirPath::get('classes') . 'comments.class.php';
 require_once DirPath::get('classes') . 'gravatar.class.php';
 require_once DirPath::get('includes') . 'plugin.functions.php';
