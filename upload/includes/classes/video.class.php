@@ -2006,12 +2006,9 @@ class CBvideo extends CBCategory
      */
     function remove_thumbs($vdetails)
     {
-        //reset default thumb
-        Clipbucket_db::getInstance()->update(tbl('video'), ['default_thumbnail'], ['|f|null'], ' videoid = ' . mysql_clean($vdetails['videoid']));
-        $videoThumb = new VideoThumbs($vdetails['videoid']);
         $video_images = VideoThumbs::getAll(['videoid' => $vdetails['videoid']]);
         foreach ($video_images as $video_image) {
-            $videoThumb->deleteImageAndThumbs($video_image);
+            VideoThumbs::deleteVideoImage($video_image);
         }
         e(lang('vid_thumb_removed_msg'), 'm');
     }
