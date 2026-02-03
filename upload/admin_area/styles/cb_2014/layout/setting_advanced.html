@@ -604,8 +604,11 @@
                                                 {if $count == 2 }
                                                     {$count = 0}
                                                 {/if}
-                                                {if $count == 0}
+                                                {if $count == 0 || $smarty.foreach.bitrate.last}
                                                     </div>
+
+                                                {/if}
+                                                {if $count == 0}
                                                     <hr/>
                                                 {/if}
                                             {/foreach}

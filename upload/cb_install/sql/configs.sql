@@ -161,7 +161,7 @@ INSERT INTO `{tbl_prefix}config` (`configid`, `name`, `value`) VALUES
 	(NULL, 'vid_cat_width', '120'),
 	(NULL, 'vid_cat_height', '120'),
 	(NULL, 'chromecast_fix', '1'),
-	(NULL, 'allowed_photo_types', 'jpg,jpeg,png'),
+	(NULL, 'allowed_photo_types', 'jpg,jpeg,png,gif'),
 	(NULL, 'logo_name', ''),
 	(NULL, 'favicon_name', ''),
 	(NULL, 'comment_per_page', '10'),

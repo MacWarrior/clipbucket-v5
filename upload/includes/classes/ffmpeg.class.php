@@ -1226,4 +1226,11 @@ class FFMpeg
 
         return true;
     }
+
+    public static function generateGif(string $input_file, string $output_file, int $width = 100): void
+    {
+        $cmd = config('ffmpegpath') .' -i ' . $input_file . ' -vf "scale=' . $width . ':-1:flags=lanczos,split[s0][s1];[s0]palettegen=stats_mode=full[p];[s1][p]paletteuse=dither=none" -gifflags -offsetting ' . $output_file;
+        $output = shell_exec($cmd);
+        DiscordLog::sendDump($output);
+    }
 }
