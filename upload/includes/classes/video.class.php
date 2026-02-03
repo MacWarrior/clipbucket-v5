@@ -352,7 +352,7 @@ class Video extends Objects
         $param_get_detail = $params['get_detail'] ?? false;
 
         $conditions = [];
-        if( $param_videoid ){
+        if( $param_videoid !== false ){
             $conditions[] = $this->getTableName() . '.videoid = \''.mysql_clean($param_videoid).'\'';
         }
         if( $param_videoids ){

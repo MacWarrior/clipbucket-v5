@@ -627,7 +627,11 @@ if (!empty($mode)) {
             break;
 
         case 'add_collection':
-            if (empty($_POST['collection_name']) || empty($_POST['collection_description']) || empty($_POST['category']) ) {
+            if (empty($_POST['collection_name'])
+                || empty($_POST['collection_description'])
+                || (
+                    empty($_POST['category']) && config('enable_collection_categories') == 'yes')
+                ) {
                 e(lang('missing_params'));
                 $insert_id = 0;
             } else {
