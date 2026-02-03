@@ -491,7 +491,7 @@ CREATE TABLE `{tbl_prefix}video` (
   `userid` int(11) NULL DEFAULT NULL,
   `title` text DEFAULT NULL,
   `file_name` varchar(32) NOT NULL DEFAULT '',
-  `file_type` VARCHAR(3) NULL DEFAULT NULL,
+  `file_type` VARCHAR(4) NULL DEFAULT NULL,
   `file_directory` varchar(25) NOT NULL DEFAULT '',
   `description` text DEFAULT NULL,
   `broadcast` varchar(10) NOT NULL DEFAULT '',

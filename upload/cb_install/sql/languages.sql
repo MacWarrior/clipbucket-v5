@@ -1752,4 +1752,8 @@ VALUES ('ongoing_conversion'),
        ('photo_delete_successfully'),
        ('option_keep_ratio_photo_description'),
        ('option_ratio_photo'),
-       ('show_original');
+       ('show_original'),
+       ('bps'),
+       ('hz'),
+       ('fps'),
+       ('option_video_thumbs_format');

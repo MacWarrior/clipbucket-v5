@@ -441,7 +441,10 @@ class VideoThumbs
      */
     public function generateThumb(int $id_video_image, string $num, $video_time, string $type = 'thumbnail'): void
     {
-        $extension = 'jpg';
+        $extension = config('video_thumbs_format');
+        if( empty($extension) ){
+            $extension = 'webp';
+        }
         foreach (self::$resolution_setting[$type] as $key => $res) {
             if ($key == 'original') {
                 $size_tag = 'original';
@@ -454,12 +457,13 @@ class VideoThumbs
             $file_path = $this->thumb_dir .DIRECTORY_SEPARATOR . $file_name;
             $this->ffmpeg_instance->log->writeLine(date('Y-m-d H:i:s') . ' => Generating ' . $file_name . '...');
             $return = FFMpeg::extractVideoThumbnail([
-                'timecode'    => $video_time,
-                'input_path'  => $this->ffmpeg_instance->input_file,
-                'size_tag'    => $size_tag,
-                'width'       => $res['width'] ?? null,
-                'height'      => $res['height'] ?? null,
-                'output_path' => $file_path
+                'timecode'       => $video_time
+                ,'input_path'    => $this->ffmpeg_instance->input_file
+                ,'size_tag'      => $size_tag
+                ,'width'         => $res['width'] ?? null
+                ,'height'        => $res['height'] ?? null
+                ,'output_path'   => $file_path
+                ,'output_format' => $extension
             ]);
 
             if (System::isInDev()) {
@@ -673,14 +677,25 @@ class VideoThumbs
             'backdrop'
         ])) {
             e(lang('technical_error'));
-            error_log('getThumb - unknown type : ' . $type);
+            $msg = 'getThumb - unknown type : ' . $type;
+            error_log($msg);
+            if (System::isInDev()) {
+                DiscordLog::sendDump($msg);
+            }
+            return $is_multi ? [self::getDefaultMissingThumb($return_type, $return_with_num)] : self::getDefaultMissingThumb($return_type, $return_with_num);
+        }
+        if (empty($videoid)) {
             return $is_multi ? [self::getDefaultMissingThumb($return_type, $return_with_num)] : self::getDefaultMissingThumb($return_type, $return_with_num);
         }
 
         $video = Video::getInstance()->getOne(['videoid' => $videoid]);
         if (empty($video)) {
             e(lang('technical_error'));
-            error_log('getDefaultThumbFile - called on empty vdetails');
+            $msg ='getDefaultThumbFile - called on empty vdetails';
+            error_log($msg);
+            if (System::isInDev()) {
+                DiscordLog::sendDump($msg);
+            }
             return $is_multi ? [self::getDefaultMissingThumb($return_type, $return_with_num)] : self::getDefaultMissingThumb($return_type, $return_with_num);
         }
 
