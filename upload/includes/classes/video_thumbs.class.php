@@ -673,14 +673,25 @@ class VideoThumbs
             'backdrop'
         ])) {
             e(lang('technical_error'));
-            error_log('getThumb - unknown type : ' . $type);
+            $msg = 'getThumb - unknown type : ' . $type;
+            error_log($msg);
+            if (System::isInDev()) {
+                DiscordLog::sendDump($msg);
+            }
+            return $is_multi ? [self::getDefaultMissingThumb($return_type, $return_with_num)] : self::getDefaultMissingThumb($return_type, $return_with_num);
+        }
+        if (empty($videoid)) {
             return $is_multi ? [self::getDefaultMissingThumb($return_type, $return_with_num)] : self::getDefaultMissingThumb($return_type, $return_with_num);
         }
 
         $video = Video::getInstance()->getOne(['videoid' => $videoid]);
         if (empty($video)) {
             e(lang('technical_error'));
-            error_log('getDefaultThumbFile - called on empty vdetails');
+            $msg ='getDefaultThumbFile - called on empty vdetails';
+            error_log($msg);
+            if (System::isInDev()) {
+                DiscordLog::sendDump($msg);
+            }
             return $is_multi ? [self::getDefaultMissingThumb($return_type, $return_with_num)] : self::getDefaultMissingThumb($return_type, $return_with_num);
         }
 
