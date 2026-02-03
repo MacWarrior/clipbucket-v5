@@ -1,6 +1,6 @@
 {
   "version":"5.5.3",
-  "revision":"24",
+  "revision":"25",
   "status":"stable",
   "detail":[
     {
@@ -24,6 +24,7 @@
         ,"Fix possible display issues on login & signup pages"
         ,"Fix possible error during photo upload"
         ,"Fix minified CSS file"
+        ,"Fix video collection default thumb"
       ]
     },
     {
