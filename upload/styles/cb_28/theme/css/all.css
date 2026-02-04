@@ -7152,3 +7152,7 @@ h4.disabled {
 h4:has(i) {
   cursor: pointer;
 }
+
+.cursor_default {
+  cursor: default !important;
+}
