@@ -1756,4 +1756,8 @@ VALUES ('ongoing_conversion'),
        ('bps'),
        ('hz'),
        ('fps'),
-       ('option_video_thumbs_format');
+       ('option_video_thumbs_format'),
+       ('you_cant_rate_own_photo'),
+       ('you_cant_rate_own_collection'),
+       ('collection_rate_disabled'),
+       ('channel_rate_disabled');

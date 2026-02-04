@@ -309,7 +309,7 @@ class Video extends Objects
             unset($sorts[array_search('most_commented', $sorts)]);
         }
 
-        if (config('video_rating') != '1') {
+        if (config('video_rating') != 'yes') {
             unset($sorts[array_search('top_rated', $sorts)]);
         }
 
