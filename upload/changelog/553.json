@@ -1,6 +1,6 @@
 {
   "version":"5.5.3",
-  "revision":"27",
+  "revision":"30",
   "status":"stable",
   "detail":[
     {
@@ -16,7 +16,9 @@
     {
       "title": "Front office",
       "description": [
-        "Implement video favorite icon"
+        "Refactor medias rating"
+        ,"Implement video favorite icon"
+        ,"Implement collection rating"
         ,"Update media rating"
         ,"Update collection management"
         ,"Add signup date of birth calendar icon"
@@ -43,13 +45,15 @@
         ,"Fix clean orphan files tool"
         ,"Fix tools error handling"
         ,"Fix possible SQL error on video upload"
+        ,"Fix thumbs deletion"
       ]
     },
     {
       "title": "Conversion",
       "description": [
         "Implement Webp video thumbs"
-        ,"Implemet Gif image thumbs"
+        ,"Implement Gif image thumbs"
+        ,"Fix conversion logs"
       ]
     },
     {

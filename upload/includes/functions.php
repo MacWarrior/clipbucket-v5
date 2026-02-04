@@ -3479,6 +3479,7 @@ function rglob($pattern, $flags = 0)
 }
 
 /**
+ * delete all empty folders recursively from a given path
  * @param $path
  * @return bool
  */
