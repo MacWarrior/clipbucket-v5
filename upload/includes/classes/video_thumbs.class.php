@@ -386,7 +386,7 @@ class VideoThumbs
      */
     public function generateAutomaticThumbs($regenerate = true): void
     {
-        $this->ffmpeg_instance->log->newSection('Generating thumbnails*');
+        $this->ffmpeg_instance->log->newSection('Generating thumbnails');
         if ($regenerate) {
             $this->removeGeneratedThumbs();
         }
