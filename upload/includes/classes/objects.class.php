@@ -258,7 +258,28 @@ abstract class Objects
                 $id_field = 'videoid';
                 break;
         }
-        if (User::getInstance()->getCurrentUserID() == $current_rating['userid'] && !config($config_own_rate)) {
+
+        if ($current_rating['allow_rating'] == 'no' || config($config_rating) != 'yes') {
+            switch (static::TYPE) {
+                case 'photo':
+                    $lang = 'photo_rate_disabled';
+                    break;
+                case 'collection':
+                    $lang = 'collection_rate_disabled';
+                    break;
+                case 'user':
+                    $lang = 'channel_rate_disabled';
+                    break;
+                case 'video':
+                    $lang = 'vid_rate_disabled';
+                    break;
+                default:
+                    $lang = '';
+            }
+            throw new Exception(lang($lang));
+        }
+
+        if (User::getInstance()->getCurrentUserID() == $current_rating['userid'] && config($config_own_rate) != 'yes') {
             switch (static::TYPE) {
                 case 'photo':
                     $lang = 'you_cant_rate_own_photo';
@@ -276,25 +297,6 @@ abstract class Objects
                     $lang = '';
             }
             throw new Exception(lang($lang));
-        }
-        if ($current_rating['allow_rating'] =='no' || !config($config_rating)) {
-            switch (static::TYPE) {
-                case 'photo':
-                    $lang = 'photo_rate_disabled';
-                    break;
-                case 'collection':
-                    $lang = 'collection_rate_disabled';
-                    break;
-                case 'user':
-                    $lang = 'channel_rate_disabled';
-                    break;
-                case 'video':
-                    $lang = 'vid_rate_disabled';
-                    break;
-                default:
-                    $lang = '';
-            }
-            throw new Exception(lang( $lang ));
         }
         $Old_histo = explode('|', $current_rating[$voters_key]);
         if (!empty($Old_histo) && is_array($Old_histo) && count($Old_histo) > 1) {
@@ -329,14 +331,14 @@ abstract class Objects
                 'rating'   => $rating
             ];
             $total_voters = empty($histo) ? 0 : count($histo);
-            $newrate = ($t + $rating) / ($total_voters?:1);
+            $newrate = ($t + $rating) / ($total_voters ?: 1);
             if ($newrate > 10) {
                 $newrate = 10;
             }
         }
 
         Clipbucket_db::getInstance()->update(
-            tbl($table),  ['rating', 'rated_by', $voters_key], [$newrate, $total_voters, '|no_mc|' . (!empty($histo) ? json_encode($histo): '')], ' ' . $id_field . ' = ' . mysql_clean($object_id)
+            tbl($table), ['rating', 'rated_by', $voters_key], [$newrate, $total_voters, '|no_mc|' . (!empty($histo) ? json_encode($histo) : '')], ' ' . $id_field . ' = ' . mysql_clean($object_id)
         );
 
     }

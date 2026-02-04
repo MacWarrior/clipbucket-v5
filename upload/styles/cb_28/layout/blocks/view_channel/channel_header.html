@@ -10,9 +10,9 @@
         {/if}
 
         <div class="ratting-counts clearfix">
-            {if User::getInstance()->getCurrentUserID() && config('channel_rating') == '1' && User::getInstance($user.userid)->get('allow_ratings') == 'yes' }
+            {if User::getInstance()->getCurrentUserID() && config('channel_rating') == 'yes' && User::getInstance($user.userid)->get('allow_ratings') == 'yes' }
                 <div class="user-ratting" id="rating_container">
-                    {show_video_rating rating=$p.rating ratings=$p.rated_by total='10' id=$user.userid type=user disable=(!config('own_channel_rating') && $user.userid == User::getInstance()->getCurrentUserID()) }
+                    {show_video_rating rating=$p.rating ratings=$p.rated_by total='10' id=$user.userid type=user disable=(config('own_channel_rating') != 'yes' && $user.userid == User::getInstance()->getCurrentUserID()) }
                 </div>
             {/if}
             <ul class="counters">
