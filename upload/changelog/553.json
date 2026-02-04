@@ -1,6 +1,6 @@
 {
   "version":"5.5.3",
-  "revision":"29",
+  "revision":"30",
   "status":"stable",
   "detail":[
     {
@@ -52,7 +52,8 @@
       "title": "Conversion",
       "description": [
         "Implement Webp video thumbs"
-        ,"Implemet Gif image thumbs"
+        ,"Implement Gif image thumbs"
+        ,"Fix conversion logs"
       ]
     },
     {
