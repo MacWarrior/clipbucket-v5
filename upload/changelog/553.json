@@ -1,6 +1,6 @@
 {
   "version":"5.5.3",
-  "revision":"25",
+  "revision":"27",
   "status":"stable",
   "detail":[
     {
@@ -25,6 +25,7 @@
         ,"Fix possible error during photo upload"
         ,"Fix minified CSS file"
         ,"Fix video collection default thumb display"
+        ,"Fix video saving on upload form"
       ]
     },
     {
@@ -48,6 +49,7 @@
       "title": "Conversion",
       "description": [
         "Implement Webp video thumbs"
+        ,"Implemet Gif image thumbs"
       ]
     },
     {

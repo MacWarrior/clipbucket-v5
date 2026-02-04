@@ -379,38 +379,36 @@ class PhotoThumbs
                 }
             }
 
-            $ratio = $org_width / $destination_width; // We will resize it according to Width
-
-            $width = $org_width / $ratio;
-            $height = $org_height / $ratio;
-
-            $image_r = imagecreatetruecolor($width, $height);
-
             try {
-                switch ($extension) {
-                    case 'jpeg':
-                        $image = imagecreatefromjpeg($original_file_path);
-                        imagecopyresampled($image_r, $image, 0, 0, 0, 0, $width, $height, $org_width, $org_height);
-                        imagejpeg($image_r, $destination_path, 90);
-                        break;
+                if( $extension == 'gif' ){
+                    FFmpeg::generateGif($original_file_path, $destination_path, $destination_width);
+                } else {
+                    $ratio = $org_width / $destination_width;
 
-                    case 'png':
-                        $image = imagecreatefrompng($original_file_path);
-                        imagecopyresampled($image_r, $image, 0, 0, 0, 0, $width, $height, $org_width, $org_height);
-                        imagepng($image_r, $destination_path, 9);
-                        break;
+                    $width = $org_width / $ratio;
+                    $height = $org_height / $ratio;
 
-                    case 'gif':
-                        $image = imagecreatefromgif($original_file_path);
-                        imagecopyresampled($image_r, $image, 0, 0, 0, 0, $width, $height, $org_width, $org_height);
-                        imagegif($image_r, $destination_path);
-                        break;
+                    $image_r = imagecreatetruecolor($width, $height);
 
-                    default:
-                        throw new Exception(lang('remote_play_invalid_extension'));
+                    switch ($extension) {
+                        case 'jpeg':
+                            $image = imagecreatefromjpeg($original_file_path);
+                            imagecopyresampled($image_r, $image, 0, 0, 0, 0, $width, $height, $org_width, $org_height);
+                            imagejpeg($image_r, $destination_path, 90);
+                            break;
+
+                        case 'png':
+                            $image = imagecreatefrompng($original_file_path);
+                            imagecopyresampled($image_r, $image, 0, 0, 0, 0, $width, $height, $org_width, $org_height);
+                            imagepng($image_r, $destination_path, 9);
+                            break;
+
+                        default:
+                            throw new Exception(lang('remote_play_invalid_extension'));
+                    }
+                    imagedestroy($image_r);
+                    imagedestroy($image);
                 }
-                imagedestroy($image_r);
-                imagedestroy($image);
             } catch (Exception $e) {
                 e($e->getMessage());
             }
@@ -423,21 +421,6 @@ class PhotoThumbs
         }
     }
 
-    //Validating an Image
-    public static function ValidateImage($file, $ext = null): bool
-    {
-        if( !in_array(strtolower($ext), ['jpg','jpeg','gif','png']) ) {
-            return false;
-        }
-
-        $array = getimagesize($file);
-        if (empty($array[0]) || empty($array[1])) {
-            return false;
-        }
-
-        return true;
-    }
-
     /**
      * @param $mime_type
      * @return string
@@ -445,13 +428,13 @@ class PhotoThumbs
     public static function getMimeType($mime_type): string
     {
         return match ($mime_type) {
-            'image/jpeg' => 'jpeg',
-            'image/png'  => 'png',
-            'image/gif'  => 'gif',
-            'image/webp' => 'webp',
-            'image/bmp'  => 'bmp',
-            'image/tiff' => 'tiff',
-            default      => null,
+            'image/jpeg'  => 'jpeg'
+            ,'image/png'  => 'png'
+            ,'image/gif'  => 'gif'
+            ,'image/webp' => 'webp'
+            ,'image/bmp'  => 'bmp'
+            ,'image/tiff' => 'tiff'
+            ,default      => null
         };
     }
 
