@@ -161,7 +161,7 @@ INSERT INTO `{tbl_prefix}config` (`configid`, `name`, `value`) VALUES
 	(NULL, 'vid_cat_width', '120'),
 	(NULL, 'vid_cat_height', '120'),
 	(NULL, 'chromecast_fix', '1'),
-	(NULL, 'allowed_photo_types', 'jpg,jpeg,png'),
+	(NULL, 'allowed_photo_types', 'jpg,jpeg,png,gif'),
 	(NULL, 'logo_name', ''),
 	(NULL, 'favicon_name', ''),
 	(NULL, 'comment_per_page', '10'),
@@ -334,6 +334,9 @@ INSERT INTO `{tbl_prefix}config` (`configid`, `name`, `value`) VALUES
     (NULL, 'enable_user_profil_censor', 'no'),
     (NULL, 'enable_allow_alias_email', 'yes'),
     (NULL, 'enable_favorite_icon', 'yes'),
+    (NULL, 'keep_ratio_photo', 'yes'),
+    (NULL, 'ratio_photo', 1.7777),
+    (NULL, 'video_thumbs_format', 'webp'),
     (NULL, 'random_video_order', 'yes');
 
 
@@ -374,8 +377,6 @@ INSERT INTO `{tbl_prefix}tools` (`language_key_label`, `language_key_description
     ('install_missing_translation_label', 'install_missing_translation_description', 'AdminTool::installMissingTranslations', 'install_missing_translation', NULL, NULL, '1', '0');
 
 INSERT INTO `{tbl_prefix}tags_type` (`name`) VALUES ('video'), ('photo'), ('collection'), ('profile'), ('playlist'), ('actors'), ('producer'), ('executive_producer'), ('director'), ('crew'), ('genre');
-
-UPDATE `{tbl_prefix}video_thumbs` SET `type` = 'auto' WHERE `type` IS NULL;
 
 INSERT INTO `{tbl_prefix}object_type` (`name`)
 VALUES ('video'),

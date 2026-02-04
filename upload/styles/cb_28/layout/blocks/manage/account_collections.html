@@ -36,7 +36,7 @@
             </td>
             <td style="width:50%">
                 <label for="check_item-{$collection.videoid}">
-                    <img src="{getThumb vdetails=$collection size=168x105}" width="40" height="30" border="0" class="acc_usr_video_thumb img-responsive" style="float:left;margin-right:10px;">
+                    <img src="{VideoThumbs::getDefaultThumbFile($collection.videoid)}" width="40" height="30" border="0" class="acc_usr_video_thumb img-responsive" style="float:left;margin-right:10px;">
                     <span>{display_clean($collection.title)|truncate:100}</span>
                 </label><br/>
                 <span class="video_control">
@@ -65,7 +65,7 @@
                     {/if}
 
                     <div style='padding:1px; border:1px solid #999;float:left;max-width:168px;margin-right:10px;'>
-                        {get_photo class=$photo_class details=$collection output="html"}
+                        {PhotoThumbs::getHtmlThumbFile($collection.photo_id, 150, ['class'=>$photo_class, 'crop'=>true])}
                     </div>
                     {display_clean($collection.photo_title)|truncate:100}
                 </label>

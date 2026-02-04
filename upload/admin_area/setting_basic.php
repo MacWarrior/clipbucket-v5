@@ -172,6 +172,7 @@ if (isset($_POST['update'])) {
         , 'player_thumbnails'
         , 'enable_allow_alias_email'
         , 'enable_favorite_icon'
+        , 'keep_ratio_photo'
         , 'random_video_order'
     ];
 
@@ -447,6 +448,9 @@ if (isset($_POST['update'])) {
         'collection_enable_fullwidth',
         'enable_allow_alias_email',
         'enable_favorite_icon',
+        'keep_ratio_photo',
+        'ratio_photo',
+        'enable_favorite_icon',
         'random_video_order'
     ];
 
@@ -501,7 +505,8 @@ if (isset($_POST['update'])) {
         'video_thumbs_preview_count',
 
         'max_photo_categories',
-        'max_collection_categories'
+        'max_collection_categories',
+        'ratio_photo'
     ];
 
     $has_missing_config = false;

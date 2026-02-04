@@ -2,6 +2,10 @@
 const THIS_PAGE = 'photo_uploader';
 include('../includes/config.inc.php');
 
+if (!Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '14')) {
+    upload_error('Sorry, you cannot upload new photos until the application has been fully updated by an administrator');
+    die();
+}
 if( !User::getInstance()->hasPermission('allow_photo_upload') ){
     upload_error(lang('insufficient_privileges_loggin'));
     die();
@@ -39,8 +43,7 @@ switch ($mode) {
         $details = CBPhotos::getInstance()->get_photo($insert_id);
         $details['filename'] = $_POST['file_name'];
         $response['success'] = msg('single');
-        $params = ['details' => $details, 'size' => 'm', 'static' => true];
-        $response['photoPreview'] = get_image_file($params);
+        $response['photoPreview'] = PhotoThumbs::getThumbFile($details['photo_id'], 550);
 
         sendClientResponseAndContinue(function () use ($response) {
             echo json_encode($response);
@@ -65,13 +68,8 @@ switch ($mode) {
                     ,'autoload' => true
                 ]);
 
-                $params = [
-                    'size' => 'o',
-                    'filepath' => true,
-                    'details' => $details
-                ];
 
-                if( $ia->is(get_image_file($params), $model) ){
+                if( $ia->is(PhotoThumbs::getThumbFile($details['photo_id'], 'original', 'filepath'), $model) ){
                     if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '255')) {
                         Flag::flagItem($details['photo_id'], 'photo', array_search('sexual_content',Flag::getFlagTypes()),0);
                     }

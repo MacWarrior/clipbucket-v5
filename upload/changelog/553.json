@@ -1,13 +1,16 @@
 {
   "version":"5.5.3",
-  "revision":"13",
+  "revision":"27",
   "status":"stable",
   "detail":[
     {
       "title": "Back office",
       "description": [
         "Implement email alias allow option"
+        ,"Update advanced settings display"
         ,"Fix JS error on playlist management page"
+        ,"Fix missing video thumbs tool"
+        ,"Fix possible PHP error on video edition page"
       ]
     },
     {
@@ -19,16 +22,34 @@
         ,"Add signup date of birth calendar icon"
         ,"Fix possible JS error on register page"
         ,"Fix possible display issues on login & signup pages"
+        ,"Fix possible error during photo upload"
+        ,"Fix minified CSS file"
+        ,"Fix video collection default thumb display"
+        ,"Fix video saving on upload form"
       ]
     },
     {
       "title": "Miscellaneous",
       "description": [
         "Refactor favorites storage"
+        ,"Refactor thumbs"
         ,"Update compatibility to PHP 8.5.X"
         ,"Cleanup code"
         ,"Drop support for PHP 8.0"
         ,"Fix possible PHP error with discord logs"
+        ,"Fix possible issue with migration 5.5.3 - 14"
+        ,"Fix SQL error on video, photo & collection deletion"
+        ,"Fix pre-5.5.1 videos thumbs"
+        ,"Fix clean orphan files tool"
+        ,"Fix tools error handling"
+        ,"Fix possible SQL error on video upload"
+      ]
+    },
+    {
+      "title": "Conversion",
+      "description": [
+        "Implement Webp video thumbs"
+        ,"Implemet Gif image thumbs"
       ]
     },
     {

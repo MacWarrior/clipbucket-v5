@@ -755,6 +755,38 @@
                                         </div>
                                         <hr/>
                                     </div>
+                                    <div class="col-md-4">
+                                        <div class="row">
+                                            <div class="col-md-8">
+                                                <label class="nowrap" for="keep_ratio_photo" title="{lang('option_keep_ratio_photo')}">{lang('option_keep_ratio_photo')}</label>
+                                            </div>
+                                            <div class="col-md-4 row-size">
+                                                <input value="yes" name="keep_ratio_photo" id="keep_ratio_photo" {if $row.keep_ratio_photo=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+                                                <span class="lbl"></span>
+                                            </div>
+                                        </div>
+                                        <hr/>
+                                        <div class="row">
+                                            <div class="col-md-8">
+                                                <label class="nowrap" for="ratio_photo" title="{lang code='option_ratio_photo'}">{lang code='option_ratio_photo'}</label>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <select class="form-control" name="ratio_photo" id="ratio_photo">
+                                                    {assign var=array_styles value=[
+                                                    '1.3333' => '4/3'
+                                                    ,'1.7777' => '16/9'
+                                                    ,'1.6' => '16/10'
+                                                    ]}
+                                                    {foreach from=$array_styles item=value key=code}
+                                                        <option {if $code==$row.ratio_photo}selected{/if} value="{$code}">
+                                                            {$value}
+                                                        </option>
+                                                    {/foreach}
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <hr/>
+                                    </div>
                                 </div>
                             </div>
                             <div class="tab-pane interfaces" id="interfaces_collection">
