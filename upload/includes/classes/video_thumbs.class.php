@@ -384,12 +384,14 @@ class VideoThumbs
      * @return void
      * @throws Exception
      */
-    public function generateAutomaticThumbs($regenerate = true): void
+    public function generateAutomaticThumbs(bool $regenerate = true): void
     {
-        $this->ffmpeg_instance->log->newSection('Generating thumbnails');
         if ($regenerate) {
             $this->removeGeneratedThumbs();
         }
+
+        $this->ffmpeg_instance->log->newSection('Generating thumbnails');
+
         $duration = (int)$this->ffmpeg_instance->input_details['duration'];
         $max_num = (config('num_thumbs') ?: 1);
         if ($max_num > $duration) {
