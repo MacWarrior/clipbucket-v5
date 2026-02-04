@@ -25,16 +25,6 @@ class MWIP extends \Migration
             'en' => 'Create a copy'
         ]);
 
-        self::generateTranslation('delete_copy', [
-            'fr' => 'Supprimer la copie',
-            'en' => 'Delete a copy'
-        ]);
-
-        self::generateTranslation('edit_copy', [
-            'fr' => 'Editer la copie',
-            'en' => 'Edit a copy'
-        ]);
-
         self::generateTranslation('delete_template_confirmation', [
             'fr' => 'Voulez-vous vraiment supprimer ce template ?',
             'en' => 'Are you sure you want to delete this template ?'

@@ -89,7 +89,7 @@ $(function () {
                 text_element.removeClass('hidden');
                 $('.save_'+field).removeClass('glyphicon-ok glyphicon-remove').addClass('glyphicon-save').attr('title', lang['save']);
             });
-            $(this).addClass('text-primary').attr('title', lang['edit_copy']);
+            $(this).addClass('text-primary').attr('title', lang['edit']);
             $(this).siblings('.delete_default_theme').removeClass('hidden');
         }
     });
