@@ -1132,9 +1132,9 @@ class User extends Objects
         //Finally Removing Database entry of user
         Clipbucket_db::getInstance()->execute('DELETE FROM ' . tbl('users_storage_histo') . ' WHERE id_user =' . (int)$uid);
         Clipbucket_db::getInstance()->execute('DELETE FROM ' . tbl('email_histo') . ' WHERE userid =' . (int)$uid);
-        Clipbucket_db::getInstance()->execute('DELETE FROM ' . tbl('favorites') . ' WHERE userid =' . (int)$uid);
         Clipbucket_db::getInstance()->execute('DELETE FROM ' . tbl('user_profile') . ' WHERE userid =' . (int)$uid);
         Clipbucket_db::getInstance()->execute('DELETE FROM ' . tbl('users') . ' WHERE userid =' . (int)$uid);
+        User::getInstance()->removeFromFavoritesForAllUsers((int)$uid);
     }
 
     /**
@@ -1718,7 +1718,7 @@ class userquery extends CBCategory
         Clipbucket_db::getInstance()->delete(tbl('video_users'), ['userid'], [(int)$uid]);
         Clipbucket_db::getInstance()->execute('DELETE FROM ' . tbl('users_storage_histo') . ' WHERE id_user =' . (int)$uid);
         Clipbucket_db::getInstance()->execute('DELETE FROM ' . tbl('email_histo') . ' WHERE userid =' . (int)$uid);
-        Clipbucket_db::getInstance()->execute('DELETE FROM ' . tbl('favorites') . ' WHERE userid =' . (int)$uid);
+        User::getInstance()->removeFromFavoritesForAllUsers((int)$uid);
         Clipbucket_db::getInstance()->execute('DELETE FROM ' . tbl('user_profile') . ' WHERE userid =' . (int)$uid);
         Clipbucket_db::getInstance()->execute('DELETE FROM ' . tbl('users') . ' WHERE userid =' . (int)$uid);
 
@@ -3413,8 +3413,7 @@ class userquery extends CBCategory
 
         if (rename($data['filepath'], $file_path)) {
             unlink($data['filepath']);
-            $imgObj = new ResizeImage();
-            if (!$imgObj->ValidateImage($file_path,  $data['extension'])) {
+            if (!VideoThumbs::ValidateImage($file_path,  $data['extension'])) {
                 @unlink($file_path);
                 return [
                     'status' => false,
@@ -5511,7 +5510,7 @@ class userquery extends CBCategory
                 'video_title'       => $vidDetails['title'],
                 'video_description' => $vidDetails['description'],
                 'video_link'        => video_link($vidDetails),
-                'video_thumb'       => DirPath::getUrl('root') . get_thumb($vidDetails)
+                'video_thumb'       => VideoThumbs::getDefaultThumbFile($vidDetails['videoid'])
             ];
             foreach ($subscribers as $subscriber) {
                 EmailTemplate::sendMail('video_subscription', $subscriber['userid'], $var);

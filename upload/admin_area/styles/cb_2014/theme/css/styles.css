@@ -1,3 +1,7 @@
+:root {
+    --crop_ratio: 16 / 10
+}
+
 .main-content, .breadcrumbs{
     overflow: hidden;
 }
@@ -1306,4 +1310,37 @@ textarea[disabled]{
 .empty_table{
     text-align: center;
     font-style: italic;
+}
+
+a.disabled {
+    opacity: .35; filter:Alpha(Opacity=35); background-image: none;
+    cursor: not-allowed !important;
+}
+
+.crop_image {
+    aspect-ratio: var(--crop_ratio);
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+    object-position: center;
+    display: block;
+}
+.crop_image_max {
+    aspect-ratio: var(--crop_ratio);
+    max-width: 100%;
+    height: auto;
+    object-fit: cover;
+    object-position: center;
+    display: block;
+}
+
+.img-responsive {
+    display: block;
+    max-width: 100%;
+    height: auto;
+}
+
+a:disabled {
+    opacity: .35; filter:Alpha(Opacity=35); background-image: none;
+    cursor: not-allowed !important;
 }
