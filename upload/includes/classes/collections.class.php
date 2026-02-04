@@ -762,7 +762,7 @@ class Collection extends Objects
             return false;
         }
         if (!$this->isValidType($type)) {
-            e(lang('unknown_type'));
+            e(lang('unknown_type', $type));
             return false;
         }
         $collection = $this->getOne(['collection_id' => $collection_id]);
@@ -990,7 +990,7 @@ class Collection extends Objects
             return false;
         }
         if (!self::getInstance()->isValidType($type)) {
-            e(lang('unknown_type'));
+            e(lang('unknown_type', $type));
             return false;
         }
         $collection = self::getInstance()->getOne(['collection_id' => $collection_id]);
