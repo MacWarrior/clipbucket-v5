@@ -1,6 +1,6 @@
 {
   "version":"5.5.3",
-  "revision":"28",
+  "revision":"29",
   "status":"stable",
   "detail":[
     {
@@ -45,6 +45,7 @@
         ,"Fix clean orphan files tool"
         ,"Fix tools error handling"
         ,"Fix possible SQL error on video upload"
+        ,"Fix thumbs deletion"
       ]
     },
     {

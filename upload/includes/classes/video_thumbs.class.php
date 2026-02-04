@@ -525,7 +525,7 @@ class VideoThumbs
                 'is_auto' => true
             ]);
             foreach ($video_images as $video_image) {
-                $this->deleteImageAndThumbs($video_image);
+                self::deleteVideoImage($video_image);
             }
         } else {
             Clipbucket_db::getInstance()->delete(tbl('video_thumbs'), [
@@ -631,30 +631,6 @@ class VideoThumbs
         }
     }
 
-    /**
-     * @param $video_image
-     * @return void
-     * @throws Exception
-     */
-    public function deleteImageAndThumbs($video_image): void
-    {
-        if ($video_image['version'] > '5.5.2') {
-            $pattern = DirPath::get('thumbs') . $this->ffmpeg_instance->file_directory . DIRECTORY_SEPARATOR
-                . $this->ffmpeg_instance->file_name . '-'
-                . $video_image['type'] . '-'
-                . '*[!-cpb]-'
-                . $video_image['num']
-                . '.*';
-        } else {
-            $pattern = DirPath::get('thumbs') . $this->ffmpeg_instance->file_directory . DIRECTORY_SEPARATOR . $this->ffmpeg_instance->file_name . '*[!-cpb].*';
-        }
-        $glob = glob($pattern);
-        foreach ($glob as $thumb) {
-            unlink($thumb);
-        }
-        Clipbucket_db::getInstance()->delete(tbl(self::$tableNameThumb), ['id_video_image'], [$video_image['id_video_image']]);
-        Clipbucket_db::getInstance()->delete(tbl(self::$tableName), ['id_video_image'], [$video_image['id_video_image']]);
-    }
 
     /**
      * @param bool $is_multi
