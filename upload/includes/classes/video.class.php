@@ -2012,6 +2012,7 @@ class CBvideo extends CBCategory
         foreach ($video_images as $video_image) {
             VideoThumbs::deleteVideoImage($video_image);
         }
+        remove_empty_parent_directory(DirPath::get('thumbs') . 'video' . DIRECTORY_SEPARATOR . $vdetails['file_directory'] . DIRECTORY_SEPARATOR . $vdetails['file_name'], DirPath::get('thumbs'));
         e(lang('vid_thumb_removed_msg'), 'm');
     }
 
@@ -2028,7 +2029,7 @@ class CBvideo extends CBCategory
         if (file_exists($file1) && is_file($file1)) {
             unlink($file1);
         }
-        remove_empty_directory(DirPath::get('logs') . $str, DirPath::get('logs'));
+        remove_empty_parent_directory(DirPath::get('logs') . $str, DirPath::get('logs'));
         e(lang('vid_log_delete_msg'), 'm');
     }
 
@@ -2146,7 +2147,7 @@ class CBvideo extends CBCategory
                 rmdir($directory_path);
             }
         }
-        remove_empty_directory(DirPath::get('videos') . $vdetails['file_directory'], DirPath::get('videos'));
+        remove_empty_parent_directory(DirPath::get('videos') . $vdetails['file_directory'], DirPath::get('videos'));
         e(lang('vid_files_removed_msg'), 'm');
     }
 
