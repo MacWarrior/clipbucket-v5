@@ -11,7 +11,7 @@ class M00028 extends \Migration
     public function start()
     {
         self::generateTranslation('you_cant_rate_own_photo', [
-            'fr' => '	Vous ne pouvez voter pour vos propres photos',
+            'fr' => 'Vous ne pouvez voter pour vos propres photos',
             'en' => 'You can\'t rate your own photo'
         ]);
 
