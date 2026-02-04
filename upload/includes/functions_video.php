@@ -1511,7 +1511,7 @@ function reset_video_log($log_file): void
  */
 function remove_empty_directory_log($path): void
 {
-    remove_empty_directory($path, DirPath::get('logs'));
+    remove_empty_parent_directory($path, DirPath::get('logs'));
 }
 
 /**
@@ -1520,7 +1520,7 @@ function remove_empty_directory_log($path): void
  * @param string $stop_path path where function has to stop
  * @return void
  */
-function remove_empty_directory($path, string $stop_path): void
+function remove_empty_parent_directory($path, string $stop_path): void
 {
     if ($path == $stop_path) {
         return;
@@ -1529,7 +1529,7 @@ function remove_empty_directory($path, string $stop_path): void
     $current_dir_content = array_diff((!empty($files) ? $files : []), ['..', '.']);
     if (count($current_dir_content) <= 0) {
         rmdir($path);
-        remove_empty_directory(dirname($path), $stop_path);
+        remove_empty_parent_directory(dirname($path), $stop_path);
     }
 }
 
@@ -1728,7 +1728,7 @@ function clean_orphan_files($file): string
         default:
             return false;
     }
-    remove_empty_directory(dirname($full_path), $stop_path);
+    remove_empty_parent_directory(dirname($full_path), $stop_path);
     return lang('orphan_file_has_been_deleted', $file['data']);
 }
 

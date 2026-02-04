@@ -1421,7 +1421,7 @@ class CBPhotos
             errorhandler::getInstance()->flush_msg();
             //finally removing from Database
             $this->delete_from_db($photo);
-            remove_empty_directory(DirPath::get('photos') . $photo['file_directory'], DirPath::get('photos'));
+            remove_empty_parent_directory(DirPath::get('photos') . $photo['file_directory'], DirPath::get('photos'));
         } else {
             e(lang('photo_not_exist'));
         }
@@ -1445,7 +1445,9 @@ class CBPhotos
         if (file_exists($file_dir)) {
             unlink($file_dir);
         }
+        remove_empty_parent_directory(DirPath::get('photos') . DIRECTORY_SEPARATOR . $photo['file_directory'], DirPath::get('thumbs'));
         PhotoThumbs::deleteThumbs($photo['photo_id']);
+        remove_empty_parent_directory(DirPath::get('thumbs') . 'photo' . DIRECTORY_SEPARATOR . $photo['file_directory'] . DIRECTORY_SEPARATOR . $photo['filename'], DirPath::get('thumbs'));
         e(lang('success_delete_file', display_clean($photo['photo_title'])), 'm');
     }
 
