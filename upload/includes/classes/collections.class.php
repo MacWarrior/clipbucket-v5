@@ -206,7 +206,7 @@ class Collection extends Objects
         if (config('enable_comments_collection') != 'yes') {
             unset($sorts[array_search('most_commented', $sorts)]);
         }
-        if (config('collection_rating') != '1') {
+        if (config('collection_rating') != 'yes') {
             unset($sorts[array_search('top_rated', $sorts)]);
         }
         return $sorts;
