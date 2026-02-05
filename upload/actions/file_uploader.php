@@ -113,8 +113,8 @@ switch ($mode) {
         $log->writeLine(date('Y-m-d H:i:s').' - File Uploaded to Temp directory successfully and video conversion file is being executed !');
 
         $filename_without_ext = pathinfo($original_filename, PATHINFO_FILENAME);
-        if (strlen($filename_without_ext) > config('max_video_title')) {
-            $filename_without_ext = substr($filename_without_ext, 0, config('max_video_title'));
+        if (mb_strlen($filename_without_ext) > config('max_video_title')) {
+            $filename_without_ext = mb_substr($filename_without_ext, 0, config('max_video_title'));
         }
 
         if( Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.0', '331') ){
@@ -130,7 +130,7 @@ switch ($mode) {
             , 'description'     => $filename_without_ext
             , 'file_type'       => $extension
             , 'category'        => $category
-            , 'userid'          => user_id()
+            , 'userid'          => User::getInstance()->getCurrentUserID()
             , 'allow_comments'  => 'yes'
             , 'comment_voting'  => 'yes'
             , 'allow_rating'    => 'yes'
