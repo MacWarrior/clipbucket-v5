@@ -101,7 +101,17 @@ class FFMpeg
         $info['audio_bitrate'] = (int)$audio['bit_rate'];
         $info['audio_rate'] = (int)$audio['sample_rate'];
         $info['audio_channels'] = (float)$audio['channels'];
-        $info['rotation'] = (float)$video['tags']['rotate'];
+        if (isset($video['side_data_list'])) {
+            foreach ($video['side_data_list'] as $side_data) {
+                if (isset($side_data['side_data_type'], $side_data['rotation'])
+                    && $side_data['side_data_type'] === 'Display Matrix')
+                {
+                    $info['rotation'] = (float)$side_data['rotation'];
+                }
+            }
+        } elseif (isset($video['tags']['rotate'])) {
+            $info['rotation'] = (float)$video['tags']['rotate'];
+        }
 
         if (!$info['duration']) {
             $CMD = config('media_info') . ' \'--Inform=General;%Duration%\' \'' . $file_path . '\' 2>&1';
