@@ -450,6 +450,16 @@
                             </div>
                             <hr/>
                             <div class="row">
+                                <div class="col-md-10">
+                                    <label class="nowrap" for="video_remove_black_bars" title="{lang code='option_video_remove_black_bars'}"><span class="fa fa-question-circle tips" title="{lang code='tips_video_remove_black_bars'}"></span> {lang code='option_video_remove_black_bars'}</label>
+                                </div>
+                                <div class="col-md-2 row-size">
+                                    <input value="yes" name="video_remove_black_bars" id="video_remove_black_bars" {if $row.video_remove_black_bars=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+                                    <span class="lbl"></span>
+                                </div>
+                            </div>
+                            <hr/>
+                            <div class="row">
                                 <div class="col-md-6 row-size">
                                     <label><span class="fa fa-question-circle tips" title="Choose it wisely ! MP4 won't allow multiple audio tracks ; HLS won't allow download and require FFmpeg 4.3+"></span> Conversion type</label>
                                 </div>

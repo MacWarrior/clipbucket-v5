@@ -33,7 +33,7 @@ class FFMpeg
      * @param null|string $file_path
      *
      */
-    function get_file_info($file_path = null): array
+    public function get_file_info($file_path = null): array
     {
         if (!$file_path) {
             $file_path = $this->input_file;
@@ -244,7 +244,7 @@ class FFMpeg
         }
     }
 
-    static function unlockAll()
+    static function unlockAll(): void
     {
         $max_conversion = config('max_conversion');
         for ($i = 0; $i < $max_conversion; $i++) {
@@ -255,7 +255,7 @@ class FFMpeg
         }
     }
 
-    static function isThereAnyConversionLocks()
+    static function isThereAnyConversionLocks(): bool
     {
         $max_conversion = config('max_conversion');
         for ($i = 0; $i < $max_conversion; $i++) {
@@ -492,6 +492,72 @@ class FFMpeg
         return $final_vrate;
     }
 
+    public function getCropFilter(): string
+    {
+        if (empty($this->input_file) || empty($this->input_details['video_width']) || empty($this->input_details['video_height'])) {
+            return '';
+        }
+
+        $srcW = (int)$this->input_details['video_width'];
+        $srcH = (int)$this->input_details['video_height'];
+
+        $cmd = config('ffmpegpath')
+            . ' -hide_banner -nostats -i ' . escapeshellarg($this->input_file)
+            . ' -vf fps=1,cropdetect=limit=24:round=2:reset=0'
+            . ' -an -f null - 2>&1';
+
+        $out = System::shell_output($cmd);
+        if (empty($out)) {
+            return '';
+        }
+
+        if (!preg_match_all('/\bcrop=(\d+):(\d+):(\d+):(\d+)\b/', $out, $m, PREG_SET_ORDER)) {
+            return '';
+        }
+
+        $minX = PHP_INT_MAX;
+        $minY = PHP_INT_MAX;
+        $maxR = 0;
+        $maxB = 0;
+        $found = false;
+
+        foreach ($m as $c) {
+            $w = (int)$c[1]; $h = (int)$c[2]; $x = (int)$c[3]; $y = (int)$c[4];
+
+            if ($w === $srcW && $h === $srcH && $x === 0 && $y === 0) {
+                continue;
+            }
+
+            $found = true;
+            $minX = min($minX, $x);
+            $minY = min($minY, $y);
+            $maxR = max($maxR, $x + $w);
+            $maxB = max($maxB, $y + $h);
+        }
+
+        if (!$found) {
+            return '';
+        }
+
+        $x = max(0, $minX);
+        $y = max(0, $minY);
+        $w = min($srcW, $maxR) - $x;
+        $h = min($srcH, $maxB) - $y;
+
+        if ($w <= 0 || $h <= 0) {
+            return '';
+        }
+
+        $w -= $w % 2;
+        $h -= $h % 2;
+
+        if ($w === $srcW && $h === $srcH && $x === 0 && $y === 0) {
+            return '';
+        }
+
+        return 'crop=' . $w . ':' . $h . ':' . $x . ':' . $y;
+    }
+
     /**
      * @throws Exception
      */
@@ -540,7 +606,19 @@ class FFMpeg
                 } else {
                     $scale = $resolution['video_height'] . ':-2';
                 }
-                $cmd .= ' -vf "scale=' . $scale . '"';
+
+                $filter = '';
+                if( config('video_remove_black_bars') == 'yes' ){
+                    $filter .= $this->getCropFilter();
+                }
+
+                if( !empty($filter) ){
+                    $filter .= ',';
+                }
+
+                $filter .= 'scale=' . $scale;
+
+                $cmd .= ' -vf "' . $filter . '"';
                 break;
 
             case 'video_hls':
@@ -549,6 +627,11 @@ class FFMpeg
                 $resolutions = ' -filter_complex "';
                 $log_res = '';
                 $filter_complex = '';
+
+                $crop = '';
+                if( config('video_remove_black_bars') == 'yes' ){
+                    $crop = $this->getCropFilter();
+                }
 
                 foreach ($resolution as $res) {
                     $video_bitrate = myquery::getInstance()->getVideoResolutionBitrateFromHeight($res['height']);
@@ -567,7 +650,15 @@ class FFMpeg
                     if( $filter_complex != '' ){
                         $filter_complex .= '; ';
                     }
-                    $filter_complex .= '[0:v]scale=' . $scale . '[v' . $count . ']';
+
+                    $filter = $crop;
+                    if( !empty($filter) ){
+                        $filter .= ',';
+                    }
+                    $filter .= 'scale=' . $scale;
+
+                    $filter_complex .= '[0:v]' . $filter . '[v' . $count . ']';
+
                     $count++;
                 }
                 $resolutions .= $filter_complex . '"';
@@ -891,12 +982,12 @@ class FFMpeg
             $params['output_format'] = 'webp';
         }
 
-        $size = '';
+        $filter = '';
         if( $params['size_tag'] != 'original' ){
             $color = self::convertHexToFFmpeg(config('thumb_background_color'));
             $width = $params['width'];
             $height = $params['height'];
-            $size .= '-vf "scale=\'if(gt(a,' . $width . '/' . $height . '),' . $width . ',-1)\':\'if(gt(a,' . $width . '/' . $height . '),-1,' . $height . ')\',pad=' . $width . ':' . $height . ':(' . $width . '-iw)/2:(' . $height . '-ih)/2:' . $color . '"';
+            $filter .= 'scale=\'if(gt(a,' . $width . '/' . $height . '),' . $width . ',-1)\':\'if(gt(a,' . $width . '/' . $height . '),-1,' . $height . ')\',pad=' . $width . ':' . $height . ':(' . $width . '-iw)/2:(' . $height . '-ih)/2:' . $color;
         }
 
         $codecOptions = '-c:v libwebp';
@@ -904,7 +995,13 @@ class FFMpeg
             $codecOptions = '-c:v mjpeg';
         }
 
-        $command = config('ffmpegpath') . ' -ss ' . $params['timecode'] . ' -i ' . $params['input_path'] . ' -pix_fmt yuvj422p -an -r 1 ' . $size . ' ' . $codecOptions . ' -y -f image2 -vframes 1 ' . $params['output_path'] . ' 2>&1';
+        $vf = '';
+        if ($filter !== '') {
+            $vf = ' -vf "' . $filter . '"';
+        }
+
+        $command = config('ffmpegpath') . ' -ss ' . $params['timecode'] . ' -i ' . $params['input_path'] . ' -pix_fmt yuvj422p -an -r 1 ' . $vf . ' ' . $codecOptions . ' -y -f image2 -vframes 1 ' . $params['output_path'] . ' 2>&1';
+        DiscordLog::sendDump($command);
 
         return [
             'command' => $command
