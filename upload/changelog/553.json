@@ -1,6 +1,6 @@
 {
   "version":"5.5.3",
-  "revision":"33",
+  "revision":"34",
   "status":"stable",
   "detail":[
     {
@@ -41,6 +41,7 @@
         ,"Update compatibility to PHP 8.5.X"
         ,"Cleanup code"
         ,"Drop support for PHP 8.0"
+        ,"Drop outdated & unused columns"
         ,"Fix possible PHP error with discord logs"
         ,"Fix possible issue with migration 5.5.3 - 14"
         ,"Fix SQL error on video, photo & collection deletion"
