@@ -469,6 +469,7 @@ function pr($text, $pretty = false): void
  * if there is no user_id it will return false
  * @throws Exception
  * @uses : { class : userquery } { var : userid }
+ * @deprecated 
  */
 function user_id()
 {
@@ -1702,7 +1703,7 @@ function validate_cb_form($input, $array): void
                 if (!isUTF8($val)) {
                     $val = utf8_decode($val);
                 }
-                $length = strlen($val);
+                $length = mb_strlen($val);
             }
             $min_len = $field['min_length'] ?? 0;
             $max_len = $field['max_length'];

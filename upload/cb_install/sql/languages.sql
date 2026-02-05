@@ -1780,5 +1780,7 @@ VALUES ('ongoing_conversion'),
        ('this_is_my_amazing_template'),
        ('my_amazing_website'),
        ('end_edition'),
+       ('option_video_remove_black_bars'),
+       ('tips_video_remove_black_bars'),
        ('option_random_video_order'),
        ('sort_by_random');

@@ -1,6 +1,6 @@
 {
   "version":"5.5.3",
-  "revision":"31",
+  "revision":"35",
   "status":"stable",
   "detail":[
     {
@@ -13,6 +13,7 @@
         ,"Fix JS error on playlist management page"
         ,"Fix missing video thumbs tool"
         ,"Fix possible PHP error on video edition page"
+        ,"Fix unstuck update tool from admin dashboard"
       ]
     },
     {
@@ -30,6 +31,7 @@
         ,"Fix minified CSS file"
         ,"Fix video collection default thumb display"
         ,"Fix video saving on upload form"
+        ,"Fix possible SQL error on video upload form with malfomated video file name"
       ]
     },
     {
@@ -40,6 +42,7 @@
         ,"Update compatibility to PHP 8.5.X"
         ,"Cleanup code"
         ,"Drop support for PHP 8.0"
+        ,"Drop outdated & unused columns"
         ,"Fix possible PHP error with discord logs"
         ,"Fix possible issue with migration 5.5.3 - 14"
         ,"Fix SQL error on video, photo & collection deletion"
@@ -55,6 +58,7 @@
       "description": [
         "Implement Webp video thumbs"
         ,"Implement Gif image thumbs"
+        ,"Implement Remove hard-coded letterboxing / pillarboxing option"
         ,"Fix conversion logs"
       ]
     },
