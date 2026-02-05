@@ -1,6 +1,6 @@
 {
   "version":"5.5.3",
-  "revision":"31",
+  "revision":"33",
   "status":"stable",
   "detail":[
     {
@@ -30,6 +30,7 @@
         ,"Fix minified CSS file"
         ,"Fix video collection default thumb display"
         ,"Fix video saving on upload form"
+        ,"Fix possible SQL error on video upload form with malfomated video file name"
       ]
     },
     {
@@ -55,6 +56,7 @@
       "description": [
         "Implement Webp video thumbs"
         ,"Implement Gif image thumbs"
+        ,"Implement Remove hard-coded letterboxing / pillarboxing option"
         ,"Fix conversion logs"
       ]
     },
