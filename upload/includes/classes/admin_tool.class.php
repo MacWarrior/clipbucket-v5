@@ -923,9 +923,11 @@ class AdminTool
     }
 
     /**
+     * @param $id_tool
+     * @param bool $force
      * @throws Exception
      */
-    public function setToolError($id_tool, $force = false): void
+    public function setToolError($id_tool, bool $force = false): void
     {
         if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.0', '367')) {
             $this->updateToolHisto(['id_tools_histo_status', 'date_end'], ['|no_mc||f|(SELECT id_tools_histo_status FROM ' . tbl('tools_histo_status') . ' WHERE language_key_title like \'on_error\')', '|f|NOW()']);
