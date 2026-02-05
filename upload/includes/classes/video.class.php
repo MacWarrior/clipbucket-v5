@@ -278,9 +278,11 @@ class Video extends Objects
             case 'reverse_alphabetical':
                 $params['order'] = $this->getTableName() . '.title DESC';
                 break;
+
             case 'random':
                 $params['order'] = 'RAND()';
                 break;
+
             case 'all_time':
             case 'today':
             case 'yesterday':
