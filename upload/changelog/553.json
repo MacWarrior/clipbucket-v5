@@ -1,6 +1,6 @@
 {
   "version":"5.5.3",
-  "revision":"31",
+  "revision":"32",
   "status":"stable",
   "detail":[
     {
@@ -55,6 +55,7 @@
       "description": [
         "Implement Webp video thumbs"
         ,"Implement Gif image thumbs"
+        ,"Implement Remove hard-coded letterboxing / pillarboxing option"
         ,"Fix conversion logs"
       ]
     },

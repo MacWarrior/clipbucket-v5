@@ -45,6 +45,7 @@ if (isset($_POST['update'])) {
         , 'video_enable_nsfw_check'
         , 'store_guest_session'
         , 'allow_conversion_1_percent'
+        , 'video_remove_black_bars'
     ];
 
     $config_booleans_to_refactor = [
@@ -103,6 +104,7 @@ if (isset($_POST['update'])) {
         'enable_photo_file_upload',
 
         'allow_conversion_1_percent',
+        'video_remove_black_bars',
 
         'mail_type',
         'smtp_host',

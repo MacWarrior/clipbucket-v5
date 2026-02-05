@@ -1779,4 +1779,6 @@ VALUES ('ongoing_conversion'),
        ('author_name'),
        ('this_is_my_amazing_template'),
        ('my_amazing_website'),
-       ('end_edition');
+       ('end_edition'),
+       ('option_video_remove_black_bars'),
+       ('tips_video_remove_black_bars');
