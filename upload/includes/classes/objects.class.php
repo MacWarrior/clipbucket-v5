@@ -5,24 +5,26 @@ abstract class Objects
 
     private static array $type_array = [];
 
+    /**
+     * @return string
+     */
     protected static function getTableNameObjectType(): string
     {
-        //TODO optimiser pour ne pas faire le test à chaque appel
         if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '8')) {
             return 'object_type';
-        } else {
-            return 'categories_type';
         }
+        return 'categories_type';
     }
 
+    /**
+     * @return string
+     */
     protected static function getIdFieldObjectType(): string
     {
-        //TODO optimiser pour ne pas faire le test à chaque appel
         if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '8')) {
             return 'id_object_type';
-        } else {
-            return 'id_category_type';
         }
+        return 'id_category_type';
     }
 
     /**
@@ -119,6 +121,16 @@ abstract class Objects
     }
 
     /**
+     * @param int $object_id
+     * @return void
+     * @throws Exception
+     */
+    public function removeFromFavoritesForAllUsers(int $object_id): void
+    {
+        Clipbucket_db::getInstance()->delete(tbl('favorites'), ['id_type', 'id'], [static::getTypeId(), $object_id]);
+    }
+
+    /**
      * Get Used Favorites
      *
      * @param array $params
@@ -178,6 +190,9 @@ abstract class Objects
         ];
     }
 
+    /**
+     * @return array
+     */
     protected static function getObjectTableAndFieldId(): array
     {
         //TODO optimiser pour supprimer le switch
@@ -200,7 +215,13 @@ abstract class Objects
         return ['table_name' => $tablename, 'field_id' => $object_id];
     }
 
-    public static function ratingUpdate($object_id, $rating)
+    /**
+     * @param $object_id
+     * @param $rating
+     * @return void
+     * @throws Exception
+     */
+    public static function ratingUpdate($object_id, $rating): void
     {
         if (!User::getInstance()->isUserConnected()) {
             throw new Exception(lang('please_login_to_rate'));
@@ -237,11 +258,45 @@ abstract class Objects
                 $id_field = 'videoid';
                 break;
         }
-        if (User::getInstance()->getCurrentUserID() == $current_rating['userid'] && !config($config_own_rate)) {
-            throw new Exception(lang('you_cant_rate_own_' . static::TYPE));
+
+        if ($current_rating['allow_rating'] == 'no' || config($config_rating) != 'yes') {
+            switch (static::TYPE) {
+                case 'photo':
+                    $lang = 'photo_rate_disabled';
+                    break;
+                case 'collection':
+                    $lang = 'collection_rate_disabled';
+                    break;
+                case 'user':
+                    $lang = 'channel_rate_disabled';
+                    break;
+                case 'video':
+                    $lang = 'vid_rate_disabled';
+                    break;
+                default:
+                    $lang = '';
+            }
+            throw new Exception(lang($lang));
         }
-        if ($current_rating['allow_rating'] =='no' || !config($config_rating)) {
-            throw new Exception(lang( static::TYPE . '_rate_disabled' ));
+
+        if (User::getInstance()->getCurrentUserID() == $current_rating['userid'] && config($config_own_rate) != 'yes') {
+            switch (static::TYPE) {
+                case 'photo':
+                    $lang = 'you_cant_rate_own_photo';
+                    break;
+                case 'collection':
+                    $lang = 'you_cant_rate_own_collection';
+                    break;
+                case 'user':
+                    $lang = 'you_cant_rate_own_channel';
+                    break;
+                case 'video':
+                    $lang = 'you_cant_rate_own_video';
+                    break;
+                default:
+                    $lang = '';
+            }
+            throw new Exception(lang($lang));
         }
         $Old_histo = explode('|', $current_rating[$voters_key]);
         if (!empty($Old_histo) && is_array($Old_histo) && count($Old_histo) > 1) {
@@ -276,14 +331,14 @@ abstract class Objects
                 'rating'   => $rating
             ];
             $total_voters = empty($histo) ? 0 : count($histo);
-            $newrate = ($t + $rating) / ($total_voters?:1);
+            $newrate = ($t + $rating) / ($total_voters ?: 1);
             if ($newrate > 10) {
                 $newrate = 10;
             }
         }
 
         Clipbucket_db::getInstance()->update(
-            tbl($table),  ['rating', 'rated_by', $voters_key], [$newrate, $total_voters, '|no_mc|' . (!empty($histo) ? json_encode($histo): '')], ' ' . $id_field . ' = ' . mysql_clean($object_id)
+            tbl($table), ['rating', 'rated_by', $voters_key], [$newrate, $total_voters, '|no_mc|' . (!empty($histo) ? json_encode($histo) : '')], ' ' . $id_field . ' = ' . mysql_clean($object_id)
         );
 
     }

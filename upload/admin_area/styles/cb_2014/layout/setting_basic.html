@@ -758,6 +758,36 @@
                                     <div class="col-md-4">
                                         <div class="row">
                                             <div class="col-md-8">
+                                                <label class="nowrap" for="keep_ratio_photo" title="{lang('option_keep_ratio_photo')}">{lang('option_keep_ratio_photo')}</label>
+                                            </div>
+                                            <div class="col-md-4 row-size">
+                                                <input value="yes" name="keep_ratio_photo" id="keep_ratio_photo" {if $row.keep_ratio_photo=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+                                                <span class="lbl"></span>
+                                            </div>
+                                        </div>
+                                        <hr/>
+                                        <div class="row">
+                                            <div class="col-md-8">
+                                                <label class="nowrap" for="ratio_photo" title="{lang code='option_ratio_photo'}">{lang code='option_ratio_photo'}</label>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <select class="form-control" name="ratio_photo" id="ratio_photo">
+                                                    {assign var=array_styles value=[
+                                                    '1.3333' => '4/3'
+                                                    ,'1.7777' => '16/9'
+                                                    ,'1.6' => '16/10'
+                                                    ]}
+                                                    {foreach from=$array_styles item=value key=code}
+                                                        <option {if $code==$row.ratio_photo}selected{/if} value="{$code}">
+                                                            {$value}
+                                                        </option>
+                                                    {/foreach}
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <hr/>
+                                        <div class="row">
+                                            <div class="col-md-8">
                                                 <label class="nowrap" for="enable_favorite_icon_photo" title="{lang code='option_enable_favorite_icon'}"><span class="fa fa-question-circle tips" title="{lang code='option_enable_favorite_icon_hint_photo'}"></span>{lang code='option_enable_favorite_icon'}</label>
                                             </div>
                                             <div class="col-md-2 row-size">
@@ -767,7 +797,6 @@
                                         </div>
                                         <hr/>
                                     </div>
-
                                 </div>
                             </div>
                             <div class="tab-pane interfaces" id="interfaces_collection">
@@ -2047,7 +2076,7 @@
                                     <label class="nowrap" for="video_rating" title="Video rating">Video rating</label>
                                 </div>
                                 <div class="col-md-2 row-size">
-                                    <input value="1" name="video_rating" id="video_rating" {if $row.video_rating=='1'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+                                    <input value="yes" name="video_rating" id="video_rating" {if $row.video_rating=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
                                     <span class="lbl"></span>
                                 </div>
                                 <div class="col-md-4">
@@ -2064,7 +2093,7 @@
                                     <label class="nowrap" for="own_video_rating" title="Rate own video">Rate own video</label>
                                 </div>
                                 <div class="col-md-2 row-size">
-                                    <input value="1" name="own_video_rating" id="own_video_rating" {if $row.own_video_rating=='1'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+                                    <input value="yes" name="own_video_rating" id="own_video_rating" {if $row.own_video_rating=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
                                     <span class="lbl"></span>
                                 </div>
                                 <div class="col-md-4">
@@ -2084,14 +2113,14 @@
                                     <label class="nowrap" for="collection_rating" title="Collection rating">Collection rating</label>
                                 </div>
                                 <div class="col-md-2 row-size">
-                                    <input value="1" name="collection_rating" id="collection_rating" {if $row.collection_rating=='1'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+                                    <input value="yes" name="collection_rating" id="collection_rating" {if $row.collection_rating=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
                                     <span class="lbl"></span>
                                 </div>
                                 <div class="col-md-4">
                                     <label class="nowrap" for="channel_rating" title="Channel rating">Channel rating</label>
                                 </div>
                                 <div class="col-md-2 row-size">
-                                    <input value="1" name="channel_rating" id="channel_rating" {if $row.channel_rating=='1'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+                                    <input value="yes" name="channel_rating" id="channel_rating" {if $row.channel_rating=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
                                     <span class="lbl"></span>
                                 </div>
 
@@ -2102,14 +2131,14 @@
                                     <label class="nowrap" for="own_collection_rating" title="Rate own collection">Rate own collection</label>
                                 </div>
                                 <div class="col-md-2 row-size">
-                                    <input value="1" name="own_collection_rating" id="own_collection_rating" {if $row.own_collection_rating=='1'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+                                    <input value="yes" name="own_collection_rating" id="own_collection_rating" {if $row.own_collection_rating=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
                                     <span class="lbl"></span>
                                 </div>
                                 <div class="col-md-4">
                                     <label class="nowrap" for="own_channel_rating" title="Rate own channel">Rate own channel</label>
                                 </div>
                                 <div class="col-md-2 row-size">
-                                    <input value="1" name="own_channel_rating" id="own_channel_rating" {if $row.own_channel_rating=='1'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+                                    <input value="yes" name="own_channel_rating" id="own_channel_rating" {if $row.own_channel_rating=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
                                     <span class="lbl"></span>
                                 </div>
 
@@ -2123,7 +2152,7 @@
                                     <label class="nowrap" for="comment_rating" title="Comments rating">Comments rating</label>
                                 </div>
                                 <div class="col-md-2 row-size">
-                                    <input value="1" name="comment_rating" id="comment_rating" {if $row.comment_rating=='1'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+                                    <input value="yes" name="comment_rating" id="comment_rating" {if $row.comment_rating=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
                                     <span class="lbl"></span>
                                 </div>
 

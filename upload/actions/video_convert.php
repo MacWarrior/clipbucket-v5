@@ -88,7 +88,7 @@ $values = [$ffmpeg->conversion_type, 'Waiting'];
 
 update_video_by_filename($fileName, $fields, $values);
 
-$ffmpeg->ClipBucket();
+$ffmpeg->ClipBucket($videoDetails['videoid']);
 
 $video_files = json_encode($ffmpeg->video_files);
 
@@ -117,7 +117,7 @@ update_castable_status($videoDetails);
 
 $active = config('activation') ? 'no' : 'yes';
 if (config('video_enable_nsfw_check') == 'yes' && AIVision::isAvailable()) {
-    $thumbs = get_thumb($videoDetails, true, 'original', 'auto', null, 'filepath');
+    $thumbs = VideoThumbs::getAllThumbFiles($videoDetails['videoid'],'original','original','thumbnail', true, 'filepath');
 
     if (!empty($thumbs)) {
         switch (config('video_nsfw_check_model')) {

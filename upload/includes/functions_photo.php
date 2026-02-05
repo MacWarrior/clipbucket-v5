@@ -14,17 +14,6 @@ function get_photos($param)
     return CBPhotos::getInstance()->get_photos($param);
 }
 
-//Photo File Fetcher
-/**
- * @throws Exception
- */
-function get_photo($params)
-{
-    return get_image_file($params);
-}
-
-
-
 //Create download button
 
 function plupload_photo_uploader(): void
@@ -254,21 +243,4 @@ function get_image_file($params)
     } else {
         return get_photo_default_thumb($size, $output);
     }
-}
-
-/**
- * @throws Exception
- */
-function get_photo_file($photo_id, $size = 't', $multi = false, $assign = null, $with_path = true, $with_orig = false)
-{
-    $args = [
-        'details'   => $photo_id,
-        'size'      => $size,
-        'multi'     => $multi,
-        'assign'    => $assign,
-        'with_path' => $with_path,
-        'with_orig' => $with_orig
-    ];
-
-    return get_image_file($args);
 }

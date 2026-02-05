@@ -6,7 +6,6 @@ include_once 'upload_forms.php';
 /**
  * This function is for Securing Password, you may change its combination for security reason but
  * make sure do not change once you made your script run
- * TODO : Multiple md5/sha1 is useless + this is totally unsecure, must be replaced by sha512 + salt
  *
  * @param $string
  *
@@ -294,19 +293,6 @@ function getAd($params): string
         $data .= '</div>';
     }
     return $data;
-}
-
-/**
- * FUNCTION USED TO GET THUMBNAIL, MADE FOR SMARTY
- *
- * @param : { array } { $params } { array of parameters }
- *
- * @return mixed
- * @throws Exception
- */
-function getSmartyThumb($params)
-{
-    return get_thumb($params['vdetails'], $params['multi'], $params['size']);
 }
 
 /**
@@ -3297,7 +3283,7 @@ function upload_image($type = 'logo')
 {
     $file_post = 'upload_' . $type;
     if (!in_array($type, ['logo', 'favicon', 'player-logo'])) {
-        e(lang('unknown_type'));
+        e(lang('unknown_type', $type));
         return false;
     }
 
@@ -3493,6 +3479,7 @@ function rglob($pattern, $flags = 0)
 }
 
 /**
+ * delete all empty folders recursively from a given path
  * @param $path
  * @return bool
  */
@@ -3513,6 +3500,28 @@ function delete_empty_directories($path): bool
     }
 
     return false;
+}
+/**
+ * @param $path
+ * @return bool
+ */
+function delete_directories_recursive($path): bool
+{
+    if (!is_dir($path)) {
+        return false;
+    }
+    $content = glob($path . '/*', GLOB_ONLYDIR);
+    foreach ($content as $sub_dir) {
+        delete_directories_recursive($sub_dir);
+    }
+    $content = glob($path . '/*');
+    $success = true;
+    // Si le répertoire est maintenant vide, le supprimer
+    foreach ($content as $file) {
+        $success = unlink($file) && $success;
+    }
+    return rmdir($path) && $success;
+
 }
 
 /**

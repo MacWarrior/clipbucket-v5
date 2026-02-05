@@ -56,7 +56,8 @@
                         {if (User::getInstance()->hasPermission($upload_permission) && $c.public_upload == 'yes')
                         || (User::getInstance()->isUserConnected() && User::getInstance()->get('userid') == $c.userid)
                         || User::getInstance()->hasAdminAccess()}
-                            <a href="{$link_add_more}" class="btn btn-success pull-right">{lang('add_more')}</a>
+                            <a {if !Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3','14')} disabled="disabled" href="#" title="Sorry, you cannot perform this action until the application has been fully updated by an administrator"
+                            {else}href="{$link_add_more}"{/if}  class="btn btn-success pull-right" >{lang('add_more')}</a>
                         {/if}
                     </div>
                 </div>
@@ -110,6 +111,11 @@
 
             <div class="clearfix fav-repo">
                 <div class="show clearfix photoStats">
+                    {if User::getInstance()->getCurrentUserID() && config('collection_rating') == 'yes' }
+                        <div class="user-ratting" id="rating_container" style="display:inline-block;">
+                            {show_video_rating rating=$c.rating ratings=$c.rated_by total='10' id=$c.collection_id type=collection disable=($c.userid == User::getInstance()->getCurrentUserID() && config('own_collection_rating')!= 'yes')}
+                        </div>
+                    {/if}
                     {if User::getInstance()->getCurrentUserID()}
                         {if config('enable_favorite_icon_collection') == 'yes' && User::getInstance()->isUserConnected()}
                             <span class="{if Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '8')} manage_favorite {else} disabled {/if} watch-rating-icon pointer glyphicon glyphicon-heart{if !$is_favorite}-empty " title="{lang('add_to_my_favorites')}{/if}" title="{lang('remove_from_favorites')}" style="font-size: 20px;"></span>

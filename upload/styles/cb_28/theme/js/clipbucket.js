@@ -788,53 +788,51 @@
                     rating: rating,
                     type: type
                 },
-                function (data) {
-                    if (!data.success) {
-                        alert('No data');
-                    } else {
-                        const currLikes = parseInt($('.likes').find('span:nth-child(2)').html());
-                        const currDislikes = parseInt($('.dislikes').find('span:nth-child(2)').html());
-                        let newRating;
-                        if (rating == 5) {
-                            if ($('.likes').hasClass('rated')) {
-                                newRating = currLikes - 1;
-                                if (newRating < 0) {
-                                    newRating = 0;
-                                }
-                                $('.likes').removeClass('rated').find('span:nth-child(2)').html(newRating);
-                            } else {
-                                newRating = currLikes + 1;
-                                $('.likes').addClass('rated').find('span:nth-child(2)').html(newRating);
-                                if ($('.dislikes').hasClass('rated')) {
-                                    newRating = currDislikes - 1;
-                                    if (newRating < 0) {
-                                        newRating = 0;
-                                    }
-                                    $('.dislikes').removeClass('rated').find('span:nth-child(2)').html(newRating);
-                                }
-                            }
-                        } else {
-                            if ($('.dislikes').hasClass('rated')) {
-                                newRating = currDislikes - 1;
-                                if (newRating < 0) {
-                                    newRating = 0;
-                                }
-                                $('.dislikes').removeClass('rated').find('span:nth-child(2)').html(newRating);
-                            } else {
-                                newRating = currDislikes + 1;
-                                $('.dislikes').addClass('rated').find('span:nth-child(2)').html(newRating);
-                                if ($('.likes').hasClass('rated')) {
-                                    newRating = currLikes - 1;
-                                    if (newRating < 0) {
-                                        newRating = 0;
-                                    }
-                                    $('.likes').removeClass('rated').find('span:nth-child(2)').html(newRating);
-                                }
-                            }
-                        }
-                    }
-                    curObj.throwHeadDivMsg(data.msg, 5000, true);
-                }, 'json'
+				function (data) {
+					if (data.success) {
+						const currLikes = parseInt($('.likes').find('span:nth-child(2)').html());
+						const currDislikes = parseInt($('.dislikes').find('span:nth-child(2)').html());
+						let newRating;
+						if (rating == 5) {
+							if ($('.likes').hasClass('rated')) {
+								newRating = currLikes - 1;
+								if (newRating < 0) {
+									newRating = 0;
+								}
+								$('.likes').removeClass('rated').find('span:nth-child(2)').html(newRating);
+							} else {
+								newRating = currLikes + 1;
+								$('.likes').addClass('rated').find('span:nth-child(2)').html(newRating);
+								if ($('.dislikes').hasClass('rated')) {
+									newRating = currDislikes - 1;
+									if (newRating < 0) {
+										newRating = 0;
+									}
+									$('.dislikes').removeClass('rated').find('span:nth-child(2)').html(newRating);
+								}
+							}
+						} else {
+							if ($('.dislikes').hasClass('rated')) {
+								newRating = currDislikes - 1;
+								if (newRating < 0) {
+									newRating = 0;
+								}
+								$('.dislikes').removeClass('rated').find('span:nth-child(2)').html(newRating);
+							} else {
+								newRating = currDislikes + 1;
+								$('.dislikes').addClass('rated').find('span:nth-child(2)').html(newRating);
+								if ($('.likes').hasClass('rated')) {
+									newRating = currLikes - 1;
+									if (newRating < 0) {
+										newRating = 0;
+									}
+									$('.likes').removeClass('rated').find('span:nth-child(2)').html(newRating);
+								}
+							}
+						}
+					}
+					curObj.throwHeadDivMsg(data.msg, 5000, true);
+				}, 'json'
             );
         }
 

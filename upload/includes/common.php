@@ -91,6 +91,8 @@ require_once DirPath::get('classes') . 'ffmpeg.class.php';
 require_once DirPath::get('classes') . 'flag.class.php';
 require_once DirPath::get('classes') . 'sort_type.class.php';
 require_once DirPath::get('classes') . 'video_conversion_queue.class.php';
+require_once DirPath::get('classes') . 'video_thumbs.class.php';
+require_once DirPath::get('classes') . 'photo_thumbs.class.php';
 
 $cb_columns = new cb_columns();
 $row = myquery::getInstance()->Get_Website_Details();
@@ -171,7 +173,6 @@ if (!Update::isVersionSystemInstalled()) {
 
 require_once DirPath::get('includes') . 'defined_links.php';
 require_once DirPath::get('classes') . 'search.class.php';
-require_once DirPath::get('classes') . 'image.class.php';
 require_once DirPath::get('classes') . 'fileupload.class.php';
 require_once DirPath::get('classes') . 'upload.class.php';
 require_once DirPath::get('classes') . 'ads.class.php';
@@ -188,7 +189,6 @@ require_once DirPath::get('classes') . 'reindex.class.php';
 require_once DirPath::get('classes') . 'collections.class.php';
 require_once DirPath::get('classes') . 'photos.class.php';
 require_once DirPath::get('classes') . 'cbfeeds.class.php';
-require_once DirPath::get('classes') . 'resizer.class.php';
 require_once DirPath::get('classes') . 'comments.class.php';
 require_once DirPath::get('classes') . 'gravatar.class.php';
 require_once DirPath::get('includes') . 'plugin.functions.php';
@@ -201,7 +201,6 @@ $formObj = new formObj();
 $cbplugin = new CBPlugin();
 
 $cblog = new CBLogs();
-$imgObj = new ResizeImage();
 $cbplayer = new CBPlayer();
 $cbemail = new CBEmail();
 $cbpm = new cb_pm();
@@ -271,8 +270,6 @@ function show_video_rating($params)
 }
 
 $Smarty->register_function('AD', 'getAd');
-$Smarty->register_function('get_thumb', 'getSmartyThumb');
-$Smarty->register_function('getThumb', 'getSmartyThumb');
 $Smarty->register_function('videoLink', 'videoSmartyLink');
 $Smarty->register_function('show_rating', 'show_rating');
 $Smarty->register_function('ANCHOR', 'ANCHOR');
@@ -300,7 +297,6 @@ $Smarty->register_function('include_template_file', 'include_template_file');
 $Smarty->register_function('include_js', 'include_js');
 $Smarty->register_function('include_css', 'include_css');
 $Smarty->register_function('rss_feeds', 'rss_feeds');
-$Smarty->register_function('get_photo', 'get_image_file');
 $Smarty->register_function('cbCategories', 'getSmartyCategoryList');
 $Smarty->register_modifier('SetTime', 'SetTime');
 $Smarty->register_modifier('getname', 'getname');

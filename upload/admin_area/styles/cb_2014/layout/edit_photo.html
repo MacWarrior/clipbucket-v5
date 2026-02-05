@@ -63,7 +63,7 @@
                     {lang("photo_is", strtolower(lang("orphan")))}
                 </div>
                 {/if}
-                {get_photo details=$data size='l' output='html' class='img-thumbnail'}
+                {PhotoThumbs::getHtmlThumbFile($data['photo_id'], 900, ['class'=>'img-thumbnail'])}
             </div>
         </div>
         <div class="col-md-6">

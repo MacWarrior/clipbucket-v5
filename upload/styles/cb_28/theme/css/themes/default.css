@@ -421,8 +421,8 @@ a:hover{
 
 /* Video */
 .rating .like-dislike.rated a,
-.rating .like-dislike a:hover,
-.video-details header.details .user-video-info .user-title a:hover{
+.rating .like-dislike a:not(.disabled):hover,
+.video-details header.details .user-video-info .user-title a:not(.disabled):hover{
     color: var(--color-main-01);
 }
 .video-details{

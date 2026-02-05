@@ -33,7 +33,7 @@ class FileUpload
     /**
      * @throws Exception
      */
-    private function error($error)
+    private function error($error): void
     {
         if( file_exists($this->tempFilePath) ){
             unlink($this->tempFilePath);
@@ -53,7 +53,7 @@ class FileUpload
     /**
      * @throws Exception
      */
-    private function checkUploadedSize()
+    private function checkUploadedSize(): void
     {
         if( (int)$_SERVER['CONTENT_LENGTH'] > getBytesFromFileSize(Clipbucket::getInstance()->getMaxUploadSize('M')) ){
             $this->error('POST exceeded maximum allowed size.');
@@ -63,7 +63,7 @@ class FileUpload
     /**
      * @throws Exception
      */
-    private function checkFileData()
+    private function checkFileData(): void
     {
         if( !isset($_FILES[$this->fileData]) ){
             $this->error('No file was selected');
@@ -181,7 +181,7 @@ class FileUpload
     /**
      * @throws Exception
      */
-    private function manageFile()
+    private function manageFile(): void
     {
         if( config('enable_chunk_upload') == 'yes'){
             $this->manageChunkedFile();
@@ -220,7 +220,7 @@ class FileUpload
     /**
      * @throws Exception
      */
-    public function processUpload()
+    public function processUpload(): void
     {
         $this->checkUploadedSize();
         $this->checkFileData();
