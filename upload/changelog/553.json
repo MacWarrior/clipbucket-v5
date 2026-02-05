@@ -1,12 +1,14 @@
 {
   "version":"5.5.3",
-  "revision":"30",
+  "revision":"31",
   "status":"stable",
   "detail":[
     {
       "title": "Back office",
       "description": [
-        "Implement email alias allow option"
+        "Refactor templates management"
+        ,"Implement email alias allow option"
+        ,"Implement templates edition"
         ,"Update advanced settings display"
         ,"Fix JS error on playlist management page"
         ,"Fix missing video thumbs tool"

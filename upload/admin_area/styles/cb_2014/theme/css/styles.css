@@ -652,42 +652,43 @@ a[role='menuitem'] {
     padding: 3px;
 }
 
-#tmdb_token_test{
+#tmdb_token_test, .save_template_field{
     width: 40px;
     top: 0;
 }
 
-#tmdb_token_test img{
+#tmdb_token_test img,.save_template_field img{
     width: 15px;
 }
 
-#tmdb_token_test:not(.disabled){
+#tmdb_token_test:not(.disabled), .save_template_field:not(.disabled){
     cursor: pointer;
 }
 
 #tmdb_token_test.disabled,
-#main_form input:disabled{
+#main_form input:disabled,
+.save_template_field.disabled {
     cursor: no-drop;
 }
 
-#tmdb_token_test:not(.disabled):hover{
+#tmdb_token_test:not(.disabled):hover, .save_template_field:not(.disabled):hover{
     background-color: #d5d5d5;
 }
 
-#tmdb_token_test.glyphicon-ok{
+#tmdb_token_test.glyphicon-ok, .save_template_field.glyphicon-ok{
     background-color:#DFF0D8;
     color: #3c763d;
 }
 
-#tmdb_token_test.glyphicon-ok:hover{
+#tmdb_token_test.glyphicon-ok:hover, .save_template_field.glyphicon-ok:hover{
     background-color: #d2eeca;
 }
 
-#tmdb_token_test.glyphicon-remove{
+#tmdb_token_test.glyphicon-remove, .save_template_field.glyphicon-remove{
     background-color:#F2DEDE;
     color: #a94442;
 }
-#tmdb_token_test.glyphicon-remove:hover{
+#tmdb_token_test.glyphicon-remove:hover, .save_template_field.glyphicon-remove:hover{
     background-color: #f3d3d3;
 }
 

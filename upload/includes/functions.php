@@ -3501,6 +3501,28 @@ function delete_empty_directories($path): bool
 
     return false;
 }
+/**
+ * @param $path
+ * @return bool
+ */
+function delete_directories_recursive($path): bool
+{
+    if (!is_dir($path)) {
+        return false;
+    }
+    $content = glob($path . '/*', GLOB_ONLYDIR);
+    foreach ($content as $sub_dir) {
+        delete_directories_recursive($sub_dir);
+    }
+    $content = glob($path . '/*');
+    $success = true;
+    // Si le répertoire est maintenant vide, le supprimer
+    foreach ($content as $file) {
+        $success = unlink($file) && $success;
+    }
+    return rmdir($path) && $success;
+
+}
 
 /**
  * @param array $list_language
