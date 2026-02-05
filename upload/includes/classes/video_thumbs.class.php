@@ -447,6 +447,7 @@ class VideoThumbs
         if( empty($extension) ){
             $extension = 'webp';
         }
+
         foreach (self::$resolution_setting[$type] as $key => $res) {
             if ($key == 'original') {
                 $size_tag = 'original';
@@ -457,6 +458,7 @@ class VideoThumbs
             }
             $file_name = self::getThumbName('thumbnail', $this->ffmpeg_instance->file_name, 1, $num, $size_tag, $res['width'], $res['height'], $extension, Update::getInstance()->getCurrentCoreVersion());
             $file_path = $this->thumb_dir .DIRECTORY_SEPARATOR . $file_name;
+
             $this->ffmpeg_instance->log->writeLine(date('Y-m-d H:i:s') . ' => Generating ' . $file_name . '...');
             $return = FFMpeg::extractVideoThumbnail([
                 'timecode'       => $video_time

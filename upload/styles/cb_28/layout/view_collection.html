@@ -120,7 +120,8 @@
                         {if config('enable_favorite_icon_collection') == 'yes' && User::getInstance()->isUserConnected()}
                             <span class="{if Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '8')} manage_favorite {else} disabled {/if} watch-rating-icon pointer glyphicon glyphicon-heart{if !$is_favorite}-empty " title="{lang('add_to_my_favorites')}{/if}" title="{lang('remove_from_favorites')}" style="font-size: 20px;"></span>
                         {else}
-                            <a class="btn btn-ghost" id="addToFav" {if Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '8')} onclick="slide_up_watch_video('#video_action_result_cont');_cb.add_to_favNew('collection','{$c.collection_id}');"
+                            <a class="btn btn-ghost" id="addToFav" {if Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '8')} onclick="slide_up_watch_video('#video_action_result_cont');_cb.add_to_favNew('collection','{$c.collection_id}').catch((e)=>{
+                                    });"
                                     {else} disabled="disabled" title="{lang('cant_perform_action_until_app_fully_updated')}" {/if}>
                                 {lang code='add_to_my_favorites'}</a>
                         {/if}
