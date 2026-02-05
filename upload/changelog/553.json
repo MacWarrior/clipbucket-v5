@@ -1,6 +1,6 @@
 {
   "version":"5.5.3",
-  "revision":"35",
+  "revision":"36",
   "status":"stable",
   "detail":[
     {
@@ -22,6 +22,7 @@
         "Refactor medias rating"
         ,"Implement video favorite icon"
         ,"Implement collection rating"
+        ,"Implement random video order"
         ,"Update media rating"
         ,"Update collection management"
         ,"Add signup date of birth calendar icon"

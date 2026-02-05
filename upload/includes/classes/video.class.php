@@ -279,6 +279,10 @@ class Video extends Objects
                 $params['order'] = $this->getTableName() . '.title DESC';
                 break;
 
+            case 'random':
+                $params['order'] = 'RAND()';
+                break;
+
             case 'all_time':
             case 'today':
             case 'yesterday':
@@ -311,6 +315,9 @@ class Video extends Objects
 
         if (config('video_rating') != 'yes') {
             unset($sorts[array_search('top_rated', $sorts)]);
+        }
+        if (config('random_video_order') != 'yes') {
+            unset($sorts[array_search('random', $sorts)]);
         }
 
         return $sorts;
