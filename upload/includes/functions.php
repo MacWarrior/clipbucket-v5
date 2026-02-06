@@ -145,6 +145,12 @@ function getExt($file): string
     return strtolower(end($parts));
 }
 
+function getExtMimeType($file_path): string
+{
+    $image_sizes = getimagesize($file_path);
+    return PhotoThumbs::getMimeType($image_sizes['mime']);
+}
+
 /**
  * Convert given seconds in Hours Minutes Seconds format
  *

@@ -423,9 +423,9 @@ class PhotoThumbs
 
     /**
      * @param $mime_type
-     * @return string
+     * @return string|null
      */
-    public static function getMimeType($mime_type): string
+    public static function getMimeType($mime_type): string|null
     {
         return match ($mime_type) {
             'image/jpeg'  => 'jpeg'
