@@ -258,8 +258,8 @@ $(document).ready(function (){
     }
 
     progressVideoCheck(ids_to_check_progress, display_type, 'channel_video_interval');
-
     eventFriendButton();
+    _cb.listener_favorite_only_remove('photo');
 });
 
 function eventFriendButton() {

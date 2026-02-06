@@ -181,6 +181,8 @@ if (isset($_POST['update'])) {
         , 'channel_rating'
         , 'own_channel_rating'
         , 'random_video_order'
+        , 'enable_favorite_icon_photo'
+        , 'enable_favorite_icon_collection'
     ];
 
     $config_booleans_to_refactor = [
@@ -451,7 +453,10 @@ if (isset($_POST['update'])) {
         'keep_ratio_photo',
         'ratio_photo',
         'enable_favorite_icon',
-        'random_video_order'
+        'random_video_order',
+        'ratio_photo',
+        'enable_favorite_icon_photo',
+        'enable_favorite_icon_collection'
     ];
 
     //Numeric Array

@@ -182,3 +182,7 @@ $('.dropdown-menu li').on('click',function(){
         $('#cbsearch').trigger('click');
     }
 });
+
+$(function () {
+    _cb.listener_favorite('photo', curr_photo.photo_id);
+});

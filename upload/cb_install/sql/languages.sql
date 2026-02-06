@@ -1783,4 +1783,6 @@ VALUES ('ongoing_conversion'),
        ('option_video_remove_black_bars'),
        ('tips_video_remove_black_bars'),
        ('option_random_video_order'),
-       ('sort_by_random');
+       ('sort_by_random'),
+       ('option_enable_favorite_icon_hint_photo'),
+       ('option_enable_favorite_icon_hint_collection');

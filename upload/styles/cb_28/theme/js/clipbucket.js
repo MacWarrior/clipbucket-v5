@@ -901,9 +901,9 @@
                     if (!data.success) {
                         reject(data);
                     } else {
-                        $('#video_action_result_cont').hide();
                         resolve(data);
                     }
+					$('#video_action_result_cont').hide();
                     curObj.throwHeadDivMsg(data.msg, 5000, true)
                 }, 'json');
             });
@@ -1156,7 +1156,74 @@
 				},'text'
 			);
 		};
-	};
+
+
+        this.listener_favorite_old = function (type, id) {
+            const curObj = this;
+            $('.manage_favorite').on('click', function (e) {
+                let button = $(this);
+                if (button.hasClass('glyphicon-heart')) {
+                    button.removeClass('glyphicon-heart').html(curObj.loading_img);
+                    //remove fav
+                    curObj.remove_from_fav(type, id).then(function (data) {
+                        button.html('').addClass('glyphicon-heart-empty');
+                        button.attr('title', lang['add_to_my_favorites']);
+                    }).catch(function (error) {
+                        button.addClass('glyphicon-heart').html('');
+                    });
+                } else {
+                    button.removeClass('glyphicon-heart-empty').html(curObj.loading_img);
+                    curObj.add_to_favNew(type, id).then(function (data) {
+                        button.html('').addClass('glyphicon-heart');
+                        button.attr('title', lang['remove_from_favorites']);
+                    }).catch(function (error) {
+                        button.addClass('glyphicon-heart-empty').html('');
+                    });
+                }
+            });
+        }
+        this.listener_favorite = function (type, id) {
+            const curObj = this;
+            $('.manage_favorite').on('click', function (e) {
+                let button = $(this);
+                if (button.hasClass('glyphicon-heart')) {
+                    button.removeClass('glyphicon-heart').html(curObj.loading_img);
+                    //remove fav
+                    curObj.remove_from_fav(type, id).then(function (data) {
+                        button.html('').addClass('glyphicon-heart-empty');
+                        button.attr('title', lang['add_to_my_favorites']);
+                    }).catch(function (error) {
+                        button.addClass('glyphicon-heart').html('');
+                    });
+                } else {
+                    button.removeClass('glyphicon-heart-empty').html(curObj.loading_img);
+                    curObj.add_to_favNew(type, id).then(function (data) {
+                        button.html('').addClass('glyphicon-heart');
+                        button.attr('title', lang['remove_from_favorites']);
+                    }).catch(function (error) {
+                        button.addClass('glyphicon-heart-empty').html('');
+                    });
+                }
+            });
+        }
+
+        this.listener_favorite_only_remove = function (type, class_parent_need) {
+            const curObj = this;
+            let selector = '.manage_favorite';
+            if (typeof class_parent_need !== 'undefined') {
+                selector = '.' + class_parent_need + ' ' + selector;
+            }
+            $(selector).off().on('click', function () {
+                const button = $(this);
+                button.removeClass('glyphicon-heart').html(curObj.loading_img);
+                curObj.remove_from_fav(type, button.data('id')).then(function (data) {
+                    button.remove();
+                }).catch(function (err) {
+                    button.addClass('glyphicon-heart').html('');
+                });
+            });
+        }
+    };
 
 	window._cb = new _cb();
 

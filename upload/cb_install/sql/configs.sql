@@ -338,7 +338,10 @@ INSERT INTO `{tbl_prefix}config` (`configid`, `name`, `value`) VALUES
     (NULL, 'ratio_photo', 1.7777),
     (NULL, 'video_thumbs_format', 'webp'),
     (NULL, 'video_remove_black_bars', 'yes'),
-    (NULL, 'random_video_order', 'yes');
+    (NULL, 'random_video_order', 'yes'),
+    (NULL, 'enable_favorite_icon_photo', 'yes'),
+    (NULL, 'enable_favorite_icon_collection', 'yes');
+
 
 INSERT INTO `{tbl_prefix}video_resolution` (`title`, `ratio`, `enabled`, `width`, `height`, `video_bitrate`) VALUES
 	('240p', '16/9', 1, 426, 240, 240000),
