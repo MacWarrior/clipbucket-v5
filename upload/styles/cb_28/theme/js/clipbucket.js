@@ -1207,9 +1207,13 @@
             });
         }
 
-        this.listener_favorite_only_remove = function (type) {
+        this.listener_favorite_only_remove = function (type, class_parent_need) {
             const curObj = this;
-            $('.manage_favorite').on('click', function () {
+            let selector = '.manage_favorite';
+            if (typeof class_parent_need !== 'undefined') {
+                selector = '.' + class_parent_need + ' ' + selector;
+            }
+            $(selector).off().on('click', function () {
                 const button = $(this);
                 button.removeClass('glyphicon-heart').html(curObj.loading_img);
                 curObj.remove_from_fav(type, button.data('id')).then(function (data) {

@@ -26,4 +26,5 @@ $(document).ready(function(){
     });
 
     _cb.listener_favorite('collection', collection_id);
+    _cb.listener_favorite_only_remove('photo', 'photo-info');
 });
