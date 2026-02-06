@@ -164,7 +164,7 @@ class Tmdb
 
         $sql_year = '';
         if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '106') && ($year != '0000' && !empty($year))) {
-            $sql_year = ' AND YEAR(`release_date`) = ' . mysql_clean($year);
+            $sql_year = ' AND YEAR(`release_date`) = ' . (int)$year;
         }
         $sql_type = '';
 

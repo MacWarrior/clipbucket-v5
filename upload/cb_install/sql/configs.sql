@@ -338,6 +338,7 @@ INSERT INTO `{tbl_prefix}config` (`configid`, `name`, `value`) VALUES
     (NULL, 'ratio_photo', 1.7777),
     (NULL, 'video_thumbs_format', 'webp'),
     (NULL, 'video_remove_black_bars', 'yes'),
+    (NULL, 'random_video_order', 'yes'),
     (NULL, 'enable_favorite_icon_photo', 'yes'),
     (NULL, 'enable_favorite_icon_collection', 'yes');
 
@@ -1740,4 +1741,5 @@ VALUES ('most_old', 'videos', FALSE),
        ('reverse_alphabetical', 'videos', false),
        ('reverse_alphabetical', 'photos', false),
        ('reverse_alphabetical', 'collections', false),
-       ('reverse_alphabetical', 'channels', false);
+       ('reverse_alphabetical', 'channels', false),
+       ('random', 'videos', false);

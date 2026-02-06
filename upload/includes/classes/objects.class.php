@@ -60,12 +60,12 @@ abstract class Objects
             $field = 'type';
             $value = '\'' . static::TYPE . '\'';
         }
-        return !empty(Clipbucket_db::getInstance()->select(tbl('favorites'), 'favorite_id', ' id = ' . mysql_clean($object_id) . ' AND userid = ' . mysql_clean($user_id) . ' AND ' . $field . ' = ' . $value));
+        return !empty(Clipbucket_db::getInstance()->select(tbl('favorites'), 'favorite_id', ' id = ' . (int)$object_id . ' AND userid = ' . (int)$user_id . ' AND ' . $field . ' = ' . $value));
     }
 
     /**
      * @param int $object_id
-     * @param int|null $user_id
+     * @param int $user_id
      * @return bool
      * @throws Exception
      */
@@ -338,7 +338,7 @@ abstract class Objects
         }
 
         Clipbucket_db::getInstance()->update(
-            tbl($table), ['rating', 'rated_by', $voters_key], [$newrate, $total_voters, '|no_mc|' . (!empty($histo) ? json_encode($histo) : '')], ' ' . $id_field . ' = ' . mysql_clean($object_id)
+            tbl($table), ['rating', 'rated_by', $voters_key], [$newrate, $total_voters, '|no_mc|' . (!empty($histo) ? json_encode($histo) : '')], ' ' . $id_field . ' = ' . (int)$object_id
         );
 
     }

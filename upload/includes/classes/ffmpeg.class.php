@@ -1001,7 +1001,6 @@ class FFMpeg
         }
 
         $command = config('ffmpegpath') . ' -ss ' . $params['timecode'] . ' -i ' . $params['input_path'] . ' -pix_fmt yuvj422p -an -r 1 ' . $vf . ' ' . $codecOptions . ' -y -f image2 -vframes 1 ' . $params['output_path'] . ' 2>&1';
-        DiscordLog::sendDump($command);
 
         return [
             'command' => $command

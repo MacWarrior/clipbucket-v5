@@ -217,7 +217,7 @@ class EmailTemplate
                 $fields[] = $field . ' = ' . $email_template[$field];
             }
         }
-        $sql .= implode(', ', $fields) . ' WHERE id_email_template = ' . mysql_clean($email_template['id_email_template']);
+        $sql .= implode(', ', $fields) . ' WHERE id_email_template = ' . (int)$email_template['id_email_template'];
         return Clipbucket_db::getInstance()->execute($sql);
     }
 
@@ -240,7 +240,7 @@ class EmailTemplate
                 $fields[] = $field . ' = ' . $email[$field];
             }
         }
-        $sql .= implode(', ', $fields) . ' WHERE id_email = ' . mysql_clean($email['id_email']);
+        $sql .= implode(', ', $fields) . ' WHERE id_email = ' . (int)$email['id_email'];
         return !empty(Clipbucket_db::getInstance()->execute($sql));
     }
 
@@ -292,10 +292,10 @@ class EmailTemplate
         }
 
         if ($param_id_email_template !== false) {
-            $conditions[] = ' ' . self::$tableName . '.id_email_template = ' . mysql_clean($param_id_email_template);
+            $conditions[] = ' ' . self::$tableName . '.id_email_template = ' . (int)$param_id_email_template;
         }
         if ($param_not_id_email_template !== false) {
-            $conditions[] = ' ' . self::$tableName . '.id_email_template != ' . mysql_clean($param_not_id_email_template);
+            $conditions[] = ' ' . self::$tableName . '.id_email_template != ' . (int)$param_not_id_email_template;
         }
 
         if ($param_code !== false) {
@@ -387,10 +387,10 @@ class EmailTemplate
         $join[] = ' LEFT JOIN ' . cb_sql_table(self::$tableName) . ' ON ' . self::$tableName . '.id_email_template = ' . self::$tableNameEmail . '.id_email_template ';
 
         if ($param_id_email !== false) {
-            $conditions[] = ' ' . self::$tableNameEmail . '.id_email = ' . mysql_clean($param_id_email);
+            $conditions[] = ' ' . self::$tableNameEmail . '.id_email = ' . (int)$param_id_email;
         }
         if ($param_not_id_email !== false) {
-            $conditions[] = ' ' . self::$tableNameEmail . '.id_email != ' . mysql_clean($param_not_id_email);
+            $conditions[] = ' ' . self::$tableNameEmail . '.id_email != ' . (int)$param_not_id_email;
         }
 
         if ($param_code !== false) {
@@ -485,16 +485,16 @@ class EmailTemplate
      * @param bool $change_all
      * @throws Exception
      */
-    public static function makeDefault($id_email_template, bool $change_all = false)
+    public static function makeDefault($id_email_template, bool $change_all = false): void
     {
         $template = self::getOneTemplate(['id_email_template' => $id_email_template ?: 0]);
         if ($template) {
             Clipbucket_db::getInstance()->update(tbl(self::$tableName), ['is_default'], [0], ' is_default = 1 ');
-            Clipbucket_db::getInstance()->update(tbl(self::$tableName), ['is_default'], [1], ' id_email_template = ' . mysql_clean($id_email_template));
+            Clipbucket_db::getInstance()->update(tbl(self::$tableName), ['is_default'], [1], ' id_email_template = ' . (int)$id_email_template);
             e(lang('template_set_default', [$template['code']]), 'm');
 
             if ($change_all) {
-                Clipbucket_db::getInstance()->update(tbl(self::$tableNameEmail), ['id_email_template'], [mysql_clean($id_email_template)], ' 1 ');
+                Clipbucket_db::getInstance()->update(tbl(self::$tableNameEmail), ['id_email_template'], [(int)$id_email_template], ' 1 ');
             }
         }
     }
@@ -562,7 +562,7 @@ class EmailTemplate
         }
         $conditions = [];
         $conditions[] = ' type = \'email\'';
-        $conditions[] = ' ' . self::$tableNameEmailVariableLink . '.id_email = ' . $id_email;
+        $conditions[] = ' ' . self::$tableNameEmailVariableLink . '.id_email = ' . (int)$id_email;
 
         $sql = 'SELECT * FROM ' . cb_sql_table(self::$tableNameEmailVariable)
             . ' INNER JOIN ' . cb_sql_table(self::$tableNameEmailVariableLink) . ' ON ' . self::$tableNameEmailVariableLink . '.id_email_variable = ' . self::$tableNameEmailVariable . '.id_email_variable'

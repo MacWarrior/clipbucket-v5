@@ -28,7 +28,7 @@ if (!empty($_GET['search'])) {
 }
 $selected_tag_type = 0;
 if (!empty($_GET['id_tag_type'])) {
-    $cond[] = ' T.id_tag_type = ' . mysql_clean($_GET['id_tag_type']);
+    $cond[] = ' T.id_tag_type = ' . (int)$_GET['id_tag_type'];
     $selected_tag_type = $_GET['id_tag_type'];
 }
 

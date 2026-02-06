@@ -98,10 +98,10 @@ class VideoThumbs
         }
 
         if ($param_videoid) {
-            $conditions[] = self::$tableName . '.videoid = ' . mysql_clean($param_videoid);
+            $conditions[] = self::$tableName . '.videoid = ' . (int)$param_videoid;
         }
         if ($param_num) {
-            $conditions[] = self::$tableName . '.num = ' . mysql_clean($param_num);
+            $conditions[] = self::$tableName . '.num = ' . (int)$param_num;
         }
         if ($param_type) {
             $conditions[] = self::$tableName .'.type = \'' . mysql_clean($param_type) . '\'';
@@ -111,7 +111,7 @@ class VideoThumbs
         }
 
         if ( $param_is_auto !== null ) {
-            $conditions[] = self::$tableName . '.is_auto = ' . mysql_clean((int)$param_is_auto);
+            $conditions[] = self::$tableName . '.is_auto = ' . (int)$param_is_auto;
         }
         if ($param_default) {
             $conditions[] = Video::getInstance()->getTableName() . '.default_'. $param_default .' = ' . self::$tableName .'.id_video_image';
@@ -214,10 +214,10 @@ class VideoThumbs
 
         //CONDITIONS
         if ($param_id_video_image) {
-            $conditions[] = self::$tableNameThumb . '.id_video_image = ' . mysql_clean($param_id_video_image);
+            $conditions[] = self::$tableNameThumb . '.id_video_image = ' . (int)$param_id_video_image;
         }
         if ($param_video_id) {
-            $conditions[] = self::$tableName . '.videoid = ' . mysql_clean($param_video_id);
+            $conditions[] = self::$tableName . '.videoid = ' . (int)$param_video_id;
         }
         if ($param_type) {
             $conditions[] = self::$tableName . '.type = \'' . mysql_clean($param_type) . '\'';
@@ -228,10 +228,10 @@ class VideoThumbs
             $conditions[] = self::$tableNameThumb . '.is_original_size = 1';
         } else {
             if ($param_width) {
-                $conditions[] = self::$tableNameThumb . '.width = ' .  mysql_clean($param_width);
+                $conditions[] = self::$tableNameThumb . '.width = ' .  (int)$param_width;
             }
             if ($param_height) {
-                $conditions[] = self::$tableNameThumb . '.height = ' . mysql_clean($param_height);
+                $conditions[] = self::$tableNameThumb . '.height = ' . (int)$param_height;
             }
             if (!empty($param_width) || !empty($param_height)) {
                 $conditions[] = self::$tableNameThumb . '.is_original_size = 0';
@@ -424,7 +424,7 @@ class VideoThumbs
                         'is_auto' => false,
                     ]);
                     if (empty($res)) {
-                        Clipbucket_db::getInstance()->update(tbl('video'), ['default_thumbnail'], [$id_video_image], ' videoid = ' . mysql_clean($this->video['videoid']));
+                        Clipbucket_db::getInstance()->update(tbl('video'), ['default_thumbnail'], [$id_video_image], ' videoid = ' . (int)$this->video['videoid']);
                     }
                 }
             } else {
@@ -736,16 +736,16 @@ class VideoThumbs
                     break;
             }
             if ($is_default) {
-                $conditions_old[] = ' num = ' . mysql_clean($default);
+                $conditions_old[] = ' num = ' . (int)$default;
             }
             if ($width == 'original' || $height == 'original') {
                 $conditions_old[] = 'resolution = \'original\'';
             } else if ($width && $height) {
                 $conditions_old[] = 'resolution = \'' . mysql_clean($width) . 'x' . mysql_clean($height) . '\'';
             }
-            $sql = 'SELECT *, CASE WHEN num = ' . mysql_clean($video[$default_field] ?? 0) . ' THEN 1 ELSE 0 END AS is_default, CASE WHEN type != \'custom\' THEN 1 ELSE 0 END AS is_auto
+            $sql = 'SELECT *, CASE WHEN num = ' . (int)($video[$default_field] ?? 0) . ' THEN 1 ELSE 0 END AS is_default, CASE WHEN type != \'custom\' THEN 1 ELSE 0 END AS is_auto
             FROM ' . tbl('video_thumbs') . ' 
-            WHERE videoid = ' . $videoid . ' 
+            WHERE videoid = ' . (int)$videoid . ' 
             AND type IN ( ' . $old_type . ' ) '
             . (!empty($conditions_old) ? ' AND ' : '') . implode(' AND ', $conditions_old)
             . (!$is_multi ? ' LIMIT 1 ' : '');
@@ -756,7 +756,7 @@ class VideoThumbs
             if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '14') ) {
                 $all_thumbs = self::getAllThumbs(['videoid' => $videoid, 'type' => $type, 'is_auto' => true]);
             } else {
-                $all_thumbs = Clipbucket_db::getInstance()->_select('SELECT * FROM ' . tbl('video_thumbs') . ' WHERE videoid = ' . $videoid . ' AND type = \'' . mysql_clean($type) . '\' AND type != \'custom\'');
+                $all_thumbs = Clipbucket_db::getInstance()->_select('SELECT * FROM ' . tbl('video_thumbs') . ' WHERE videoid = ' . (int)$videoid . ' AND type = \'' . mysql_clean($type) . '\' AND type != \'custom\'');
             }
             //generation of missing thumbs if no automatic thumbs are found
             if (empty($all_thumbs)) {
@@ -1170,7 +1170,7 @@ class VideoThumbs
 
             $image_temp = self::getOne(['id_video_image' => $image['id_video_image'], 'get_is_default'=>true]);
             if (empty($image_temp)) {
-                Clipbucket_db::getInstance()->update(tbl(Video::getInstance()->getTableName()), ['default_'. $image['type']], ['|f|null'], ' videoid = ' . $image['videoid']);
+                Clipbucket_db::getInstance()->update(tbl(Video::getInstance()->getTableName()), ['default_'. $image['type']], ['|f|null'], ' videoid = ' . (int)$image['videoid']);
             }
         }
         $thumbs = self::getAllThumbs(['id_video_image' => $image['id_video_image'], 'get_video_directory'=>true, 'get_video_file_name'=>true, 'get_is_auto'=>true, 'get_num'=>true , 'get_type'=>true]);
@@ -1230,9 +1230,12 @@ class VideoThumbs
     public static function getAllThumbCountByVideoId($videoid): mixed
     {
         if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '14')) {
-            return VideoThumbs::getAllThumbs(['count'=>true, 'videoid'=>$videoid]);
+            return VideoThumbs::getAllThumbs([
+                'count'   => true,
+                'videoid' => $videoid
+            ]);
         } else {
-            $resVideo = Clipbucket_db::getInstance()->select(tbl('video') . ' AS V INNER JOIN ' . tbl('video_thumbs') . ' AS VT ON VT.videoid = V.videoid ', 'COUNT(V.videoid) as nb_thumbs', 'V.videoid = ' . mysql_clean($videoid));
+            $resVideo = Clipbucket_db::getInstance()->select(tbl('video') . ' AS V INNER JOIN ' . tbl('video_thumbs') . ' AS VT ON VT.videoid = V.videoid ', 'COUNT(V.videoid) as nb_thumbs', 'V.videoid = ' . (int)$videoid);
             if (empty($resVideo)) {
                 error_log('get_count_thumb - no thumbnails for videoid : ' . $videoid);
                 return 0;
@@ -1255,13 +1258,13 @@ class VideoThumbs
         }
         //search for a resolution that exists
         //the biggest resolution that is smaller than the requested one
-        $sql = 'SELECT width, height FROM ' . tbl(self::$tableNameThumb) . ' WHERE id_video_image = ' . $id_video_image . ' AND width < '.mysql_clean($requested_width).' AND height < '.mysql_clean($requested_height).' ORDER BY width DESC LIMIT 1';
+        $sql = 'SELECT width, height FROM ' . tbl(self::$tableNameThumb) . ' WHERE id_video_image = ' . (int)$id_video_image . ' AND width < ' . (int)($requested_width).' AND height < ' . (int)($requested_height).' ORDER BY width DESC LIMIT 1';
         $resolutions = Clipbucket_db::getInstance()->_select($sql);
         if (!empty($resolutions[0]) && !empty($resolutions[0]['width'])) {
             return $resolutions[0];
         }
         //if no resolution is found, return the smaller resolution that is bigger than the requested one
-        $sql = 'SELECT width, height FROM ' . tbl(self::$tableNameThumb) . ' WHERE id_video_image = ' . $id_video_image . ' AND width > '.mysql_clean($requested_width).' AND height > '.mysql_clean($requested_height).' ORDER BY width ASC LIMIT 1';
+        $sql = 'SELECT width, height FROM ' . tbl(self::$tableNameThumb) . ' WHERE id_video_image = ' . (int)$id_video_image . ' AND width > ' . (int)($requested_width).' AND height > ' . (int)($requested_height).' ORDER BY width ASC LIMIT 1';
         $resolutions = Clipbucket_db::getInstance()->_select($sql);
         if (!empty($resolutions[0]) && !empty($resolutions[0]['width'])) {
             return $resolutions[0];

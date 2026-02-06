@@ -204,7 +204,7 @@ class cbpage
                 }
             }
             Clipbucket_db::getInstance()->update(tbl($this->page_tbl), ['page_name', 'page_title', 'page_content'],
-                [$name, $title, '|no_mc|' . $content], ' page_id='.mysql_clean($id));
+                [$name, $title, '|no_mc|' . $content], ' page_id = ' . (int)$id);
             e(lang('page_updated'), 'm');
             return true;
         }
@@ -276,18 +276,18 @@ class cbpage
 
         switch ($type) {
             case 'activate';
-                Clipbucket_db::getInstance()->update(tbl($this->page_tbl), ['active'], ['yes'], ' page_id='.mysql_clean($id));
+                Clipbucket_db::getInstance()->update(tbl($this->page_tbl), ['active'], ['yes'], ' page_id = ' . (int)$id);
                 e(lang('page_activated'), 'm');
                 break;
 
             case 'deactivate';
-                Clipbucket_db::getInstance()->update(tbl($this->page_tbl), ['active'], ['no'], ' page_id='.mysql_clean($id));
+                Clipbucket_db::getInstance()->update(tbl($this->page_tbl), ['active'], ['no'], ' page_id = ' . (int)$id);
                 e(lang('page_deactivated'), 'm');
                 break;
 
             case 'delete';
                 if ($page['delete_able'] == 'yes') {
-                    Clipbucket_db::getInstance()->delete(tbl($this->page_tbl), ['page_id'], [mysql_clean($id)]);
+                    Clipbucket_db::getInstance()->delete(tbl($this->page_tbl), ['page_id'], [(int)$id]);
                     e(lang('page_deleted'), 'm');
                 } else {
                     e(lang('you_cant_delete_this_page'), 'w');
@@ -295,12 +295,12 @@ class cbpage
                 break;
 
             case 'display':
-                Clipbucket_db::getInstance()->update(tbl($this->page_tbl), ['display'], ['yes'], ' page_id='.mysql_clean($id));
+                Clipbucket_db::getInstance()->update(tbl($this->page_tbl), ['display'], ['yes'], ' page_id = ' . (int)$id);
                 e(lang('page_display_changed'), 'm');
                 break;
 
             case 'hide':
-                Clipbucket_db::getInstance()->update(tbl($this->page_tbl), ['display'], ['no'], ' page_id='.mysql_clean($id));
+                Clipbucket_db::getInstance()->update(tbl($this->page_tbl), ['display'], ['no'], ' page_id = ' . (int)$id);
                 e(lang('page_display_changed'), 'm');
                 break;
         }
@@ -316,7 +316,7 @@ class cbpage
      */
     function is_active($id): bool
     {
-        $result = Clipbucket_db::getInstance()->count(tbl($this->page_tbl), 'page_id', 'page_id=' . mysql_clean($id) . ' AND active=\'yes\'');
+        $result = Clipbucket_db::getInstance()->count(tbl($this->page_tbl), 'page_id', 'page_id = ' . (int)$id . ' AND active=\'yes\'');
         if ($result > 0) {
             return true;
         }
@@ -331,7 +331,7 @@ class cbpage
     {
         $pages = $this->get_pages();
         foreach ($pages as $page) {
-            Clipbucket_db::getInstance()->update(tbl($this->page_tbl), ['page_order'], [$_POST['page_ord_' . $page['page_id']]], ' page_id=' . mysql_clean($page['page_id']));
+            Clipbucket_db::getInstance()->update(tbl($this->page_tbl), ['page_order'], [$_POST['page_ord_' . $page['page_id']]], ' page_id = ' . (int)$page['page_id']);
         }
     }
 }

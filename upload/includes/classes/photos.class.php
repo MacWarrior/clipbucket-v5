@@ -221,10 +221,10 @@ class Photo extends Objects
 
         $conditions = [];
         if ($param_not_photo_id) {
-            $conditions[] = $this->getTableName() . '.photo_id != \'' . mysql_clean($param_not_photo_id) . '\'';
+            $conditions[] = $this->getTableName() . '.photo_id != ' . (int)$param_not_photo_id;
         }
         if ($param_photo_id) {
-            $conditions[] = $this->getTableName() . '.photo_id = \'' . mysql_clean($param_photo_id) . '\'';
+            $conditions[] = $this->getTableName() . '.photo_id = ' . (int)$param_photo_id;
         } elseif ($param_photo_ids) {
             $conditions[] = $this->getTableName() . '.photo_id IN (' . mysql_clean($param_photo_ids) . ')';
         }
@@ -238,7 +238,7 @@ class Photo extends Objects
             $conditions[] = 'LOWER(' . $this->getTableName() . '.extension) = LOWER(\''.mysql_clean($param_extension).'\')';
         }
         if( $param_userid ){
-            $conditions[] = $this->getTableName() . '.userid = \''.mysql_clean($param_userid).'\'';
+            $conditions[] = $this->getTableName() . '.userid = ' . (int)$param_userid;
         }
         if( $param_filename ){
             $conditions[] = $this->getTableName() . '.file_name = \''.mysql_clean($param_filename).'\'';
@@ -329,7 +329,7 @@ class Photo extends Objects
 
             if ($param_category) {
                 if (!is_array($param_category)) {
-                    $conditions[] = 'categories.category_id = ' . mysql_clean($param_category);
+                    $conditions[] = 'categories.category_id = ' . (int)$param_category;
                 } else {
                     $conditions[] = 'categories.category_id IN (' . implode(', ', $param_category) . ')';
                 }
@@ -348,7 +348,7 @@ class Photo extends Objects
             if( is_array($param_collection_id) ){
                 $tmp_cond = ' IN (' . implode(',', $param_collection_id) . ')';
             } else {
-                $tmp_cond = ' = ' . $param_collection_id;
+                $tmp_cond = ' = ' . (int)$param_collection_id;
             }
             $join[] = 'INNER JOIN ' . cb_sql_table($collection_items_table) . ' ON ' . $collection_items_table . '.collection_id' . $tmp_cond . ' AND photos.photo_id = ' . $collection_items_table . '.object_id';
         } else {
@@ -465,9 +465,9 @@ class Photo extends Objects
 
         $current_user_id = user_id();
         if ($current_user_id) {
-            $cond_orphan .= ' OR photos.userid = ' . $current_user_id ;
+            $cond_orphan .= ' OR photos.userid = ' . (int)$current_user_id;
             $cond.=')';
-            $select_contacts = 'SELECT contact_userid FROM ' . tbl('contacts') . ' WHERE confirmed = \'yes\' AND userid = ' . $current_user_id;
+            $select_contacts = 'SELECT contact_userid FROM ' . tbl('contacts') . ' WHERE confirmed = \'yes\' AND userid = ' . (int)$current_user_id;
             $cond .= ' OR (photos.active = \'yes\' AND photos.broadcast IN(\'public\',\'logged\')'.$sql_age_restrict.')';
             $cond .= ' OR (photos.broadcast = \'private\' AND photos.userid IN(' . $select_contacts . ')'.$sql_age_restrict.')';
         } else {
@@ -560,6 +560,9 @@ class Photo extends Objects
         return $total;
     }
 
+    /**
+     * @throws Exception
+     */
     public function getPhotoRelated($photo_id, $limit, $order = 'date_added DESC')
     {
         $photo = $this->getOne(['photo_id'=>$photo_id]);
@@ -579,13 +582,13 @@ class Photo extends Objects
                     SELECT photo_id, 2 as score, photos.date_added FROM ' . cb_sql_table('photos') . '
                     LEFT JOIN ' . cb_sql_table('photo_tags') . ' ON photos.photo_id = photo_tags.id_photo
                     LEFT JOIN ' . cb_sql_table('tags') .' ON photo_tags.id_tag = tags.id_tag 
-                    WHERE photo_id != ' . mysql_clean($photo_id) . ' 
+                    WHERE photo_id != ' . (int)$photo_id . ' 
                     AND '.$cond_title.' 
                 UNION 
                     SELECT photo_id, 1 as score, photos.date_added FROM ' . cb_sql_table('photos') . '
                     LEFT JOIN ' . cb_sql_table('photo_tags') . ' ON photos.photo_id = photo_tags.id_photo
                     LEFT JOIN ' . cb_sql_table('tags') .' ON photo_tags.id_tag = tags.id_tag 
-                    WHERE photo_id != ' . mysql_clean($photo_id) . ' 
+                    WHERE photo_id != ' . (int)$photo_id . ' 
                     AND '.$cond_tag.' 
                 ) AS R
                 ORDER BY score DESC,' . $order ;
@@ -947,7 +950,7 @@ class CBPhotos
     function photo_exists($id): bool
     {
         if (is_numeric($id)) {
-            $result = Clipbucket_db::getInstance()->select(tbl($this->p_tbl), 'photo_id', ' photo_id = \'' . $id . '\'');
+            $result = Clipbucket_db::getInstance()->select(tbl($this->p_tbl), 'photo_id', ' photo_id = ' . (int)$id);
         } else {
             $result = Clipbucket_db::getInstance()->select(tbl($this->p_tbl), 'photo_id', ' photo_key = \'' . $id . '\'');
         }
@@ -1498,9 +1501,9 @@ class CBPhotos
         }
 
         if (!is_numeric($id)) {
-            $result = Clipbucket_db::getInstance()->select(tbl($this->p_tbl), $field, ' photo_key = ' . $id . '');
+            $result = Clipbucket_db::getInstance()->select(tbl($this->p_tbl), $field, ' photo_key = \'' . mysql_clean($id) . '\'');
         } else {
-            $result = Clipbucket_db::getInstance()->select(tbl($this->p_tbl), $field, ' photo_id = ' . $id . '');
+            $result = Clipbucket_db::getInstance()->select(tbl($this->p_tbl), $field, ' photo_id = ' . (int)$id);
         }
 
         if ($result) {
@@ -2129,7 +2132,6 @@ class CBPhotos
                     }
                 }
 
-
                 if (!empty($field['db_field'])) {
                     $query_field[] = $field['db_field'];
                 }
@@ -2137,7 +2139,7 @@ class CBPhotos
                 if (is_array($val)) {
                     $new_val = '';
                     foreach ($val as $v) {
-                        $new_val .= "#" . $v . "# ";
+                        $new_val .= '#' . $v . '# ';
                     }
                     $val = $new_val;
                 }
@@ -2160,32 +2162,32 @@ class CBPhotos
                 }
 
                 if (isset($array['total_comments'])) {
-                    $query_field[] = "total_comments";
+                    $query_field[] = 'total_comments';
                     $query_val[] = $array['total_comments'];
                 }
 
                 if (isset($array['total_favorites'])) {
-                    $query_field[] = "total_favorites";
+                    $query_field[] = 'total_favorites';
                     $query_val[] = $array['total_favorites'];
                 }
 
                 if (isset($array['downloaded'])) {
-                    $query_field[] = "downloaded";
+                    $query_field[] = 'downloaded';
                     $query_val[] = $array['downloaded'];
                 }
 
                 if (isset($array['voters'])) {
-                    $query_field[] = "voters";
+                    $query_field[] = 'voters';
                     $query_val[] = $array['voters'];
                 }
             }
 
             if (!error()) {
                 if (!user_id()) {
-                    e(lang("you_not_logged_in"));
+                    e(lang('you_not_logged_in'));
                 } else {
                     if (!$this->photo_exists($pid)) {
-                        e(lang("photo_not_exist"));
+                        e(lang('photo_not_exist'));
                     } else {
                         if ($this->get_photo_owner($pid) != user_id() && !User::getInstance()->hasAdminAccess()) {
                             e(lang("cant_edit_photo"));
@@ -2247,8 +2249,6 @@ class CBPhotos
         }
     }
 
-
-
     /**
      * Will be called when collection is being deleted
      * This will make photos in the collection orphan
@@ -2269,10 +2269,10 @@ class CBPhotos
 
         $cond = '';
         if (!empty($pid)) {
-            $cond = ' AND object_id = ' . mysql_clean($pid);
+            $cond = ' AND object_id = ' . (int)$pid;
         }
 
-        Clipbucket_db::getInstance()->execute('DELETE FROM ' . tbl('collection_items') . ' WHERE type = \'photos\' AND collection_id = ' . mysql_clean($cid) . $cond);
+        Clipbucket_db::getInstance()->execute('DELETE FROM ' . tbl('collection_items') . ' WHERE type = \'photos\' AND collection_id = ' . (int)$cid . $cond);
     }
 
     /**
@@ -2282,6 +2282,7 @@ class CBPhotos
      * @param $type
      *
      * @return string
+     * @throws Exception
      */
     function photo_links($details, $type): string
     {
@@ -2462,34 +2463,32 @@ class CBPhotos
      */
     function photo_actions($action, $id)
     {
-        $id = (int)$id;
-
         switch ($action) {
             case 'activate':
             case 'activation':
             case 'ap':
-                Clipbucket_db::getInstance()->update(tbl($this->p_tbl), ['active'], ['yes'], ' photo_id = ' . $id);
+                Clipbucket_db::getInstance()->update(tbl($this->p_tbl), ['active'], ['yes'], ' photo_id = ' . (int)$id);
                 e(lang('photo_activated'), 'm');
                 break;
 
             case 'deactivate':
             case 'deactivation':
             case 'dap':
-                Clipbucket_db::getInstance()->update(tbl($this->p_tbl), ['active'], ['no'], ' photo_id = ' . $id);
+                Clipbucket_db::getInstance()->update(tbl($this->p_tbl), ['active'], ['no'], ' photo_id = ' . (int)$id);
                 e(lang('photo_deactivated'), 'm');
                 break;
 
             case 'make_featured':
             case 'feature_photo':
             case 'fp':
-                Clipbucket_db::getInstance()->update(tbl($this->p_tbl), ['featured'], ['yes'], ' photo_id = ' . $id);
+                Clipbucket_db::getInstance()->update(tbl($this->p_tbl), ['featured'], ['yes'], ' photo_id = ' . (int)$id);
                 e(lang('photo_featured'), 'm');
                 break;
 
             case 'make_unfeatured':
             case 'unfeature_photo':
             case 'ufp':
-                Clipbucket_db::getInstance()->update(tbl($this->p_tbl), ['featured'], ['no'], ' photo_id = ' . $id);
+                Clipbucket_db::getInstance()->update(tbl($this->p_tbl), ['featured'], ['no'], ' photo_id = ' . (int)$id);
                 e(lang('photo_unfeatured'), 'm');
                 break;
         }

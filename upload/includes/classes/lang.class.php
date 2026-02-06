@@ -101,7 +101,7 @@ class Language
 
         $select = tbl('languages_translations') . ' AS LT
         INNER JOIN ' . tbl('languages_keys') . ' AS LK ON LK.id_language_key = LT.id_language_key';
-        $results = Clipbucket_db::getInstance()->select($select, '*', ' LK.language_key = \'' . mysql_clean($language_key) . '\' AND LT.language_id = \'' . mysql_clean($language_id) . '\'');
+        $results = Clipbucket_db::getInstance()->select($select, '*', ' LK.language_key = \'' . mysql_clean($language_key) . '\' AND LT.language_id = ' . (int)$language_id);
         if (!empty($results)) {
             return $results[0];
         }
@@ -125,7 +125,7 @@ class Language
 
         $select = tbl('languages_translations') . ' AS LT
         INNER JOIN ' . tbl('languages_keys') . ' AS LK ON LK.id_language_key = LT.id_language_key';
-        $results = Clipbucket_db::getInstance()->select($select, '*', ' LK.id_language_key = \'' . mysql_clean($id_language_key) . '\' AND LT.language_id = \'' . mysql_clean($language_id) . '\'');
+        $results = Clipbucket_db::getInstance()->select($select, '*', ' LK.id_language_key = \'' . mysql_clean($id_language_key) . '\' AND LT.language_id = ' . (int)$language_id);
         if (!empty($results)) {
             return $results[0];
         }
@@ -150,7 +150,7 @@ class Language
         }
 
         $select = tbl('languages_keys') . ' AS LK
-        LEFT JOIN ' . tbl('languages_translations') . ' AS LT ON LK.id_language_key = LT.id_language_key AND LT.language_id = ' . mysql_clean($language_id);
+        LEFT JOIN ' . tbl('languages_translations') . ' AS LT ON LK.id_language_key = LT.id_language_key AND LT.language_id = ' . (int)$language_id;
 
         /** concat aaaaaaa to sort when translation is missing */
         return Clipbucket_db::getInstance()->select($select, $fields, $extra_param, $limit, ' CASE WHEN LT.translation IS NULL THEN concat(\'aaaaaaaaaaaaaaaaaaaa\',language_key) ELSE LK.language_key END', false, 3600, self::$redis_key);
@@ -172,7 +172,7 @@ class Language
         }
 
         $select = tbl('languages_keys') . ' AS LK
-        LEFT JOIN ' . tbl('languages_translations') . ' AS LT ON LK.id_language_key = LT.id_language_key AND LT.language_id = ' . $language_id;
+        LEFT JOIN ' . tbl('languages_translations') . ' AS LT ON LK.id_language_key = LT.id_language_key AND LT.language_id = ' . (int)$language_id;
 
         $results = Clipbucket_db::getInstance()->select($select, 'COUNT(LK.id_language_key) as total', $extra_param);
 
@@ -190,13 +190,13 @@ class Language
      * @param int $language_id
      * @throws Exception
      */
-    public function update_phrase($id_language_key, $translation, $language_id = 1)
+    public function update_phrase($id_language_key, $translation, $language_id = 1): void
     {
         //First checking if phrase already exists or not
         if ($this->getTranslationByIdKey($id_language_key, $language_id)) {
-            Clipbucket_db::getInstance()->update(tbl('languages_translations'), ['translation'], [stripslashes(mysql_clean($translation))], ' id_language_key = ' . mysql_clean($id_language_key) . ' AND language_id = ' . mysql_clean($language_id));
+            Clipbucket_db::getInstance()->update(tbl('languages_translations'), ['translation'], [stripslashes(mysql_clean($translation))], ' id_language_key = ' . (int)$id_language_key . ' AND language_id = ' . (int)$language_id);
         } else {
-            Clipbucket_db::getInstance()->insert(tbl('languages_translations'), ['translation,id_language_key,language_id'], [stripslashes(mysql_clean($translation)), mysql_clean($id_language_key), mysql_clean($language_id)]);
+            Clipbucket_db::getInstance()->insert(tbl('languages_translations'), ['translation,id_language_key,language_id'], [stripslashes(mysql_clean($translation)), (int)$id_language_key, (int)$language_id]);
         }
         CacheRedis::flushAll();
     }
@@ -284,7 +284,7 @@ class Language
     public static function getLangById($id)
     {
         $id = mysql_clean($id);
-        $results = Clipbucket_db::getInstance()->select(tbl('languages'), '*', 'language_id = ' . mysql_clean($id), false, false, false, 3600);
+        $results = Clipbucket_db::getInstance()->select(tbl('languages'), '*', 'language_id = ' . (int)$id, false, false, false, 3600);
 
         if (!empty($results)) {
             return $results[0];

@@ -79,7 +79,7 @@ switch ($mode) {
             }
 
             if( !$nsfw_flag && !config('photo_activation') ){
-                Clipbucket_db::getInstance()->update(tbl('photos'), ['active'], ['yes'], 'photo_id = ' . mysql_clean($details['photo_id']));
+                Clipbucket_db::getInstance()->update(tbl('photos'), ['active'], ['yes'], 'photo_id = ' . (int)$details['photo_id']);
             }
         }
 

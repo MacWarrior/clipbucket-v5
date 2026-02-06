@@ -180,6 +180,7 @@ if (isset($_POST['update'])) {
         , 'own_collection_rating'
         , 'channel_rating'
         , 'own_channel_rating'
+        , 'random_video_order'
         , 'enable_favorite_icon_photo'
         , 'enable_favorite_icon_collection'
     ];
@@ -195,7 +196,6 @@ if (isset($_POST['update'])) {
         , 'video_embed'
         , 'video_download'
         , 'bits_color_warning'
-
         , 'photo_crop'
         , 'show_collapsed_checkboxes'
         , 'activation'
@@ -451,6 +451,9 @@ if (isset($_POST['update'])) {
         'enable_allow_alias_email',
         'enable_favorite_icon',
         'keep_ratio_photo',
+        'ratio_photo',
+        'enable_favorite_icon',
+        'random_video_order',
         'ratio_photo',
         'enable_favorite_icon_photo',
         'enable_favorite_icon_collection'
