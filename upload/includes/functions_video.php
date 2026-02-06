@@ -1538,6 +1538,7 @@ function remove_empty_parent_directory($path, string $stop_path): void
  * @return string
  * @throws \Predis\Connection\ConnectionException
  * @throws \Predis\Response\ServerException
+ * @throws Exception
  */
 function clean_orphan_files($file): string
 {
@@ -1589,7 +1590,7 @@ function clean_orphan_files($file): string
             break;
 
         case 'userfeeds':
-            $query = 'SELECT userid FROM ' . tbl('users') . ' WHERE userid = \'' . mysql_clean($file['user']) . '\'';
+            $query = 'SELECT userid FROM ' . tbl('users') . ' WHERE userid = ' . (int)$file['user'];
             $filename = $file['user'];
             if (config('cache_enable') == 'yes') {
                 $redis_type_key = 'user';
@@ -1668,6 +1669,7 @@ function clean_orphan_files($file): string
             rmdir($full_path);
             $stop_path = DirPath::get('videos');
             break;
+
         case 'convert_video_hls':
             $files_hls = array_diff(scandir($full_path), ['.', '..']);
             foreach ($files_hls as $file_hls) {
@@ -1681,10 +1683,12 @@ function clean_orphan_files($file): string
             unlink($full_path);
             $stop_path = DirPath::get('thumbs');
             break;
+
         case 'photo_thumb':
             unlink($full_path);
             $stop_path = DirPath::get('thumbs') . 'photo' . DIRECTORY_SEPARATOR;
             break;
+
         case 'video_thumb':
             unlink($full_path);
             $stop_path = DirPath::get('thumbs') . 'video' . DIRECTORY_SEPARATOR;
@@ -1704,10 +1708,12 @@ function clean_orphan_files($file): string
             unlink($full_path);
             $stop_path = DirPath::get('userfeeds');
             break;
+
         case 'avatar':
             unlink($full_path);
             $stop_path = DirPath::get('avatars');
             break;
+
         case 'background':
             unlink($full_path);
             $stop_path = DirPath::get('backgrounds');
@@ -1717,14 +1723,17 @@ function clean_orphan_files($file): string
             unlink($full_path);
             $stop_path = DirPath::get('logos');
             break;
+
         case 'category_thumbs':
             unlink($file['data']);
             $stop_path = DirPath::get('category_thumbs');
             break;
+
         case 'video_parts':
             unlink($full_path);
             $stop_path = DirPath::get('temp');
             break;
+
         default:
             return false;
     }
@@ -1732,26 +1741,5 @@ function clean_orphan_files($file): string
     return lang('orphan_file_has_been_deleted', $file['data']);
 }
 
-/**
- * @throws Exception
- */
-function age_restriction_check($user_id, $video_id, $obj_type = 'video', $id_field= 'videoid')
-{
-    $sql = ' SELECT 
-    TIMESTAMPDIFF(YEAR, U.dob, now()),
-    CASE
-        WHEN O.age_restriction IS NULL THEN 1
-        WHEN TIMESTAMPDIFF(YEAR, U.dob, now()) < O.age_restriction THEN 0
-            ELSE 1
-        END AS can_access
-    FROM '.tbl('users') . ' AS U , '.tbl($obj_type) .' AS O
-    WHERE O.'.$id_field.' = '.mysql_clean($video_id).' AND U.userid = '.($user_id ? mysql_clean($user_id) :  '0').'
-    ' ;
-    $rs = select($sql);
-    if (!empty($rs)) {
-        return $rs[0]['can_access'];
-    }
-    return 0;
-}
 
 

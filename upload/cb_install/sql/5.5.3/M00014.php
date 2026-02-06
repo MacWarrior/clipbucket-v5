@@ -112,12 +112,12 @@ class M00014 extends \Migration
                 $video_thumb_instance = new \VideoThumbs($video['videoid']);
                 $video_thumb_instance->prepareFFmpeg();
                 $sql_old_thumbs = 'SELECT *
-                , CASE WHEN cast(num as int) = ' . mysql_clean($video['default_thumb']) . ' AND type in (\'custom\',\'auto\')THEN 1 ELSE 0 END AS is_default_thumb'
-                . ($video['default_poster'] ? ', CASE WHEN cast(num as int) = ' . mysql_clean($video['default_poster']) . ' AND type = \'poster\' THEN 1 ELSE 0 END AS is_default_poster' : '')
-                . ($video['default_backdrop'] ? ', CASE WHEN cast(num as int) = ' . mysql_clean($video['default_backdrop']) . ' AND type = \'backdrop\' THEN 1 ELSE 0 END AS is_default_backdrop' : '')
+                , CASE WHEN cast(num as int) = ' . (int)$video['default_thumb'] . ' AND type in (\'custom\',\'auto\')THEN 1 ELSE 0 END AS is_default_thumb'
+                . ($video['default_poster'] ? ', CASE WHEN cast(num as int) = ' . (int)$video['default_poster'] . ' AND type = \'poster\' THEN 1 ELSE 0 END AS is_default_poster' : '')
+                . ($video['default_backdrop'] ? ', CASE WHEN cast(num as int) = ' . (int)$video['default_backdrop'] . ' AND type = \'backdrop\' THEN 1 ELSE 0 END AS is_default_backdrop' : '')
                 .', CASE WHEN type != \'custom\' THEN 1 ELSE 0 END AS is_auto
                 FROM ' . tbl('video_thumbs') . ' 
-                WHERE videoid = ' . mysql_clean($video['videoid']);
+                WHERE videoid = ' . (int)$video['videoid'];
                 $old_thumbs = \Clipbucket_db::getInstance()->_select($sql_old_thumbs);
                 foreach ($old_thumbs as $old_thumb) {
                     $type = $old_thumb['type'];
@@ -155,7 +155,7 @@ class M00014 extends \Migration
                             $sql_field = 'default_backdrop';
                         }
                         if (!empty($sql_field)) {
-                            $sql = 'UPDATE ' . tbl('video') . ' SET '.$sql_field.' = ' . $id_video_image . ' WHERE videoid = ' . $video['videoid'];
+                            $sql = 'UPDATE ' . tbl('video') . ' SET '.$sql_field.' = ' . (int)$id_video_image . ' WHERE videoid = ' . (int)$video['videoid'];
                             \Clipbucket_db::getInstance()->execute($sql);
                         }
                     }

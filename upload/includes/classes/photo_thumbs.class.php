@@ -48,17 +48,17 @@ class PhotoThumbs
         }
 
         if ($param_photo_id !== false) {
-            $conditions[] = self::$tableNameThumb . '.photo_id = ' . mysql_clean($param_photo_id);
+            $conditions[] = self::$tableNameThumb . '.photo_id = ' . (int)$param_photo_id;
         }
 
         if ($param_width == 'original' || $param_height == 'original') {
-            $conditions[] = self::$tableNameThumb . '.is_original_size = ' . (mysql_clean($param_width) ? 1 : 0);
+            $conditions[] = self::$tableNameThumb . '.is_original_size = ' . ($param_width ? 1 : 0);
         } else {
             if ($param_width) {
-                $conditions[] = self::$tableNameThumb . '.width = ' .  mysql_clean($param_width);
+                $conditions[] = self::$tableNameThumb . '.width = ' .  (int)$param_width;
             }
             if ($param_height) {
-                $conditions[] = self::$tableNameThumb . '.height = ' . mysql_clean($param_height);
+                $conditions[] = self::$tableNameThumb . '.height = ' . (int)$param_height;
             }
         }
 
@@ -289,7 +289,7 @@ class PhotoThumbs
             rename($original_photo_path, $temp_thumb_path);
             $original_photo_path = $temp_thumb_path;
             if ( file_exists($original_photo_path)) {
-                $sql = 'UPDATE ' . tbl(Photo::getInstance()->getTableName()) . ' SET ext = \'' . $mime_type . '\' WHERE photo_id = ' . mysql_clean($photo['photo_id']);
+                $sql = 'UPDATE ' . tbl(Photo::getInstance()->getTableName()) . ' SET ext = \'' . $mime_type . '\' WHERE photo_id = ' . (int)$photo['photo_id'];
                 Clipbucket_db::getInstance()->execute($sql);
             } else {
                 e(lang('error_uploading_thumb'));

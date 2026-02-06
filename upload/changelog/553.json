@@ -1,6 +1,6 @@
 {
   "version":"5.5.3",
-  "revision":"36",
+  "revision":"37",
   "status":"stable",
   "detail":[
     {
@@ -52,6 +52,7 @@
         ,"Fix tools error handling"
         ,"Fix possible SQL error on video upload"
         ,"Fix thumbs deletion"
+        ,"Fix possible SQL injection"
       ]
     },
     {

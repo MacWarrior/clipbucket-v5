@@ -167,7 +167,7 @@ class remote_play{
             ,'status' => 'Successful'
         ];
 
-        Clipbucket_db::getInstance()->update(tbl('video'), array_keys($fields), array_values($fields), ' videoid = \''.$video_id.'\'');
+        Clipbucket_db::getInstance()->update(tbl('video'), array_keys($fields), array_values($fields), ' videoid = ' . (int)$video_id);
 
         $ffmpeg->unLock();
 

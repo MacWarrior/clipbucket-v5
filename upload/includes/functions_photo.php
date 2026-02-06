@@ -72,7 +72,7 @@ function get_photo_date_folder($photo_id)
             /**
              * Photo exists, update file_directory index
              */
-            Clipbucket_db::getInstance()->update(tbl('photos'), ['file_directory'], [$directory], ' photo_id = \'' . mysql_clean($photo['photo_id']) . '\'');
+            Clipbucket_db::getInstance()->update(tbl('photos'), ['file_directory'], [$directory], ' photo_id = ' . (int)$photo['photo_id']);
         } else {
             $directory = false;
         }

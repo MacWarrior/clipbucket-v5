@@ -24,7 +24,7 @@ class M00289 extends \Migration
         foreach ($thumbs as $thumb) {
             $ext = pathinfo($thumb['category_thumb'], PATHINFO_EXTENSION);
             self::query('UPDATE ' . tbl('categories') . ' SET category_thumb = \'' . $thumb['category_id'] . '.' . $ext . '\' 
-            WHERE category_id = \'' . $thumb['category_id'] . '\'');
+            WHERE category_id = ' . (int)$thumb['category_id']);
         }
     }
 }

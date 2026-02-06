@@ -242,7 +242,7 @@ class Category
 
         $sql = 'UPDATE ' . cb_sql_table($this->tablename)
             . ' SET ' . implode(', ', $sets)
-            . ' WHERE ' . $this->primary_key . ' = ' . mysql_clean($param_primary_key);
+            . ' WHERE ' . $this->primary_key . ' = ' . (int)$param_primary_key;
 
         Clipbucket_db::getInstance()->execute($sql);
         return true;
@@ -285,7 +285,7 @@ class Category
         $type = $this->typeNamesByIds[$cat_details['id_category_type']];
         //si has child
         $childs = $this->getAll([
-            'condition' => 'parent_id = \'' . mysql_clean($category_id) . '\''
+            'condition' => 'parent_id = ' . (int)$category_id
         ]);
         if (!empty($childs)) {
             //deplacer
@@ -301,7 +301,7 @@ class Category
         }
 
         //si has item
-        $sql = 'SELECT '.$this->getTypeTableID($type).' FROM ' . tbl($this->getTypeTableName($type)) . ' WHERE id_category = ' . $category_id;
+        $sql = 'SELECT '.$this->getTypeTableID($type).' FROM ' . tbl($this->getTypeTableName($type)) . ' WHERE id_category = ' . (int)$category_id;
         $has_item = Clipbucket_db::getInstance()->_select($sql);
         if (!empty($has_item)) {
             e(lang('cannot_delete_not_empty_category'));
@@ -313,7 +313,7 @@ class Category
         if (!empty($cat_details['category_thumb'])) {
             unlink(DirPath::get('category_thumbs') . $type . DIRECTORY_SEPARATOR . $cat_details['category_thumb']);
         }
-        Clipbucket_db::getInstance()->execute('DELETE FROM ' . tbl($this->tablename) . ' WHERE '. $this->primary_key .' = ' . mysql_clean($category_id));
+        Clipbucket_db::getInstance()->execute('DELETE FROM ' . tbl($this->tablename) . ' WHERE '. $this->primary_key .' = ' . (int)$category_id);
         e(lang('class_cat_del_msg'), 'm');
     }
 
@@ -413,14 +413,14 @@ class Category
         }
         if (!empty($this->getById($category_id))) {
             if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.2', '194')) {
-                $sql = 'UPDATE ' . cb_sql_table($this->tablename) . ' SET is_default = NULL WHERE id_category_type = ' . mysql_clean($categ_type_id);
+                $sql = 'UPDATE ' . cb_sql_table($this->tablename) . ' SET is_default = NULL WHERE id_category_type = ' . (int)$categ_type_id;
                 Clipbucket_db::getInstance()->execute($sql);
-                $sql = 'UPDATE ' . cb_sql_table($this->tablename) . ' SET is_default = TRUE WHERE category_id = ' . mysql_clean($category_id);
+                $sql = 'UPDATE ' . cb_sql_table($this->tablename) . ' SET is_default = TRUE WHERE category_id = ' . (int)$category_id;
                 Clipbucket_db::getInstance()->execute($sql);
             } else {
-                $sql = 'UPDATE ' . cb_sql_table($this->tablename) . ' SET is_default = \'no\' WHERE id_category_type = ' . mysql_clean($categ_type_id);
+                $sql = 'UPDATE ' . cb_sql_table($this->tablename) . ' SET is_default = \'no\' WHERE id_category_type = ' . (int)$categ_type_id;
                 Clipbucket_db::getInstance()->execute($sql);
-                $sql = 'UPDATE ' . cb_sql_table($this->tablename) . ' SET is_default = \'yes\' WHERE category_id = ' . mysql_clean($category_id);
+                $sql = 'UPDATE ' . cb_sql_table($this->tablename) . ' SET is_default = \'yes\' WHERE category_id = ' . (int)$category_id;
                 Clipbucket_db::getInstance()->execute($sql);
             }
             e(lang('cat_set_default_ok'), 'm');
@@ -558,7 +558,7 @@ class Category
     {
         $categ_type_id = $this->getIdsCategoriesType($type);
         $sql = 'SELECT MAX(category_order) + 1 AS next_order_place FROM ' . tbl($this->tablename) . ' 
-        WHERE id_category_type = ' . mysql_clean($categ_type_id) . ' AND parent_id ' . ((empty($parent_id) || $parent_id == 'null') ? ' IS NULL ' : ' = ' . mysql_clean($parent_id));
+        WHERE id_category_type = ' . (int)$categ_type_id . ' AND parent_id ' . ((empty($parent_id) || $parent_id == 'null') ? ' IS NULL ' : ' = ' . (int)$parent_id);
         $results = Clipbucket_db::getInstance()->_select($sql);
         if (!empty($results[0]['next_order_place'])) {
             return $results[0]['next_order_place'];
@@ -672,6 +672,9 @@ abstract class CBCategory
         }
     }
 
+    /**
+     * @throws Exception
+     */
     function displayOptions($catArray, $params, $spacer = ''): string
     {
         $html = '';
@@ -781,7 +784,7 @@ abstract class CBCategory
      */
     function is_parent($cid): bool
     {
-        $result = Clipbucket_db::getInstance()->count(tbl($this->cat_tbl), 'category_id', ' parent_id = ' . mysql_clean($cid));
+        $result = Clipbucket_db::getInstance()->count(tbl($this->cat_tbl), 'category_id', ' parent_id = ' . (int)$cid);
 
         if ($result > 0) {
             return true;
