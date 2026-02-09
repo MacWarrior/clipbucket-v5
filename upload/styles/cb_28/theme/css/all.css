@@ -6509,7 +6509,6 @@ textarea#comment_box {
   top: auto;
   left: 33px;
   bottom: 10px;
-  background: rgba(0, 0, 0, 0.3);
   text-align: center;
   transition: transform .3s; /* Animation */
   cursor: pointer;
