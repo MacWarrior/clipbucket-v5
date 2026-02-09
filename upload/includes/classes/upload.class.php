@@ -27,7 +27,7 @@ class Upload
      *
      * @param null $array
      * @param bool $is_upload
-     * @throws \PHPMailer\PHPMailer\Exception|Exception
+     * @throws Exception
      */
     function validate_video_upload_form($array = null, $is_upload = false): void
     {
@@ -664,6 +664,7 @@ class Upload
     /**
      * Video Key Gen
      * * it is use to generate video key
+     * @throws Exception
      */
     function video_keygen(): string
     {

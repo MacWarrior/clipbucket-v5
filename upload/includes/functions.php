@@ -3286,7 +3286,7 @@ function get_player_logo_path(): string
 /**
  * @throws Exception
  */
-function upload_image($type = 'logo')
+function upload_image($type = 'logo'): bool
 {
     $file_post = 'upload_' . $type;
     if (!in_array($type, ['logo', 'favicon', 'player-logo'])) {
@@ -3315,7 +3315,11 @@ function upload_image($type = 'logo')
 
     $logo_path = DirPath::get('logos') . $type . '.' . $file_ext;
     unlink($logo_path);
-    move_uploaded_file($_FILES[$file_post]['tmp_name'], $logo_path);
+
+    if (!move_uploaded_file($_FILES[$file_post]['tmp_name'], $logo_path)) {
+        e(lang('class_error_occured'));
+        return false;
+    }
 
     myquery::getInstance()->Set_Website_Details($type . '_name', $type . '.' . $file_ext);
     myquery::getInstance()->Set_Website_Details('logo_update_timestamp', time());

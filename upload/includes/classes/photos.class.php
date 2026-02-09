@@ -1883,7 +1883,7 @@ class CBPhotos
      * @param $file
      * @throws Exception
      */
-    function update_watermark($file)
+    function update_watermark($file): void
     {
         if (empty($file)) {
             e(lang('no_watermark_found'));
