@@ -53,6 +53,7 @@
         ,"Fix possible SQL error on video upload"
         ,"Fix thumbs deletion"
         ,"Fix possible SQL injection"
+        ,"Fix possible duplicate configs"
       ]
     },
     {
