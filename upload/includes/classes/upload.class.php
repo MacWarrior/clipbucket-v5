@@ -27,7 +27,7 @@ class Upload
      *
      * @param null $array
      * @param bool $is_upload
-     * @throws \PHPMailer\PHPMailer\Exception|Exception
+     * @throws Exception
      */
     function validate_video_upload_form($array = null, $is_upload = false): void
     {
@@ -664,6 +664,7 @@ class Upload
     /**
      * Video Key Gen
      * * it is use to generate video key
+     * @throws Exception
      */
     function video_keygen(): string
     {
@@ -832,15 +833,15 @@ class Upload
                     return false;
                 }
 
-                $ext = getext($file['name']);
+                $ext = getExtMimeType($file['tmp_name']);
+                if (!VideoThumbs::ValidateImage($file['tmp_name'], $ext)) {
+                    e(lang('Invalid file type'));
+                    @unlink($file['tmp_name']);
+                    return false;
+                }
                 $file_name = $uid . '.' . $ext;
                 $file_path = DirPath::get('avatars') . $file_name;
                 if (move_uploaded_file($file['tmp_name'], $file_path)) {
-                    if (!VideoThumbs::ValidateImage($file_path, $ext)) {
-                        e(lang('Invalid file type'));
-                        @unlink($file_path);
-                        return false;
-                    }
                     $small_size = DirPath::get('avatars') . $uid . '-small.' . $ext;
                     CBPhotos::getInstance()->createImage($file_path, $file_path, $ext, AVATAR_SIZE, AVATAR_SIZE);
                     CBPhotos::getInstance()->createImage($file_path, $small_size, $ext, AVATAR_SMALL_SIZE, AVATAR_SMALL_SIZE);
@@ -865,15 +866,16 @@ class Upload
                     return false;
                 }
 
-                $ext = getext($file['name']);
+                $ext = getExtMimeType($file['tmp_name']);
+                if (!VideoThumbs::ValidateImage($file['tmp_name'], $ext)) {
+                    e(lang('Invalid file type'));
+                    @unlink($file['tmp_name']);
+                    return false;
+                }
+
                 $file_name = $uid . '.' . $ext;
                 $file_path = DirPath::get('backgrounds') . $file_name;
                 if (move_uploaded_file($file['tmp_name'], $file_path)) {
-                    if (!VideoThumbs::ValidateImage($file_path, $ext)) {
-                        e(lang('Invalid file type'));
-                        @unlink($file_path);
-                        return false;
-                    }
                     return $file_name;
                 }
                 e(lang('class_error_occured'));
