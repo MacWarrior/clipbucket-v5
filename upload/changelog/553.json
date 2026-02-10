@@ -1,6 +1,6 @@
 {
   "version":"5.5.3",
-  "revision":"39",
+  "revision":"40",
   "status":"stable",
   "detail":[
     {
@@ -33,6 +33,7 @@
         ,"Fix video collection default thumb display"
         ,"Fix video saving on upload form"
         ,"Fix possible SQL error on video upload form with malfomated video file name"
+        ,"Fix possible temporary remote code execution (Thanks @m0x41nos !)"
       ]
     },
     {
