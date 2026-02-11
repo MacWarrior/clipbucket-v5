@@ -18,8 +18,6 @@ if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.0', '367', true)) {
     $tools_wanted = [$db, $core];
     if ($type == 'db') {
         $tools_wanted = [$db];
-    } elseif ($type == 'core') {
-        $tools_wanted = [$core];
     }
     $where = ' tools_histo.id_tools_histo_status IN (SELECT id_tools_histo_status FROM ' . tbl('tools_histo_status') . ' WHERE language_key_title IN(\'in_progress\',\'stopping\'))  AND code IN (\''.  implode("','", $tools_wanted) . '\')';
     $where_error = ' tools_histo.id_tools_histo_status IN (SELECT id_tools_histo_status FROM ' . tbl('tools_histo_status') . ' WHERE language_key_title = \'on_error\')  AND code IN (\''.  implode("','", $tools_wanted) . '\')';
@@ -30,8 +28,6 @@ if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.0', '367', true)) {
     $tools_wanted = [$db, $core];
     if ($type == 'db') {
         $tools_wanted = [$db];
-    } elseif ($type == 'core') {
-        $tools_wanted = [$core];
     }
     $where = ' tools.id_tools_status IN (SELECT id_tools_status FROM ' . tbl('tools_status') . ' WHERE language_key_title IN(\'in_progress\',\'stopping\'))  AND id_tool IN ('.implode(',', $tools_wanted).')';
     $where_error = ' tools.id_tools_status IN (SELECT id_tools_status FROM ' . tbl('tools_status') . ' WHERE language_key_title = \'on_error\')  AND id_tool IN ('.implode(',', $tools_wanted).')';
