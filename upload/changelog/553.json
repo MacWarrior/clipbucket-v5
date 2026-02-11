@@ -1,6 +1,6 @@
 {
   "version":"5.5.3",
-  "revision":"37",
+  "revision":"40",
   "status":"stable",
   "detail":[
     {
@@ -20,7 +20,7 @@
       "title": "Front office",
       "description": [
         "Refactor medias rating"
-        ,"Implement video favorite icon"
+        ,"Implement video, photo & collection favorite icon"
         ,"Implement collection rating"
         ,"Implement random video order"
         ,"Update media rating"
@@ -33,6 +33,7 @@
         ,"Fix video collection default thumb display"
         ,"Fix video saving on upload form"
         ,"Fix possible SQL error on video upload form with malfomated video file name"
+        ,"Fix possible temporary remote code execution (Thanks @m0x41nos !)"
       ]
     },
     {
@@ -53,6 +54,7 @@
         ,"Fix possible SQL error on video upload"
         ,"Fix thumbs deletion"
         ,"Fix possible SQL injection"
+        ,"Fix possible duplicate configs"
       ]
     },
     {

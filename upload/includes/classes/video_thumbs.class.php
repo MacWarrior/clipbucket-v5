@@ -1142,7 +1142,8 @@ class VideoThumbs
     //Validating an Image
     public static function ValidateImage($file, $ext = null): bool
     {
-        if( !in_array(strtolower($ext), ['jpg','jpeg','gif','png']) ) {
+        $allowed_types = explode(',', config('allowed_photo_types'));
+        if( !in_array(strtolower($ext), $allowed_types) ) {
             return false;
         }
 

@@ -8,13 +8,5 @@ $(document).ready(function(){
 
     progressVideoCheck(ids_to_check_progress, 'videos');
 
-    $('.manage_favorite').on('click', function(){
-        const button = $(this);
-        button.removeClass('glyphicon-heart').html(_cb.loading_img);
-        _cb.remove_from_fav('video', button.data('id')).then(function (data) {
-            button.remove();
-        }).catch(function (err) {
-            button.addClass('glyphicon-heart').html('');
-        });
-    });
+   _cb.listener_favorite_only_remove('video');
 });

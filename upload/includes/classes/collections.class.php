@@ -1997,36 +1997,38 @@ class Collections extends CBCategory
      *
      * @param $cid
      * @param $file
+     * @throws Exception
      */
     function upload_thumb($cid, $file): void
     {
-        $file_ext = getext($file['name']);
+        $ext = getExtMimeType($file['name']);
+        if (!VideoThumbs::ValidateImage($file['tmp_name'], $ext)) {
+            e(lang('pic_upload_vali_err'));
+            @unlink($file['tmp_name']);
+            return;
+        }
 
-        $exts = ['jpg', 'gif', 'jpeg', 'png'];
-
-        foreach ($exts as $ext) {
-            if ($ext == $file_ext) {
-                $thumb = DirPath::get('collection_thumbs') . $cid . '.' . $ext;
-
-                $sThumb = DirPath::get('collection_thumbs') . $cid . '-small.' . $ext;
-                $oThumb = DirPath::get('collection_thumbs') . $cid . '-orignal.' . $ext;
-                foreach ($exts as $un_ext) {
-                    if (file_exists(DirPath::get('collection_thumbs') . $cid . '.' . $un_ext) && file_exists(DirPath::get('collection_thumbs') . $cid . '-small.' . $un_ext) && file_exists(DirPath::get('collection_thumbs') . $cid . '-orignal.' . $un_ext)) {
-                        unlink(DirPath::get('collection_thumbs') . $cid . '.' . $un_ext);
-                        unlink(DirPath::get('collection_thumbs') . $cid . '-small.' . $un_ext);
-                        unlink(DirPath::get('collection_thumbs') . $cid . '-orignal.' . $un_ext);
-                    }
-                }
-                move_uploaded_file($file['tmp_name'], $thumb);
-                if (!VideoThumbs::ValidateImage($thumb, $ext)) {
-                    e('pic_upload_vali_err');
-                } else {
-                    VideoThumbs::createThumb($thumb, $thumb, $this->collect_thumb_width, $ext, $this->collect_thumb_height);
-                    VideoThumbs::createThumb($thumb, $sThumb, $this->collect_small_thumb_width, $ext, $this->collect_small_thumb_height);
-                    VideoThumbs::createThumb($thumb, $oThumb, $this->collect_orignal_thumb_width, $ext, $this->collect_orignal_thumb_height);
-                }
+        $exts = explode(',', config('allowed_photo_types'));
+        foreach ($exts as $un_ext) {
+            if (file_exists(DirPath::get('collection_thumbs') . $cid . '.' . $un_ext) && file_exists(DirPath::get('collection_thumbs') . $cid . '-small.' . $un_ext) && file_exists(DirPath::get('collection_thumbs') . $cid . '-orignal.' . $un_ext)) {
+                unlink(DirPath::get('collection_thumbs') . $cid . '.' . $un_ext);
+                unlink(DirPath::get('collection_thumbs') . $cid . '-small.' . $un_ext);
+                unlink(DirPath::get('collection_thumbs') . $cid . '-orignal.' . $un_ext);
             }
         }
+
+        $thumb = DirPath::get('collection_thumbs') . $cid . '.' . $ext;
+        $sThumb = DirPath::get('collection_thumbs') . $cid . '-small.' . $ext;
+        $oThumb = DirPath::get('collection_thumbs') . $cid . '-orignal.' . $ext;
+
+        if (!move_uploaded_file($file['tmp_name'], $thumb)) {
+            e(lang('class_error_occured'));
+            return;
+        }
+
+        VideoThumbs::createThumb($thumb, $thumb, $this->collect_thumb_width, $ext, $this->collect_thumb_height);
+        VideoThumbs::createThumb($thumb, $sThumb, $this->collect_small_thumb_width, $ext, $this->collect_small_thumb_height);
+        VideoThumbs::createThumb($thumb, $oThumb, $this->collect_orignal_thumb_width, $ext, $this->collect_orignal_thumb_height);
     }
 
     /**

@@ -128,6 +128,8 @@ if( config('enable_comments_photo') == 'yes' ){
     Comments::initVisualComments();
 }
 
+assign('is_favorite', Photo::isFavorite($photo['photo_id']));
+
 ClipBucket::getInstance()->addCSS([
     'jquery.tagit' . $min_suffixe . '.css'     => 'admin',
     'tagit.ui-zendesk' . $min_suffixe . '.css' => 'admin',

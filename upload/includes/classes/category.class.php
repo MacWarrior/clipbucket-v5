@@ -488,13 +488,12 @@ class Category
         //Checking for category thumbs directory
         $dir = $this->typeNamesByIds[$category['id_category_type']];
 
-        //Checking File Extension
-        $ext = getext($file['name']);
-
-        $types = strtolower(config('allowed_photo_types'));
-        $supported_extensions = explode(',', $types);
-        if (!in_array($ext, $supported_extensions)) {
-             e(lang('error_allow_photo_types', implode(', ', $supported_extensions)));
+        $ext = getExtMimeType($file['tmp_name']);
+        if (!VideoThumbs::ValidateImage($file['tmp_name'], $ext)) {
+            @unlink($file['tmp_name']);
+            $types = strtolower(config('allowed_photo_types'));
+            $supported_extensions = explode(',', $types);
+            e(lang('error_allow_photo_types', implode(', ', $supported_extensions)));
             return false;
         }
 
@@ -513,19 +512,17 @@ class Category
         if (file_exists($path)) {
             unlink($path);
         }
-        move_uploaded_file($file['tmp_name'], $path);
 
-        //Now checking if file is really an image
-        if (!@VideoThumbs::ValidateImage($path, $ext)) {
-            e(lang('pic_upload_vali_err'));
-            unlink($path);
-        } else {
-            VideoThumbs::CreateThumb($path, $path, $this->cat_thumb_width, $ext, $this->cat_thumb_height);
-            Category::getInstance()->update([
-                'category_id'    => $cid,
-                'category_thumb' => $cid . '.' . $ext
-            ]);
+        if (!move_uploaded_file($file['tmp_name'], $path)) {
+            e(lang('class_error_occured'));
+            return false;
         }
+
+        VideoThumbs::CreateThumb($path, $path, $this->cat_thumb_width, $ext, $this->cat_thumb_height);
+        Category::getInstance()->update([
+            'category_id'    => $cid,
+            'category_thumb' => $cid . '.' . $ext
+        ]);
         return true;
     }
 
@@ -551,7 +548,7 @@ class Category
     /**
      * @param $type
      * @param $parent_id
-     * @return int|mixed
+     * @return int
      * @throws Exception
      */
     public function getNextOrderForParent($type, $parent_id): int
@@ -584,19 +581,6 @@ abstract class CBCategory
     var $cat_thumb_height = '125';
     var $cat_thumb_width = '125';
     var $default_thumb = 'no_thumb.jpg';
-
-    /**
-     * Function used to check weather category exists or not
-     *
-     * @param $cid
-     *
-     * @return bool|array
-     * @throws Exception
-     */
-    function category_exists($cid)
-    {
-        return !empty(Category::getInstance()->getById($cid));
-    }
 
     /**
      * @throws \PHPMailer\PHPMailer\Exception

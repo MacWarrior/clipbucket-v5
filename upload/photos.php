@@ -65,6 +65,10 @@ assign('featured', Photo::getInstance()->getAll([
 
 $total_pages = count_pages($count, config('photo_main_list'));
 assign('anonymous_id', userquery::getInstance()->get_anonymous_user());
+
+$min_suffixe = System::isInDev() ? '' : '.min';
+ClipBucket::getInstance()->addJS(['pages/photos/photos' . $min_suffixe . '.js' => 'admin']);
+
 //Pagination
 pages::getInstance()->paginate($total_pages, $page);
 assign('url_edit', DirPath::getUrl('admin_area') . 'edit_photo.php?photo=');

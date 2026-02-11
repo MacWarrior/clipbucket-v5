@@ -151,6 +151,8 @@ if( config('enable_collection_categories') == 'yes' ){
     assign('category_links', implode(',', $category_links));
 }
 
+assign('is_favorite', Collection::isFavorite($collection_id));
+
 if( !empty($cdetails['tags']) ){
     ClipBucket::getInstance()->addJS([
         'tag-it'.$min_suffixe.'.js'                               => 'admin'

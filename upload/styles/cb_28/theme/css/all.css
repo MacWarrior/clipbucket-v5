@@ -7155,3 +7155,7 @@ h4:has(i) {
 .cursor_default {
   cursor: default !important;
 }
+
+.collections-grid .manage_favorite {
+  display: none;
+}
