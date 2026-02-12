@@ -1,6 +1,6 @@
 {
   "version":"5.5.3",
-  "revision":"40",
+  "revision":"41",
   "status":"stable",
   "detail":[
     {
@@ -34,6 +34,7 @@
         ,"Fix video saving on upload form"
         ,"Fix possible SQL error on video upload form with malfomated video file name"
         ,"Fix possible temporary remote code execution (Thanks @m0x41nos !)"
+        ,"Fix default thumb selection on video upload form"
       ]
     },
     {
