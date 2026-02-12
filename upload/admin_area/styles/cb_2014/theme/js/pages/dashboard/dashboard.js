@@ -508,7 +508,7 @@ async function update(type){
             }
 
             // connectSSE();
-            refreshUpdateProgression();
+            refreshUpdateProgression(type);
         }
     });
 }
@@ -576,15 +576,16 @@ async function check_before_launch_update() {
     return true;
 }
 
-function refreshUpdateProgression() {
+function refreshUpdateProgression(type) {
     var interval = setInterval(function () {
-        updateInfo(interval);
+        updateInfo(interval, type);
     }, 5000);
 }
-function updateInfo(interval) {
+function updateInfo(interval, type) {
     $.ajax({
         url: admin_url + "actions/update_info.php",
         type: "post",
+        data: {type: type},
         dataType: "json",
         success: function (data) {
             $('#update_div').html(data.html);
