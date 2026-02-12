@@ -34,6 +34,9 @@
 		</a>
 		<div class="photo-info {if config('enable_hide_uploader_name') == 'yes'}nouploader{/if}">
 			<strong><a href="{CBPhotos::getInstance()->photo_links($photo,'view_item')}" title="{display_clean($photo.photo_title)}">{display_clean($photo.photo_title)|truncate:30}</a></strong>
+            {if config('enable_favorite_icon_photo') == 'yes' && User::getInstance()->isUserConnected() && Photo::isFavorite($photo.photo_id)}
+                <span class="manage_favorite watch-rating-icon pointer glyphicon glyphicon-heart " title="{lang('remove_from_favorites')}" data-id="{$photo.photo_id}" style="position: absolute; right: 5px; top: 5px; left: auto;"></span>
+            {/if}
 			{if config('enable_hide_uploader_name') != 'yes'}
 			<span>
 				{if isSectionEnabled('channels') && $photo.userid != $anonymous_id && $photo.disabled_channel !='yes'}
@@ -58,6 +61,9 @@
         </a>
         <div class="photo-info {if config('enable_hide_uploader_name') == 'yes'}nouploader{/if}">
             <strong><a href="{CBPhotos::getInstance()->photo_links($photo,'view_item')}" title="{display_clean($photo.photo_title)}">{display_clean($photo.photo_title)|truncate:50}</a></strong>
+            {if config('enable_favorite_icon_photo') == 'yes' && User::getInstance()->isUserConnected() && Photo::isFavorite($photo.photo_id)}
+                <span class="manage_favorite watch-rating-icon pointer glyphicon glyphicon-heart " title="{lang('remove_from_favorites')}" data-id="{$photo.photo_id}" style="position: absolute; right: 5px; top: 5px; left: auto;"></span>
+            {/if}
             {if config('enable_hide_uploader_name') != 'yes'}
             <span>
                 {if isSectionEnabled('channels') && $photo.userid != $anonymous_id && $photo.disabled_channel !='yes'}
@@ -168,6 +174,9 @@
     </a>
     <div class="photo-info {if config('enable_hide_uploader_name') == 'yes'}nouploader{/if}">
         <strong><a href="{CBPhotos::getInstance()->photo_links($photo,'view_item')}" title="{display_clean($photo.photo_title)}">{display_clean($photo.photo_title)|truncate:30}</a></strong>
+        {if config('enable_favorite_icon_photo') == 'yes' && User::getInstance()->isUserConnected() && Photo::isFavorite($photo.photo_id)}
+            <span class="manage_favorite watch-rating-icon pointer glyphicon glyphicon-heart " title="{lang('remove_from_favorites')}" data-id="{$photo.photo_id}" style="position: absolute; right: 5px; top: 5px; left: auto;"></span>
+        {/if}
 		{if config('enable_hide_uploader_name') != 'yes'}
         <span>
 			{if isSectionEnabled('channels') && $photo.userid != $anonymous_id && $photo.disabled_channel !='yes'}
