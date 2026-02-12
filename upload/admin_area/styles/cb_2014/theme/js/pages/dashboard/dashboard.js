@@ -117,7 +117,7 @@ $(document).ready(function(){
 
     $("#todolist .delete").on("click", function(e){
         e.preventDefault();
-
+        const button = $(this);
         $.ajax({
             url: page,
             type: "post",
@@ -126,7 +126,7 @@ $(document).ready(function(){
                 mode: "delete_todo"
             },
             success: function (data) {
-                this.parents("li").remove();
+                button.parents("li").remove();
             }
         });
     });
