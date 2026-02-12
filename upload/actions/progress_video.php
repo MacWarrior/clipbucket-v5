@@ -108,6 +108,7 @@ foreach ($videos as $video) {
             $vidthumbs = [VideoThumbs::getDefaultMissingThumb(return_with_num: true)];
             $vidthumbs_custom = [];
         }
+        assign('vidthumbs', $vidthumbs);
         $data['thumbs'] = getTemplate('blocks/videos/thumb_form.html');
     }
     if (!empty($_POST['display_subtitles'])) {
