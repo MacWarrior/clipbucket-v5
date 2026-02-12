@@ -90,7 +90,7 @@ if (isset($_POST['update_order'])) {
     cbpage::getInstance()->update_order();
     if( !error() && !warning() ) {
         errorhandler::getInstance()->flush();
-        e(lang('page_order_has_been_updated'), 'm');
+        e(lang('Page order has been updated'), 'm');
     }
 }
 

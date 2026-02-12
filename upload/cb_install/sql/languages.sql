@@ -1785,5 +1785,4 @@ VALUES ('ongoing_conversion'),
        ('option_random_video_order'),
        ('sort_by_random'),
        ('option_enable_favorite_icon_hint_photo'),
-       ('option_enable_favorite_icon_hint_collection'),
-       ('page_order_has_been_updated');
+       ('option_enable_favorite_icon_hint_collection');
