@@ -1,6 +1,6 @@
 {
   "version":"5.5.3",
-  "revision":"44",
+  "revision":"45",
   "status":"stable",
   "detail":[
     {
@@ -58,6 +58,7 @@
         ,"Fix thumbs deletion"
         ,"Fix possible SQL injection"
         ,"Fix possible duplicate configs"
+        ,"Fix SSRF vulnerability (Thanks @Takumi142857 !)"
       ]
     },
     {
