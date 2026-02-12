@@ -1,6 +1,6 @@
 {
   "version":"5.5.3",
-  "revision":"42",
+  "revision":"43",
   "status":"stable",
   "detail":[
     {
@@ -66,6 +66,12 @@
         ,"Implement Gif image thumbs"
         ,"Implement Remove hard-coded letterboxing / pillarboxing option"
         ,"Fix conversion logs"
+      ]
+    },
+    {
+      "title": "Translations",
+      "description": [
+        "Translate hardcoded texts"
       ]
     },
     {
