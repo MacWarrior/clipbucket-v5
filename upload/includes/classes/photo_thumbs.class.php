@@ -189,7 +189,20 @@ class PhotoThumbs
             }
         }
         if (empty($thumb)) {
-            return self::getDefaultMissingThumb($return_type);
+            $params_for_photo = $params;
+            unset($params_for_photo['width']);
+            $photo_thumb = self::getOneThumb($params_for_photo);
+            if (empty($photo_thumb)) {
+                return self::getDefaultMissingThumb($return_type);
+            }
+            $resolutions = self::getNearestResolutionThumb($photo_thumb['photo_id'], $width);
+            if (empty($resolutions)) {
+                return self::getDefaultMissingThumb($return_type);
+            }
+            $thumbs_files = self::getThumbFile($photo_id, $resolutions['width'], $return_type);
+            if (!empty($thumbs_files)) {
+                return $thumbs_files;
+            }
         }
         $thumb_path = self::getThumbPath($thumb['file_directory'], $thumb['filename'], $thumb['width'], $thumb['ext'], $thumb['version']);
         $filepath = $thumb_photo_directory . $thumb_path;
@@ -690,5 +703,33 @@ class PhotoThumbs
         }
         imagedestroy($image);
         imagedestroy($canvas);
+    }
+
+    /**
+     * @param $id_photo
+     * @param $requested_width
+     * @return array|string[]
+     * @throws Exception
+     */
+    public static function getNearestResolutionThumb($id_photo, $requested_width): array
+    {
+        if(empty($id_photo) ) {
+            return [];
+        }
+        //search for a resolution that exists
+        //the biggest resolution that is smaller than the requested one
+        $sql = 'SELECT width FROM ' . tbl(self::$tableNameThumb) . ' WHERE photo_id = ' . (int)$id_photo . ' AND width < ' . (int)($requested_width).' ORDER BY width DESC LIMIT 1';
+        $resolutions = Clipbucket_db::getInstance()->_select($sql);
+        if (!empty($resolutions[0]) && !empty($resolutions[0]['width'])) {
+            return $resolutions[0];
+        }
+        //if no resolution is found, return the smaller resolution that is bigger than the requested one
+        $sql = 'SELECT width FROM ' . tbl(self::$tableNameThumb) . ' WHERE photo_id = ' . (int)$id_photo . ' AND width > ' . (int)($requested_width).'  ORDER BY width ASC LIMIT 1';
+        $resolutions = Clipbucket_db::getInstance()->_select($sql);
+        if (!empty($resolutions[0]) && !empty($resolutions[0]['width'])) {
+            return $resolutions[0];
+        }
+        //if nothing is found return original
+        return ['width' => 'original'];
     }
 }
