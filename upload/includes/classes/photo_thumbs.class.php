@@ -301,6 +301,9 @@ class PhotoThumbs
                 $new_thumb_path = $original_photo_path;
             } else {
                 $width = $res['width'] ;
+                if ($width > $original_sizes[0]) {
+                    continue;
+                }
                 $new_thumb_path = $thumb_photo_directory . self::getThumbPath($photo['file_directory'], $photo['filename'], $width, $mime_type, Update::getInstance()->getCurrentCoreVersion());
                 PhotoThumbs::CreateThumb($original_photo_path, $new_thumb_path, $width, $mime_type, $original_sizes);
             }
