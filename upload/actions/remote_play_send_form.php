@@ -6,6 +6,24 @@ if (!Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '14')) {
     sessionMessageHandler::add_message('Sorry, you cannot upload new videos until the application has been fully updated by an administrator', 'e', User::getInstance()->getDefaultHomepageFromUserLevel());
 }
 
+$ipv4 = gethostbyname($_POST['remote_play_url']);
+if (!filter_var(
+    $ipv4,
+    FILTER_VALIDATE_IP,
+    FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE
+)) {
+    echo json_encode(['error' => lang('remote_play_invalid_url')]);
+    die();
+}
+
+$records = dns_get_record($_POST['remote_play_url'], DNS_A + DNS_AAAA);
+foreach ($records as $record) {
+    if (isset($record['ip']) && !filter_var($record['ip'], FILTER_VALIDATE_IP, FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE)) {
+        echo json_encode(['error' => lang('remote_play_invalid_url')]);
+        die();
+    }
+}
+
 if( !User::getInstance()->hasPermission('allow_video_upload') ){
     echo json_encode(['error'=>lang('insufficient_privileges')]);
     die();
@@ -31,7 +49,7 @@ if( !empty($_POST['form_data']) ){
 $video_url = $_POST['remote_play_url'] = $_POST['remote_play_file_url'];
 unset($_POST['remote_play_file_url']);
 if (filter_var($video_url, FILTER_VALIDATE_URL) === FALSE) {
-    echo json_encode(['error'=>lang('remote_play_invalid_url')]);
+    echo json_encode(['error' => lang('remote_play_invalid_url')]);
     die();
 }
 
