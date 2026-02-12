@@ -1,6 +1,6 @@
 {
   "version":"5.5.3",
-  "revision":"40",
+  "revision":"43",
   "status":"stable",
   "detail":[
     {
@@ -14,6 +14,7 @@
         ,"Fix missing video thumbs tool"
         ,"Fix possible PHP error on video edition page"
         ,"Fix unstuck update tool from admin dashboard"
+        ,"Fix possible wrong error message display on core/db update from dashboard"
       ]
     },
     {
@@ -34,6 +35,7 @@
         ,"Fix video saving on upload form"
         ,"Fix possible SQL error on video upload form with malfomated video file name"
         ,"Fix possible temporary remote code execution (Thanks @m0x41nos !)"
+        ,"Fix default thumb selection on video upload form"
       ]
     },
     {
@@ -64,6 +66,12 @@
         ,"Implement Gif image thumbs"
         ,"Implement Remove hard-coded letterboxing / pillarboxing option"
         ,"Fix conversion logs"
+      ]
+    },
+    {
+      "title": "Translations",
+      "description": [
+        "Translate hardcoded texts"
       ]
     },
     {
