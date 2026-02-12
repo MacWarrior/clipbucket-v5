@@ -1,6 +1,6 @@
 {
   "version":"5.5.3",
-  "revision":"41",
+  "revision":"42",
   "status":"stable",
   "detail":[
     {
@@ -14,6 +14,7 @@
         ,"Fix missing video thumbs tool"
         ,"Fix possible PHP error on video edition page"
         ,"Fix unstuck update tool from admin dashboard"
+        ,"Fix possible wrong error message display on core/db update from dashboard"
       ]
     },
     {
