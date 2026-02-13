@@ -359,64 +359,93 @@ class PhotoThumbs
      */
     public static function CreateThumb(string $original_file_path, string $destination_path, int|string $destination_width, string $extension, array $original_sizes): void
     {
-        $org_width = $original_sizes[0];
-        $org_height = $original_sizes[1];
+        $org_width  = (int)($original_sizes[0] ?? 0);
+        $org_height = (int)($original_sizes[1] ?? 0);
 
-        if ($org_width > $destination_width && !empty($destination_width) && $destination_width != 'original') {
-            if (stristr(PHP_OS, 'WIN')) {
-                // On Windows hosts, imagecreatefromX functions consumes lots of RAM
-                $memory_needed = PhotoThumbs::getMemoryNeededForImage($original_file_path);
-                $memory_limit = ini_get('memory_limit');
-                if ($memory_needed > getBytesFromFileSize($memory_limit)) {
-                    $msg = 'Photo generation would requiere ~' . System::get_readable_filesize($memory_needed, 0) . ' of memory, but it\'s currently limited to ' . $memory_limit;
-                    if (System::isInDev()) {
-                        e($msg);
-                    } else {
-                        e(lang('technical_error'));
-                    }
-                    DiscordLog::sendDump($msg);
-                    return;
-                }
-            }
-
-            try {
-                if( $extension == 'gif' ){
-                    FFmpeg::generateGif($original_file_path, $destination_path, $destination_width);
-                } else {
-                    $ratio = $org_width / $destination_width;
-
-                    $width = $org_width / $ratio;
-                    $height = $org_height / $ratio;
-
-                    $image_r = imagecreatetruecolor($width, $height);
-
-                    switch ($extension) {
-                        case 'jpeg':
-                            $image = imagecreatefromjpeg($original_file_path);
-                            imagecopyresampled($image_r, $image, 0, 0, 0, 0, $width, $height, $org_width, $org_height);
-                            imagejpeg($image_r, $destination_path, 90);
-                            break;
-
-                        case 'png':
-                            $image = imagecreatefrompng($original_file_path);
-                            imagecopyresampled($image_r, $image, 0, 0, 0, 0, $width, $height, $org_width, $org_height);
-                            imagepng($image_r, $destination_path, 9);
-                            break;
-
-                        default:
-                            throw new Exception(lang('remote_play_invalid_extension'));
-                    }
-                    imagedestroy($image_r);
-                    imagedestroy($image);
-                }
-            } catch (Exception $e) {
-                e($e->getMessage());
-            }
-        } else {
+        if (empty($destination_width) || $destination_width === 'original' || $org_width <= (int)$destination_width) {
             if (!file_exists($destination_path)) {
                 if (!is_dir($original_file_path)) {
                     copy($original_file_path, $destination_path);
                 }
+            }
+            return;
+        }
+
+        $destination_width = (int)$destination_width;
+
+        if (stristr(PHP_OS, 'WIN')) {
+            // On Windows hosts, imagecreatefromX functions consumes lots of RAM
+            $memory_needed = PhotoThumbs::getMemoryNeededForImage($original_file_path);
+            $memory_limit = ini_get('memory_limit');
+            if ($memory_needed > getBytesFromFileSize($memory_limit)) {
+                $msg = 'Photo generation would requiere ~' . System::get_readable_filesize($memory_needed, 0) . ' of memory, but it\'s currently limited to ' . $memory_limit;
+                if (System::isInDev()) {
+                    e($msg);
+                } else {
+                    e(lang('technical_error'));
+                }
+                DiscordLog::sendDump($msg);
+                return;
+            }
+        }
+
+        $image_r = $image = null;
+        try {
+            if ($extension === 'gif') {
+                FFmpeg::generateGif($original_file_path, $destination_path, $destination_width);
+                return;
+            }
+
+            $ratio = $org_width / $destination_width;
+            $width  = (int) round($org_width / $ratio);
+            $height = (int) round($org_height / $ratio);
+
+            $image_r = imagecreatetruecolor($width, $height);
+
+            switch ($extension) {
+                case 'jpeg':
+                    $image = imagecreatefromjpeg($original_file_path);
+                    imagecopyresampled($image_r, $image, 0, 0, 0, 0, $width, $height, $org_width, $org_height);
+                    imagejpeg($image_r, $destination_path, 90);
+                    break;
+
+                case 'png':
+                    $image = imagecreatefrompng($original_file_path);
+
+                    if (!imageistruecolor($image)) {
+                        imagepalettetotruecolor($image);
+                    }
+
+                    imagealphablending($image, false);
+                    imagesavealpha($image, true);
+
+                    imagealphablending($image_r, false);
+                    imagesavealpha($image_r, true);
+
+                    $transparent = imagecolorallocatealpha($image_r, 0, 0, 0, 127);
+                    imagefilledrectangle($image_r, 0, 0, $width, $height, $transparent);
+
+                    imagecopyresampled(
+                        $image_r, $image,
+                        0, 0, 0, 0,
+                        $width, $height,
+                        $org_width, $org_height
+                    );
+
+                    imagepng($image_r, $destination_path, 9);
+                    break;
+
+                default:
+                    throw new Exception(lang('remote_play_invalid_extension'));
+            }
+        } catch (Exception $e) {
+            e($e->getMessage());
+        } finally {
+            if ($image_r instanceof \GdImage || is_resource($image_r)) {
+                imagedestroy($image_r);
+            }
+            if ($image instanceof \GdImage || is_resource($image)) {
+                imagedestroy($image);
             }
         }
     }
