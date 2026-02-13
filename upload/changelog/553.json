@@ -1,6 +1,6 @@
 {
   "version":"5.5.3",
-  "revision":"46",
+  "revision":"47",
   "status":"stable",
   "detail":[
     {
@@ -67,6 +67,7 @@
         "Implement Webp video thumbs"
         ,"Implement Gif image thumbs"
         ,"Implement Remove hard-coded letterboxing / pillarboxing option"
+        ,"Prevent thumbs generation when not needed"
         ,"Fix conversion logs"
         ,"Fix PNG transparency"
       ]
