@@ -362,6 +362,17 @@ class PhotoThumbs
         $org_width  = (int)($original_sizes[0] ?? 0);
         $org_height = (int)($original_sizes[1] ?? 0);
 
+        $thumb_format = strtolower((string)config('photo_thumbs_format'));
+        $convert_to_webp = ($thumb_format === 'webp' && $extension !== 'gif');
+        if ($convert_to_webp && !function_exists('imagewebp')) {
+            $convert_to_webp = false;
+            if( System::isInDev() ){
+                $msg = 'GD imagewebp() is not available (install/enable WebP support).';
+                error_log($msg);
+                DiscordLog::sendDump($msg);
+            }
+        }
+
         if (empty($destination_width) || $destination_width === 'original' || $org_width <= (int)$destination_width) {
             if (!file_exists($destination_path)) {
                 if (!is_dir($original_file_path)) {

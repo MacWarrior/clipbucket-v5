@@ -137,9 +137,9 @@
                                 <div class="col-md-4">
                                     <select class="form-control" name="video_nsfw_check_model" id="video_nsfw_check_model" {if !AIVision::isAvailable()}title="{lang code='warning_ai_requirements'}" disabled{/if}>
                                         {assign var=array_modes value=[
-                                        'nudity'       => 'option_nudity'
-                                        ,'nsfw'        => 'option_nsfw'
-                                        ,'nudity+nsfw' => 'option_nudity_nsfw'
+                                            'nudity'       => 'option_nudity'
+                                            ,'nsfw'        => 'option_nsfw'
+                                            ,'nudity+nsfw' => 'option_nudity_nsfw'
                                         ]}
                                         {foreach from=$array_modes item=trad key=code}
                                             <option {if $code==$row.video_nsfw_check_model}selected{/if} value="{$code}">
@@ -1103,13 +1103,29 @@
                     <div class="col-md-6">
                         <div class="row">
                             <div class="col-md-3">
-                                <label class="nowrap" for="photo_ratio" title="Photo ratio"><span class="fa fa-question-circle tips" title="{lang('option_photo_ratio_help')}"></span>{lang('option_photo_ratio')}</label>
+                                <label class="nowrap" for="photo_ratio" title="Photo ratio"><span class="fa fa-question-circle tips" title="{lang('option_photo_ratio_help')}"></span> {lang('option_photo_ratio')}</label>
                             </div>
                             <div class="col-md-3 row-size">
                                 <select class="form-control" id="photo_ratio" name="photo_ratio">
                                     <option class="form-control" value="4:3" {if $row.photo_ratio=='4:3'}selected{/if} >4:3</option>
                                     <option class="form-control" value="16:9" {if $row.photo_ratio=='16:9'}selected{/if}>16:9</option>
                                     <option class="form-control" value="16:10" {if $row.photo_ratio=='16:10'}selected{/if}>16:10</option>
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                <label class="nowrap" for="photo_thumbs_format" title="{lang code='option_photo_thumbs_format'}"><span class="fa fa-question-circle tips" title="{lang('photo_thumbs_format_tips')}"></span> {lang code='option_photo_thumbs_format'}</label>
+                            </div>
+                            <div class="col-md-3">
+                                <select class="form-control" name="photo_thumbs_format" id="photo_thumbs_format">
+                                    {assign var=array_modes value=[
+                                        'webp'  => 'webp'
+                                        ,'keep' => 'keep_photo_type'
+                                    ]}
+                                    {foreach from=$array_modes item=trad key=code}
+                                        <option {if $code==$row.photo_thumbs_format}selected{/if} value="{$code}">
+                                            {lang code=$trad}
+                                        </option>
+                                    {/foreach}
                                 </select>
                             </div>
                         </div>

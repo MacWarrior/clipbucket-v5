@@ -147,6 +147,8 @@ if (isset($_POST['update'])) {
         'photo_thumb_height',
         'photo_med_width',
         'photo_med_height',
+        'photo_thumbs_format',
+        'video_thumbs_format',
 
         'maximum_allowed_subtitle_size'
     ];
