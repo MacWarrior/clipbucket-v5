@@ -67,7 +67,7 @@
         "Implement Webp video thumbs"
         ,"Implement Gif image thumbs"
         ,"Implement Remove hard-coded letterboxing / pillarboxing option"
-        ,"Prevent thumbs generation when not needed"
+        ,"Prevent photo thumbs generation when not needed"
         ,"Fix conversion logs"
         ,"Fix PNG transparency"
       ]
