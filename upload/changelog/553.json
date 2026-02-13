@@ -1,6 +1,6 @@
 {
   "version":"5.5.3",
-  "revision":"45",
+  "revision":"46",
   "status":"stable",
   "detail":[
     {
@@ -68,6 +68,7 @@
         ,"Implement Gif image thumbs"
         ,"Implement Remove hard-coded letterboxing / pillarboxing option"
         ,"Fix conversion logs"
+        ,"Fix PNG transparency"
       ]
     },
     {
