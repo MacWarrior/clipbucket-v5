@@ -1,7 +1,7 @@
 <?php
 class User extends Objects
 {
-    private static $user;
+    private static User[] $user;
     private $tablename = '';
     private $tablename_profile = '';
     private $tablename_level = '';
@@ -230,12 +230,18 @@ class User extends Objects
         return self::$user[$user_id];
     }
 
+    public static function clearInstance()
+    {
+       self::$user = [];
+    }
+
     public function getTableName(): string
     {
         return $this->tablename;
     }
 
     public function getTableNameProfile(): string
+
     {
         return $this->tablename_profile;
     }

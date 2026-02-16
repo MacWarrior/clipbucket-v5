@@ -45,6 +45,14 @@ class Category
         return self::$category;
     }
 
+    /**
+     * @return void
+     */
+    public static function clearInstance()
+    {
+        self::$category = new self();
+    }
+
     private function getAllFields(): array
     {
         return array_map(function($field) {

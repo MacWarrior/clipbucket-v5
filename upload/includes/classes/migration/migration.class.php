@@ -108,6 +108,12 @@ class Migration
         Clipbucket_db::getInstance()->executeThrowException($sql);
         CacheRedis::flushAll();
         Update::getInstance()->flush();
+        Update::getInstance()->getDBVersion(true);
+        Video::clearInstance();
+        Photo::clearInstance();
+        Playlist::clearInstance();
+        Category::clearInstance();
+        User::clearInstance();
     }
 
     /**
