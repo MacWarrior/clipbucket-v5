@@ -1,7 +1,7 @@
 <?php
 class User extends Objects
 {
-    private static User[] $user;
+    private static $user;
     private $tablename = '';
     private $tablename_profile = '';
     private $tablename_level = '';
