@@ -870,7 +870,7 @@ class VideoThumbs
      * @param $thumb_version
      * @return string
      */
-    private static function getThumbPath($type, $video_file_directory, $video_file_name, $thumb_is_auto, $thumb_num, $thumb_resolution, $thumb_width, $thumb_height, $thumb_extension, $thumb_version): string
+    public static function getThumbPath($type, $video_file_directory, $video_file_name, $thumb_is_auto, $thumb_num, $thumb_resolution, $thumb_width, $thumb_height, $thumb_extension, $thumb_version): string
     {
         if ($thumb_version > '5.5.2') {
             $filepath = $video_file_directory . DIRECTORY_SEPARATOR . $video_file_name .DIRECTORY_SEPARATOR;
@@ -892,7 +892,7 @@ class VideoThumbs
      * @param $thumb_version
      * @return string
      */
-    private static function getThumbName($type, $video_file_name, $thumb_is_auto, $thumb_num, $thumb_resolution, $thumb_width, $thumb_height, $thumb_extension, $thumb_version): string
+    public static function getThumbName($type, $video_file_name, $thumb_is_auto, $thumb_num, $thumb_resolution, $thumb_width, $thumb_height, $thumb_extension, $thumb_version): string
     {
         if ($thumb_version > '5.5.2') {
             $filename =  $video_file_name . '-'

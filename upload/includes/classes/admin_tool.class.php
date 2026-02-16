@@ -1277,7 +1277,7 @@ class AdminTool
             $sql_insert = 'INSERT INTO ' . tbl('tools_tasks') . ' (id_histo, loop_index, data) VALUES ';
             $inserted_values = [];
             foreach ($datas as $data) {
-                $inserted_values[] = '(' . $this->id_histo . ', ' . ($this->tasks_total++) . ', \'' . addslashes(json_encode($data)) . '\')';
+                $inserted_values[] = '(' . $this->id_histo . ', ' . ((int)$this->tasks_total++) . ', \'' . addslashes(json_encode($data)) . '\')';
             }
             return Clipbucket_db::getInstance()->execute($sql_insert . implode(', ', $inserted_values));
         } else {
@@ -1915,6 +1915,36 @@ class AdminTool
         $request = \Migration::prepare($request);
         $request = preg_replace('/INSERT INTO/', 'INSERT IGNORE INTO', $request);
         return (bool)Clipbucket_db::getInstance()->execute($request);
+    }
+
+    public function regenerateAllVideoThumbs()
+    {
+        if (empty($this->tasks_total)) {
+            $limit = 100;
+            $offset = 0;
+            do {
+                $videos = Video::getInstance()->getAll([
+                    'limit'                       => $offset . ', ' . $limit,
+                    'disable_generic_constraints' => true
+                ]);
+                $offset += $limit;
+                foreach ($videos as $video) {
+                    $this->insertTaskData(['video'=>$video]);
+                }
+            } while (!empty($videos));
+        }
+        $this->executeTool('AdminTool::generateVideoThumbs');
+    }
+
+    /**
+     * @param $video
+     * @return bool
+     * @throws Exception
+     */
+    public static function generateVideoThumbs($data): bool
+    {
+        generatingMoreThumbs($data, true);
+        return true;
     }
 }
 

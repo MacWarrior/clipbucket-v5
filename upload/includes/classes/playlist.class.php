@@ -37,6 +37,14 @@ class Playlist
         return self::$playlist;
     }
 
+    /**
+     * @return void
+     */
+    public static function clearInstance()
+    {
+        self::$playlist = new self();
+    }
+
     private function getSQLFields($type = '', $prefix = false): array
     {
         $fields = $this->fields;

@@ -316,7 +316,7 @@ function register_collection_delete_functions($func): void
 function register_action_remove_video(string $func): void
 {
     //Editing this thing without special consideration can trun whole CB into "WTF"
-    CBvideo::getInstance()->video_delete_functions[] = $func;
+//    CBvideo::getInstance()->video_delete_functions[] = $func;
 }
 
 /**
