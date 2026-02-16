@@ -1785,4 +1785,6 @@ VALUES ('ongoing_conversion'),
        ('option_random_video_order'),
        ('sort_by_random'),
        ('option_enable_favorite_icon_hint_photo'),
-       ('option_enable_favorite_icon_hint_collection');
+       ('option_enable_favorite_icon_hint_collection'),
+       ('regenerate_all_video_thumbs_label'),
+       ('regenerate_all_video_thumbs_description');
