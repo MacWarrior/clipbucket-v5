@@ -1,6 +1,6 @@
 {
   "version":"5.5.3",
-  "revision":"48",
+  "revision":"49",
   "status":"stable",
   "detail":[
     {
@@ -25,6 +25,7 @@
         ,"Implement video, photo & collection favorite icon"
         ,"Implement collection rating"
         ,"Implement random video order"
+        ,"Implement support for ultrawide screens"
         ,"Update media rating"
         ,"Update collection management"
         ,"Add signup date of birth calendar icon"
