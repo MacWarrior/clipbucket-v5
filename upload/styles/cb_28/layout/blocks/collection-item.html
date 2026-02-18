@@ -5,11 +5,15 @@
     {$blur = Photo::getInstance()->isToBlur($first_elem.photo_id)}
 {/if}
 
+{if empty($thumbsize)}
+    {$thumbsize = 'm'}
+{/if}
+
 <div class="collection-holder">
     <div class="photo-block no_select no_overflow">
         <a href="{Collections::getInstance()->collection_links($collection,'view')}" title="{display_clean($collection.collection_name)}">
-            <img alt="{display_clean($collection.collection_name)}" title="{display_clean($collection.collection_name)}" class="img-responsive {if $blur}blur{/if} {if config('keep_ratio_photo') && $collection.type == 'photos'} crop_image{/if}"
-                 id="collection_{$collection.collection_id}" src="{Collections::getInstance()->coll_first_thumb($collection,'m')}"/>
+            <img alt="{display_clean($collection.collection_name)}" title="{display_clean($collection.collection_name)}" class="img-responsive{if $blur} blur{/if}{if config('keep_ratio_photo') && $collection.type == 'photos'} crop_image{/if}"
+                 id="collection_{$collection.collection_id}" src="{Collections::getInstance()->coll_first_thumb($collection, $thumbsize)}"/>
             {ANCHOR place='in_collection_thumb' data=$collection}
             <div class="collection-info">
                 <span>{$collection.total_objects}</span>{lang code=$collection.type}

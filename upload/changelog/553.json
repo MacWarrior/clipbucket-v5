@@ -1,6 +1,6 @@
 {
   "version":"5.5.3",
-  "revision":"41",
+  "revision":"50",
   "status":"stable",
   "detail":[
     {
@@ -14,6 +14,8 @@
         ,"Fix missing video thumbs tool"
         ,"Fix possible PHP error on video edition page"
         ,"Fix unstuck update tool from admin dashboard"
+        ,"Fix possible wrong error message display on core/db update from dashboard"
+        ,"Fix todo deletion"
       ]
     },
     {
@@ -23,6 +25,7 @@
         ,"Implement video, photo & collection favorite icon"
         ,"Implement collection rating"
         ,"Implement random video order"
+        ,"Implement support for ultrawide screens"
         ,"Update media rating"
         ,"Update collection management"
         ,"Add signup date of birth calendar icon"
@@ -35,6 +38,7 @@
         ,"Fix possible SQL error on video upload form with malfomated video file name"
         ,"Fix possible temporary remote code execution (Thanks @m0x41nos !)"
         ,"Fix default thumb selection on video upload form"
+        ,"Fix missing minified JS file"
       ]
     },
     {
@@ -56,6 +60,7 @@
         ,"Fix thumbs deletion"
         ,"Fix possible SQL injection"
         ,"Fix possible duplicate configs"
+        ,"Fix SSRF vulnerability (Thanks @Takumi142857 !)"
       ]
     },
     {
@@ -64,7 +69,15 @@
         "Implement Webp video thumbs"
         ,"Implement Gif image thumbs"
         ,"Implement Remove hard-coded letterboxing / pillarboxing option"
+        ,"Prevent photo thumbs generation when not needed"
         ,"Fix conversion logs"
+        ,"Fix PNG transparency"
+      ]
+    },
+    {
+      "title": "Translations",
+      "description": [
+        "Translate hardcoded texts"
       ]
     },
     {
@@ -78,6 +91,7 @@
       "description": [
         "Update phpmailer/phpmailer to 7.0.2"
         ,"Update VideoJS to version 8.23.6"
+        ,"Update predis/predis to 3.4.0"
       ]
     }
   ]

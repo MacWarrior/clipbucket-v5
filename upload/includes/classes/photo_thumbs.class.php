@@ -189,7 +189,20 @@ class PhotoThumbs
             }
         }
         if (empty($thumb)) {
-            return self::getDefaultMissingThumb($return_type);
+            $params_for_photo = $params;
+            unset($params_for_photo['width']);
+            $photo_thumb = self::getOneThumb($params_for_photo);
+            if (empty($photo_thumb)) {
+                return self::getDefaultMissingThumb($return_type);
+            }
+            $resolutions = self::getNearestResolutionThumb($photo_thumb['photo_id'], $width);
+            if (empty($resolutions)) {
+                return self::getDefaultMissingThumb($return_type);
+            }
+            $thumbs_files = self::getThumbFile($photo_id, $resolutions['width'], $return_type);
+            if (!empty($thumbs_files)) {
+                return $thumbs_files;
+            }
         }
         $thumb_path = self::getThumbPath($thumb['file_directory'], $thumb['filename'], $thumb['width'], $thumb['ext'], $thumb['version']);
         $filepath = $thumb_photo_directory . $thumb_path;
@@ -301,6 +314,9 @@ class PhotoThumbs
                 $new_thumb_path = $original_photo_path;
             } else {
                 $width = $res['width'] ;
+                if ($width > $original_sizes[0]) {
+                    continue;
+                }
                 $new_thumb_path = $thumb_photo_directory . self::getThumbPath($photo['file_directory'], $photo['filename'], $width, $mime_type, Update::getInstance()->getCurrentCoreVersion());
                 PhotoThumbs::CreateThumb($original_photo_path, $new_thumb_path, $width, $mime_type, $original_sizes);
             }
@@ -359,64 +375,93 @@ class PhotoThumbs
      */
     public static function CreateThumb(string $original_file_path, string $destination_path, int|string $destination_width, string $extension, array $original_sizes): void
     {
-        $org_width = $original_sizes[0];
-        $org_height = $original_sizes[1];
+        $org_width  = (int)($original_sizes[0] ?? 0);
+        $org_height = (int)($original_sizes[1] ?? 0);
 
-        if ($org_width > $destination_width && !empty($destination_width) && $destination_width != 'original') {
-            if (stristr(PHP_OS, 'WIN')) {
-                // On Windows hosts, imagecreatefromX functions consumes lots of RAM
-                $memory_needed = PhotoThumbs::getMemoryNeededForImage($original_file_path);
-                $memory_limit = ini_get('memory_limit');
-                if ($memory_needed > getBytesFromFileSize($memory_limit)) {
-                    $msg = 'Photo generation would requiere ~' . System::get_readable_filesize($memory_needed, 0) . ' of memory, but it\'s currently limited to ' . $memory_limit;
-                    if (System::isInDev()) {
-                        e($msg);
-                    } else {
-                        e(lang('technical_error'));
-                    }
-                    DiscordLog::sendDump($msg);
-                    return;
-                }
-            }
-
-            try {
-                if( $extension == 'gif' ){
-                    FFmpeg::generateGif($original_file_path, $destination_path, $destination_width);
-                } else {
-                    $ratio = $org_width / $destination_width;
-
-                    $width = $org_width / $ratio;
-                    $height = $org_height / $ratio;
-
-                    $image_r = imagecreatetruecolor($width, $height);
-
-                    switch ($extension) {
-                        case 'jpeg':
-                            $image = imagecreatefromjpeg($original_file_path);
-                            imagecopyresampled($image_r, $image, 0, 0, 0, 0, $width, $height, $org_width, $org_height);
-                            imagejpeg($image_r, $destination_path, 90);
-                            break;
-
-                        case 'png':
-                            $image = imagecreatefrompng($original_file_path);
-                            imagecopyresampled($image_r, $image, 0, 0, 0, 0, $width, $height, $org_width, $org_height);
-                            imagepng($image_r, $destination_path, 9);
-                            break;
-
-                        default:
-                            throw new Exception(lang('remote_play_invalid_extension'));
-                    }
-                    imagedestroy($image_r);
-                    imagedestroy($image);
-                }
-            } catch (Exception $e) {
-                e($e->getMessage());
-            }
-        } else {
+        if (empty($destination_width) || $destination_width === 'original' || $org_width <= (int)$destination_width) {
             if (!file_exists($destination_path)) {
                 if (!is_dir($original_file_path)) {
                     copy($original_file_path, $destination_path);
                 }
+            }
+            return;
+        }
+
+        $destination_width = (int)$destination_width;
+
+        if (stristr(PHP_OS, 'WIN')) {
+            // On Windows hosts, imagecreatefromX functions consumes lots of RAM
+            $memory_needed = PhotoThumbs::getMemoryNeededForImage($original_file_path);
+            $memory_limit = ini_get('memory_limit');
+            if ($memory_needed > getBytesFromFileSize($memory_limit)) {
+                $msg = 'Photo generation would requiere ~' . System::get_readable_filesize($memory_needed, 0) . ' of memory, but it\'s currently limited to ' . $memory_limit;
+                if (System::isInDev()) {
+                    e($msg);
+                } else {
+                    e(lang('technical_error'));
+                }
+                DiscordLog::sendDump($msg);
+                return;
+            }
+        }
+
+        $image_r = $image = null;
+        try {
+            if ($extension === 'gif') {
+                FFmpeg::generateGif($original_file_path, $destination_path, $destination_width);
+                return;
+            }
+
+            $ratio = $org_width / $destination_width;
+            $width  = (int) round($org_width / $ratio);
+            $height = (int) round($org_height / $ratio);
+
+            $image_r = imagecreatetruecolor($width, $height);
+
+            switch ($extension) {
+                case 'jpeg':
+                    $image = imagecreatefromjpeg($original_file_path);
+                    imagecopyresampled($image_r, $image, 0, 0, 0, 0, $width, $height, $org_width, $org_height);
+                    imagejpeg($image_r, $destination_path, 90);
+                    break;
+
+                case 'png':
+                    $image = imagecreatefrompng($original_file_path);
+
+                    if (!imageistruecolor($image)) {
+                        imagepalettetotruecolor($image);
+                    }
+
+                    imagealphablending($image, false);
+                    imagesavealpha($image, true);
+
+                    imagealphablending($image_r, false);
+                    imagesavealpha($image_r, true);
+
+                    $transparent = imagecolorallocatealpha($image_r, 0, 0, 0, 127);
+                    imagefilledrectangle($image_r, 0, 0, $width, $height, $transparent);
+
+                    imagecopyresampled(
+                        $image_r, $image,
+                        0, 0, 0, 0,
+                        $width, $height,
+                        $org_width, $org_height
+                    );
+
+                    imagepng($image_r, $destination_path, 9);
+                    break;
+
+                default:
+                    throw new Exception(lang('remote_play_invalid_extension'));
+            }
+        } catch (Exception $e) {
+            e($e->getMessage());
+        } finally {
+            if ($image_r instanceof \GdImage || is_resource($image_r)) {
+                imagedestroy($image_r);
+            }
+            if ($image instanceof \GdImage || is_resource($image)) {
+                imagedestroy($image);
             }
         }
     }
@@ -687,5 +732,33 @@ class PhotoThumbs
         }
         imagedestroy($image);
         imagedestroy($canvas);
+    }
+
+    /**
+     * @param $id_photo
+     * @param $requested_width
+     * @return array|string[]
+     * @throws Exception
+     */
+    public static function getNearestResolutionThumb($id_photo, $requested_width): array
+    {
+        if(empty($id_photo) ) {
+            return [];
+        }
+        //search for a resolution that exists
+        //the biggest resolution that is smaller than the requested one
+        $sql = 'SELECT width FROM ' . tbl(self::$tableNameThumb) . ' WHERE photo_id = ' . (int)$id_photo . ' AND width < ' . (int)($requested_width).' ORDER BY width DESC LIMIT 1';
+        $resolutions = Clipbucket_db::getInstance()->_select($sql);
+        if (!empty($resolutions[0]) && !empty($resolutions[0]['width'])) {
+            return $resolutions[0];
+        }
+        //if no resolution is found, return the smaller resolution that is bigger than the requested one
+        $sql = 'SELECT width FROM ' . tbl(self::$tableNameThumb) . ' WHERE photo_id = ' . (int)$id_photo . ' AND width > ' . (int)($requested_width).'  ORDER BY width ASC LIMIT 1';
+        $resolutions = Clipbucket_db::getInstance()->_select($sql);
+        if (!empty($resolutions[0]) && !empty($resolutions[0]['width'])) {
+            return $resolutions[0];
+        }
+        //if nothing is found return original
+        return ['width' => 'original'];
     }
 }
