@@ -1213,7 +1213,9 @@
             if (typeof class_parent_need !== 'undefined') {
                 selector = '.' + class_parent_need + ' ' + selector;
             }
-            $(selector).off().on('click', function () {
+            $(selector).off().on('click', function (e) {
+                e.preventDefault();
+                e.stopPropagation();
                 const button = $(this);
                 button.removeClass('glyphicon-heart').html(curObj.loading_img);
                 curObj.remove_from_fav(type, button.data('id')).then(function (data) {
