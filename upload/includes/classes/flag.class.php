@@ -73,13 +73,13 @@ class Flag
         $join = [];
         $group_by = [];
         if ($param_flag_id !== false) {
-            $conditions[] = ' ' . self::$tableName . '.userid = ' . mysql_clean($param_flag_id);
+            $conditions[] = ' ' . self::$tableName . '.userid = ' . (int)$param_flag_id;
         }
         if ($param_id_flag_type !== false) {
-            $conditions[] = ' ' . self::$tableName . '.id_flag_type = ' . mysql_clean($param_id_flag_type);
+            $conditions[] = ' ' . self::$tableName . '.id_flag_type = ' . (int)$param_id_flag_type;
         }
         if ($param_id_element !== false) {
-            $conditions[] = ' ' . self::$tableName . '.id_element = ' . mysql_clean($param_id_element);
+            $conditions[] = ' ' . self::$tableName . '.id_element = ' . (int)$param_id_element;
         }
 
         switch ($param_element_type) {
@@ -319,14 +319,14 @@ class Flag
                 return [
                     'fo'    => video_link($flag['id_element']),
                     'bo'    => DirPath::getUrl('admin_area') . 'edit_video.php?video=' . $flag['id_element'],
-                    'thumb' => get_thumb($flag['id_element'], false, '168x105')
+                    'thumb' => VideoThumbs::getDefaultThumbFile($flag['id_element'])
                 ];
 
             case 'photo':
                 return [
                     'fo'    => Photo::getInstance()->getFOLink($flag['id_element']),
                     'bo'    => DirPath::getUrl('admin_area') . 'edit_photo.php?photo=' . $flag['id_element'],
-                    'thumb' => get_image_file(['details' => $flag['id_element']])
+                    'thumb' => PhotoThumbs::getThumbFile($flag['id_element'])
                 ];
 
             case 'collection':

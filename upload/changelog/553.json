@@ -1,33 +1,83 @@
 {
   "version":"5.5.3",
-  "revision":"12",
+  "revision":"50",
   "status":"stable",
   "detail":[
     {
       "title": "Back office",
       "description": [
-        "Implement email alias allow option"
+        "Refactor templates management"
+        ,"Implement email alias allow option"
+        ,"Implement templates edition"
+        ,"Update advanced settings display"
         ,"Fix JS error on playlist management page"
+        ,"Fix missing video thumbs tool"
+        ,"Fix possible PHP error on video edition page"
+        ,"Fix unstuck update tool from admin dashboard"
+        ,"Fix possible wrong error message display on core/db update from dashboard"
+        ,"Fix todo deletion"
       ]
     },
     {
       "title": "Front office",
       "description": [
-        "Implement video favorite icon"
+        "Refactor medias rating"
+        ,"Implement video, photo & collection favorite icon"
+        ,"Implement collection rating"
+        ,"Implement random video order"
+        ,"Implement support for ultrawide screens"
         ,"Update media rating"
         ,"Update collection management"
         ,"Add signup date of birth calendar icon"
         ,"Fix possible JS error on register page"
+        ,"Fix possible display issues on login & signup pages"
+        ,"Fix possible error during photo upload"
+        ,"Fix minified CSS file"
+        ,"Fix video collection default thumb display"
+        ,"Fix video saving on upload form"
+        ,"Fix possible SQL error on video upload form with malfomated video file name"
+        ,"Fix possible temporary remote code execution (Thanks @m0x41nos !)"
+        ,"Fix default thumb selection on video upload form"
+        ,"Fix missing minified JS file"
       ]
     },
     {
       "title": "Miscellaneous",
       "description": [
         "Refactor favorites storage"
+        ,"Refactor thumbs"
         ,"Update compatibility to PHP 8.5.X"
         ,"Cleanup code"
         ,"Drop support for PHP 8.0"
+        ,"Drop outdated & unused columns"
         ,"Fix possible PHP error with discord logs"
+        ,"Fix possible issue with migration 5.5.3 - 14"
+        ,"Fix SQL error on video, photo & collection deletion"
+        ,"Fix pre-5.5.1 videos thumbs"
+        ,"Fix clean orphan files tool"
+        ,"Fix tools error handling"
+        ,"Fix possible SQL error on video upload"
+        ,"Fix thumbs deletion"
+        ,"Fix possible SQL injection"
+        ,"Fix possible duplicate configs"
+        ,"Fix SSRF vulnerability (Thanks @Takumi142857 !)"
+      ]
+    },
+    {
+      "title": "Conversion",
+      "description": [
+        "Implement Webp video thumbs"
+        ,"Implement Gif image thumbs"
+        ,"Implement Remove hard-coded letterboxing / pillarboxing option"
+        ,"Prevent photo thumbs generation when not needed"
+        ,"Fix conversion logs"
+        ,"Fix PNG transparency"
+      ]
+    },
+    {
+      "title": "Translations",
+      "description": [
+        "Translate hardcoded texts"
       ]
     },
     {
@@ -41,6 +91,7 @@
       "description": [
         "Update phpmailer/phpmailer to 7.0.2"
         ,"Update VideoJS to version 8.23.6"
+        ,"Update predis/predis to 3.4.0"
       ]
     }
   ]

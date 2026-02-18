@@ -33,7 +33,7 @@ class FFMpeg
      * @param null|string $file_path
      *
      */
-    function get_file_info($file_path = null): array
+    public function get_file_info($file_path = null): array
     {
         if (!$file_path) {
             $file_path = $this->input_file;
@@ -244,7 +244,7 @@ class FFMpeg
         }
     }
 
-    static function unlockAll()
+    static function unlockAll(): void
     {
         $max_conversion = config('max_conversion');
         for ($i = 0; $i < $max_conversion; $i++) {
@@ -255,7 +255,7 @@ class FFMpeg
         }
     }
 
-    static function isThereAnyConversionLocks()
+    static function isThereAnyConversionLocks(): bool
     {
         $max_conversion = config('max_conversion');
         for ($i = 0; $i < $max_conversion; $i++) {
@@ -270,7 +270,7 @@ class FFMpeg
     /**
      * @throws Exception
      */
-    function ClipBucket(): void
+    function ClipBucket(int $videoid): void
     {
         $this->log->newSection('Conversion lock');
         while($this->isLocked()){
@@ -302,7 +302,8 @@ class FFMpeg
 
         if (file_exists($this->input_file)) {
             try {
-                $this->generateAllThumbs();
+                $videoConverion = new VideoThumbs($videoid, $this);
+                $videoConverion->generateAutomaticThumbs();
             } catch (\Exception $e) {
                 $this->log->writeLine(date('Y-m-d H:i:s').' - Error occured : ' . $e->getMessage());
             }
@@ -491,6 +492,72 @@ class FFMpeg
         return $final_vrate;
     }
 
+    public function getCropFilter(): string
+    {
+        if (empty($this->input_file) || empty($this->input_details['video_width']) || empty($this->input_details['video_height'])) {
+            return '';
+        }
+
+        $srcW = (int)$this->input_details['video_width'];
+        $srcH = (int)$this->input_details['video_height'];
+
+        $cmd = config('ffmpegpath')
+            . ' -hide_banner -nostats -i ' . escapeshellarg($this->input_file)
+            . ' -vf fps=1,cropdetect=limit=24:round=2:reset=0'
+            . ' -an -f null - 2>&1';
+
+        $out = System::shell_output($cmd);
+        if (empty($out)) {
+            return '';
+        }
+
+        if (!preg_match_all('/\bcrop=(\d+):(\d+):(\d+):(\d+)\b/', $out, $m, PREG_SET_ORDER)) {
+            return '';
+        }
+
+        $minX = PHP_INT_MAX;
+        $minY = PHP_INT_MAX;
+        $maxR = 0;
+        $maxB = 0;
+        $found = false;
+
+        foreach ($m as $c) {
+            $w = (int)$c[1]; $h = (int)$c[2]; $x = (int)$c[3]; $y = (int)$c[4];
+
+            if ($w === $srcW && $h === $srcH && $x === 0 && $y === 0) {
+                continue;
+            }
+
+            $found = true;
+            $minX = min($minX, $x);
+            $minY = min($minY, $y);
+            $maxR = max($maxR, $x + $w);
+            $maxB = max($maxB, $y + $h);
+        }
+
+        if (!$found) {
+            return '';
+        }
+
+        $x = max(0, $minX);
+        $y = max(0, $minY);
+        $w = min($srcW, $maxR) - $x;
+        $h = min($srcH, $maxB) - $y;
+
+        if ($w <= 0 || $h <= 0) {
+            return '';
+        }
+
+        $w -= $w % 2;
+        $h -= $h % 2;
+
+        if ($w === $srcW && $h === $srcH && $x === 0 && $y === 0) {
+            return '';
+        }
+
+        return 'crop=' . $w . ':' . $h . ':' . $x . ':' . $y;
+    }
+
     /**
      * @throws Exception
      */
@@ -539,7 +606,19 @@ class FFMpeg
                 } else {
                     $scale = $resolution['video_height'] . ':-2';
                 }
-                $cmd .= ' -vf "scale=' . $scale . '"';
+
+                $filter = '';
+                if( config('video_remove_black_bars') == 'yes' ){
+                    $filter .= $this->getCropFilter();
+                }
+
+                if( !empty($filter) ){
+                    $filter .= ',';
+                }
+
+                $filter .= 'scale=' . $scale;
+
+                $cmd .= ' -vf "' . $filter . '"';
                 break;
 
             case 'video_hls':
@@ -548,6 +627,11 @@ class FFMpeg
                 $resolutions = ' -filter_complex "';
                 $log_res = '';
                 $filter_complex = '';
+
+                $crop = '';
+                if( config('video_remove_black_bars') == 'yes' ){
+                    $crop = $this->getCropFilter();
+                }
 
                 foreach ($resolution as $res) {
                     $video_bitrate = myquery::getInstance()->getVideoResolutionBitrateFromHeight($res['height']);
@@ -566,7 +650,15 @@ class FFMpeg
                     if( $filter_complex != '' ){
                         $filter_complex .= '; ';
                     }
-                    $filter_complex .= '[0:v]scale=' . $scale . '[v' . $count . ']';
+
+                    $filter = $crop;
+                    if( !empty($filter) ){
+                        $filter .= ',';
+                    }
+                    $filter .= 'scale=' . $scale;
+
+                    $filter_complex .= '[0:v]' . $filter . '[v' . $count . ']';
+
                     $count++;
                 }
                 $resolutions .= $filter_complex . '"';
@@ -884,152 +976,36 @@ class FFMpeg
         }
     }
 
-    /**
-     * @return void
-     * @throws Exception
-     */
-    public function generateAllThumbs(): void
-    {
-        $this->log->newSection('Thumbs generation');
-
-        $thumbs_res_settings = thumbs_res_settings_28();
-
-        $thumbs_settings = [];
-        $thumbs_settings['duration'] = $this->input_details['duration'];
-        $thumbs_settings['num'] = config('num_thumbs');
-
-        $video_info = Video::getInstance()->getOne([
-            'file_name' => $this->file_name
-            ,'disable_generic_constraints' => true
-        ]);
-
-        if( empty($video_info) ){
-            $this->log->writeLine(date('Y-m-d H:i:s') . ' - ' . lang('technical_error'));
-            return;
-        }
-
-        $thumbs_settings['videoid'] = $video_info['videoid'];
-
-        //delete olds thumbs from db and on disk
-        $this->log->writeLine(date('Y-m-d H:i:s').' - Deleting old thumbs...');
-        Clipbucket_db::getInstance()->delete(tbl('video_thumbs'), ['videoid','type'], [$video_info['videoid'],'auto']);
-        $pattern = DirPath::get('thumbs') . $this->file_directory . DIRECTORY_SEPARATOR . $this->file_name . '*[!-cpb].*';
-        $glob = glob($pattern);
-        foreach ($glob as $thumb) {
-            unlink($thumb);
-        }
-
-        //reset default thumb
-        $this->generateDefaultsThumbs($video_info['videoid'], $thumbs_res_settings, $thumbs_settings);
-    }
-
     public static function extractVideoThumbnail(array $params): array
     {
-        $size = '';
+        if ( empty($params['output_format']) || !in_array($params['output_format'], ['jpg', 'webp'], true) ) {
+            $params['output_format'] = 'webp';
+        }
+
+        $filter = '';
         if( $params['size_tag'] != 'original' ){
             $color = self::convertHexToFFmpeg(config('thumb_background_color'));
             $width = $params['width'];
             $height = $params['height'];
-            $size .= '-vf "scale=\'if(gt(a,' . $width . '/' . $height . '),' . $width . ',-1)\':\'if(gt(a,' . $width . '/' . $height . '),-1,' . $height . ')\',pad=' . $width . ':' . $height . ':(' . $width . '-iw)/2:(' . $height . '-ih)/2:' . $color . '"';
+            $filter .= 'scale=\'if(gt(a,' . $width . '/' . $height . '),' . $width . ',-1)\':\'if(gt(a,' . $width . '/' . $height . '),-1,' . $height . ')\',pad=' . $width . ':' . $height . ':(' . $width . '-iw)/2:(' . $height . '-ih)/2:' . $color;
         }
-        $command = config('ffmpegpath') . ' -ss ' . $params['timecode'] . ' -i ' . $params['input_path'] . ' -pix_fmt yuvj422p -an -r 1 ' . $size . ' -y -f image2 -vframes 1 ' . $params['output_path'] . ' 2>&1';
+
+        $codecOptions = '-c:v libwebp';
+        if( $params['output_format'] == 'jpg' ){
+            $codecOptions = '-c:v mjpeg';
+        }
+
+        $vf = '';
+        if ($filter !== '') {
+            $vf = ' -vf "' . $filter . '"';
+        }
+
+        $command = config('ffmpegpath') . ' -ss ' . $params['timecode'] . ' -i ' . $params['input_path'] . ' -pix_fmt yuvj422p -an -r 1 ' . $vf . ' ' . $codecOptions . ' -y -f image2 -vframes 1 ' . $params['output_path'] . ' 2>&1';
 
         return [
             'command' => $command
             ,'output' => shell_exec($command)
         ];
-    }
-
-    /**
-     * @param $array
-     * @return void
-     * @throws Exception
-     */
-    public function generateThumbs($array): void
-    {
-        $duration = $array['duration'];
-        $size_tag = $array['size_tag'];
-        $num = $array['num'];
-
-        $this->log->writeLine(date('Y-m-d H:i:s').' - Generating '.$size_tag.'...');
-
-        if ($num > $duration) {
-            $num = (int)$duration;
-        }
-
-        $thumb_dir = DirPath::get('thumbs') . $this->file_directory;
-        if (!is_dir($thumb_dir)) {
-            mkdir($thumb_dir, 0755, true);
-        }
-
-        $videoid = $array['videoid'];
-
-        $extension = 'jpg';
-        if ($num >= 1) {
-            $division = $duration / $num;
-
-            for ($count = 1; $count <= $num; $count++) {
-                $thumb_file_number = str_pad((string)$count, 4, '0', STR_PAD_LEFT);
-                $file_name = $this->file_name . '-' . $size_tag . '-' . $thumb_file_number . '.' . $extension;
-                $file_path = $thumb_dir . $file_name;
-                $time_sec = (int)($division * $count);
-
-                $this->log->writeLine(date('Y-m-d H:i:s').' => Generating '.$file_name.'...');
-
-                $return = self::extractVideoThumbnail([
-                    'timecode' => $time_sec
-                    ,'input_path' => $this->input_file
-                    ,'size_tag' => $array['size_tag']
-                    ,'width' => $array['width']
-                    ,'height' => $array['height']
-                    ,'output_path' => $file_path
-                ]);
-
-                if(System::isInDev()){
-                    $this->log->writeLine('<div class="showHide"><p class="title glyphicon-chevron-right">Command : </p><p class="content">'.$return['command'].'</p></div>', false, true);
-                    $this->log->writeLine('<div class="showHide"><p class="title glyphicon-chevron-right">Output : </p><p class="content">'.$return['output'].'</p></div>', false, true);
-                }
-
-                if (file_exists($file_path)) {
-                    Clipbucket_db::getInstance()->insert(tbl('video_thumbs'), ['videoid', 'resolution', 'num', 'extension', 'version', 'type'], [$videoid, $size_tag, $thumb_file_number, $extension, Update::getInstance()->getCurrentCoreVersion(), 'auto']);
-                } else {
-                    $this->log->writeLine(date('Y-m-d H:i:s').' => Error generating '.$file_name.'...');
-                }
-            }
-        } else {
-            $this->log->writeLine(date('Y-m-d H:i:s').' - Thumbs num can\'t be '.$num.'...');
-        }
-    }
-
-    /**
-     * @throws Exception
-     */
-    public function generateAllMissingThumbs(): void
-    {
-        $thumbs_res_settings = thumbs_res_settings_28();
-
-        $thumbs_settings = [];
-        $thumbs_settings['duration'] = $this->input_details['duration'];
-        $thumbs_settings['num'] = config('num_thumbs');
-        $rs = Clipbucket_db::getInstance()->select(tbl('video'), '*', 'file_name LIKE \'' . $this->file_name . '\'');
-
-        if( empty($rs) ){
-            e(lang('technical_error'));
-            return;
-        }
-
-        $video_details = $rs[0];
-
-        $thumbs_settings['videoid'] = $video_details['videoid'];
-
-        $thumbs = get_thumb($video_details, true);
-        //si rien en base
-        if (empty($thumbs) || $thumbs[0] == default_thumb()) {
-            Video::getInstance()->deletePictures($video_details, 'auto');
-
-            //generate default thumb
-            $this->generateDefaultsThumbs($video_details['videoid'], $thumbs_res_settings, $thumbs_settings);
-        }
     }
 
     private function check_subtitle_track(int $track_id): bool
@@ -1231,38 +1207,6 @@ class FFMpeg
         return $max_resolution;
     }
 
-    /**
-     * @param $videoid
-     * @param array $thumbs_res_settings
-     * @param array $thumbs_settings
-     * @return void
-     * @throws Exception
-     */
-    public function generateDefaultsThumbs($videoid, array $thumbs_res_settings, array $thumbs_settings): void
-    {
-        foreach ($thumbs_res_settings as $key => $thumbs_size) {
-            $height_setting = $thumbs_size[1];
-            $width_setting = $thumbs_size[0];
-
-            if ($key == 'original') {
-                $thumbs_settings['size_tag'] = $key;
-            } else {
-                $thumbs_settings['size_tag'] = $width_setting . 'x' . $height_setting;
-                $thumbs_settings['width'] = $width_setting;
-                $thumbs_settings['height'] = $height_setting;
-            }
-
-            $this->generateThumbs($thumbs_settings);
-        }
-
-        $res = Clipbucket_db::getInstance()->select(tbl('video') . ' AS V LEFT JOIN ' . tbl('video_thumbs') . ' AS VT ON VT.videoid = V.videoid '
-            , 'num'
-            , ' V.videoid = ' . mysql_clean($videoid). ' AND type=\'custom\' AND V.default_thumb = VT.num'
-        );
-        if (empty($res)) {
-            Clipbucket_db::getInstance()->update(tbl('video'), ['default_thumb'], [1], ' videoid = ' . mysql_clean($videoid));
-        }
-    }
 
     public static function getFileType($filepath): string
     {
@@ -1377,5 +1321,12 @@ class FFMpeg
         }
 
         return true;
+    }
+
+    public static function generateGif(string $input_file, string $output_file, int $width = 100): void
+    {
+        $cmd = config('ffmpegpath') .' -i ' . $input_file . ' -vf "scale=' . $width . ':-1:flags=lanczos,split[s0][s1];[s0]palettegen=stats_mode=full[p];[s1][p]paletteuse=dither=none" -gifflags -offsetting ' . $output_file;
+        $output = shell_exec($cmd);
+        DiscordLog::sendDump($output);
     }
 }

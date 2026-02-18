@@ -117,7 +117,7 @@ $(document).ready(function(){
 
     $("#todolist .delete").on("click", function(e){
         e.preventDefault();
-
+        const button = $(this);
         $.ajax({
             url: page,
             type: "post",
@@ -126,7 +126,7 @@ $(document).ready(function(){
                 mode: "delete_todo"
             },
             success: function (data) {
-                this.parents("li").remove();
+                button.parents("li").remove();
             }
         });
     });
@@ -472,19 +472,24 @@ function updateListeners () {
 
     $('.mark_as_failed').off('click').on('click', function () {
         var id = $(this).data('id');
-        if (confirm(lang.confirm_mark_as_failed)) {
+        let promise = popinConfirm._confirm_it({
+            'message': lang.confirm_mark_as_failed,
+            'title': lang.update
+        });
+        promise.then(function (result) {
+            showSpinner();
             $.ajax({
                 url: admin_url + "actions/tool_force_to_error.php",
                 type: "POST",
                 data: {id_tool: id},
-                dataType: 'json',
-                success: function (result) {
-                    showSpinner();
-                }
+                dataType: 'json'
+            }).done(function (data) {
+                $(".page-content").prepend(data.msg);
+            }).always(function () {
+                updateInfo(0);
+                hideSpinner();
             });
-        } else {
-            return false;
-        }
+        })
     })
 }
 
@@ -542,7 +547,7 @@ async function update(type){
             }
 
             // connectSSE();
-            refreshUpdateProgression();
+            refreshUpdateProgression(type);
         }
     });
 }
@@ -610,37 +615,41 @@ async function check_before_launch_update() {
     return true;
 }
 
-function refreshUpdateProgression() {
+function refreshUpdateProgression(type) {
     var interval = setInterval(function () {
-        $.ajax({
-            url: admin_url + "actions/update_info.php",
-            type: "post",
-            dataType: "json",
-            success: function (data) {
-                $('#update_div').html(data.html);
-                updateListeners();
-                hideSpinner();
-                if (data.msg_template) {
-                    $(".page-content").prepend(data.msg_template)
-                }
-                if (data.is_updating === 'false') {
-                    clearInterval(interval);
-                    checkStatus();
-                } else {
-                    var tool = data.update_info;
-                    $('.launch_wip').off('click');
-
-                    if (tool && tool.elements_done > 0) {
-                        $('#progress_div').show();
-                    }
-                    $('#progress-bar').attr('aria-valuenow', tool.pourcent).width(tool.pourcent + '%');
-                    $('#pourcent').html(tool.pourcent);
-                    $('#done').html(tool.elements_done);
-                    $('#total').html(tool.elements_total);
-                }
-            }
-        });
+        updateInfo(interval, type);
     }, 5000);
+}
+function updateInfo(interval, type) {
+    $.ajax({
+        url: admin_url + "actions/update_info.php",
+        type: "post",
+        data: {type: type},
+        dataType: "json",
+        success: function (data) {
+            $('#update_div').html(data.html);
+            updateListeners();
+            hideSpinner();
+            if (data.msg_template) {
+                $(".page-content").prepend(data.msg_template)
+            }
+            if (data.is_updating === 'false') {
+                clearInterval(interval);
+                checkStatus();
+            } else {
+                var tool = data.update_info;
+                $('.launch_wip').off('click');
+
+                if (tool && tool.elements_done > 0) {
+                    $('#progress_div').show();
+                }
+                $('#progress-bar').attr('aria-valuenow', tool.pourcent).width(tool.pourcent + '%');
+                $('#pourcent').html(tool.pourcent);
+                $('#done').html(tool.elements_done);
+                $('#total').html(tool.elements_total);
+            }
+        }
+    });
 }
 
 function checkStatus() {

@@ -1,14 +1,21 @@
 {ANCHOR place="before_edit_video_form_thumbs"}
 <div class="formSection clear">
-    <h4>{lang code='thumbs'} <i class="glyphicon glyphicon-chevron-down pull-right"></i></h4>
+    <h4 {if !Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3','14')} title="{lang('cant_perform_action_until_app_fully_updated')}" class="disabled" {/if}>
+        {lang('thumbs')|ucfirst} {if Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3','14')}<i class="glyphicon glyphicon-chevron-down pull-right"></i>{/if}
+    </h4>
     <div class="sectionContent" style="display: none;">
         <div class="row">
             <h5>{lang code="extracted_thumbs"}</h5>
             {foreach from=$vidthumbs item=vid_thumb}
+                {if $vid_thumb.thumb_id}
+                    {$thumb_id = $vid_thumb.thumb_id}
+                {else}
+                    {$thumb_id = $vid_thumb.thumb_num}
+                {/if}
                 <div class="col-md-3">
                     <div class="form-group text-center">
-                        <label for="{$vid_thumb|getname}"><img class="edit-img-thumbnail" src="{$vid_thumb}" width="100" height="100" />
-                            <input class="show" style="margin:5px auto;" type="radio" value="{$vid_thumb|get_thumb_num}" id="{$vid_thumb|getname}" name="default_thumb" {if $v.default_thumb==$vid_thumb|get_thumb_num}checked{/if}/>{lang code='default'}
+                        <label for="thumb_{$thumb_id}"><img class="edit-img-thumbnail" src="{$vid_thumb.thumb}" width="100" height="100" />
+                            <input class="show" style="margin:5px auto;" type="radio" value="{$thumb_id}" id="thumb_{$thumb_id}" name="default_thumb" {if $v.default_thumbnail==$vid_thumb.thumb_id}checked{/if}/>{lang code='default'}
                         </label>
                     </div>
                 </div>
@@ -19,10 +26,15 @@
             <div class="row">
                 <h5>{lang code="custom_thumbs"}</h5>
                 {foreach from=$vidthumbs_custom item=vid_thumb}
+                    {if $vid_thumb.thumb_id}
+                        {$thumb_id = $vid_thumb.thumb_id}
+                    {else}
+                        {$thumb_id = $vid_thumb.num}
+                    {/if}
                     <div class="col-md-3">
                         <div class="form-group text-center">
-                            <label for="{$vid_thumb|getname}"><img class="edit-img-thumbnail" src="{$vid_thumb}" width="100" height="100" />
-                                <input class="show" style="margin:5px auto;" type="radio" value="{$vid_thumb|get_thumb_num}" id="{$vid_thumb|getname}" name="default_thumb" {if $v.default_thumb==$vid_thumb|get_thumb_num}checked{/if} />{lang code='default'}
+                            <label for="thumb_{$thumb_id}"><img class="edit-img-thumbnail" src="{$vid_thumb.thumb}" width="100" height="100" />
+                                <input class="show" style="margin:5px auto;" type="radio" value="{$thumb_id}" id="thumb_c_{$thumb_id}" name="default_thumb" {if $v.default_thumbnail==$vid_thumb.thumb_id}checked{/if} />{lang code='default'}
                             </label>
                         </div>
                     </div>
@@ -34,9 +46,8 @@
         <div class="row">
             <h5>{lang code='upload_custom_thumbnail'}</h5>
             <input name="vid_thumb[]" id="new_thumbs" type="file" />
-            <label for="upload_thumbs"></label>
             <div class="form-group pull-right">
-                <input type="submit" id="upload_thumbs" value="{lang code='upload'}" class="btn btn-primary btn-sm"/>
+                <input type="submit" id="upload_thumbs" value="{lang code='upload'}" class="btn btn-primary btn-sm" {if !Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '14')} disabled="disabled" title="Sorry, you cannot perform this action until the application has been fully updated by an administrator" {/if}/>
             </div>
         </div>
         {ANCHOR place="after_edit_video_form_thumbs_upload"}

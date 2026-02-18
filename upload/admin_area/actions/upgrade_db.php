@@ -180,7 +180,7 @@ try {
     if ($need_to_create_version_table) {
         execute_sql_file($table_version_path);
 
-        $sql = 'INSERT IGNORE INTO ' . tbl('version') . ' (id, version, revision) VALUES (1, \'' . mysql_clean($version) . '\' , ' . mysql_clean((int)$revision) . ')';
+        $sql = 'INSERT IGNORE INTO ' . tbl('version') . ' (id, version, revision) VALUES (1, \'' . mysql_clean($version) . '\' , ' . (int)$revision . ')';
         Clipbucket_db::getInstance()->execute($sql);
     }
 

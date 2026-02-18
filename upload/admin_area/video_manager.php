@@ -15,8 +15,8 @@ if ($_GET['active'] == 'no') {
 }
 
 if (isset($_POST['reconvert_selected']) || isset($_GET['reconvert_video'])) {
-    if (!Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.2', '148')) {
-        e('Sorry, you cannot upload new videos until the application has been fully updated by an administrator');
+    if (!Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '14')) {
+        e('Sorry, you cannot perform this action until the application has been fully updated by an administrator');
     } else {
         reConvertVideos();
     }

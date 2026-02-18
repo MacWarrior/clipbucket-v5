@@ -1,10 +1,9 @@
 {lang code='photo' assign='object_type'}
 
-{assign var=json value=$photo.photo_details|json_decode}
 {$curr_photo = $photo|@json_encode}
 {$user_admin = $user|@json_encode}
-{$srcfirst = {get_photo(['details'=>$photo,'size'=>'l'])}}
-{$shareableThumb = get_photo_file($photo.photo_id)}
+{$srcfirst = {PhotoThumbs::getThumbFile($photo.photo_id, 'original')}}
+{$shareableThumb = {PhotoThumbs::getThumbFile($photo.photo_id, 150)}}
 {$shareableThumb = $shareableThumb.0}
 <div id="main" class="clearfix container">
     <div id="collectionItemView" class="clearfix">
@@ -29,7 +28,8 @@
 
                 <div class="clearfix photo-view">
                     <div id="gallery">
-                        <i id="enlarge" class="fa fa-expand fa-2x" style="float:right;cursor:pointer;" data-toggle="modal" data-target="#myModal"></i>
+
+                            <i id="enlarge" class="fa fa-expand fa-2x" style="float:right; {if Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '14')} cursor:pointer;" data-toggle="modal" data-target="#myModal" title="{lang('show_original')}"  {else} cursor: not-allowed" title="{lang('cant_perform_action_until_app_fully_updated')}" disabled="disabled" {/if}></i>
                         <div class="image-holder">
                             <div class="inner-holder">
                                 {if empty($photo.collection_id)}
@@ -37,14 +37,14 @@
                                         {lang("photo_is", strtolower(lang("orphan")))}
                                     </div>
                                 {/if}
-                                {get_photo details=$photo size='l' class='img-responsive center-block' output='html' height="100"}
+                                {PhotoThumbs::getHtmlThumbFile($photo.photo_id, 900, ['class'=>'img-responsive center-block'])}
                             </div>
                         </div>
                     </div>
 
                     <div id="myNav" class="overlay">
                         <div class="overlay-content">
-                            <img id="gallery-exd" class="img-responsive center-block"/>
+                            <img id="gallery-exd" class="img-responsive center-block" style="max-width: 100%;max-height: 100%;"/>
                             <button type="button" class="img-close" id="btn-close" data-dismiss="modal" data-check="">&times;</button>
                             {if $c.total_objects > 1}
                                 <div class="btn-holder clearfix">
@@ -74,7 +74,7 @@
                                         <img src="{userquery::getInstance()->getUserThumb(null,'m',$photo.userid)}" class="img-responsive"/>
                                     </div>
                                     <h2 class="user-title">
-                                        <span >{display_clean($user.username)}</span>
+                                        <span>{display_clean($user.username)}</span>
                                     </h2>
                                 {else}
                                     <a href="{userquery::getInstance()->profile_link($user)}" class="avatar">
@@ -90,48 +90,50 @@
                             </div>
                         </div>
                         <div class="user-likes-sub clearfix">
-                            {if config('photo_rating') == 'yes' && ($photo.userid != user_id() || config('own_photo_rating') == 'yes') }
                             <div class="clearfix like-rating col-lg-6 col-md-6 col-sm-6 col-xs-12" id="rating_container">
-                                {show_video_rating rating=$photo.rating ratings=$photo.rated_by total='10' id=$photo.photo_id type=photo}
-                            </div>
-                            <div class="clearfix subscribe-col col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                {else}
-                                <div class="clearfix subscribe-col col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <div class="watch-rating-inline">
+                                    {if config('photo_rating') == 'yes' }
+                                        {show_video_rating rating=$photo.rating ratings=$photo.rated_by total='10' id=$photo.photo_id type=photo disable=($photo.userid == User::getInstance()->getCurrentUserID() && config('own_photo_rating') != 'yes')}
                                     {/if}
-                                    {if user_id() && $photo.userid != user_id() && $photo.userid != $anonymous_id}
-                                        {if userquery::getInstance()->is_subscribed($photo.userid,user_id())}
-                                            <button onclick="_cb.unsubscribeToChannel('{$photo.userid}','unsubscribe_user');" class="btn btn-subscribe btn-primary subs_{$photo.userid}">
-                                                {lang code="unsubscribe"}
-                                            </button>
-
-                                        {else}
-                                            <button onclick="_cb.subscribeToChannelNew('{$photo.userid}','subscribe_user');" class="btn btn-subscribe btn-primary subs_{$photo.userid}">
-                                                {lang code="subscribe"}
-                                            </button>
-                                        {/if}
-                                    {/if}
-                                    {if config('enable_edit_photo_button') == 'yes' && User::getInstance()->isUserConnected()}
-                                        {if User::getInstance()->hasPermission('admin_access')}
-                                            {if $photo.userid == user_id()}
-                                                <div class="dropdown">
-                                                    <button class="btn btn-success dropdown-toggle" type="button" id="dropdownEdit" data-toggle="dropdown" aria-expanded="true">
-                                                        {lang code='edit'}
-                                                        <span class="caret"></span>
-                                                    </button>
-                                                    <ul class="dropdown-menu pull-right" role="menu" aria-labelledby="dropdownEdit">
-                                                        <li><a href="{$link_edit_bo}">{lang code='edit_from_BO'}</a></li>
-                                                        <li><a href="{$link_edit_fo}">{lang code='edit_from_FO'}</a></li>
-                                                    </ul>
-                                                </div>
-                                            {else}
-                                                <a class="btn btn-success" style="font-size: 14px; line-height: 14px;" href="{$link_edit_bo}">{lang code='edit'}</a>
-                                            {/if}
-                                        {elseif $photo.userid == user_id()}
-                                            <a class="btn btn-success" style="font-size: 14px;line-height: 14px;" href="{$link_edit_fo}">{lang code='edit'}</a>
-                                        {/if}
+                                    {if config('enable_favorite_icon_photo') == 'yes' && User::getInstance()->isUserConnected()}
+                                        <span class="manage_favorite watch-rating-icon pointer glyphicon glyphicon-heart{if !$is_favorite}-empty " title="{lang('add_to_my_favorites')}{/if}" title="{lang('remove_from_favorites')}" style="font-size: 20px;"></span>
                                     {/if}
                                 </div>
                             </div>
+                            <div class="clearfix subscribe-col col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                                {if User::getInstance()->getCurrentUserID() && $photo.userid != User::getInstance()->getCurrentUserID() && $photo.userid != $anonymous_id}
+                                    {if userquery::getInstance()->is_subscribed($photo.userid,User::getInstance()->getCurrentUserID())}
+                                        <button onclick="_cb.unsubscribeToChannel('{$photo.userid}','unsubscribe_user');" class="btn btn-subscribe btn-primary subs_{$photo.userid}">
+                                            {lang code="unsubscribe"}
+                                        </button>
+                                    {else}
+                                        <button onclick="_cb.subscribeToChannelNew('{$photo.userid}','subscribe_user');" class="btn btn-subscribe btn-primary subs_{$photo.userid}">
+                                            {lang code="subscribe"}
+                                        </button>
+                                    {/if}
+                                {/if}
+                                {if config('enable_edit_photo_button') == 'yes' && User::getInstance()->isUserConnected()}
+                                    {if User::getInstance()->hasPermission('admin_access')}
+                                        {if $photo.userid == User::getInstance()->getCurrentUserID()}
+                                            <div class="dropdown">
+                                                <button class="btn btn-success dropdown-toggle" type="button" id="dropdownEdit" data-toggle="dropdown" aria-expanded="true">
+                                                    {lang code='edit'}
+                                                    <span class="caret"></span>
+                                                </button>
+                                                <ul class="dropdown-menu pull-right" role="menu" aria-labelledby="dropdownEdit">
+                                                    <li><a href="{$link_edit_bo}">{lang code='edit_from_BO'}</a></li>
+                                                    <li><a href="{$link_edit_fo}">{lang code='edit_from_FO'}</a></li>
+                                                </ul>
+                                            </div>
+                                        {else}
+                                            <a class="btn btn-success" style="font-size: 14px; line-height: 14px;" href="{$link_edit_bo}">{lang code='edit'}</a>
+                                        {/if}
+                                    {elseif $photo.userid == User::getInstance()->getCurrentUserID()}
+                                        <a class="btn btn-success" style="font-size: 14px;line-height: 14px;" href="{$link_edit_fo}">{lang code='edit'}</a>
+                                    {/if}
+                                {/if}
+                            </div>
+                        </div>
                     </header>
                     <div id="messageFav" class="alert alert-info marginTop" style="display:none;"></div>
                     <div class="view-tabs clearfix">
@@ -142,11 +144,11 @@
                             <li>
                                 <a href="#cb-item-share" data-toggle="tab"><span class="icon-share"></span>{lang code='share_embed'}</a>
                             </li>
-                            {if user_id()}
+                            {if User::getInstance()->getCurrentUserID() && (config('enable_favorite_icon_photo') != 'yes' || (isSectionEnabled('collections') && empty($photo.collection_id)))}
                                 <li>
                                     <a href="#cb-item-addto" data-toggle="tab"><span class="icon-plusrounded"></span>{lang('add_to')}</a>
                                 </li>
-                                {if user_id() != $photo.userid}
+                                {if User::getInstance()->getCurrentUserID() != $photo.userid}
                                     <li>
                                         <a href="#cb-item-report" data-toggle="tab"><span class="icon-flag"></span>{lang('report_this')}
                                         </a>
@@ -180,7 +182,9 @@
                             <div class="tab-pane fade in clearfix" id="cb-item-share">
                                 <ul class="social-share">
                                     <li>
-                                        <a class="btn-fb icon-facebook" href="http://www.facebook.com/sharer/sharer.php?s=100&p[url]={CBPhotos::getInstance()->photo_links($photo,'view_item')|urlencode}&p[images][0]={$shareableThumb}&p[title]={$photo.photo_title|title|urlencode}&p[summary]={$photo.photo_description|description|urlencode}" target="_blank">
+                                        <a class="btn-fb icon-facebook"
+                                           href="http://www.facebook.com/sharer/sharer.php?s=100&p[url]={CBPhotos::getInstance()->photo_links($photo,'view_item')|urlencode}&p[images][0]={$shareableThumb}&p[title]={$photo.photo_title|title|urlencode}&p[summary]={$photo.photo_description|description|urlencode}"
+                                           target="_blank">
                                             <span>Facebook</span>
                                         </a>
                                     </li>
@@ -199,14 +203,17 @@
                                 {show_share_form photo=$photo id=$photo.photo_id type=photo}
                             </div>
 
-                            {if user_id()}
+                            {if User::getInstance()->getCurrentUserID() && (config('enable_favorite_icon_photo') != 'yes' || (isSectionEnabled('collections') && empty($photo.collection_id)))}
                                 <div class="tab-pane fade in clearfix" id="cb-item-addto">
+                                    {if config('enable_favorite_icon_photo') != 'yes'}
                                     <div class="clearfix btn-fav">
                                         <div id="video_action_result_cont"></div>
-                                        <a id="addfav" class="btn btn-block btn-primary" href="javascript:void(0);"  {if Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '8')} onclick="_cb.add_to_favNew('photo','{$photo.photo_id}');"
+                                        <a id="addfav" class="btn btn-block btn-primary" href="javascript:void(0);" {if Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '8')} onclick="_cb.add_to_favNew('photo','{$photo.photo_id}').catch((e)=>{
+                                        });"
                                                 {else} disabled="disabled" title="{lang('cant_perform_action_until_app_fully_updated')}" {/if}>
                                             {lang code='add_to_my_favorites'}</a>
                                     </div>
+                                    {/if}
                                     {if isSectionEnabled('collections') && empty($photo.collection_id)}
                                         <div class="clearfix btn-big">
                                             <a href="javascript:void(0);" onclick="$('#addCollectionCont').toggle()" class="btn btn-block btn-primary">+ {lang code='add_to_my_collection'}</a>
@@ -218,7 +225,7 @@
                                 </div>
                             {/if}
 
-                            {if user_id() && $photo.userid != user_id()}
+                            {if User::getInstance()->getCurrentUserID() && $photo.userid != User::getInstance()->getCurrentUserID()}
                                 <div class="tab-pane fade in clearfix" id="cb-item-report">
                                     {show_flag_form id=$photo.photo_id type=Photo}
                                 </div>
@@ -283,7 +290,7 @@
                         <div class="clearfix row">
                             {foreach from=$top_collections item=collection}
                                 <div class="clearfix collection-item col-lg-6 col-md-6 col-sm-12 col-xs-12">
-                                    {include file="$style_dir/blocks/collection-item.html"}
+                                    {include file="$style_dir/blocks/collection-item.html" thumbsize='s'}
                                 </div>
                             {/foreach}
                         </div>
@@ -314,6 +321,8 @@
                     init_readonly_tags('tags', '#list_tags');
                 }
             });
+            lang['add_to_my_favorites'] = '{lang('add_to_my_favorites')}';
+            lang['remove_from_favorites'] = '{lang('remove_from_favorites')}';
         </script>
     </div>
 </div>

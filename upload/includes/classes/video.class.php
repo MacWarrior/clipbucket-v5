@@ -66,7 +66,6 @@ class Video extends Objects
             ,'video_files'
             ,'file_server_path'
             ,'video_version'
-            ,'thumbs_version'
             ,'subscription_email'
         ];
 
@@ -92,6 +91,11 @@ class Video extends Objects
         }
         if (!Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.2', '72')) {
             $this->fields[] = 'video_users';
+        }
+        if (!Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '14')) {
+            $this->fields[] = 'thumbs_version';
+        } else {
+            $this->fields[] = 'default_thumbnail';
         }
 
         $this->fields_categories = [
@@ -274,6 +278,10 @@ class Video extends Objects
                 $params['order'] = $this->getTableName() . '.title DESC';
                 break;
 
+            case 'random':
+                $params['order'] = 'RAND()';
+                break;
+
             case 'all_time':
             case 'today':
             case 'yesterday':
@@ -304,8 +312,11 @@ class Video extends Objects
             unset($sorts[array_search('most_commented', $sorts)]);
         }
 
-        if (config('video_rating') != '1') {
+        if (config('video_rating') != 'yes') {
             unset($sorts[array_search('top_rated', $sorts)]);
+        }
+        if (config('random_video_order') != 'yes') {
+            unset($sorts[array_search('random', $sorts)]);
         }
 
         return $sorts;
@@ -347,8 +358,8 @@ class Video extends Objects
         $param_get_detail = $params['get_detail'] ?? false;
 
         $conditions = [];
-        if( $param_videoid ){
-            $conditions[] = $this->getTableName() . '.videoid = \''.mysql_clean($param_videoid).'\'';
+        if( $param_videoid !== false ){
+            $conditions[] = $this->getTableName() . '.videoid = ' . (int)$param_videoid;
         }
         if( $param_videoids ){
             $conditions[] = $this->getTableName() . '.videoid IN ( '.mysql_clean(implode(', ', $param_videoids)).')';
@@ -357,7 +368,7 @@ class Video extends Objects
             $conditions[] = $this->getTableName() . '.videokey = \''.mysql_clean($param_videokey).'\'';
         }
         if( $param_userid ){
-            $conditions[] = $this->getTableName() . '.userid = \''.mysql_clean($param_userid).'\'';
+            $conditions[] = $this->getTableName() . '.userid = ' . (int)$param_userid;
         }
         if( $param_file_name ){
             $conditions[] = $this->getTableName() . '.file_name = \''.mysql_clean($param_file_name).'\'';
@@ -453,7 +464,7 @@ class Video extends Objects
             if( !$param_count ){
                 $types = Tags::getVideoTypes();
                 foreach ($types as $type) {
-                    $select[] = 'GROUP_CONCAT( DISTINCT(CASE WHEN tags.id_tag_type = ' . mysql_clean($type['id_tag_type']) . ' THEN tags.name END) SEPARATOR \',\') AS tags_' . mysql_clean($type['name']);
+                    $select[] = 'GROUP_CONCAT( DISTINCT(CASE WHEN tags.id_tag_type = ' . (int)$type['id_tag_type'] . ' THEN tags.name END) SEPARATOR \',\') AS tags_' . mysql_clean($type['name']);
                 }
                 $group[] = $this->getTableName() . '.videoid';
             }
@@ -476,7 +487,7 @@ class Video extends Objects
 
             if( $param_category ){
                 if( !is_array($param_category) ){
-                    $conditions[] = 'categories.category_id = '.mysql_clean($param_category);
+                    $conditions[] = 'categories.category_id = ' . (int)$param_category;
                 } else {
                     $conditions[] = 'categories.category_id IN (' . implode(', ', $param_category) . ')';
                 }
@@ -497,7 +508,7 @@ class Video extends Objects
             if( is_array($param_collection_id) ){
                 $tmp_cond = ' IN (' . implode(',', $param_collection_id) . ')';
             } else {
-                $tmp_cond = ' = ' . $param_collection_id;
+                $tmp_cond = ' = ' . (int)$param_collection_id;
             }
             $join[] = 'INNER JOIN ' . cb_sql_table($collection_items_table) . ' ON ' . $collection_items_table . '.collection_id' . $tmp_cond . ' AND ' . $this->getTableName() . '.videoid = ' . $collection_items_table . '.object_id';
         }
@@ -515,7 +526,6 @@ class Video extends Objects
             $flag_constraint = self::getFlagConstraint();
             $join[] = $flag_constraint['join'];
             $select[] = $flag_constraint['select'];
-
         }
 
         if( $param_group ){
@@ -613,16 +623,16 @@ class Video extends Objects
 
         $current_user_id = user_id();
         if ($current_user_id) {
-            $select_contacts = 'SELECT contact_userid FROM ' . tbl('contacts') . ' WHERE confirmed = \'yes\' AND userid = ' . $current_user_id;
+            $select_contacts = 'SELECT contact_userid FROM ' . tbl('contacts') . ' WHERE confirmed = \'yes\' AND userid = ' . (int)$current_user_id;
             $condition_video_users = '';
             if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.2', '72')) {
                 if ($sub_request) {
-                    $condition_video_users = ' OR video.videoid IN (SELECT videoid FROM '.tbl('video_users').' WHERE userid = ' . $current_user_id . ' )';
+                    $condition_video_users = ' OR video.videoid IN (SELECT videoid FROM '.tbl('video_users').' WHERE userid = ' . (int)$current_user_id . ' )';
                 } else {
-                    $condition_video_users = ' OR video_users.userid = ' . $current_user_id . ' ';
+                    $condition_video_users = ' OR video_users.userid = ' . (int)$current_user_id . ' ';
                 }
             }
-            $cond .= ' OR video.userid = ' . $current_user_id . ')';
+            $cond .= ' OR video.userid = ' . (int)$current_user_id . ')';
             $cond .= ' OR (video.active = \'yes\' AND video.status = \'Successful\'' ;
             $cond .= ' AND video.broadcast = \'private\' AND (video.userid IN(' . $select_contacts . ') ' . $condition_video_users . ' )' . $sql_age_restrict . ')';
         } else {
@@ -739,61 +749,113 @@ class Video extends Objects
     /**
      * @throws Exception
      */
-    public function setDefaultPicture($video_id, string $poster, string $type = 'auto'): void
+    public function setDefaultPicture($video_id, string $poster, string $type = 'thumbnail'): void
     {
         if (empty($poster)) {
             e(lang('missing_params'));
             return;
         }
-        if (!in_array($type, ['auto', 'custom', 'poster', 'backdrop']) ) {
-            if( System::isInDev() ){
-                e(lang('unknown_type', $type));
-            } else {
-                e(lang('technical_error'));
+        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '14')) {
+            if (!in_array($type, ['thumbnail', 'poster', 'backdrop']) ) {
+                if( System::isInDev() ){
+                    e(lang('unknown_type', $type));
+                } else {
+                    e(lang('technical_error'));
+                }
+                return;
             }
-            return;
-        }
+            //check if poster is valable ID
+            if (!empty(VideoThumbs::getOne(['id_video_image' => (int)$poster]))) {
+                Clipbucket_db::getInstance()->update(tbl('video'), ['default_' . $type], [$poster], ' videoid=' . (int)$video_id);
+            }
+        } else {
+            if (!in_array($type, ['auto', 'custom', 'poster', 'backdrop']) ) {
+                if( System::isInDev() ){
+                    e(lang('unknown_type', $type));
+                } else {
+                    e(lang('technical_error'));
+                }
+                return;
+            }
 
-        if( in_array($type, ['auto', 'custom'])){
-            $type = 'thumb';
-        }
+            if( in_array($type, ['auto', 'custom'])){
+                $type = 'thumb';
+            }
 
-        $num = get_thumb_num($poster);
-        if( empty($num) ){
-            return;
+            $num = get_thumb_num($poster);
+            if( empty($num) ){
+                return;
+            }
+            Clipbucket_db::getInstance()->update(tbl('video'), ['default_' . $type], [$num], ' videoid=' . (int)$video_id);
         }
-        Clipbucket_db::getInstance()->update(tbl('video'), ['default_' . $type], [$num], ' videoid=\'' . mysql_clean($video_id) . '\'');
     }
     /**
      * @throws Exception
      */
     public function resetDefaultPicture($video_id, string $type = 'auto'): void
     {
-        if (!in_array($type, ['auto', 'custom', 'poster', 'backdrop']) ) {
-            if( System::isInDev() ){
+
+        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '14')) {
+            $allowed_array = [
+                'thumbnail',
+                'poster',
+                'backdrop'
+            ];
+            $sub_request = /** @lang MySQL */
+                'SELECT id_video_image 
+                     FROM ' . tbl(VideoThumbs::getTableName()) . ' 
+                     WHERE videoid = ' . (int)$video_id . ' 
+                         AND type = \'' . $type . '\' 
+                     GROUP BY videoid, type HAVING MIN(num)';
+        } else {
+            $allowed_array = [
+                'auto',
+                'custom',
+                'poster',
+                'backdrop'
+            ];
+            $sub_request = /** @lang MySQL */
+                'IFNULL (SELECT MIN(CASE WHEN num = \'\' THEN 0 ELSE CAST(num AS INTEGER) END) 
+                     FROM ' . tbl('video_thumbs') . ' 
+                     WHERE videoid = ' . (int)$video_id . ' 
+                         AND type = \'' . $type . '\'' . ', 0)';
+        }
+        if (!in_array($type, $allowed_array)) {
+            if (System::isInDev()) {
                 e(lang('unknown_type', $type));
             } else {
                 e(lang('technical_error'));
             }
             return;
         }
-
-        if( in_array($type, ['auto', 'custom'])){
+        if (in_array($type, ['auto', 'custom'])) {
             $type = 'thumb';
         }
 
-        Clipbucket_db::getInstance()->update(tbl('video'), ['default_' . $type], ['|f|null'], ' videoid=\'' . mysql_clean($video_id) . '\'');
+        $sql = /** @lang MySQL */
+            'UPDATE ' . tbl('video') . '
+            SET `default_' . $type . '` = ( ' . $sub_request . ')
+            WHERE videoid = ' . (int)$video_id;
+        Clipbucket_db::getInstance()->execute($sql, 'update');
     }
 
     /**
      * @param array $video_detail
      * @param string $type must one of following : thumb, poster, backdrop
+     * @param bool $is_auto
      * @return void
      * @throws Exception
      */
-    public function deletePictures(array $video_detail, string $type): void
+    public function dropPictures(array $video_detail, string $type, bool $is_auto = null): void
     {
-        if (!in_array($type, ['auto', 'custom', 'poster', 'backdrop']) ) {
+        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '14')) {
+            $allowed_array = ['thumbnail', 'poster', 'backdrop'];
+            $results = VideoThumbs::getAll(['type' => $type, 'videoid' => $video_detail['videoid'], 'is_auto' => $is_auto, 'get_is_default'=>true]);
+        } else {
+            $allowed_array = ['auto', 'custom', 'poster', 'backdrop'];
+            $results = Clipbucket_db::getInstance()->select(tbl('video_thumbs'), 'num', ' type= \''. mysql_clean($type) .'\' and videoid = ' . (int)$video_detail['videoid']);
+        }
+        if (!in_array($type, $allowed_array) ) {
             if( System::isInDev() ){
                 e(lang('unknown_type', $type));
             } else {
@@ -801,10 +863,13 @@ class Video extends Objects
             }
             return;
         }
-        $results = Clipbucket_db::getInstance()->select(tbl('video_thumbs'), 'num', ' type= \''. mysql_clean($type) .'\' and videoid = ' . mysql_clean($video_detail['videoid']));
         if (!empty($results)) {
             foreach ($results as $result) {
-                delete_video_thumb($video_detail, $result['num'], $type);
+                if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '14')) {
+                    VideoThumbs::deleteVideoImage($result, false);
+                } else {
+                    delete_video_thumb($video_detail, $result['num'], $type);
+                }
             }
             Video::getInstance()->resetDefaultPicture($video_detail['videoid'], $type);
         }
@@ -906,8 +971,10 @@ class Video extends Objects
                         $total += filesize($file);
                     }
                     break;
+
                 default:
-                    e(lang('unknown_type'));
+                    e(lang('unknown_type', $file_type));
+                    break;
             }
         }
         return $total;
@@ -970,24 +1037,6 @@ class Video extends Objects
         return $total;
     }
 
-    /**
-     * @throws Exception
-     */
-    public function setDefautThumb($num, $type, $videoid)
-    {
-        if (!empty(Upload::getInstance()->types_thumb[$type])) {
-            $type_db = Upload::getInstance()->types_thumb[$type];
-        } elseif (in_array($type, Upload::getInstance()->types_thumb) || $type == 'thumb') {
-            $type_db = $type;
-        } else {
-            e(lang('error'));
-            return false;
-        }
-        if ($type_db == 'auto' || $type_db == 'custom') {
-            $type_db = 'thumb';
-        }
-        Clipbucket_db::getInstance()->update(tbl($this->tablename), ['default_' . $type_db], [(int)$num], ' videoid = ' . mysql_clean($videoid));
-    }
 
     /**
      * @param int $videoid
@@ -997,7 +1046,7 @@ class Video extends Objects
      */
     public function getVideoViewHistory(int $videoid, int $page): array
     {
-        $sql = 'SELECT COUNT(`id_video_view`) as total FROM ' . cb_sql_table('video_views') . ' WHERE `id_video` = ' . mysql_clean($videoid);
+        $sql = 'SELECT COUNT(`id_video_view`) as total FROM ' . cb_sql_table('video_views') . ' WHERE `id_video` = ' . (int)$videoid;
         $total = Clipbucket_db::getInstance()->_select($sql)[0]['total'] ?? 0;
 
         $sql_limit = '';
@@ -1006,7 +1055,7 @@ class Video extends Objects
         }
         $sql = 'SELECT video_views.*, users.username FROM ' . cb_sql_table('video_views') . '
          LEFT JOIN ' . cb_sql_table('users') . ' ON video_views.id_user = users.userid
-        WHERE id_video = ' . mysql_clean($videoid) . ' ORDER BY view_date DESC' . $sql_limit;
+        WHERE id_video = ' . (int)$videoid . ' ORDER BY view_date DESC' . $sql_limit;
         $results = Clipbucket_db::getInstance()->_select($sql);
 
         return [
@@ -1024,7 +1073,7 @@ class Video extends Objects
             return;
         }
 
-        $sql = 'UPDATE ' . tbl($this->tablename) . ' SET ' . $field . ' = ' . $value . ' WHERE ' . $this->field_id . ' = ' . $id_video;
+        $sql = 'UPDATE ' . tbl($this->tablename) . ' SET ' . $field . ' = ' . $value . ' WHERE ' . $this->field_id . ' = ' . (int)$id_video;
         Clipbucket_db::getInstance()->execute($sql);
     }
 
@@ -1037,7 +1086,8 @@ class Video extends Objects
             return '';
         }
 
-        $thumbs = get_thumb($vdetails, true, $size, 'auto');
+        $sizes = VideoThumbs::getWidthHeightFromSize($size);
+        $thumbs = VideoThumbs::getAllThumbFiles($vdetails['videoid'], $sizes['width'],  $sizes['height']);
         if( empty($thumbs) ){
             return '';
         }
@@ -1459,8 +1509,12 @@ class CBvideo extends CBCategory
             , 'comment_voting', 'comments_count', 'last_commented', 'featured', 'featured_date', 'allow_rating'
             , 'active', 'favourite_count', 'playlist_count', 'views', 'last_viewed', 'date_added', 'flagged', 'duration', 'status'
             , 'default_thumb', 'embed_code', 'downloads', 'uploader_ip'
-            , 'video_files', 'file_server_path', 'video_version', 'thumbs_version', 'subscription_email'
+            , 'video_files', 'file_server_path', 'video_version', 'subscription_email'
         ];
+
+        if (!Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '14')) {
+            $basic_fields[] = 'thumbs_version';
+        }
 
         if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.3.0', '1')) {
             $basic_fields[] = 'is_castable';
@@ -1552,7 +1606,7 @@ class CBvideo extends CBCategory
         if( Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.0', '264') ){
             $types = Tags::getVideoTypes();
             foreach ($types as $type) {
-                $select_tag .= ', GROUP_CONCAT( DISTINCT(CASE WHEN tags.id_tag_type = ' . mysql_clean($type['id_tag_type']) . ' THEN tags.name ELSE \'\' END) SEPARATOR \',\') AS tags_' . mysql_clean($type['name']);
+                $select_tag .= ', GROUP_CONCAT( DISTINCT(CASE WHEN tags.id_tag_type = ' . (int)$type['id_tag_type'] . ' THEN tags.name ELSE \'\' END) SEPARATOR \',\') AS tags_' . mysql_clean($type['name']);
             }
             $join_tag = ' LEFT JOIN ' . cb_sql_table('video_tags') . ' ON video.videoid = video_tags.id_video 
                     LEFT JOIN ' . cb_sql_table('tags') .' ON video_tags.id_tag = tags.id_tag';
@@ -1877,10 +1931,10 @@ class CBvideo extends CBCategory
     /**
      * @throws Exception
      */
-    function update_subtitle ($videoid, $number, $title)
+    function update_subtitle($videoid, $number, $title): void
     {
         if ($this->video_exists($videoid)) {
-            Clipbucket_db::getInstance()->update(tbl('video_subtitle'), ['title'], [$title], ' videoid = ' . mysql_clean($videoid) . ' AND number LIKE \'' . $number . '\'');
+            Clipbucket_db::getInstance()->update(tbl('video_subtitle'), ['title'], [$title], ' videoid = ' . (int)$videoid . ' AND number LIKE \'' . $number . '\'');
         }
     }
 
@@ -1922,7 +1976,7 @@ class CBvideo extends CBCategory
                 Category::getInstance()->unlinkAll('video', $vdetails['videoid']);
 
                 Clipbucket_db::getInstance()->execute('DELETE FROM ' . tbl('playlist_items') . ' WHERE object_id = ' . (int)$vdetails['videoid'] . ' AND playlist_item_type=\'v\'');
-                Clipbucket_db::getInstance()->delete(tbl('favorites'), ['type', 'id'], ['v', $vdetails['videoid']]);
+                Video::getInstance()->removeFromFavoritesForAllUsers($vdetails['videoid']);
                 Clipbucket_db::getInstance()->delete(tbl('video_views'), ['id_video'], [$vdetails['videoid']]);
                 Clipbucket_db::getInstance()->delete(tbl('video_users'), ['videoid'], [$vdetails['videoid']]);
 
@@ -1951,23 +2005,18 @@ class CBvideo extends CBCategory
     }
 
     /**
-     * Function used to remove video thumbs
+     * Function used to remove all video thumbs
      *
      * @param $vdetails
      * @throws Exception
      */
     function remove_thumbs($vdetails)
     {
-        //delete olds thumbs from db and on disk
-        Clipbucket_db::getInstance()->delete(tbl('video_thumbs'), ['videoid'], [$vdetails['videoid']]);
-        $pattern = DirPath::get('thumbs') . $vdetails['file_directory'] . DIRECTORY_SEPARATOR . $vdetails['file_name'] . '*';
-        $glob = glob($pattern);
-        foreach ($glob as $thumb) {
-            unlink($thumb);
+        $video_images = VideoThumbs::getAll(['videoid' => $vdetails['videoid']]);
+        foreach ($video_images as $video_image) {
+            VideoThumbs::deleteVideoImage($video_image);
         }
-
-        //reset default thumb
-        Clipbucket_db::getInstance()->update(tbl('video'), ['default_thumb'], [1], ' videoid = ' . mysql_clean($vdetails['videoid']));
+        remove_empty_parent_directory(DirPath::get('thumbs') . 'video' . DIRECTORY_SEPARATOR . $vdetails['file_directory'] . DIRECTORY_SEPARATOR . $vdetails['file_name'], DirPath::get('thumbs'));
         e(lang('vid_thumb_removed_msg'), 'm');
     }
 
@@ -1984,7 +2033,7 @@ class CBvideo extends CBCategory
         if (file_exists($file1) && is_file($file1)) {
             unlink($file1);
         }
-        remove_empty_directory(DirPath::get('logs') . $str, DirPath::get('logs'));
+        remove_empty_parent_directory(DirPath::get('logs') . $str, DirPath::get('logs'));
         e(lang('vid_log_delete_msg'), 'm');
     }
 
@@ -1996,7 +2045,7 @@ class CBvideo extends CBCategory
     function remove_subtitles($vdetails, string $number = null)
     {
         $directory = DirPath::get('subtitles') . $vdetails['file_directory'] . DIRECTORY_SEPARATOR;
-        $query = 'SELECT * FROM ' . tbl('video_subtitle') . ' WHERE videoid = ' . $vdetails['videoid'];
+        $query = 'SELECT * FROM ' . tbl('video_subtitle') . ' WHERE videoid = ' . (int)$vdetails['videoid'];
         if ($number !== null) {
             $query .= ' AND number = \'' . mysql_clean($number) . '\'';
         }
@@ -2008,7 +2057,7 @@ class CBvideo extends CBCategory
                     unlink($filepath);
                 }
             }
-            $query_delete = 'DELETE FROM ' . tbl('video_subtitle') . ' WHERE videoid = ' . $vdetails['videoid'];
+            $query_delete = 'DELETE FROM ' . tbl('video_subtitle') . ' WHERE videoid = ' . (int)$vdetails['videoid'];
             if ($number !== null) {
                 $query_delete .= ' AND number = \'' . mysql_clean($number) . '\'';
             }
@@ -2027,7 +2076,7 @@ class CBvideo extends CBCategory
      * @return void
      * @throws Exception
      */
-    function remove_resolution($resolution, &$video_detail)
+    function remove_resolution($resolution, &$video_detail): void
     {
         $directory_path = DirPath::get('videos') . $video_detail['file_directory'] . DIRECTORY_SEPARATOR;
         switch ($video_detail['file_type']) {
@@ -2054,13 +2103,12 @@ class CBvideo extends CBCategory
                 }
                 //TODO regenerate index
                 break;
-
         }
 
         $video_detail['video_files'] = json_encode(array_values(array_filter(json_decode($video_detail['video_files']), function ($reso) use ($resolution) {
             return $reso != $resolution;
         })));
-        Clipbucket_db::getInstance()->update(tbl('video'), ['video_files'], [$video_detail['video_files']], 'videoid = ' . mysql_clean($video_detail['videoid']));
+        Clipbucket_db::getInstance()->update(tbl('video'), ['video_files'], [$video_detail['video_files']], 'videoid = ' . (int)$video_detail['videoid']);
     }
 
     /**
@@ -2102,7 +2150,7 @@ class CBvideo extends CBCategory
                 rmdir($directory_path);
             }
         }
-        remove_empty_directory(DirPath::get('videos') . $vdetails['file_directory'], DirPath::get('videos'));
+        remove_empty_parent_directory(DirPath::get('videos') . $vdetails['file_directory'], DirPath::get('videos'));
         e(lang('vid_files_removed_msg'), 'm');
     }
 
@@ -2617,7 +2665,7 @@ class CBvideo extends CBCategory
             'video_description' => $details['description'],
             'video_title'       => $details['title'],
             'video_link'        => video_link($details),
-            'video_thumb'       => get_thumb($details)
+            'video_thumb'       => VideoThumbs::getDefaultThumbFile($details['videoid'])
         ];
 
         $this->action->share_template_name = 'share_video';
@@ -2827,7 +2875,7 @@ class CBvideo extends CBCategory
         if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.2', '72')) {
             $query .= ' LEFT JOIN ' . cb_sql_table('video_users') . ' ON video_users.videoid = video.videoid';
         }
-        $query .= ' WHERE playlist_items.playlist_id = \'' . $playlist_id . '\'' . $where;
+        $query .= ' WHERE playlist_items.playlist_id = ' . (int)$playlist_id . $where;
 
         if (!is_null($order)) {
             $query .= ' ORDER BY ' . $order;

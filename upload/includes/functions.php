@@ -6,7 +6,6 @@ include_once 'upload_forms.php';
 /**
  * This function is for Securing Password, you may change its combination for security reason but
  * make sure do not change once you made your script run
- * TODO : Multiple md5/sha1 is useless + this is totally unsecure, must be replaced by sha512 + salt
  *
  * @param $string
  *
@@ -144,6 +143,12 @@ function getExt($file): string
 {
     $parts = explode('.', $file);
     return strtolower(end($parts));
+}
+
+function getExtMimeType($file_path): string
+{
+    $image_sizes = getimagesize($file_path);
+    return PhotoThumbs::getMimeType($image_sizes['mime']);
 }
 
 /**
@@ -294,19 +299,6 @@ function getAd($params): string
         $data .= '</div>';
     }
     return $data;
-}
-
-/**
- * FUNCTION USED TO GET THUMBNAIL, MADE FOR SMARTY
- *
- * @param : { array } { $params } { array of parameters }
- *
- * @return mixed
- * @throws Exception
- */
-function getSmartyThumb($params)
-{
-    return get_thumb($params['vdetails'], $params['multi'], $params['size']);
 }
 
 /**
@@ -483,6 +475,7 @@ function pr($text, $pretty = false): void
  * if there is no user_id it will return false
  * @throws Exception
  * @uses : { class : userquery } { var : userid }
+ * @deprecated 
  */
 function user_id()
 {
@@ -1716,7 +1709,7 @@ function validate_cb_form($input, $array): void
                 if (!isUTF8($val)) {
                     $val = utf8_decode($val);
                 }
-                $length = strlen($val);
+                $length = mb_strlen($val);
             }
             $min_len = $field['min_length'] ?? 0;
             $max_len = $field['max_length'];
@@ -3293,11 +3286,11 @@ function get_player_logo_path(): string
 /**
  * @throws Exception
  */
-function upload_image($type = 'logo')
+function upload_image($type = 'logo'): bool
 {
     $file_post = 'upload_' . $type;
     if (!in_array($type, ['logo', 'favicon', 'player-logo'])) {
-        e(lang('unknown_type'));
+        e(lang('unknown_type', $type));
         return false;
     }
 
@@ -3322,7 +3315,11 @@ function upload_image($type = 'logo')
 
     $logo_path = DirPath::get('logos') . $type . '.' . $file_ext;
     unlink($logo_path);
-    move_uploaded_file($_FILES[$file_post]['tmp_name'], $logo_path);
+
+    if (!move_uploaded_file($_FILES[$file_post]['tmp_name'], $logo_path)) {
+        e(lang('class_error_occured'));
+        return false;
+    }
 
     myquery::getInstance()->Set_Website_Details($type . '_name', $type . '.' . $file_ext);
     myquery::getInstance()->Set_Website_Details('logo_update_timestamp', time());
@@ -3493,6 +3490,7 @@ function rglob($pattern, $flags = 0)
 }
 
 /**
+ * delete all empty folders recursively from a given path
  * @param $path
  * @return bool
  */
@@ -3513,6 +3511,28 @@ function delete_empty_directories($path): bool
     }
 
     return false;
+}
+/**
+ * @param $path
+ * @return bool
+ */
+function delete_directories_recursive($path): bool
+{
+    if (!is_dir($path)) {
+        return false;
+    }
+    $content = glob($path . '/*', GLOB_ONLYDIR);
+    foreach ($content as $sub_dir) {
+        delete_directories_recursive($sub_dir);
+    }
+    $content = glob($path . '/*');
+    $success = true;
+    // Si le répertoire est maintenant vide, le supprimer
+    foreach ($content as $file) {
+        $success = unlink($file) && $success;
+    }
+    return rmdir($path) && $success;
+
 }
 
 /**

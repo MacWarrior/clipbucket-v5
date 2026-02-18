@@ -85,6 +85,30 @@
                             </div>
                             <hr/>
                             <div class="row">
+                                <div class="col-md-6">
+                                    <label class="nowrap" for="max_video_duration" title="Max video duration">Max video duration</label>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="input-group">
+                                        <input class="form-control" name="max_video_duration" id="max_video_duration" value="{$row.max_video_duration}" size="45"/>
+                                        <span class="input-group-addon" title="{lang('in_x',lang('minutes'))}">{lang code='minutes'}</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <hr/>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <label class="nowrap" for="maximum_allowed_subtitle_size" title="{lang('option_maximum_allowed_subtitle_size')}">{lang('option_maximum_allowed_subtitle_size')}</label>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="input-group">
+                                        <input value="{$row.maximum_allowed_subtitle_size}" name="maximum_allowed_subtitle_size" id="maximum_allowed_subtitle_size" class="form-control" size="45"/>
+                                        <span class="input-group-addon" title="{lang('in_x',lang('mb'))}">{lang code='mb'}</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <hr/>
+                            <div class="row">
                                 <div class="col-md-10">
                                     <label class="nowrap" for="video_enable_nsfw_check" title="{lang code='option_enable_nsfw_check'}">
                                         <span class="fa fa-question-circle tips" title="{lang code='tips_enable_nsfw_check'}"></span>
@@ -128,34 +152,9 @@
                             </div>
                             <hr/>
                             <div class="row">
-                                <div class="col-md-6">
-                                    <label class="nowrap" for="max_video_duration" title="Max video duration">Max video duration</label>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="input-group">
-                                        <input class="form-control" name="max_video_duration" id="max_video_duration" value="{$row.max_video_duration}" size="45"/>
-                                        <span class="input-group-addon" title="{lang('in_x',lang('minutes'))}">{lang code='minutes'}</span>
-                                    </div>
-                                </div>
-                            </div>
-                            <hr/>
-                            <div class="row">
                                 <div class="col-md-12">
                                     <label class="nowrap" for="allowed_video_types" title="Allowed Video extensions"><span class="fa fa-question-circle tips" title="{lang code='separated_by_commas'}"></span> Allowed Video extensions</label>
                                     <textarea class="form-control" name="allowed_video_types" id="allowed_video_types" cols="45" rows="5">{$row.allowed_video_types}</textarea>
-                                </div>
-                            </div>
-                            <hr/>
-
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <label class="nowrap" for="maximum_allowed_subtitle_size" title="{lang('option_maximum_allowed_subtitle_size')}">{lang('option_maximum_allowed_subtitle_size')}</label>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="input-group">
-                                        <input value="{$row.maximum_allowed_subtitle_size}" name="maximum_allowed_subtitle_size" id="maximum_allowed_subtitle_size" class="form-control" size="45"/>
-                                        <span class="input-group-addon" title="{lang('in_x',lang('mb'))}">{lang code='mb'}</span>
-                                    </div>
                                 </div>
                             </div>
                             <hr/>
@@ -170,7 +169,7 @@
                             <hr/>
                             <div class="row">
                                 <div class="col-md-4">
-                                    <label class="nowrap" for="enable_photo_file_upload" title="Enable remote upload">Enable photo file upload</label>
+                                    <label class="nowrap" for="enable_photo_file_upload" title="Enable photo file upload">Enable photo file upload</label>
                                 </div>
                                 <div class="col-md-2 row-size">
                                     <input value="yes" name="enable_photo_file_upload" id="enable_photo_file_upload" {if $row.enable_photo_file_upload=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
@@ -198,6 +197,18 @@
                                     <div class="input-group">
                                         <input class="form-control" name="max_bg_size" id="max_bg_size" value="{$row.max_bg_size}" size="45"/>
                                         <span class="input-group-addon" title="{lang('in_x',lang('kb'))}">{lang code='kb'}</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <hr/>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <label class="nowrap" for="max_photo_size" title="Maximum allowed photo size">Maximum allowed photo size</label>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="input-group">
+                                        <input class="form-control" name="max_photo_size" id="max_photo_size" value="{$row.max_photo_size}" size="45"/>
+                                        <span class="input-group-addon" title="{lang('in_x',lang('mb'))}">{lang code='mb'}</span>
                                     </div>
                                 </div>
                             </div>
@@ -245,19 +256,6 @@
                                 </div>
                             </div>
                             <hr/>
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <label class="nowrap" for="max_photo_size" title="Maximum allowed photo size">Maximum allowed photo size</label>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="input-group">
-                                        <input class="form-control" name="max_photo_size" id="max_photo_size" value="{$row.max_photo_size}" size="45"/>
-                                        <span class="input-group-addon" title="{lang('in_x',lang('mb'))}">{lang code='mb'}</span>
-                                    </div>
-                                </div>
-                            </div>
-                            <hr/>
-
                             <div class="row">
                                 <div class="col-md-12">
                                     <label class="nowrap" for="allowed_photo_types" title="Allowed Photo extensions"><span class="fa fa-question-circle tips" title="{lang code='separated_by_commas'}"></span> Allowed Photo extensions</label>
@@ -332,10 +330,65 @@
                             <hr/>
                             <div class="row">
                                 <div class="col-md-6">
+                                    <label class="nowrap" for="video_thumbs_format" title="{lang code='option_video_thumbs_format'}">{lang code='option_video_thumbs_format'}</label>
+                                </div>
+                                <div class="col-md-6">
+                                    <select class="form-control" name="video_thumbs_format" id="video_thumbs_format">
+                                        {assign var=array_modes value=[
+                                            'webp'
+                                            ,'jpg'
+                                        ]}
+                                        {foreach from=$array_modes item=code}
+                                            <option {if $code==$row.video_thumbs_format}selected{/if} value="{$code}">
+                                                {$code|ucfirst}
+                                            </option>
+                                        {/foreach}
+                                    </select>
+                                </div>
+                            </div>
+                            <hr/>
+                            <div class="row">
+                                <div class="col-md-6">
                                     <label class="nowrap" for="thumb_background_color" title="{lang code='option_thumb_background_color'}">{lang code='option_thumb_background_color'}</label>
                                 </div>
                                 <div class="col-md-6">
                                     <input type="color" class="form-control" id="thumb_background_color" name="thumb_background_color" value="{$row.thumb_background_color}"/>
+                                </div>
+                            </div>
+                            <hr/>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <label class="nowrap" for="srate" title="Audio Rate">Audio Rate</label>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="input-group">
+                                        <input class="form-control" name="srate" id="srate" value="{$row.srate}" size="45"/>
+                                        <span class="input-group-addon" title="{lang('in_x',lang('hz'))}">{lang code='hz'}</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <hr/>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <label class="nowrap" for="sbrate" title="Audio Bitrate">Audio Bitrate</label>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="input-group">
+                                        <input class="form-control" name="sbrate" id="sbrate" value="{$row.sbrate}" size="45"/>
+                                        <span class="input-group-addon" title="{lang('in_x',lang('bps'))}">{lang code='bps'}</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <hr/>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <label class="nowrap" for="vrate" title="Frame rate target"><span class="fa fa-question-circle tips" title="Video rate will be calculated to be the closer as possible from this value"></span> Frame rate target</label>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="input-group">
+                                        <input class="form-control" name="vrate" id="vrate" value="{$row.vrate}" size="45"/>
+                                        <span class="input-group-addon" title="{lang('in_x',lang('fps'))}">{lang code='fps'}</span>
+                                    </div>
                                 </div>
                             </div>
                             <hr/>
@@ -355,27 +408,6 @@
                             </div>
                             <hr/>
                             <div class="row">
-                                <div class="col-md-3">
-                                    <label class="nowrap" for="srate" title="Audio Rate">Audio Rate</label>
-                                </div>
-                                <div class="col-md-3">
-                                    <input class="form-control" name="srate" id="srate" value="{$row.srate}"/>
-                                </div>
-                                <div class="col-md-3">
-                                    <label class="nowrap" for="sbrate" title="Audio Bitrate">Audio Bitrate</label>
-                                </div>
-                                <div class="col-md-3">
-                                    <input class="form-control" name="sbrate" id="sbrate" value="{$row.sbrate}"/>
-                                </div>
-                            </div>
-                            <hr/>
-                            <div class="row">
-                                <div class="col-md-3">
-                                    <label class="nowrap" for="vrate" title="Frame rate target"><span class="fa fa-question-circle tips" title="Video rate will be calculated to be the closer as possible from this value"></span> Frame rate target</label>
-                                </div>
-                                <div class="col-md-3">
-                                    <input class="form-control" name="vrate" id="vrate" value="{$row.vrate}"/>
-                                </div>
                                 <div class="col-md-3">
                                     <label class="nowrap" for="subtitle_format" title="Subtitle Format">Subtitle Format</label>
                                 </div>
@@ -413,6 +445,16 @@
                                 </div>
                                 <div class="col-md-2 row-size">
                                     <input value="1" name="extract_subtitles" id="extract_subtitles" {if $row.extract_subtitles=='1'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+                                    <span class="lbl"></span>
+                                </div>
+                            </div>
+                            <hr/>
+                            <div class="row">
+                                <div class="col-md-10">
+                                    <label class="nowrap" for="video_remove_black_bars" title="{lang code='option_video_remove_black_bars'}"><span class="fa fa-question-circle tips" title="{lang code='tips_video_remove_black_bars'}"></span> {lang code='option_video_remove_black_bars'}</label>
+                                </div>
+                                <div class="col-md-2 row-size">
+                                    <input value="yes" name="video_remove_black_bars" id="video_remove_black_bars" {if $row.video_remove_black_bars=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
                                     <span class="lbl"></span>
                                 </div>
                             </div>
@@ -559,11 +601,14 @@
                                                 {if $count == 0}
                                                     <div class="row">
                                                 {/if}
-                                                <div class="col-md-3">
+                                                <div class="col-md-2">
                                                     <label class="nowrap" for="vbrate_{$resolution.title}" title="{$resolution.title}">{$resolution.title}</label>
                                                 </div>
-                                                <div class="col-md-3">
-                                                    <input class="form-control" name="vbrate_{$resolution.title}" id="vbrate_{$resolution.title}" value="{$resolution.video_bitrate}"/>
+                                                <div class="col-md-4">
+                                                    <div class="input-group">
+                                                        <input class="form-control" name="vbrate_{$resolution.title}" id="vbrate_{$resolution.title}" value="{$resolution.video_bitrate}" size="45"/>
+                                                        <span class="input-group-addon" title="{lang('in_x',lang('bps'))}">{lang code='bps'}</span>
+                                                    </div>
                                                 </div>
                                                 {$count = $count+1}
                                                 {if $count == 2 }
@@ -571,6 +616,9 @@
                                                 {/if}
                                                 {if $count == 0 || $smarty.foreach.bitrate.last}
                                                     </div>
+
+                                                {/if}
+                                                {if $count == 0}
                                                     <hr/>
                                                 {/if}
                                             {/foreach}

@@ -1,4 +1,4 @@
-<div id="main" class="container clearfix{if config('collections_enable_fullwidth') == 'yes'} fullwidth{/if}">
+<div id="main" class="container clearfix{if config('collection_enable_fullwidth') == 'yes'} fullwidth{/if}">
     <div class="clearfix">
         <section id="content" class="clearfix">
             {if config("enable_advertisement") == "yes"}
@@ -56,17 +56,28 @@
                         {if (User::getInstance()->hasPermission($upload_permission) && $c.public_upload == 'yes')
                         || (User::getInstance()->isUserConnected() && User::getInstance()->get('userid') == $c.userid)
                         || User::getInstance()->hasAdminAccess()}
-                            <a href="{$link_add_more}" class="btn btn-success pull-right">{lang('add_more')}</a>
+                            <a {if !Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3','14')} disabled="disabled" href="#" title="Sorry, you cannot perform this action until the application has been fully updated by an administrator"
+                            {else}href="{$link_add_more}"{/if}  class="btn btn-success pull-right" >{lang('add_more')}</a>
                         {/if}
                     </div>
                 </div>
             </div>
 
+            {if config('collection_enable_fullwidth') == 'yes'}
+                {$class_video = 'colcb-xs-2 colcb-768-3 colcb-992-4 colcb-1200-5 colcb-1600-6 colcb-1920-7 colcb-2560-10 colcb-3840-12 colcb-5120-14'}
+                {$class_photo = 'colcb-xs-1 colcb-768-2 colcb-992-3 colcb-1200-4 colcb-1600-5 colcb-1920-6 colcb-2560-8 colcb-3840-10 colcb-5120-12'}
+                {$class_collection = 'colcb-xs-2 colcb-768-2 colcb-992-3 colcb-1200-4 colcb-1600-5 colcb-1920-6 colcb-2560-8 colcb-3840-10 colcb-5120-12'}
+            {else}
+                {$class_video = 'colcb-xs-2 colcb-768-2 colcb-992-3 colcb-1200-4'}
+                {$class_photo = 'colcb-xs-2 colcb-768-2 colcb-992-3 colcb-1200-4'}
+                {$class_collection = 'colcb-xs-2 colcb-768-2 colcb-992-3 colcb-1200-4'}
+            {/if}
+
             {if $collections}
                 <div class="collections clearfix">
                     <div class="row clearfix">
                         {foreach $collections as $collection}
-                            <div class="clearfix collection-item col-lg-4 col-md-4 col-sm-4 col-xs-6">
+                            <div class="clearfix collection-item {$class_collection}">
                                 {include file="$style_dir/blocks/collection-item.html"}
                             </div>
                         {/foreach}
@@ -74,18 +85,10 @@
                 </div>
             {/if}
 
-            {if config('collections_enable_fullwidth') == 'yes'}
-                {$class_video = 'col-lg-2'}
-                {$class_photo = 'col-lg-3'}
-            {else}
-                {$class_video = 'col-lg-3'}
-                {$class_photo = 'col-lg-4'}
-            {/if}
-
             {if $c.type == 'photos'}
                 <div class="photos clearfix">
                     {section name=list loop=$objects}
-                        <div class="item-photo {$class_photo} col-md-4 col-sm-6 col-xs-12">
+                        <div class="item-photo {$class_photo}">
                             {include file="$style_dir/blocks/photo.html" photo=$objects[list] display_type=collection_item}
                         </div>
                     {sectionelse}
@@ -96,7 +99,7 @@
                 <div class="videos clearfix">
                     {if $objects}
                         {foreach $objects as $video}
-                            <div class="item-video {$class_video} col-md-4 col-sm-4 col-xs-12" data-id="{$video.videoid}">
+                            <div class="item-video {$class_video}" data-id="{$video.videoid}">
                                 {include file="$style_dir/blocks/videos/video-classic.html"}
                             </div>
                         {/foreach}
@@ -110,11 +113,21 @@
 
             <div class="clearfix fav-repo">
                 <div class="show clearfix photoStats">
+                    {if User::getInstance()->getCurrentUserID() && config('collection_rating') == 'yes' }
+                        <div class="user-ratting" id="rating_container" style="display:inline-block;">
+                            {show_video_rating rating=$c.rating ratings=$c.rated_by total='10' id=$c.collection_id type=collection disable=($c.userid == User::getInstance()->getCurrentUserID() && config('own_collection_rating')!= 'yes')}
+                        </div>
+                    {/if}
                     {if User::getInstance()->getCurrentUserID()}
-                        <a class="btn btn-ghost" id="addToFav" {if Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '8')} onclick="slide_up_watch_video('#video_action_result_cont');_cb.add_to_favNew('collection','{$c.collection_id}');"
-                                {else} disabled="disabled" title="{lang('cant_perform_action_until_app_fully_updated')}" {/if}>
-                            {lang code='add_to_my_favorites'}</a>
-                        {if User::getInstance()->getCurrentUserID() != $photo.userid}
+                        {if config('enable_favorite_icon_collection') == 'yes' && User::getInstance()->isUserConnected()}
+                            <span class="{if Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '8')} manage_favorite {else} disabled {/if} watch-rating-icon pointer glyphicon glyphicon-heart{if !$is_favorite}-empty " title="{lang('add_to_my_favorites')}{/if}" title="{lang('remove_from_favorites')}" style="font-size: 20px;"></span>
+                        {else}
+                            <a class="btn btn-ghost" id="addToFav" {if Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '8')} onclick="slide_up_watch_video('#video_action_result_cont');_cb.add_to_favNew('collection','{$c.collection_id}').catch((e)=>{
+                                    });"
+                                    {else} disabled="disabled" title="{lang('cant_perform_action_until_app_fully_updated')}" {/if}>
+                                {lang code='add_to_my_favorites'}</a>
+                        {/if}
+                        {if User::getInstance()->getCurrentUserID() != $c.userid}
                             <a class="btn btn-ghost" id="flagPhotoButton" onclick="$('#report_item').toggle();">{lang code='report_this'}</a>
                         {/if}
                     {/if}
@@ -226,7 +239,7 @@
                     <div class="clearfix row">
                         {foreach from=$collections item=collection}
                             <div class="clearfix collection-item col-lg-6 col-md-6 col-sm-12 col-xs-12">
-                                {include file="$style_dir/blocks/collection-item.html"}
+                                {include file="$style_dir/blocks/collection-item.html" thumbsize='s'}
                             </div>
                         {/foreach}
                     </div>
@@ -241,4 +254,6 @@
     let total_comments = "{$c.total_comments}";
     let object_type = "{$object_type}";
     let ids_to_check_progress = JSON.parse('{$ids_to_check_progress}');
+    lang['add_to_my_favorites'] = '{lang('add_to_my_favorites')}';
+    lang['remove_from_favorites'] = '{lang('remove_from_favorites')}';
 </script>

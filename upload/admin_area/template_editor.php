@@ -120,5 +120,9 @@ if (isset($_POST['file'])) {
 $open_file = fopen($file, "r");
 $data = htmlentities(file_get_contents($file));
 
+assign('editing_file', (!empty($_GET['folder']) ? '/'.$_GET['folder'].'/' : '/') . $_file);
+$min_suffixe = System::isInDev() ? '' : '.min';
+ClipBucket::getInstance()->addAdminJS(['pages/template_editor/template_editor'.$min_suffixe.'.js' => 'admin']);
+
 template_files('template_editor.html');
 display_it();

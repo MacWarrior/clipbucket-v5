@@ -84,10 +84,10 @@ class Tags
                     LEFT JOIN ' . tbl('playlist_tags') . ' PLT ON PLT.id_tag = T.id_tag 
                     LEFT JOIN ' . tbl('user_tags') . ' UT ON UT.id_tag = T.id_tag 
                     LEFT JOIN ' . tbl('video_tags') . ' VT ON VT.id_tag = T.id_tag 
-                    WHERE T.id_tag = ' . mysql_clean($id_tag);
+                    WHERE T.id_tag = ' . (int)$id_tag;
         $result = Clipbucket_db::getInstance()->_select($query);
         if (!empty($result) && $result[0]['can_delete']) {
-            Clipbucket_db::getInstance()->delete(tbl('tags'), ['id_tag'], [$id_tag]);
+            Clipbucket_db::getInstance()->delete(tbl('tags'), ['id_tag'], [(int)$id_tag]);
             e(lang('tag_deleted'), 'm');
         } else {
             e(lang('error'));
@@ -112,7 +112,7 @@ class Tags
             return false;
         }
         try {
-            Clipbucket_db::getInstance()->update(tbl('tags'), ['name'], [$name], 'id_tag = ' . mysql_clean($id_tag));
+            Clipbucket_db::getInstance()->update(tbl('tags'), ['name'], [$name], 'id_tag = ' . (int)$id_tag);
             e(lang('tag_updated'), 'm');
             return true;
         } catch (Exception $e) {
@@ -165,10 +165,10 @@ class Tags
 
             $sql_delete_link = 'DELETE ' . $table_tag . ' FROM ' . cb_sql_table($table_tag) . '
                 INNER JOIN ' . cb_sql_table('tags') . ' ON tags.id_tag = ' . $table_tag . '.id_tag
-                WHERE ' . $id_field . ' = ' . mysql_clean($object_id) . ' AND tags.id_tag_type = ' . $id_type;
+                WHERE ' . $id_field . ' = ' . (int)$object_id . ' AND tags.id_tag_type = ' . (int)$id_type;
         } else {
             $sql_delete_link = 'DELETE ' . $table_tag . ' FROM ' . cb_sql_table($table_tag) . '
-                WHERE ' . $id_field . ' = ' . mysql_clean($object_id);
+                WHERE ' . $id_field . ' = ' . (int)$object_id;
         }
 
         if (!Clipbucket_db::getInstance()->execute($sql_delete_link, 'delete')) {
@@ -262,11 +262,11 @@ class Tags
             $sql_link_tag = 'INSERT IGNORE INTO ' . tbl($table_tag) . ' (`id_tag`, `' . $id_field . '`)
                 SELECT 
                     tags.id_tag
-                    ,' . mysql_clean($object_id) . '
+                    ,' . (int)$object_id . '
                 FROM
                     ' . cb_sql_table('tags') . '
                 WHERE
-                    tags.id_tag_type = ' . mysql_clean($id_type) . '
+                    tags.id_tag_type = ' . (int)$id_type . '
                     AND tags.name IN(\'' . implode('\',\'', $tmp_tags) . '\')
             ';
 
@@ -300,7 +300,7 @@ class Tags
             e(lang('unknown_tag_type'));
             return [];
         }
-        $query = 'SELECT name FROM ' . tbl('tags') . ' T  WHERE T.id_tag_type = ' . mysql_clean($id_type);
+        $query = 'SELECT name FROM ' . tbl('tags') . ' T  WHERE T.id_tag_type = ' . (int)$id_type;
         $result = Clipbucket_db::getInstance()->_select($query, 0);
         return array_map(function ($item) {
             return $item['name'];

@@ -2124,23 +2124,20 @@ h1 {
 .photo-view .overlay {
   /* Height & width depends on how you want to reveal the overlay (see JS below) */
   height: 100%;
-  width: 0;
   position: fixed;
   /* Stay in place */
   z-index: 6;
   /* Sit on top */
-  left: 0;
-  right: 100%;
   top: 0;
   background: rgba(0, 0, 0, 0.98);
   /* Black w/opacity */
-  overflow-y: hidden;
+  overflow-y: auto;
   transition: 0.3s;
   /* 0.5 second transition effect to slide in or slide down the overlay (height or width, depending on reveal) */
 }
 
 .photo-view .overlay.maximized {
-  display: table;
+  display: block;
 }
 
 .photo-view .overlay img {
@@ -2193,14 +2190,6 @@ h1 {
 }
 
 .photo-view .overlay .overlay-content {
-  position: relative;
-  height: auto;
-  max-height: 100%;
-  width: 100%;
-  /* 100% width */
-  text-align: center;
-  /* Centered text/links */
-  display: table-cell;
   vertical-align: middle;
 }
 
@@ -7107,7 +7096,7 @@ span.tagit-label i.fa {
     width: 100%;
 }
 
-li.up_vid > a[disabled] {
+li.up_vid > a[disabled],li.up_img > a[disabled] {
     cursor: not-allowed;
     filter: alpha(opacity=65);
     opacity: .65;
@@ -7140,4 +7129,34 @@ h2 a{
 
 input.btn-danger:disabled {
   cursor: not-allowed;
+}
+
+:root {
+  --crop_ratio: 16 / 10
+}
+
+.crop_image {
+  aspect-ratio: var(--crop_ratio);
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+  object-position: center;
+  display: block;
+}
+
+h4.disabled {
+  opacity: .35; filter:Alpha(Opacity=35); background-image: none;
+  cursor: not-allowed !important;
+}
+
+h4:has(i) {
+  cursor: pointer;
+}
+
+.cursor_default {
+  cursor: default !important;
+}
+
+.collections-grid .manage_favorite {
+  display: none;
 }

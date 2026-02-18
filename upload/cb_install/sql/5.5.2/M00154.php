@@ -59,10 +59,10 @@ class M00154 extends \Migration
                 $item = json_decode($item['ids_list']);
                 $orginal_id = $item[0];
                 for ($i = 1; $i < count($item); $i++) {
-                    $sql_update = 'UPDATE `{tbl_prefix}categories` SET `id_category_type` = ' . $orginal_id . ' WHERE `id_category_type` = ' . $item[$i] . ';';
+                    $sql_update = 'UPDATE `{tbl_prefix}categories` SET `id_category_type` = ' . (int)$orginal_id . ' WHERE `id_category_type` = ' .(int) $item[$i] . ';';
                     self::query($sql_update);
                     //delete higher id
-                    $sql_delete = 'DELETE FROM `{tbl_prefix}categories_type` WHERE `id_category_type` = ' . $item[$i] . ';';
+                    $sql_delete = 'DELETE FROM `{tbl_prefix}categories_type` WHERE `id_category_type` = ' . (int)$item[$i] . ';';
                     self::query($sql_delete);
                 }
             }
@@ -93,10 +93,10 @@ class M00154 extends \Migration
                 $item = json_decode($item['ids_list']);
                 $orginal_id = $item[0];
                 for ($i = 1; $i < count($item); $i++) {
-                    $sql_update = 'UPDATE `{tbl_prefix}tools_histo` SET `id_tools_histo_status` = ' . $orginal_id . ' WHERE `id_tools_histo_status` = ' . $item[$i] . ';';
+                    $sql_update = 'UPDATE `{tbl_prefix}tools_histo` SET `id_tools_histo_status` = ' . (int)$orginal_id . ' WHERE `id_tools_histo_status` = ' . (int)$item[$i] . ';';
                     self::query($sql_update);
                     //delete higher id
-                    $sql_delete = 'DELETE FROM `{tbl_prefix}tools_histo_status` WHERE `id_tools_histo_status` = ' . $item[$i] . ';';
+                    $sql_delete = 'DELETE FROM `{tbl_prefix}tools_histo_status` WHERE `id_tools_histo_status` = ' . (int)$item[$i] . ';';
                     self::query($sql_delete);
                 }
             }
@@ -129,12 +129,12 @@ class M00154 extends \Migration
                 $orginal_id = $item[0]['category_id'];
                 for ($i = 1; $i < count($item); $i++) {
                     $id_category = $item[$i]['category_id'];
-                    $sql_update = 'UPDATE IGNORE `{tbl_prefix}' . $item[$i]['type'] . 's_categories` SET `id_category` = ' . $orginal_id . ' WHERE `id_category` = ' . $id_category . ';';
+                    $sql_update = 'UPDATE IGNORE `{tbl_prefix}' . $item[$i]['type'] . 's_categories` SET `id_category` = ' . (int)$orginal_id . ' WHERE `id_category` = ' . (int)$id_category . ';';
                     self::query($sql_update);
                     //delete higher id
-                    $sql_delete = 'DELETE FROM `{tbl_prefix}' . $item[$i]['type'] . 's_categories` WHERE `id_category` = ' . $id_category . ';';
+                    $sql_delete = 'DELETE FROM `{tbl_prefix}' . $item[$i]['type'] . 's_categories` WHERE `id_category` = ' . (int)$id_category . ';';
                     self::query($sql_delete);
-                    $sql_delete = 'DELETE FROM `{tbl_prefix}categories` WHERE `category_id` = ' . $id_category . ';';
+                    $sql_delete = 'DELETE FROM `{tbl_prefix}categories` WHERE `category_id` = ' . (int)$id_category . ';';
                     self::query($sql_delete);
                 }
             }
