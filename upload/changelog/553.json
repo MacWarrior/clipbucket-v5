@@ -1,6 +1,6 @@
 {
   "version":"5.5.3",
-  "revision":"49",
+  "revision":"50",
   "status":"stable",
   "detail":[
     {
@@ -91,6 +91,7 @@
       "description": [
         "Update phpmailer/phpmailer to 7.0.2"
         ,"Update VideoJS to version 8.23.6"
+        ,"Update predis/predis to 3.4.0"
       ]
     }
   ]
