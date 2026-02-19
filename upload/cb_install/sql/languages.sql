@@ -1786,4 +1786,12 @@ VALUES ('ongoing_conversion'),
        ('sort_by_random'),
        ('option_enable_favorite_icon_hint_photo'),
        ('option_enable_favorite_icon_hint_collection'),
-       ('page_order_has_been_updated');
+       ('page_order_has_been_updated'),
+       ('confirmation_upgrade_core_breaking_version'),
+       ('maintenance_recommended'),
+       ('do_want_to_update'),
+       ('website_closed'),
+       ('update_completed_maintenance_off'),
+       ('update_incomplete'),
+       ('maintenance_still_on'),
+       ('ok');

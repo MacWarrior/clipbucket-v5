@@ -15,7 +15,7 @@ class Update
     private $webVersion = '';
     private $webRevision = '';
     private $webChangelog = [];
-    private $needCodeDBUpdate = '';
+    public $needCodeDBUpdate = '';
 
     /**
      * @throws Exception
@@ -411,8 +411,14 @@ class Update
         assign('need_core_update', false);
         assign('show_core_update', false);
         if( config('enable_update_checker') == '1' && $this->isManagedWithGit()) {
-            assign('need_core_update', !$this->isCoreUpToDate());
+            $isCoreUpToDate = $this->isCoreUpToDate();
+            assign('need_core_update', !$isCoreUpToDate);
             assign('show_core_update', true);
+            $warning_breaking_update = false;
+            if (!$isCoreUpToDate) {
+                $warning_breaking_update = $this->checkBreakingVersion();
+            }
+            assign('warning_breaking_update', $warning_breaking_update);
         }
 
         Template('msg_update_db.html');
@@ -863,6 +869,42 @@ class Update
             $php_version = json_decode(file_get_contents($filepath_php_version), true);
         }
         return $php_version;
+    }
+
+    public function getBreakingVersionComptability(): array
+    {
+        $filename = 'breaking_version.json';
+
+        if (config('enable_update_checker') == '1') {
+            $breaking_version = $this->getDistantFile($filename);
+        }
+        if (empty($breaking_version)) {
+            $filepath_breaking_version = DirPath::get('changelog') . $filename;
+            $breaking_version = json_decode(file_get_contents($filepath_breaking_version),true);
+        }
+        return $breaking_version;
+    }
+
+    /**
+     * @return bool|array
+     * @throws Exception
+     */
+    public function checkBreakingVersion(): bool|array
+    {
+        $breaking_versions = $this->getBreakingVersionComptability();
+        if (empty($breaking_versions)) {
+            return false;
+        }
+        $cb_version = $this->getCurrentCoreVersion();
+        $cb_revision = $this->getCurrentCoreRevision();
+        foreach ($breaking_versions as $item) {
+            $breaking_version = $item['version'];
+            $breaking_revision = $item['revision'];
+            if ($breaking_version > $cb_version || ($breaking_version == $cb_version && $breaking_revision >= $cb_revision)){
+                return ['version'=>$breaking_version, 'revision'=>$breaking_revision];
+            }
+        }
+        return false;
     }
 
 }

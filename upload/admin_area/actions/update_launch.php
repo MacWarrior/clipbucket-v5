@@ -16,8 +16,7 @@ if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.0', '367')) {
 
 if (($error_init['core'] === false && $_POST['type'] == 'core') || $error_init['db'] === false) {
     echo json_encode([
-        'success'   => false
-        ,
+        'success'   => false,
         'error_msg' => System::isInDev() ? 'Failed to find tools for update' : lang('technical_error')
     ]);
     die();
@@ -28,7 +27,7 @@ sendClientResponseAndContinue(function () {
     Update::getInstance()->displayGlobalSQLUpdateAlert($_POST['type'], true);
     echo json_encode([
         'success' => true,
-        'html'=>ob_get_clean()
+        'html'    => ob_get_clean()
     ]);
 });
 
@@ -38,7 +37,7 @@ if (file_exists(DirPath::get('temp') . 'update_core_tmp.php')) {
 }
 $tmp_file = fopen(DirPath::get('temp') . 'update_core_tmp.php', 'w');
 $data = /** @lang PHP */
-'<?php
+    '<?php
 if (php_sapi_name() != \'cli\') {
     die;
 }
