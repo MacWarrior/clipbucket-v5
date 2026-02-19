@@ -53,6 +53,9 @@
                             {/if}
                         </div>
                         {/if}
+                        {if User::getInstance()->hasPermission('allow_create_collection') || User::getInstance()->hasAdminAccess()}
+                            <a class="btn btn-success pull-right" style="margin-left: 5px;" href="{$baseurl}manage_collections.php?mode=add_new&parent_id={$c.collection_id}">{lang code='add_new_collection'}</a>
+                        {/if}
                         {if (User::getInstance()->hasPermission($upload_permission) && $c.public_upload == 'yes')
                         || (User::getInstance()->isUserConnected() && User::getInstance()->get('userid') == $c.userid)
                         || User::getInstance()->hasAdminAccess()}
