@@ -538,14 +538,14 @@
                         </li>
                         {if config('enable_video_poster') == 'yes'}
                         <li>
-                            <a {if Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '14')} data-toggle="tab" href="#posters" {else} class="disabled" disabled="disabled" title="{lang('cant_perform_action_until_app_fully_updated')}" {/if}>
+                            <a {if Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '14')} data-toggle="tab" href="#posters" {if empty($vidthumbs_poster)} class="hidden"{/if} {else} class="disabled" disabled="disabled" title="{lang('cant_perform_action_until_app_fully_updated')}" {/if}>
                                 <i class="glyphicon glyphicon-picture"></i> {lang('default_x',lang('poster'))|ucfirst}
                             </a>
                         </li>
                         {/if}
                         {if config('enable_video_backdrop') == 'yes'}
                         <li>
-                            <a {if Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '14')} data-toggle="tab" href="#backdrops" {else} class="disabled" disabled="disabled" title="{lang('cant_perform_action_until_app_fully_updated')}" {/if}>
+                            <a {if Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '14')} data-toggle="tab" href="#backdrops" {if empty($vidthumbs_backdrop)} class="hidden"{/if} {else} class="disabled" disabled="disabled" title="{lang('cant_perform_action_until_app_fully_updated')}" {/if}>
                                 <i class="glyphicon glyphicon-picture"></i> {lang('default_x',lang('backdrop'))|ucfirst}
                             </a>
                         </li>
@@ -587,12 +587,12 @@
                             {include file="$style_dir/blocks/thumb_mini_list.html"}
                         </div>
                         {if config('enable_video_poster') == 'yes'}
-                        <div id="posters" class="tab-pane fade">
+                        <div id="posters" class="tab-pane fade {if empty($vidthumbs_poster)} hidden{/if}">
                             {include file="$style_dir/blocks/poster_mini_list.html"}
                         </div>
                         {/if}
                         {if config('enable_video_backdrop') == 'yes'}
-                        <div id="backdrops" class="tab-pane fade">
+                        <div id="backdrops" class="tab-pane fade {if empty($vidthumbs_backdrop)} hidden{/if}">
                             {include file="$style_dir/blocks/backdrop_mini_list.html"}
                         </div>
                         {/if}
