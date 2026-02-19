@@ -420,25 +420,27 @@ function updateListeners () {
     $('.update_core').on('click', async function () {
 
         if (message_php !== '') {
-            if (await popinConfirm._confirm_it({message: message_php, title: lang['update']})) {
+            if (await popinConfirm._confirm_it({message: message_php, title: lang['update']} )) {
                 update('core');
             }
         } else if (message_breaking_version !== '') {
-            const wantsMaintenance = await popinConfirm._confirm_it({
+            const okUpdate = await popinConfirm._confirm_it({
                 message: message_breaking_version,
                 title: lang['update']
             });
 
-            if (wantsMaintenance) {
-                await setMaintenance();
+            if (okUpdate) {
+                const wantsMaintenance = await popinConfirm._confirm_it({
+                    message: lang['maintenance_recommended'],
+                    title: lang['update'],
+                    text_button_confirm: lang['yes'],
+                    text_button_cancel: lang['no']
+                });
+                if (wantsMaintenance) {
+                    await setMaintenance();
+                }
+                update('core');
             }
-
-            const okUpdate = await popinConfirm._confirm_it({
-                message: lang['do_want_to_update'],
-                title: lang['update']
-            });
-
-            if (okUpdate) update('core');
         } else {
             update('core');
         }
@@ -632,6 +634,11 @@ function updateInfo(interval, type) {
             hideSpinner();
             if (data.msg_template) {
                 $(".page-content").prepend(data.msg_template)
+            }
+            if (data.modal_error != 0) {
+                var modal = $('#myModal');
+                modal.find('#error_update').html(data.modal_error);
+                modal.modal();
             }
             if (data.is_updating === 'false') {
                 clearInterval(interval);

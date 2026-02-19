@@ -153,10 +153,11 @@ if (!empty($info_php) && $info_php['version_update'] >= $info_php['cb_version_mi
 $message_breaking_version = '';
 $info_warning = Update::getInstance()->CheckBreakingVersion();
 if ($info_warning) {
-    $message_breaking_version = lang('confirmation_upgrade_core_breaking_version', ['<b>' . $info_warning['version'] . ' - ' . ($info_warning['revision']?:'1') . '</b>']) . '<br>' . lang('maintenance_recommended');
+    $message_breaking_version = lang('confirmation_upgrade_core_breaking_version', ['<b>' . $info_warning['version'] . ' - ' . ($info_warning['revision']?:'1') . '</b>']) . '<br>' . lang('do_want_to_update');
 }
 assign('message_php', $message_php);
 assign('message_breaking_version', $message_breaking_version);
 assign('do_want_to_update', lang('do_want_to_update'));
+assign('maintenance_recommended', lang('maintenance_recommended'));
 template_files('index.html');
 display_it();

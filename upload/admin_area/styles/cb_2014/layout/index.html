@@ -150,7 +150,20 @@
         </div>
     </div>
 </div>
-
+<div class="modal fade" id="myModal" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+            </div>
+            <div class="modal-body">
+                <div class="alert alert-warning" id="error_update"></div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">{lang('ok')}</button>
+            </div>
+        </div>
+    </div>
+</div>
 <script type="text/javascript">
     let visual_editor_comments_enabled = "{config('enable_visual_editor_comments') == 'yes'}";
     let is_update_processing = {$is_update_processing};
@@ -193,6 +206,9 @@
     lang['confirm_mark_as_failed'] = "{lang('confirm_mark_as_failed')}";
     lang['update'] = "{lang('update')}";
     lang['do_want_to_update'] = "{lang('do_want_to_update')}";
+    lang['maintenance_recommended'] = "{lang('maintenance_recommended')}";
+    lang['yes'] = "{lang('yes')}";
+    lang['no'] = "{lang('no')}";
     var message_php = '{$message_php}';
     var message_breaking_version = '{$message_breaking_version}';
 </script>

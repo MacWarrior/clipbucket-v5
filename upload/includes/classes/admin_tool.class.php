@@ -1363,11 +1363,11 @@ class AdminTool
     public static function getLastestToolUpdate()
     {
         $core_tool = self::getUpdateCoreTool();
-        $db_toool = self::getUpdateDbTool();
-        if ( $core_tool->getLastStart() > $db_toool->getLastStart() ) {
+        $db_tool = self::getUpdateDbTool();
+        if ( $core_tool->getLastStart() > $db_tool->getLastStart() ) {
             return $core_tool;
         }
-        return $db_toool;
+        return $db_tool;
     }
 
     /**

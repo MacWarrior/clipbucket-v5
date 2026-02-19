@@ -15,7 +15,7 @@ class Update
     private $webVersion = '';
     private $webRevision = '';
     private $webChangelog = [];
-    private $needCodeDBUpdate = '';
+    public $needCodeDBUpdate = '';
 
     /**
      * @throws Exception
@@ -886,10 +886,10 @@ class Update
     }
 
     /**
-     * @return bool
+     * @return bool|array
      * @throws Exception
      */
-    public function checkBreakingVersion()
+    public function checkBreakingVersion(): bool|array
     {
         $breaking_versions = $this->getBreakingVersionComptability();
         if (empty($breaking_versions)) {
@@ -897,7 +897,9 @@ class Update
         }
         $cb_version = $this->getCurrentCoreVersion();
         $cb_revision = $this->getCurrentCoreRevision();
-        foreach ($breaking_versions as $breaking_version => $breaking_revision) {
+        foreach ($breaking_versions as $item) {
+            $breaking_version = $item['version'];
+            $breaking_revision = $item['revision'];
             if ($breaking_version > $cb_version || ($breaking_version == $cb_version && $breaking_revision >= $cb_revision)){
                 return ['version'=>$breaking_version, 'revision'=>$breaking_revision];
             }

@@ -1790,4 +1790,8 @@ VALUES ('ongoing_conversion'),
        ('confirmation_upgrade_core_breaking_version'),
        ('maintenance_recommended'),
        ('do_want_to_update'),
-       ('website_closed');
+       ('website_closed'),
+       ('update_completed_maintenance_off'),
+       ('update_incomplete'),
+       ('maintenance_still_on'),
+       ('ok');
