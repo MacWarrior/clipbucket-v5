@@ -223,7 +223,7 @@ class Photo extends Objects
         if ($param_not_photo_id) {
             $conditions[] = $this->getTableName() . '.photo_id != ' . (int)$param_not_photo_id;
         }
-        if ($param_photo_id) {
+        if ($param_photo_id !== false) {
             $conditions[] = $this->getTableName() . '.photo_id = ' . (int)$param_photo_id;
         } elseif ($param_photo_ids) {
             $conditions[] = $this->getTableName() . '.photo_id IN (' . mysql_clean($param_photo_ids) . ')';
@@ -615,6 +615,93 @@ class Photo extends Objects
             return $base_url . 'item/photos/' . $details['collection_id'] . '/' . $details['photo_key'] . '/' . SEO(display_clean(str_replace(' ', '-', $details['photo_title'])));
         }
         return $base_url . 'view_item.php?item=' . $details['photo_key'] . '&amp;collection=' . $details['collection_id'];
+    }
+
+    public static function displayCollectionItem($photo, $collection, $fullscreen = false,$ajax = true)
+    {
+        $breadcrum = [];
+        $breadcrum[] = [
+            'title' => $photo['photo_title'],
+            'url'   => '#'
+        ];
+        if (!empty($collection)) {
+            $collection_parent = $collection;
+            do {
+                $breadcrum[] = [
+                    'title' => $collection_parent['collection_name'],
+                    'url'   => Collections::getInstance()->collection_links($collection_parent, 'view')
+                ];
+                $collection_parent = Collections::getInstance()->get_parent_collection($collection_parent);
+            } while ($collection_parent);
+            assign('breadcrum', array_reverse($breadcrum));
+            assign('collection_baseurl', Collections::getInstance()->get_base_url());
+            subtitle($collection['collection_name'] . ' > ' . $photo['photo_title']);
+            assign('collections', []);
+
+        } else {
+            assign('breadcrum', $breadcrum);
+            assign('collection_baseurl', '');
+            if (User::getInstance()->hasAdminAccess()) {
+                $param = ['type' => 'photos'];
+            } else {
+                $param = ['userid' => User::getInstance()->getCurrentUserID(), 'type' => 'photos', 'can_upload' => true];
+            }
+            $collections = Collection::getInstance()->getAll($param) ?: [];
+            assign('collections', $collections);
+            assign('restore_collection', true);
+            assign('item_id', $photo['photo_id']);
+            subtitle($photo['photo_title']);
+        }
+
+        increment_views($photo['photo_id'], 'photo');
+
+        assign('photo', $photo);
+        assign('user', userquery::getInstance()->get_user_details($photo['userid']));
+
+        assign('c', $collection);
+
+        //link edit
+        assign('link_edit_bo', DirPath::getUrl('admin_area') . 'edit_photo.php?photo=' . $photo['photo_id']);
+        assign('link_edit_fo', DirPath::getUrl('root') . 'edit_photo.php?photo=' . $photo['photo_id']);
+
+        if (config('enable_photo_categories') == 'yes') {
+            $category_links = [];
+            foreach (json_decode($photo['category_list'], true) as $photo_category) {
+                $category_links[] = '<a href="' . cblink([
+                        'name' => 'category',
+                        'data' => ['category_id' => $photo_category['id'], 'category_name' => $photo_category['name']],
+                        'type' => 'photos'
+                    ]) . '">' . display_clean($photo_category['name']) . '</a>';
+            }
+            assign('category_links', implode(',', $category_links));
+        }
+
+        // Top collections
+        $params = [
+            'limit'        => 5,
+            'type'         => 'photos',
+            'parents_only' => true
+        ];
+        $top_collections = Collection::getInstance()->getAll($params);
+        assign('top_collections', $top_collections);
+
+        // Related collections
+        $related_photos = Photo::getInstance()->getPhotoRelated($photo['photo_id'], config('limit_photo_related') != 0 ? config('limit_photo_related') : 8);
+        assign('related_photos', $related_photos);
+
+        assign('is_favorite', Photo::isFavorite($photo['photo_id']));
+        assign('anonymous_id', userquery::getInstance()->get_anonymous_user());
+        assign('fullscreen', $fullscreen);
+        assign('ajax', $ajax);
+
+        assign('srcfirst', PhotoThumbs::getThumbFile($photo['photo_id'], 'original'));
+        if ($ajax) {
+            Template('view_photo.html');
+        } else {
+            assign('curr_photo', json_encode($photo));
+            template_files('view_photo.html');
+            display_it();
+        }
     }
 }
 

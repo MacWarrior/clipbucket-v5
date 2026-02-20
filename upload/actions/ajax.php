@@ -752,34 +752,6 @@ if (!empty($mode)) {
             }
             break;
 
-        case 'photo_ajax':
-            try {
-                if (!User::getInstance()->hasPermission('view_photos')) {
-                    throw new Exception(lang('insufficient_privileges'));
-                }
-                if (!empty($_POST['photo_pre']) && !empty($_POST['item'])) {
-                    $photo = $_POST['photo_pre'];
-                    $items = $_POST['item'];
-                    $ci_id = $photo['ci_id'];
-                    $collection = $photo['collection_id'];    // collection id.
-                    $link = Collections::getInstance()->get_next_prev_item($ci_id, $collection, $items, $limit = 1, $check_only = false); // getting Previous item
-                    $srcString = PhotoThumbs::getThumbFile($link[0]['photo_id'], 'original');
-                    $photo_key = $link[0]['photo_key']; // Image Key.
-                    $response['photo'] = $link;
-                    $response['photo_key'] = $link[0]['photo_key'];
-                    $response['src_string'] = $srcString; // Image source.
-                    $response['collection_id'] = $collection;
-                    echo json_encode($response);
-                } else {
-                    throw new Exception(lang('missing_params'));
-                }
-            } catch (Exception $e) {
-                $response["error_ex"] = true;
-                $response["msg"] = 'Message: ' . $e->getMessage();
-                echo(json_encode($response));
-            }
-            break;
-
         case 'user_suggest':
             if (!User::getInstance()->hasPermission('private_msg_access')) {
                 return 'none';

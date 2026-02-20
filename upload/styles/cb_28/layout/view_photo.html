@@ -1,11 +1,8 @@
 {lang code='photo' assign='object_type'}
 
-{$curr_photo = $photo|@json_encode}
-{$user_admin = $user|@json_encode}
-{$srcfirst = {PhotoThumbs::getThumbFile($photo.photo_id, 'original')}}
 {$shareableThumb = {PhotoThumbs::getThumbFile($photo.photo_id, 150)}}
 {$shareableThumb = $shareableThumb.0}
-<div id="main" class="clearfix container">
+<div id="main" class="clearfix container{if $fullscreen} image-zoom{/if}">
     <div id="collectionItemView" class="clearfix">
         <div class="clearfix">
             <section id="content" class="clearfix">
@@ -28,8 +25,7 @@
 
                 <div class="clearfix photo-view">
                     <div id="gallery">
-
-                            <i id="enlarge" class="fa fa-expand fa-2x" style="float:right; {if Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '14')} cursor:pointer;" data-toggle="modal" data-target="#myModal" title="{lang('show_original')}"  {else} cursor: not-allowed" title="{lang('cant_perform_action_until_app_fully_updated')}" disabled="disabled" {/if}></i>
+                        <i id="enlarge" class="fa fa-expand fa-2x" style="float:right; {if Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '14')} cursor:pointer;" data-toggle="modal" data-target="#myModal" title="{lang('show_original')}"  {else} cursor: not-allowed" title="{lang('cant_perform_action_until_app_fully_updated')}" disabled="disabled" {/if}></i>
                         <div class="image-holder">
                             <div class="inner-holder">
                                 {if empty($photo.collection_id)}
@@ -41,10 +37,9 @@
                             </div>
                         </div>
                     </div>
-
-                    <div id="myNav" class="overlay">
+                    <div id="myNav" class="overlay {if $fullscreen} maximized" style="width:100%;left:0;{/if}">
                         <div class="overlay-content">
-                            <img id="gallery-exd" class="img-responsive center-block" style="max-width: 100%;max-height: 100%;"/>
+                            <img id="gallery-exd" class="img-responsive center-block" style="max-width: 100%;max-height: 100%;" {if $fullscreen} src="{$srcfirst}" {/if}/>
                             <button type="button" class="img-close" id="btn-close" data-dismiss="modal" data-check="">&times;</button>
                             {if $c.total_objects > 1}
                                 <div class="btn-holder clearfix">
@@ -298,19 +293,13 @@
                 {/if}
             </aside>
         </div>
-
+{if !$ajax}
         <script type="text/javascript">
             var seoUrls = "{config('seo')}";
             var srcFirst = "{$srcfirst}";
-            var link_type = "photos";
-            var key_globel; // image source key0
-            var collection_id;
-            var mode = "photo_ajax";
-            var key; // for passing key to different attributes
-            var d = {$curr_photo}; // photo info
             var curr_photo = {$curr_photo};
-            var r = $('<i class="glyphicon glyphicon-refresh animate-spin pic-glyp" style="position:absolute;left:50%;top: 50%;font-size:16px;line-height:16px;width:16px;height:16px;margin:-8px 0 0 -8px;"></i>');
-            var b = $('<i class="glyphicon glyphicon-refresh animate-spin pic-glyp" style="position:absolute;left:50%;top: 50%;font-size:16px;line-height:16px;width:16px;height:16px;margin:-8px 0 0 -8px; color:#fff;"></i>');
+            var loader_black = $('<i class="glyphicon glyphicon-refresh animate-spin pic-glyp" style="position:absolute;left:50%;top: 50%;font-size:16px;line-height:16px;width:16px;height:16px;margin:-8px 0 0 -8px;"></i>');
+            var loader_white = $('<i class="glyphicon glyphicon-refresh animate-spin pic-glyp" style="position:absolute;left:50%;top: 50%;font-size:16px;line-height:16px;width:16px;height:16px;margin:-8px 0 0 -8px; color:#fff;"></i>');
 
             $(document).ready(function(){
                 if( $("#userCommentsList").length > 0 ){
@@ -323,6 +312,8 @@
             });
             lang['add_to_my_favorites'] = '{lang('add_to_my_favorites')}';
             lang['remove_from_favorites'] = '{lang('remove_from_favorites')}';
+            lang['photo'] = '{lang('photo')}';
         </script>
+{/if}
     </div>
 </div>
