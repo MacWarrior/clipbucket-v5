@@ -1,6 +1,6 @@
 {
   "version":"5.5.3",
-  "revision":"53",
+  "revision":"54",
   "status":"stable",
   "detail":[
     {
@@ -10,6 +10,7 @@
         ,"Implement email alias allow option"
         ,"Implement templates edition"
         ,"Update advanced settings display"
+        ,"Hide poster & backdrop tabs when empty on video edition page"
         ,"Fix JS error on playlist management page"
         ,"Fix missing video thumbs tool"
         ,"Fix possible PHP error on video edition page"
