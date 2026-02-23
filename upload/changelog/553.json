@@ -1,6 +1,6 @@
 {
   "version":"5.5.3",
-  "revision":"52",
+  "revision":"53",
   "status":"stable",
   "detail":[
     {
@@ -40,6 +40,7 @@
         ,"Fix default thumb selection on video upload form"
         ,"Fix missing minified JS file"
         ,"Fix JS error on subtitle upload from video upload form"
+        ,"Fix video favorite icon display and action"
       ]
     },
     {
