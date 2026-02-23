@@ -1,6 +1,6 @@
 {
   "version":"5.5.3",
-  "revision":"51",
+  "revision":"52",
   "status":"stable",
   "detail":[
     {
@@ -39,6 +39,7 @@
         ,"Fix possible temporary remote code execution (Thanks @m0x41nos !)"
         ,"Fix default thumb selection on video upload form"
         ,"Fix missing minified JS file"
+        ,"Fix JS error on subtitle upload from video upload form"
       ]
     },
     {
