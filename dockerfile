@@ -15,27 +15,33 @@ RUN apt-get update && \
     apt-get install -y \
         nginx-full \
         mariadb-server \
-        php8.2-fpm \
-        php8.2-curl \
-        php8.2-mysqli \
-        php8.2-xml \
-        php8.2-mbstring \
-        php8.2-gd \
+        php-pear \
+        php8.4-fpm \
+        php8.4-dev \
+        php8.4-curl \
+        php8.4-mysqli \
+        php8.4-xml \
+        php8.4-mbstring \
+        php8.4-gd \
         git \
         ffmpeg \
         sendmail \
         mediainfo && \
     apt-get clean
 
+RUN pecl install xhprof \
+    && echo "extension=xhprof.so" > /etc/php/8.4/mods-available/xhprof.ini \
+    && phpenmod xhprof
+
 # Configuration PHP
-RUN sed -i "s/max_execution_time = 30/max_execution_time = 7200/g" /etc/php/8.2/fpm/php.ini
-RUN sed -i "s/;ffi.enable=preload/ffi.enable=true/g" /etc/php/8.2/fpm/php.ini
-RUN sed -i "s/;ffi.enable=preload/ffi.enable=true/g" /etc/php/8.2/cli/php.ini
+RUN sed -i "s/max_execution_time = 30/max_execution_time = 7200/g" /etc/php/8.4/fpm/php.ini
+RUN sed -i "s/;ffi.enable=preload/ffi.enable=true/g" /etc/php/8.4/fpm/php.ini
+RUN sed -i "s/;ffi.enable=preload/ffi.enable=true/g" /etc/php/8.4/cli/php.ini
 
 # change l'utilisateur de nginx et php-fpm
 RUN sed -i 's/^user www-data;/user containeruser;/g' /etc/nginx/nginx.conf ;\
-    sed -i 's/^user = www-data$/user = containeruser/' /etc/php/8.2/fpm/pool.d/www.conf ;\
-    sed -i 's/^group = www-data$/group = containeruser/' /etc/php/8.2/fpm/pool.d/www.conf
+    sed -i 's/^user = www-data$/user = containeruser/' /etc/php/8.4/fpm/pool.d/www.conf ;\
+    sed -i 's/^group = www-data$/group = containeruser/' /etc/php/8.4/fpm/pool.d/www.conf
 
 # Configure Nginx
 RUN rm -f /etc/nginx/sites-enabled/default && \
@@ -57,7 +63,7 @@ RUN rm -f /etc/nginx/sites-enabled/default && \
         proxy_buffers 4 256k; \
         proxy_busy_buffers_size 256k; \
         location ~* \.php$ { \
-            fastcgi_pass unix:/run/php/php8.2-fpm.sock; \
+            fastcgi_pass unix:/run/php/php8.4-fpm.sock; \
             fastcgi_index index.php; \
             fastcgi_split_path_info ^(.+\.php)(.*)$; \
             include fastcgi_params; \
