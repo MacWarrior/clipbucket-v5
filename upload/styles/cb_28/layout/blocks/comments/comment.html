@@ -7,7 +7,7 @@
 {/if}
 
 {if $rep_mode}
-<li id="reply-{$comment.comment_id}" class="commentBox clearfix reply-{$comment.comment_id}">
+<li id="reply-{$comment.comment_id}" class="commentBox not_disabled clearfix reply-{$comment.comment_id}">
 	<div class="reply-holder">
 		<div class="comments-box clearfix">
 			{$user_id = $comment.userid}
@@ -40,7 +40,6 @@
 				</div>
 			{if user_id()}
 				<div class="com-info-actions clearfix">
-
 					<div class="reply">
 						{if $comment.userid != user_id()}
 						<a href="javascript:void(0);" onclick="spam_comment('{$comment.comment_id}')">{lang code='spam'}</a>
@@ -61,7 +60,7 @@
 </li>
 
 {else}
-	<li id="comment_{$comment.comment_id}" class="clearfix" {$comment_attr}>
+	<li id="comment_{$comment.comment_id}" class="not_disabled clearfix" {$comment_attr}>
 		<hr>
 		<div class="comments-box clearfix">
 			<div class="comment-avatar">
@@ -89,6 +88,9 @@
 				{if user_id()}
 				<div class="com-info-actions clearfix">
 					<div class="reply">
+						{if User::getInstance()->getCurrentUserID() && config('comment_rating') == 'yes' && User::getInstance($user.userid)->get('allow_ratings') == 'yes' }
+							{show_video_rating rating=$comment.rating ratings=$comment.rated_by total='10' id=$comment.comment_id type=comment disable=($comment.userid == User::getInstance()->getCurrentUserID() && config('own_comment_rating') != 'yes')}
+						{/if}
 						<a href="javascript:void(0);" onclick="reply_box('{$comment.comment_id}','{$comment.type}','{$comment.type_id}')">{lang code='reply'}</a>
 						{if $comment.userid != user_id()}
 						&middot; <a href="javascript:void(0);" onclick="spam_comment('{$comment.comment_id}')">{lang code='spam'}</a>
@@ -109,7 +111,7 @@
 		<div class="more-comments-{$comment.comment_id}" style="display:none;">
 				{/if}
 
-		<li id="reply-{$comment.comment_id}" class="commentBox clearfix reply-{$reply.comment_id}">
+		<li id="reply-{$comment.comment_id}" class="not_disabled commentBox clearfix reply-{$reply.comment_id}">
 			<div class="reply-holder">
 				<div class="comments-box clearfix">
 					<div class="comment-avatar">
@@ -135,6 +137,9 @@
 						{if user_id()}
 						<div class="com-info-actions clearfix">
 							<div class="reply">
+								{if User::getInstance()->getCurrentUserID() && config('comment_rating') == 'yes' && User::getInstance($user.userid)->get('allow_ratings') == 'yes' }
+									{show_video_rating rating=$comment.rating ratings=$comment.rated_by total='10' id=$comment.comment_id type=comment disable=($comment.userid == User::getInstance()->getCurrentUserID() && config('own_comment_rating') != 'yes')}
+								{/if}
 								{if $comment.userid != user_id()}
 								<a href="javascript:void(0);" onclick="spam_comment('{$reply.comment_id}')">{lang code='spam'}</a>
 									{if User::getInstance()->hasPermission('admin_del_access') || $comment.type_owner_id==user_id()}

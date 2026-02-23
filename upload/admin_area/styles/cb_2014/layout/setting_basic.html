@@ -2167,7 +2167,16 @@
                                     <input value="yes" name="comment_rating" id="comment_rating" {if $row.comment_rating=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
                                     <span class="lbl"></span>
                                 </div>
-
+                            </div>
+                            <hr/>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <label class="nowrap" for="own_comment_rating" title="{lang('option_enable_own_comment_rating')}">{lang('option_enable_own_comment_rating')}</label>
+                                </div>
+                                <div class="col-md-2 row-size">
+                                    <input value="yes" name="own_comment_rating" id="own_comment_rating" {if $row.own_comment_rating=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+                                    <span class="lbl"></span>
+                                </div>
                             </div>
                             <hr/>
 

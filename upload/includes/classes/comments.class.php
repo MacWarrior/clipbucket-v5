@@ -1,8 +1,10 @@
 <?php
 
-class Comments
+class Comments extends Objects
 {
     public static $libelle_type_channel = 'channel';
+
+    public const TYPE = 'comment';
     /**
      * @throws Exception
      */
@@ -102,6 +104,8 @@ class Comments
                 ,'comments.spam_voters'
                 ,'comments.date_added'
                 ,'comments.comment_ip'
+                ,'comments.rating'
+                ,'comments.rated_by'
                 ,'users.username'
                 ,'users.email'
                 ,'CASE ' . $case_when . ' END AS title'

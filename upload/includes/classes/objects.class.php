@@ -249,6 +249,13 @@ abstract class Objects
                 $table = 'user_profile';
                 $id_field = 'user_profile_id';
                 break;
+            case 'comment':
+                $config_own_rate = 'own_comment_rating';
+                $config_rating = 'comment_rating';
+                $voters_key = 'voters';
+                $table = 'comments';
+                $id_field = 'comment_id';
+                break;
             case 'video':
             default:
                 $config_own_rate = 'own_video_rating';
@@ -272,6 +279,9 @@ abstract class Objects
                     break;
                 case 'video':
                     $lang = 'vid_rate_disabled';
+                    break;
+                case 'comment':
+                    $lang = 'comment_rate_disabled';
                     break;
                 default:
                     $lang = '';

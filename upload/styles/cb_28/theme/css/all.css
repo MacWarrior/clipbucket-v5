@@ -7104,7 +7104,7 @@ li.up_vid > a[disabled],li.up_img > a[disabled] {
     box-shadow: none;
 }
 
-li:has(a.disabled) {
+li:not(.not_disabled):has(a.disabled) {
     cursor: not-allowed;
     filter: alpha(opacity=65);
     opacity: .65;
