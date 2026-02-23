@@ -1,0 +1,39 @@
+<div class="current-subscription">
+    <div class="subscription-header">
+        <h3>{lang('title_cancel_membership')}</h3>
+    </div>
+
+    {if $membership['language_key_title'] == 'completed' }
+
+        <div class="warning-box">
+            <p><strong>⚠️ Attention :</strong> En résiliant votre abonnement, vous perdrez l'accès aux fonctionnalités premium à la fin de la période de facturation en cours.
+                Votre abonnement restera actif jusqu'au {$membership['next_date_renew']}. Après cette date, votre compte passera en mode gratuit.</p>
+        </div>
+
+        <div>
+            <button class="cancel-btn-danger" id="cancelMembership">
+                {lang('btn_cancel_my_membership')}
+            </button>
+        </div>
+
+    {elseif $membership['language_key_title'] == 'canceled' && Membership::getInstance()->isUserMembershipHasAlreadyHaveCompletedTransactionInHisHistory($membership['id_user_membership'])}
+
+        <div class="info-box">
+            <p><strong>Info :</strong> Vous pouvez réactiver votre abonnement jusqu'au {$membership['next_date_renew']}. Après cette date, votre compte passera en mode gratuit.</p>
+        </div>
+
+        <div>
+            <button class="cancel-btn-danger" id="reEnableMembership">
+                {lang('btn_re_enable_my_membership')}
+            </button>
+        </div>
+
+    {else}
+
+        <div class="info-box">
+            <p><strong>Info :</strong> Vous n'avez aucun membership qui a déjà était complemeent payé.</p>
+        </div>
+
+    {/if}
+
+</div>

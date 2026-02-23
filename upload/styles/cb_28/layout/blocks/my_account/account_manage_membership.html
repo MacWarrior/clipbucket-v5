@@ -1,8 +1,38 @@
-{if User::getInstance()->isUserMustRenewMembership() && $can_renew_membership}
-    <h2>{lang code='renew_membership'}</h2>
-    <button class="btn-primary btn mb-2">{lang('renew')}</button>
-{/if}
-{if User::getInstance()->isUserMustRenewMembership()}
+{if User::getInstance()->isUserHasActiveMembership()}
+
+    {include file="$style_dir/blocks/my_account/account_affichage_abonement_actif.html" membership=$current_membership}
+
+    {if User::getInstance()->isUserMustRenewMembership() && $can_renew_membership}
+        <h2>{lang code='renew_membership'}</h2>
+        <button class="btn-primary btn mb-2">{lang('renew')}</button>
+    {/if}
+
+    {$payment->getHtmlForCrudToken()}
+
+    {include file="$style_dir/blocks/my_account/account_histo_membership.html" memberships=$memberships }
+
+    {include file="$style_dir/blocks/my_account/account_cancel_membership.html"  membership=$current_membership}
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            let payment = new Payment();
+
+            /** abonnement crud card saved */
+            document.dispatchEvent(new CustomEvent('payment:capture_crud_card_saved'));
+
+            payment.capture_cancel_membership();
+            /** reload page after cancel */
+            document.addEventListener('payment:canceled', function (event) {
+                window.location.reload();
+            });
+            /** reload page after reEnable */
+            document.addEventListener('payment:reEnabled', function (event) {
+                window.location.reload();
+            });
+        });
+    </script>
+
+{else}
 
     {include file="$style_dir/blocks/my_account/account_paiment_stepper.html"}
     <div id="stepper-step-1">
@@ -14,49 +44,17 @@
     </div>
 
     <div id="stepper-step-3" style="display: none">
-        {include file="$style_dir/blocks/my_account/account_cb_paiement.html"}
+        {$payment->getHtmlPayment()}
     </div>
 
+    {include file="$style_dir/blocks/my_account/account_histo_membership.html" memberships=$memberships }
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            let payment = new Payment();
+            payment.loadJsFiles();
+            payment.enable_step_payment();
+            payment.capture_select_membership();
+        });
+    </script>
 {/if}
-{if !empty($memberships)}
-
-    <!-- if user has membership actif -->
-    {include file="$style_dir/blocks/my_account/account_affichage_abonement_actif.html"}
-    {include file="$style_dir/blocks/my_account/account_crud_cb.html"}
-    {include file="$style_dir/blocks/my_account/account_billing_address.html"}
-
-    <h2>{lang code='membership_history'}</h2>
-    <table class="table table-bordered table-striped">
-        <tr>
-            <th class="col-md-2" style="cursor:pointer;">{lang('date_start')} </th>
-            <th class="col-md-2" style="cursor:pointer;">{lang('date_end')}</th>
-            <th class="col-md-2" style="cursor:pointer;">{lang('status')}</th>
-            <th class="col-md-2" style="cursor:pointer;">{lang('user_levels')}</th>
-            <th class="col-md-1" style="cursor:pointer;">{lang('price')}</th>
-            {if config('enable_storage_history' == 'yes')}
-                <th class="col-md-2" style="cursor:pointer;">{lang('max_period_storage')}</th>
-            {/if}
-        </tr>
-        {section name=sub loop=$memberships}
-            <tr>
-                <td><span>{display_clean($memberships[sub].date_start)}</span></td>
-                <td><span>{if $memberships[sub].date_end}{display_clean($memberships[sub].date_end)}{else}{lang('never')}{/if}</span></td>
-                <td><span>{lang($memberships[sub].language_key_title)}</span></td>
-                <td><span>{lang($memberships[sub].user_level_name|strtolower|replace:' ':'_')} - {lang('frequency_'|cat:$memberships[sub].frequency)}</span></td>
-                <td><span>{display_clean($memberships[sub].price)} {display_clean($memberships[sub].symbol)}</span></td>
-                {if config('enable_storage_history' == 'yes')}
-                    {if $memberships[sub].date_end  == null}{assign var=date_end value='2999-01-01 00:00:00'}{else}{assign var=date_end value=$memberships[sub].date_end}{/if}
-                    <td><span>{System::get_readable_filesize(User::getInstance()->getPeriodMaxStorageUseByUser($memberships[sub].userid, $memberships[sub].date_start, $date_end),2)}</span></td>
-                {/if}
-            </tr>
-        {/section}
-    </table>
-{/if}
-
-<script>
-    document.addEventListener("DOMContentLoaded", function() {
-        let payment = new Payment();
-        payment.enable_step_payment();
-        payment.capture_select_membership();
-    });
-</script>

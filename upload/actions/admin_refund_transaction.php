@@ -4,7 +4,7 @@ require_once dirname(__FILE__, 2) . '/includes/admin_config.php';
 
 /** centralisation de la création de l'objet PAYPAL */
 /** @var \OxygenzSAS\Paypal\Paypal $paypal */
-$paypal = require_once dirname(__FILE__, 2) . '/includes/paypal_config.php';
+$paypal = require_once dirname(__FILE__, 2) . '/includes/payment_config.php';
 
 User::getInstance()->hasPermissionAjax('admin_access');
 

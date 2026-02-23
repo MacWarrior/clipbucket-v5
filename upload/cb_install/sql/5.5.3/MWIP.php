@@ -643,9 +643,70 @@ class MWIP extends \Migration
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_520_ci';
         self::query($sql);
 
+        $sql = /** @lang MySQL */ 'CREATE TABLE IF NOT EXISTS `' . tbl('paypal_vault') . '` (    
+            paypal_vault_id varchar(20) PRIMARY KEY,
+            status TEXT NOT NULL,
+            paypal_customer_id varchar(20),
+            last_digits varchar(4),
+            expiry varchar(7),
+            brand TEXT NOT NULL,
+            type TEXT NOT NULL,
+            created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_520_ci';
+        self::query($sql);
+
+        $sql = /** @lang MySQL */ 'CREATE TABLE IF NOT EXISTS `' . tbl('user_vault') . '` (    
+            paypal_vault_id varchar(20) NOT NULL,
+            id_user bigint(20) NOT NULL,
+            created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+            is_default  BOOLEAN DEFAULT FALSE,
+            PRIMARY KEY (paypal_vault_id, id_user),
+            CONSTRAINT fk_user_vault_user FOREIGN KEY (id_user) REFERENCES `' . tbl('users') . '` (userid)
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_520_ci';
+        self::query($sql);
+
         self::generateTranslation('transactions', [
             'fr'=>'Transactions',
             'en'=>'Transactions'
         ]);
+
+        /** @todo
+         *
+         *
+         * billing_name TEXT,
+         * billing_adress_line_1 TEXT,
+         * billing_adress_line_2 TEXT,
+         * billing_admin_area_1 TEXT,
+         * billing_admin_area_2 TEXT,
+         * billing_postal_code TEXT,
+         * billing_country_code TEXT,
+         *
+         * CREATE TABLE IF NOT EXISTS cb_user_billing_address (
+         * `id_user_billing_address` INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+         * `userid` BIGINT NOT NULL,
+         * billing_name TEXT,
+         * billing_address_line_1 TEXT,
+         * billing_address_line_2 TEXT,
+         * billing_admin_area_1 TEXT,
+         * billing_admin_area_2 TEXT,
+         * billing_postal_code TEXT,
+         * billing_country_code TEXT,
+         * CONSTRAINT fk_user_billing FOREIGN KEY (userid) REFERENCES cb_users(userid)
+         * ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_520_ci;
+         *
+         * ALTER TABLE cb_user_memberships ADD COLUMN id_user_billing_address INT;
+         * ALTER TABLE cb_user_memberships ADD COLUMN is_card_saved ENUM('yes', 'no') DEFAULT 'no';
+         * ALTER TABLE cb_user_memberships MODIFY COLUMN date_start DATE NULL;
+         * ALTER TABLE cb_user_memberships MODIFY COLUMN date_end DATE NULL;
+         * ALTER TABLE cb_user_memberships DROP COLUMN price;
+         *
+         * ajouter les clef etrangere manquante
+         */
+
+        self::generateTranslation('unable_to_set_membership', [
+            'fr'=>'Echec de sélection d\'un abonnement',
+            'en'=>'Unable to set membership'
+        ]);
+
     }
 }

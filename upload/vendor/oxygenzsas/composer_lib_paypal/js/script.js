@@ -11,7 +11,7 @@ class PaypalCustom {
     init = function () {
         let instance = this;
         // Charger le SDK PayPal
-        instance.url_to_head(instance.paypal_sdk_url + "?client-id=" + instance.client_id + "&currency=" + instance.currency + "&intent=capture&commit=true&components=card-fields")
+        Payment.urlToHead(instance.paypal_sdk_url + "?client-id=" + instance.client_id + "&currency=" + instance.currency + "&intent=capture&commit=true&components=card-fields")
             .then(() => {
                 instance.afterInitSDK();
             })
@@ -92,21 +92,7 @@ class PaypalCustom {
         const event = new CustomEvent(eventName, { detail });
         document.dispatchEvent(event);
     }
-
-    url_to_head = (url) => {
-        return new Promise(function (resolve, reject) {
-            let script = document.createElement('script');
-            script.src = url;
-            script.onload = function () {
-                resolve();
-            };
-            script.onerror = function () {
-                reject('Error loading script.');
-            };
-            document.head.appendChild(script);
-        });
-    }
-
+    
     addAtribute = (field_name, value) => {
         let instance = this;
         instance.attributes[field_name] = value;

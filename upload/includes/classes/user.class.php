@@ -1055,7 +1055,8 @@ class User
                         'first_only'          => true,
                         'date_between'        => date('Y-m-d H:i:s'),
                         'userid'              => $user_id,
-                        'get_user_membership' => true
+                        'get_user_membership' => true,
+                        'join_users' => true
                     ]);
                     $need_to_active_membership = empty($resutls);
                 }
@@ -1063,6 +1064,21 @@ class User
             $this->user_data['need_to_active_membership'] = $need_to_active_membership;
         }
         return $this->user_data['need_to_active_membership'];
+    }
+
+    public function isUserHasActiveMembership($user_id = null): bool
+    {
+        if (empty($user_id)) {
+            $user_id = user_id();
+        }
+
+        if (config('enable_membership') != 'yes' || empty($user_id)) {
+            return false;
+        }
+
+        $resutls = Membership::getInstance()->getCurrentMembershipForUser($user_id);
+
+        return !empty($resutls);
     }
 
     public function doesUserHaveAvailableMembership()
@@ -1076,7 +1092,6 @@ class User
         }
         return $this->user_data['does_user_have_available_membership'];
     }
-
 
     /**
      * @throws Exception
@@ -1307,6 +1322,133 @@ class User
         return $avcode;
     }
 
+    /**
+     * @param array $billingAddress
+     * @return false|int|mixed
+     * @throws Exception
+     */
+    public function setBillingAdress(array $billingAddress)
+    {
+        $fields = [
+            'userid'
+            ,'billing_name'
+            ,'billing_address_line_1'
+            ,'billing_address_line_2'
+            ,'billing_admin_area_1'
+            ,'billing_admin_area_2'
+            ,'billing_postal_code'
+            ,'billing_country_code'
+        ];
+
+        $id_user_billing_adress = 0;
+        $sets = [];
+
+        /** @odo check inputs */
+        foreach ($fields as $field) {
+            if (!isset($billingAddress[$field])) {
+                continue;
+            }
+
+            $value = $billingAddress[$field];
+            switch ($field) {
+                case 'userid':
+                    if (!is_numeric($value)) {
+                        e(lang('error_type'));
+                        return false;
+                    }
+                    break;
+                case 'billing_name':
+                case 'billing_address_line_1':
+                case 'billing_admin_area_1':
+                case 'billing_postal_code':
+                case 'billing_country_code':
+                    if (empty($value)) {
+                        e(lang('missing_params'));
+                        return false;
+                    }
+                    break;
+            }
+        }
+
+        if($this->isBillingAdressAlreadyExistForUser($billingAddress['userid'], $id_user_billing_adress)) {
+            foreach ($fields as $field) {
+                if (isset($billingAddress[$field])) {
+                    $sets[] = ' '.$field.' = \''.mysql_clean($billingAddress[$field]).'\' ' ;
+                }
+            }
+            $sql = 'UPDATE ' . tbl('user_billing_address').' SET
+             ' . implode(', ', $sets) . ' WHERE id_user_billing_address = '. (int) $id_user_billing_adress;
+            Clipbucket_db::getInstance()->execute($sql);
+        } else {
+            foreach ($fields as $field) {
+                if (isset($billingAddress[$field])) {
+                    $sets[] = $field;
+                    $values[] = '\''.mysql_clean($billingAddress[$field]).'\'';
+                }
+            }
+            $sql = 'INSERT INTO ' . tbl('user_billing_address').' (' . implode(', ', $sets) . ') VALUES (' . implode(', ', $values) . ') ';
+            Clipbucket_db::getInstance()->execute($sql);
+            $id_user_billing_adress = Clipbucket_db::getInstance()->insert_id();
+        }
+
+        return $id_user_billing_adress;
+    }
+
+    /**
+     * @param int $userid
+     * @return array
+     * @throws Exception
+     */
+    public function getBillingAdressForUser(int $userid) :array
+    {
+        $fields = [
+            'id_user_billing_address'
+            ,'userid'
+            ,'billing_name'
+            ,'billing_address_line_1'
+            ,'billing_address_line_2'
+            ,'billing_admin_area_1'
+            ,'billing_admin_area_2'
+            ,'billing_postal_code'
+            ,'billing_country_code'
+        ];
+
+        $sql = 'SELECT  ' . implode(', ', $fields) . '
+                FROM ' . cb_sql_table('user_billing_address').' 
+                WHERE userid = '.(int) $userid;
+
+        $result = Clipbucket_db::getInstance()->_select($sql);
+
+        if(empty($result)){
+            return [];
+        }
+
+        /** @todo remove when multi billing address support */
+        if(count($result) > 1){
+            throw new Exception('There is more than one billing address for this user.');
+        }
+
+        return $result;
+    }
+
+    /**
+     * @param int $userid
+     * @param int $id_user_billing_adress
+     * @return bool
+     * @throws Exception
+     */
+    public function isBillingAdressAlreadyExistForUser(int $userid, int &$id_user_billing_adress = 0) :bool
+    {
+        $result = $this->getBillingAdressForUser($userid);
+
+        if(empty($result)){
+            return false;
+        }
+
+        $id_user_billing_adress = $result[0]['id_user_billing_address'];
+
+        return true;
+    }
 }
 
 class userquery extends CBCategory
@@ -5794,5 +5936,4 @@ class userquery extends CBCategory
         }
         return '';
     }
-
 }

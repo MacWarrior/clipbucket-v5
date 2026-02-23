@@ -22,10 +22,11 @@ abstract class Paypal
      */
     private $currency;
     
-    private $table_name_paypal_transaction;
-    private $table_name_paypal_transaction_logs;
+    public $table_name_paypal_transaction;
+    public $table_name_paypal_vault;
+    public $table_name_paypal_transaction_logs;
 
-    public function __construct($clientID, $secretID, $api, $currency, $urlJsSdk, $url_back, $active_ssl = true, $table_name_paypal_transaction = 'paypal_transactions', $table_name_paypal_transaction_logs = 'paypal_transactions_logs') {
+    public function __construct($clientID, $secretID, $api, $currency, $urlJsSdk, $url_back, $active_ssl = true, $table_name_paypal_transaction = 'paypal_transactions', $table_name_paypal_transaction_logs = 'paypal_transactions_logs', $table_name_paypal_vault = 'paypal_vault') {
         $this->clientID = $clientID;
         $this->secretID = $secretID;
         $this->api = $api;
@@ -35,6 +36,7 @@ abstract class Paypal
         $this->currency= $currency;
         $this->table_name_paypal_transaction = $table_name_paypal_transaction;
         $this->table_name_paypal_transaction_logs = $table_name_paypal_transaction_logs;
+        $this->table_name_paypal_vault = $table_name_paypal_vault;
     }
 
     // Crée une commande et renvoie la réponse en JSON.
@@ -127,7 +129,7 @@ abstract class Paypal
     }
 
     // Crée une commande et renvoie la réponse en JSON.
-    public function createOrderFromToken($paypal_vault_id, $amount, $devise, $paypal_customer_id = null)
+    public function createOrderFromToken($paypal_vault_id, $amount, $devise, $name, $adress_line_1, $adress_line_2, $admin_area_2, $admin_area_1, $postal_code, $country_code, $paypal_customer_id = null)
     {
         try {
             $accessToken = $this->getAccessToken();
@@ -138,7 +140,17 @@ abstract class Paypal
                 "payment_source" => [
                     "token"=> [
                         "type" => 'PAYMENT_METHOD_TOKEN',
-                        "id" => $paypal_vault_id
+                        "id" => $paypal_vault_id,
+
+                        'billing_address' => [
+                            'address_line_1' => $adress_line_1,
+                            'address_line_2' => $adress_line_2,
+                            'admin_area_2' => $admin_area_2,
+                            'admin_area_1' => $admin_area_1,
+                            'postal_code' => $postal_code,
+                            'country_code' => $country_code
+                        ],
+                        'name' => $name
                     ]
                 ],
 
@@ -146,7 +158,7 @@ abstract class Paypal
                     [
                         'amount' => [
                             'currency_code' => $devise,
-                            'value' => $amount
+                            'value' => number_format($amount, 2, '.', '')
                         ]
                     ]
                 ]
@@ -231,6 +243,8 @@ abstract class Paypal
 
             $json = json_decode($response, true);
 
+            $vaultData= [];
+
             /** recup des donnéer issue d'un paiement de Paypal button */
             if(isset($json['payment_source']['paypal'])) {
                 $vault_id = $json['payment_source']['paypal']['attributes']['vault']['id'] ?? null;
@@ -241,6 +255,11 @@ abstract class Paypal
                 $vault_id = '';
                 if($json['payment_source']['card']['attributes']['vault']['status'] == 'VAULTED') {
                     $vault_id = $json['payment_source']['card']['attributes']['vault']['id'] ?? null;
+                    $vaultData = $json['payment_source']['card']['attributes']['vault'];
+                    $vaultData['last_digits'] = $json['payment_source']['card']['last_digits'];
+                    $vaultData['expiry'] = $json['payment_source']['card']['expiry'];
+                    $vaultData['brand'] = $json['payment_source']['card']['brand'];
+                    $vaultData['type'] = $json['payment_source']['card']['type'];
                 }
                 $customer_id = $json['payment_source']['card']['attributes']['vault']['customer']['id'] ?? null;
             }
@@ -279,7 +298,24 @@ abstract class Paypal
             ])->fetch(\PDO::FETCH_ASSOC);
             $this->addLog($response, $updated_transaction['id_paypal_transaction']);
 
-            $this->completeOrderSuccess($response, $_POST['attributes']);
+            /** Save vault if success */
+            if(!empty($vaultData) && $vaultData['status'] == 'VAULTED') {
+                Database::getInstance()->query(/** @lang SQL */'
+                INSERT INTO '.$this->table_name_paypal_vault.' 
+                ( paypal_vault_id, status, paypal_customer_id, last_digits, expiry, brand, type )
+                VALUES(:paypal_vault_id, :status, :paypal_customer_id, :last_digits, :expiry, :brand, :type );
+            ', [
+                    ':paypal_customer_id' => $vaultData['customer']['id'],
+                    ':paypal_vault_id' => $vaultData['id'],
+                    ':status' => $vaultData['status'],
+                    ':last_digits' => $vaultData['last_digits'],
+                    ':expiry' => $vaultData['expiry'],
+                    ':brand' => $vaultData['brand'],
+                    ':type' => $vaultData['type']
+                ]);
+            }
+
+            $this->completeOrderSuccess($response, $_POST['attributes'], $vaultData);
 
             // Retourner la réponse à l'utilisateur
             echo json_encode([ 'status' => $json['status']]);
@@ -290,6 +326,76 @@ abstract class Paypal
             echo json_encode(['status' => 'error','error' => $e->getMessage()]);
         }
     }
+
+
+    public function deleteVault(string $paypal_vault_id) {
+        try {
+            $accessToken = $this->getAccessToken();
+
+            // URL de l'API pour compléter la commande
+            $url = $this->api."/v3/vault/payment-tokens/".$paypal_vault_id;
+
+            $ch = curl_init();
+
+            curl_setopt($ch, CURLOPT_URL, $url);
+            curl_setopt($ch, CURLOPT_CUSTOMREQUEST  , 'DELETE');
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_HTTPHEADER, [
+                'Content-Type: application/json',
+                'Authorization: Bearer ' . $accessToken
+            ]);
+            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, $this->active_ssl);
+
+            $response = curl_exec($ch);
+            $httpStatus = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+
+            if (!in_array($httpStatus, [200,201,204])) {
+                throw new \Exception("Erreur lors de la suppression ddu vault: " . $response);
+            }
+
+            curl_close($ch);
+
+        } catch (\Exception $e) {
+            error_log($e->getMessage());
+        }
+    }
+
+
+    public function getAllVaultFromCustomer(string $customer_id) {
+        try {
+            $accessToken = $this->getAccessToken();
+
+            // URL de l'API pour compléter la commande
+            $url = $this->api."/v3/vault/payment-tokens?customer_id=".$customer_id;
+
+            $ch = curl_init();
+
+            curl_setopt($ch, CURLOPT_URL, $url);
+            //            curl_setopt($ch, CURLOPT_POST, true);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_HTTPHEADER, [
+                'Content-Type: application/json',
+                'Authorization: Bearer ' . $accessToken
+            ]);
+            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, $this->active_ssl);
+
+            $response = curl_exec($ch);
+            $httpStatus = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+
+            if ($httpStatus != 200 && $httpStatus != 201) {
+                throw new \Exception("Erreur lors de la complétion de la commande: " . $response);
+            }
+
+            curl_close($ch);
+
+            return json_decode($response, true);
+
+        } catch (\Exception $e) {
+            error_log($e->getMessage());
+            return null;
+        }
+    }
+
 
     public function refundCapture($capture_id, $amount, $currency, $note_to_payer = 'refund' ) {
         try {
@@ -500,12 +606,39 @@ abstract class Paypal
         switch($_POST['action'] ?? null) {
             case 'create_order':
                 $this->beforeCreateOrder($_POST['attributes']);
-
                 $amount = $this->getAmountFromAttribute($_POST['attributes']);
                 $adress_facturation =  $this->getAdressFromAttribute($_POST['attributes']);
                 $isCardSave = $this->isCardShouldBeSaved($_POST['attributes']);
 
                 call_user_func_array(array($this, 'createOrder'), [$amount, $this->currency, $adress_facturation['name'], $adress_facturation['adress_line_1'], $adress_facturation['adress_line_2'], $adress_facturation['admin_area_2'], $adress_facturation['admin_area_1'], $adress_facturation['postal_code'], $adress_facturation['country_code'], $isCardSave ]);
+                die();
+
+            case 'create_order_from_vault':
+
+                $this->beforeCreateOrder($_POST['attributes']);
+                $amount = $this->getAmountFromAttribute($_POST['attributes']);
+                $adress_facturation =  $this->getAdressFromAttribute($_POST['attributes']);
+
+                /** get vault freom attribute */
+                $paypal_vault_id = $this->getPaypalVaultIdFromAttribute();
+
+                if($this->createOrderFromToken(
+                    $paypal_vault_id,
+                    $amount,
+                    $this->currency,
+                    $adress_facturation['name'],
+                    $adress_facturation['adress_line_1'],
+                    $adress_facturation['adress_line_2'],
+                    $adress_facturation['admin_area_2'],
+                    $adress_facturation['admin_area_1'],
+                    $adress_facturation['postal_code'],
+                    $adress_facturation['country_code'],
+                    ) === false){
+                    throw new EXception('Echec de creation de la commande a partir du vault');
+                }
+
+                echo json_encode(['status' => 'success']);
+
                 die();
                 /*
             case 'createOrderFromToken':
@@ -580,8 +713,9 @@ abstract class Paypal
     abstract protected function createOrderError($error, string $attribute) : void;
 
     abstract protected function beforeCompleteOrder(string $attribute) :void;
-    abstract protected function completeOrderSuccess($response, string $attribute) : void;
+    abstract protected function completeOrderSuccess($response, string $attribute, array $vaultData) : void;
     abstract protected function completeOrderError($error, string $attribute) : void;
 
     abstract protected function isCardShouldBeSaved(string $attribute) :bool;
+    abstract protected function getPaypalVaultIdFromAttribute(string $attribute) :string;
 }

@@ -1,154 +1,69 @@
-<style>
-
-    .current-subscription {
-        background: white;
-        border: 1px solid #e0e0e0;
-        border-radius: 4px;
-        padding: 20px;
-        margin-bottom: 24px;
-    }
-
-    .subscription-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 20px;
-        padding-bottom: 16px;
-        border-bottom: 2px solid #f0f0f0;
-    }
-
-    .subscription-header h3 {
-        font-size: 18px;
-        font-weight: 600;
-        color: #333;
-        margin: 0;
-    }
-
-    .status-badge {
-        display: inline-block;
-        padding: 4px 12px;
-        border-radius: 3px;
-        font-size: 12px;
-        font-weight: 600;
-        text-transform: uppercase;
-    }
-
-    .status-active {
-        background-color: #d4edda;
-        color: #155724;
-    }
-
-    .status-cancelled {
-        background-color: #f8d7da;
-        color: #721c24;
-    }
-
-    .subscription-grid {
-        display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        gap: 16px;
-    }
-
-    .subscription-item {
-        display: flex;
-        flex-direction: column;
-    }
-
-    .subscription-item label {
-        font-size: 13px;
-        color: #666;
-        margin-bottom: 4px;
-        font-weight: 500;
-    }
-
-    .subscription-item .value {
-        font-size: 15px;
-        color: #333;
-        font-weight: 600;
-    }
-
-    .subscription-item .value.highlight {
-        color: #0891b2;
-        font-size: 18px;
-    }
-
-    .frequency-badge {
-        display: inline-block;
-        padding: 2px 8px;
-        background-color: #e3f2fd;
-        color: #1976d2;
-        border-radius: 3px;
-        font-size: 12px;
-        font-weight: 600;
-    }
-
-    .warning-box {
-        margin-top: 16px;
-        padding: 12px;
-        background-color: #fff3cd;
-        border-left: 3px solid #ffc107;
-        border-radius: 3px;
-    }
-
-    .warning-box p {
-        color: #856404;
-        font-size: 13px;
-        line-height: 1.5;
-        margin: 0;
-    }
-
-    @media (max-width: 768px) {
-        .subscription-grid {
-            grid-template-columns: 1fr;
-        }
-    }
-</style>
-
-
 <!-- Abonnement actuel -->
 <div class="current-subscription">
     <div class="subscription-header">
-        <h3>Abonnement actuel</h3>
-        <span class="status-badge status-active">Actif</span>
-        <span class="status-badge status-active">Actif - renouvellement automatique</span>
-        <span class="status-badge status-cancelled">Résilié</span>
+        <h3>{lang('title_current_membership')}</h3>
+
+        {if in_array( $membership['language_key_title'], ['completed']) }
+            <span class="status-badge status-active">
+                {lang('active')}
+                {if $membership['is_auto_renew'] == 'yes'  }
+                    - {lang('automatic_renew')}
+                {/if}
+            </span>
+        {elseif in_array( $membership['language_key_title'], ['canceled']) }
+           <span class="status-badge status-cancelled">{lang('canceled')}</span>
+        {/if}
     </div>
 
     <div class="subscription-grid">
         <div class="subscription-item">
-            <label>Formule</label>
-            <div class="value">Global Moderator</div>
+            <label>{lang('user_level')}</label>
+            <div class="value">{$membership['user_level_name']}</div>
         </div>
 
         <div class="subscription-item">
-            <label>Fréquence</label>
+            <label>{lang('frequency')}</label>
             <div class="value">
-                <span class="frequency-badge">Mensuel</span>
+                <span class="frequency-badge">{$membership['frequency']}</span>
             </div>
         </div>
 
         <div class="subscription-item">
-            <label>Prix</label>
-            <div class="value highlight">100 €</div>
+            <label>{lang('price')}</label>
+            <div class="value highlight">{$membership['base_price']} {$membership['symbol']}</div>
         </div>
 
         <div class="subscription-item">
-            <label>Prochain paiement</label>
-            <div class="value">15 février 2026</div>
+            <label>{lang('next_paiement_date')}</label>
+            <div class="value">{$membership['next_date_renew']}</div>
         </div>
 
         <div class="subscription-item">
-            <label>Quota de stockage</label>
-            <div class="value">Illimité</div>
+            <label>{lang('storage_quota')}</label>
+            <div class="value">
+                {if $membership['storage_quota_included'] != 0}
+                    {$membership['storage_quota_included']}{lang('gb')}
+                {else}
+                    {lang('none')}
+                {/if}
+                </div>
         </div>
 
         <div class="subscription-item">
-            <label>Prix par GB</label>
-            <div class="value">Gratuit</div>
+            <label>{lang('storage_price')}</label>
+            <div class="value">
+                {if $membership['storage_price_per_go'] != 0}
+                    {$membership['storage_price_per_go']}
+                {else}
+                    {lang('free')}
+                {/if}
+                </div>
         </div>
     </div>
 
-    <div class="warning-box">
-        <p><strong>⚠️ Attention :</strong> Votre abonnement prendra fin le 31 janvier 2026. Après cette date, vous n'aurez plus accès aux fonctionnalités premium.</p>
-    </div>
+    {if in_array( $membership['language_key_title'], ['canceled']) }
+        <div class="warning-box">
+            <p><strong>⚠️ Attention :</strong> Votre abonnement prendra fin le {$membership['next_date_renew']}. Après cette date, vous n'aurez plus accès aux fonctionnalités premium.</p>
+        </div>
+    {/if}
 </div>

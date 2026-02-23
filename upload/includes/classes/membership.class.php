@@ -40,7 +40,9 @@ class Membership
             'id_user_memberships_status',
             'date_start',
             'date_end',
-            'price'
+            'id_user_billing_address',
+            'is_card_saved',
+            'is_auto_renew'
         ];
 
         $this->frequencies = [
@@ -105,6 +107,8 @@ class Membership
         $param_date_between = $params['date_between'] ?? false;
         $param_is_disabled = $params['is_disabled'] ?? null;
         $param_get_nb_users = $params['get_nb_users'] ?? false;
+        $param_language_key_title = $params['language_key_title'] ?? null;
+        $param_id_user_membership = $params['id_user_membership'] ?? null;
 
         //CONDITIONS
         $conditions = [];
@@ -138,6 +142,20 @@ class Membership
         if ($param_date_between !== false ) {
             $conditions[] = ' \''.mysql_clean($param_date_between) . '\'  BETWEEN ' . $this->tablename_user_membership . '.date_start AND (CASE WHEN ' . $this->tablename_user_membership . '.date_end IS NULL THEN \'2999-12-12\' ELSE ' . $this->tablename_user_membership . '.date_end END)';
         }
+        if ($param_language_key_title !== null ) {
+
+            if(!is_array($param_language_key_title)) {
+                $param_language_key_title = [$param_language_key_title];
+            }
+            $constrain = [];
+            foreach ($param_language_key_title as $value){
+                $constrain[] = ' \''.mysql_clean($value).'\' ';
+            }
+            $conditions[] = ' language_key_title IN ('.implode(',', $constrain).') ';
+        }
+        if ($param_id_user_membership !== null ) {
+            $conditions[] = ' user_memberships.id_user_membership = \''.mysql_clean($param_id_user_membership).'\'';
+        }
 
         if ($param_group) {
             $group[] = $param_group;
@@ -166,11 +184,13 @@ class Membership
         }
 
         $join = [];
-        $join[] = ' ' . $type_join . ' JOIN ' . cb_sql_table($this->tablename_user_membership) . ' ON ' . $this->tablename_user_membership . '.id_membership = ' . $this->tablename . '.id_membership';
-        $join[] = ' LEFT JOIN ' . cb_sql_table('user_levels') . ' ON user_levels.user_level_id = ' . $this->tablename . '.user_level_id';
         $join[] = ' LEFT JOIN ' . cb_sql_table('currency') . ' ON currency.id_currency = ' . $this->tablename . '.id_currency';
 
         if ($param_join_users) {
+            $join[] = ' ' . $type_join . ' JOIN ' . cb_sql_table($this->tablename_user_membership) . ' ON ' . $this->tablename_user_membership . '.id_membership = ' . $this->tablename . '.id_membership';
+            $join[] = ' LEFT JOIN ' . cb_sql_table('user_levels') . ' ON user_levels.user_level_id = ' . $this->tablename . '.user_level_id';
+            $select[] = 'user_levels.user_level_name';
+
             $join[] = ' LEFT JOIN ' . cb_sql_table('users') . ' ON users.userid = ' . $this->tablename_user_membership . '.userid';
             $select[] = 'users.username';
         }
@@ -186,9 +206,33 @@ class Membership
             if ($param_get_user_membership) {
                 $select = $this->getSQLFields('user_membership');
                 $select[] = $this->tablename . '.frequency';
+                $select[] = '\'unknown\' AS next_date_renew';
+                $select[] = $this->tablename . '.storage_quota_included';
+                $select[] = $this->tablename . '.storage_price_per_go';
+
                 $join[] = ' LEFT JOIN ' . cb_sql_table('user_memberships_status') . ' ON user_memberships_status.id_user_memberships_status = ' . $this->tablename_user_membership . '.id_user_memberships_status ';
                 $select[] = 'user_memberships_status.language_key_title';
                 $select[] = $this->tablename.'.id_membership AS id_membership_from_join';
+
+                if (!$param_join_users) {
+                    throw new Exception('params join_users must be present for user_membership');
+                }
+
+                $select[] = 'user_levels.user_level_name';
+
+                // add membership fields
+                $select[] = $this->tablename.'.base_price';
+                $select[] = $this->tablename.'.disabled = 1 AS is_membership_disabled';
+                $select[] = 'currency.code AS code_currency';
+
+                $join[] = ' LEFT JOIN ' . cb_sql_table('user_billing_address') . ' ON user_billing_address.id_user_billing_address = ' . $this->tablename_user_membership . '.id_user_billing_address ';
+                $select[] = 'user_billing_address.billing_name';
+                $select[] = 'user_billing_address.billing_address_line_1';
+                $select[] = 'user_billing_address.billing_address_line_2';
+                $select[] = 'user_billing_address.billing_admin_area_1';
+                $select[] = 'user_billing_address.billing_admin_area_2';
+                $select[] = 'user_billing_address.billing_postal_code';
+                $select[] = 'user_billing_address.billing_country_code';
 
             } else {
                 $select = $this->getSQLFields('membership');
@@ -196,10 +240,8 @@ class Membership
                     $select[] = ' COUNT(DISTINCT '.$this->tablename_user_membership . '.id_user_membership) AS nb_user_membership ';
                 }
             }
-            $select[] = 'user_levels.user_level_name';
             $select[] = 'currency.symbol';
         }
-
 
         $sql = 'SELECT * FROM (SELECT ' . implode(', ', $select) . '
                 FROM ' . cb_sql_table($this->tablename)
@@ -389,6 +431,31 @@ class Membership
     }
 
     /**
+     * @param array $histoMembership
+     * @return bool|mysqli_result
+     * @throws Exception
+     */
+    public function updateHistoMembership(array $histoMembership)
+    {
+        $sql = 'UPDATE ' . tbl($this->tablename_user_membership) . ' SET ';
+        $updated_fields = [];
+        $histoMembership = $this->formatAndValidateFieldsHistoMembership($histoMembership);
+        if ($histoMembership === false) {
+            return false;
+        }
+        foreach ($this->fields_user_membership as $field) {
+            if ($field == 'id_user_membership') {
+                continue;
+            }
+            if (isset($histoMembership[$field])) {
+                $updated_fields[] = $field . ' = \'' . $histoMembership[$field].'\'';
+            }
+        }
+        $sql .= implode(', ', $updated_fields) . ' WHERE id_user_membership = ' . mysql_clean($histoMembership['id_user_membership']);
+        return Clipbucket_db::getInstance()->execute($sql);
+    }
+
+    /**
      * @param array $membership
      * @return bool|mysqli_result
      * @throws Exception
@@ -408,12 +475,95 @@ class Membership
             }
             if (isset($membership[$field])) {
                 $fields[] = $field;
-                $values[] = $membership[$field];
+                $values[] = '\''.$membership[$field].'\'';
             }
         }
         $sql .= ' (' . implode(', ', $fields) . ') VALUES (' . implode(', ', $values) . ') ';
         Clipbucket_db::getInstance()->execute($sql);
         return Clipbucket_db::getInstance()->insert_id();
+    }
+
+    /**
+     * @param array $histoMembership
+     * @return bool|mysqli_result
+     * @throws Exception
+     */
+    public function insertHistoMembership(array $histoMembership)
+    {
+        if (empty($histoMembership['userid'])) {
+            return false;
+        }
+
+        $sql = 'INSERT INTO ' . tbl($this->tablename_user_membership) . ' ';
+        $fields = [];
+        $values = [];
+        $histoMembership = $this->formatAndValidateFieldsHistoMembership($histoMembership);
+
+        if ($histoMembership === false) {
+            return false;
+        }
+        foreach ($this->fields_user_membership as $field) {
+            if ($field == 'id_user_membership') {
+                continue;
+            }
+            if (isset($histoMembership[$field])) {
+                $fields[] = $field;
+                $values[] = $histoMembership[$field];
+            }
+        }
+
+        $sql .= ' (' . implode(', ', $fields) . ') VALUES (' . implode(', ', $values) . ') ';
+        Clipbucket_db::getInstance()->execute($sql);
+        return Clipbucket_db::getInstance()->insert_id();
+    }
+
+
+    public function formatAndValidateFieldsHistoMembership(array $fields)
+    {
+        foreach ($fields as $field => &$value) {
+            $value = mysql_clean($value);
+            switch ($field) {
+                case 'userid':
+                case 'id_membership':
+                case 'id_user_billing_address':
+                    if (empty($value)) {
+                        e(lang('missing_params'));
+                        return false;
+                    } elseif ((int)$value != $value) {
+                        e(lang('error_type'));
+                        return false;
+                    }
+                    break;
+
+                case 'id_user_memberships_status':
+                    if (empty($value)) {
+                        e(lang('missing_params'));
+                        return false;
+                    }
+                    /** @todo Clement : a remplir je ne sait pas comment vous verifier */
+                    break;
+
+                case 'is_card_saved':
+                case 'is_auto_renew':
+                    if (empty($value)) {
+                        e(lang('missing_params'));
+                        return false;
+                    } elseif (!in_array($value, ['yes', 'no'])) {
+                        e(lang('error_type'));
+                        return false;
+                    }
+                    break;
+
+                case 'date_start':
+                case 'date_end':
+                    /** @todo Clement : a remplir je ne sait pas comment vous verifiez les dates */
+                    break;
+                default:
+                    break;
+
+            }
+        }
+        return $fields;
     }
 
     public function formatAndValidateFields(array $fields)
@@ -517,4 +667,38 @@ class Membership
         return $results;
     }
 
+    public function getCurrentMembershipForUser(int $user_id)
+    {
+        $results = Membership::getInstance()->getAll([
+            'first_only'          => true,
+            'date_between'        => date('Y-m-d H:i:s'),
+            'userid'              => $user_id,
+            'get_user_membership' => true,
+            'join_users'          => true,
+            'language_key_title'  => ['completed', 'canceled', 'refunded'],
+            'order'               => 'CASE 
+                                        WHEN language_key_title = \'completed\' THEN 0 
+                                        ELSE 1
+                                      END ASC, date_start DESC, id_user_membership DESC',
+            'limit'               => 1
+        ]);
+
+        if(empty($results)){
+            return [];
+        }
+
+        return $results;
+    }
+
+    public function isUserMembershipHasAlreadyHaveCompletedTransactionInHisHistory(int $id_user_membership)
+    {
+        $sql = 'SELECT 1 
+                FROM ' . cb_sql_table('user_memberships_transactions') .' 
+                INNER JOIN ' . cb_sql_table('paypal_transactions') .' ON user_memberships_transactions.id_paypal_transaction = paypal_transactions.id_paypal_transaction
+                WHERE paypal_transactions.status in (\'COMPLETED\', \'REFUND\')
+                AND user_memberships_transactions.id_user_membership = '.(int)$id_user_membership.'
+                ';
+        $result = Clipbucket_db::getInstance()->_select($sql);
+        return !empty($result);
+    }
 }
