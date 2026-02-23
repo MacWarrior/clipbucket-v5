@@ -137,9 +137,9 @@
                                 <div class="col-md-4">
                                     <select class="form-control" name="video_nsfw_check_model" id="video_nsfw_check_model" {if !AIVision::isAvailable()}title="{lang code='warning_ai_requirements'}" disabled{/if}>
                                         {assign var=array_modes value=[
-                                        'nudity'       => 'option_nudity'
-                                        ,'nsfw'        => 'option_nsfw'
-                                        ,'nudity+nsfw' => 'option_nudity_nsfw'
+                                            'nudity'       => 'option_nudity'
+                                            ,'nsfw'        => 'option_nsfw'
+                                            ,'nudity+nsfw' => 'option_nudity_nsfw'
                                         ]}
                                         {foreach from=$array_modes item=trad key=code}
                                             <option {if $code==$row.video_nsfw_check_model}selected{/if} value="{$code}">
@@ -937,6 +937,70 @@
                         </div>
                         <hr/>
                     </div>
+                    <div class="col-md-4">
+                        <div class="row">
+                            <div class="col-md-5">
+                                <label class="nowrap" for="enable_profiling" title="{lang code='option_enable_profiling'}">{lang code='option_enable_profiling'} <span class="fa fa-question-circle tips" title="{lang code='option_profiling_tips'}"></span></label>
+                            </div>
+                            <div class="col-md-2 row-size">
+                                <input value="yes" name="enable_profiling" id="enable_profiling"{if $enable_profiling} checked{/if}{if !Profiling::isAvailable(true)} disabled{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+                                <span class="lbl"></span>
+                            </div>
+                            {if !Profiling::isAvailable(true)}
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <img alt="warning" src="{$imageurl}/error.png"/> {lang code='warning_profiling_requirements'}
+                                    </div>
+                                </div>
+                            {/if}
+                        </div>
+                        <hr/>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <label class="nowrap" for="profiling_db_host" title="{lang code='option_profiling_db_host'}"><span class="fa fa-question-circle tips" title="{lang code='option_profiling_hidden_tips'}"></span> {lang code='option_profiling_db_host'}</label>
+                            </div>
+                            <div class="col-md-8 row-size">
+                                <input class="form-control" name="profiling_db_host" id="profiling_db_host" placeholder="**********"{if !$enable_profiling} disabled="disabled"{/if}/>
+                            </div>
+                        </div>
+                        <hr/>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <label class="nowrap" for="profiling_db_name" title="{lang code='option_profiling_db_name'}"><span class="fa fa-question-circle tips" title="{lang code='option_profiling_hidden_tips'}"></span> {lang code='option_profiling_db_name'}</label>
+                            </div>
+                            <div class="col-md-8 row-size">
+                                <input class="form-control" name="profiling_db_name" id="profiling_db_name" placeholder="**********"{if !$enable_profiling} disabled="disabled"{/if}/>
+                            </div>
+                        </div>
+                        <hr/>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <label class="nowrap" for="profiling_db_user" title="{lang code='option_profiling_db_user'}"><span class="fa fa-question-circle tips" title="{lang code='option_profiling_hidden_tips'}"></span> {lang code='option_profiling_db_user'}</label>
+                            </div>
+                            <div class="col-md-8 row-size">
+                                <input class="form-control" name="profiling_db_user" id="profiling_db_user" placeholder="**********"{if !$enable_profiling} disabled="disabled"{/if}/>
+                            </div>
+                        </div>
+                        <hr/>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <label class="nowrap" for="profiling_db_password" title="{lang code='option_profiling_db_password'}"><span class="fa fa-question-circle tips" title="{lang code='option_profiling_hidden_tips'}"></span> {lang code='option_profiling_db_password'}</label>
+                            </div>
+                            <div class="col-md-8 row-size">
+                                <input class="form-control" name="profiling_db_password" id="profiling_db_password" placeholder="**********"{if !$enable_profiling} disabled="disabled"{/if}/>
+                            </div>
+                        </div>
+                        <hr/>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <label class="nowrap" for="profiling_db_port" title="{lang code='option_profiling_db_port'}"><span class="fa fa-question-circle tips" title="{lang code='option_profiling_hidden_tips'}"></span> {lang code='option_profiling_db_port'}</label>
+                            </div>
+                            <div class="col-md-8 row-size">
+                                <input class="form-control" name="profiling_db_port" id="profiling_db_port" placeholder="**********"{if !$enable_profiling} disabled="disabled"{/if}/>
+                            </div>
+                        </div>
+                        <hr/>
+                    </div>
                 </div>
             </div>
             <div id="config_hosting" class="tab-pane">
@@ -1047,9 +1111,9 @@
                             <div class="col-md-6">
                                 <select class="form-control" name="automate_launch_mode" id="automate_launch_mode">
                                     {assign var=array_automate value=[
-                                    'crontab' => 'option_automate_launch_mode_crontab'
-                                    ,'user_activity' => 'option_automate_launch_mode_user_activity'
-                                    ,'disabled' => 'option_automate_launch_mode_disabled'
+                                        'crontab' => 'option_automate_launch_mode_crontab'
+                                        ,'user_activity' => 'option_automate_launch_mode_user_activity'
+                                        ,'disabled' => 'option_automate_launch_mode_disabled'
                                     ]}
                                     {foreach from=$array_automate item=trad key=code}
                                         <option {if $code==$row.automate_launch_mode}selected{/if} value="{$code}">
