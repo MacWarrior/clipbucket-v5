@@ -959,7 +959,6 @@ class Collection extends Objects
     {
         $params = [
             'type'   => $type,
-            'userid' => user_id()
         ];
 
         if (!empty($collection_id)) {
