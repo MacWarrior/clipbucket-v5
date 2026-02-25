@@ -77,24 +77,38 @@ if( config('home_display_recent_videos') == 'yes' && config('homepage_recent_vid
 Assign('ids_to_check_progress_recent', json_encode($ids_to_check_progress));
 
 $ids_to_check_progress = [];
-if( config('home_display_featured_collections') == 'yes' ){
+if (config('home_display_featured_collections') == 'yes') {
     $params = [
-        'featured'               => 'yes'
-        ,'type'                  => 'videos'
-        ,'hide_empty_collection' => true
-        ,'with_items'            => true
-        ,'with_sub_items'        => true
-        ,'allow_children'        => true
+        'featured'              => 'yes',
+        'type'                  => 'videos',
+        'hide_empty_collection' => true,
+        'with_items'            => true,
+        'with_sub_items'        => true,
+        'allow_children'        => true
     ];
+
     $featured_collections = Collection::getInstance()->getAll($params);
-    assign('featured_collections', $featured_collections);
-}
-foreach ($featured_collections as $featured_collection) {
-    foreach ($featured_collection['items'] as $item) {
-        if (in_array($item['status'], ['Processing', 'Waiting'])) {
-            $ids_to_check_progress[] = $item['videoid'];
+    foreach ($featured_collections as &$featured_collection) {
+        if (config('enable_sub_collection') == 'yes' && config('enable_featured_collection_hierarchy') == 'yes' && $featured_collection['hierarchy_featured'] == 'yes') {
+            $breadcrumb_collection = [];
+            $collection_parent = $featured_collection;
+            do {
+                $breadcrumb_collection[] = [
+                    'title' => $collection_parent['collection_name'],
+                    'url'   => Collections::getInstance()->collection_links($collection_parent, 'view')
+                ];
+                $collection_parent = Collections::getInstance()->get_parent_collection($collection_parent);
+            } while ($collection_parent);
+            $featured_collection['breadcrumb'] = array_reverse($breadcrumb_collection);
+        }
+
+        foreach ($featured_collection['items'] as $item) {
+            if (in_array($item['status'], ['Processing', 'Waiting'])) {
+                $ids_to_check_progress[] = $item['videoid'];
+            }
         }
     }
+    assign('featured_collections', $featured_collections);
 }
 Assign('ids_to_check_progress_collection', json_encode($ids_to_check_progress));
 

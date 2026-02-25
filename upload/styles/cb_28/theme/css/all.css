@@ -7159,3 +7159,16 @@ h4:has(i) {
 .collections-grid .manage_favorite {
   display: none;
 }
+
+.collect_breadcrumb {
+  padding: 8px 15px;
+  list-style: none;
+}
+.collect_breadcrumb > li {
+  display: inline-block;
+}
+.collect_breadcrumb > li + li:before {
+  padding: 0 5px;
+  color: #ccc;
+  content: ">";
+}
