@@ -12,6 +12,18 @@ class MWIP extends \Migration
      */
     public function start()
     {
+        self::insertTool('regenerate_all_video_thumbs', 'AdminTool::regenerateAllVideoThumbs');
+
+        self::generateTranslation('regenerate_all_video_thumbs_label', [
+            'fr'=>'Régénère les miniatures des vidéos',
+            'en'=>'Regenerate videos thumbs'
+        ]);
+
+        self::generateTranslation('regenerate_all_video_thumbs_description', [
+            'fr'=>'Régénère toutes les miniatures automatiques de toutes les vidéos',
+            'en'=>'Regenerate all video thumbs auto'
+        ]);
+
         $limit = 100;
         $offset = 0;
 
@@ -45,17 +57,5 @@ class MWIP extends \Migration
         } while (!empty($videos_images));
 
         delete_empty_directories(\DirPath::get('thumbs'));
-
-        self::insertTool('regenerate_all_video_thumbs', 'AdminTool::regenerateAllVideoThumbs');
-
-        self::generateTranslation('regenerate_all_video_thumbs_label', [
-            'fr'=>'Régénère les miniatures des vidéos',
-            'en'=>'Regenerate videos thumbs'
-        ]);
-
-        self::generateTranslation('regenerate_all_video_thumbs_description', [
-            'fr'=>'Régénère toutes les miniatures automatiques de toutes les vidéos',
-            'en'=>'Regenerate all video thumbs auto'
-        ]);
     }
 }
