@@ -72,12 +72,12 @@
             <div class="clearfix row">
                 {if $videos}
                     {if config('videos_enable_fullwidth') == 'yes'}
-                        {$class = 'col-lg-2'}
+                        {$class = 'colcb-xs-1 colcb-768-3 colcb-992-4 colcb-1200-5 colcb-1600-6 colcb-1920-7 colcb-2560-10 colcb-3840-12 colcb-5120-14'}
                     {else}
-                        {$class = 'col-lg-3'}
+                        {$class = 'colcb-xs-1 colcb-768-3 colcb-992-4 colcb-1200-5'}
                     {/if}
                     {foreach $videos as $video}
-                        <div class="item-video {$class} col-md-4 col-sm-4 col-xs-12" data-id="{$video.videoid}">
+                        <div class="item-video {$class}" data-id="{$video.videoid}">
                             {if config('videos_video_style') == 'modern'}
                                 {include file="$style_dir/blocks/videos/video-modern.html"}
                             {else}

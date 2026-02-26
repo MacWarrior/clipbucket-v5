@@ -77,12 +77,12 @@
                 <div class="row clearfix">
                     {if $collections}
                         {if config('collections_enable_fullwidth') == 'yes'}
-                            {$class = 'col-lg-3'}
+                            {$class = 'colcb-xs-1 colcb-768-2 colcb-992-3 colcb-1200-4 colcb-1600-5 colcb-1920-6 colcb-2560-8 colcb-3840-10 colcb-5120-12'}
                         {else}
-                            {$class = 'col-lg-4'}
+                            {$class = 'colcb-xs-1 colcb-768-2 colcb-992-3'}
                         {/if}
                         {foreach $collections as $collection}
-                            <div class="clearfix collection-item {$class} col-md-4 col-sm-4 col-xs-6">
+                            <div class="clearfix collection-item {$class}">
                                 {include file="$style_dir/blocks/collection-item.html"}
                             </div>
                         {/foreach}
