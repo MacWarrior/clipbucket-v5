@@ -1356,13 +1356,10 @@ class Collections extends CBCategory
      * @param        $ci_id
      * @param        $cid
      * @param string $item
-     * @param int $limit
-     * @param bool $check_only
-     *
      * @return array|bool
      * @throws Exception
      */
-    function get_next_prev_item($ci_id, $cid, $item = 'prev', $limit = 1, $check_only = false)
+    function get_next_prev_item($ci_id, $cid, string $item = 'prev'): bool|array
     {
         $iTbl = tbl($this->items);
         $oTbl = tbl($this->objTable);
@@ -1375,30 +1372,26 @@ class Collections extends CBCategory
         } elseif ($item == 'next') {
             $op = '<';
             $order = $iTbl . '.ci_id DESC';
-        } elseif ($item == null) {
+        } else {
             $op = '=';
             $order = '';
         }
 
         $cond = ' ' . $iTbl . '.collection_id = ' . $cid . ' AND ' . $iTbl . '.ci_id ' . $op . ' ' . $ci_id . ' AND ' . $iTbl . '.object_id = ' . $oTbl . '.' . $this->objFieldID . ' AND ' . $oTbl . '.userid = ' . $uTbl . '.userid';
-        if (!$check_only) {
-            $result = Clipbucket_db::getInstance()->select($tbls, $iTbl . '.*,' . $oTbl . '.*,' . $uTbl . '.username', $cond, $limit, $order);
+        $result = Clipbucket_db::getInstance()->select($tbls, $iTbl . '.*,' . $oTbl . '.*,' . $uTbl . '.username', $cond, 1, $order);
 
-            // Result was empty. Checking if we were going backwards, So bring last item
-            if (empty($result) && $item == 'prev') {
-                $order = $iTbl . '.ci_id ASC';
-                $op = '<';
-                $result = Clipbucket_db::getInstance()->select($tbls, $iTbl . '.*,' . $oTbl . '.*,' . $uTbl . '.username', ' ' . $iTbl . '.collection_id = ' . $cid . ' AND ' . $iTbl . '.ci_id ' . $op . ' ' . $ci_id . ' AND ' . $iTbl . '.object_id = ' . $oTbl . '.' . $this->objFieldID . ' AND ' . $oTbl . '.userid = ' . $uTbl . '.userid', $limit, $order);
-            }
+        // Result was empty. Checking if we were going backwards, So bring last item
+        if (empty($result) && $item == 'prev') {
+            $order = $iTbl . '.ci_id ASC';
+            $op = '<';
+            $result = Clipbucket_db::getInstance()->select($tbls, $iTbl . '.*,' . $oTbl . '.*,' . $uTbl . '.username', ' ' . $iTbl . '.collection_id = ' . $cid . ' AND ' . $iTbl . '.ci_id ' . $op . ' ' . $ci_id . ' AND ' . $iTbl . '.object_id = ' . $oTbl . '.' . $this->objFieldID . ' AND ' . $oTbl . '.userid = ' . $uTbl . '.userid', 1, $order);
+        }
 
-            // Result was empty. Checking if we were going forwards, So bring first item
-            if (empty($result) && $item == 'next') {
-                $order = $iTbl . '.ci_id DESC';
-                $op = '>';
-                $result = Clipbucket_db::getInstance()->select($tbls, $iTbl . '.*,' . $oTbl . '.*,' . $uTbl . '.username', ' ' . $iTbl . '.collection_id = ' . $cid . ' AND ' . $iTbl . '.ci_id ' . $op . ' ' . $ci_id . ' AND ' . $iTbl . '.object_id = ' . $oTbl . '.' . $this->objFieldID . ' AND ' . $oTbl . '.userid = ' . $uTbl . '.userid', $limit, $order);
-            }
-        } else {
-            $result = Clipbucket_db::getInstance()->count($iTbl . ',' . $oTbl, $iTbl . '.ci_id', ' ' . $iTbl . '.collection_id = ' . $cid . ' AND ' . $iTbl . '.ci_id ' . $op . ' ' . $ci_id . ' AND ' . $iTbl . '.object_id = $oTbl.' . $this->objFieldID, $limit, $order);
+        // Result was empty. Checking if we were going forwards, So bring first item
+        if (empty($result) && $item == 'next') {
+            $order = $iTbl . '.ci_id DESC';
+            $op = '>';
+            $result = Clipbucket_db::getInstance()->select($tbls, $iTbl . '.*,' . $oTbl . '.*,' . $uTbl . '.username', ' ' . $iTbl . '.collection_id = ' . $cid . ' AND ' . $iTbl . '.ci_id ' . $op . ' ' . $ci_id . ' AND ' . $iTbl . '.object_id = ' . $oTbl . '.' . $this->objFieldID . ' AND ' . $oTbl . '.userid = ' . $uTbl . '.userid', 1, $order);
         }
 
         if ($result) {
