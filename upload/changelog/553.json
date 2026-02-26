@@ -1,6 +1,6 @@
 {
   "version":"5.5.3",
-  "revision":"50",
+  "revision":"54",
   "status":"stable",
   "detail":[
     {
@@ -10,6 +10,7 @@
         ,"Implement email alias allow option"
         ,"Implement templates edition"
         ,"Update advanced settings display"
+        ,"Hide poster & backdrop tabs when empty on video edition page"
         ,"Fix JS error on playlist management page"
         ,"Fix missing video thumbs tool"
         ,"Fix possible PHP error on video edition page"
@@ -39,6 +40,8 @@
         ,"Fix possible temporary remote code execution (Thanks @m0x41nos !)"
         ,"Fix default thumb selection on video upload form"
         ,"Fix missing minified JS file"
+        ,"Fix JS error on subtitle upload from video upload form"
+        ,"Fix video favorite icon display and action"
       ]
     },
     {
@@ -46,6 +49,7 @@
       "description": [
         "Refactor favorites storage"
         ,"Refactor thumbs"
+        ,"Implement PHP profiling"
         ,"Update compatibility to PHP 8.5.X"
         ,"Cleanup code"
         ,"Drop support for PHP 8.0"
