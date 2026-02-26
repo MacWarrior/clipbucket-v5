@@ -1,6 +1,6 @@
 {
   "version":"5.5.3",
-  "revision":"56",
+  "revision":"57",
   "status":"stable",
   "detail":[
     {
@@ -67,6 +67,7 @@
         ,"Fix possible SQL injection"
         ,"Fix possible duplicate configs"
         ,"Fix SSRF vulnerability (Thanks @Takumi142857 !)"
+        ,"Fix Readme"
       ]
     },
     {
