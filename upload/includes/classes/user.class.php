@@ -241,7 +241,6 @@ class User extends Objects
     }
 
     public function getTableNameProfile(): string
-
     {
         return $this->tablename_profile;
     }
