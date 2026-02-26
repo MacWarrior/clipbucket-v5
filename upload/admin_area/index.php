@@ -150,9 +150,10 @@ $message_php = '';
 if (!empty($info_php) && $info_php['version_update'] >= $info_php['cb_version_min']) {
     $message_php = lang('confirmation_upgrade_core_php_version_require', ['<b>' . $info_php['php_version'] . '</b>', '<b>' . $info_php['version_update'] . ' - ' . ($info_php['revision_update']?:'1') . '</b>']);
 }
+
 $message_breaking_version = '';
 $info_warning = Update::getInstance()->CheckBreakingVersion();
-if ($info_warning) {
+if (!empty($info_warning)) {
     $message_breaking_version = lang('confirmation_upgrade_core_breaking_version', ['<b>' . $info_warning['version'] . ' - ' . ($info_warning['revision']?:'1') . '</b>']) . '<br>' . lang('do_want_to_update');
 }
 assign('message_php', $message_php);

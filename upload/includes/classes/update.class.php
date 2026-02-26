@@ -895,11 +895,11 @@ class Update
         if (empty($breaking_versions)) {
             return false;
         }
+
         $cb_version = $this->getCurrentCoreVersion();
         $cb_revision = $this->getCurrentCoreRevision();
-        foreach ($breaking_versions as $item) {
-            $breaking_version = $item['version'];
-            $breaking_revision = $item['revision'];
+
+        foreach ($breaking_versions as $breaking_version => $breaking_revision) {
             if ($breaking_version > $cb_version || ($breaking_version == $cb_version && $breaking_revision >= $cb_revision)){
                 return ['version'=>$breaking_version, 'revision'=>$breaking_revision];
             }
