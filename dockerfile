@@ -201,8 +201,8 @@ COPY docker/entrypoint.sh /usr/local/bin/
 RUN sed -i 's/\r$//' /usr/local/bin/entrypoint.sh
 RUN chmod +x /usr/local/bin/entrypoint.sh
 
-# Créer les volumes pour la bdd et les sources
-VOLUME ["/var/lib/mysql", "label=clipbucket_database"]
+# Créer les volumes uniquement en mode full (pas en mode lite)
+# Le volume pour /var/lib/mysql n'est pas nécessaire en mode lite
 VOLUME ["/srv/http/clipbucket", "label=clipbucket_sources"]
 
 # Port d'écoute

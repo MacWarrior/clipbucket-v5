@@ -164,6 +164,71 @@ Installing <a href="https://github.com/MacWarrior/clipbucket-v5">ClipBucket V5</
 Replace username with the name of the user. For example, for the user john, use id john.
 </details>
 
+### Lite Image (External Database)
+
+For production environments or when using an external database, use the **lite** image which excludes MariaDB:
+
+```bash
+docker run \
+
+--restart unless-stopped \
+
+--pull=always \
+
+-e DOMAIN_NAME=clipbucket.local \
+
+-e LITE=true \
+
+-e UID=1000 \
+
+-e GID=1000 \
+
+-v clipbucket_files:/srv/http/clipbucket \
+
+-v /path/to/custom/config.php:/srv/http/clipbucket/upload/cb_install/config.php \
+
+-p 80:80 \
+
+--name clipbucket \
+
+-d oxygenz/clipbucket-v5:lite-latest
+```
+
+#### Using an External Database
+
+When using the lite image, you need to configure the database connection. Mount a custom configuration file:
+
+**1. Create your config.php:**
+
+```php
+<?php
+//Database Host
+$DBHOST = "your-db-host";
+//Database Name
+$DBNAME = "clipbucket";
+//Database Username
+$DBUSER = "clipbucket_user";
+//Database Password
+$DBPASS = "your_secure_password";
+//Database Port
+$DBPORT = "3306";
+//Setting Table Prefix
+define("TABLE_PREFIX", "cb_");
+```
+
+**2. Mount the config file in your docker run command:**
+
+```bash
+-v /path/to/your/config.php:/srv/http/clipbucket/upload/cb_install/config.php
+```
+
+The lite image is ideal for:
+- Using an external MySQL/MariaDB server
+- Kubernetes deployments with separate database pods
+- High availability setups with managed databases
+- Reducing container resource usage
+
+
 ## On dedicated server
 <details>
   <summary>Beginners - Easy installation scripts</summary>
