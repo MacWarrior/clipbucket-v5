@@ -1,13 +1,13 @@
 # Utiliser une image Debian stable comme base
 FROM debian:stable-slim
 
-# Build argument pour mode standalone (sans MariaDB)
-ARG STANDALONE=false
+# Build argument pour mode lite (sans MariaDB)
+ARG LITE=false
 
 # Variables d'environnement pour le runtime
 ENV DOMAIN_NAME=clipbucket.local
 ENV MYSQL_PASSWORD=clipbucket_password
-ENV STANDALONE=${STANDALONE}
+ENV LITE=${LITE}
 
 # Ajouter un utilisateur avec un UID/GID dynamique
 ENV UID=1000
@@ -32,8 +32,8 @@ RUN apt-get update && \
         mediainfo && \
     apt-get clean
 
-# Installer MariaDB uniquement si pas en mode standalone
-RUN if [ "$STANDALONE" = "false" ]; then \
+# Installer MariaDB uniquement si pas en mode lite
+RUN if [ "$LITE" = "false" ]; then \
         apt-get update && \
         apt-get install -y mariadb-server && \
         apt-get clean; \

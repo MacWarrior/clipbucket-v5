@@ -44,9 +44,9 @@ jobs:
         with:
           context: .
           push: true
-          tags: ${{ env.IMAGE_NAME }}:standalone-latest
+          tags: ${{ env.IMAGE_NAME }}:lite-latest
           build-args: |
-            STANDALONE=true
+            LITE=true
           labels: |
             org.opencontainers.image.title=ClipBucket v5 (Standalone)
             org.opencontainers.image.source=${{ github.server_url }}/${{ github.repository }}

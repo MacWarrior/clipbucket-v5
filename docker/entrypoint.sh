@@ -22,11 +22,11 @@ chown -R ${USER_NAME}:${USER_NAME} /var/lib/mysql /run/mysqld /usr/lib/mysql /sr
 # Fonction pour terminer correctement les processus enfants
 terminate_processes() {
     echo "Terminating processes..."
-    if [ "$STANDALONE" != "true" ]; then
+    if [ "$LITE" != "true" ]; then
         kill -TERM "$mariadb_pid" 2>/dev/null || true
     fi
     kill -TERM "$php_pid" "$nginx_pid" 2>/dev/null || true
-    if [ "$STANDALONE" != "true" ]; then
+    if [ "$LITE" != "true" ]; then
         wait "$mariadb_pid" 2>/dev/null || true
     fi
     wait "$php_pid" "$nginx_pid" 2>/dev/null || true
@@ -38,7 +38,7 @@ terminate_processes() {
 trap terminate_processes SIGTERM SIGINT
 
 # Mode standalone : sans MariaDB
-if [ "$STANDALONE" != "true" ]; then
+if [ "$LITE" != "true" ]; then
     # Vérifier si mysql a deja était installé
     if [ ! -d "/var/lib/mysql/clipbucket" ]; then
         echo "install mariadb ..."
@@ -126,7 +126,7 @@ nginx_pid=$!
 
 # Surveiller les processus et détecter les arrêts
 while true; do
-    if [ "$STANDALONE" != "true" ]; then
+    if [ "$LITE" != "true" ]; then
         if ! kill -0 "$mariadb_pid" 2>/dev/null; then
             echo "MariaDB process has exited. Exiting script..."
             terminate_processes
