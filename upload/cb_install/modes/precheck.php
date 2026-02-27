@@ -66,8 +66,12 @@ if (System::getPHPVersionWeb() < '8.1' ) {
 
             if( !in_array($key, $php_extensions, true) ) {
                 $txt = ' extension is not enabled';
-                if( $key == 'ffi' ){
-                    $msg = ['war' => $extension['display'] . $txt];
+                if( in_array($key, ['ffi','xhprof']) ){
+                    if( $key == 'xhprof') {
+                        $msg = ['war' => $extension['display'] . $txt . '<br/>Profiling feature will be disabled.'];
+                    } else {
+                        $msg = ['war' => $extension['display'] . $txt];
+                    }
                 } else {
                     $everything_good = false;
                     $msg = ['err' => $extension['display'] . $txt];
