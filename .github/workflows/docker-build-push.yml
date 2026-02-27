@@ -17,14 +17,6 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Sanitize release tag
-        id: sanitize
-        run: |
-          TAG="${{ github.event.release.tag_name }}"
-          CLEAN_TAG=$(echo "$TAG" | sed 's/#//g')
-          echo "tag=$CLEAN_TAG" >> $GITHUB_OUTPUT
-          echo "Clean tag: $CLEAN_TAG"
-
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
@@ -39,12 +31,9 @@ jobs:
         with:
           context: .
           push: true
-          tags: |
-            ${{ env.IMAGE_NAME }}:${{ steps.sanitize.outputs.tag }}
-            ${{ env.IMAGE_NAME }}:latest
+          tags: ${{ env.IMAGE_NAME }}:latest
           labels: |
             org.opencontainers.image.title=ClipBucket v5
-            org.opencontainers.image.version=${{ steps.sanitize.outputs.tag }}
             org.opencontainers.image.source=${{ github.server_url }}/${{ github.repository }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
