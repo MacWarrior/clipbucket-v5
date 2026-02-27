@@ -39,7 +39,7 @@ jobs:
           cache-to: type=gha,mode=max
           platforms: linux/amd64
 
-      - name: Build and push Docker image (standalone)
+      - name: Build and push Docker image (lite)
         uses: docker/build-push-action@v5
         with:
           context: .
@@ -48,7 +48,7 @@ jobs:
           build-args: |
             LITE=true
           labels: |
-            org.opencontainers.image.title=ClipBucket v5 (Standalone)
+            org.opencontainers.image.title=ClipBucket v5 (lite)
             org.opencontainers.image.source=${{ github.server_url }}/${{ github.repository }}
           cache-from: type=gha
           cache-to: type=gha,mode=max

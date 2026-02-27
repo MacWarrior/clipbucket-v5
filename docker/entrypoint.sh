@@ -22,11 +22,9 @@ chown -R ${USER_NAME}:${USER_NAME} /var/lib/mysql /run/mysqld /usr/lib/mysql /sr
 # Fonction pour terminer correctement les processus enfants
 terminate_processes() {
     echo "Terminating processes..."
-    if [ "$LITE" != "true" ]; then
-        kill -TERM "$mariadb_pid" 2>/dev/null || true
-    fi
     kill -TERM "$php_pid" "$nginx_pid" 2>/dev/null || true
     if [ "$LITE" != "true" ]; then
+        kill -TERM "$mariadb_pid" 2>/dev/null || true
         wait "$mariadb_pid" 2>/dev/null || true
     fi
     wait "$php_pid" "$nginx_pid" 2>/dev/null || true
@@ -37,7 +35,7 @@ terminate_processes() {
 # Capturer les signaux pour arrêter proprement les processus
 trap terminate_processes SIGTERM SIGINT
 
-# Mode standalone : sans MariaDB
+# Mode lite : sans MariaDB
 if [ "$LITE" != "true" ]; then
     # Vérifier si mysql a deja était installé
     if [ ! -d "/var/lib/mysql/clipbucket" ]; then
@@ -79,7 +77,7 @@ if [ "$LITE" != "true" ]; then
         echo "Database already exists. No init required."
     fi
 else
-    echo "Standalone mode : MariaDB is disabled"
+    echo "Lite mode : MariaDB is disabled"
 fi
 
 # Démarrer PHP-FPM
