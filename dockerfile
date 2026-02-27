@@ -1,19 +1,19 @@
-# Utiliser une image Debian stable comme base
+# Use a stable Debian image as base
 FROM debian:stable-slim
 
-# Build argument pour mode lite (sans MariaDB)
+# Build argument for lite mode (without MariaDB)
 ARG LITE=false
 
-# Variables d'environnement pour le runtime
+# Environment variables for runtime
 ENV DOMAIN_NAME=clipbucket.local
 ENV MYSQL_PASSWORD=clipbucket_password
 ENV LITE=${LITE}
 
-# Ajouter un utilisateur avec un UID/GID dynamique
+# Add a user with a dynamic UID/GID
 ENV UID=1000
 ENV GID=1000
 
-# Version de PHP fixée
+# Fixed PHP version
 RUN apt-get update && \
     apt-get dist-upgrade -y && \
     apt-get install -y \
@@ -32,7 +32,7 @@ RUN apt-get update && \
         mediainfo && \
     apt-get clean
 
-# Installer MariaDB uniquement si pas en mode lite
+# Install MariaDB only if not in lite mode
 RUN if [ "$LITE" = "false" ]; then \
         apt-get update && \
         apt-get install -y mariadb-server && \
@@ -43,12 +43,12 @@ RUN pecl install xhprof \
     && echo "extension=xhprof.so" > /etc/php/8.4/mods-available/xhprof.ini \
     && phpenmod xhprof
 
-# Configuration PHP
+# PHP configuration
 RUN sed -i "s/max_execution_time = 30/max_execution_time = 7200/g" /etc/php/8.4/fpm/php.ini
 RUN sed -i "s/;ffi.enable=preload/ffi.enable=true/g" /etc/php/8.4/fpm/php.ini
 RUN sed -i "s/;ffi.enable=preload/ffi.enable=true/g" /etc/php/8.4/cli/php.ini
 
-# change l'utilisateur de nginx et php-fpm
+# Change the nginx and php-fpm user
 RUN sed -i 's/^user www-data;/user containeruser;/g' /etc/nginx/nginx.conf ;\
     sed -i 's/^user = www-data$/user = containeruser/' /etc/php/8.4/fpm/pool.d/www.conf ;\
     sed -i 's/^group = www-data$/group = containeruser/' /etc/php/8.4/fpm/pool.d/www.conf
@@ -97,7 +97,7 @@ RUN rm -f /etc/nginx/sites-enabled/default && \
         location ~* ^(.*/)?files/temp/ { \
             return 302 $1403; \
         } \
-        # Direct acces to files \
+        # Direct access to files \
         location ~* ^(.*/)?files/ { \
             try_files $uri $uri/ =404; \
         } \
@@ -196,17 +196,17 @@ RUN rm -f /etc/nginx/sites-enabled/default && \
 
 RUN sed -i "s/DOMAIN_NAME_PLACEHOLDER/${DOMAIN_NAME}/g" /etc/nginx/sites-available/clipbucket
 
-# Ajouter un script d'entrée pour init bdd et sources si necessaire
+# Add an entrypoint script to initialize the database and sources if needed
 COPY docker/entrypoint.sh /usr/local/bin/
 RUN sed -i 's/\r$//' /usr/local/bin/entrypoint.sh
 RUN chmod +x /usr/local/bin/entrypoint.sh
 
-# Le volume pour /var/lib/mysql n'est pas nécessaire en mode lite mais on le conserve pour retrocompatibilité avec les anciennes images
+# The volume for /var/lib/mysql is not needed in lite mode but kept for backward compatibility with older images
 VOLUME ["/var/lib/mysql", "label=clipbucket_database"]
 VOLUME ["/srv/http/clipbucket", "label=clipbucket_sources"]
 
-# Port d'écoute
+# Listening port
 EXPOSE 80
 
-# Commande de démarrage
+# Start command
 ENTRYPOINT ["entrypoint.sh"]
