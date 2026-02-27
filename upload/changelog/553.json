@@ -1,6 +1,6 @@
 {
   "version":"5.5.3",
-  "revision":"57",
+  "revision":"58",
   "status":"stable",
   "detail":[
     {
@@ -68,6 +68,7 @@
         ,"Fix possible duplicate configs"
         ,"Fix SSRF vulnerability (Thanks @Takumi142857 !)"
         ,"Fix Readme"
+        ,"Fix docker image <i>(#781, #782)</i>"
       ]
     },
     {
