@@ -158,11 +158,15 @@ $(document).ready(function(){
                     url : baseurl+"actions/photo_uploader.php",
                     type : "post",
                     data : data,
+                    dataType: "JSON",
                     success: function (msg) {
-                        msg = $.parseJSON(msg);
+                        debugger
+                        console.log('msg')
+                        console.log(msg)
+
                         $("#uploadMessage").removeClass("hidden");
                         if (msg.error) {
-                            $('#uploadMessage').html(msg.error.val).attr('class', 'alert alert-danger container');
+                            $('#uploadMessage').html(msg.error).attr('class', 'alert alert-danger container');
                             $('html,body').animate({
                                 scrollTop: $("body").offset().top
                             }, 'medium');
@@ -339,8 +343,10 @@ $(document).ready(function(){
             },
             dataType: "JSON",
             success: function(msg){
+                debugger;
+                console.log(msg)
                 if( msg.error ){
-                    $("#uploadMessage").html(msg.error.val).attr("class", "alert alert-danger container");
+                    $("#uploadMessage").html(msg.error).attr("class", "alert alert-danger container");
                 } else {
                     $("#uploadMessage").html("All Files are uploaded Successfully").attr("class", "alert alert-success container");
                     setTimeout(function(){
@@ -371,6 +377,7 @@ $(document).ready(function(){
 
     uploader.bind('error', function(up, err) {
         $("#uploadMessage").removeClass("hidden");
+        debugger;
         if(err){
             $("#uploadMessage").html(err.message).attr("class", "alert alert-danger container");
         }

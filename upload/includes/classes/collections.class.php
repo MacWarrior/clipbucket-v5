@@ -2002,13 +2002,13 @@ class Collections extends CBCategory
     function upload_thumb($cid, $file): void
     {
         $ext = getExtMimeType($file['name']);
-        if (!VideoThumbs::ValidateImage($file['tmp_name'], $ext)) {
+        if (!Photo::ValidateImage($file['tmp_name'])) {
             e(lang('pic_upload_vali_err'));
             @unlink($file['tmp_name']);
             return;
         }
 
-        $exts = explode(',', config('allowed_photo_types'));
+        $exts = Photo::getAllowedPhotoExtension(Clipbucket::getInstance());
         foreach ($exts as $un_ext) {
             if (file_exists(DirPath::get('collection_thumbs') . $cid . '.' . $un_ext) && file_exists(DirPath::get('collection_thumbs') . $cid . '-small.' . $un_ext) && file_exists(DirPath::get('collection_thumbs') . $cid . '-orignal.' . $un_ext)) {
                 unlink(DirPath::get('collection_thumbs') . $cid . '.' . $un_ext);

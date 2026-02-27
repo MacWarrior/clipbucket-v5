@@ -148,7 +148,7 @@ function getExt($file): string
 function getExtMimeType($file_path): string
 {
     $image_sizes = getimagesize($file_path);
-    return PhotoThumbs::getMimeType($image_sizes['mime']);
+    return Photo::getMimeType($image_sizes['mime']);
 }
 
 /**

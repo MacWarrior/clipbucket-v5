@@ -111,12 +111,13 @@ switch ($mode) {
         $targetFile = $targetDir . DIRECTORY_SEPARATOR . $targetFileName;
 
         $params = [
-            'fileData' => 'Filedata',
-            'mimeType' => 'image',
+            'fileData'            => 'Filedata',
+            'mimeType'            => 'image',
             'destinationFilePath' => $targetFile,
-            'keepExtension' => true,
-            'maxFileSize' => !empty((int)config('max_upload_size')) ? config('max_upload_size') : 1000,
-            'allowedExtensions' => config('allowed_photo_types')
+            'keepExtension'       => true,
+            'maxFileSize'         => !empty((int)config('max_photo_size')) ? config('max_photo_size') : 2,
+            'allowedExtensions'   => config('allowed_photo_types'),
+            'checkMimeType'       => true
         ];
 
         FileUpload::getInstance($params)->processUpload();

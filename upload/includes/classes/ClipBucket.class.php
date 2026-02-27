@@ -1,6 +1,7 @@
 <?php
 class ClipBucket
 {
+    private $allowed_photo_types;
     private static self $instance;
     public static function getInstance(): self
     {

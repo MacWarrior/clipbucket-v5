@@ -45,7 +45,7 @@ if (isset($_FILES['Filedata'])) {
         'mimeType'            => 'image',
         'destinationFilePath' => $destinationFilePath,
         'keepExtension'       => true,
-        'maxFileSize'         => config('max_bg_size') / 1024,
+        'maxFileSize'         => config('max_photo_size') / 1024 / 1024,
         'allowedExtensions'   => config('allowed_photo_types')
     ];
 
