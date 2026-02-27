@@ -5,7 +5,7 @@ on:
     types: [published]
 
 env:
-  IMAGE_NAME: vekaserver/clipbucket-v5
+  IMAGE_NAME: oxygenz/clipbucket-v5
 
 jobs:
   build-and-push:
