@@ -1,6 +1,6 @@
 {
   "version":"5.5.3",
-  "revision":"58",
+  "revision":"59",
   "status":"stable",
   "detail":[
     {
@@ -17,6 +17,7 @@
         ,"Fix unstuck update tool from admin dashboard"
         ,"Fix possible wrong error message display on core/db update from dashboard"
         ,"Fix todo deletion"
+        ,"Fix possible XSS injection (Thanks @sy460129 !)"
       ]
     },
     {
@@ -44,6 +45,7 @@
         ,"Fix JS error on subtitle upload from video upload form"
         ,"Fix video favorite icon display and action"
         ,"Fix photo display"
+        ,"Fix possible collection edition fron unauthorized user (Thanks @sy460129 !)"
       ]
     },
     {
