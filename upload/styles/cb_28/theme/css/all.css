@@ -2137,7 +2137,7 @@ h1 {
 }
 
 .photo-view .overlay.maximized {
-  display: block;
+  display: table;
 }
 
 .photo-view .overlay img {
@@ -2191,6 +2191,7 @@ h1 {
 
 .photo-view .overlay .overlay-content {
   vertical-align: middle;
+  display: table-cell;
 }
 
 .photo-view .overlay .overlay-content img {
