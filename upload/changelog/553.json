@@ -1,6 +1,6 @@
 {
   "version":"5.5.3",
-  "revision":"59",
+  "revision":"60",
   "status":"stable",
   "detail":[
     {
@@ -58,6 +58,7 @@
         ,"Cleanup code"
         ,"Drop support for PHP 8.0"
         ,"Drop outdated & unused columns"
+        ,"Improve MySQL auto-reconnect handling"
         ,"Fix possible PHP error with discord logs"
         ,"Fix possible issue with migration 5.5.3 - 14"
         ,"Fix SQL error on video, photo & collection deletion"
