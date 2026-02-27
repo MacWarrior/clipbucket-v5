@@ -21,7 +21,7 @@ class MWIP extends \Migration
 
         self::generateTranslation('regenerate_all_video_thumbs_description', [
             'fr'=>'Régénère toutes les miniatures automatiques de toutes les vidéos',
-            'en'=>'Regenerate all video thumbs auto'
+            'en'=>'Regenerate all extracted video thumbs'
         ]);
 
         $limit = 100;
