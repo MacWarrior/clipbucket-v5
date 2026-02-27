@@ -22,8 +22,14 @@ chown -R ${USER_NAME}:${USER_NAME} /var/lib/mysql /run/mysqld /usr/lib/mysql /sr
 # Fonction pour terminer correctement les processus enfants
 terminate_processes() {
     echo "Terminating processes..."
-    kill -TERM "$mariadb_pid" "$php_pid" "$nginx_pid" 2>/dev/null
-    wait "$mariadb_pid" "$php_pid" "$nginx_pid"
+    if [ "$STANDALONE" != "true" ]; then
+        kill -TERM "$mariadb_pid" 2>/dev/null || true
+    fi
+    kill -TERM "$php_pid" "$nginx_pid" 2>/dev/null || true
+    if [ "$STANDALONE" != "true" ]; then
+        wait "$mariadb_pid" 2>/dev/null || true
+    fi
+    wait "$php_pid" "$nginx_pid" 2>/dev/null || true
     echo "All processes terminated."
     exit 1
 }
@@ -31,44 +37,49 @@ terminate_processes() {
 # Capturer les signaux pour arrêter proprement les processus
 trap terminate_processes SIGTERM SIGINT
 
-# Vérifier si mysql a deja était installé
-if [ ! -d "/var/lib/mysql/clipbucket" ]; then
-    echo "install mariadb ..."
-    mariadb-install-db --user=${USER_NAME} --basedir=/usr --datadir=/var/lib/mysql || true
+# Mode standalone : sans MariaDB
+if [ "$STANDALONE" != "true" ]; then
+    # Vérifier si mysql a deja était installé
+    if [ ! -d "/var/lib/mysql/clipbucket" ]; then
+        echo "install mariadb ..."
+        mariadb-install-db --user=${USER_NAME} --basedir=/usr --datadir=/var/lib/mysql || true
+    else
+        echo "mariadb already installed."
+    fi
+
+    # Démarrer MariaDB
+    echo "Starting MariaDB..."
+    mariadbd --user=${USER_NAME} --datadir=/var/lib/mysql &
+    mariadb_pid=$!
+
+    # Initialiser le compteur de temps d'attente
+    timeout=200
+    elapsed=0
+
+    # Attendre que le fichier de socket MariaDB soit créé, avec une limite de 20 secondes
+    while [ ! -e /var/run/mysqld/mysqld.sock ] && [ $elapsed -lt $timeout ]; do
+      sleep 0.1
+      elapsed=$((elapsed + 1))
+    done
+
+    # Si le fichier de socket n'a pas été trouvé après 20 secondes, échouer
+    if [ ! -e /var/run/mysqld/mysqld.sock ]; then
+      echo "Erreur : Le fichier de socket MariaDB n'a pas été créé après 20 secondes."
+      exit 1
+    fi
+
+    # Vérifier si la base de données existe
+    if [ ! -d "/var/lib/mysql/clipbucket" ]; then
+        echo "Init database..."
+        mysql -uroot -e "CREATE DATABASE clipbucket;"
+        mysql -uroot -e "CREATE USER 'clipbucket'@'localhost' IDENTIFIED BY '${MYSQL_PASSWORD}';"
+        mysql -uroot -e "GRANT ALL PRIVILEGES ON clipbucket.* TO 'clipbucket'@'localhost';"
+        mysql -uroot -e "FLUSH PRIVILEGES;"
+    else
+        echo "Database already exists. No init required."
+    fi
 else
-    echo "mariadb already installed."
-fi
-
-# Démarrer MariaDB
-echo "Starting MariaDB..."
-mariadbd --user=${USER_NAME} --datadir=/var/lib/mysql &
-mariadb_pid=$!
-
-# Initialiser le compteur de temps d'attente
-timeout=200
-elapsed=0
-
-# Attendre que le fichier de socket MariaDB soit créé, avec une limite de 20 secondes
-while [ ! -e /var/run/mysqld/mysqld.sock ] && [ $elapsed -lt $timeout ]; do
-  sleep 0.1  # Petite attente pour éviter une boucle infinie excessive
-  elapsed=$((elapsed + 1))  # Incrémenter le compteur en utilisant des entiers
-done
-
-# Si le fichier de socket n'a pas été trouvé après 20 secondes, échouer
-if [ ! -e /var/run/mysqld/mysqld.sock ]; then
-  echo "Erreur : Le fichier de socket MariaDB n'a pas été créé après 20 secondes."
-  exit 1
-fi
-
-# Vérifier si la base de données existe
-if [ ! -d "/var/lib/mysql/clipbucket" ]; then
-    echo "Init database..."
-    mysql -uroot -e "CREATE DATABASE clipbucket;"
-    mysql -uroot -e "CREATE USER 'clipbucket'@'localhost' IDENTIFIED BY '${MYSQL_PASSWORD}';"
-    mysql -uroot -e "GRANT ALL PRIVILEGES ON clipbucket.* TO 'clipbucket'@'localhost';"
-    mysql -uroot -e "FLUSH PRIVILEGES;"
-else
-    echo "Database already exists. No init required."
+    echo "Standalone mode : MariaDB is disabled"
 fi
 
 # Démarrer PHP-FPM
@@ -82,8 +93,8 @@ elapsed=0
 
 # Attendre que le fichier de socket soit créé, avec une limite de 20 secondes
 while [ ! -e /run/php/php8.4-fpm.sock ] && [ $elapsed -lt $timeout ]; do
-  sleep 0.1  # Petite attente pour éviter une boucle infinie excessive
-  elapsed=$((elapsed + 1))  # Incrémenter le compteur en utilisant des entiers
+  sleep 0.1
+  elapsed=$((elapsed + 1))
 done
 
 # Si le fichier de socket n'a pas été trouvé après 20 secondes, échouer
@@ -115,9 +126,11 @@ nginx_pid=$!
 
 # Surveiller les processus et détecter les arrêts
 while true; do
-    if ! kill -0 "$mariadb_pid" 2>/dev/null; then
-        echo "MariaDB process has exited. Exiting script..."
-        terminate_processes
+    if [ "$STANDALONE" != "true" ]; then
+        if ! kill -0 "$mariadb_pid" 2>/dev/null; then
+            echo "MariaDB process has exited. Exiting script..."
+            terminate_processes
+        fi
     fi
 
     if ! kill -0 "$php_pid" 2>/dev/null; then
