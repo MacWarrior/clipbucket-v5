@@ -16,8 +16,15 @@ else
 fi
 
 # adapter les permission pour le nouvel user
-mkdir -p /var/lib/mysql /srv/http/clipbucket /run/mysqld /var/lib/nginx && \
-chown -R ${USER_NAME}:${USER_NAME} /var/lib/mysql /run/mysqld /usr/lib/mysql /srv/http/clipbucket /run/php
+if [ "$LITE" = "true" ]; then
+    # Mode lite : pas de MariaDB
+    mkdir -p /srv/http/clipbucket /var/lib/nginx && \
+    chown -R ${USER_NAME}:${USER_NAME} /srv/http/clipbucket /run/php
+else
+    # Mode full : avec MariaDB
+    mkdir -p /var/lib/mysql /srv/http/clipbucket /run/mysqld /var/lib/nginx && \
+    chown -R ${USER_NAME}:${USER_NAME} /var/lib/mysql /run/mysqld /usr/lib/mysql /srv/http/clipbucket /run/php
+fi
 
 # Fonction pour terminer correctement les processus enfants
 terminate_processes() {
