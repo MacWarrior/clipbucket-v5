@@ -1796,4 +1796,12 @@ VALUES ('ongoing_conversion'),
        ('option_profiling_hidden_tips'),
        ('option_profiling_tips'),
        ('option_profiling_error'),
-       ('warning_profiling_requirements');
+       ('warning_profiling_requirements'),
+       ('confirmation_upgrade_core_breaking_version'),
+       ('maintenance_recommended'),
+       ('do_want_to_update'),
+       ('website_closed'),
+       ('update_completed_maintenance_off'),
+       ('update_incomplete'),
+       ('maintenance_still_on'),
+       ('ok');
