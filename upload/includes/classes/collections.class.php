@@ -2006,7 +2006,7 @@ class Collections extends CBCategory
             return;
         }
 
-        $exts = Photo::getAllowedPhotoExtension(Clipbucket::getInstance());
+        $exts = Photo::getAllowedPhotoExtension();
         foreach ($exts as $un_ext) {
             if (file_exists(DirPath::get('collection_thumbs') . $cid . '.' . $un_ext) && file_exists(DirPath::get('collection_thumbs') . $cid . '-small.' . $un_ext) && file_exists(DirPath::get('collection_thumbs') . $cid . '-orignal.' . $un_ext)) {
                 unlink(DirPath::get('collection_thumbs') . $cid . '.' . $un_ext);

@@ -491,7 +491,7 @@ class Category
         $ext = getExtMimeType($file['tmp_name']);
         if (!Photo::ValidateImage($file['tmp_name'])) {
             @unlink($file['tmp_name']);
-            e(lang('error_allow_photo_types', implode(', ', explode(',', strtolower(config('allowed_photo_types'))))));
+            e(lang('error_allow_photo_types', Photo::getAllowedPhotoExtension('string')));
             return false;
         }
 

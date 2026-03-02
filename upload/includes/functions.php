@@ -3297,7 +3297,7 @@ function upload_image($type = 'logo'): bool
     $filename = $_FILES[$file_post]['name'];
     $file_ext = getExt($filename);
     $filesize = $_FILES[$file_post]['size'];
-    $allowed_file_types = explode(',', strtolower(config('allowed_photo_types')));
+    $allowed_file_types = Photo::getAllowedPhotoExtension();
 
     $max_size = 4000000;
     if ($filesize > $max_size) {

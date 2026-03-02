@@ -189,7 +189,7 @@ if (isset($_POST['update'])) {
         }
 
         if ($field == 'allowed_photo_types') {
-            $types = explode( ',', config('allowed_photo_types'));
+            $types = Photo::getAllowedPhotoExtension();
             $type_ok = true;
             foreach ($types as $type) {
                 if (!in_array($type, Photo::getAllowedUploadTypes())) {
@@ -311,9 +311,6 @@ if (!empty($tool)) {
 assign('cron_copy_paste', $cron_line ?? '');
 
 assign('is_there_conversion_lock', FFMpeg::isThereAnyConversionLocks());
-
-Photo::getAllowedPhotoExtension(Clipbucket::getInstance());
-
 
 $allTimezone = [];
 if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '99')) {

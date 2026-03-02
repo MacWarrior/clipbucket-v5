@@ -46,7 +46,7 @@ if (isset($_FILES['Filedata'])) {
         'destinationFilePath' => $destinationFilePath,
         'keepExtension'       => true,
         'maxFileSize'         => config('max_photo_size') / 1024 / 1024,
-        'allowedExtensions'   => config('allowed_photo_types')
+        'allowedExtensions'   => Photo::getAllowedPhotoExtension()
     ];
 
     FileUpload::getInstance($params)->processUpload();

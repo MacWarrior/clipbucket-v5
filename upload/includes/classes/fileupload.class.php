@@ -20,7 +20,7 @@ class FileUpload
         $this->mimeType            = $params['mimeType'];
         $this->destinationFilePath = $params['destinationFilePath'];
         $this->maxFileSize         = $params['maxFileSize'];
-        $this->allowedExtensions   = explode(',', strtolower($params['allowedExtensions']));
+        $this->allowedExtensions   = $params['allowedExtensions'];
         $this->keepExtension       = $params['keepExtension'];
         $this->checkMimeType       = $params['checkMimeType'];
     }

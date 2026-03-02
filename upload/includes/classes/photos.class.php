@@ -96,7 +96,7 @@ class Photo extends Objects
      */
     public static function ValidateImage($file): bool
     {
-        $allowed_types = self::getAllowedPhotoExtension(Clipbucket::getInstance());
+        $allowed_types = self::getAllowedPhotoExtension();
         $array = getimagesize($file);
         if (empty($array[0]) || empty($array[1])) {
             return false;
@@ -123,13 +123,13 @@ class Photo extends Objects
      */
     public static function getAllowedPhotoExtension(string $type_output = 'array')
     {
-        if (!empty(self::$allowed_photo_types)) {
-            return self::$allowed_photo_types;
+        if (!empty(self::$allowed_photo_types[$type_output])) {
+            return self::$allowed_photo_types[$type_output];
         }
         $allowed_photo_types = explode(',', config('allowed_photo_types'));
         $have_jpeg = array_search('jpeg', $allowed_photo_types) !== false;
         $have_jpg = array_search('jpg', $allowed_photo_types) !== false;
-        if ($have_jpeg || $have_jpg) {
+        if (($have_jpeg || $have_jpg) && !($have_jpeg && $have_jpg)) {
             if ($have_jpeg) {
                 $allowed_photo_types[] = 'jpg';
             }
@@ -137,11 +137,11 @@ class Photo extends Objects
                 $allowed_photo_types[] = 'jpeg';
             }
         }
-        self::$allowed_photo_types = $allowed_photo_types;
+        self::$allowed_photo_types[$type_output]= $allowed_photo_types;
         if ($type_output == 'array') {
             return $allowed_photo_types;
         } else {
-            return implode(',', $allowed_photo_types);
+            return implode(', ', $allowed_photo_types);
         }
     }
 

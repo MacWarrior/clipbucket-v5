@@ -635,7 +635,7 @@ class ClipBucket
                 break;
 
             case 'photo':
-                $exts = config('allowed_photo_types');
+                $exts = Photo::getAllowedPhotoExtension('string');
                 break;
         }
 

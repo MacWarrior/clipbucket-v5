@@ -1048,7 +1048,7 @@ class VideoThumbs
                 }
                 unlink($temp_file_path);
             } else {
-                e(lang('wrong_image_extension', config('allowed_photo_types')));
+                e(lang('wrong_image_extension', Photo::getAllowedPhotoExtension('string')));
             }
         }
     }

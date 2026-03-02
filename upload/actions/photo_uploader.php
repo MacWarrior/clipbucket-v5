@@ -116,7 +116,7 @@ switch ($mode) {
             'destinationFilePath' => $targetFile,
             'keepExtension'       => true,
             'maxFileSize'         => !empty((int)config('max_photo_size')) ? config('max_photo_size') : 2,
-            'allowedExtensions'   => config('allowed_photo_types'),
+            'allowedExtensions'   => Photo::getAllowedPhotoExtension(),
             'checkMimeType'       => true
         ];
 
