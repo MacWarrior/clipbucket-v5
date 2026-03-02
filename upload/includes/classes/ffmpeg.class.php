@@ -280,10 +280,20 @@ class FFMpeg
         }
 
         $this->log->writeLine(date('Y-m-d H:i:s').' - Starting conversion...');
-        update_video_by_filename($this->file_name, ['status'], ['Processing']);
+        setVideoStatus($this->file_name, 'Processing', true);
 
         $this->start_time_check();
         $this->prepare();
+
+        if( !(int)$this->input_details['video_width'] > 0 || !(int)$this->input_details['video_height'] > 0 ){
+            $this->log->newSection('Conversion failed');
+            $this->log->writeLine('Input video file seems corrupted, or not supporter by FFMpeg - video resolution is not available');
+            $this->log->writeLine('Conversion_status : failed');
+            setVideoStatus($this->file_name, 'Failed', true);
+            unlink($this->input_file);
+            $this->unLock();
+            return;
+        }
 
         if( Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '329') && !empty($this->input_details['video_width']) && !empty($this->input_details['video_height'])) {
             $aspect_ratio = (int)$this->input_details['video_width'] / (int)$this->input_details['video_height'];
@@ -296,6 +306,8 @@ class FFMpeg
             $this->log->newSection('Conversion failed');
             $this->log->writeLine('Video duration was ' . $this->input_details['duration'] . ' minutes and Max video duration is ' . $max_duration_seconds . ' minutes');
             $this->log->writeLine('Conversion_status : failed');
+            setVideoStatus($this->file_name, 'Failed', true);
+            unlink($this->input_file);
             $this->unLock();
             return;
         }
@@ -307,9 +319,13 @@ class FFMpeg
             } catch (\Exception $e) {
                 $this->log->writeLine(date('Y-m-d H:i:s').' - Error occured : ' . $e->getMessage());
             }
-
         } else {
-            $this->log->writeLine('Input file is missing ; no thumbs generation !');
+            $this->log->newSection('Conversion failed');
+            $this->log->writeLine('Input file is missing');
+            $this->log->writeLine('Conversion_status : failed');
+            setVideoStatus($this->file_name, 'Failed', true);
+            $this->unLock();
+            return;
         }
 
         if (config('extract_subtitles')) {
@@ -330,35 +346,41 @@ class FFMpeg
                 $resolutions = [ $resolutions[$max_key] ];
             }
         }
+
+        if( empty($resolutions) ){
+            $this->log->newSection('Conversion failed');
+            $this->log->writeLine('Video resolution is lower than lower resolution enabled : no video resolution available for conversion');
+            $this->log->writeLine('Conversion_status : failed');
+            setVideoStatus($this->file_name, 'Failed', true);
+            unlink($this->input_file);
+            $this->unLock();
+            return;
+        }
+
         $this->log->newSection('FFMpeg '.strtoupper($this->conversion_type).' conversion');
-        if (!empty($resolutions)) {
-            switch ($this->conversion_type) {
-                default:
-                    $this->conversion_type = 'mp4';
-                case 'mp4':
-                    $ext = getExt($this->input_file);
-                    if (config('stay_mp4') == 'yes' && $ext == 'mp4') {
-                        $this->log->writeLine('<b>Stay MP4 as it is enabled, no conversion done</b>');
-                        $resolution = $this->get_max_resolution_from_file();
-                        $this->video_files[] = $resolution;
-                        $this->output_file = $this->output_dir . $this->file_name . '-' . $resolution . '.' . $this->conversion_type;
-                        copy($this->input_file, $this->output_file);
-                        break;
-                    }
-
-                    $this->set_total_pixels($resolutions);
-                    foreach ($resolutions as $res) {
-                        $this->convert_mp4($res);
-                    }
+        switch ($this->conversion_type) {
+            default:
+                $this->conversion_type = 'mp4';
+            case 'mp4':
+                $ext = getExt($this->input_file);
+                if (config('stay_mp4') == 'yes' && $ext == 'mp4') {
+                    $this->log->writeLine('<b>Stay MP4 as it is enabled, no conversion done</b>');
+                    $resolution = $this->get_max_resolution_from_file();
+                    $this->video_files[] = $resolution;
+                    $this->output_file = $this->output_dir . $this->file_name . '-' . $resolution . '.' . $this->conversion_type;
+                    copy($this->input_file, $this->output_file);
                     break;
+                }
 
-                case 'hls':
-                    $this->convert_hls($resolutions);
-                    break;
-            }
-        } else {
-            $this->log->writeLine('<b>Video resolution is lower than lower resolution enabled : no video resolution available for conversion</b>');
-            unset($this->input_file);
+                $this->set_total_pixels($resolutions);
+                foreach ($resolutions as $res) {
+                    $this->convert_mp4($res);
+                }
+                break;
+
+            case 'hls':
+                $this->convert_hls($resolutions);
+                break;
         }
 
         $this->end_time_check();
@@ -377,7 +399,7 @@ class FFMpeg
 
         $this->log->writeLine('Conversion_status : '.$conversion_status);
         setVideoStatus($this->file_name, $video_status, true);
-
+        unlink($this->input_file);
         $this->unLock();
     }
 
