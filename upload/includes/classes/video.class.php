@@ -2835,7 +2835,6 @@ class CBvideo extends CBCategory
         assign('disperc', $disperc);
         assign('id', $id);
         assign('type', $type);
-        assign('id', $id);
         assign('rating_msg', $rating_msg);
         assign('likes', $likes);
         assign('dislikes', $dislikes);

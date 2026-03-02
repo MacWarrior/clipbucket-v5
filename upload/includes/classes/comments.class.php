@@ -104,12 +104,14 @@ class Comments extends Objects
                 ,'comments.spam_voters'
                 ,'comments.date_added'
                 ,'comments.comment_ip'
-                ,'comments.rating'
-                ,'comments.rated_by'
                 ,'users.username'
                 ,'users.email'
                 ,'CASE ' . $case_when . ' END AS title'
             ];
+            if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '999')) {
+                $select[] = 'comments.rating';
+                $select[] = 'comments.rated_by';
+            }
         }
 
         $sql ='SELECT ' . implode(', ', $select) . '
@@ -603,6 +605,24 @@ class Comments extends Objects
                 'toastui/i18n/' . strtolower(Language::getInstance()->getLang()) . $min_suffixe . '.js' => 'libs'
             ]);
         }
+    }
+
+    /**
+     * @param int $object_id
+     * @return false|mixed
+     * @throws Exception
+     */
+    public static function current_rating(int $object_id)
+    {
+        if (!Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '999')){
+            return false;
+        }
+
+        $result = Clipbucket_db::getInstance()->select(tbl('comments'), 'userid,rating,rated_by,voters', ' comment_id = ' . $object_id);
+        if ($result) {
+            return $result[0];
+        }
+        return false;
     }
 
 }

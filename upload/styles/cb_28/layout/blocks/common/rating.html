@@ -1,18 +1,18 @@
 {$ratedBy = has_rated(user_id(),$id,$type)}
 <div class="clearfix rating">
-	<div class="clearfix rating-holder">
-		<div class="likes like-dislike{if $ratedBy == 'liked'} rated{/if}">
-			<a {if !$disable} onclick="_cb.rateNew('{$id}','5','{$type}')" {else} class="disabled cursor_default"{/if} href="javascript:void(0);"><span class="icon-thumbup"></span></a>
-			<span>{prettyNum($likes)}</span>
-		</div>
-		<div class="dislikes like-dislike{if $ratedBy == 'disliked'} rated{/if}">
-			<a {if !$disable} onclick="_cb.rateNew('{$id}','1','{$type}')" {else} class="disabled cursor_default"{/if} href="javascript:void(0);"><span class="icon-thumbdown"></span></a>
-			<span>{prettyNum($dislikes)}</span>
-		</div>
-	</div>
-	<div id="rating_result_container" class="clearfix rating-alert">
+    <div class="clearfix rating-holder">
+        <div class="likes like-dislike{if $ratedBy == 'liked'} rated{/if}">
+            <a {if !$disable} onclick="_cb.rateNew('{$id}','5','{$type}', this)" {else} class="disabled cursor_default"{/if} href="javascript:void(0);"><span class="icon-thumbup"></span></a>
+            <span>{prettyNum($likes)}</span>
+        </div>
+        <div class="dislikes like-dislike{if $ratedBy == 'disliked'} rated{/if}">
+            <a {if !$disable} onclick="_cb.rateNew('{$id}','1','{$type}', this)" {else} class="disabled cursor_default"{/if} href="javascript:void(0);"><span class="icon-thumbdown"></span></a>
+            <span>{prettyNum($dislikes)}</span>
+        </div>
+    </div>
+    <div id="rating_result_container" class="clearfix rating-alert">
         {if $rating_msg}
-			{$rating_msg}
-		{/if}
-	</div>
+            {$rating_msg}
+        {/if}
+    </div>
 </div>
