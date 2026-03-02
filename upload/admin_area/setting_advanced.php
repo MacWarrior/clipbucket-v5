@@ -74,9 +74,7 @@ if (isset($_POST['update'])) {
         'ffprobe_path',
         'media_info',
 
-        'max_bg_size',
         'max_conversion',
-        'max_profile_pic_size',
         'max_upload_size',
         'max_video_duration',
 
@@ -152,7 +150,7 @@ if (isset($_POST['update'])) {
     ];
 
     foreach (Upload::getInstance()->get_upload_options() as $optl) {
-        if( !empty($optl['load_func']) ){
+        if (!empty($optl['load_func'])) {
             $rows[] = $optl['load_func'];
         }
     }
@@ -190,22 +188,36 @@ if (isset($_POST['update'])) {
             continue;
         }
 
+        if ($field == 'allowed_photo_types') {
+            $types = Photo::getAllowedPhotoExtension();
+            $type_ok = true;
+            foreach ($types as $type) {
+                if (!in_array($type, Photo::getAllowedUploadTypes())) {
+                    e(lang('unsupported_photo_type', $type));
+                    $type_ok = false;
+                }
+            }
+            if (!$type_ok) {
+                continue;
+            }
+        }
+
         if (!isset(myquery::getInstance()->Get_Website_Details()[$field])) {
-            if( !$has_missing_config ){
-                e(lang('error_missing_config_please_use_tool', DirPath::getUrl('admin_area') . 'admin_tool.php?code_tool=install_missing_config'),'w',false);
+            if (!$has_missing_config) {
+                e(lang('error_missing_config_please_use_tool', DirPath::getUrl('admin_area') . 'admin_tool.php?code_tool=install_missing_config'), 'w', false);
                 $has_missing_config = true;
             }
-            if( System::isInDev() ){
-                $tmp_text = 'Missing config: '.$field;
+            if (System::isInDev()) {
+                $tmp_text = 'Missing config: ' . $field;
                 error_log($tmp_text);
                 DiscordLog::sendDump($tmp_text);
             }
             continue;
         }
-        if( !is_null($value) ){
+        if (!is_null($value)) {
             myquery::getInstance()->Set_Website_Details($field, $value);
         } else {
-            DiscordLog::sendDump('Missing value for config: '.$field);
+            DiscordLog::sendDump('Missing value for config: ' . $field);
         }
     }
 
@@ -313,9 +325,15 @@ assign('allTimezone', $allTimezone);
 
 $min_suffixe = System::isInDev() ? '' : '.min';
 ClipBucket::getInstance()->addAdminJS([
-    'jquery-ui-1.13.2.min.js' => 'global'
-    ,
-    'pages/main/main' . $min_suffixe . '.js' => 'admin'
+    'jquery-ui-1.13.2.min.js'                                  => 'global',
+    'tag-it' . $min_suffixe . '.js'                            => 'admin',
+    'init_default_tag/init_default_tag' . $min_suffixe . '.js' => 'admin',
+    'pages/main/main' . $min_suffixe . '.js'                   => 'admin'
 ]);
+ClipBucket::getInstance()->addAdminCSS([
+    'jquery.tagit' . $min_suffixe . '.css'     => 'admin',
+    'tagit.ui-zendesk' . $min_suffixe . '.css' => 'admin'
+]);
+assign('available_tags_photo_types', Photo::getAllowedUploadTypes());
 template_files('setting_advanced.html');
 display_it();

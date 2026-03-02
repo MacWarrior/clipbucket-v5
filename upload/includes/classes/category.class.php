@@ -489,11 +489,9 @@ class Category
         $dir = $this->typeNamesByIds[$category['id_category_type']];
 
         $ext = getExtMimeType($file['tmp_name']);
-        if (!VideoThumbs::ValidateImage($file['tmp_name'], $ext)) {
+        if (!Photo::ValidateImage($file['tmp_name'])) {
             @unlink($file['tmp_name']);
-            $types = strtolower(config('allowed_photo_types'));
-            $supported_extensions = explode(',', $types);
-            e(lang('error_allow_photo_types', implode(', ', $supported_extensions)));
+            e(lang('error_allow_photo_types', Photo::getAllowedPhotoExtension('string')));
             return false;
         }
 

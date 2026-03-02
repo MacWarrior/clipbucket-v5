@@ -179,31 +179,7 @@
                             <hr/>
                             <div class="row">
                                 <div class="col-md-6">
-                                    <label class="nowrap" for="max_profile_pic_size" title="Max profile pic size">Max profile pic size</label>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="input-group">
-                                        <input class="form-control" name="max_profile_pic_size" id="max_profile_pic_size" value="{$row.max_profile_pic_size}" size="45"/>
-                                        <span class="input-group-addon" title="{lang('in_x',lang('kb'))}">{lang code='kb'}</span>
-                                    </div>
-                                </div>
-                            </div>
-                            <hr/>
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <label class="nowrap" for="max_bg_size" title="Max Background Size">Max Background Size</label>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="input-group">
-                                        <input class="form-control" name="max_bg_size" id="max_bg_size" value="{$row.max_bg_size}" size="45"/>
-                                        <span class="input-group-addon" title="{lang('in_x',lang('kb'))}">{lang code='kb'}</span>
-                                    </div>
-                                </div>
-                            </div>
-                            <hr/>
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <label class="nowrap" for="max_photo_size" title="Maximum allowed photo size">Maximum allowed photo size</label>
+                                    <label class="nowrap" for="max_photo_size" title="{lang('maximum_image_size')}">{lang('maximum_image_size')}</label>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="input-group">
@@ -258,8 +234,10 @@
                             <hr/>
                             <div class="row">
                                 <div class="col-md-12">
-                                    <label class="nowrap" for="allowed_photo_types" title="Allowed Photo extensions"><span class="fa fa-question-circle tips" title="{lang code='separated_by_commas'}"></span> Allowed Photo extensions</label>
-                                    <textarea class="form-control" name="allowed_photo_types" id="allowed_photo_types" cols="45" rows="5">{$row.allowed_photo_types}</textarea>
+                                    <label class="nowrap" for="allowed_photo_types" title="Allowed Photo extensions">Allowed Photo extensions</label>
+{*                                    <textarea class="form-control" name="allowed_photo_types" id="allowed_photo_types" cols="45" rows="5">{$row.allowed_photo_types}</textarea>*}
+                                    <ul id="list_allowed_photo_types"></ul>
+                                    <input name="allowed_photo_types" id="allowed_photo_types" value="{$row.allowed_photo_types}" type="hidden">
                                 </div>
                             </div>
                             <hr/>
@@ -1249,4 +1227,5 @@
 <script>
     var lang=[];
     lang['at_least_one_resolution'] = '{lang("at_least_one_resolution")}';
+    let available_tags_photo_types = JSON.parse('{$available_tags_photo_types|json_encode|escape:'javascript'}');
 </script>

@@ -291,4 +291,7 @@ $(document).ready(function () {
             base_url.trigger('focus');
         }
     });
+
+    init_tags('allowed_photo_types', available_tags_photo_types, '#list_allowed_photo_types');
+
 });

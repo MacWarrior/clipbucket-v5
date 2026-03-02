@@ -3413,7 +3413,7 @@ class userquery extends CBCategory
 
         if (rename($data['filepath'], $file_path)) {
             unlink($data['filepath']);
-            if (!VideoThumbs::ValidateImage($file_path,  $data['extension'])) {
+            if (!Photo::ValidateImage($file_path)) {
                 @unlink($file_path);
                 return [
                     'status' => false,
