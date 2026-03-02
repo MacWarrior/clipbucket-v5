@@ -757,7 +757,7 @@ class Collection extends Objects
         $item_id = mysql_clean($item_id);
         $collection_id = mysql_clean($collection_id);
 
-        if (!user_id()) {
+        if (!User::getInstance()->isUserConnected()) {
             e(lang('you_not_logged_in'));
             return false;
         }
@@ -790,8 +790,13 @@ class Collection extends Objects
             return false;
         }
 
+        if (($collection['public_upload'] !='yes' && $collection['userid'] != User::getInstance()->getCurrentUserID() && !User::getInstance()->hasAdminAccess() ) || !User::getInstance()->hasPermission('view_collections')) {
+            e(lang('cant_perform_action_collect'));
+            return false;
+        }
+
         $fields = ['collection_id', 'object_id', 'type', 'userid', 'date_added'];
-        $values = [$collection_id, $item_id, $type, user_id(), NOW()];
+        $values = [$collection_id, $item_id, $type, User::getInstance()->getCurrentUserID(), NOW()];
 
         Clipbucket_db::getInstance()->insert(tbl($this->getTableNameItems()), $fields, $values);
         e(lang('item_added_in_collection', strtolower(lang($type))), 'm');
@@ -997,7 +1002,7 @@ class Collection extends Objects
             return false;
         }
         $collection = self::getInstance()->getOne(['collection_id' => $collection_id]);
-        if (!$collection['userid'] == User::getInstance()->getCurrentUserID() && !User::getInstance()->hasAdminAccess() && !User::getInstance()->hasPermission('view_collections')) {
+        if ((!$collection['userid'] == User::getInstance()->getCurrentUserID() && !User::getInstance()->hasAdminAccess()) || !User::getInstance()->hasPermission('view_collections')) {
             e(lang('cant_perform_action_collect'));
             return false;
         }
