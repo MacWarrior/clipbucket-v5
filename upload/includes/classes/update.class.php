@@ -725,7 +725,7 @@ class Update
     {
         chdir($root_directory);
 
-        $output = shell_exec(System::get_binaries('git') . ' reset --hard --quiet 2>&1');
+        $output = $this->runGitCommandWithBusyRetry('reset --hard --quiet');
 
         $filepath_install_me = DirPath::get('temp') . 'install.me';
         $filepath_install_me_not = $filepath_install_me . '.not';
@@ -740,7 +740,26 @@ class Update
     {
         chdir($root_directory);
 
-        return shell_exec(System::get_binaries('git') . ' pull --quiet 2>&1');
+        return $this->runGitCommandWithBusyRetry('pull --quiet');
+    }
+
+    private function runGitCommandWithBusyRetry(string $git_command): string
+    {
+        $max_attempts = 5;
+        $attempt = 1;
+        $output = '';
+
+        while ($attempt <= $max_attempts) {
+            $output = shell_exec(System::get_binaries('git') . ' ' . $git_command . ' 2>&1');
+            if (empty($output) || stripos($output, 'Text file busy') === false) {
+                return (string)$output;
+            }
+
+            usleep(500000 * $attempt);
+            $attempt++;
+        }
+
+        return (string)$output;
     }
 
     /**
