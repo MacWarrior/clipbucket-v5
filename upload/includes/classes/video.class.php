@@ -134,6 +134,14 @@ class Video extends Objects
         return self::$video;
     }
 
+    /**
+     * @return void
+     */
+    public static function clearInstance(): void
+    {
+        self::$video = new self();
+    }
+
     public function getTableName(): string
     {
         return $this->tablename;

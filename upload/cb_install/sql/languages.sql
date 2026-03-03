@@ -1799,4 +1799,6 @@ VALUES ('ongoing_conversion'),
        ('warning_profiling_requirements'),
        ('option_enable_featured_collection_hierarchy'),
        ('display_collection_hierarchy_featured_hint'),
-       ('hierarchy_featured');
+       ('hierarchy_featured'),
+       ('regenerate_all_video_thumbs_label'),
+       ('regenerate_all_video_thumbs_description');
