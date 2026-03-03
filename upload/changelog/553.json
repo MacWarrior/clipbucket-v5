@@ -1,6 +1,6 @@
 {
   "version":"5.5.3",
-  "revision":"61",
+  "revision":"62",
   "status":"stable",
   "detail":[
     {
@@ -18,6 +18,7 @@
         ,"Fix possible wrong error message display on core/db update from dashboard"
         ,"Fix todo deletion"
         ,"Fix possible XSS injection (Thanks @sy460129 !)"
+        ,"Fix flagged video count"
       ]
     },
     {
