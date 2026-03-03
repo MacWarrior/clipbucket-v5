@@ -44,7 +44,7 @@ if (php_sapi_name() != \'cli\') {
 }
 const THIS_PAGE = \'update_core_tmp\';
 include_once \'' . DirPath::get('includes') . 'admin_config.php' . '\';
-$type = \'' . $_POST['type'] . '\';
+$type = $argv[1] ?? \'' . $_POST['type'] . '\';
 $core_tool = AdminTool::getUpdateCoreTool();
 if (empty($core_tool)) {
     echo  \'false\';
@@ -62,10 +62,23 @@ if (empty(AdminTool::getInstance())) {
 if ($type == \'core\' && $core_tool->isAlreadyLaunch() === false) {
     $core_tool->setToolInProgress();
     $core_tool->launch();
+    Update::getInstance()->flush();
+
+    if (AdminTool::getInstance()->isAlreadyLaunch() === false) {
+        $cmd = System::get_binaries(\'php\') . \' -q \' . escapeshellarg(__FILE__) . \' db\';
+        if (stristr(PHP_OS, \'WIN\')) {
+            shell_exec($cmd);
+        } elseif (stristr(PHP_OS, \'darwin\')) {
+            shell_exec($cmd . \' </dev/null >/dev/null &\');
+        } else {
+            shell_exec($cmd . \' > /dev/null &\');
+        }
+    }
+    die;
 }
 Update::getInstance()->flush();
 
-if (($type == \'core\' || $type == \'db\') && AdminTool::getInstance()->isAlreadyLaunch() === false) {
+if ($type == \'db\' && AdminTool::getInstance()->isAlreadyLaunch() === false) {
     AdminTool::getInstance()->setToolInProgress();
     AdminTool::getInstance()->launch();
 }
@@ -73,7 +86,7 @@ if (($type == \'core\' || $type == \'db\') && AdminTool::getInstance()->isAlread
 fwrite($tmp_file, $data);
 fclose($tmp_file);
 chdir(DirPath::get('root'));
-$cmd = System::get_binaries('php') . ' -q ' . DirPath::get('temp') . 'update_core_tmp.php';
+$cmd = System::get_binaries('php') . ' -q ' . escapeshellarg(DirPath::get('temp') . 'update_core_tmp.php') . ' ' . escapeshellarg($_POST['type']);
 if (stristr(PHP_OS, 'WIN')) {
     $complement = '';
 } elseif (stristr(PHP_OS, 'darwin')) {
