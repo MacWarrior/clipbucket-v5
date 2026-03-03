@@ -56,6 +56,9 @@ class Collection extends Objects
         if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '299')) {
             $this->fields[] = 'sort_type';
         }
+        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '63')) {
+            $this->fields[] = 'hierarchy_featured';
+        }
 
         $this->fields_items = [
             'ci_id'
@@ -1658,6 +1661,23 @@ class Collections extends CBCategory
             'display_function'  => 'display_sharing_opt',
             'default_value'     => 'no'
         ];
+
+        if (config('enable_featured_collection_hierarchy') == 'yes' && Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '63')) {
+            $return['hierarchy_featured'] = [
+                'title'             => lang('hierarchy_featured'),
+                'class'             => 'form-control',
+                'type'              => 'checkboxv2',
+                'id'                => 'hierarchy_featured',
+                'name'              => 'hierarchy_featured',
+                'value'             => 'yes',
+                'checked'           => $default['hierarchy_featured'] ?? 'no',
+                'hint_icon'         => lang('display_collection_hierarchy_featured_hint'),
+                'db_field'          => 'hierarchy_featured',
+                'required'          => 'no',
+                'validate_function' => 'yes_or_no',
+                'default_value'     => 'yes'
+            ];
+        }
 
 
         return $return;
