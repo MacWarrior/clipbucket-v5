@@ -56,7 +56,7 @@ class Collection extends Objects
         if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '299')) {
             $this->fields[] = 'sort_type';
         }
-        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '999')) {
+        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '63')) {
             $this->fields[] = 'hierarchy_featured';
         }
 
@@ -1662,7 +1662,7 @@ class Collections extends CBCategory
             'default_value'     => 'no'
         ];
 
-        if (config('enable_featured_collection_hierarchy') == 'yes' && Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '999')) {
+        if (config('enable_featured_collection_hierarchy') == 'yes' && Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '63')) {
             $return['hierarchy_featured'] = [
                 'title'             => lang('hierarchy_featured'),
                 'class'             => 'form-control',

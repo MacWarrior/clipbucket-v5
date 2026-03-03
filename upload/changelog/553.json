@@ -1,6 +1,6 @@
 {
   "version":"5.5.3",
-  "revision":"62",
+  "revision":"63",
   "status":"stable",
   "detail":[
     {
@@ -30,6 +30,7 @@
         ,"Implement random video order"
         ,"Implement support for ultrawide screens"
         ,"Implement photo next/previous actions with keyboard"
+        ,"Implement featured collection hierarchy display"
         ,"Update media rating"
         ,"Update collection management"
         ,"Add signup date of birth calendar icon"
