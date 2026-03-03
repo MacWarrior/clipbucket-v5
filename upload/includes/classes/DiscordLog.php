@@ -10,9 +10,10 @@ class DiscordLog extends \OxygenzSAS\Discord\Discord
     public function __construct()
     {
         $site_title = '';
-        if( function_exists('config') && Clipbucket_db::isAvailable() ){
+        if( function_exists('config') && class_exists('Clipbucket_db') && Clipbucket_db::isAvailable() ){
             $site_title = config('site_title');
         }
+
         if( empty($site_title) ){
             $site_title = $_SERVER['HTTP_HOST'] ?? '';
         }

@@ -18,6 +18,8 @@
     ,"oxygenzsas/composer_lib_discord": "*"
     ,"veka-server/onnx-php": "dev-php7"
     ,"psr/http-server-middleware": "*"
+    ,"perftools/php-profiler": "^1.2"
+    ,"perftools/xhgui-collector": "^1.8"
 
     ,"fortawesome/font-awesome": "4.7.0"
 
@@ -28,7 +30,7 @@
   },
   "config": {
     "platform": {
-      "php": "8.0"
+      "php": "8.1"
     }
   }
 }

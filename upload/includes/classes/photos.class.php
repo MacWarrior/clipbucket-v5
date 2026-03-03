@@ -1,5 +1,5 @@
 <?php
-class Photo
+class Photo extends Objects
 {
     private static $photo;
     private $tablename = '';
@@ -7,6 +7,8 @@ class Photo
     private $display_block = '';
     private $search_limit = 0;
     private $display_var_name = '';
+
+    public const TYPE = 'photo';
 
     /**
      * @throws Exception
@@ -42,9 +44,11 @@ class Photo
             ,'downloaded'
             ,'server_url'
             ,'owner_ip'
-            ,'photo_details'
         ];
 
+        if (!Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '14')) {
+            $this->fields[] = 'photo_details';
+        }
         if( Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.0', '305') ){
             $this->fields[] = 'age_restriction';
         }
@@ -217,10 +221,10 @@ class Photo
 
         $conditions = [];
         if ($param_not_photo_id) {
-            $conditions[] = $this->getTableName() . '.photo_id != \'' . mysql_clean($param_not_photo_id) . '\'';
+            $conditions[] = $this->getTableName() . '.photo_id != ' . (int)$param_not_photo_id;
         }
-        if ($param_photo_id) {
-            $conditions[] = $this->getTableName() . '.photo_id = \'' . mysql_clean($param_photo_id) . '\'';
+        if ($param_photo_id !== false) {
+            $conditions[] = $this->getTableName() . '.photo_id = ' . (int)$param_photo_id;
         } elseif ($param_photo_ids) {
             $conditions[] = $this->getTableName() . '.photo_id IN (' . mysql_clean($param_photo_ids) . ')';
         }
@@ -234,7 +238,7 @@ class Photo
             $conditions[] = 'LOWER(' . $this->getTableName() . '.extension) = LOWER(\''.mysql_clean($param_extension).'\')';
         }
         if( $param_userid ){
-            $conditions[] = $this->getTableName() . '.userid = \''.mysql_clean($param_userid).'\'';
+            $conditions[] = $this->getTableName() . '.userid = ' . (int)$param_userid;
         }
         if( $param_filename ){
             $conditions[] = $this->getTableName() . '.file_name = \''.mysql_clean($param_filename).'\'';
@@ -325,7 +329,7 @@ class Photo
 
             if ($param_category) {
                 if (!is_array($param_category)) {
-                    $conditions[] = 'categories.category_id = ' . mysql_clean($param_category);
+                    $conditions[] = 'categories.category_id = ' . (int)$param_category;
                 } else {
                     $conditions[] = 'categories.category_id IN (' . implode(', ', $param_category) . ')';
                 }
@@ -344,7 +348,7 @@ class Photo
             if( is_array($param_collection_id) ){
                 $tmp_cond = ' IN (' . implode(',', $param_collection_id) . ')';
             } else {
-                $tmp_cond = ' = ' . $param_collection_id;
+                $tmp_cond = ' = ' . (int)$param_collection_id;
             }
             $join[] = 'INNER JOIN ' . cb_sql_table($collection_items_table) . ' ON ' . $collection_items_table . '.collection_id' . $tmp_cond . ' AND photos.photo_id = ' . $collection_items_table . '.object_id';
         } else {
@@ -366,8 +370,9 @@ class Photo
         }
 
         if ($param_join_flag && Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '255') && !$param_count) {
-            $join[] = ' LEFT JOIN ' . cb_sql_table(Flag::getTableName()) . ' ON ' . Flag::getTableName() . '.id_element = ' . $this->tablename . '.photo_id AND ' . Flag::getTableName() . '.id_flag_element_type = (SELECT id_flag_element_type FROM ' . tbl(Flag::getTableNameElementType()) . ' WHERE name = \'photo\' ) ';
-            $select[] = ' IF(COUNT(distinct ' . Flag::getTableName() . '.flag_id) > 0, 1, 0) AS is_flagged ';
+            $flag_constraint = self::getFlagConstraint();
+            $join[] = $flag_constraint['join'];
+            $select[] = $flag_constraint['select'];
         }
 
         if( $param_group ){
@@ -460,9 +465,9 @@ class Photo
 
         $current_user_id = user_id();
         if ($current_user_id) {
-            $cond_orphan .= ' OR photos.userid = ' . $current_user_id ;
+            $cond_orphan .= ' OR photos.userid = ' . (int)$current_user_id;
             $cond.=')';
-            $select_contacts = 'SELECT contact_userid FROM ' . tbl('contacts') . ' WHERE confirmed = \'yes\' AND userid = ' . $current_user_id;
+            $select_contacts = 'SELECT contact_userid FROM ' . tbl('contacts') . ' WHERE confirmed = \'yes\' AND userid = ' . (int)$current_user_id;
             $cond .= ' OR (photos.active = \'yes\' AND photos.broadcast IN(\'public\',\'logged\')'.$sql_age_restrict.')';
             $cond .= ' OR (photos.broadcast = \'private\' AND photos.userid IN(' . $select_contacts . ')'.$sql_age_restrict.')';
         } else {
@@ -529,46 +534,35 @@ class Photo
         return $this->isCurrentUserRestricted($photo_id);
     }
 
-    /**
-     * @param $id
-     * @return null
-     * @throws Exception
-     */
-    public static function generatePhoto($id)
-    {
-        CBPhotos::getInstance()->generate_photos($id);
-    }
 
     /**
      * @param string|int $id
-     * @param string $file_name
-     * @param string $file_directory
-     * @param string $extension
      * @return int
-     * @throws Exception
      */
-    public function getUsage($id, string $file_name, string $file_directory, string $extension, string $photo_key): int
+    public function getUsage($id, string $file_name, string $file_directory, string $extension): int
     {
         $total = 0;
-        $details = [
-            'photo_id' => $id,
-            'photo_key' => $photo_key,
-            'file_directory'=>$file_directory,
-            'filename'=>$file_name,
-            'ext'=>$extension
-        ];
-        $files = get_image_file(['details' => $details, 'size' => 't', 'multi' => true, 'with_orig' => true, 'with_path' => false]);
-        if (!empty($files)) {
-            foreach ($files as $file) {
-                $file_dir = DirPath::get('photos') . $file;
-                if (file_exists($file_dir)) {
-                    $total += filesize($file_dir);
+        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '14')) {
+            $photos_thumbs = PhotoThumbs::getAllThumbs(['photo_id' => $id]);
+            if (!empty($photos_thumbs)) {
+                foreach ($photos_thumbs as $photos_thumb) {
+                    $file_dir = PhotoThumbs::getThumbPath($photos_thumb['file_directory'], $photos_thumb['filename'], $photos_thumb['width'], $photos_thumb['ext'], $photos_thumb['version']);
+                    if (file_exists($file_dir)) {
+                        $total += filesize($file_dir);
+                    }
                 }
+            }
+            $photo_file = DirPath::get('photos') . $file_directory . DIRECTORY_SEPARATOR . $file_name . '.' . $extension;
+            if (file_exists($photo_file)) {
+                $total += filesize($photo_file);
             }
         }
         return $total;
     }
 
+    /**
+     * @throws Exception
+     */
     public function getPhotoRelated($photo_id, $limit, $order = 'date_added DESC')
     {
         $photo = $this->getOne(['photo_id'=>$photo_id]);
@@ -588,13 +582,13 @@ class Photo
                     SELECT photo_id, 2 as score, photos.date_added FROM ' . cb_sql_table('photos') . '
                     LEFT JOIN ' . cb_sql_table('photo_tags') . ' ON photos.photo_id = photo_tags.id_photo
                     LEFT JOIN ' . cb_sql_table('tags') .' ON photo_tags.id_tag = tags.id_tag 
-                    WHERE photo_id != ' . mysql_clean($photo_id) . ' 
+                    WHERE photo_id != ' . (int)$photo_id . ' 
                     AND '.$cond_title.' 
                 UNION 
                     SELECT photo_id, 1 as score, photos.date_added FROM ' . cb_sql_table('photos') . '
                     LEFT JOIN ' . cb_sql_table('photo_tags') . ' ON photos.photo_id = photo_tags.id_photo
                     LEFT JOIN ' . cb_sql_table('tags') .' ON photo_tags.id_tag = tags.id_tag 
-                    WHERE photo_id != ' . mysql_clean($photo_id) . ' 
+                    WHERE photo_id != ' . (int)$photo_id . ' 
                     AND '.$cond_tag.' 
                 ) AS R
                 ORDER BY score DESC,' . $order ;
@@ -622,6 +616,93 @@ class Photo
         }
         return $base_url . 'view_item.php?item=' . $details['photo_key'] . '&amp;collection=' . $details['collection_id'];
     }
+
+    public static function displayCollectionItem($photo, $collection, $fullscreen = false,$ajax = true)
+    {
+        $breadcrum = [];
+        $breadcrum[] = [
+            'title' => $photo['photo_title'],
+            'url'   => '#'
+        ];
+        if (!empty($collection)) {
+            $collection_parent = $collection;
+            do {
+                $breadcrum[] = [
+                    'title' => $collection_parent['collection_name'],
+                    'url'   => Collections::getInstance()->collection_links($collection_parent, 'view')
+                ];
+                $collection_parent = Collections::getInstance()->get_parent_collection($collection_parent);
+            } while ($collection_parent);
+            assign('breadcrum', array_reverse($breadcrum));
+            assign('collection_baseurl', Collections::getInstance()->get_base_url());
+            subtitle($collection['collection_name'] . ' > ' . $photo['photo_title']);
+            assign('collections', []);
+
+        } else {
+            assign('breadcrum', $breadcrum);
+            assign('collection_baseurl', '');
+            if (User::getInstance()->hasAdminAccess()) {
+                $param = ['type' => 'photos'];
+            } else {
+                $param = ['userid' => User::getInstance()->getCurrentUserID(), 'type' => 'photos', 'can_upload' => true];
+            }
+            $collections = Collection::getInstance()->getAll($param) ?: [];
+            assign('collections', $collections);
+            assign('restore_collection', true);
+            assign('item_id', $photo['photo_id']);
+            subtitle($photo['photo_title']);
+        }
+
+        increment_views($photo['photo_id'], 'photo');
+
+        assign('photo', $photo);
+        assign('user', userquery::getInstance()->get_user_details($photo['userid']));
+
+        assign('c', $collection);
+
+        //link edit
+        assign('link_edit_bo', DirPath::getUrl('admin_area') . 'edit_photo.php?photo=' . $photo['photo_id']);
+        assign('link_edit_fo', DirPath::getUrl('root') . 'edit_photo.php?photo=' . $photo['photo_id']);
+
+        if (config('enable_photo_categories') == 'yes') {
+            $category_links = [];
+            foreach (json_decode($photo['category_list'], true) as $photo_category) {
+                $category_links[] = '<a href="' . cblink([
+                        'name' => 'category',
+                        'data' => ['category_id' => $photo_category['id'], 'category_name' => $photo_category['name']],
+                        'type' => 'photos'
+                    ]) . '">' . display_clean($photo_category['name']) . '</a>';
+            }
+            assign('category_links', implode(',', $category_links));
+        }
+
+        // Top collections
+        $params = [
+            'limit'        => 5,
+            'type'         => 'photos',
+            'parents_only' => true
+        ];
+        $top_collections = Collection::getInstance()->getAll($params);
+        assign('top_collections', $top_collections);
+
+        // Related collections
+        $related_photos = Photo::getInstance()->getPhotoRelated($photo['photo_id'], config('limit_photo_related') != 0 ? config('limit_photo_related') : 8);
+        assign('related_photos', $related_photos);
+
+        assign('is_favorite', Photo::isFavorite($photo['photo_id']));
+        assign('anonymous_id', userquery::getInstance()->get_anonymous_user());
+        assign('fullscreen', $fullscreen);
+        assign('ajax', $ajax);
+
+        assign('srcfirst', PhotoThumbs::getThumbFile($photo['photo_id'], 'original'));
+        if ($ajax) {
+            Template('view_photo.html');
+        } else {
+            assign('curr_photo', json_encode($photo));
+            template_files('view_photo.html');
+            display_it();
+        }
+    }
 }
 
 class CBPhotos
@@ -637,7 +718,6 @@ class CBPhotos
             self::$instance->mid_height = config('photo_med_height');
             self::$instance->lar_width = config('photo_lar_width');
             self::$instance->cropping = config('photo_crop');
-            self::$instance->position = config('watermark_placement');
         }
         return self::$instance;
     }
@@ -724,10 +804,13 @@ class CBPhotos
         # Set basic photo fields
         $basic_fields = [
             'photo_id', 'photo_key', 'userid', 'photo_title', 'photo_description',
-            'photo_details', 'date_added', 'filename', 'ext', 'active', 'broadcast', 'file_directory', 'views',
+            'date_added', 'filename', 'ext', 'active', 'broadcast', 'file_directory', 'views',
             'last_commented', 'total_comments'
         ];
 
+        if (!Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.2','14')) {
+            $basic_fields[] = 'photo_details';
+        }
         if( Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.0', '305') ){
             $basic_fields[] = 'age_restriction';
         }
@@ -836,7 +919,7 @@ class CBPhotos
             'photo_description' => $data['photo_description'],
             'photo_title'       => $data['photo_title'],
             'photo_link'        => $this->collection->collection_links($data, 'view_item'),
-            'photo_thumb'       => $this->get_image_file($data['photo_id'], 'm')
+            'photo_thumb'       => PhotoThumbs::getThumbFile($data['photo_id'], 550)
         ];
         $this->action->share_template_name = 'share_photo';
         $this->action->val_array = $this->share_email_vars;
@@ -954,7 +1037,7 @@ class CBPhotos
     function photo_exists($id): bool
     {
         if (is_numeric($id)) {
-            $result = Clipbucket_db::getInstance()->select(tbl($this->p_tbl), 'photo_id', ' photo_id = \'' . $id . '\'');
+            $result = Clipbucket_db::getInstance()->select(tbl($this->p_tbl), 'photo_id', ' photo_id = ' . (int)$id);
         } else {
             $result = Clipbucket_db::getInstance()->select(tbl($this->p_tbl), 'photo_id', ' photo_key = \'' . $id . '\'');
         }
@@ -1424,11 +1507,11 @@ class CBPhotos
             Comments::delete($params);
 
             //Removing Photo From Favorites
-            Clipbucket_db::getInstance()->delete(tbl('favorites'), ['type', 'id'], ['p', $photo['photo_id']]);
+            Photo::getInstance()->removeFromFavoritesForAllUsers($photo['photo_id']);
             errorhandler::getInstance()->flush_msg();
             //finally removing from Database
             $this->delete_from_db($photo);
-            remove_empty_directory(DirPath::get('photos') . $photo['file_directory'], DirPath::get('photos'));
+            remove_empty_parent_directory(DirPath::get('photos') . $photo['file_directory'], DirPath::get('photos'));
         } else {
             e(lang('photo_not_exist'));
         }
@@ -1448,17 +1531,14 @@ class CBPhotos
             $photo = $id;
         }
 
-        $files = get_image_file(['details' => $photo, 'size' => 't', 'multi' => true, 'with_orig' => true, 'with_path' => false]);
-        if (!empty($files)) {
-            foreach ($files as $file) {
-                $file_dir = DirPath::get('photos') . $file;
-                if (file_exists($file_dir)) {
-                    unlink($file_dir);
-                }
-            }
-
-            e(lang('success_delete_file', display_clean($photo['photo_title'])), 'm');
+        $file_dir = DirPath::get('photos') . $photo['file_directory'] . DIRECTORY_SEPARATOR . $photo['filename'] . '.' . $photo['ext'];
+        if (file_exists($file_dir)) {
+            unlink($file_dir);
         }
+        remove_empty_parent_directory(DirPath::get('photos') . DIRECTORY_SEPARATOR . $photo['file_directory'], DirPath::get('thumbs'));
+        PhotoThumbs::deleteThumbs($photo['photo_id']);
+        remove_empty_parent_directory(DirPath::get('thumbs') . 'photo' . DIRECTORY_SEPARATOR . $photo['file_directory'] . DIRECTORY_SEPARATOR . $photo['filename'], DirPath::get('thumbs'));
+        e(lang('success_delete_file', display_clean($photo['photo_title'])), 'm');
     }
 
     /**
@@ -1508,9 +1588,9 @@ class CBPhotos
         }
 
         if (!is_numeric($id)) {
-            $result = Clipbucket_db::getInstance()->select(tbl($this->p_tbl), $field, ' photo_key = ' . $id . '');
+            $result = Clipbucket_db::getInstance()->select(tbl($this->p_tbl), $field, ' photo_key = \'' . mysql_clean($id) . '\'');
         } else {
-            $result = Clipbucket_db::getInstance()->select(tbl($this->p_tbl), $field, ' photo_id = ' . $id . '');
+            $result = Clipbucket_db::getInstance()->select(tbl($this->p_tbl), $field, ' photo_id = ' . (int)$id);
         }
 
         if ($result) {
@@ -1572,92 +1652,6 @@ class CBPhotos
         imagedestroy($canvas);
     }
 
-    /**
-     * Used to resize and watermark image
-     *
-     * @param $array
-     * @throws Exception
-     */
-    function generate_photos($array): void
-    {
-        $path = DirPath::get('photos');
-
-        if (!is_array($array)) {
-            $p = $this->get_photo($array);
-        } else {
-            $p = $array;
-        }
-
-        $path .= get_photo_date_folder($p) . DIRECTORY_SEPARATOR;
-
-        $filename = $p['filename'];
-        $extension = $p['ext'];
-
-        $this->createThumb($path . $filename . '.' . $extension, $path . $filename . '_o.' . $extension, $extension);
-        $this->createThumb($path . $filename . '.' . $extension, $path . $filename . '_t.' . $extension, $extension, $this->thumb_width, $this->thumb_height);
-
-        if (empty(errorhandler::getInstance()->get_error())) {
-            $this->createThumb($path . $filename . '.' . $extension, $path . $filename . '_m.' . $extension, $extension, $this->mid_width, $this->mid_height);
-            $this->createThumb($path . $filename . '.' . $extension, $path . $filename . '_l.' . $extension, $extension, $this->lar_width);
-
-            $should_watermark = config('watermark_photo');
-
-            if (!empty($should_watermark) && $should_watermark == 1) {
-                $this->watermark_image($path . $filename . '_l.' . $extension, $path . $filename . '_l.' . $extension);
-                $this->watermark_image($path . $filename . '_o.' . $extension, $path . $filename . '_o.' . $extension);
-            }
-        }
-
-        /* GETTING DETAILS OF IMAGES AND STORING THEM IN DB */
-        $this->update_image_details($p);
-    }
-
-    /**
-     * This function is used to get photo files and extract
-     * dimensions and file size of each file, put them in array
-     * then encode in json and finally update photo details column
-     *
-     * @param $photo
-     * @throws Exception
-     */
-    function update_image_details($photo): void
-    {
-        if (is_array($photo) && !empty($photo['photo_id'])) {
-            $p = $photo;
-        } else {
-            $p = $this->get_photo($photo);
-        }
-
-        if (!empty($photo)) {
-            $images = get_image_file(['details' => $photo, 'size' => 't', 'multi' => true, 'with_path' => false]);
-
-            if ($images) {
-                foreach ($images as $image) {
-                    $imageFile = DirPath::get('photos') . $image;
-
-                    if (file_exists($imageFile)) {
-                        $imageDetails = getimagesize($imageFile);
-                        $imageSize = filesize($imageFile);
-                        $data[$this->get_image_type($image)] = [
-                            'width'     => $imageDetails[0],
-                            'height'    => $imageDetails[1],
-                            'attribute' => mysql_clean($imageDetails[3]),
-                            'size'      => [
-                                'bytes'     => round($imageSize),
-                                'kilobytes' => round($imageSize / 1024),
-                                'megabytes' => round($imageSize / 1024 / 1024, 2)
-                            ]
-                        ];
-                    }
-                }
-
-                if (is_array($data) && !empty($data)) {
-                    $encodedData = stripslashes(json_encode($data));
-                    Clipbucket_db::getInstance()->update(tbl('photos'), ['photo_details'], ["|no_mc|$encodedData"], " photo_id = '" . $p['photo_id'] . "' ");
-                }
-            }
-        }
-    }
 
     /**
      * Creating resized photo
@@ -1670,7 +1664,7 @@ class CBPhotos
      * @param bool $force_copy
      * @throws Exception
      */
-    function createThumb($from, $to, $ext, $d_width = null, $d_height = null, $force_copy = false): void
+    function createImage($from, $to, $ext, $d_width = null, $d_height = null, $force_copy = false): void
     {
         $file = $from;
         $info = getimagesize($file);
@@ -1681,7 +1675,7 @@ class CBPhotos
 
             if( stristr(PHP_OS, 'WIN') ) {
                 // On Windows hosts, imagecreatefromX functions consumes lots of RAM
-                $memory_needed = Image::getMemoryNeededForImage($from);
+                $memory_needed = PhotoThumbs::getMemoryNeededForImage($from);
                 $memory_limit = ini_get('memory_limit');
                 if ($memory_needed > getBytesFromFileSize($memory_limit)) {
                     $msg = 'Photo generation would requiere ~' . System::get_readable_filesize($memory_needed, 0) . ' of memory, but it\'s currently limited to ' . $memory_limit;
@@ -1750,123 +1744,7 @@ class CBPhotos
         }
     }
 
-    /**
-     * Used to get watermark file
-     */
-    function watermark_file()
-    {
-        if (file_exists(DirPath::get('images') . 'photo_watermark.png')) {
-            return DirPath::getUrl('images') . 'photo_watermark.png';
-        }
-        return false;
-    }
 
-    /**
-     * Fetches watermark default position from database
-     * @return bool|string : { position of watermark }
-     */
-    function get_watermark_position()
-    {
-        return config('watermark_placement');
-    }
-
-    /**
-     * Used to set watermark position
-     *
-     * @param $file
-     * @param $watermark
-     *
-     * @return array
-     */
-    function position_watermark($file, $watermark): array
-    {
-        $watermark_pos = $this->get_watermark_position();
-        if (empty($watermark_pos)) {
-            $info = ['right', 'top'];
-        } else {
-            $info = explode(":", $watermark_pos);
-        }
-
-        $x = $info[0];
-        $y = $info[1];
-        [$w, $h] = getimagesize($file);
-        [$ww, $wh] = getimagesize($watermark);
-        $padding = $this->padding;
-
-        switch ($x) {
-            case 'center':
-                $finalxPadding = $w / 2 - $ww / 2;
-                break;
-
-            case 'left':
-            default:
-                $finalxPadding = $padding;
-                break;
-
-            case 'right':
-                $finalxPadding = $w - $ww - $padding;
-                break;
-        }
-
-        switch ($y) {
-            case 'top':
-            default:
-                $finalyPadding = $padding;
-                break;
-
-            case 'center':
-                $finalyPadding = $h / 2 - $wh / 2;
-                break;
-
-            case 'bottom':
-                $finalyPadding = $h - $wh - $padding;
-                break;
-        }
-
-        return [$finalxPadding, $finalyPadding];
-    }
-
-    /**
-     * Used to watermark image
-     *
-     * @param $input
-     * @param $output
-     *
-     * @return bool|void
-     */
-    function watermark_image($input, $output)
-    {
-        $watermark_file = $this->watermark_file();
-        if (!$watermark_file) {
-            return false;
-        }
-
-        [$Swidth, $Sheight, $Stype] = getimagesize($input);
-        $wImage = imagecreatefrompng($watermark_file);
-        $ww = imagesx($wImage);
-        $wh = imagesy($wImage);
-        $paddings = $this->position_watermark($input, $watermark_file);
-
-        switch ($Stype) {
-            case 1: //GIF
-                $sImage = imagecreatefromgif($input);
-                imagecopy($sImage, $wImage, $paddings[0], $paddings[1], 0, 0, $ww, $wh);
-                imagejpeg($sImage, $output, 90);
-                break;
-
-            case 2: //JPEG
-                $sImage = imagecreatefromjpeg($input);
-                imagecopy($sImage, $wImage, $paddings[0], $paddings[1], 0, 0, $ww, $wh);
-                imagejpeg($sImage, $output, 90);
-                break;
-
-            case 3: //PNG
-                $sImage = imagecreatefrompng($input);
-                imagecopy($sImage, $wImage, $paddings[0], $paddings[1], 0, 0, $ww, $wh);
-                imagepng($sImage, $input, 9);
-                break;
-        }
-    }
 
     /**
      * Load Required Form
@@ -2064,7 +1942,7 @@ class CBPhotos
             Collection::getInstance()->addCollectionItem($insert_id, $array['collection_id'], 'photos');
 
             if (!$array['server_url'] || $array['server_url'] == 'undefined') {
-                $this->generate_photos($photo);
+                PhotoThumbs::generateThumbs($photo);
             }
             if (config('enable_photo_categories') == 'yes') {
                 Category::getInstance()->saveLinks('photo', $insert_id, $array['category'] ?? [Category::getInstance()->getDefaultByType('photo')['category_id']]);
@@ -2074,6 +1952,8 @@ class CBPhotos
 
             if (empty(errorhandler::getInstance()->get_error())) {
                 e(lang('photo_is_saved_now', display_clean($photo['photo_title'])), 'm');
+            } else {
+                //TODO error
             }
 
             Clipbucket_db::getInstance()->update(tbl('users'), ['total_photos'], ['|f|total_photos+1'], " userid='" . $userid . "'");
@@ -2090,7 +1970,7 @@ class CBPhotos
      * @param $file
      * @throws Exception
      */
-    function update_watermark($file)
+    function update_watermark($file): void
     {
         if (empty($file)) {
             e(lang('no_watermark_found'));
@@ -2108,7 +1988,7 @@ class CBPhotos
                 if (move_uploaded_file($file['tmp_name'], DirPath::get('images') . 'photo_watermark.png')) {
                     $wFile = DirPath::get('images') . 'photo_watermark.png';
                     if ($width > $this->max_watermark_width) {
-                        $this->createThumb($wFile, $wFile, 'png', $this->max_watermark_width);
+                        $this->createImage($wFile, $wFile, 'png', $this->max_watermark_width);
                     }
                 }
                 e(lang('watermark_updated'), 'm');
@@ -2283,19 +2163,6 @@ class CBPhotos
         return time() . RandomString(6);
     }
 
-    /**
-     * Construct extensions for SWF
-     */
-    function extensions(): string
-    {
-        $exts = $this->exts;
-        $list = '';
-        foreach ($exts as $ext) {
-            $list .= "*." . $ext . ";";
-        }
-        return $list;
-
-    }
 
     /**
      * Function used to validate form fields
@@ -2352,7 +2219,6 @@ class CBPhotos
                     }
                 }
 
-
                 if (!empty($field['db_field'])) {
                     $query_field[] = $field['db_field'];
                 }
@@ -2360,7 +2226,7 @@ class CBPhotos
                 if (is_array($val)) {
                     $new_val = '';
                     foreach ($val as $v) {
-                        $new_val .= "#" . $v . "# ";
+                        $new_val .= '#' . $v . '# ';
                     }
                     $val = $new_val;
                 }
@@ -2383,32 +2249,32 @@ class CBPhotos
                 }
 
                 if (isset($array['total_comments'])) {
-                    $query_field[] = "total_comments";
+                    $query_field[] = 'total_comments';
                     $query_val[] = $array['total_comments'];
                 }
 
                 if (isset($array['total_favorites'])) {
-                    $query_field[] = "total_favorites";
+                    $query_field[] = 'total_favorites';
                     $query_val[] = $array['total_favorites'];
                 }
 
                 if (isset($array['downloaded'])) {
-                    $query_field[] = "downloaded";
+                    $query_field[] = 'downloaded';
                     $query_val[] = $array['downloaded'];
                 }
 
                 if (isset($array['voters'])) {
-                    $query_field[] = "voters";
+                    $query_field[] = 'voters';
                     $query_val[] = $array['voters'];
                 }
             }
 
             if (!error()) {
                 if (!user_id()) {
-                    e(lang("you_not_logged_in"));
+                    e(lang('you_not_logged_in'));
                 } else {
                     if (!$this->photo_exists($pid)) {
-                        e(lang("photo_not_exist"));
+                        e(lang('photo_not_exist'));
                     } else {
                         if ($this->get_photo_owner($pid) != user_id() && !User::getInstance()->hasAdminAccess()) {
                             e(lang("cant_edit_photo"));
@@ -2471,225 +2337,6 @@ class CBPhotos
     }
 
     /**
-     * Used to get image file
-     *
-     * @param        $pid
-     * @param string $size
-     * @param bool $multi
-     * @param null $assign
-     * @param bool $with_path
-     * @param bool $with_orig
-     *
-     * @return string|void
-     */
-    function get_image_file($pid, $size = 't', $multi = false, $assign = null, $with_path = true, $with_orig = false)
-    {
-        $params = [
-            'details'     => $pid
-            , 'size'      => $size
-            , 'multi'     => $multi
-            , 'assign'    => $assign
-            , 'with_path' => $with_path
-            , 'with_orig' => $with_orig
-        ];
-        return get_image_file($params);
-    }
-
-    /**
-     * This will become a Smarty function.
-     * I am writting this to eliminate the possiblitles
-     * of distort pictures
-     *
-     * @param $p
-     *
-     * @return string|array
-     * @throws Exception
-     */
-    function getFileSmarty($p)
-    {
-        $details = $p['details'];
-        $output = $p['output'];
-        if (empty($details)) {
-            return $this->default_thumb($size, $output);
-        } else {
-            //Calling Custom Functions
-            if (!empty(ClipBucket::getInstance()->custom_get_photo_funcs)) {
-                foreach (ClipBucket::getInstance()->custom_get_photo_funcs as $funcs) {
-                    if (function_exists($funcs)) {
-                        $func_returned = $funcs($p);
-                        if ($func_returned) {
-                            return $func_returned;
-                        }
-                    }
-                }
-            }
-
-            if (($p['size'] != 't' && $p['size'] != 'm' && $p['size'] != 'l' && $p['size'] != 'o') || empty($p['size'])) {
-                $p['size'] = 't';
-            }
-
-            if ($p['with_path'] === false) {
-                $p['with_path'] = false;
-            } else {
-                $p['with_path'] = true;
-            }
-            $with_path = $p['with_path'];
-            $with_orig = $p['with_orig'] ? $p['with_orig'] : false;
-
-            if (!is_array($details)) {
-                $photo = $this->get_photo($details);
-            } else {
-                $photo = $details;
-            }
-
-            if (empty($photo['photo_id']) || empty($photo['photo_key'])) {
-                return $this->default_thumb($size, $output);
-            }
-
-            if (!empty($photo['filename']) && !empty($photo['ext'])) {
-                $files = glob(DirPath::get('photos') . $photo['filename'] . '*.' . $photo['ext']);
-                if (!empty($files) && is_array($files)) {
-                    $thumbs = [];
-                    foreach ($files as $file) {
-                        $file_parts = explode('/', $file);
-                        $thumb_name = $file_parts[count($file_parts) - 1];
-
-                        $type = $this->get_image_type($thumb_name);
-                        if ($with_orig) {
-                            if ($with_path) {
-                                $thumbs[] = DirPath::getUrl('photos') . $thumb_name;
-                            } else {
-                                $thumbs[] = $thumb_name;
-                            }
-                        } elseif (!empty($type)) {
-                            if ($with_path) {
-                                $thumbs[] = DirPath::getUrl('photos') . $thumb_name;
-                            } else {
-                                $thumbs[] = $thumb_name;
-                            }
-                        }
-                    }
-
-                    if (empty($p['output']) || $p['output'] == 'non_html') {
-                        if ($p['assign'] && $p['multi']) {
-                            assign($p['assign'], $thumbs);
-                        } else {
-                            if (!$p['assign'] && $p['multi']) {
-                                return $thumbs;
-                            } else {
-                                $size = '_' . $p['size'];
-                                $return_thumb = array_find_cb($photo['filename'] . $size, $thumbs);
-
-                                if (empty($return_thumb)) {
-                                    $this->default_thumb($size, $output);
-                                } else {
-                                    if ($p['assign'] != null) {
-                                        assign($p['assign'], $return_thumb);
-                                    } else {
-                                        return $return_thumb;
-                                    }
-                                }
-                            }
-                        }
-                    }
-
-                    if ($p['output'] == 'html') {
-                        $size = '_' . $p['size'];
-
-                        $src = array_find_cb($photo['filename'] . $size, $thumbs);
-                        DiscordLog::sendDump($src);
-                        if (empty($src)) {
-                            $src = $this->default_thumb($size);
-                        }
-
-                        if (!empty($js)) {
-                            $imgDetails = $js->json_decode($photo['photo_details'], true);
-                        } else {
-                            $imgDetails = json_decode($photo['photo_details'], true);
-                        }
-
-                        if (empty($imgDetails) || empty($imgDetails[$p['size']])) {
-                            $dem = getimagesize(str_replace(DirPath::getUrl('photos'), DirPath::get('photos'), $src));
-                            $width = $dem[0];
-                            $height = $dem[1];
-                            /* UPDATING IMAGE DETAILS */
-                            $this->update_image_details($details);
-                        } else {
-                            $width = $imgDetails[$p['size']]['width'];
-                            $height = $imgDetails[$p['size']]['height'];
-                        }
-
-                        $img = '<img src=\'' . $src . '\'';
-
-                        if ($p['id']) {
-                            $img .= ' id=\'' . display_clean($p['id']) . '_' . $photo['photo_id'] . '\'';
-                        }
-
-                        if ($p['class']) {
-                            $img .= ' class=\'' . display_clean($p['class']) . '\'';
-                        }
-
-                        if ($p['align']) {
-                            $img .= ' align=\'' . $p['align'] . '\'';
-                        }
-                        if (($p['width'] && is_numeric($p['width'])) && ($p['height'] && is_numeric($p['height']))) {
-                            $height = $p['height'];
-                            $width = $p['width'];
-                        } elseif ($p['width'] && is_numeric($p['width'])) {
-                            $height = round($p['width'] / $width * $height);
-                            $width = $p['width'];
-                        } elseif ($p['height'] && is_numeric($p['height'])) {
-                            $width = round($p['height'] * $width / $height);
-                            $height = $p['height'];
-                        }
-
-                        $img .= ' width=\'' . $width . '\'';
-                        $img .= ' height=\'' . $height . '\'';
-
-                        if ($p['title']) {
-                            $img .= " title='" . display_clean($p['title']) . '\'';
-                        } else {
-                            $img .= " title='" . display_clean($photo['photo_title']) . '\'';
-                        }
-
-                        if ($p['alt']) {
-                            $img .= ' alt=\'' . display_clean($p['alt']) . '\'';
-                        } else {
-                            $img .= ' alt=\'' . display_clean($photo['photo_title']) . '\'';
-                        }
-
-                        if ($p['anchor']) {
-                            $anchor_p = [
-                                'place'  => $p['anchor']
-                                , 'data' => $photo
-                            ];
-                            ANCHOR($anchor_p);
-                        }
-
-                        if ($p['style']) {
-                            $img .= ' style=\'' . $p['style'] . '\'';
-                        }
-
-                        if ($p['extra']) {
-                            $img .= ($p['extra']);
-                        }
-
-                        $img .= ' />';
-
-                        if ($p['assign']) {
-                            assign($p['assign'], $img);
-                        } else {
-                            return $img;
-                        }
-                    }
-                } else {
-                    return $this->default_thumb($size, $output);
-                }
-            }
-        }
-    }
-
-    /**
      * Will be called when collection is being deleted
      * This will make photos in the collection orphan
      * User will be able to access them in orphan photos
@@ -2709,10 +2356,10 @@ class CBPhotos
 
         $cond = '';
         if (!empty($pid)) {
-            $cond = ' AND object_id = ' . mysql_clean($pid);
+            $cond = ' AND object_id = ' . (int)$pid;
         }
 
-        Clipbucket_db::getInstance()->execute('DELETE FROM ' . tbl('collection_items') . ' WHERE type = \'photos\' AND collection_id = ' . mysql_clean($cid) . $cond);
+        Clipbucket_db::getInstance()->execute('DELETE FROM ' . tbl('collection_items') . ' WHERE type = \'photos\' AND collection_id = ' . (int)$cid . $cond);
     }
 
     /**
@@ -2722,6 +2369,7 @@ class CBPhotos
      * @param $type
      *
      * @return string
+     * @throws Exception
      */
     function photo_links($details, $type): string
     {
@@ -2867,135 +2515,7 @@ class CBPhotos
         return false;
     }
 
-    /**
-     * Used to rate photo
-     *
-     * @param $id
-     * @param $rating
-     *
-     * @return array
-     * @throws Exception
-     */
-    function rate_photo($id, $rating): array
-    {
-        if (!is_numeric($rating) || $rating <= 9) {
-            $rating = 0;
-        }
-        if ($rating >= 10) {
-            $rating = 10;
-        }
 
-        $c_rating = $this->current_rating($id);
-        $voters = $c_rating['voters'];
-
-        $new_rate = $c_rating['rating'];
-        $rated_by = $c_rating['rated_by'];
-
-        $voters = json_decode($voters, true);
-
-        if (!empty($voters)) {
-            $already_voted = array_key_exists(user_id(), $voters);
-        }
-
-        if (!user_id()) {
-            e(lang('please_login_to_rate'));
-        } elseif (user_id() == $c_rating['userid'] && config('own_photo_rating') != 'yes') {
-            e(lang('you_cannot_rate_own_photo'));
-        } elseif (!empty($already_voted)) {
-            e(lang('you_hv_already_rated_photo'));
-        } elseif ($c_rating['allow_rating'] == 'no' || config('photo_rating') != 'yes') {
-            e(lang('photo_rate_disabled'));
-        } else {
-            $voters[user_id()] = [
-                'userid'   => user_id(),
-                'username' => user_name(),
-                'time'     => now(),
-                'rating'   => $rating
-            ];
-            $voters = json_encode($voters);
-
-            $t = $c_rating['rated_by'] * $c_rating['rating'];
-            $rated_by = $c_rating['rated_by'] + 1;
-            $new_rate = ($t + $rating) / $rated_by;
-            Clipbucket_db::getInstance()->update(tbl('photos'), ['rating', 'rated_by', 'voters'], ["$new_rate", "$rated_by", "|no_mc|$voters"], ' photo_id = ' . $id);
-            $userDetails = [
-                "object_id" => $id,
-                "type"      => 'photo',
-                "time"      => now(),
-                "rating"    => $rating,
-                "userid"    => user_id(),
-                "username"  => user_name()
-            ];
-            /* Updating user details */
-            update_user_voted($userDetails);
-            e(lang('thnx_for_voting'), 'm');
-        }
-
-        return ['rating' => $new_rate, 'rated_by' => $rated_by, 'total' => 10, 'id' => $id, 'type' => 'photo', 'disable' => 'disabled'];
-    }
-
-    /**
-     * Used to generate different
-     * embed codes
-     *
-     * @param $p
-     *
-     * @return bool|string
-     * @throws Exception
-     */
-    function generate_embed_codes($p)
-    {
-        $details = $p['details'];
-        $type = $p['type'];
-
-        if (is_array($details)) {
-            $photo = $details;
-        } else {
-            $photo = $this->get_photo($details);
-        }
-
-        $code = '';
-        $image_file = $this->get_image_file($photo);
-        if (is_array($image_file)) {
-            $image_file = $image_file[0];
-        }
-
-        $base_url = DirPath::getUrl('root');
-        switch ($type) {
-            case 'html':
-                if ($p['with_url']) {
-                    $code .= "&lt;a href='" . $this->collection->collection_links($photo, 'view_item') . "' target='_blank'&gt;";
-                }
-                $code .= "&lt;img src='" . $base_url . $image_file . "' title='" . display_clean($photo['photo_title']) . "' alt='" . display_clean($photo['photo_title']) . '&nbsp;' . TITLE . "' /&gt;";
-                if ($p['with_url']) {
-                    $code .= '&lt;/a&gt;';
-                }
-                break;
-
-            case 'forum':
-                if ($p['with_url']) {
-                    $code .= '&#91;URL=' . $this->collection->collection_links($photo, 'view_item') . '&#93;';
-                }
-                $code .= '&#91;IMG&#93;' . $base_url . $image_file . '&#91;/IMG&#93;';
-                if ($p['with_url']) {
-                    $code .= '&#91;/URL&#93;';
-                }
-                break;
-
-            case 'email':
-                $code .= $this->collection->collection_links($photo, 'view_item');
-                break;
-
-            case 'direct':
-                $code .= $base_url . $image_file;
-                break;
-
-            default:
-                return false;
-        }
-
-        return $code;
-    }
 
     /**
      * Used encode photo key
@@ -3030,34 +2550,32 @@ class CBPhotos
      */
     function photo_actions($action, $id)
     {
-        $id = (int)$id;
-
         switch ($action) {
             case 'activate':
             case 'activation':
             case 'ap':
-                Clipbucket_db::getInstance()->update(tbl($this->p_tbl), ['active'], ['yes'], ' photo_id = ' . $id);
+                Clipbucket_db::getInstance()->update(tbl($this->p_tbl), ['active'], ['yes'], ' photo_id = ' . (int)$id);
                 e(lang('photo_activated'), 'm');
                 break;
 
             case 'deactivate':
             case 'deactivation':
             case 'dap':
-                Clipbucket_db::getInstance()->update(tbl($this->p_tbl), ['active'], ['no'], ' photo_id = ' . $id);
+                Clipbucket_db::getInstance()->update(tbl($this->p_tbl), ['active'], ['no'], ' photo_id = ' . (int)$id);
                 e(lang('photo_deactivated'), 'm');
                 break;
 
             case 'make_featured':
             case 'feature_photo':
             case 'fp':
-                Clipbucket_db::getInstance()->update(tbl($this->p_tbl), ['featured'], ['yes'], ' photo_id = ' . $id);
+                Clipbucket_db::getInstance()->update(tbl($this->p_tbl), ['featured'], ['yes'], ' photo_id = ' . (int)$id);
                 e(lang('photo_featured'), 'm');
                 break;
 
             case 'make_unfeatured':
             case 'unfeature_photo':
             case 'ufp':
-                Clipbucket_db::getInstance()->update(tbl($this->p_tbl), ['featured'], ['no'], ' photo_id = ' . $id);
+                Clipbucket_db::getInstance()->update(tbl($this->p_tbl), ['featured'], ['no'], ' photo_id = ' . (int)$id);
                 e(lang('photo_unfeatured'), 'm');
                 break;
         }

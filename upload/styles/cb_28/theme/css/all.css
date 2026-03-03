@@ -684,6 +684,14 @@ h1 {
   left: 10px;
 }
 
+.item-video .thumb-holder .manage_favorite {
+  position: absolute;
+  z-index: 4;
+  top: auto;
+  bottom: 10px;
+  left: 36px;
+}
+
 .item-video .thumb-holder .duration {
   font-size: 14px;
   line-height: 20px;
@@ -2116,17 +2124,14 @@ h1 {
 .photo-view .overlay {
   /* Height & width depends on how you want to reveal the overlay (see JS below) */
   height: 100%;
-  width: 0;
   position: fixed;
   /* Stay in place */
   z-index: 6;
   /* Sit on top */
-  left: 0;
-  right: 100%;
   top: 0;
   background: rgba(0, 0, 0, 0.98);
   /* Black w/opacity */
-  overflow-y: hidden;
+  overflow-y: auto;
   transition: 0.3s;
   /* 0.5 second transition effect to slide in or slide down the overlay (height or width, depending on reveal) */
 }
@@ -2185,15 +2190,8 @@ h1 {
 }
 
 .photo-view .overlay .overlay-content {
-  position: relative;
-  height: auto;
-  max-height: 100%;
-  width: 100%;
-  /* 100% width */
-  text-align: center;
-  /* Centered text/links */
-  display: table-cell;
   vertical-align: middle;
+  display: table-cell;
 }
 
 .photo-view .overlay .overlay-content img {
@@ -4049,7 +4047,7 @@ textarea#comment_box {
   z-index: 1050;
 }
 
-.alert_messages_holder .alert-messages {
+.alert_messages_holder .alert-messages, .alert_messages_holder .alert-dismissable {
   position: relative;
   width: 300px;
   margin: 0 0 10px;
@@ -6502,6 +6500,20 @@ textarea#comment_box {
   transition: transform .3s; /* Animation */
   cursor: pointer;
 }
+
+.slider-video-container .thumb-video-padding .thumb-video > .manage_favorite {
+  font-size: 20px;
+  width: 24px;
+  height: 21px;
+  padding: 0.2rem 0.5rem;
+  position: absolute;
+  top: auto;
+  left: 33px;
+  bottom: 10px;
+  text-align: center;
+  transition: transform .3s; /* Animation */
+  cursor: pointer;
+}
  .slider-video-container .thumb-video-padding .thumb-video > .add-playlist:after {
   content:'+';
 }
@@ -7084,7 +7096,7 @@ span.tagit-label i.fa {
     width: 100%;
 }
 
-li.up_vid > a[disabled] {
+li.up_vid > a[disabled],li.up_img > a[disabled] {
     cursor: not-allowed;
     filter: alpha(opacity=65);
     opacity: .65;
@@ -7096,4 +7108,98 @@ li:has(a.disabled) {
     cursor: not-allowed;
     filter: alpha(opacity=65);
     opacity: .65;
+}
+
+.glyphicon-heart-empty:hover:before  {
+  content: "\e005";
+}
+
+.glyphicon-heart:hover:before {
+  content: "\e143";
+}
+
+.movie-rating .manage_favorite {
+  padding-left: 5px;
+  bottom: 2px;
+}
+
+h2 a{
+  color: #337ab7;
+}
+
+input.btn-danger:disabled {
+  cursor: not-allowed;
+}
+
+:root {
+  --crop_ratio: 16 / 10
+}
+
+.crop_image {
+  aspect-ratio: var(--crop_ratio);
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+  object-position: center;
+  display: block;
+}
+
+h4.disabled {
+  opacity: .35; filter:Alpha(Opacity=35); background-image: none;
+  cursor: not-allowed !important;
+}
+
+h4:has(i) {
+  cursor: pointer;
+}
+
+.cursor_default {
+  cursor: default !important;
+}
+
+.collections-grid .manage_favorite {
+  display: none;
+}
+
+.collect_breadcrumb {
+  padding: 8px 15px;
+  list-style: none;
+}
+.collect_breadcrumb > li {
+  display: inline-block;
+}
+.collect_breadcrumb > li + li:before {
+  padding: 0 5px;
+  color: #ccc;
+  content: ">";
+}
+
+.cursor_help {
+  cursor: help;
+}
+
+.switch-inline{
+  display:flex;
+  align-items:center;
+  gap:12px;
+}
+
+.switch-inline > label.show{
+  margin:0;
+  white-space:nowrap;
+}
+
+
+.switch-inline .row{
+  margin:0;
+  flex:0 0 auto;
+  width:auto;
+}
+
+.switch-inline .row .col-md-1,
+.switch-inline .row .col-md-7{
+  padding-left:0;
+  padding-right:0;
+  width:auto;
+  flex:0 0 auto;
 }

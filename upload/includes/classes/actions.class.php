@@ -75,64 +75,6 @@ class cbactions
     }
 
     /**
-     * Function used to add content to favorites
-     * @throws Exception
-     */
-    function add_to_fav($id): void
-    {
-        $id = mysql_clean($id);
-        //First checking weather object exists or not
-        if ($this->exists($id)) {
-            if (user_id()) {
-                if (!$this->fav_check($id)) {
-                    Clipbucket_db::getInstance()->insert(tbl($this->fav_tbl), ['type', 'id', 'userid', 'date_added'], [$this->type, $id, user_id(), NOW()]);
-                    addFeed(['action' => 'add_favorite', 'object_id' => $id, 'object' => 'video']);
-
-                    //Logging Favorite
-                    $log_array = [
-                        'success'        => 'yes',
-                        'details'        => 'added ' . $this->name . ' to favorites',
-                        'action_obj_id'  => $id,
-                        'action_done_id' => Clipbucket_db::getInstance()->insert_id()
-                    ];
-                    insert_log($this->name . '_favorite', $log_array);
-
-                    e('<div class="alert alert-success">' . lang('add_fav_message', lang($this->name)) . '</div>', 'm');
-                } else {
-                    e(lang('already_fav_message', lang($this->name)));
-                }
-            } else {
-                e(lang('you_not_logged_in'));
-            }
-        } else {
-            e(lang('obj_not_exists', $this->name));
-        }
-    }
-
-    /**
-     * Function used to check weather object already added to favorites or not
-     *
-     * @param      $id
-     * @param null $uid
-     *
-     * @return bool
-     * @throws Exception
-     */
-    function fav_check($id, $uid = null): bool
-    {
-        $id = mysql_clean($id);
-
-        if (!$uid) {
-            $uid = user_id();
-        }
-        $results = Clipbucket_db::getInstance()->select(tbl($this->fav_tbl), 'favorite_id', ' id=\'' . mysql_clean($id) . '\' AND userid=\'' . mysql_clean($uid) . '\' AND type=\'' . $this->type . '\'');
-        if (count($results) > 0) {
-            return true;
-        }
-        return false;
-    }
-
-    /**
      * Function used to check weather object exists or not
      *
      * @param $id
@@ -222,45 +164,6 @@ class cbactions
     }
 
     /**
-     * Get Used Favorites
-     *
-     * @param $params
-     *
-     * @return array|bool
-     * @throws Exception
-     */
-    function get_favorites($params)
-    {
-        $uid = $params['userid'];
-        $limit = $params['limit'];
-        $cond = $params['cond'];
-        $order = $params['order'];
-
-        if (!$uid) {
-            $uid = user_id();
-        }
-
-        if ($cond) {
-            $cond = ' AND ' . $cond;
-        }
-
-        if ($params['count_only']) {
-            return Clipbucket_db::getInstance()->count(tbl($this->fav_tbl . ',' . $this->type_tbl), '*', ' ' . tbl($this->fav_tbl) . '.type=\'' . $this->type . '\' 
-                AND ' . tbl($this->fav_tbl) . '.userid=\'' . $uid . '\' 
-                AND ' . tbl($this->type_tbl) . '.' . $this->type_id_field . ' = ' . tbl($this->fav_tbl) . '.id' . $cond);
-        }
-
-        $results = Clipbucket_db::getInstance()->select(tbl($this->fav_tbl . ',' . $this->type_tbl), '*', ' ' . tbl($this->fav_tbl) . '.type=\'' . $this->type . '\' 
-            AND ' . tbl($this->fav_tbl) . '.userid=\'' . $uid . '\' 
-            AND ' . tbl($this->type_tbl) . '.' . $this->type_id_field . ' = ' . tbl($this->fav_tbl) . '.id' . $cond, $limit, $order);
-
-        if (count($results) > 0) {
-            return $results;
-        }
-        return false;
-    }
-
-    /**
      * Function used to count total favorites only
      * @throws Exception
      */
@@ -269,25 +172,6 @@ class cbactions
         return Clipbucket_db::getInstance()->count(tbl($this->fav_tbl), 'favorite_id', ' type=\'' . $this->type . '\'');
     }
 
-    /**
-     * Function used remove video from favorites
-     *
-     * @param      $fav_id
-     * @param null $uid
-     * @throws Exception
-     */
-    function remove_favorite($fav_id, $uid = null): void
-    {
-        if (!$uid) {
-            $uid = user_id();
-        }
-        if ($this->fav_check($fav_id, $uid)) {
-            Clipbucket_db::getInstance()->delete(tbl($this->fav_tbl), ['userid', 'type', 'id'], [$uid, $this->type, $fav_id]);
-            e(lang('fav_remove_msg', ucfirst(lang($this->name))), 'm');
-        } else {
-            e(lang('unknown_favorite', lang($this->name)));
-        }
-    }
 
     /**
      * @throws Exception
@@ -462,7 +346,7 @@ class cbactions
                     'total_items' => '|f|total_items+1'
                 ];
 
-                Clipbucket_db::getInstance()->update(tbl('playlists'), array_keys($fields), array_values($fields), ' playlist_id = \'' . mysql_clean($pid) . '\'');
+                Clipbucket_db::getInstance()->update(tbl('playlists'), array_keys($fields), array_values($fields), ' playlist_id = ' . (int)$pid);
 
                 e('<div class="alert alert-success">' . lang('video_added_to_playlist') . '</div>', 'm');
                 return $video;
@@ -512,7 +396,7 @@ class cbactions
                 $fields['first_item'] = '|no_mc|' . json_encode([]);
             }
 
-            Clipbucket_db::getInstance()->update(tbl('playlists'), array_keys($fields), array_values($fields), ' playlist_id = \'' . mysql_clean($item['playlist_id']) . '\'');
+            Clipbucket_db::getInstance()->update(tbl('playlists'), array_keys($fields), array_values($fields), ' playlist_id = ' . (int)$item['playlist_id']);
 
             e(lang('playlist_item_delete'), 'm');
 
@@ -561,7 +445,7 @@ class cbactions
             $query .= ' LEFT JOIN ' . cb_sql_table('playlists') . ' ON playlist_items.playlist_id = playlists.playlist_id';
         }
 
-        $query .= ' WHERE playlist_items.playlist_item_id = \'' . mysql_clean($id) . '\' LIMIT 1';
+        $query .= ' WHERE playlist_items.playlist_item_id = ' . (int)$id . ' LIMIT 1';
 
         $query_id = cb_query_id($query);
 
@@ -675,7 +559,7 @@ class cbactions
 
                 $query_values['last_update'] = NOW();
 
-                Clipbucket_db::getInstance()->update(tbl('playlists'), array_keys($query_values), array_values($query_values), ' playlist_id = \'' . mysql_clean($pdetails['playlist_id']) . '\'');
+                Clipbucket_db::getInstance()->update(tbl('playlists'), array_keys($query_values), array_values($query_values), ' playlist_id = ' . (int)$pdetails['playlist_id']);
 
                 Tags::saveTags($array['playlists_tags'], 'playlist', $pdetails['playlist_id']);
 

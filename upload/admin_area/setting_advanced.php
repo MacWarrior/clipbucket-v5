@@ -45,6 +45,7 @@ if (isset($_POST['update'])) {
         , 'video_enable_nsfw_check'
         , 'store_guest_session'
         , 'allow_conversion_1_percent'
+        , 'video_remove_black_bars'
     ];
 
     $config_booleans_to_refactor = [
@@ -103,6 +104,7 @@ if (isset($_POST['update'])) {
         'enable_photo_file_upload',
 
         'allow_conversion_1_percent',
+        'video_remove_black_bars',
 
         'mail_type',
         'smtp_host',
@@ -268,10 +270,24 @@ if (!empty($_POST)) {
     } else {
         DiscordLog::getInstance()->disable();
     }
+
+    if( !empty($_POST['enable_profiling']) ){
+        Profiling::enable(
+            host: $_POST['profiling_db_host'] ?? '',
+            dbname: $_POST['profiling_db_name'] ?? '',
+            username: $_POST['profiling_db_user'] ?? '',
+            password: $_POST['profiling_db_password'] ?? '',
+            port: $_POST['profiling_db_port'] ?? ''
+        );
+        Profiling::load();
+    } else {
+        Profiling::disable();
+    }
 }
 
 assign('discord_error_log', DiscordLog::getInstance()->isEnabled());
 assign('discord_webhook_url', DiscordLog::getInstance()->getCurrentUrl());
+assign('enable_profiling', Profiling::isEnabled());
 
 if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.0', '367', true)) {
     $tool = AdminTool::getToolByCode('automate');

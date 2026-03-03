@@ -1,11 +1,11 @@
 <div class="slide video-link{if $popup_video && $video.status|lower == 'successful'} cd-popup-trigger-slider{/if}" data-videoid="{$video.videoid}" data-href="{video_link($video)}">
     {if config('enable_video_poster') == 'yes' && !empty($video.default_poster)}
         <span class="image-container {if Video::getInstance()->isToBlur($video['videoid'])}blured{/if}">
-            <img src="{get_thumb($video, false, 'original', 'poster')}" class="poster"/>
+            <img src="{VideoThumbs::getDefaultThumbFile($video['videoid'], 200, 300, 'poster')}" class="poster"/>
         </span>
     {/if}
     <span class="image-container {if Video::getInstance()->isToBlur($video['videoid'])}blured{/if}">
-        <img src="{get_thumb($video, false, '632x395')}" {Video::get_thumbs_preview($video, '632x395')}/>
+        <img src="{VideoThumbs::getDefaultThumbFile($video['videoid'], 512, 320)}" {Video::get_thumbs_preview($video, '512x320')}/>
     </span>
     {ANCHOR place='in_video_thumb' data=$video}
     <div class="movie-details">
@@ -13,6 +13,9 @@
         <div class="movie-description" title="{display_clean($video.description)}">{display_clean($video.description)}</div>
         <div class="movie-rating">
             <span class="icon-thumbup"></span> {Video::getLike($video)} <span class="icon-thumbdown"></span> {Video::getDislike($video)}
+            {if config('enable_favorite_icon') == 'yes' && User::getInstance()->isUserConnected() && Video::isFavorite($video.videoid)}
+                <span class="manage_favorite watch-rating-icon pointer glyphicon glyphicon-heart " title="{lang('remove_from_favorites')}" data-id="{$video.videoid}"></span>
+            {/if}
         </div>
         <div class="movie-duration">{if $video.duration>1}{$video.duration|SetTime} {/if}<span class="movie-limit">{Video::display_restricted($video)}</span></div>
     </div>

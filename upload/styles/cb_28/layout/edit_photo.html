@@ -10,9 +10,11 @@
                 <div>
                     <a href="{CBPhotos::getInstance()->photo_links($p,'view_item')}" target="_blank" class="btn btn-primary">{lang('watch')}</a>
                     <button class="btn btn-primary" type="button" onClick="viewRatings(this,'{$p.photo_id}');">View Ratings</button>
-                    <button class="btn btn-primary" type="button" href="javascript:void(0);" onmousedown="delete_item('delete_icon_a','{$photo.photo_id}','{lang code="confirm_del_photo"}','manage_photos.php?mode=uploaded&amp;delete_photo={$p.photo_id}')"  id="delete_icon_a-{$photo.photo_id}">{lang code='delete'}</button>
+                    <button class="btn btn-primary" type="button" href="javascript:void(0);" {if Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '14')} onmousedown="delete_item('delete_icon_a','{$photo.photo_id}','{lang code="confirm_del_photo"}','manage_photos.php?mode=uploaded&amp;delete_photo={$p.photo_id}')"
+                            {else} disabled="disabled" title="Sorry, you cannot perform this action until the application has been fully updated by an administrator"{/if}
+                            id="delete_icon_a-{$photo.photo_id}">{lang code='delete'}</button>
                 </div>
-                {assign var='requiredFields' value=CBPhotos::getInstance()->load_required_forms($p)}
+                {assign var='requiredFields' value=CBPhotos::getInstance()->load_required_forms($p)}'
                 {assign var='optionFields' value=CBPhotos::getInstance()->load_other_forms($p)}
                 <div class="account_form">
                     <form name="edit_photo" id="edit_photo" method="post">
@@ -42,7 +44,7 @@
                                                 {lang("photo_is", strtolower(lang("orphan")))}
                                             </div>
                                         {/if}
-                                        {get_photo details=$p output='html' size='m' class='photoThumbBox moveL'}
+                                        {PhotoThumbs::getHtmlThumbFile($p.photo_id, 550, ['class'=>'photoThumbBox moveL', 'extra'=>'style="width: -webkit-fill-available"'])}
                                     </div>
                                 </div>
                                 {foreach from=$optionFields item=field}

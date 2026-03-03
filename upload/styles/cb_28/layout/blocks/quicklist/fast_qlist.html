@@ -2,7 +2,7 @@
 	<div class="pl_num"></div>
 	<div class="pl_thumb">
 		<a href="{video_link($ql_item)}" class="no_overflow">
-			<img src="{getThumb vdetails=$ql_item size=168x105}" {Video::get_thumbs_preview($ql_item, '168x105')} class="img-responsive {if Video::getInstance()->isToBlur($ql_item.videoid)}blur{/if}" alt=""/>
+			<img src="{VideoThumbs::getDefaultThumbFile($ql_item.videoid)}" {Video::get_thumbs_preview($ql_item, '168x105')} class="img-responsive {if Video::getInstance()->isToBlur($ql_item.videoid)}blur{/if}" alt=""/>
 		</a>
 		<span class="pl_duration">{if $ql_item.duration>1}{$ql_item.duration|SetTime}{else}00:00{/if}</span>
 	</div>

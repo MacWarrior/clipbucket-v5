@@ -645,6 +645,7 @@ class ClipBucket
 
         return $this->template = $template;
     }
+
     function get_extensions($type = 'video'): string
     {
         switch ($type) {
@@ -652,6 +653,7 @@ class ClipBucket
             case 'video':
                 $exts = config('allowed_video_types');
                 break;
+
             case 'photo':
                 $exts = config('allowed_photo_types');
                 break;

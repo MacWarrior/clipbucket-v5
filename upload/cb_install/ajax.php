@@ -158,8 +158,8 @@ if ($mode == 'sitesettings') {
         if ($step == 'version') {
             $last_version = $versions['stable'];
             $changelog = json_decode(file_get_contents(DirPath::get('changelog') . $last_version . '.json'), true);
-            $sql = 'INSERT INTO ' . $dbprefix . 'version SET version = \'' . $cnnct->real_escape_string($changelog['version']) . '\' , revision = ' . $cnnct->real_escape_string($changelog['revision']) . ', id = 1
-            ON DUPLICATE KEY UPDATE version = \'' . $cnnct->real_escape_string($changelog['version']) . '\' , revision = ' . $cnnct->real_escape_string($changelog['revision']);
+            $sql = 'INSERT INTO ' . $dbprefix . 'version SET version = \'' . $cnnct->real_escape_string($changelog['version']) . '\' , revision = ' . (int)$changelog['revision'] . ', id = 1
+            ON DUPLICATE KEY UPDATE version = \'' . $cnnct->real_escape_string($changelog['version']) . '\' , revision = ' . (int)$changelog['revision'];
             mysqli_query($cnnct, $sql);
         }
     } else {

@@ -74,26 +74,25 @@ switch ($mode) {
         //Removing video from favorites
         if (!empty($_GET['remove_fav_videoid']) && in_array($_GET['remove_fav_videoid'], $favorites) ) {
             $videoid = (int)$_GET['remove_fav_videoid'];
-            CBvideo::getInstance()->action->remove_favorite($videoid);
+            Video::getInstance()->removeFromFavorites($videoid);
         }
         $cond = '';
         if (get('query') != '') {
             $cond = " (video.title LIKE '%" . mysql_clean(get('query')) . "%' OR video.tags LIKE '%" . mysql_clean(get('query')) . "%' )";
         }
         $params = [
-            'userid' => user_id()
-            ,'limit' => $get_limit
+            'limit' => $get_limit
             ,'cond' => $cond
         ];
 
-        $videos = CBvideo::getInstance()->action->get_favorites($params);
+        $videos = Video::getInstance()->getAllFavorites($params);
 
         if( $page == 1 && is_array($videos) && count($videos) < config('videos_list_per_page') ){
             $favorites_count = count($videos);
         } else {
             $params['count_only'] = 'yes';
             unset($params['limit']);
-            $favorites_count = CBvideo::getInstance()->action->get_favorites($params);
+            $favorites_count = Video::getInstance()->getAllFavorites($params);
         }
 
         $total_pages = count_pages($favorites_count, config('videos_list_per_page'));

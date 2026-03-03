@@ -51,7 +51,7 @@ class Plugin
 
         $conditions = [];
         if( $param_plugin_id ){
-            $conditions[] = 'plugins.plugin_id = '.mysql_clean($param_plugin_id);
+            $conditions[] = 'plugins.plugin_id = ' . (int)$param_plugin_id;
         }
         if( $param_plugin_file ){
             $conditions[] = 'plugins.plugin_file = \''.mysql_clean($param_plugin_file).'\'';

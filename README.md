@@ -55,7 +55,7 @@ After 196 focused revisions, ClipBucketV5 – 5.5.2 stands as a key consolidatio
 </details>
 
 # 🌟 Why <a href="https://github.com/MacWarrior/clipbucket-v5">ClipBucket V5</a>
-| PHP 8.0 - 8.4+ compatibility  | MySQL 9+ & strict mode compatibility                              |
+| PHP 8.1 - 8.5+ compatibility  | MySQL 9+ & strict mode compatibility                              |
 |-------------------------------|-------------------------------------------------------------------|
 | UHD video resolutions support | TMDB integration                                                  |
 | Dark & Light theme            | Age restriction                                                   |

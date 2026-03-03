@@ -58,6 +58,7 @@ $(function () {
         $.each($('#new_thumbs')[0].files, function(i, file) {
             fd.append('vid_thumb[]', file);
         });
+        showSpinner();
         $.ajax(
             'upload_thumb.php?video=' + videoid
             , {
@@ -65,9 +66,10 @@ $(function () {
                 contentType: false,
                 processData: false,
                 cache: false,
-                data: fd
+                data: fd,
+                dataType: 'json'
                 , success: function (data) {
-                    // location.reload();
+                    window.location.replace(data.redirect);
                 }
             }
         )
@@ -80,6 +82,7 @@ $(function () {
         $.each($('#new_thumbs_poster')[0].files, function(i, file) {
             fd.append('vid_thumb_poster[]', file);
         });
+        showSpinner();
         $.ajax(
             'upload_thumb.php?video=' + videoid
             , {
@@ -87,9 +90,10 @@ $(function () {
                 contentType: false,
                 processData: false,
                 cache: false,
-                data: fd
-                , success: function () {
-                    location.reload();
+                data: fd,
+                dataType: 'json'
+                , success: function (data) {
+                    window.location.replace(data.redirect);
                 }
             }
         )
@@ -102,6 +106,7 @@ $(function () {
         $.each($('#new_thumbs_backdrop')[0].files, function(i, file) {
             fd.append('vid_thumb_backdrop[]', file);
         });
+        showSpinner();
         $.ajax(
             'upload_thumb.php?video=' + videoid
             , {
@@ -109,9 +114,10 @@ $(function () {
                 contentType: false,
                 processData: false,
                 cache: false,
-                data: fd
+                data: fd,
+                dataType: 'json'
                 , success: function (data) {
-                    location.reload();
+                    window.location.replace(data.redirect);
                 }
             }
         )

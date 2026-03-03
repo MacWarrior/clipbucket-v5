@@ -28,7 +28,7 @@ class CBreindex
                 if ($params['video_count']) {
                     $video_count = Clipbucket_db::getInstance()->count(tbl($this->vtbl),
                         tbl($this->vtbl) . '.videoid',
-                        tbl($this->vtbl) . '.userid = ' . $params['user'] . ' AND ' . tbl($this->vtbl) . '.active = \'yes\' AND ' . tbl($this->vtbl) . '.status = \'Successful\'');
+                        tbl($this->vtbl) . '.userid = ' . (int)$params['user'] . ' AND ' . tbl($this->vtbl) . '.active = \'yes\' AND ' . tbl($this->vtbl) . '.status = \'Successful\'');
                     $arr[] = $video_count;
                 }
 
@@ -44,7 +44,7 @@ class CBreindex
                     $subtbl = tbl('subscriptions');
                     $subscribers_count = Clipbucket_db::getInstance()->count($subtbl,
                         $subtbl . '.subscription_id',
-                        $subtbl . '.subscribed_to = ' . $params['user']);
+                        $subtbl . '.subscribed_to = ' . (int)$params['user']);
                     $arr[] = $subscribers_count;
                 }
 
@@ -53,7 +53,7 @@ class CBreindex
                     $subtbl = tbl('subscriptions');
                     $subscriptions_count = Clipbucket_db::getInstance()->count($subtbl,
                         $subtbl . '.subscription_id',
-                        $subtbl . '.userid = ' . $params['user']);
+                        $subtbl . '.userid = ' . (int)$params['user']);
                     $arr[] = $subscriptions_count;
                 }
 
@@ -85,7 +85,7 @@ class CBreindex
                     $ftbl = tbl('favorites');
                     $favs_count = Clipbucket_db::getInstance()->count($ftbl,
                         $ftbl . '.favorite_id',
-                        $ftbl . '.id = ' . $params['video_id'] . ' AND ' . $ftbl . '.type = \'v\'');
+                        $ftbl . '.id = ' . (int)$params['video_id'] . ' AND ' . $ftbl . '.type = \'v\'');
                     $arr[] = $favs_count;
                 }
 
@@ -93,7 +93,7 @@ class CBreindex
                     $ptbl = tbl('playlist_items');
                     $playlist_count = Clipbucket_db::getInstance()->count($ptbl,
                         $ptbl . '.playlist_item_id',
-                        $ptbl . '.object_id = ' . $params['video_id'] . ' AND ' . $ptbl . '.playlist_item_type = \'v\'');
+                        $ptbl . '.object_id = ' . (int)$params['video_id'] . ' AND ' . $ptbl . '.playlist_item_type = \'v\'');
                     $arr[] = $playlist_count;
                 }
 
@@ -101,7 +101,7 @@ class CBreindex
 
             case 'photos':
                 if ($params['favorite_count']) {
-                    $fav_count = Clipbucket_db::getInstance()->count(tbl('favorites'), 'favorite_id', tbl('favorites.id') . ' = ' . $params['photo_id'] . ' AND ' . tbl('favorites.type') . ' = \'p\' ');
+                    $fav_count = Clipbucket_db::getInstance()->count(tbl('favorites'), 'favorite_id', tbl('favorites.id') . ' = ' . (int)$params['photo_id'] . ' AND ' . tbl('favorites.type') . ' = \'p\' ');
                     $arr[] = $fav_count;
                 }
 
@@ -117,7 +117,7 @@ class CBreindex
 
             case 'collections':
                 if ($params['favorite_count']) {
-                    $fav_count = Clipbucket_db::getInstance()->count(tbl('favorites'), 'favorite_id', tbl('favorites.id') . ' = ' . $params['collection_id'] . ' AND ' . tbl('favorites.type') . ' = \'cl\' ');
+                    $fav_count = Clipbucket_db::getInstance()->count(tbl('favorites'), 'favorite_id', tbl('favorites.id') . ' = ' . (int)$params['collection_id'] . ' AND ' . tbl('favorites.type') . ' = \'cl\' ');
                     $arr[] = $fav_count;
                 }
 
@@ -138,23 +138,23 @@ class CBreindex
      * indexes
      * @throws Exception
      */
-    function update_index($type, $params = null)
+    function update_index($type, $params = null): void
     {
         switch ($type) {
             case 'users':
-                Clipbucket_db::getInstance()->update(tbl($this->utbl), $params['fields'], $params['values'], tbl($this->utbl) . '.userid = ' . $params['user']);
+                Clipbucket_db::getInstance()->update(tbl($this->utbl), $params['fields'], $params['values'], tbl($this->utbl) . '.userid = ' . (int)$params['user']);
                 break;
 
             case 'videos':
-                Clipbucket_db::getInstance()->update(tbl($this->vtbl), $params['fields'], $params['values'], tbl($this->vtbl) . '.videoid = ' . $params['video_id']);
+                Clipbucket_db::getInstance()->update(tbl($this->vtbl), $params['fields'], $params['values'], tbl($this->vtbl) . '.videoid = ' . (int)$params['video_id']);
                 break;
 
             case 'photos':
-                Clipbucket_db::getInstance()->update(tbl('photos'), $params['fields'], $params['values'], tbl('photos.photo_id') . ' = ' . $params['photo_id']);
+                Clipbucket_db::getInstance()->update(tbl('photos'), $params['fields'], $params['values'], tbl('photos.photo_id') . ' = ' . (int)$params['photo_id']);
                 break;
 
             case 'collections':
-                Clipbucket_db::getInstance()->update(tbl('collections'), $params['fields'], $params['values'], tbl('collections.collection_id') . ' = ' . $params['collection_id']);
+                Clipbucket_db::getInstance()->update(tbl('collections'), $params['fields'], $params['values'], tbl('collections.collection_id') . ' = ' . (int)$params['collection_id']);
                 break;
         }
     }

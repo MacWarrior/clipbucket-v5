@@ -43,9 +43,9 @@
         </div>
         <div class="col-md-4">
             <h4>Current Watermark</h4>
-            {assign var=file value=CBPhotos::getInstance()->watermark_file()}
+            {assign var=file value=PhotoThumbs::watermark_file()}
             {if $file}
-            <img src="{CBPhotos::getInstance()->watermark_file()}" />
+                <img src="{$file}" />
             {else}
             <p>Watermark not found</p>
             {/if}

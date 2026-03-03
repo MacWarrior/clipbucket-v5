@@ -2,6 +2,7 @@
 $min_suffixe = System::isInDev() ? '' : '.min';
 ClipBucket::getInstance()->addCSS([
     'bootstrap.min.css'                                 => 'admin',
+    'bootstrap.clipbucket' . $min_suffixe . '.css'      => 'admin',
     'fortawesome/font-awesome/css/font-awesome.min.css' => 'vendor',
     'icon-font.css'                                     => 'admin',
     'all' . $min_suffixe . '.css'                       => 'admin',

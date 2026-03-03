@@ -4,6 +4,10 @@ const PARENT_PAGE = 'upload';
 require 'includes/config.inc.php';
 
 User::getInstance()->hasPermissionOrRedirect('allow_photo_upload', true);
+if (!Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '14')) {
+    sessionMessageHandler::add_message('Sorry, you cannot upload new photos until the application has been fully updated by an administrator', 'e', User::getInstance()->getDefaultHomepageFromUserLevel());
+}
+
 subtitle(lang('photos_upload'));
 if (isset($_GET['collection'])) {
     $selected_collection = CBPhotos::getInstance()->decode_key($_GET['collection']);

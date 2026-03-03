@@ -1,5 +1,5 @@
 <?php
-class User
+class User extends Objects
 {
     private static $user;
     private $tablename = '';
@@ -15,6 +15,7 @@ class User
     private $user_notification_contact;
 
     private $default_homepage_list = [];
+    public const TYPE = 'user';
 
     /**
      * @throws Exception
@@ -399,7 +400,7 @@ class User
         }
 
         if( $param_category ){
-            $conditions[] = 'categories.category_id = ' . mysql_clean($param_category);
+            $conditions[] = 'categories.category_id = ' . (int)$param_category;
         }
 
         if( $param_email ){
@@ -696,7 +697,7 @@ class User
             if( file_exists($file) ){
                 unlink($file);
             }
-            Clipbucket_db::getInstance()->update(tbl('users'), ['background'], [''], ' userid = ' . mysql_clean($userid));
+            Clipbucket_db::getInstance()->update(tbl('users'), ['background'], [''], ' userid = ' . (int)$userid);
         }
     }
 
@@ -842,7 +843,7 @@ class User
     public function getPeriodMaxStorageUseByUser(int $userid, string $date_start, string $date_end): int
     {
         $sql = 'SELECT MAX(storage_used) AS storage_used FROM ' . tbl('users_storage_histo') . ' 
-        WHERE id_user = ' . mysql_clean($userid) . ' 
+        WHERE id_user = ' . (int)$userid . ' 
         AND datetime BETWEEN \'' . mysql_clean($date_start) . '\' AND \'' . mysql_clean($date_end) . '\' 
         GROUP BY id_user ';
         $results = Clipbucket_db::getInstance()->_select($sql);
@@ -874,7 +875,7 @@ class User
     public function removeUserFromContact(): void
     {
         $uid = $this->get('userid');
-        Clipbucket_db::getInstance()->execute('DELETE FROM ' . tbl('contacts') . ' WHERE userid = ' . $uid . ' OR contact_userid = ' . $uid);
+        Clipbucket_db::getInstance()->execute('DELETE FROM ' . tbl('contacts') . ' WHERE userid = ' . (int)$uid . ' OR contact_userid = ' . (int)$uid);
     }
 
     /**
@@ -898,9 +899,7 @@ class User
      */
     public function getFavoritesVideos(): array
     {
-        $uid = $this->get('userid');
-        $sql = ' SELECT id AS videoid FROM ' . tbl('favorites') . ' WHERE userid = ' . (int)$uid . ' AND type=\'v\'';
-        $results = Clipbucket_db::getInstance()->_select($sql);
+        $results = Video::getInstance()->getAllFavorites();
         if ( empty($results)) {
             return [];
         }
@@ -987,7 +986,7 @@ class User
         if( empty($levelDetails) ){
             return false;
         }
-        $sql = 'UPDATE ' . cb_sql_table('user_levels') . ' SET user_level_active = ' . ($activate ? '\'yes\'' : '\'no\'' ) . ' WHERE user_level_id = ' . mysql_clean($user_level_id) ;
+        $sql = 'UPDATE ' . cb_sql_table('user_levels') . ' SET user_level_active = ' . ($activate ? '\'yes\'' : '\'no\'' ) . ' WHERE user_level_id = ' . (int)$user_level_id;
         return (bool)Clipbucket_db::getInstance()->execute($sql);
     }
 
@@ -1195,9 +1194,9 @@ class User
         //Finally Removing Database entry of user
         Clipbucket_db::getInstance()->execute('DELETE FROM ' . tbl('users_storage_histo') . ' WHERE id_user =' . (int)$uid);
         Clipbucket_db::getInstance()->execute('DELETE FROM ' . tbl('email_histo') . ' WHERE userid =' . (int)$uid);
-        Clipbucket_db::getInstance()->execute('DELETE FROM ' . tbl('favorites') . ' WHERE userid =' . (int)$uid);
         Clipbucket_db::getInstance()->execute('DELETE FROM ' . tbl('user_profile') . ' WHERE userid =' . (int)$uid);
         Clipbucket_db::getInstance()->execute('DELETE FROM ' . tbl('users') . ' WHERE userid =' . (int)$uid);
+        User::getInstance()->removeFromFavoritesForAllUsers((int)$uid);
     }
 
     /**
@@ -1908,7 +1907,7 @@ class userquery extends CBCategory
         Clipbucket_db::getInstance()->delete(tbl('video_users'), ['userid'], [(int)$uid]);
         Clipbucket_db::getInstance()->execute('DELETE FROM ' . tbl('users_storage_histo') . ' WHERE id_user =' . (int)$uid);
         Clipbucket_db::getInstance()->execute('DELETE FROM ' . tbl('email_histo') . ' WHERE userid =' . (int)$uid);
-        Clipbucket_db::getInstance()->execute('DELETE FROM ' . tbl('favorites') . ' WHERE userid =' . (int)$uid);
+        User::getInstance()->removeFromFavoritesForAllUsers((int)$uid);
         Clipbucket_db::getInstance()->execute('DELETE FROM ' . tbl('user_profile') . ' WHERE userid =' . (int)$uid);
         Clipbucket_db::getInstance()->execute('DELETE FROM ' . tbl('users') . ' WHERE userid =' . (int)$uid);
 
@@ -2390,17 +2389,17 @@ class userquery extends CBCategory
     {
 
         $sql = 'select * FROM `'.tbl('subscriptions').'`
-        WHERE subscribed_to = '.mysql_clean($user_id).' AND userid NOT IN (
-            SELECT userid FROM cb_contacts WHERE contact_userid = '.mysql_clean($user_id).'
+        WHERE subscribed_to = ' . (int)$user_id . ' AND userid NOT IN (
+            SELECT userid FROM cb_contacts WHERE contact_userid = ' . (int)$user_id . '
         );';
         $res = Clipbucket_db::getInstance()->_select($sql);
         foreach ($res as $subscription) {
             Clipbucket_db::getInstance()->delete(tbl('subscriptions'), ['subscription_id'], [$subscription['subscription_id']]);
             Clipbucket_db::getInstance()->update(tbl($this->dbtbl['users']), ['subscribers'],
-                [$this->get_user_subscribers($subscription['subscribed_to'], true)], " userid=".$subscription['subscribed_to']);
+                [$this->get_user_subscribers($subscription['subscribed_to'], true)], ' userid = ' . (int)$subscription['subscribed_to']);
         }
         Clipbucket_db::getInstance()->update(tbl($this->dbtbl['users']), ['total_subscriptions'],
-            [$this->get_user_subscriptions($user_id, 'count')], " userid=".$user_id);
+            [$this->get_user_subscriptions($user_id, 'count')], ' userid = ' . (int)$user_id);
     }
 
 
@@ -2412,7 +2411,7 @@ class userquery extends CBCategory
      */
     function increment_watched_videos($userid): void
     {
-        Clipbucket_db::getInstance()->update(tbl($this->dbtbl['users']), ['total_watched'], ['|f|total_watched+1'], ' userid=\'' . $userid . '\'');
+        Clipbucket_db::getInstance()->update(tbl($this->dbtbl['users']), ['total_watched'], ['|f|total_watched+1'], ' userid = ' . (int)$userid);
     }
 
     /**
@@ -3151,7 +3150,7 @@ class userquery extends CBCategory
         $query = 'SELECT ' . implode(', ', $select) . '
                     FROM ' . tbl($this->dbtbl['user_profile']) . ' UP
                    ' . $join . '
-                    WHERE UP.userid = ' . mysql_clean($uid) . '
+                    WHERE UP.userid = ' . (int)$uid . '
                    ' . (empty($group) ? '' : ' GROUP BY ' . implode(', ', $group));
         $result = Clipbucket_db::getInstance()->_select($query, 60);
 
@@ -3257,6 +3256,8 @@ class userquery extends CBCategory
                 e(lang('usr_email_err1'));
             } elseif (!Email::isValid($array['email'])) {
                 e(lang('usr_email_err2'));
+            } elseif (config('enable_allow_alias_email') != 'yes' && str_contains($array['email'], '+')) {
+                e(lang('error_alias_email_not_allowed'));
             } elseif (email_exists($array['email']) && $array['email'] != $array['demail']) {
                 e(lang('usr_email_err3'));
             } else {
@@ -3601,15 +3602,14 @@ class userquery extends CBCategory
 
         if (rename($data['filepath'], $file_path)) {
             unlink($data['filepath']);
-            $imgObj = new ResizeImage();
-            if (!$imgObj->ValidateImage($file_path,  $data['extension'])) {
+            if (!VideoThumbs::ValidateImage($file_path,  $data['extension'])) {
                 @unlink($file_path);
                 return [
                     'status' => false,
                     'msg'    => 'Invalid file type'
                 ];
             }
-            Clipbucket_db::getInstance()->update(tbl('users'), ['background'], [$file_name], ' userid = ' . mysql_clean($data['user_id']));
+            Clipbucket_db::getInstance()->update(tbl('users'), ['background'], [$file_name], ' userid = ' . (int)$data['user_id']);
             return [
                 'status' => true,
                 'msg'    => 'Succesfully Uploaded'
@@ -4344,6 +4344,12 @@ class userquery extends CBCategory
                     }
                 }
 
+                if ($name == 'email') {
+                    if (config('enable_allow_alias_email')!='yes' && str_contains($val,'+')) {
+                        e(lang('error_alias_email_not_allowed'));
+                        return false;
+                    }
+                }
 
                 if (!empty($field['db_field'])) {
                     $query_field[] = $field['db_field'];
@@ -5629,72 +5635,6 @@ class userquery extends CBCategory
     }
 
     /**
-     * Used to rate photo
-     *
-     * @param $id
-     * @param $rating
-     *
-     * @return array
-     * @throws Exception
-     */
-    function rate_user($id, $rating): array
-    {
-        if (!is_numeric($rating) || $rating <= 9) {
-            $rating = 0;
-        }
-        if ($rating >= 10) {
-            $rating = 10;
-        }
-
-        $c_rating = $this->current_rating($id);
-        $voters = $c_rating['voters'];
-        $new_rate = $c_rating['rating'];
-        $rated_by = $c_rating['rated_by'];
-
-        $voters = json_decode($voters, true);
-
-        if (!empty($voters)) {
-            $already_voted = array_key_exists(user_id(), $voters);
-        }
-
-        if (!user_id()) {
-            e(lang('please_login_to_rate'));
-        } elseif (user_id() == $c_rating['userid'] && !config('own_channel_rating')) {
-            e(lang('you_cant_rate_own_channel'));
-        } elseif (!empty($already_voted)) {
-            e(lang('you_have_already_voted_channel'));
-        } elseif ($c_rating['allow_ratings'] == 'no' || !config('channel_rating')) {
-            e(lang('channel_rating_disabled'));
-        } else {
-            $voters[user_id()] = [
-                'userid'   => user_id(),
-                'username' => user_name(),
-                'time'     => now(),
-                'rating'   => $rating
-            ];
-            $voters = json_encode($voters);
-
-            $t = $c_rating['rated_by'] * $c_rating['rating'];
-            $rated_by = $c_rating['rated_by'] + 1;
-            $new_rate = ($t + $rating) / $rated_by;
-            Clipbucket_db::getInstance()->update(tbl('user_profile'), ['rating', 'rated_by', 'voters'], ["$new_rate", "$rated_by", "|no_mc|$voters"], ' userid = ' . $id . '');
-            $userDetails = [
-                'object_id' => $id,
-                'type'      => 'user',
-                'time'      => now(),
-                'rating'    => $rating,
-                'userid'    => user_id(),
-                'username'  => user_name()
-            ];
-            /* Updating user details */
-            update_user_voted($userDetails);
-            e(lang('thnx_for_voting'), 'm');
-        }
-
-        return ['rating' => $new_rate, 'rated_by' => $rated_by, 'total' => 10, 'id' => $id, 'type' => 'user', 'disable' => 'disabled'];
-    }
-
-    /**
      * Used to get current rating
      *
      * @param $id
@@ -5704,7 +5644,7 @@ class userquery extends CBCategory
      */
     function current_rating($id)
     {
-        $result = Clipbucket_db::getInstance()->select(tbl('user_profile'), 'userid,allow_ratings,rating,rated_by,voters', ' userid = ' . mysql_clean($id) );
+        $result = Clipbucket_db::getInstance()->select(tbl('user_profile'), 'userid,allow_ratings,rating,rated_by,voters', ' userid = ' . (int)$id);
         if ($result) {
             return $result[0];
         }
@@ -5762,7 +5702,7 @@ class userquery extends CBCategory
                 'video_title'       => $vidDetails['title'],
                 'video_description' => $vidDetails['description'],
                 'video_link'        => video_link($vidDetails),
-                'video_thumb'       => DirPath::getUrl('root') . get_thumb($vidDetails)
+                'video_thumb'       => VideoThumbs::getDefaultThumbFile($vidDetails['videoid'])
             ];
             foreach ($subscribers as $subscriber) {
                 EmailTemplate::sendMail('video_subscription', $subscriber['userid'], $var);
@@ -5816,18 +5756,9 @@ class userquery extends CBCategory
             $voted = '';
             $votedDetails = Clipbucket_db::getInstance()->select(tbl('users'), 'voted', " userid = '$userid'");
             if (!empty($votedDetails)) {
-                if (!empty($js)) {
-                    $voted = $js->json_decode($votedDetails[0]['voted'], true);
-                } else {
-                    $voted = json_decode($votedDetails[0]['voted'], true);
-                }
+                $voted = json_decode($votedDetails[0]['voted'], true);
             }
-
-            if (!empty($js)) {
-                $votedEncode = $js->json_encode($voted);
-            } else {
-                $votedEncode = json_encode($voted);
-            }
+            $votedEncode = json_encode($voted);
 
             if (!empty($votedEncode)) {
                 Clipbucket_db::getInstance()->update(tbl('users'), ['voted'], ["|no_mc|$votedEncode"], " userid='$userid'");

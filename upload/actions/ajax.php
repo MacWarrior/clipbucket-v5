@@ -206,63 +206,6 @@ if (!empty($mode)) {
                 }
             }
             break;
-
-        case 'add_to_fav':
-            if (!User::getInstance()->isUserConnected()) {
-                e(lang('please_login'));
-            }elseif (empty($_POST['type']) || empty($_POST['id'])) {
-                e(lang('missing_params'));
-            } else {
-
-                $type = strtolower($_POST['type']);
-                $id = $_POST['id'];
-                switch ($type) {
-                    case 'v':
-                    case 'video':
-                    default:
-                        CBvideo::getInstance()->action->add_to_fav($id);
-                        updateObjectStats('fav', 'video', $id); // Increment in total favs
-                        $funcs = cb_get_functions('favorite_video');
-                        break;
-
-                    case 'p':
-                    case 'photo':
-                        CBPhotos::getInstance()->action->add_to_fav($id);
-                        updateObjectStats('fav', 'photo', $id); // Increment in total favs
-                        $funcs = cb_get_functions('favorite_photo');
-                        break;
-
-                    case 'cl':
-                    case 'collection':
-                        Collections::getInstance()->action->add_to_fav($id);
-                        $funcs = cb_get_functions('favorite_collection');
-                        break;
-                }
-
-                if ($funcs) {
-                    foreach ($funcs as $func) {
-                        $func['func']($id);
-                    }
-                }
-            }
-
-            $error = errorhandler::getInstance()->get_error();
-            $warning = errorhandler::getInstance()->get_warning();
-            $message = errorhandler::getInstance()->get_message();
-
-            if ($error) {
-                echo '<div class="error">' . $error[0]['val'] . '</div>';
-            } else {
-                if ($warning) {
-                    echo '<div class="warning">' . $warning[0]['val'] . '</div>';
-                } else {
-                    if ($message) {
-                        echo '<div class="msg">' . $message[0]['val'] . '</div>';
-                    }
-                }
-            }
-            break;
-
         case 'flag_object':
             $type = strtolower($_POST['type']);
             $id = $_POST['id'];
@@ -684,7 +627,11 @@ if (!empty($mode)) {
             break;
 
         case 'add_collection':
-            if (empty($_POST['collection_name']) || empty($_POST['collection_description']) || empty($_POST['category']) ) {
+            if (empty($_POST['collection_name'])
+                || empty($_POST['collection_description'])
+                || (
+                    empty($_POST['category']) && config('enable_collection_categories') == 'yes')
+                ) {
                 e(lang('missing_params'));
                 $insert_id = 0;
             } else {
@@ -802,33 +749,6 @@ if (!empty($mode)) {
 
                 Template('blocks/comments/comments.html');
                 Template('blocks/pagination.html');
-            }
-            break;
-
-        case 'photo_ajax':
-            try {
-                if (!User::getInstance()->hasPermission('view_photo')) {
-                    throw new Exception(lang('insufficient_privileges'));
-                }
-                if (!empty($_POST['photo_pre']) && !empty($_POST['item'])) {
-                    $photo = $_POST['photo_pre'];
-                    $items = $_POST['item'];
-                    $ci_id = $photo['ci_id'];
-                    $collection = $photo['collection_id'];    // collection id.
-                    $link = Collections::getInstance()->get_next_prev_item($ci_id, $collection, $items, $limit = 1, $check_only = false); // getting Previous item
-                    $srcString = '/files/photos/' . $link[0]['file_directory'] . '/' . $link[0]['filename'] . '.' . $link[0]['ext']; // Image Source...
-                    $response['photo'] = $link;
-                    $response['photo_key'] = $link[0]['photo_key'];
-                    $response['src_string'] = $srcString; // Image source.
-                    $response['collection_id'] = $collection;
-                    echo json_encode($response);
-                } else {
-                    throw new Exception(lang('missing_params'));
-                }
-            } catch (Exception $e) {
-                $response["error_ex"] = true;
-                $response["msg"] = 'Message: ' . $e->getMessage();
-                echo(json_encode($response));
             }
             break;
 

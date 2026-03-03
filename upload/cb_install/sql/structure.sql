@@ -54,6 +54,7 @@ CREATE TABLE `{tbl_prefix}collections` (
   `userid` int(10) NOT NULL,
   `date_added` datetime NOT NULL,
   `featured` varchar(4) NOT NULL DEFAULT 'no',
+  `hierarchy_featured` ENUM('yes', 'no') DEFAULT 'no',
   `broadcast` varchar(10) NOT NULL,
   `allow_comments` enum('yes','no') NOT NULL DEFAULT 'yes',
   `allow_rating` enum('yes','no') NOT NULL DEFAULT 'yes',
@@ -138,13 +139,22 @@ CREATE TABLE `{tbl_prefix}email_templates` (
   `email_template` text NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_520_ci;
 
+CREATE TABLE IF NOT EXISTS `{tbl_prefix}object_type`
+(
+    `id_object_type`   INT         NOT NULL AUTO_INCREMENT,
+    `name`             VARCHAR(32) NOT NULL UNIQUE ,
+    PRIMARY KEY (`id_object_type`)
+) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE utf8mb4_unicode_520_ci;
+
 CREATE TABLE `{tbl_prefix}favorites` (
-  `favorite_id` int(225) NOT NULL,
-  `type` varchar(4) NOT NULL,
-  `id` int(225) NOT NULL,
-  `userid` int(225) NOT NULL,
-  `date_added` datetime NOT NULL
+  `favorite_id` INT(225) NOT NULL,
+  `id_type` INT NOT NULL,
+  `id` INT(225) NOT NULL,
+  `userid` BIGINT(20) NOT NULL,
+  `date_added` DATETIME NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_520_ci;
+
+
 
 CREATE TABLE `{tbl_prefix}flags`
 (
@@ -155,13 +165,6 @@ CREATE TABLE `{tbl_prefix}flags`
     `id_flag_type`         INT        NOT NULL,
     `date_added`           DATETIME   NOT NULL,
     PRIMARY KEY (`flag_id`)
-) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE utf8mb4_unicode_520_ci;
-
-CREATE TABLE IF NOT EXISTS `{tbl_prefix}flag_element_type`
-(
-    `id_flag_element_type` INT         NOT NULL AUTO_INCREMENT,
-    `name`                 VARCHAR(32) NOT NULL UNIQUE ,
-    PRIMARY KEY (`id_flag_element_type`)
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE utf8mb4_unicode_520_ci;
 
 CREATE TABLE IF NOT EXISTS `{tbl_prefix}flag_type`
@@ -251,7 +254,6 @@ CREATE TABLE `{tbl_prefix}photos` (
   `downloaded` bigint(255) NOT NULL DEFAULT 0,
   `server_url` text NULL DEFAULT NULL,
   `owner_ip` varchar(45) NOT NULL DEFAULT '',
-  `photo_details` text NULL DEFAULT NULL,
   `age_restriction` INT DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_520_ci;
 
@@ -499,7 +501,7 @@ CREATE TABLE `{tbl_prefix}video` (
   `userid` int(11) NULL DEFAULT NULL,
   `title` text DEFAULT NULL,
   `file_name` varchar(32) NOT NULL DEFAULT '',
-  `file_type` VARCHAR(3) NULL DEFAULT NULL,
+  `file_type` VARCHAR(4) NULL DEFAULT NULL,
   `file_directory` varchar(25) NOT NULL DEFAULT '',
   `description` text DEFAULT NULL,
   `broadcast` varchar(10) NOT NULL DEFAULT '',
@@ -532,12 +534,12 @@ CREATE TABLE `{tbl_prefix}video` (
   `uploader_ip` varchar(45) NOT NULL DEFAULT '',
   `video_files` tinytext NULL DEFAULT NULL,
   `file_server_path` text NULL DEFAULT NULL,
-  `video_version` varchar(8) NOT NULL DEFAULT '5.5.1',
-  `thumbs_version` varchar(8) NOT NULL DEFAULT '5.5.1',
+  `video_version` varchar(8) NOT NULL DEFAULT '5.5.3',
   `is_castable` tinyint(1) NOT NULL DEFAULT 0,
   `bits_color` tinyint(4) DEFAULT NULL,
   `subscription_email` enum('pending','sent') NOT NULL DEFAULT 'pending',
   `age_restriction` INT DEFAULT NULL,
+  `default_thumbnail` int NULL DEFAULT NULL,
   `default_poster` int(3) NULL DEFAULT NULL,
   `default_backdrop` int(3) NULL DEFAULT NULL,
   `fov` varchar(3) NULL DEFAULT NULL,
@@ -838,21 +840,6 @@ ALTER TABLE `{tbl_prefix}languages_translations`
     ADD CONSTRAINT `languages_translations_ibfk_1` FOREIGN KEY (`language_id`) REFERENCES `{tbl_prefix}languages` (`language_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
     ADD CONSTRAINT `languages_translations_ibfk_2` FOREIGN KEY (`id_language_key`) REFERENCES `{tbl_prefix}languages_keys` (`id_language_key`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
-CREATE TABLE `{tbl_prefix}video_thumbs`(
-    `videoid`    BIGINT(20)  NOT NULL,
-    `resolution` VARCHAR(16) NOT NULL,
-    `num`        VARCHAR(4)  NOT NULL,
-    `extension`  VARCHAR(4)  NOT NULL,
-    `version`    VARCHAR(30) NOT NULL,
-    `type`       VARCHAR(15) NOT NULL,
-    PRIMARY KEY `resolution` (`videoid`, `resolution`, `num`),
-    KEY `videoid` (`videoid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_520_ci;
-
-ALTER TABLE `{tbl_prefix}video_thumbs`
-    ADD CONSTRAINT `video_thumbs_ibfk_1` FOREIGN KEY (`videoid`) REFERENCES `{tbl_prefix}video` (`videoid`) ON DELETE RESTRICT ON UPDATE NO ACTION,
-    ADD INDEX(`type`);
-
 CREATE TABLE `{tbl_prefix}tools`(
     `id_tool`                  INT          NOT NULL AUTO_INCREMENT,
     `language_key_label`       VARCHAR(128) NOT NULL,
@@ -972,17 +959,17 @@ ALTER TABLE `{tbl_prefix}categories`
     ADD CONSTRAINT `categorie_parent` FOREIGN KEY (`parent_id`) REFERENCES `{tbl_prefix}categories` (`category_id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 ALTER TABLE `{tbl_prefix}categories` ADD FULLTEXT KEY `categorie` (`category_name`);
 
-CREATE TABLE IF NOT EXISTS `{tbl_prefix}categories_type`
+CREATE TABLE IF NOT EXISTS `{tbl_prefix}object_type`
 (
-    `id_category_type` INT         NOT NULL AUTO_INCREMENT,
+    `id_object_type`   INT         NOT NULL AUTO_INCREMENT,
     `name`             VARCHAR(32) NOT NULL UNIQUE ,
-    PRIMARY KEY (`id_category_type`)
+    PRIMARY KEY (`id_object_type`)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4
   COLLATE utf8mb4_unicode_520_ci;
 
 ALTER TABLE `{tbl_prefix}categories`
-    ADD CONSTRAINT `categorie_type` FOREIGN KEY (`id_category_type`) REFERENCES `{tbl_prefix}categories_type` (`id_category_type`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+    ADD CONSTRAINT `categorie_type` FOREIGN KEY (`id_category_type`) REFERENCES `{tbl_prefix}object_type` (`id_object_type`) ON DELETE RESTRICT ON UPDATE RESTRICT;
 
 CREATE TABLE IF NOT EXISTS `{tbl_prefix}videos_categories`
 (
@@ -1222,7 +1209,7 @@ ALTER TABLE `{tbl_prefix}email_variable_link`
     ADD CONSTRAINT `email_variable_link_email_variable_email_fk` FOREIGN KEY (`id_email_variable`) REFERENCES `{tbl_prefix}email_variable` (`id_email_variable`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 ALTER TABLE `{tbl_prefix}flags`
-    ADD CONSTRAINT `fk_id_flag_element_type` FOREIGN KEY (`id_flag_element_type`) REFERENCES `{tbl_prefix}flag_element_type` (`id_flag_element_type`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+    ADD CONSTRAINT `fk_id_flag_element_type_new` FOREIGN KEY (`id_flag_element_type`) REFERENCES `{tbl_prefix}object_type` (`id_object_type`) ON DELETE NO ACTION ON UPDATE NO ACTION,
     ADD CONSTRAINT `fk_id_flag_type` FOREIGN KEY (`id_flag_type`) REFERENCES `{tbl_prefix}flag_type` (`id_flag_type`) ON DELETE NO ACTION ON UPDATE NO ACTION,
     ADD CONSTRAINT `fk_flag_userid` FOREIGN KEY (`userid`) REFERENCES `{tbl_prefix}users` (`userid`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
@@ -1305,6 +1292,58 @@ CREATE TABLE `{tbl_prefix}video_conversion_queue`
 
 ALTER TABLE `{tbl_prefix}video_conversion_queue`
     ADD CONSTRAINT `video_conversion_fk` FOREIGN KEY (`videoid`) REFERENCES `{tbl_prefix}video` (`videoid`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+ALTER TABLE `{tbl_prefix}favorites`
+    ADD CONSTRAINT `fk_id_favorite_type` FOREIGN KEY (`id_type`) REFERENCES `{tbl_prefix}object_type` (`id_object_type`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+    ADD CONSTRAINT `fk_favorites_userid` FOREIGN KEY (`userid`) REFERENCES `{tbl_prefix}users` (`userid`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+CREATE TABLE `{tbl_prefix}video_image`
+(
+    id_video_image INT                                     NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    videoid        BIGINT(20)                              NOT NULL,
+    type           ENUM ('thumbnail','poster', 'backdrop') NOT NULL,
+    num            INT                                     NOT NULL,
+    is_auto        BOOL DEFAULT TRUE                       NOT NULL,
+    UNIQUE KEY (videoid, type, num, is_auto)
+);
+
+ALTER TABLE `{tbl_prefix}video_image`
+    ADD CONSTRAINT `video_image_ibfk_1` FOREIGN KEY (videoid) REFERENCES `{tbl_prefix}video` (videoid);
+
+CREATE TABLE `{tbl_prefix}video_thumb`
+(
+    id_video_thumb   INT                NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    id_video_image   INT                NOT NULL,
+    width            INT                NOT NULL,
+    height           INT                NOT NULL,
+    extension        VARCHAR(4)         NOT NULL,
+    version          VARCHAR(16)        NOT NULL,
+    is_original_size BOOL DEFAULT FALSE NOT NULL,
+    UNIQUE KEY (id_video_image, width, height)
+);
+ALTER TABLE `{tbl_prefix}video_thumb`
+    ADD CONSTRAINT `video_thumb_ibfk_1` FOREIGN KEY (id_video_image) REFERENCES `{tbl_prefix}video_image` (id_video_image);
+
+CREATE TABLE `{tbl_prefix}photo_thumb`
+(
+    id_photo_thumb   INT                NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    photo_id         BIGINT(255)        NOT NULL,
+    width            INT                NOT NULL,
+    extension        VARCHAR(4)         NOT NULL,
+    version          VARCHAR(16)        NOT NULL,
+    is_original_size BOOL DEFAULT FALSE NOT NULL,
+    UNIQUE KEY (photo_id, width)
+);
+ALTER TABLE `{tbl_prefix}photo_thumb`
+    ADD CONSTRAINT `photo_thumb_ibfk_1` FOREIGN KEY (photo_id) REFERENCES `{tbl_prefix}photos` (photo_id);
+
+ALTER TABLE `{tbl_prefix}video`
+    ADD CONSTRAINT `video_default_poster_ibfk_1` FOREIGN KEY (default_poster) REFERENCES `{tbl_prefix}video_image` (id_video_image) ON DELETE SET NULL;
+ALTER TABLE `{tbl_prefix}video`
+    ADD CONSTRAINT `video_default_backdrop_ibfk_1` FOREIGN KEY (default_backdrop) REFERENCES `{tbl_prefix}video_image` (id_video_image) ON DELETE SET NULL;
+ALTER TABLE `{tbl_prefix}video`
+    ADD CONSTRAINT `video_default_thumb_ibfk_1` FOREIGN KEY (default_thumbnail) REFERENCES `{tbl_prefix}video_image` (id_video_image) ON DELETE SET NULL;
+
 CREATE TABLE `{tbl_prefix}currency`
 (
     `id_currency` INT(20) NOT NULL AUTO_INCREMENT PRIMARY KEY,

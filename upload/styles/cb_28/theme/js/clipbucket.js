@@ -751,7 +751,7 @@
 			};
 		}
 
-		this.throwHeadMsg = function(tclass, msg, hideAfter,scroll) {
+		this.throwHeadMsg = function(tclass, msg, hideAfter) {
 			$(document).find('#headErr').remove();
 			hideAfter = parseInt(hideAfter);
 
@@ -765,6 +765,14 @@
 
 			$('<div id="headErr" class="alert_messages_holder" style="display:none;"><div class="alert alert-'+tclass+' alert-messages alert-ajax" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>'+msg+'</div></div>').insertAfter('#header').fadeIn('slow').delay(hideAfter).fadeOut();
 		};
+		this.throwHeadDivMsg = function(msg, hideAfter) {
+			$(document).find('#headErr').remove();
+			hideAfter = parseInt(hideAfter);
+			if (hideAfter < 10) {
+				hideAfter = 3000;
+			}
+			$('<div id="headErr" class="alert_messages_holder alert-ajax" style="display:none;">'+msg+'</div>').insertAfter('#header').fadeIn('slow').delay(hideAfter).fadeOut();
+		};
 
 		/**
 		 * New improved version of ClipBucket rating system
@@ -772,58 +780,71 @@
 		 * @author: Saqib Razzaq
 		 */
 
-		this.rateNew = function (id,rating,type) {
-			curObj = this;
-			var page = baseurl+'actions/ajax.php';
-			$.post(page, {
-					mode : 'rating',
-					id:id,
-					rating:rating,
-					type:type
-				},
-				function(data)
-				{
-					if(!data) {
-						alert('No data');
-					} else {
-						likesSect = $('.likes').find('span:nth-child(2)').html();
-						dislikesSect = $('.dislikes').find('span:nth-child(2)').html();
-						currLikes = parseInt(likesSect);
-						currDislikes = parseInt(dislikesSect);
-
-						isError = $(data).find('span.error').html();
-						isOk = $(data).find('span.msg').html();
-						if (isError) {
-							if (isError.length > 2) {
-								curObj.throwHeadMsg('danger',isError, 5000, true);
-							}
-						} else if (isOk) {
-							if (isOk.length > 2) {
-								if (rating == 5) {
-									newRating = currLikes + 1;
-									$('.likes').addClass('rated').find('span:nth-child(2)').html(newRating);
-								} else {
-									newRating = currDislikes + 1;
+        this.rateNew = function (id, rating, type) {
+            curObj = this;
+            var page = baseurl + 'actions/rating_update.php';
+            $.post(page, {
+                    id: id,
+                    rating: rating,
+                    type: type
+                },
+				function (data) {
+					if (data.success) {
+						const currLikes = parseInt($('.likes').find('span:nth-child(2)').html());
+						const currDislikes = parseInt($('.dislikes').find('span:nth-child(2)').html());
+						let newRating;
+						if (rating == 5) {
+							if ($('.likes').hasClass('rated')) {
+								newRating = currLikes - 1;
+								if (newRating < 0) {
+									newRating = 0;
+								}
+								$('.likes').removeClass('rated').find('span:nth-child(2)').html(newRating);
+							} else {
+								newRating = currLikes + 1;
+								$('.likes').addClass('rated').find('span:nth-child(2)').html(newRating);
+								if ($('.dislikes').hasClass('rated')) {
+									newRating = currDislikes - 1;
 									if (newRating < 0) {
 										newRating = 0;
 									}
-									$('.dislikes').addClass('rated').find('span:nth-child(2)').html(newRating);
+									$('.dislikes').removeClass('rated').find('span:nth-child(2)').html(newRating);
 								}
-								curObj.throwHeadMsg('success',isOk, 5000, true);
+							}
+						} else {
+							if ($('.dislikes').hasClass('rated')) {
+								newRating = currDislikes - 1;
+								if (newRating < 0) {
+									newRating = 0;
+								}
+								$('.dislikes').removeClass('rated').find('span:nth-child(2)').html(newRating);
+							} else {
+								newRating = currDislikes + 1;
+								$('.dislikes').addClass('rated').find('span:nth-child(2)').html(newRating);
+								if ($('.likes').hasClass('rated')) {
+									newRating = currLikes - 1;
+									if (newRating < 0) {
+										newRating = 0;
+									}
+									$('.likes').removeClass('rated').find('span:nth-child(2)').html(newRating);
+								}
 							}
 						}
 					}
-				},'text');
-		}
+					curObj.throwHeadDivMsg(data.msg, 5000, true);
+				}, 'json'
+            );
+        }
 
 		this.showMeTheMsg = function(data, alertDiv) {
-			curObj = this;
+			let curObj = this;
+			let isOk;
 			if (alertDiv == true) {
 				isOk = $(data).filter('div.msg').find('div.alert').html();
 			} else {
 				isOk = $(data).filter('div.msg').html();
 			}
-			isError = $(data).filter('div.error').html();
+			let isError = $(data).filter('div.error').html();
 
 			if (isError) {
 				if (isError.length > 2) {
@@ -854,26 +875,39 @@
 			);
 		};
 
-		this.add_to_favNew = function(type,id){
-			var curObj = this;
-			$('#video_action_result_cont').css('display','block').html(curObj.loading);
+        this.add_to_favNew = function (type, id) {
+            return this.manage_fav('add', type, id);
+        };
+        this.remove_from_fav = function (type, id) {
+            return this.manage_fav('remove', type, id);
+        };
+        this.manage_fav = function (action, type, id) {
+            var curObj = this;
+            let url = '';
+            if (action == 'remove') {
+                url = baseurl + 'actions/favorite_remove.php';
+            } else if (action == 'add') {
+                url = baseurl + 'actions/favorite_add.php';
+            } else {
+                return false;
+            }
+            $('#video_action_result_cont').css('display', 'block').html(curObj.loading);
 
-			$.post(page,
-				{
-					mode : 'add_to_fav',
-					type : type,
-					id : id
-				},
-				function(data)
-				{
-					if(!data){
-						alert('No data');
-					} else {
-						$('#video_action_result_cont').hide();
-						curObj.showMeTheMsg(data, true);
-					}
-				},'text');
-		};
+            return new Promise((resolve, reject) => {
+                $.post(url, {
+                    type: type,
+                    id: id
+                }, function (data) {
+                    if (!data.success) {
+                        reject(data);
+                    } else {
+                        resolve(data);
+                    }
+					$('#video_action_result_cont').hide();
+                    curObj.throwHeadDivMsg(data.msg, 5000, true)
+                }, 'json');
+            });
+        }
 
 		this.flag_objectNew = function(form_id,id,type){
 			var curObj = this;
@@ -1122,7 +1156,76 @@
 				},'text'
 			);
 		};
-	};
+
+
+        this.listener_favorite_old = function (type, id) {
+            const curObj = this;
+            $('.manage_favorite').on('click', function (e) {
+                let button = $(this);
+                if (button.hasClass('glyphicon-heart')) {
+                    button.removeClass('glyphicon-heart').html(curObj.loading_img);
+                    //remove fav
+                    curObj.remove_from_fav(type, id).then(function (data) {
+                        button.html('').addClass('glyphicon-heart-empty');
+                        button.attr('title', lang['add_to_my_favorites']);
+                    }).catch(function (error) {
+                        button.addClass('glyphicon-heart').html('');
+                    });
+                } else {
+                    button.removeClass('glyphicon-heart-empty').html(curObj.loading_img);
+                    curObj.add_to_favNew(type, id).then(function (data) {
+                        button.html('').addClass('glyphicon-heart');
+                        button.attr('title', lang['remove_from_favorites']);
+                    }).catch(function (error) {
+                        button.addClass('glyphicon-heart-empty').html('');
+                    });
+                }
+            });
+        }
+        this.listener_favorite = function (type, id) {
+            const curObj = this;
+            $('.manage_favorite').on('click', function (e) {
+                let button = $(this);
+                if (button.hasClass('glyphicon-heart')) {
+                    button.removeClass('glyphicon-heart').html(curObj.loading_img);
+                    //remove fav
+                    curObj.remove_from_fav(type, id).then(function (data) {
+                        button.html('').addClass('glyphicon-heart-empty');
+                        button.attr('title', lang['add_to_my_favorites']);
+                    }).catch(function (error) {
+                        button.addClass('glyphicon-heart').html('');
+                    });
+                } else {
+                    button.removeClass('glyphicon-heart-empty').html(curObj.loading_img);
+                    curObj.add_to_favNew(type, id).then(function (data) {
+                        button.html('').addClass('glyphicon-heart');
+                        button.attr('title', lang['remove_from_favorites']);
+                    }).catch(function (error) {
+                        button.addClass('glyphicon-heart-empty').html('');
+                    });
+                }
+            });
+        }
+
+        this.listener_favorite_only_remove = function (type, class_parent_need) {
+            const curObj = this;
+            let selector = '.manage_favorite';
+            if (typeof class_parent_need !== 'undefined') {
+                selector = '.' + class_parent_need + ' ' + selector;
+            }
+            $(selector).off().on('click', function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+                const button = $(this);
+                button.removeClass('glyphicon-heart').html(curObj.loading_img);
+                curObj.remove_from_fav(type, button.data('id')).then(function (data) {
+                    button.remove();
+                }).catch(function (err) {
+                    button.addClass('glyphicon-heart').html('');
+                });
+            });
+        }
+    };
 
 	window._cb = new _cb();
 

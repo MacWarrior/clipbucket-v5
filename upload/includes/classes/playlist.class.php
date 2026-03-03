@@ -68,7 +68,7 @@ class Playlist
 
         $current_user_id = user_id();
         if ($current_user_id) {
-            $cond .= ' OR (playlists.userid = ' . $current_user_id . ')';
+            $cond .= ' OR (playlists.userid = ' . (int)$current_user_id . ')';
         }
         $cond .= ')';
         return $cond;
@@ -99,13 +99,13 @@ class Playlist
 
         $conditions = [];
         if ($param_playlist_id) {
-            $conditions[] = $this->getTablename() . '.playlist_id = \'' . mysql_clean($param_playlist_id) . '\'';
+            $conditions[] = $this->getTablename() . '.playlist_id = ' . (int)$param_playlist_id;
         }
         if ($param_playlist_name) {
             $conditions[] = $this->getTablename() . '.playlist_name LIKE \'%' . mysql_clean($param_playlist_name) . '%\'';
         }
         if ($param_userid) {
-            $conditions[] = $this->getTablename() . '.userid = \'' . mysql_clean($param_userid) . '\'';
+            $conditions[] = $this->getTablename() . '.userid = ' . (int)$param_userid;
         }
         if ($param_tags) {
             $conditions[] = 'tags.name LIKE \'%' . mysql_clean($param_tags) . '%\'';
@@ -157,7 +157,7 @@ class Playlist
 
             if( $param_category ){
                 if( !is_array($param_category) ){
-                    $conditions[] = 'categories.category_id = '.mysql_clean($param_category);
+                    $conditions[] = 'categories.category_id = ' . (int)$param_category;
                 } else {
                     $conditions[] = 'categories.category_id IN (' . implode(', ', $param_category) . ')';
                 }

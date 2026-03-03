@@ -146,14 +146,14 @@ case ${OS} in
         echo ""
         echo ""
         echo "PHP versions availables : "
-        echo " - 8.0 [Default]"
-        echo " - 8.1"
+        echo " - 8.1 [Default]"
         echo " - 8.2"
         echo " - 8.3"
         echo " - 8.4"
-        read -p "Which PHP version do you want to use ? [8.0] " READ_PHP_VERSION
+        echo " - 8.5"
+        read -p "Which PHP version do you want to use ? [8.1] " READ_PHP_VERSION
         case ${READ_PHP_VERSION} in
-            "8.0"|"8.1"|"8.2"|"8.3"|"8.4"|*)
+            "8.1"|"8.2"|"8.3"|"8.4"|"8.5"|*)
                 echo ""
                 echo -ne "Configuring PHP ${READ_PHP_VERSION} repo..."
                 apt install apt-transport-https ca-certificates curl wget gnupg2 --yes > /dev/null 2>&1
@@ -170,14 +170,14 @@ case ${OS} in
         echo ""
         echo ""
         echo "PHP versions availables : "
-        echo " - 8.0 [Default]"
-        echo " - 8.1"
+        echo " - 8.1 [Default]"
         echo " - 8.2"
         echo " - 8.3"
         echo " - 8.4"
-        read -p "Which PHP version do you want to use ? [8.0] " READ_PHP_VERSION
+        echo " - 8.5"
+        read -p "Which PHP version do you want to use ? [8.1] " READ_PHP_VERSION
         case ${READ_PHP_VERSION} in
-            "8.0"|"8.1"|"8.2"|"8.3"|"8.4"|*)
+            "8.1"|"8.2"|"8.3"|"8.4"|"8.5"|*)
                 echo ""
                 echo -ne "Configuring PHP ${READ_PHP_VERSION} repo..."
                 apt install apt-transport-https ca-certificates curl wget gnupg2 --yes > /dev/null 2>&1
@@ -197,9 +197,10 @@ case ${OS} in
         echo " - 8.2 [Default]"
         echo " - 8.3"
         echo " - 8.4"
+        echo " - 8.5"
         read -p "Which PHP version do you want to use ? [8.2] " READ_PHP_VERSION
         case ${READ_PHP_VERSION} in
-            "8.3"|"8.4")
+            "8.3"|"8.4"|"8.5")
                 echo ""
                 echo -ne "Configuring PHP ${READ_PHP_VERSION} repo..."
                 apt install apt-transport-https ca-certificates curl wget gnupg2 --yes > /dev/null 2>&1
@@ -235,14 +236,16 @@ esac
 
 echo ""
 echo -ne "Installing requiered elements..."
-apt install php${PHP_VERSION}-fpm mariadb-server git php${PHP_VERSION}-curl ffmpeg php${PHP_VERSION}-mysqli php${PHP_VERSION}-xml php${PHP_VERSION}-mbstring php${PHP_VERSION}-gd sendmail mediainfo --yes > /dev/null 2>&1
-echo -ne " OK"
+apt install php${PHP_VERSION}-fpm mariadb-server git php-pear php${PHP_VERSION}-dev php${PHP_VERSION}-curl ffmpeg php${PHP_VERSION}-mysqli php${PHP_VERSION}-xml php${PHP_VERSION}-mbstring php${PHP_VERSION}-gd sendmail mediainfo --yes > /dev/null 2>&1
+pecl install xhprof > /dev/null 2>&1
 
 echo ""
 echo -ne "Updating PHP ${PHP_VERSION} configs..."
+echo "extension=xhprof.so" > /etc/php/${PHP_VERSION}/mods-available/xhprof.ini
 sed -i "s/max_execution_time = 30/max_execution_time = 7200/g" /etc/php/${PHP_VERSION}/fpm/php.ini
 sed -i "s/;ffi.enable=preload/ffi.enable=true/g" /etc/php/${PHP_VERSION}/fpm/php.ini
 sed -i "s/;ffi.enable=preload/ffi.enable=true/g" /etc/php/${PHP_VERSION}/cli/php.ini
+phpenmod xhprof
 
 systemctl restart php${PHP_VERSION}-fpm
 echo -ne " OK"

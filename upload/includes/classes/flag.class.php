@@ -5,7 +5,8 @@ class Flag
     private static $flag_types = [];
     private static $flag_element_types = [];
     private static $tableName = 'flags';
-    private static $tableNameElementType = 'flag_element_type';
+    private static string $tableNameElementType;
+    private static string $fieldIdElementType ;
     private static $tableNameType = 'flag_type';
 
     private static $fields = [
@@ -16,14 +17,8 @@ class Flag
         'id_flag_type',
         'date_added'
     ];
-    private static $fieldsElementType = [
-        'id_flag_element_type',
-        'name'
-    ];
-    private static $fieldsType = [
-        'id_flag_type',
-        'language_key'
-    ];
+
+    public const TYPE = 'flag';
 
     /**
      * @return array
@@ -48,7 +43,7 @@ class Flag
     public static function getFlagElementTypes(): array
     {
         if (empty(self::$flag_element_types)) {
-            $res = Clipbucket_db::getInstance()->_select('SELECT * FROM ' . tbl(self::$tableNameElementType));
+            $res = Clipbucket_db::getInstance()->_select('SELECT ' . self::getFieldIdElementType() . ' AS id_flag_element_type, name FROM ' . tbl(self::getTableNameElementType()));
             self::$flag_element_types = array_combine(array_column($res, 'id_flag_element_type'), array_column($res, 'name'));
         }
         return self::$flag_element_types;
@@ -78,25 +73,25 @@ class Flag
         $join = [];
         $group_by = [];
         if ($param_flag_id !== false) {
-            $conditions[] = ' ' . self::$tableName . '.userid = ' . mysql_clean($param_flag_id);
+            $conditions[] = ' ' . self::$tableName . '.userid = ' . (int)$param_flag_id;
         }
         if ($param_id_flag_type !== false) {
-            $conditions[] = ' ' . self::$tableName . '.id_flag_type = ' . mysql_clean($param_id_flag_type);
+            $conditions[] = ' ' . self::$tableName . '.id_flag_type = ' . (int)$param_id_flag_type;
         }
         if ($param_id_element !== false) {
-            $conditions[] = ' ' . self::$tableName . '.id_element = ' . mysql_clean($param_id_element);
+            $conditions[] = ' ' . self::$tableName . '.id_element = ' . (int)$param_id_element;
         }
 
         switch ($param_element_type) {
             case 'video':
-                $join[] = ' INNER JOIN ' . tbl(Video::getInstance()->getTableName()) . ' AS ' . $param_element_type . ' ON ' . self::$tableName . '.id_flag_element_type = (SELECT id_flag_element_type FROM ' . tbl(self::$tableNameElementType) . ' WHERE name = \'video\' ) 
+                $join[] = ' INNER JOIN ' . tbl(Video::getInstance()->getTableName()) . ' AS ' . $param_element_type . ' ON ' . self::$tableName . '.id_flag_element_type = (SELECT '.self::getFieldIdElementType().' FROM ' . tbl(self::getTableNameElementType()) . ' WHERE name = \'video\' ) 
                     AND ' . self::$tableName . '.id_element = ' . $param_element_type . '.videoid ';
                 $select_element = $param_element_type . '.title ';
                 $select_is_active = 'CASE WHEN ' . $param_element_type . '.active = \'yes\' THEN 1 ELSE 0 END';
                 break;
 
             case 'photo':
-                $join[] = ' INNER JOIN ' . tbl(Photo::getInstance()->getTableName()) . ' AS ' . $param_element_type . ' ON ' . self::$tableName . '.id_flag_element_type = (SELECT id_flag_element_type FROM ' . tbl(self::$tableNameElementType) . ' WHERE name = \'photo\') 
+                $join[] = ' INNER JOIN ' . tbl(Photo::getInstance()->getTableName()) . ' AS ' . $param_element_type . ' ON ' . self::$tableName . '.id_flag_element_type = (SELECT '.self::getFieldIdElementType().' FROM ' . tbl(self::getTableNameElementType()) . ' WHERE name = \'photo\') 
                     AND ' . self::$tableName . '.id_element = ' . $param_element_type . '.photo_id ';
                 $join[] = 'LEFT JOIN  ' . cb_sql_table(Collection::getInstance()->getTableNameItems()) . ' ON  ' . $param_element_type . '.photo_id = ' . Collection::getInstance()->getTableNameItems() . '.object_id AND ' . Collection::getInstance()->getTableNameItems() . '.type = \'photos\'';
                 $select_element = $param_element_type . '.photo_title ';
@@ -105,21 +100,21 @@ class Flag
                 break;
 
             case 'user':
-                $join[] = ' INNER JOIN ' . tbl(User::getInstance()->getTableName()) . ' AS ' . $param_element_type . ' ON ' . self::$tableName . '.id_flag_element_type = (SELECT id_flag_element_type FROM ' . tbl(self::$tableNameElementType) . ' WHERE name = \'user\') 
+                $join[] = ' INNER JOIN ' . tbl(User::getInstance()->getTableName()) . ' AS ' . $param_element_type . ' ON ' . self::$tableName . '.id_flag_element_type = (SELECT '.self::getFieldIdElementType().' FROM ' . tbl(self::getTableNameElementType()) . ' WHERE name = \'user\') 
                     AND ' . self::$tableName . '.id_element = ' . $param_element_type . '.userid ';
                 $select_element = $param_element_type . '.username ';
                 $select_is_active = 'CASE WHEN ' . $param_element_type . '.usr_status = \'Ok\' THEN 1 ELSE 0 END';
                 break;
 
             case 'collection':
-                $join[] = ' INNER JOIN ' . tbl(Collection::getInstance()->getTableName()) . ' AS ' . $param_element_type . ' ON ' . self::$tableName . '.id_flag_element_type = (SELECT id_flag_element_type FROM ' . tbl(self::$tableNameElementType) . ' WHERE name = \'collection\') 
+                $join[] = ' INNER JOIN ' . tbl(Collection::getInstance()->getTableName()) . ' AS ' . $param_element_type . ' ON ' . self::$tableName . '.id_flag_element_type = (SELECT '.self::getFieldIdElementType().' FROM ' . tbl(self::getTableNameElementType()) . ' WHERE name = \'collection\') 
                     AND ' . self::$tableName . '.id_element = ' . $param_element_type . '.collection_id ';
                 $select_element = $param_element_type . '.collection_name ';
                 $select_is_active = 'CASE WHEN ' . $param_element_type . '.active = \'yes\' THEN 1 ELSE 0 END';
                 break;
 
             case  'playlist':
-                $join[] = ' INNER JOIN ' . tbl(Playlist::getInstance()->getTableName()) . ' AS ' . $param_element_type . ' ON ' . self::$tableName . '.id_flag_element_type = (SELECT id_flag_element_type FROM ' . tbl(self::$tableNameElementType) . ' WHERE name = \'playlist\') 
+                $join[] = ' INNER JOIN ' . tbl(Playlist::getInstance()->getTableName()) . ' AS ' . $param_element_type . ' ON ' . self::$tableName . '.id_flag_element_type = (SELECT '.self::getFieldIdElementType().' FROM ' . tbl(self::getTableNameElementType()) . ' WHERE name = \'playlist\') 
                     AND ' . self::$tableName . '.id_element = ' . $param_element_type . '.playlist_id ';
                 $select_element = $param_element_type . '.playlist_name ';
                 $select_is_active = null;
@@ -290,7 +285,7 @@ class Flag
             'id_flag_element_type'
         ], [
             $id_element,
-            stripslashes('|no_mc||f|(SELECT id_flag_element_type FROM ' . tbl(self::$tableNameElementType) . ' WHERE name=\'' . $type . '\' )')
+            stripslashes('|no_mc||f|(SELECT '.self::getFieldIdElementType().' FROM ' . tbl(self::getTableNameElementType()) . ' WHERE name=\'' . $type . '\' )')
         ]);
         return true;
     }
@@ -324,14 +319,14 @@ class Flag
                 return [
                     'fo'    => video_link($flag['id_element']),
                     'bo'    => DirPath::getUrl('admin_area') . 'edit_video.php?video=' . $flag['id_element'],
-                    'thumb' => get_thumb($flag['id_element'], false, '168x105')
+                    'thumb' => VideoThumbs::getDefaultThumbFile($flag['id_element'])
                 ];
 
             case 'photo':
                 return [
                     'fo'    => Photo::getInstance()->getFOLink($flag['id_element']),
                     'bo'    => DirPath::getUrl('admin_area') . 'edit_photo.php?photo=' . $flag['id_element'],
-                    'thumb' => get_image_file(['details' => $flag['id_element']])
+                    'thumb' => PhotoThumbs::getThumbFile($flag['id_element'])
                 ];
 
             case 'collection':
@@ -374,9 +369,26 @@ class Flag
         return self::$tableName;
     }
 
+    /**
+     * @return string
+     */
     public static function getTableNameElementType(): string
     {
+        if (empty(self::$tableNameElementType)) {
+            self::$tableNameElementType = Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '8') ? 'object_type': 'flag_element_type';
+        }
         return self::$tableNameElementType;
+    }
+
+    /**
+     * @return string
+     */
+    public static function getFieldIdElementType(): string
+    {
+        if (empty(self::$fieldIdElementType)) {
+            self::$fieldIdElementType = Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '8') ? 'id_object_type': 'id_flag_element_type';
+        }
+        return self::$fieldIdElementType;
     }
 
 }

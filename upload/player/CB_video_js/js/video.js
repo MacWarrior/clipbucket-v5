@@ -1,7 +1,7 @@
 /**
  * @license
- * Video.js 8.23.4 <http://videojs.com/>
- * Copyright Brightcove, Inc. <https://www.brightcove.com/>
+ * Video.js 8.23.6 <http://videojs.com/>
+ * Copyright 2010-present Video.js contributors
  * Available under Apache License Version 2.0
  * <https://github.com/videojs/video.js/blob/main/LICENSE>
  *
@@ -16,7 +16,7 @@
   (global = typeof globalThis !== 'undefined' ? globalThis : global || self, global.videojs = factory());
 })(this, (function () { 'use strict';
 
-  var version$5 = "8.23.4";
+  var version$5 = "8.23.6";
 
   /**
    * An Object that contains lifecycle hooks as keys which point to an array

@@ -2,8 +2,8 @@ INSERT INTO `{tbl_prefix}users` (`userid`, `featured_video`, `username`, `user_s
 (1, '', 'admin', '', 10192, '', 'webmaster@website', 'Ok', 'yes', '0', '', 'male', '1989-10-14', 'PK', 1, '08c5a7bd48', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 0, '', '127.0.0.1', '', 0, 'No', NULL, 0, 0, 0, 0, 0, 0, 0, NULL, 'no', '0', 0, 0, '0', '', '', 'no-repeat', CURRENT_TIMESTAMP, '', 'yes', 0);
 
 SET @type_category = (
-    SELECT id_category_type
-    FROM `{tbl_prefix}categories_type`
+    SELECT id_object_type
+    FROM `{tbl_prefix}object_type`
     WHERE name LIKE 'user'
 );
 

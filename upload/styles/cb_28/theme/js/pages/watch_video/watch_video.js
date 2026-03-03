@@ -1,7 +1,7 @@
 var cookieToSave, commentDataCheck;
 var link_type = "videos";
 
-$(document).ready(function () {
+$(function () {
     cookieToSave = 'comment_data_u' + userid + "v" + current_video;
     commentDataCheck = $.cookie(cookieToSave);
     if (commentDataCheck !== 'null') {
@@ -151,6 +151,8 @@ $(document).ready(function () {
             })
         }, 60000);
     }
+
+    _cb.listener_favorite('video', videoid);
 });
 
 function getViewHistory(video_id, page) {
@@ -179,4 +181,3 @@ function showSpinner() {
 function hideSpinner() {
     $('.taskHandler').hide();
 }
-

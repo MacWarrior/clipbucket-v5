@@ -36,17 +36,25 @@ switch ($mode) {
 
         assign('mode', 'uploaded');
         if (isset($_GET['delete_photo'])) {
-            $id = mysql_clean($_GET['delete_photo']);
-            CBPhotos::getInstance()->delete_photo($id);
+            if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '14')) {
+                e('Sorry, you cannot perform this action until the application has been fully updated by an administrator');
+            } else {
+                $id = mysql_clean($_GET['delete_photo']);
+                CBPhotos::getInstance()->delete_photo($id);
+            }
         }
 
         if (isset($_POST['delete_photos']) && is_array($_POST['check_photo'])) {
-            $total = count($_POST['check_photo']);
-            for ($i = 0; $i < $total; $i++) {
-                CBPhotos::getInstance()->delete_photo($_POST['check_photo'][$i]);
+            if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '14')) {
+                e('Sorry, you cannot perform this action until the application has been fully updated by an administrator');
+            } else {
+                $total = count($_POST['check_photo']);
+                for ($i = 0; $i < $total; $i++) {
+                    CBPhotos::getInstance()->delete_photo($_POST['check_photo'][$i]);
+                }
+                errorhandler::getInstance()->flush();
+                e(lang('total_photos_deleted', $total), 'm');
             }
-            errorhandler::getInstance()->flush();
-            e(lang('total_photos_deleted', $total), 'm');
         }
 
         $params = [
@@ -81,14 +89,14 @@ switch ($mode) {
         assign('mode', 'favorite');
         if ($_GET['remove_fav_photo']) {
             $photo = mysql_clean($_GET['remove_fav_photo']);
-            CBPhotos::getInstance()->action->remove_favorite($photo);
+            Photo::getInstance()->removeFromFavorites($photo);
             updateObjectStats('fav', 'photo', $photo, '-');
         }
 
         if ($_POST['remove_fav_photos'] && is_array($_POST['check_photo'])) {
             $total = count($_POST['check_photo']);
             for ($i = 0; $i < $total; $i++) {
-                CBPhotos::getInstance()->action->remove_favorite($_POST['check_photo'][$i]);
+                Photo::getInstance()->removeFromFavorites($_POST['check_photo'][$i]);
                 updateObjectStats('fav', 'photo', $_POST['check_photo'][$i], '-');
             }
             errorhandler::getInstance()->flush();
@@ -101,11 +109,10 @@ switch ($mode) {
         }
 
         $photo_arr = [
-            'user' => user_id()
-            ,'limit' => $get_limit
+            'limit' => $get_limit
             ,'cond' => $cond
         ];
-        $photos = CBPhotos::getInstance()->action->get_favorites($photo_arr);
+        $photos = Photo::getInstance()->getAllFavorites($photo_arr);
         assign('photos', $photos);
 
         if( $page == 1 && is_array($photos) && count($photos) < config('photo_main_list') ){
@@ -113,7 +120,7 @@ switch ($mode) {
         } else {
             $photo_arr['count_only'] = true;
             unset($photo_arr['limit']);
-            $total_rows = CBPhotos::getInstance()->action->get_favorites($photo_arr);
+            $total_rows = Photo::getInstance()->getAllFavorites($photo_arr);
         }
 
         $total_pages = count_pages($total_rows, config('photo_main_list'));

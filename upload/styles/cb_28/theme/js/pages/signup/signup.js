@@ -179,4 +179,8 @@ $(document).ready(function(){
             $('#signup_form').submit();
         }
     });
+
+    $('.glyphicon-calendar').on('click',function(){
+        $(this).siblings('input.hasDatepicker').focus();
+    })
 });

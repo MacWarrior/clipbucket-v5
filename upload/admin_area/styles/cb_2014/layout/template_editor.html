@@ -2,70 +2,99 @@
     <h2>Edit template</h2>
 </div>
 
-    {if $templates}
+{if $templates}
     <form name="select_template" method="get">
         <div class="form-group">
-            <label for="$template.id">Select Theme To Edit</label>
-            <select class="form-control" name="dir">
+            <label for="template_dir">{lang('select_theme_to_edit')}</label>
+            <select class="form-control" name="dir" id="template_dir" style="width:fit-content;text-align:center;display:inline-block;">
                 {foreach from=$templates item=template}
                     <option value="{$template.dir}" {if $sel_dir==$template.dir} selected{/if}>{$template.name}</option>
                 {/foreach}
-            </select>        
+            </select>
+            <hr/>
         </div>
-    <input class="btn btn-primary btn-xs" type="submit" name="select" value="Select" />
     </form>
-    {/if}
+{/if}
 
 <div class="row">
     <div class="col-md-3">
-        <h3>Layout Files</h3>
-        <ul class="nav nav-pills nav-stacked tabs ">
-            {foreach from=$tpl_files item=tplfile key=folder}
-                {if !is_array($tplfile)}
-                    <li {if $smarty.get.file == $tplfile} class = "sel_file"{/if}><a href="?dir={$sel_dir}&file={$tplfile}">{$tplfile}</a></li>
-                {else}
-                    <li>
-                        <ul class="nav nav-pills nav-stacked tabs ">
-                            <li><b>/{$folder}/</b></li>
-                            {foreach from=$tplfile item=file}
-                                <li {if $_GET['file'] == $file && $_GET['folder'] == $folder} class = "sel_file"{/if}><a href="?dir={$sel_dir}&file={$file}&folder={$folder}">{$file}</a></li>
-                            {/foreach}
-                        </ul>
+        <div class="row">
+            <div class="col-md-12">
+                <ul class="nav nav-tabs">
+                    <li class="active">
+                        <a data-toggle="tab" href="#html_files">
+                            <h6>{lang('html_files')}</h6>
+                        </a>
                     </li>
-
-                {/if}
-            {/foreach}
-        </ul>
-        <h3>CSS Files</h3>
-        <ul class="nav nav-pills nav-stacked tabs horizontalTabs">
-        {foreach from=$css_files item=cssfile}
-            {if !is_array($cssfile)}
-                <li {if $smarty.get.file == $cssfile} class="sel_file"{/if}><a href="?dir={$sel_dir}&file={$cssfile}">{$cssfile}</a></li>
-            {/if}
-        {/foreach}
-        </ul>
+                    <li>
+                        <a data-toggle="tab" href="#css_files">
+                            <h6>{lang('css_files')}</h6>
+                        </a>
+                    </li>
+                </ul>
+                <div class="tab-content">
+                    <div id="html_files" class="tab-pane active">
+                        <div class="row">
+                            <ul class="nav nav-pills nav-stacked tabs">
+                                {foreach from=$tpl_files item=tplfile key=folder}
+                                    {if !is_array($tplfile)}
+                                        <li{if $smarty.get.file == $tplfile} class="active"{/if}><a href="?dir={$sel_dir}&file={$tplfile}">{$tplfile}</a></li>
+                                    {else}
+                                        <li>
+                                            <ul class="nav nav-pills nav-stacked tabs">
+                                                <li><b>/{$folder}/</b></li>
+                                                {foreach from=$tplfile item=file}
+                                                    <li{if $_GET['file'] == $file && $_GET['folder'] == $folder} class="active"{/if}><a href="?dir={$sel_dir}&file={$file}&folder={$folder}">{$file}</a></li>
+                                                {/foreach}
+                                            </ul>
+                                        </li>
+                                    {/if}
+                                {/foreach}
+                            </ul>
+                        </div>
+                    </div>
+                    <div id="css_files" class="tab-pane">
+                        <div class="row">
+                            <ul class="nav nav-pills nav-stacked tabs">
+                                {foreach from=$css_files item=cssfile}
+                                    {if !is_array($cssfile)}
+                                        <li{if $smarty.get.file == $cssfile} class="active"{/if}><a href="?dir={$sel_dir}&file={$cssfile}">{$cssfile}</a></li>
+                                    {/if}
+                                {/foreach}
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
     <div class="col-md-9">
         <form name="file_content" method="post">
             <div class="form-group">
-                <label for="file_content"><h3>Edit Template</h3></label>
-                <textarea rows="30" class="form-control" name="thecontent" class="file_content" id="file_content">
-                    {if $content}{$content}{else}<em>{lang('no_file_selected')}</em>{/if}
-                </textarea>
+                {if $content}
+                    <label for="file_content"><h3>{lang('editing_template', [$editing_file])}</h3></label>
+                    <textarea rows="30" class="form-control" name="thecontent" class="file_content" id="file_content" style="height: 250px;width: 100%;">
+                        {$content}
+                    </textarea>
+                {else}
+                    <label for="file_content"><h3>{lang('edit_template')}</h3></label>
+                    <br/>
+                    <em>{lang('no_file_selected')}</em>
+                {/if}
             </div>
-            <div>
-                {if $writeable=='no'}
-                This file is not writeable, please set
-                <em>
-                    <strong>{$smarty.get.file}</strong>
-                </em> permissions to 0755 -
-                <a href="http://docs.clip-bucket.com/clipbucket-docs/files-folder-permissions" target="_blank">
-                    <strong>More Details</strong>
-                </a>
-            </div>
-        {else}
-            <input type="submit" value="Update File" name="update_file" class="btn btn-primary btn-sm" />
-        {/if}
+            {if $writeable=='no'}
+                <div>
+                    This file is not writeable, please set
+                    <em>
+                        <strong>{$smarty.get.file}</strong>
+                    </em> permissions to 0755 -
+                    <a href="http://docs.clip-bucket.com/clipbucket-docs/files-folder-permissions" target="_blank">
+                        <strong>More Details</strong>
+                    </a>
+                </div>
+            {elseif !empty($content)}
+                <input type="submit" value="Update File" name="update_file" class="btn btn-primary btn-sm"/>
+            {/if}
         </form>
     </div>
 </div>

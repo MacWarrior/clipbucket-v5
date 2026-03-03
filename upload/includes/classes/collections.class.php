@@ -1,5 +1,5 @@
 <?php
-class Collection
+class Collection extends Objects
 {
     private static $collection;
     private string $tablename = '';
@@ -14,6 +14,8 @@ class Collection
     private array $broadcast_options = [];
 
     private array $type_list= [];
+
+    public const TYPE = 'collection';
 
     /**
      * @throws Exception
@@ -53,6 +55,9 @@ class Collection
 
         if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '299')) {
             $this->fields[] = 'sort_type';
+        }
+        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '63')) {
+            $this->fields[] = 'hierarchy_featured';
         }
 
         $this->fields_items = [
@@ -204,7 +209,7 @@ class Collection
         if (config('enable_comments_collection') != 'yes') {
             unset($sorts[array_search('most_commented', $sorts)]);
         }
-        if (config('collection_rating') != '1') {
+        if (config('collection_rating') != 'yes') {
             unset($sorts[array_search('top_rated', $sorts)]);
         }
         return $sorts;
@@ -291,9 +296,6 @@ class Collection
         }
         if( $param_parents_only ){
             $conditions[] = $this->getTableName() . '.collection_id_parent IS NULL';
-        }
-        if( $param_empty_thumb_objectid ){
-            $conditions[] = $this->getTableName() . '.thumb_objectid IS NULL';
         }
         if( $param_empty_thumb_objectid ){
             $conditions[] = $this->getTableName() . '.thumb_objectid IS NULL';
@@ -442,7 +444,7 @@ class Collection
 
             if( $param_category ){
                 if( !is_array($param_category) ){
-                    $conditions[] = 'categories.category_id = '.mysql_clean($param_category);
+                    $conditions[] = 'categories.category_id = ' . (int)$param_category;
                 } else {
                     $conditions[] = 'categories.category_id IN (' . implode(', ', $param_category) . ')';
                 }
@@ -479,8 +481,9 @@ class Collection
         }
 
         if ($param_join_flag && Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '255') && !$param_count) {
-            $join[] = 'LEFT JOIN ' . cb_sql_table(Flag::getTableName()) . ' ON ' . Flag::getTableName() . '.id_element = ' . $this->getTableName() . '.collection_id AND ' . Flag::getTableName() . '.id_flag_element_type = (SELECT id_flag_element_type FROM ' . tbl(Flag::getTableNameElementType()) . ' WHERE name = \'collection\' )';
-            $select[] = 'IF(COUNT(distinct ' . Flag::getTableName() . '.flag_id) > 0, 1, 0) AS is_flagged';
+            $flag_constraint = self::getFlagConstraint();
+            $join[] = $flag_constraint['join'];
+            $select[] = $flag_constraint['select'];
         }
 
         $newline = ' ';
@@ -516,7 +519,7 @@ class Collection
                                 0 AS depth,
                                 CAST(c.collection_id AS CHAR(2000)) AS path
                             FROM cb_collections c
-                            WHERE c.collection_id = ' . $collection['collection_id'] . '
+                            WHERE c.collection_id = ' . (int)$collection['collection_id'] . '
                             UNION ALL
                             SELECT
                                 ch.collection_id,
@@ -739,7 +742,7 @@ class Collection
             e(lang('collection_type_must_be_same_as_parent'));
             return false;
         }
-        Clipbucket_db::getInstance()->update(tbl('collections'), ['collection_id_parent'], [$new_parent_collection['collection_id']], ' collection_id = ' . $collection['collection_id']);
+        Clipbucket_db::getInstance()->update(tbl('collections'), ['collection_id_parent'], [$new_parent_collection['collection_id']], ' collection_id = ' . (int)$collection['collection_id']);
         return true;
     }
 
@@ -757,12 +760,12 @@ class Collection
         $item_id = mysql_clean($item_id);
         $collection_id = mysql_clean($collection_id);
 
-        if (!user_id()) {
+        if (!User::getInstance()->isUserConnected()) {
             e(lang('you_not_logged_in'));
             return false;
         }
         if (!$this->isValidType($type)) {
-            e(lang('unknown_type'));
+            e(lang('unknown_type', $type));
             return false;
         }
         $collection = $this->getOne(['collection_id' => $collection_id]);
@@ -790,8 +793,13 @@ class Collection
             return false;
         }
 
+        if (($collection['public_upload'] !='yes' && $collection['userid'] != User::getInstance()->getCurrentUserID() && !User::getInstance()->hasAdminAccess() ) || !User::getInstance()->hasPermission('view_collections')) {
+            e(lang('cant_perform_action_collect'));
+            return false;
+        }
+
         $fields = ['collection_id', 'object_id', 'type', 'userid', 'date_added'];
-        $values = [$collection_id, $item_id, $type, user_id(), NOW()];
+        $values = [$collection_id, $item_id, $type, User::getInstance()->getCurrentUserID(), NOW()];
 
         Clipbucket_db::getInstance()->insert(tbl($this->getTableNameItems()), $fields, $values);
         e(lang('item_added_in_collection', strtolower(lang($type))), 'm');
@@ -843,7 +851,7 @@ class Collection
                  LEFT JOIN ' . tbl('collections') . ' AS childs ON collections.collection_id = childs.collection_id_parent
                  LEFT JOIN ' . tbl('photos') . ' AS photos ON photo_id = items.object_id AND items.type = \'photos\'
                  LEFT JOIN ' . tbl('video') . ' AS videos ON videoid = items.object_id AND items.type = \'videos\'
-            WHERE collections.collection_id = ' . (int)$tested_collection . '
+            WHERE collections.collection_id = ' . (int)$tested_collection . ' 
             ORDER BY items.ci_id
             LIMIT 1 ';
             $res = Clipbucket_db::getInstance()->_select($sql);
@@ -851,11 +859,11 @@ class Collection
             $tested_collection = $res[0]['child_id'] ?? false;
         } while (empty($thumb_num) && !empty($tested_collection));
 
-        if( $thumb_num && Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '145') ){
+        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '145')) {
             $sql = 'UPDATE ' . tbl('collections') . ' SET thumb_objectid = ' . (int)$thumb_num . ' WHERE collection_id = ' . (int)$collection_id;
             Clipbucket_db::getInstance()->execute($sql);
         }
-        return is_numeric($thumb_num) ? $thumb_num: false;
+        return is_numeric($thumb_num) ? $thumb_num : false;
     }
 
     /**
@@ -866,7 +874,7 @@ class Collection
      */
     public function setDefautThumb(int $default_thumb, int $id): void
     {
-        Clipbucket_db::getInstance()->update(tbl($this->getTableName()), ['thumb_objectid'], [$default_thumb], ' collection_id = ' . $id);
+        Clipbucket_db::getInstance()->update(tbl($this->getTableName()), ['thumb_objectid'], [$default_thumb], ' collection_id = ' . (int)$id);
     }
 
     /**
@@ -882,14 +890,14 @@ class Collection
         }
         switch ($type) {
             case 'videos':
-                $thumb = get_thumb($item);
-                break;
+                return VideoThumbs::getDefaultThumbFile($item['videoid']);
 
             case 'photos':
-                $thumb = CBPhotos::getInstance()->get_image_file($item);
-                break;
+                return PhotoThumbs::getThumbFile($item['photo_id']);
+
+            default:
+                return '';
         }
-        return $thumb;
     }
 
     /**
@@ -963,7 +971,7 @@ class Collection
         ];
 
         if (!empty($collection_id)) {
-            $params['condition'] = ' collections.collection_id != ' . mysql_clean($collection_id);
+            $params['condition'] = ' collections.collection_id != ' . (int)$collection_id;
         }
         $collection_list = Collection::getInstance()->getAllIndent($params, display_group: $display_group);
         $list_collection_display=[];
@@ -981,7 +989,10 @@ class Collection
         return $list_collection_display;
     }
 
-    public static function removeItemFromCollection($collection_id, $item_id, $type)
+    /**
+     * @throws Exception
+     */
+    public static function removeItemFromCollection($collection_id, $item_id, $type): bool
     {
         $item_id = mysql_clean($item_id);
         $collection_id = mysql_clean($collection_id);
@@ -990,20 +1001,21 @@ class Collection
             return false;
         }
         if (!self::getInstance()->isValidType($type)) {
-            e(lang('unknown_type'));
+            e(lang('unknown_type', $type));
             return false;
         }
         $collection = self::getInstance()->getOne(['collection_id' => $collection_id]);
-        if (!$collection['userid'] == User::getInstance()->getCurrentUserID() && !User::getInstance()->hasAdminAccess() && !User::getInstance()->hasPermission('view_collections')) {
+        if ((!$collection['userid'] == User::getInstance()->getCurrentUserID() && !User::getInstance()->hasAdminAccess()) || !User::getInstance()->hasPermission('view_collections')) {
             e(lang('cant_perform_action_collect'));
             return false;
         }
 
-        $sql = 'DELETE FROM ' . tbl('collection_items') . ' WHERE collection_id = ' . $collection_id . ' AND object_id = ' . $item_id . ' AND type = \'' . $type . '\'';
+        $sql = 'DELETE FROM ' . tbl('collection_items') . ' WHERE collection_id = ' . (int)$collection_id . ' AND object_id = ' . (int)$item_id . ' AND type = \'' . $type . '\'';
         Clipbucket_db::getInstance()->execute($sql);
+
+        Collection::assignDefaultThumb($collection_id);
         e(lang('collect_item_removed', $type), 'm');
         return true;
-
     }
 }
 
@@ -1187,7 +1199,7 @@ class Collections extends CBCategory
      */
     function collection_exists($id): bool
     {
-        $result = Clipbucket_db::getInstance()->count(tbl($this->section_tbl), 'collection_id', ' collection_id = ' . $id);
+        $result = Clipbucket_db::getInstance()->count(tbl($this->section_tbl), 'collection_id', ' collection_id = ' . (int)$id);
         if ($result) {
             return true;
         }
@@ -1339,7 +1351,7 @@ class Collections extends CBCategory
      */
     function get_collection_items($id, $order = null, $limit = null)
     {
-        $result = Clipbucket_db::getInstance()->select(tbl($this->items), '*', ' collection_id = ' . $id, $limit, $order);
+        $result = Clipbucket_db::getInstance()->select(tbl($this->items), '*', ' collection_id = ' . (int)$id, $limit, $order);
         if ($result) {
             return $result;
         }
@@ -1352,13 +1364,10 @@ class Collections extends CBCategory
      * @param        $ci_id
      * @param        $cid
      * @param string $item
-     * @param int $limit
-     * @param bool $check_only
-     *
      * @return array|bool
      * @throws Exception
      */
-    function get_next_prev_item($ci_id, $cid, $item = 'prev', $limit = 1, $check_only = false)
+    function get_next_prev_item($ci_id, $cid, string $item = 'prev'): bool|array
     {
         $iTbl = tbl($this->items);
         $oTbl = tbl($this->objTable);
@@ -1371,30 +1380,26 @@ class Collections extends CBCategory
         } elseif ($item == 'next') {
             $op = '<';
             $order = $iTbl . '.ci_id DESC';
-        } elseif ($item == null) {
+        } else {
             $op = '=';
             $order = '';
         }
 
         $cond = ' ' . $iTbl . '.collection_id = ' . $cid . ' AND ' . $iTbl . '.ci_id ' . $op . ' ' . $ci_id . ' AND ' . $iTbl . '.object_id = ' . $oTbl . '.' . $this->objFieldID . ' AND ' . $oTbl . '.userid = ' . $uTbl . '.userid';
-        if (!$check_only) {
-            $result = Clipbucket_db::getInstance()->select($tbls, $iTbl . '.*,' . $oTbl . '.*,' . $uTbl . '.username', $cond, $limit, $order);
+        $result = Clipbucket_db::getInstance()->select($tbls, $iTbl . '.*,' . $oTbl . '.*,' . $uTbl . '.username', $cond, 1, $order);
 
-            // Result was empty. Checking if we were going backwards, So bring last item
-            if (empty($result) && $item == 'prev') {
-                $order = $iTbl . '.ci_id ASC';
-                $op = '<';
-                $result = Clipbucket_db::getInstance()->select($tbls, $iTbl . '.*,' . $oTbl . '.*,' . $uTbl . '.username', ' ' . $iTbl . '.collection_id = ' . $cid . ' AND ' . $iTbl . '.ci_id ' . $op . ' ' . $ci_id . ' AND ' . $iTbl . '.object_id = ' . $oTbl . '.' . $this->objFieldID . ' AND ' . $oTbl . '.userid = ' . $uTbl . '.userid', $limit, $order);
-            }
+        // Result was empty. Checking if we were going backwards, So bring last item
+        if (empty($result) && $item == 'prev') {
+            $order = $iTbl . '.ci_id ASC';
+            $op = '<';
+            $result = Clipbucket_db::getInstance()->select($tbls, $iTbl . '.*,' . $oTbl . '.*,' . $uTbl . '.username', ' ' . $iTbl . '.collection_id = ' . $cid . ' AND ' . $iTbl . '.ci_id ' . $op . ' ' . $ci_id . ' AND ' . $iTbl . '.object_id = ' . $oTbl . '.' . $this->objFieldID . ' AND ' . $oTbl . '.userid = ' . $uTbl . '.userid', 1, $order);
+        }
 
-            // Result was empty. Checking if we were going forwards, So bring first item
-            if (empty($result) && $item == 'next') {
-                $order = $iTbl . '.ci_id DESC';
-                $op = '>';
-                $result = Clipbucket_db::getInstance()->select($tbls, $iTbl . '.*,' . $oTbl . '.*,' . $uTbl . '.username', ' ' . $iTbl . '.collection_id = ' . $cid . ' AND ' . $iTbl . '.ci_id ' . $op . ' ' . $ci_id . ' AND ' . $iTbl . '.object_id = ' . $oTbl . '.' . $this->objFieldID . ' AND ' . $oTbl . '.userid = ' . $uTbl . '.userid', $limit, $order);
-            }
-        } else {
-            $result = Clipbucket_db::getInstance()->count($iTbl . ',' . $oTbl, $iTbl . '.ci_id', ' ' . $iTbl . '.collection_id = ' . $cid . ' AND ' . $iTbl . '.ci_id ' . $op . ' ' . $ci_id . ' AND ' . $iTbl . '.object_id = $oTbl.' . $this->objFieldID, $limit, $order);
+        // Result was empty. Checking if we were going forwards, So bring first item
+        if (empty($result) && $item == 'next') {
+            $order = $iTbl . '.ci_id DESC';
+            $op = '>';
+            $result = Clipbucket_db::getInstance()->select($tbls, $iTbl . '.*,' . $oTbl . '.*,' . $uTbl . '.username', ' ' . $iTbl . '.collection_id = ' . $cid . ' AND ' . $iTbl . '.ci_id ' . $op . ' ' . $ci_id . ' AND ' . $iTbl . '.object_id = ' . $oTbl . '.' . $this->objFieldID . ' AND ' . $oTbl . '.userid = ' . $uTbl . '.userid', 1, $order);
         }
 
         if ($result) {
@@ -1418,7 +1423,7 @@ class Collections extends CBCategory
     {
         $tables = cb_sql_table($this->items) . ',' . cb_sql_table($this->objTable) . ', '.cb_sql_table('users');
 
-        $condition[] = $this->items . '.collection_id = ' . mysql_clean($id);
+        $condition[] = $this->items . '.collection_id = ' . (int)$id;
         $condition[] = $this->items . '.object_id = ' . $this->objTable . '.' . $this->objFieldID;
         $condition[] = $this->objTable . '.userid = ' .'users.userid';
 
@@ -1455,7 +1460,7 @@ class Collections extends CBCategory
      */
     function get_collection_item_fields($cid, $objID, $fields)
     {
-        $result = Clipbucket_db::getInstance()->select(tbl($this->items), $fields, ' object_id = ' . $objID . ' AND collection_id = ' . $cid);
+        $result = Clipbucket_db::getInstance()->select(tbl($this->items), $fields, ' object_id = ' . (int)$objID . ' AND collection_id = ' . (int)$cid);
         if ($result) {
             return $result;
         }
@@ -1657,6 +1662,23 @@ class Collections extends CBCategory
             'default_value'     => 'no'
         ];
 
+        if (config('enable_featured_collection_hierarchy') == 'yes' && Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '63')) {
+            $return['hierarchy_featured'] = [
+                'title'             => lang('hierarchy_featured'),
+                'class'             => 'form-control',
+                'type'              => 'checkboxv2',
+                'id'                => 'hierarchy_featured',
+                'name'              => 'hierarchy_featured',
+                'value'             => 'yes',
+                'checked'           => $default['hierarchy_featured'] ?? 'no',
+                'hint_icon'         => lang('display_collection_hierarchy_featured_hint'),
+                'db_field'          => 'hierarchy_featured',
+                'required'          => 'no',
+                'validate_function' => 'yes_or_no',
+                'default_value'     => 'yes'
+            ];
+        }
+
 
         return $return;
     }
@@ -1828,9 +1850,7 @@ class Collections extends CBCategory
      */
     function object_in_collection($id, $cid)
     {
-        $id = mysql_clean($id);
-        $cid = mysql_clean($cid);
-        $result = Clipbucket_db::getInstance()->select(tbl($this->items), '*', ' object_id = ' . $id . ' AND collection_id = ' . $cid);
+        $result = Clipbucket_db::getInstance()->select(tbl($this->items), '*', ' object_id = ' . (int)$id . ' AND collection_id = ' . (int)$cid);
         if ($result) {
             return $result[0];
         }
@@ -1854,9 +1874,8 @@ class Collections extends CBCategory
         if (is_array($cid)) {
             $cid = $cid['collection_id'];
         }
-        $cid = mysql_clean($cid);
         $field = mysql_clean($field);
-        $result = Clipbucket_db::getInstance()->select(tbl($this->section_tbl), $field, ' collection_id = ' . $cid);
+        $result = Clipbucket_db::getInstance()->select(tbl($this->section_tbl), $field, ' collection_id = ' . (int)$cid);
         if ($result) {
             if (count($result[0]) > 2) {
                 return $result[0];
@@ -1912,7 +1931,6 @@ class Collections extends CBCategory
             return;
         }
 
-        $cid = mysql_clean($cid);
         $del_funcs = $this->collection_delete_functions;
         if (is_array($del_funcs) && !empty($del_funcs)) {
             foreach ($del_funcs as $func) {
@@ -1926,7 +1944,7 @@ class Collections extends CBCategory
         if (is_null($collection_id_parent)) {
             $collection_id_parent = '|f|null';
         }
-        Clipbucket_db::getInstance()->update(tbl($this->section_tbl), ['collection_id_parent'], [$collection_id_parent], ' collection_id_parent = ' . $cid);
+        Clipbucket_db::getInstance()->update(tbl($this->section_tbl), ['collection_id_parent'], [$collection_id_parent], ' collection_id_parent = ' . (int)$cid);
 
         //Remove tags
         Tags::deleteTags('collection', $cid);
@@ -1944,9 +1962,8 @@ class Collections extends CBCategory
         $params['type_id'] = $cid;
         Comments::delete($params, false);
 
-        //Removing video From Favorites
-        Clipbucket_db::getInstance()->delete(tbl('favorites'), ['type', 'id'], ['cl', $cid]);
-
+        //Removing collection From Favorites
+        Collection::getInstance()->removeFromFavoritesForAllUsers($cid);
         Clipbucket_db::getInstance()->delete(tbl($this->section_tbl), ['collection_id'], [$cid]);
         //Decrementing users total collection
         Clipbucket_db::getInstance()->update(tbl('users'), ['total_collections'], ['|f|total_collections-1'], ' userid=\'' . $cid . '\'');
@@ -1965,8 +1982,7 @@ class Collections extends CBCategory
      */
     function count_items($cid)
     {
-        $cid = mysql_clean($cid);
-        $count = Clipbucket_db::getInstance()->count($this->items, 'ci_id', ' collection_id = ' . $cid);
+        $count = Clipbucket_db::getInstance()->count($this->items, 'ci_id', ' collection_id = ' . (int)$cid);
         if ($count) {
             return $count;
         }
@@ -1999,37 +2015,38 @@ class Collections extends CBCategory
      *
      * @param $cid
      * @param $file
+     * @throws Exception
      */
     function upload_thumb($cid, $file): void
     {
-        global $imgObj;
-        $file_ext = getext($file['name']);
+        $ext = getExtMimeType($file['name']);
+        if (!VideoThumbs::ValidateImage($file['tmp_name'], $ext)) {
+            e(lang('pic_upload_vali_err'));
+            @unlink($file['tmp_name']);
+            return;
+        }
 
-        $exts = ['jpg', 'gif', 'jpeg', 'png'];
-
-        foreach ($exts as $ext) {
-            if ($ext == $file_ext) {
-                $thumb = DirPath::get('collection_thumbs') . $cid . '.' . $ext;
-
-                $sThumb = DirPath::get('collection_thumbs') . $cid . '-small.' . $ext;
-                $oThumb = DirPath::get('collection_thumbs') . $cid . '-orignal.' . $ext;
-                foreach ($exts as $un_ext) {
-                    if (file_exists(DirPath::get('collection_thumbs') . $cid . '.' . $un_ext) && file_exists(DirPath::get('collection_thumbs') . $cid . '-small.' . $un_ext) && file_exists(DirPath::get('collection_thumbs') . $cid . '-orignal.' . $un_ext)) {
-                        unlink(DirPath::get('collection_thumbs') . $cid . '.' . $un_ext);
-                        unlink(DirPath::get('collection_thumbs') . $cid . '-small.' . $un_ext);
-                        unlink(DirPath::get('collection_thumbs') . $cid . '-orignal.' . $un_ext);
-                    }
-                }
-                move_uploaded_file($file['tmp_name'], $thumb);
-                if (!$imgObj->ValidateImage($thumb, $ext)) {
-                    e('pic_upload_vali_err');
-                } else {
-                    $imgObj->createThumb($thumb, $thumb, $this->collect_thumb_width, $ext, $this->collect_thumb_height);
-                    $imgObj->createThumb($thumb, $sThumb, $this->collect_small_thumb_width, $ext, $this->collect_small_thumb_height);
-                    $imgObj->createThumb($thumb, $oThumb, $this->collect_orignal_thumb_width, $ext, $this->collect_orignal_thumb_height);
-                }
+        $exts = explode(',', config('allowed_photo_types'));
+        foreach ($exts as $un_ext) {
+            if (file_exists(DirPath::get('collection_thumbs') . $cid . '.' . $un_ext) && file_exists(DirPath::get('collection_thumbs') . $cid . '-small.' . $un_ext) && file_exists(DirPath::get('collection_thumbs') . $cid . '-orignal.' . $un_ext)) {
+                unlink(DirPath::get('collection_thumbs') . $cid . '.' . $un_ext);
+                unlink(DirPath::get('collection_thumbs') . $cid . '-small.' . $un_ext);
+                unlink(DirPath::get('collection_thumbs') . $cid . '-orignal.' . $un_ext);
             }
         }
+
+        $thumb = DirPath::get('collection_thumbs') . $cid . '.' . $ext;
+        $sThumb = DirPath::get('collection_thumbs') . $cid . '-small.' . $ext;
+        $oThumb = DirPath::get('collection_thumbs') . $cid . '-orignal.' . $ext;
+
+        if (!move_uploaded_file($file['tmp_name'], $thumb)) {
+            e(lang('class_error_occured'));
+            return;
+        }
+
+        VideoThumbs::createThumb($thumb, $thumb, $this->collect_thumb_width, $ext, $this->collect_thumb_height);
+        VideoThumbs::createThumb($thumb, $sThumb, $this->collect_small_thumb_width, $ext, $this->collect_small_thumb_height);
+        VideoThumbs::createThumb($thumb, $oThumb, $this->collect_orignal_thumb_width, $ext, $this->collect_orignal_thumb_height);
     }
 
     /**
@@ -2111,8 +2128,7 @@ class Collections extends CBCategory
             } elseif (!$this->is_collection_owner($cid, user_id()) && !User::getInstance()->hasAdminAccess()) {
                 e(lang('cant_edit_collection'));
             } else {
-                $cid = mysql_clean($cid);
-                Clipbucket_db::getInstance()->update(tbl($this->section_tbl), $query_field, $query_val, ' collection_id = ' . $cid);
+                Clipbucket_db::getInstance()->update(tbl($this->section_tbl), $query_field, $query_val, ' collection_id = ' . (int)$cid);
 
                 if (config('enable_collection_categories') == 'yes') {
                     Category::getInstance()->saveLinks('collection', $cid, ($array['category'] ?? [Category::getInstance()->getDefaultByType('collection')['category_id']]));
@@ -2182,11 +2198,11 @@ class Collections extends CBCategory
             $type = $item[0]['type'];
             switch ($type) {
                 case 'videos':
-                    $thumb = get_thumb(CBvideo::getInstance()->get_video($item[0]['object_id']));
+                    $thumb = VideoThumbs::getDefaultThumbFile($item[0]['object_id']);
                     break;
 
                 case 'photos':
-                    $thumb = CBPhotos::getInstance()->get_image_file(CBPhotos::getInstance()->get_photo($item[0]['object_id']));
+                    $thumb = PhotoThumbs::getThumbFile($item[0]['object_id']);
                     break;
             }
 
@@ -2217,88 +2233,11 @@ class Collections extends CBCategory
      */
     function current_rating($id)
     {
-        $id = mysql_clean($id);
-        $result = Clipbucket_db::getInstance()->select(tbl('collections'), 'allow_rating,rating,rated_by,voters,userid', ' collection_id = ' . $id);
+        $result = Clipbucket_db::getInstance()->select(tbl('collections'), 'allow_rating,rating,rated_by,voters,userid', ' collection_id = ' . (int)$id);
         if ($result) {
             return $result[0];
         }
         return false;
-    }
-
-    /**
-     * Used to rate photo
-     *
-     * @param $id
-     * @param $rating
-     *
-     * @return array
-     * @throws Exception
-     */
-    function rate_collection($id, $rating): array
-    {
-        if (!is_numeric($rating) || $rating <= 9) {
-            $rating = 0;
-        }
-        if ($rating >= 10) {
-            $rating = 10;
-        }
-
-        $c_rating = $this->current_rating($id);
-        $voters = $c_rating['voters'];
-
-        $new_rate = $c_rating['rating'];
-        $rated_by = $c_rating['rated_by'];
-
-        $voters = json_decode($voters, true);
-
-        if (!empty($voters)) {
-            $already_voted = array_key_exists(user_id(), $voters);
-        }
-
-        if (!user_id()) {
-            e(lang('please_login_to_rate'));
-        } elseif (user_id() == $c_rating['userid'] && !config('own_collection_rating')) {
-            e(lang('you_cannot_rate_own_collection'));
-        } elseif (!empty($already_voted)) {
-            e(lang('you_hv_already_rated_photo'));
-        } elseif ($c_rating['allow_rating'] == 'no' || !config('collection_rating')) {
-            e(lang('collection_rating_not_allowed'));
-        } else {
-            $voters[user_id()] = [
-                'userid'   => user_id(),
-                'username' => user_name(),
-                'time'     => now(),
-                'rating'   => $rating
-            ];
-            $voters = json_encode($voters);
-
-            $t = $c_rating['rated_by'] * $c_rating['rating'];
-            $rated_by = $c_rating['rated_by'] + 1;
-            $new_rate = ($t + $rating) / $rated_by;
-
-            $id = mysql_clean($id);
-            Clipbucket_db::getInstance()->update(tbl('collections'), ['rating', 'rated_by', 'voters'], [$new_rate, $rated_by, '|no_mc|' . $voters], ' collection_id = ' . $id);
-            $userDetails = [
-                'object_id' => $id,
-                'type'      => 'collection',
-                'time'      => now(),
-                'rating'    => $rating,
-                'userid'    => user_id(),
-                'username'  => user_name()
-            ];
-            /* Updating user details */
-            update_user_voted($userDetails);
-            e(lang('thnx_for_voting'), 'm');
-        }
-
-        return [
-            'rating'     => $new_rate
-            , 'rated_by' => $rated_by
-            , 'total'    => 10
-            , 'id'       => $id
-            , 'type'     => 'collection'
-            , 'disable'  => 'disabled'
-        ];
     }
 
     /**
@@ -2429,7 +2368,7 @@ class Collections extends CBCategory
         if ($old == 0 || $old == null) {
             $this->add_collection_item($obj, $new);
         } else {
-            Clipbucket_db::getInstance()->update(tbl($this->items), ['collection_id'], [$new], ' collection_id = ' . $old . ' AND type = \'' . $this->objTable . '\' AND object_id = ' . $obj);
+            Clipbucket_db::getInstance()->update(tbl($this->items), ['collection_id'], [$new], ' collection_id = ' . (int)$old . ' AND type = \'' . $this->objTable . '\' AND object_id = ' . (int)$obj);
         }
     }
 
@@ -2492,12 +2431,15 @@ class Collections extends CBCategory
             $type = $this->objType;
         }
 
-        $objId = mysql_clean($objId);
-
+        $collections_that_contain_item_to_delete = Clipbucket_db::getInstance()->select(tbl('collection_items') . ' CI LEFT JOIN ' . tbl('collections') . ' C ON C.collection_id = CI.collection_id', 'C.collection_id, C.thumb_objectid'
+            , ' object_id = ' . (int)$objId . ' AND CI.type = \'' . $type . '\'');
         Clipbucket_db::getInstance()->execute('DELETE FROM ' . tbl('collection_items') . ' WHERE '
-            . ('type=\'' . $type . '\'') . ' AND ' . ('object_id=\'' . $objId . '\''));
-
-
+            . ('type=\'' . $type . '\'') . ' AND ' . ('object_id = ' . (int)$objId));
+        foreach ($collections_that_contain_item_to_delete as $collection) {
+            if ($collection['thumb_objectid'] == $objId) {
+                Collection::assignDefaultThumb($collection['collection_id']);
+            }
+        }
     }
 
     /**
@@ -2517,26 +2459,29 @@ class Collections extends CBCategory
 
         if( $col_data['type'] == 'videos' ){
             if (!$size || $size == 's') {
-                $size = '168x105';
+                $width = 168;
+                $height = 105;
             } else {
                 if ($size == 'l') {
-                    $size = '632x395';
+                    $width = 632;
+                    $height = 395;
                 } else {
-                    $size = '416x260';
+                    $width = '416';
+                    $height = '260';
                 }
             }
-            return get_thumb($object_id, false, $size);
+
+            return VideoThumbs::getDefaultThumbFile($object_id, $width, $height);
         }
 
-        if ($object_id) {
-            $param['details'] = Photo::getInstance()->getOne(['photo_id'=>$object_id]);
+        if (empty($size) || $size == 's') {
+            $size = '150';
+        } elseif ($size == 'l') {
+            $size = '900';
+        } elseif ($size == 'm') {
+            $size = '550';
         }
-        if (!$size) {
-            $param['size'] = 's';
-        } else {
-            $param['size'] = $size;
-        }
-        return get_photo($param);
+        return PhotoThumbs::getThumbFile($object_id, $size);
     }
 
 }

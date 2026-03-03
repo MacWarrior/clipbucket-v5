@@ -41,10 +41,10 @@ class VideoConversionQueue
             $conditions[] = ' ' . self::$tableName . '.id IN (' . implode(',', $param_ids) . ')';
         }
         if ($param_videoid) {
-            $conditions[] = ' ' . self::$tableName . '.videoid = ' . mysql_clean($param_videoid);
+            $conditions[] = ' ' . self::$tableName . '.videoid = ' . (int)$param_videoid;
         }
         if ($param_id) {
-            $conditions[] = ' ' . self::$tableName . '.id = ' . mysql_clean($param_id);
+            $conditions[] = ' ' . self::$tableName . '.id = ' . (int)$param_id;
         }
         if ($param_not_complete) {
             $conditions[] = ' ' . self::$tableName . '.is_completed != TRUE';

@@ -36,7 +36,7 @@
                     <div class="col-md-10">
                         <div class="row">
                             <div class="col-md-3">
-                                <img src="{getThumb vdetails=$video size=168x105}" width="130" height="80" id="thumbs_{$video.videoid}"/>
+                                <img src="{VideoThumbs::getDefaultThumbFile($video.videoid)}" width="130" height="80" id="thumbs_{$video.videoid}"/>
                             </div>
                             <div class="col-md-9">
                                 <a href="{DirPath::getUrl('admin_area')}edit_video.php?video={$video.videoid}" title="display_clean($video.title)">

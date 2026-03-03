@@ -3,21 +3,17 @@ function headerFooter()
     let headerheight = "";
     let footerheight = "";
     let cookie_banner = 0;
-    let cont_height = "";
-    let cont_height_new = "";
 
-    cont_height = $("#container").height();
     headerheight = $("#header").outerHeight();
     footerheight = $("#footer").outerHeight();
     if( $("#cookie-banner").length > 0 ){
         cookie_banner = $("#cookie-banner").is(":visible") ? $("#cookie-banner").outerHeight() : 0;
     }
 
-    cont_height_new = cont_height - (headerheight + footerheight + cookie_banner);
     $("#container").css('padding-top',headerheight+'px');
     $("#container").css('padding-bottom',(footerheight+cookie_banner)+'px');
 
-    $(".account-container, .page-error").css('height',cont_height_new+'px');
+    $(".account-container, .page-error").css('height','calc(100vh - '+(headerheight + footerheight + cookie_banner)+'px) ');
 }
 
 function shortKeys()
@@ -471,6 +467,16 @@ function homePageVideos(qlist_items)
                 $('#container').find('.total_videos_featured').hide();
                 AddingListenerModernThumbVideo();
                 AddingListenerModernThumbVideoPopinView();
+                $('.manage_favorite').on('click', function(){
+                    const button = $(this);
+                    button.removeClass('glyphicon-heart').html(_cb.loading_img);
+                    _cb.remove_from_fav('video', button.data('id')).then(function (data) {
+                        button.remove();
+                        $('.manage_favorite[data-id="'+button.data('id')+'"]').remove();
+                    }).catch(function (err) {
+                        button.addClass('glyphicon-heart').html('');
+                    });
+                });
             }
         });
     });

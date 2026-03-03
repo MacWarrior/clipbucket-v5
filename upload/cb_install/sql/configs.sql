@@ -35,8 +35,8 @@ INSERT INTO `{tbl_prefix}config` (`configid`, `name`, `value`) VALUES
 	(NULL, 'php_path', ''),
 	(NULL, 'videos_list_per_page', '30'),
 	(NULL, 'channels_list_per_page', '25'),
-	(NULL, 'video_rating', '1'),
-	(NULL, 'comment_rating', '1'),
+	(NULL, 'video_rating', 'yes'),
+	(NULL, 'comment_rating', 'yes'),
 	(NULL, 'video_download', '1'),
 	(NULL, 'video_embed', '1'),
 	(NULL, 'seo', 'no'),
@@ -137,11 +137,11 @@ INSERT INTO `{tbl_prefix}config` (`configid`, `name`, `value`) VALUES
 	(NULL, 'collection_collection_top_collections', '6'),
 	(NULL, 'collection_photos_top_collections', '6'),
 	(NULL, 'collection_items_page', '20'),
-	(NULL, 'channel_rating', '1'),
-	(NULL, 'own_channel_rating', '1'),
-	(NULL, 'collection_rating', '1'),
-	(NULL, 'own_collection_rating', '1'),
-	(NULL, 'own_video_rating', '1'),
+	(NULL, 'channel_rating', 'yes'),
+	(NULL, 'own_channel_rating', 'no'),
+	(NULL, 'collection_rating', 'yes'),
+	(NULL, 'own_collection_rating', 'no'),
+	(NULL, 'own_video_rating', 'no'),
 	(NULL, 'store_guest_session', '0'),
 	(NULL, 'delete_mass_upload', 'no'),
 	(NULL, 'comments_per_page', '15'),
@@ -161,7 +161,7 @@ INSERT INTO `{tbl_prefix}config` (`configid`, `name`, `value`) VALUES
 	(NULL, 'vid_cat_width', '120'),
 	(NULL, 'vid_cat_height', '120'),
 	(NULL, 'chromecast_fix', '1'),
-	(NULL, 'allowed_photo_types', 'jpg,jpeg,png'),
+	(NULL, 'allowed_photo_types', 'jpg,jpeg,png,gif'),
 	(NULL, 'logo_name', ''),
 	(NULL, 'favicon_name', ''),
 	(NULL, 'comment_per_page', '10'),
@@ -332,6 +332,15 @@ INSERT INTO `{tbl_prefix}config` (`configid`, `name`, `value`) VALUES
     (NULL, 'collections_enable_fullwidth', 'yes'),
     (NULL, 'collection_enable_fullwidth', 'yes'),
     (NULL, 'enable_user_profil_censor', 'no'),
+    (NULL, 'enable_allow_alias_email', 'yes'),
+    (NULL, 'enable_favorite_icon', 'yes'),
+    (NULL, 'keep_ratio_photo', 'yes'),
+    (NULL, 'ratio_photo', 1.7777),
+    (NULL, 'video_thumbs_format', 'webp'),
+    (NULL, 'video_remove_black_bars', 'yes'),
+    (NULL, 'random_video_order', 'yes'),
+    (NULL, 'enable_favorite_icon_photo', 'yes'),
+    (NULL, 'enable_favorite_icon_collection', 'yes'),
     (NULL, 'enable_membership', 'no');
 
 INSERT INTO `{tbl_prefix}video_resolution` (`title`, `ratio`, `enabled`, `width`, `height`, `video_bitrate`) VALUES
@@ -372,9 +381,7 @@ INSERT INTO `{tbl_prefix}tools` (`language_key_label`, `language_key_description
 
 INSERT INTO `{tbl_prefix}tags_type` (`name`) VALUES ('video'), ('photo'), ('collection'), ('profile'), ('playlist'), ('actors'), ('producer'), ('executive_producer'), ('director'), ('crew'), ('genre');
 
-UPDATE `{tbl_prefix}video_thumbs` SET `type` = 'auto' WHERE `type` IS NULL;
-
-INSERT INTO `{tbl_prefix}categories_type` (`name`)
+INSERT INTO `{tbl_prefix}object_type` (`name`)
 VALUES ('video'),
        ('photo'),
        ('collection'),
@@ -382,23 +389,23 @@ VALUES ('video'),
        ('playlist');
 
 SET @type_collection = (
-    SELECT id_category_type
-    FROM `{tbl_prefix}categories_type`
+    SELECT id_object_type
+    FROM `{tbl_prefix}object_type`
     WHERE name LIKE 'collection'
 );
 SET @type_user = (
-    SELECT id_category_type
-    FROM `{tbl_prefix}categories_type`
+    SELECT id_object_type
+    FROM `{tbl_prefix}object_type`
     WHERE name LIKE 'user'
 );
 SET @type_video = (
-    SELECT id_category_type
-    FROM `{tbl_prefix}categories_type`
+    SELECT id_object_type
+    FROM `{tbl_prefix}object_type`
     WHERE name LIKE 'video'
 );
 SET @type_photo = (
-    SELECT id_category_type
-    FROM `{tbl_prefix}categories_type`
+    SELECT id_object_type
+    FROM `{tbl_prefix}object_type`
     WHERE name LIKE 'photo'
 );
 
@@ -1688,8 +1695,6 @@ INSERT INTO `{tbl_prefix}fontawesome_icons` (`icon`) VALUES
     ('youtube-play'),
     ('youtube-square');
 
-INSERT IGNORE INTO `{tbl_prefix}flag_element_type` (`name`) SELECT name FROM `{tbl_prefix}categories_type`;
-
 INSERT IGNORE INTO `{tbl_prefix}flag_type` (`language_key`)
 VALUES ('inapp_content'),
        ('copyright_infring'),
@@ -1736,7 +1741,8 @@ VALUES ('most_old', 'videos', FALSE),
        ('reverse_alphabetical', 'videos', false),
        ('reverse_alphabetical', 'photos', false),
        ('reverse_alphabetical', 'collections', false),
-       ('reverse_alphabetical', 'channels', false);
+       ('reverse_alphabetical', 'channels', false),
+       ('random', 'videos', false);
 
 INSERT INTO `{tbl_prefix}currency` (`country`, `code`, `symbol`)
 VALUES ('Albania Lek', 'ALL', 'Lek'),

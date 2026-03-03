@@ -4,7 +4,7 @@ include('../includes/config.inc.php');
 
 require_once DirPath::get('classes') . 'sLog.php';
 
-if (!Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.2', '148')) {
+if (!Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '14')) {
     upload_error('Sorry, you cannot upload new videos until the application has been fully updated by an administrator');
     die();
 }
@@ -30,13 +30,13 @@ switch ($mode) {
         CBvideo::getInstance()->update_video();
         if (empty(errorhandler::getInstance()->get_error()) && !empty($_POST['videoid'])) {
             if( !empty($_POST['default_thumb']) ){
-                Video::getInstance()->setDefautThumb($_POST['default_thumb'], 'thumb', $_POST['videoid']);
+                Video::getInstance()->setDefaultPicture($_POST['videoid'], $_POST['default_thumb'], 'thumbnail');
             }
             if (config('enable_video_poster') == 'yes' && !empty($_POST['default_poster'])) {
-                Video::getInstance()->setDefautThumb($_POST['default_poster'], 'poster', $_POST['videoid']);
+                Video::getInstance()->setDefaultPicture($_POST['videoid'], $_POST['default_poster'], 'poster');
             }
             if (config('enable_video_backdrop') == 'yes' && !empty($_POST['default_backdrop'])) {
-                Video::getInstance()->setDefautThumb($_POST['default_backdrop'], 'backdrop', $_POST['videoid']);
+                Video::getInstance()->setDefaultPicture($_POST['videoid'], $_POST['default_backdrop'], 'backdrop');
             }
         }
 
@@ -113,8 +113,8 @@ switch ($mode) {
         $log->writeLine(date('Y-m-d H:i:s').' - File Uploaded to Temp directory successfully and video conversion file is being executed !');
 
         $filename_without_ext = pathinfo($original_filename, PATHINFO_FILENAME);
-        if (strlen($filename_without_ext) > config('max_video_title')) {
-            $filename_without_ext = substr($filename_without_ext, 0, config('max_video_title'));
+        if (mb_strlen($filename_without_ext) > config('max_video_title')) {
+            $filename_without_ext = mb_substr($filename_without_ext, 0, config('max_video_title'));
         }
 
         if( Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.0', '331') ){
@@ -130,7 +130,7 @@ switch ($mode) {
             , 'description'     => $filename_without_ext
             , 'file_type'       => $extension
             , 'category'        => $category
-            , 'userid'          => user_id()
+            , 'userid'          => User::getInstance()->getCurrentUserID()
             , 'allow_comments'  => 'yes'
             , 'comment_voting'  => 'yes'
             , 'allow_rating'    => 'yes'
