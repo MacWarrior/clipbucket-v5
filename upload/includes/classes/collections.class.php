@@ -760,7 +760,7 @@ class Collection extends Objects
         $item_id = mysql_clean($item_id);
         $collection_id = mysql_clean($collection_id);
 
-        if (!user_id()) {
+        if (!User::getInstance()->isUserConnected()) {
             e(lang('you_not_logged_in'));
             return false;
         }
@@ -793,8 +793,13 @@ class Collection extends Objects
             return false;
         }
 
+        if (($collection['public_upload'] !='yes' && $collection['userid'] != User::getInstance()->getCurrentUserID() && !User::getInstance()->hasAdminAccess() ) || !User::getInstance()->hasPermission('view_collections')) {
+            e(lang('cant_perform_action_collect'));
+            return false;
+        }
+
         $fields = ['collection_id', 'object_id', 'type', 'userid', 'date_added'];
-        $values = [$collection_id, $item_id, $type, user_id(), NOW()];
+        $values = [$collection_id, $item_id, $type, User::getInstance()->getCurrentUserID(), NOW()];
 
         Clipbucket_db::getInstance()->insert(tbl($this->getTableNameItems()), $fields, $values);
         e(lang('item_added_in_collection', strtolower(lang($type))), 'm');
@@ -1000,7 +1005,7 @@ class Collection extends Objects
             return false;
         }
         $collection = self::getInstance()->getOne(['collection_id' => $collection_id]);
-        if (!$collection['userid'] == User::getInstance()->getCurrentUserID() && !User::getInstance()->hasAdminAccess() && !User::getInstance()->hasPermission('view_collections')) {
+        if ((!$collection['userid'] == User::getInstance()->getCurrentUserID() && !User::getInstance()->hasAdminAccess()) || !User::getInstance()->hasPermission('view_collections')) {
             e(lang('cant_perform_action_collect'));
             return false;
         }
@@ -1359,13 +1364,10 @@ class Collections extends CBCategory
      * @param        $ci_id
      * @param        $cid
      * @param string $item
-     * @param int $limit
-     * @param bool $check_only
-     *
      * @return array|bool
      * @throws Exception
      */
-    function get_next_prev_item($ci_id, $cid, $item = 'prev', $limit = 1, $check_only = false)
+    function get_next_prev_item($ci_id, $cid, string $item = 'prev'): bool|array
     {
         $iTbl = tbl($this->items);
         $oTbl = tbl($this->objTable);
@@ -1378,30 +1380,26 @@ class Collections extends CBCategory
         } elseif ($item == 'next') {
             $op = '<';
             $order = $iTbl . '.ci_id DESC';
-        } elseif ($item == null) {
+        } else {
             $op = '=';
             $order = '';
         }
 
         $cond = ' ' . $iTbl . '.collection_id = ' . $cid . ' AND ' . $iTbl . '.ci_id ' . $op . ' ' . $ci_id . ' AND ' . $iTbl . '.object_id = ' . $oTbl . '.' . $this->objFieldID . ' AND ' . $oTbl . '.userid = ' . $uTbl . '.userid';
-        if (!$check_only) {
-            $result = Clipbucket_db::getInstance()->select($tbls, $iTbl . '.*,' . $oTbl . '.*,' . $uTbl . '.username', $cond, $limit, $order);
+        $result = Clipbucket_db::getInstance()->select($tbls, $iTbl . '.*,' . $oTbl . '.*,' . $uTbl . '.username', $cond, 1, $order);
 
-            // Result was empty. Checking if we were going backwards, So bring last item
-            if (empty($result) && $item == 'prev') {
-                $order = $iTbl . '.ci_id ASC';
-                $op = '<';
-                $result = Clipbucket_db::getInstance()->select($tbls, $iTbl . '.*,' . $oTbl . '.*,' . $uTbl . '.username', ' ' . $iTbl . '.collection_id = ' . $cid . ' AND ' . $iTbl . '.ci_id ' . $op . ' ' . $ci_id . ' AND ' . $iTbl . '.object_id = ' . $oTbl . '.' . $this->objFieldID . ' AND ' . $oTbl . '.userid = ' . $uTbl . '.userid', $limit, $order);
-            }
+        // Result was empty. Checking if we were going backwards, So bring last item
+        if (empty($result) && $item == 'prev') {
+            $order = $iTbl . '.ci_id ASC';
+            $op = '<';
+            $result = Clipbucket_db::getInstance()->select($tbls, $iTbl . '.*,' . $oTbl . '.*,' . $uTbl . '.username', ' ' . $iTbl . '.collection_id = ' . $cid . ' AND ' . $iTbl . '.ci_id ' . $op . ' ' . $ci_id . ' AND ' . $iTbl . '.object_id = ' . $oTbl . '.' . $this->objFieldID . ' AND ' . $oTbl . '.userid = ' . $uTbl . '.userid', 1, $order);
+        }
 
-            // Result was empty. Checking if we were going forwards, So bring first item
-            if (empty($result) && $item == 'next') {
-                $order = $iTbl . '.ci_id DESC';
-                $op = '>';
-                $result = Clipbucket_db::getInstance()->select($tbls, $iTbl . '.*,' . $oTbl . '.*,' . $uTbl . '.username', ' ' . $iTbl . '.collection_id = ' . $cid . ' AND ' . $iTbl . '.ci_id ' . $op . ' ' . $ci_id . ' AND ' . $iTbl . '.object_id = ' . $oTbl . '.' . $this->objFieldID . ' AND ' . $oTbl . '.userid = ' . $uTbl . '.userid', $limit, $order);
-            }
-        } else {
-            $result = Clipbucket_db::getInstance()->count($iTbl . ',' . $oTbl, $iTbl . '.ci_id', ' ' . $iTbl . '.collection_id = ' . $cid . ' AND ' . $iTbl . '.ci_id ' . $op . ' ' . $ci_id . ' AND ' . $iTbl . '.object_id = $oTbl.' . $this->objFieldID, $limit, $order);
+        // Result was empty. Checking if we were going forwards, So bring first item
+        if (empty($result) && $item == 'next') {
+            $order = $iTbl . '.ci_id DESC';
+            $op = '>';
+            $result = Clipbucket_db::getInstance()->select($tbls, $iTbl . '.*,' . $oTbl . '.*,' . $uTbl . '.username', ' ' . $iTbl . '.collection_id = ' . $cid . ' AND ' . $iTbl . '.ci_id ' . $op . ' ' . $ci_id . ' AND ' . $iTbl . '.object_id = ' . $oTbl . '.' . $this->objFieldID . ' AND ' . $oTbl . '.userid = ' . $uTbl . '.userid', 1, $order);
         }
 
         if ($result) {

@@ -73,7 +73,7 @@ fi
 
 # Démarrer PHP-FPM
 echo "Starting PHP-FPM..."
-php-fpm8.2 -F --fpm-config /etc/php/8.2/fpm/php-fpm.conf --nodaemonize &
+php-fpm8.4 -F --fpm-config /etc/php/8.4/fpm/php-fpm.conf --nodaemonize &
 php_pid=$!
 
 # Initialiser le compteur de temps d'attente
@@ -81,19 +81,19 @@ timeout=200
 elapsed=0
 
 # Attendre que le fichier de socket soit créé, avec une limite de 20 secondes
-while [ ! -e /run/php/php8.2-fpm.sock ] && [ $elapsed -lt $timeout ]; do
+while [ ! -e /run/php/php8.4-fpm.sock ] && [ $elapsed -lt $timeout ]; do
   sleep 0.1  # Petite attente pour éviter une boucle infinie excessive
   elapsed=$((elapsed + 1))  # Incrémenter le compteur en utilisant des entiers
 done
 
 # Si le fichier de socket n'a pas été trouvé après 20 secondes, échouer
-if [ ! -e /run/php/php8.2-fpm.sock ]; then
+if [ ! -e /run/php/php8.4-fpm.sock ]; then
   echo "Erreur : Le fichier de socket PHP-FPM n'a pas été créé après 20 secondes."
   exit 1
 fi
 
 # Changer le propriétaire du fichier de socket une fois qu'il est disponible
-chown ${USER_NAME}:${USER_NAME} /run/php/php8.2-fpm.sock
+chown ${USER_NAME}:${USER_NAME} /run/php/php8.4-fpm.sock
 
 # Vérifier si les sources existent
 if [ ! "$(ls -A /srv/http/clipbucket)" ]; then
