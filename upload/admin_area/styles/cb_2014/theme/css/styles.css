@@ -1344,3 +1344,32 @@ a:disabled {
     opacity: .35; filter:Alpha(Opacity=35); background-image: none;
     cursor: not-allowed !important;
 }
+
+.cursor_help {
+    cursor: help;
+}
+
+.switch-inline{
+    display:flex;
+    align-items:center;
+    gap:12px;
+}
+
+.switch-inline > label.show{
+    margin:0;
+    white-space:nowrap;
+}
+
+.switch-inline .row{
+    margin:0;
+    flex:0 0 auto;
+    width:auto;
+}
+
+.switch-inline .row .col-md-1,
+.switch-inline .row .col-md-7{
+    padding-left:0;
+    padding-right:0;
+    width:auto;
+    flex:0 0 auto;
+}

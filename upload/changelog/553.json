@@ -1,6 +1,6 @@
 {
   "version":"5.5.3",
-  "revision":"54",
+  "revision":"63",
   "status":"stable",
   "detail":[
     {
@@ -17,6 +17,8 @@
         ,"Fix unstuck update tool from admin dashboard"
         ,"Fix possible wrong error message display on core/db update from dashboard"
         ,"Fix todo deletion"
+        ,"Fix possible XSS injection (Thanks @sy460129 !)"
+        ,"Fix flagged video count"
       ]
     },
     {
@@ -27,6 +29,8 @@
         ,"Implement collection rating"
         ,"Implement random video order"
         ,"Implement support for ultrawide screens"
+        ,"Implement photo next/previous actions with keyboard"
+        ,"Implement featured collection hierarchy display"
         ,"Update media rating"
         ,"Update collection management"
         ,"Add signup date of birth calendar icon"
@@ -42,6 +46,8 @@
         ,"Fix missing minified JS file"
         ,"Fix JS error on subtitle upload from video upload form"
         ,"Fix video favorite icon display and action"
+        ,"Fix photo display"
+        ,"Fix possible collection edition fron unauthorized user (Thanks @sy460129 !)"
       ]
     },
     {
@@ -54,6 +60,7 @@
         ,"Cleanup code"
         ,"Drop support for PHP 8.0"
         ,"Drop outdated & unused columns"
+        ,"Improve MySQL auto-reconnect handling"
         ,"Fix possible PHP error with discord logs"
         ,"Fix possible issue with migration 5.5.3 - 14"
         ,"Fix SQL error on video, photo & collection deletion"
@@ -65,6 +72,14 @@
         ,"Fix possible SQL injection"
         ,"Fix possible duplicate configs"
         ,"Fix SSRF vulnerability (Thanks @Takumi142857 !)"
+        ,"Fix Readme"
+        ,"Fix docker image <i>(#781, #782)</i>"
+      ]
+    },
+    {
+      "title": "Installation & Update",
+      "description": [
+        "Fix SQL error on installation"
       ]
     },
     {
@@ -74,8 +89,10 @@
         ,"Implement Gif image thumbs"
         ,"Implement Remove hard-coded letterboxing / pillarboxing option"
         ,"Prevent photo thumbs generation when not needed"
+        ,"Detect corrupted video files"
         ,"Fix conversion logs"
         ,"Fix PNG transparency"
+        ,"Fix temp file deletion on conversion failure"
       ]
     },
     {
