@@ -745,7 +745,7 @@ class Update
 
     private function runGitCommandWithBusyRetry(string $git_command): string
     {
-        $max_attempts = 5;
+        $max_attempts = 30;
         $attempt = 1;
         $output = '';
 
@@ -755,7 +755,7 @@ class Update
                 return (string)$output;
             }
 
-            usleep(500000 * $attempt);
+            usleep(2000000);
             $attempt++;
         }
 
@@ -779,7 +779,7 @@ class Update
         }
 
         $return_reset = $update->resetGitRepository($root_directory);
-        if( !empty($return_reset) ){
+        if (!empty($return_reset) && stripos($return_reset, 'Text file busy') === false) {
             if( System::isInDev() ){
                 DiscordLog::sendDump($return_reset);
             }
