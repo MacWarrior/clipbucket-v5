@@ -88,13 +88,9 @@ fclose($tmp_file);
 chdir(DirPath::get('root'));
 $cmd = System::get_binaries('php') . ' -q ' . escapeshellarg(DirPath::get('temp') . 'update_core_tmp.php') . ' ' . escapeshellarg($_POST['type']);
 if (stristr(PHP_OS, 'WIN')) {
-    $complement = '';
-} elseif (stristr(PHP_OS, 'darwin')) {
-    $complement = ' </dev/null >/dev/null &';
+    shell_exec($cmd);
 } else { // for ubuntu or linux
-    $complement = ' > /dev/null &';
+    shell_exec('sh -c ' . escapeshellarg('sleep 1; ' . $cmd . ' >/dev/null 2>&1 &'));
 }
 
-$cmd .= $complement;
-shell_exec($cmd);
 die;
