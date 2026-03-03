@@ -5,7 +5,7 @@ require_once \DirPath::get('classes') . DIRECTORY_SEPARATOR . 'migration' . DIRE
 require_once \DirPath::get('classes') . 'video_thumbs.class.php';
 require_once \DirPath::get('classes') . 'update.class.php';
 
-class MWIP extends \Migration
+class M00064 extends \Migration
 {
     /**
      * @throws \Exception
@@ -41,7 +41,7 @@ class MWIP extends \Migration
                 'get_is_auto'             => true,
                 'get_type'                => true
             ]);
-            $offset += $limit;
+
             foreach ($videos_images as $videos_image) {
                 $path = $videos_image['file_directory'] . DIRECTORY_SEPARATOR . $videos_image['file_name'];
                 if (!is_dir($new_path . DIRECTORY_SEPARATOR . $path)) {
