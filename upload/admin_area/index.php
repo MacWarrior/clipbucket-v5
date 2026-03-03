@@ -143,6 +143,9 @@ if( config('enable_update_checker') == '1' ){
     Assign('update_checker_content', $update->getUpdateHTML());
 }
 
+assign('ongoing_conversion', VideoConversionQueue::getAll(['count' => true, 'not_complete'=>true]));
+assign('online_users', count(userquery::getInstance()->get_online_users()));
+
 ClipBucket::getInstance()->addAdminJS(['pages/dashboard/dashboard'.$min_suffixe.'.js' => 'admin']);
 
 $info_php = Update::getInstance()->CheckPHPVersion();
