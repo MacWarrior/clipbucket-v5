@@ -145,7 +145,13 @@ if( config('enable_update_checker') == '1' ){
 
 assign('ongoing_conversion', VideoConversionQueue::getAll(['count' => true, 'not_complete'=>true]));
 assign('online_users', count(userquery::getInstance()->get_online_users()));
-
+$progress_tools = [];
+if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.0', '367')) {
+    $progress_tools = AdminTool::getTools([
+        '  tools_histo.id_tools_histo_status IN (SELECT id_tools_histo_status FROM ' . tbl('tools_histo_status') . ' WHERE language_key_title IN(\'in_progress\',\'stopping\'))'
+    ]);
+}
+assign('progress_tools', $progress_tools);
 ClipBucket::getInstance()->addAdminJS(['pages/dashboard/dashboard'.$min_suffixe.'.js' => 'admin']);
 
 $info_php = Update::getInstance()->CheckPHPVersion();
