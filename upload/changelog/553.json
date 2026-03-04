@@ -1,6 +1,6 @@
 {
   "version":"5.5.3",
-  "revision":"64",
+  "revision":"65",
   "status":"stable",
   "detail":[
     {
@@ -20,6 +20,7 @@
         ,"Fix todo deletion"
         ,"Fix possible XSS injection (Thanks @sy460129 !)"
         ,"Fix flagged video count"
+        ,"Fix possible error when updating after failed update"
       ]
     },
     {
