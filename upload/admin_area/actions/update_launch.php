@@ -62,16 +62,14 @@ if (empty(AdminTool::getInstance())) {
 if ($type == \'core\' && $core_tool->isAlreadyLaunch() === false) {
     $core_tool->setToolInProgress();
     $core_tool->launch();
-    Update::getInstance()->flush();
+     Update::getInstance()->flush();
 
     if (AdminTool::getInstance()->isAlreadyLaunch() === false) {
         $cmd = System::get_binaries(\'php\') . \' -q \' . escapeshellarg(__FILE__) . \' db\';
         if (stristr(PHP_OS, \'WIN\')) {
             shell_exec($cmd);
-        } elseif (stristr(PHP_OS, \'darwin\')) {
-            shell_exec($cmd . \' </dev/null >/dev/null &\');
         } else {
-            shell_exec($cmd . \' > /dev/null &\');
+            shell_exec(\'sh -c \' . escapeshellarg(\'sleep 10; \' . $cmd . \' >/dev/null 2>&1 &\'));
         }
     }
     die;
@@ -83,6 +81,8 @@ if ($type == \'db\' && AdminTool::getInstance()->isAlreadyLaunch() === false) {
     AdminTool::getInstance()->launch();
 }
 ?>';
+
+DiscordLog::sendDump($data);
 fwrite($tmp_file, $data);
 fclose($tmp_file);
 chdir(DirPath::get('root'));
@@ -90,7 +90,7 @@ $cmd = System::get_binaries('php') . ' -q ' . escapeshellarg(DirPath::get('temp'
 if (stristr(PHP_OS, 'WIN')) {
     shell_exec($cmd);
 } else { // for ubuntu or linux
-    shell_exec('sh -c ' . escapeshellarg('sleep 1; ' . $cmd . ' >/dev/null 2>&1 &'));
+    shell_exec('sh -c ' . escapeshellarg('sleep 10; ' . $cmd . ' >/dev/null 2>&1 &'));
 }
 
 die;
