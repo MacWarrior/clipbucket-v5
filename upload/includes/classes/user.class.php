@@ -230,6 +230,11 @@ class User extends Objects
         return self::$user[$user_id];
     }
 
+    public static function clearInstance()
+    {
+       self::$user = [];
+    }
+
     public function getTableName(): string
     {
         return $this->tablename;
