@@ -41,6 +41,7 @@ try {
             User::getInstance()->hasPermissionAjax('view_channel');
             User::ratingUpdate($id, $rating);
             break;
+
         case 'comment':
             User::getInstance()->hasPermissionAjax('view_channel');
             Comments::ratingUpdate($id, $rating);
