@@ -62,6 +62,13 @@
 {/if}
 
 <script type="text/javascript">
+    function doubleClickHandler(event) {
+        if (this.isFullscreen()) {
+            this.exitFullscreen();
+        } else {
+            this.requestFullscreen();
+        }
+    }
     //player settings
     var cb_player_setup = {
         plugins : { },
@@ -88,6 +95,11 @@
                 "FullscreenToggle", // Plein écran
                 {if config('chromecast')=='yes' && Network::is_ssl()}"ChromeCastButton",{/if}
             ]
+        },
+        userActions: {
+            doubleClick: {
+                doubleClickHandler
+            }
         }
     };
 
