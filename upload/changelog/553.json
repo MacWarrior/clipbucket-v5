@@ -1,6 +1,6 @@
 {
   "version":"5.5.3",
-  "revision":"65",
+  "revision":"66",
   "status":"stable",
   "detail":[
     {
@@ -33,6 +33,7 @@
         ,"Implement support for ultrawide screens"
         ,"Implement photo next/previous actions with keyboard"
         ,"Implement featured collection hierarchy display"
+        ,"Implement add new collection button from owned collection"
         ,"Update media rating"
         ,"Update collection management"
         ,"Add signup date of birth calendar icon"
