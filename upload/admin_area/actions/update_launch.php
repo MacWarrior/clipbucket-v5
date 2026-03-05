@@ -41,6 +41,9 @@ $data = /** @lang PHP */
 if (php_sapi_name() != \'cli\') {
     die;
 }
+
+sleep(2);
+
 const THIS_PAGE = \'update_core_tmp\';
 include_once \'' . DirPath::get('includes') . 'admin_config.php' . '\';
 $type = \'' . $_POST['type'] . '\';
@@ -76,9 +79,9 @@ $cmd = System::get_binaries('php') . ' -q ' . DirPath::get('temp') . 'update_cor
 if (stristr(PHP_OS, 'WIN')) {
     $complement = '';
 } elseif (stristr(PHP_OS, 'darwin')) {
-    $complement = ' </dev/null >/dev/null &';
+    $complement = ' </dev/null >/dev/null 2>&1 &';
 } else { // for ubuntu or linux
-    $complement = ' > /dev/null &';
+    $complement = ' > /dev/null 2>&1 &';
 }
 
 $cmd .= $complement;
