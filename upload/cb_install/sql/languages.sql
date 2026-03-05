@@ -1801,4 +1801,6 @@ VALUES ('ongoing_conversion'),
        ('display_collection_hierarchy_featured_hint'),
        ('hierarchy_featured'),
        ('regenerate_all_video_thumbs_label'),
-       ('regenerate_all_video_thumbs_description');
+       ('regenerate_all_video_thumbs_description'),
+       ('option_enable_own_comment_rating'),
+       ('comment_rate_disabled');

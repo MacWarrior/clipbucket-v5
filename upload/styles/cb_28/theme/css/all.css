@@ -1675,7 +1675,6 @@ h1 {
 .rating .like-dislike {
   display: inline-block;
   vertical-align: middle;
-  margin: 0 16px 0 0;
 }
 
 .rating .like-dislike a {
@@ -2500,7 +2499,7 @@ textarea#comment_box {
 }
 
 .comments>ul>li .comment-info .commenter {
-  display: block;
+  display: flex;
   font: 16px/16px "source_sans_prosemibold", sans-serif;
   margin: 0 0 10px;
 }
@@ -7104,7 +7103,7 @@ li.up_vid > a[disabled],li.up_img > a[disabled] {
     box-shadow: none;
 }
 
-li:has(a.disabled) {
+li:not(.not_disabled):has(a.disabled) {
     cursor: not-allowed;
     filter: alpha(opacity=65);
     opacity: .65;
