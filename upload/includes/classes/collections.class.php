@@ -967,7 +967,7 @@ class Collection extends Objects
     public function getAvailableParents($collection_id, $type, $display_group = false): array
     {
         $params = [
-            'type'   => $type,
+            'type' => $type
         ];
 
         if (!empty($collection_id)) {
