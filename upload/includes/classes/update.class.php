@@ -765,6 +765,11 @@ class Update
             throw new Exception('Unable to get git root directory');
         }
 
+        $lock_filepath = $root_directory . DIRECTORY_SEPARATOR . '.git' . DIRECTORY_SEPARATOR . 'index.lock';
+        if( file_exists($lock_filepath) ){
+            unlink($lock_filepath);
+        }
+
         $return_reset = $update->resetGitRepository($root_directory);
         if( !empty($return_reset) ){
             if( System::isInDev() ){

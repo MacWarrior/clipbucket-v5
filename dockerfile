@@ -188,6 +188,7 @@ RUN sed -i "s/DOMAIN_NAME_PLACEHOLDER/${DOMAIN_NAME}/g" /etc/nginx/sites-availab
 
 # Ajouter un script d'entrée pour init bdd et sources si necessaire
 COPY docker/entrypoint.sh /usr/local/bin/
+RUN sed -i 's/\r$//' /usr/local/bin/entrypoint.sh
 RUN chmod +x /usr/local/bin/entrypoint.sh
 
 # Créer les volumes pour la bdd et les sources

@@ -56,6 +56,9 @@ class Collection extends Objects
         if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '299')) {
             $this->fields[] = 'sort_type';
         }
+        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '63')) {
+            $this->fields[] = 'hierarchy_featured';
+        }
 
         $this->fields_items = [
             'ci_id'
@@ -757,7 +760,7 @@ class Collection extends Objects
         $item_id = mysql_clean($item_id);
         $collection_id = mysql_clean($collection_id);
 
-        if (!user_id()) {
+        if (!User::getInstance()->isUserConnected()) {
             e(lang('you_not_logged_in'));
             return false;
         }
@@ -790,8 +793,13 @@ class Collection extends Objects
             return false;
         }
 
+        if (($collection['public_upload'] !='yes' && $collection['userid'] != User::getInstance()->getCurrentUserID() && !User::getInstance()->hasAdminAccess() ) || !User::getInstance()->hasPermission('view_collections')) {
+            e(lang('cant_perform_action_collect'));
+            return false;
+        }
+
         $fields = ['collection_id', 'object_id', 'type', 'userid', 'date_added'];
-        $values = [$collection_id, $item_id, $type, user_id(), NOW()];
+        $values = [$collection_id, $item_id, $type, User::getInstance()->getCurrentUserID(), NOW()];
 
         Clipbucket_db::getInstance()->insert(tbl($this->getTableNameItems()), $fields, $values);
         e(lang('item_added_in_collection', strtolower(lang($type))), 'm');
@@ -907,6 +915,7 @@ class Collection extends Objects
             $params['collection_id_parent'] = 0;
         }
         $params['display_indent'] = true;
+        $params['can_upload'] = true;
         $parents = $this->getAll($params);
 
         foreach ($parents as &$parent) {
@@ -958,8 +967,7 @@ class Collection extends Objects
     public function getAvailableParents($collection_id, $type, $display_group = false): array
     {
         $params = [
-            'type'   => $type,
-            'userid' => user_id()
+            'type' => $type
         ];
 
         if (!empty($collection_id)) {
@@ -997,7 +1005,7 @@ class Collection extends Objects
             return false;
         }
         $collection = self::getInstance()->getOne(['collection_id' => $collection_id]);
-        if (!$collection['userid'] == User::getInstance()->getCurrentUserID() && !User::getInstance()->hasAdminAccess() && !User::getInstance()->hasPermission('view_collections')) {
+        if ((!$collection['userid'] == User::getInstance()->getCurrentUserID() && !User::getInstance()->hasAdminAccess()) || !User::getInstance()->hasPermission('view_collections')) {
             e(lang('cant_perform_action_collect'));
             return false;
         }
@@ -1653,6 +1661,23 @@ class Collections extends CBCategory
             'display_function'  => 'display_sharing_opt',
             'default_value'     => 'no'
         ];
+
+        if (config('enable_featured_collection_hierarchy') == 'yes' && Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '63')) {
+            $return['hierarchy_featured'] = [
+                'title'             => lang('hierarchy_featured'),
+                'class'             => 'form-control',
+                'type'              => 'checkboxv2',
+                'id'                => 'hierarchy_featured',
+                'name'              => 'hierarchy_featured',
+                'value'             => 'yes',
+                'checked'           => $default['hierarchy_featured'] ?? 'no',
+                'hint_icon'         => lang('display_collection_hierarchy_featured_hint'),
+                'db_field'          => 'hierarchy_featured',
+                'required'          => 'no',
+                'validate_function' => 'yes_or_no',
+                'default_value'     => 'yes'
+            ];
+        }
 
 
         return $return;

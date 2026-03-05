@@ -1,6 +1,6 @@
 {
   "version":"5.5.3",
-  "revision":"57",
+  "revision":"66",
   "status":"stable",
   "detail":[
     {
@@ -9,6 +9,7 @@
         "Refactor templates management"
         ,"Implement email alias allow option"
         ,"Implement templates edition"
+        ,"Implement Regenerate videos thumbs tool"
         ,"Update advanced settings display"
         ,"Hide poster & backdrop tabs when empty on video edition page"
         ,"Fix JS error on playlist management page"
@@ -17,6 +18,9 @@
         ,"Fix unstuck update tool from admin dashboard"
         ,"Fix possible wrong error message display on core/db update from dashboard"
         ,"Fix todo deletion"
+        ,"Fix possible XSS injection (Thanks @sy460129 !)"
+        ,"Fix flagged video count"
+        ,"Fix possible error when updating after failed update"
       ]
     },
     {
@@ -28,6 +32,8 @@
         ,"Implement random video order"
         ,"Implement support for ultrawide screens"
         ,"Implement photo next/previous actions with keyboard"
+        ,"Implement featured collection hierarchy display"
+        ,"Implement add new collection button from owned collection"
         ,"Update media rating"
         ,"Update collection management"
         ,"Add signup date of birth calendar icon"
@@ -44,6 +50,7 @@
         ,"Fix JS error on subtitle upload from video upload form"
         ,"Fix video favorite icon display and action"
         ,"Fix photo display"
+        ,"Fix possible collection edition fron unauthorized user (Thanks @sy460129 !)"
       ]
     },
     {
@@ -56,6 +63,8 @@
         ,"Cleanup code"
         ,"Drop support for PHP 8.0"
         ,"Drop outdated & unused columns"
+        ,"Improve MySQL auto-reconnect handling"
+        ,"Migrate old video thumbs to newer storage structure"
         ,"Fix possible PHP error with discord logs"
         ,"Fix possible issue with migration 5.5.3 - 14"
         ,"Fix SQL error on video, photo & collection deletion"
@@ -68,6 +77,7 @@
         ,"Fix possible duplicate configs"
         ,"Fix SSRF vulnerability (Thanks @Takumi142857 !)"
         ,"Fix Readme"
+        ,"Fix docker image <i>(#781, #782)</i>"
       ]
     },
     {
@@ -83,8 +93,10 @@
         ,"Implement Gif image thumbs"
         ,"Implement Remove hard-coded letterboxing / pillarboxing option"
         ,"Prevent photo thumbs generation when not needed"
+        ,"Detect corrupted video files"
         ,"Fix conversion logs"
         ,"Fix PNG transparency"
+        ,"Fix temp file deletion on conversion failure"
       ]
     },
     {
