@@ -7,6 +7,8 @@ Ce Dockerfile supporte de multiples configurations pour répondre à différents
 | Argument | Description | Valeurs possibles | Défaut |
 |----------|-------------|-------------------|--------|
 | `PHP_VERSION` | Version de PHP | `8.1`, `8.2`, `8.3`, `8.4`, `8.5` | `8.4` |
+| `DOMAIN_NAME` | Domaine pour ClipBucket | string | `clipbucket.local` |
+| `PHPMYADMIN_DOMAIN` | Domaine pour phpMyAdmin | string | `phpmyadmin.local` |
 | `LITE` | Mode sans MariaDB | `true`, `false` | `false` |
 | `INSTALL_PHPMYADMIN` | Installer phpMyAdmin | `true`, `false` | `false` |
 | `INSTALL_XDEBUG` | Installer Xdebug | `true`, `false` | `false` |
@@ -39,6 +41,14 @@ docker build -t clipbucket-v5:dev \
 ```bash
 docker build -t clipbucket-v5:lite \
   --build-arg LITE=true .
+```
+
+### Build avec domaines personnalisés
+```bash
+docker build -t clipbucket-v5:custom \
+  --build-arg DOMAIN_NAME=myvideo.local \
+  --build-arg PHPMYADMIN_DOMAIN=dbadmin.myvideo.local \
+  --build-arg INSTALL_PHPMYADMIN=true .
 ```
 
 ### Build production avec Redis
@@ -81,7 +91,8 @@ Les images sont automatiquement buildées et publiées avec les tags suivants :
 
 | Variable | Description | Défaut |
 |----------|-------------|--------|
-| `DOMAIN_NAME` | Nom de domaine | `clipbucket.local` |
+| `DOMAIN_NAME` | Domaine pour ClipBucket | `clipbucket.local` |
+| `PHPMYADMIN_DOMAIN` | Domaine pour phpMyAdmin | `phpmyadmin.local` |
 | `MYSQL_PASSWORD` | Mot de passe MySQL | `clipbucket_password` |
 | `UID` | UID utilisateur | `1000` |
 | `GID` | GID utilisateur | `1000` |

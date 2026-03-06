@@ -36,6 +36,16 @@ on:
         required: true
         default: false
         type: boolean
+      domain_name:
+        description: 'Domain name for ClipBucket'
+        required: true
+        default: 'clipbucket.local'
+        type: string
+      phpmyadmin_domain:
+        description: 'Domain name for phpMyAdmin'
+        required: true
+        default: 'phpmyadmin.local'
+        type: string
 
 env:
   IMAGE_NAME: oxygenz/clipbucket-v5
@@ -132,6 +142,8 @@ jobs:
             INSTALL_PHPMYADMIN=${{ matrix.phpmyadmin || 'false' }}
             INSTALL_XDEBUG=${{ matrix.xdebug || 'false' }}
             INSTALL_REDIS=${{ matrix.redis || 'false' }}
+            DOMAIN_NAME=clipbucket.local
+            PHPMYADMIN_DOMAIN=phpmyadmin.local
           labels: |
             org.opencontainers.image.title=ClipBucket v5
             org.opencontainers.image.source=${{ github.server_url }}/${{ github.repository }}
@@ -210,6 +222,8 @@ jobs:
             INSTALL_PHPMYADMIN=${{ inputs.install_phpmyadmin }}
             INSTALL_XDEBUG=${{ inputs.install_xdebug }}
             INSTALL_REDIS=${{ inputs.install_redis }}
+            DOMAIN_NAME=${{ inputs.domain_name }}
+            PHPMYADMIN_DOMAIN=${{ inputs.phpmyadmin_domain }}
           labels: |
             org.opencontainers.image.title=ClipBucket v5
             org.opencontainers.image.source=${{ github.server_url }}/${{ github.repository }}
@@ -257,6 +271,8 @@ jobs:
             INSTALL_PHPMYADMIN=false
             INSTALL_XDEBUG=false
             INSTALL_REDIS=false
+            DOMAIN_NAME=clipbucket.local
+            PHPMYADMIN_DOMAIN=phpmyadmin.local
           labels: |
             org.opencontainers.image.title=ClipBucket v5
             org.opencontainers.image.source=${{ github.server_url }}/${{ github.repository }}
@@ -279,6 +295,8 @@ jobs:
             INSTALL_PHPMYADMIN=false
             INSTALL_XDEBUG=false
             INSTALL_REDIS=false
+            DOMAIN_NAME=clipbucket.local
+            PHPMYADMIN_DOMAIN=phpmyadmin.local
           labels: |
             org.opencontainers.image.title=ClipBucket v5 (lite)
             org.opencontainers.image.source=${{ github.server_url }}/${{ github.repository }}

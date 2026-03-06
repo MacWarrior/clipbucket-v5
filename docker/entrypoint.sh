@@ -172,7 +172,7 @@ echo "========================================="
 echo "All services started successfully!"
 echo "========================================="
 if [ "${INSTALL_PHPMYADMIN}" = "true" ]; then
-    echo "phpMyAdmin available at: http://localhost:8080"
+    echo "phpMyAdmin available at: http://${PHPMYADMIN_DOMAIN}:8080"
 fi
 if [ "${INSTALL_REDIS}" = "true" ]; then
     echo "Redis Server running on port 6379"
