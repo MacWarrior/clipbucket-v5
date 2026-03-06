@@ -16,8 +16,7 @@ class MWIP extends \Migration
         $limit = 100;
         $offset = 0;
         $video_done = [];
-        $thumbs = new \GlobIterator(\DirPath::get('thumbs') . '2018/04/[0-9]*/*.*');
-//        $thumbs = new \GlobIterator(\DirPath::get('thumbs') . '[0-9]*/[0-9]*/[0-9]*/*.*' );
+        $thumbs = new \GlobIterator(\DirPath::get('thumbs') . '[0-9]*/[0-9]*/[0-9]*/*.*' );
         foreach ($thumbs as $thumb) {
             if (!in_array(pathinfo($thumb)['extension'], ['jpg', 'png', 'jpeg', 'gif'])) {
                 continue;
@@ -75,24 +74,6 @@ class MWIP extends \Migration
                 if (!file_exists($old_thumb) && $videos_image['version'] <= '5.5.0') {
                     $old_thumb = \DirPath::get('thumbs') . \VideoThumbs::getThumbPath($videos_image['type'], $videos_image['file_directory'], $videos_image['file_name'], $videos_image['is_auto'], $videos_image['num'], $resolution, $videos_image['width'], $videos_image['height'], $videos_image['extension'], 0);
                 }
-                /* if ($videos_image['is_original_size']) {
-                     if (!array_key_exists($videos_image['num'] . '_' . $videos_image['id_video_image'], $duplicate_original)) {
-                         $duplicate_original[$videos_image['num'] . '_' . $videos_image['id_video_image']][($videos_image['width'] != 0 ? 'old' : 'new')] = $videos_image['id_video_thumb'];
-                     } else {
- //                        $duplicate_original[$videos_image['num'] . '_' . $videos_image['id_video_image']][($videos_image['width'] != 0 ? 'old' : 'new')] = $videos_image['id_video_thumb'];
-                         if ($videos_image['width'] == 0) {
-                             //$videos_image is the new format, so we delete the old one and update the new one
-                             $id_video_thumb = $duplicate_original[$videos_image['num'] . '_' . $videos_image['id_video_image']]['old'];
-                             self::query('UPDATE  ' . tbl(\VideoThumbs::getTableNameThumb()) . ' WHERE id_video_thumb = ' . mysql_clean($id_video_thumb));
-                         } else {
-                             $id_video_thumb = $videos_image['id_video_thumb'];
-                         }
-                         //some thumbs are duplicated in video_image is_original_size = 1
-                         self::query('DELETE FROM ' . tbl(\VideoThumbs::getTableNameThumb()) . ' WHERE id_video_thumb = ' . mysql_clean($id_video_thumb));
-                         unset($duplicate_original[$videos_image['num'] . '_' . $videos_image['id_video_image']]);
-                         continue;
-                     }
-                 }*/
 
                 if (rename($old_thumb
                     , $new_path . DIRECTORY_SEPARATOR . \VideoThumbs::getThumbPath($videos_image['type'], $videos_image['file_directory'], $videos_image['file_name'], $videos_image['is_auto'], $videos_image['num'], $resolution, $videos_image['width'], $videos_image['height'], $videos_image['extension'], \Update::getInstance()->getCurrentCoreVersion())
