@@ -78,7 +78,7 @@ RUN apt-get install -y --no-install-recommends php${PHP_VERSION}-gd ||     (echo
 RUN apt-get install -y --no-install-recommends php${PHP_VERSION}-zip ||     (echo "ERROR: Failed to install php${PHP_VERSION}-zip" && exit 1)
 
 # Install common PHP extensions
-RUN apt-get install -y --no-install-recommends     php${PHP_VERSION}-intl     php${PHP_VERSION}-json     php${PHP_VERSION}-fileinfo     php${PHP_VERSION}-openssl     php${PHP_VERSION}-tokenizer     php${PHP_VERSION}-ctype     php${PHP_VERSION}-iconv     php${PHP_VERSION}-simplexml     php${PHP_VERSION}-dom     php${PHP_VERSION}-sockets     php${PHP_VERSION}-pcntl     php${PHP_VERSION}-posix ||     (echo "WARNING: Some PHP extensions could not be installed" && exit 0)
+RUN apt-get install -y --no-install-recommends     php${PHP_VERSION}-intl     php${PHP_VERSION}-json     php${PHP_VERSION}-fileinfo     php${PHP_VERSION}-openssl     php${PHP_VERSION}-tokenizer     php${PHP_VERSION}-ctype     php${PHP_VERSION}-iconv     php${PHP_VERSION}-simplexml     php${PHP_VERSION}-dom     php${PHP_VERSION}-sockets     php${PHP_VERSION}-pcntl     php${PHP_VERSION}-posix     php${PHP_VERSION}-ffi ||     (echo "WARNING: Some PHP extensions could not be installed" && exit 0)
 
 # Clean apt cache after all PHP installs
 RUN rm -rf /var/lib/apt/lists/*
