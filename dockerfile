@@ -69,8 +69,11 @@ RUN if [ "$INSTALL_REDIS" = "true" ]; then         apt-get update &&         apt
 # Install PHP Xdebug if requested
 RUN if [ "$INSTALL_XDEBUG" = "true" ]; then         apt-get update &&         apt-get install -y --no-install-recommends php${PHP_VERSION}-xdebug ||         (pecl install xdebug &&         echo "zend_extension=xdebug.so" > /etc/php/${PHP_VERSION}/mods-available/xdebug.ini) &&         echo "xdebug.mode=debug,coverage" >> /etc/php/${PHP_VERSION}/mods-available/xdebug.ini &&         echo "xdebug.start_with_request=yes" >> /etc/php/${PHP_VERSION}/mods-available/xdebug.ini &&         echo "xdebug.client_host=host.docker.internal" >> /etc/php/${PHP_VERSION}/mods-available/xdebug.ini &&         echo "xdebug.client_port=9003" >> /etc/php/${PHP_VERSION}/mods-available/xdebug.ini &&         phpenmod xdebug &&         rm -rf /var/lib/apt/lists/*;     fi
 
-# Install XHProf only if profiling is requested
+# Install XHProf and XHGUI only if profiling is requested
 RUN if [ "$INSTALL_PROFILING" = "true" ]; then         apt-get update &&         (apt-get install -y --no-install-recommends php${PHP_VERSION}-xhprof ||         pecl install xhprof) &&         echo "extension=xhprof.so" > /etc/php/${PHP_VERSION}/mods-available/xhprof.ini &&         phpenmod xhprof &&         rm -rf /var/lib/apt/lists/*;     fi
+
+# Install XHGUI if profiling is requested
+RUN if [ "$INSTALL_PROFILING" = "true" ]; then         mkdir -p /usr/share/xhgui /var/lib/xhgui &&         git clone --depth 1 https://github.com/perftools/xhgui.git /usr/share/xhgui &&         chmod 777 /var/lib/xhgui &&         cd /usr/share/xhgui &&         composer install --no-dev --optimize-autoloader 2>/dev/null || true &&         cp /tmp/xhgui-config.php /usr/share/xhgui/config/config.php &&         rm -rf /var/lib/apt/lists/*;     fi
 
 
 # PHP configuration
