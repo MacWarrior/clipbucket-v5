@@ -83,7 +83,7 @@ RUN sed -i "s/DOMAIN_NAME_PLACEHOLDER/${DOMAIN_NAME}/g" /etc/nginx/sites-availab
 # Configure phpMyAdmin for Nginx if installed
 RUN if [ "$INSTALL_PHPMYADMIN" = "true" ]; then \
         echo 'server { \
-        listen 8080; \
+        listen 80; \
         server_name PHPMYADMIN_DOMAIN_PLACEHOLDER; \
         root /usr/share/phpmyadmin; \
         index index.php; \
