@@ -99,11 +99,6 @@ RUN if [ "$INSTALL_PHPMYADMIN" = "true" ]; then \
         sed -i "s/phpPHP_VERSION_PLACEHOLDER-fpm/php${PHP_VERSION}-fpm/g" /etc/nginx/sites-available/phpmyadmin && \
         ln -sf /etc/nginx/sites-available/phpmyadmin /etc/nginx/sites-enabled/; \
     fi
-        } \
-    }' >> /etc/nginx/sites-available/phpmyadmin && \
-        sed -i "s/phpPHP_VERSION_PLACEHOLDER-fpm/php${PHP_VERSION}-fpm/g" /etc/nginx/sites-available/phpmyadmin && \
-        ln -sf /etc/nginx/sites-available/phpmyadmin /etc/nginx/sites-enabled/; \
-    fi
 
 # Configure phpMyAdmin domain if installed
 RUN if [ -f /etc/nginx/sites-available/phpmyadmin ]; then \
