@@ -24,9 +24,6 @@ ENV GID=1000
 # Install base dependencies and add PHP repository
 RUN apt-get update && apt-get install -y --no-install-recommends     ca-certificates     curl     gnupg2     lsb-release     && rm -rf /var/lib/apt/lists/*
 
-# Add Ondrej Sury PHP repository for all PHP versions
-RUN curl -sSL https://packages.sury.org/php/apt.gpg | apt-key add -     && echo "deb https://packages.sury.org/php $(lsb_release -sc) main" > /etc/apt/sources.list.d/php.list
-
 # Validate PHP version (8.1 to 8.5)
 RUN case "${PHP_VERSION}" in     8.1|8.2|8.3|8.4|8.5) echo "PHP version ${PHP_VERSION} is valid" ;;     *) echo "Error: PHP_VERSION must be between 8.1 and 8.5 (inclusive)"; exit 1 ;; esac
 
