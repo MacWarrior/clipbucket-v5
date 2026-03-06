@@ -7,6 +7,7 @@ ARG PHP_VERSION=8.4
 ARG INSTALL_PHPMYADMIN=false
 ARG INSTALL_XDEBUG=false
 ARG INSTALL_REDIS=false
+ARG INSTALL_PROFILING=false
 ARG DOMAIN_NAME=clipbucket.local
 ARG PHPMYADMIN_DOMAIN=phpmyadmin.local
 
@@ -44,8 +45,8 @@ RUN apt-get update
 # Install nginx and base tools
 RUN apt-get install -y --no-install-recommends     nginx-full     git     ffmpeg     sendmail     mediainfo     curl     wget     unzip     && rm -rf /var/lib/apt/lists/*
 
-# Install PHP pear (required for pecl)
-RUN apt-get update && apt-get install -y --no-install-recommends     php-pear     && rm -rf /var/lib/apt/lists/*
+# Install PHP pear (required for pecl) only if needed
+RUN if [ "$INSTALL_XDEBUG" = "true" ] || [ "$INSTALL_PROFILING" = "true" ]; then         apt-get update && apt-get install -y --no-install-recommends         php-pear         && rm -rf /var/lib/apt/lists/*;     fi
 
 # Install PHP and extensions (one by one for debugging)
 RUN apt-get update
@@ -97,8 +98,8 @@ RUN if [ "$INSTALL_REDIS" = "true" ]; then         apt-get update &&         apt
 # Install PHP Xdebug if requested
 RUN if [ "$INSTALL_XDEBUG" = "true" ]; then         apt-get update &&         apt-get install -y --no-install-recommends php${PHP_VERSION}-xdebug ||         (pecl install xdebug &&         echo "zend_extension=xdebug.so" > /etc/php/${PHP_VERSION}/mods-available/xdebug.ini) &&         echo "xdebug.mode=debug,coverage" >> /etc/php/${PHP_VERSION}/mods-available/xdebug.ini &&         echo "xdebug.start_with_request=yes" >> /etc/php/${PHP_VERSION}/mods-available/xdebug.ini &&         echo "xdebug.client_host=host.docker.internal" >> /etc/php/${PHP_VERSION}/mods-available/xdebug.ini &&         echo "xdebug.client_port=9003" >> /etc/php/${PHP_VERSION}/mods-available/xdebug.ini &&         phpenmod xdebug &&         rm -rf /var/lib/apt/lists/*;     fi
 
-# Install XHProf (always installed for profiling)
-RUN apt-get update &&     (apt-get install -y --no-install-recommends php${PHP_VERSION}-xhprof ||     pecl install xhprof) &&     echo "extension=xhprof.so" > /etc/php/${PHP_VERSION}/mods-available/xhprof.ini &&     phpenmod xhprof &&     rm -rf /var/lib/apt/lists/*
+# Install XHProf only if profiling is requested
+RUN if [ "$INSTALL_PROFILING" = "true" ]; then         apt-get update &&         (apt-get install -y --no-install-recommends php${PHP_VERSION}-xhprof ||         pecl install xhprof) &&         echo "extension=xhprof.so" > /etc/php/${PHP_VERSION}/mods-available/xhprof.ini &&         phpenmod xhprof &&         rm -rf /var/lib/apt/lists/*;     fi
 
 # Install phpMyAdmin via git clone if requested
 RUN if [ "$INSTALL_PHPMYADMIN" = "true" ]; then         mkdir -p /usr/share/phpmyadmin &&         cd /usr/share/phpmyadmin &&         git clone --depth 1 --branch STABLE https://github.com/phpmyadmin/phpmyadmin.git . &&         mkdir -p /var/lib/phpmyadmin/tmp &&         chmod 777 /var/lib/phpmyadmin/tmp &&         apt-get update &&         (apt-get install -y --no-install-recommends php${PHP_VERSION}-bcmath php${PHP_VERSION}-opcache ||          apt-get install -y --no-install-recommends php-bcmath php-opcache ||          echo "Warning: Could not install bcmath/opcache packages") &&         echo "<?php \\$cfg['blowfish_secret'] = '$(openssl rand -base64 32)'; \\$cfg['TempDir'] = '/var/lib/phpmyadmin/tmp'; \\$cfg['Servers'][1]['auth_type'] = 'cookie'; \\$cfg['Servers'][1]['host'] = 'localhost'; \\$cfg['Servers'][1]['compress'] = false; \\$cfg['Servers'][1]['AllowNoPassword'] = false;" > /usr/share/phpmyadmin/config.inc.php &&         rm -rf /var/lib/apt/lists/*;     fi

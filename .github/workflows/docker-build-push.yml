@@ -176,6 +176,7 @@ jobs:
             INSTALL_PHPMYADMIN=true
             INSTALL_XDEBUG=false
             INSTALL_REDIS=true
+            INSTALL_PROFILING=true
             DOMAIN_NAME=clipbucket.local
             PHPMYADMIN_DOMAIN=phpmyadmin.local
           labels: |
@@ -224,6 +225,7 @@ jobs:
             INSTALL_PHPMYADMIN=true
             INSTALL_XDEBUG=true
             INSTALL_REDIS=true
+            INSTALL_PROFILING=true
             DOMAIN_NAME=clipbucket.local
             PHPMYADMIN_DOMAIN=phpmyadmin.local
           labels: |
