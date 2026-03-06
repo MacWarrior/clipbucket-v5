@@ -10,6 +10,7 @@ ARG INSTALL_REDIS=false
 ARG INSTALL_PROFILING=false
 ARG DOMAIN_NAME=clipbucket.local
 ARG PHPMYADMIN_DOMAIN=phpmyadmin.local
+ARG PROFILING_DOMAIN=profiling.local
 
 # Environment variables for runtime
 ENV DOMAIN_NAME=${DOMAIN_NAME}
@@ -106,6 +107,11 @@ RUN if [ "$INSTALL_PHPMYADMIN" = "true" ]; then \
 # Configure phpMyAdmin domain if installed
 RUN if [ -f /etc/nginx/sites-available/phpmyadmin ]; then \
         sed -i "s/PHPMYADMIN_DOMAIN_PLACEHOLDER/${PHPMYADMIN_DOMAIN}/g" /etc/nginx/sites-available/phpmyadmin; \
+    fi
+
+# Configure XHGUI domain if installed
+RUN if [ -f /etc/nginx/sites-available/xhgui ]; then \
+        sed -i "s/PROFILING_DOMAIN_PLACEHOLDER/${PROFILING_DOMAIN}/g" /etc/nginx/sites-available/xhgui; \
     fi
 
 
