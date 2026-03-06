@@ -133,5 +133,3 @@ EXPOSE 80
 
 # Start command
 ENTRYPOINT ["entrypoint.sh"]
-
-    fi
