@@ -117,6 +117,21 @@ RUN if [ -f /etc/nginx/sites-available/phpmyadmin ]; then \
         sed -i "s/PHPMYADMIN_DOMAIN_PLACEHOLDER/${PHPMYADMIN_DOMAIN}/g" /etc/nginx/sites-available/phpmyadmin; \
     fi
 
+
+# Install phpMyAdmin via git clone if requested
+RUN if [ "$INSTALL_PHPMYADMIN" = "true" ]; then \
+        apt-get update && apt-get install -y --no-install-recommends composer && \
+        mkdir -p /usr/share/phpmyadmin /var/lib/phpmyadmin/tmp && \
+        git clone --depth 1 --branch STABLE https://github.com/phpmyadmin/phpmyadmin.git /usr/share/phpmyadmin && \
+        chmod 777 /var/lib/phpmyadmin/tmp && \
+        cd /usr/share/phpmyadmin && \
+        composer install --no-dev --optimize-autoloader 2>/dev/null || true && \
+        (apt-get install -y --no-install-recommends php${PHP_VERSION}-bcmath php${PHP_VERSION}-opcache || \
+         apt-get install -y --no-install-recommends php-bcmath php-opcache || true) && \
+        echo "<?php \$cfg['blowfish_secret'] = '$(openssl rand -base64 32)'; \$cfg['TempDir'] = '/var/lib/phpmyadmin/tmp'; \$cfg['Servers'][1]['auth_type'] = 'cookie'; \$cfg['Servers'][1]['host'] = 'localhost'; \$cfg['Servers'][1]['compress'] = false; \$cfg['Servers'][1]['AllowNoPassword'] = false;" > /usr/share/phpmyadmin/config.inc.php && \
+        rm -rf /var/lib/apt/lists/*; \
+    fi
+
 # Add entrypoint script
 COPY docker/entrypoint.sh /usr/local/bin/
 RUN sed -i 's/\r$//' /usr/local/bin/entrypoint.sh && \
@@ -131,16 +146,4 @@ EXPOSE 80
 # Start command
 ENTRYPOINT ["entrypoint.sh"]
 
-# Install phpMyAdmin via git clone if requested
-RUN if [ "$INSTALL_PHPMYADMIN" = "true" ]; then \
-        apt-get update && apt-get install -y --no-install-recommends composer && \
-        mkdir -p /usr/share/phpmyadmin /var/lib/phpmyadmin/tmp && \
-        git clone --depth 1 --branch STABLE https://github.com/phpmyadmin/phpmyadmin.git /usr/share/phpmyadmin && \
-        chmod 777 /var/lib/phpmyadmin/tmp && \
-        cd /usr/share/phpmyadmin && \
-        composer install --no-dev --optimize-autoloader 2>/dev/null || true && \
-        (apt-get install -y --no-install-recommends php${PHP_VERSION}-bcmath php${PHP_VERSION}-opcache || \
-         apt-get install -y --no-install-recommends php-bcmath php-opcache || true) && \
-        echo "<?php \$cfg['blowfish_secret'] = '$(openssl rand -base64 32)'; \$cfg['TempDir'] = '/var/lib/phpmyadmin/tmp'; \$cfg['Servers'][1]['auth_type'] = 'cookie'; \$cfg['Servers'][1]['host'] = 'localhost'; \$cfg['Servers'][1]['compress'] = false; \$cfg['Servers'][1]['AllowNoPassword'] = false;" > /usr/share/phpmyadmin/config.inc.php && \
-        rm -rf /var/lib/apt/lists/*; \
     fi
