@@ -91,21 +91,14 @@ RUN rm -f /etc/nginx/sites-enabled/default && \
 RUN sed -i "s/DOMAIN_NAME_PLACEHOLDER/${DOMAIN_NAME}/g" /etc/nginx/sites-available/clipbucket && \
     sed -i "s/phpPHP_VERSION_PLACEHOLDER-fpm/php${PHP_VERSION}-fpm/g" /etc/nginx/sites-available/clipbucket
 
-# Configure phpMyAdmin for Nginx if installed
+# Copy nginx config for phpMyAdmin
+COPY docker/nginx-phpmyadmin.conf /tmp/nginx-phpmyadmin.conf
 RUN if [ "$INSTALL_PHPMYADMIN" = "true" ]; then \
-        echo 'server { \
-        listen 8080; \
-        server_name PHPMYADMIN_DOMAIN_PLACEHOLDER; \
-        root /usr/share/phpmyadmin; \
-        index index.php; \
-        location ~* \\.php$ { \
-            fastcgi_pass unix:/run/php/phpPHP_VERSION_PLACEHOLDER-fpm.sock; \
-            fastcgi_index index.php; \
-            include fastcgi_params; \
-            fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name; \
-        } \
-        location / { \
-            try_files $uri $uri/ /index.php; \
+        mkdir -p /etc/nginx/sites-available /etc/nginx/sites-enabled && \
+        cp /tmp/nginx-phpmyadmin.conf /etc/nginx/sites-available/phpmyadmin && \
+        sed -i "s/phpPHP_VERSION_PLACEHOLDER-fpm/php${PHP_VERSION}-fpm/g" /etc/nginx/sites-available/phpmyadmin && \
+        ln -sf /etc/nginx/sites-available/phpmyadmin /etc/nginx/sites-enabled/; \
+    fi
         } \
     }' >> /etc/nginx/sites-available/phpmyadmin && \
         sed -i "s/phpPHP_VERSION_PLACEHOLDER-fpm/php${PHP_VERSION}-fpm/g" /etc/nginx/sites-available/phpmyadmin && \
