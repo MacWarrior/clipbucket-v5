@@ -58,19 +58,24 @@ docker build -t clipbucket-v5:production \
   --build-arg INSTALL_REDIS=true .
 ```
 
-## 🏷️ Tags Docker Hub
+## 🏷️ Tags Docker Hub (Build Automatique)
 
-Les images sont automatiquement buildées et publiées avec les tags suivants :
+Les images sont automatiquement buildées et publiées lors des releases :
 
-| Tag | Description |
-|-----|-------------|
-| `latest` | PHP 8.4, full mode |
-| `php{X.Y}` | Version spécifique de PHP |
-| `php{X.Y}-lite` | Version lite (sans MariaDB) |
-| `php{X.Y}-pma` | Avec phpMyAdmin (port 8080) |
-| `php{X.Y}-xdebug` | Avec Xdebug activé |
-| `php{X.Y}-redis` | Avec Redis Server |
-| `php{X.Y}-pma-xdebug-redis` | Version complète dev |
+| Tag | Description | PHP | MariaDB | Redis | phpMyAdmin | Xdebug |
+|-----|-------------|-----|---------|-------|------------|--------|
+| `latest` | Version stable recommandée | 8.4 | ✅ | ❌ | ❌ | ❌ |
+| `lite` | Version légère sans base de données | 8.4 | ❌ | ❌ | ❌ | ❌ |
+| `dev-php8.1` | Environnement développement | 8.1 | ✅ | ✅ | ✅ | ❌ |
+| `dev-php8.2` | Environnement développement | 8.2 | ✅ | ✅ | ✅ | ❌ |
+| `dev-php8.3` | Environnement développement | 8.3 | ✅ | ✅ | ✅ | ❌ |
+| `dev-php8.4` | Environnement développement | 8.4 | ✅ | ✅ | ✅ | ❌ |
+| `dev-php8.5` | Environnement développement | 8.5 | ✅ | ✅ | ✅ | ❌ |
+| `dev-php8.1-xdebug` | Dev avec débogage | 8.1 | ✅ | ✅ | ✅ | ✅ |
+| `dev-php8.2-xdebug` | Dev avec débogage | 8.2 | ✅ | ✅ | ✅ | ✅ |
+| `dev-php8.3-xdebug` | Dev avec débogage | 8.3 | ✅ | ✅ | ✅ | ✅ |
+| `dev-php8.4-xdebug` | Dev avec débogage | 8.4 | ✅ | ✅ | ✅ | ✅ |
+| `dev-php8.5-xdebug` | Dev avec débogage | 8.5 | ✅ | ✅ | ✅ | ✅ |
 
 ## 🌐 Ports Exposés
 
