@@ -50,8 +50,11 @@ RUN apt-get update && apt-get install -y --no-install-recommends     php-pear   
 # Install PHP and extensions (one by one for debugging)
 RUN apt-get update
 
-# Install PHP-FPM
+# Install PHP-FPM and PHP-CLI (same version)
 RUN apt-get install -y --no-install-recommends php${PHP_VERSION}-fpm ||     (echo "ERROR: Failed to install php${PHP_VERSION}-fpm" && exit 1)
+
+# Install PHP-CLI (same version as FPM)
+RUN apt-get install -y --no-install-recommends php${PHP_VERSION}-cli ||     (echo "ERROR: Failed to install php${PHP_VERSION}-cli" && exit 1)
 
 # Install PHP-Dev
 RUN apt-get install -y --no-install-recommends php${PHP_VERSION}-dev ||     (echo "ERROR: Failed to install php${PHP_VERSION}-dev" && exit 1)
@@ -73,6 +76,9 @@ RUN apt-get install -y --no-install-recommends php${PHP_VERSION}-gd ||     (echo
 
 # Install PHP-Zip
 RUN apt-get install -y --no-install-recommends php${PHP_VERSION}-zip ||     (echo "ERROR: Failed to install php${PHP_VERSION}-zip" && exit 1)
+
+# Install common PHP extensions
+RUN apt-get install -y --no-install-recommends     php${PHP_VERSION}-intl     php${PHP_VERSION}-json     php${PHP_VERSION}-fileinfo     php${PHP_VERSION}-openssl     php${PHP_VERSION}-tokenizer     php${PHP_VERSION}-ctype     php${PHP_VERSION}-iconv     php${PHP_VERSION}-simplexml     php${PHP_VERSION}-dom     php${PHP_VERSION}-sockets     php${PHP_VERSION}-pcntl     php${PHP_VERSION}-posix ||     (echo "WARNING: Some PHP extensions could not be installed" && exit 0)
 
 # Clean apt cache after all PHP installs
 RUN rm -rf /var/lib/apt/lists/*
