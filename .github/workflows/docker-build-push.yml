@@ -3,12 +3,150 @@ name: Docker Build and Push
 on:
   release:
     types: [published]
+  workflow_dispatch:
+    inputs:
+      php_version:
+        description: 'PHP Version (8.1-8.5)'
+        required: true
+        default: '8.4'
+        type: choice
+        options:
+          - '8.1'
+          - '8.2'
+          - '8.3'
+          - '8.4'
+          - '8.5'
+      install_phpmyadmin:
+        description: 'Install phpMyAdmin'
+        required: true
+        default: false
+        type: boolean
+      install_xdebug:
+        description: 'Install Xdebug'
+        required: true
+        default: false
+        type: boolean
+      install_redis:
+        description: 'Install Redis Server'
+        required: true
+        default: false
+        type: boolean
+      lite_mode:
+        description: 'Lite mode (without MariaDB)'
+        required: true
+        default: false
+        type: boolean
 
 env:
   IMAGE_NAME: oxygenz/clipbucket-v5
 
 jobs:
-  build-and-push:
+  # Build matrix for automated releases
+  build-matrix:
+    if: github.event_name == 'release'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    strategy:
+      fail-fast: false
+      matrix:
+        php_version: ['8.1', '8.2', '8.3', '8.4', '8.5']
+        lite: [false, true]
+        include:
+          # Full versions with additional tools for PHP 8.4
+          - php_version: '8.4'
+            lite: false
+            phpmyadmin: true
+            xdebug: false
+            redis: false
+          - php_version: '8.4'
+            lite: false
+            phpmyadmin: false
+            xdebug: true
+            redis: false
+          - php_version: '8.4'
+            lite: false
+            phpmyadmin: false
+            xdebug: false
+            redis: true
+          # Developer version with all tools
+          - php_version: '8.4'
+            lite: false
+            phpmyadmin: true
+            xdebug: true
+            redis: true
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_TOKEN }}
+
+      - name: Generate tag suffix
+        id: tag
+        run: |
+          PHP_VER="${{ matrix.php_version }}"
+          LITE="${{ matrix.lite }}"
+          PHPMYADMIN="${{ matrix.phpmyadmin }}"
+          XDEBUG="${{ matrix.xdebug }}"
+          REDIS="${{ matrix.redis }}"
+
+          # Base tag with PHP version
+          TAG="php${PHP_VER}"
+
+          # Add suffixes for optional components
+          if [ "$PHPMYADMIN" = "true" ]; then
+            TAG="${TAG}-pma"
+          fi
+          if [ "$XDEBUG" = "true" ]; then
+            TAG="${TAG}-xdebug"
+          fi
+          if [ "$REDIS" = "true" ]; then
+            TAG="${TAG}-redis"
+          fi
+          if [ "$LITE" = "true" ]; then
+            TAG="${TAG}-lite"
+          fi
+
+          # Full tag name
+          FULL_TAG="${{ env.IMAGE_NAME }}:${TAG}"
+          echo "tag=${FULL_TAG}" >> $GITHUB_OUTPUT
+          echo "Generated tag: ${FULL_TAG}"
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: true
+          tags: ${{ steps.tag.outputs.tag }}
+          build-args: |
+            PHP_VERSION=${{ matrix.php_version }}
+            LITE=${{ matrix.lite }}
+            INSTALL_PHPMYADMIN=${{ matrix.phpmyadmin || 'false' }}
+            INSTALL_XDEBUG=${{ matrix.xdebug || 'false' }}
+            INSTALL_REDIS=${{ matrix.redis || 'false' }}
+          labels: |
+            org.opencontainers.image.title=ClipBucket v5
+            org.opencontainers.image.source=${{ github.server_url }}/${{ github.repository }}
+            org.opencontainers.image.php-version=${{ matrix.php_version }}
+            org.opencontainers.image.lite=${{ matrix.lite }}
+            org.opencontainers.image.phpmyadmin=${{ matrix.phpmyadmin || 'false' }}
+            org.opencontainers.image.xdebug=${{ matrix.xdebug || 'false' }}
+            org.opencontainers.image.redis=${{ matrix.redis || 'false' }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+          platforms: linux/amd64
+
+  # Manual build with custom options
+  build-manual:
+    if: github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -26,30 +164,126 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_TOKEN }}
 
-      - name: Build and push Docker image (full)
+      - name: Generate tag suffix
+        id: tag
+        run: |
+          PHP_VER="${{ inputs.php_version }}"
+          LITE="${{ inputs.lite_mode }}"
+          PHPMYADMIN="${{ inputs.install_phpmyadmin }}"
+          XDEBUG="${{ inputs.install_xdebug }}"
+          REDIS="${{ inputs.install_redis }}"
+
+          # Base tag with PHP version
+          TAG="php${PHP_VER}"
+
+          # Add suffixes for optional components
+          if [ "$PHPMYADMIN" = "true" ]; then
+            TAG="${TAG}-pma"
+          fi
+          if [ "$XDEBUG" = "true" ]; then
+            TAG="${TAG}-xdebug"
+          fi
+          if [ "$REDIS" = "true" ]; then
+            TAG="${TAG}-redis"
+          fi
+          if [ "$LITE" = "true" ]; then
+            TAG="${TAG}-lite"
+          fi
+
+          # Add manual suffix
+          TAG="${TAG}-manual"
+
+          # Full tag name
+          FULL_TAG="${{ env.IMAGE_NAME }}:${TAG}"
+          echo "tag=${FULL_TAG}" >> $GITHUB_OUTPUT
+          echo "Generated tag: ${FULL_TAG}"
+
+      - name: Build and push Docker image
         uses: docker/build-push-action@v5
         with:
           context: .
           push: true
-          tags: ${{ env.IMAGE_NAME }}:latest
+          tags: ${{ steps.tag.outputs.tag }}
+          build-args: |
+            PHP_VERSION=${{ inputs.php_version }}
+            LITE=${{ inputs.lite_mode }}
+            INSTALL_PHPMYADMIN=${{ inputs.install_phpmyadmin }}
+            INSTALL_XDEBUG=${{ inputs.install_xdebug }}
+            INSTALL_REDIS=${{ inputs.install_redis }}
           labels: |
             org.opencontainers.image.title=ClipBucket v5
             org.opencontainers.image.source=${{ github.server_url }}/${{ github.repository }}
+            org.opencontainers.image.php-version=${{ inputs.php_version }}
+            org.opencontainers.image.lite=${{ inputs.lite_mode }}
+            org.opencontainers.image.phpmyadmin=${{ inputs.install_phpmyadmin }}
+            org.opencontainers.image.xdebug=${{ inputs.install_xdebug }}
+            org.opencontainers.image.redis=${{ inputs.install_redis }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
           platforms: linux/amd64
 
-      - name: Build and push Docker image (lite)
+  # Build latest and default tags
+  build-latest:
+    if: github.event_name == 'release'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    needs: build-matrix
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_TOKEN }}
+
+      - name: Build and push Docker image (latest)
         uses: docker/build-push-action@v5
         with:
           context: .
           push: true
-          tags: ${{ env.IMAGE_NAME }}:lite-latest
+          tags: |
+            ${{ env.IMAGE_NAME }}:latest
+            ${{ env.IMAGE_NAME }}:php8.4
           build-args: |
+            PHP_VERSION=8.4
+            LITE=false
+            INSTALL_PHPMYADMIN=false
+            INSTALL_XDEBUG=false
+            INSTALL_REDIS=false
+          labels: |
+            org.opencontainers.image.title=ClipBucket v5
+            org.opencontainers.image.source=${{ github.server_url }}/${{ github.repository }}
+            org.opencontainers.image.php-version=8.4
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+          platforms: linux/amd64
+
+      - name: Build and push Docker image (lite-latest)
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: true
+          tags: |
+            ${{ env.IMAGE_NAME }}:lite-latest
+            ${{ env.IMAGE_NAME }}:php8.4-lite
+          build-args: |
+            PHP_VERSION=8.4
             LITE=true
+            INSTALL_PHPMYADMIN=false
+            INSTALL_XDEBUG=false
+            INSTALL_REDIS=false
           labels: |
             org.opencontainers.image.title=ClipBucket v5 (lite)
             org.opencontainers.image.source=${{ github.server_url }}/${{ github.repository }}
+            org.opencontainers.image.php-version=8.4
+            org.opencontainers.image.lite=true
           cache-from: type=gha
           cache-to: type=gha,mode=max
           platforms: linux/amd64
