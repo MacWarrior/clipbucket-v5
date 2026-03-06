@@ -21,26 +21,41 @@ ENV PHP_VERSION=${PHP_VERSION}
 ENV UID=1000
 ENV GID=1000
 
-# Validate PHP version (8.1 to 8.5)
-RUN case "${PHP_VERSION}" in     8.1|8.2|8.3|8.4|8.5) ;;     *) echo "Error: PHP_VERSION must be between 8.1 and 8.5 (inclusive)"; exit 1 ;; esac
+# Install base dependencies and add PHP repository
+RUN apt-get update && apt-get install -y --no-install-recommends     ca-certificates     curl     gnupg2     lsb-release     && rm -rf /var/lib/apt/lists/*
 
-# Install base packages
-RUN apt-get update &&     apt-get dist-upgrade -y &&     apt-get install -y         nginx-full         php-pear         php${PHP_VERSION}-fpm         php${PHP_VERSION}-dev         php${PHP_VERSION}-curl         php${PHP_VERSION}-mysqli         php${PHP_VERSION}-xml         php${PHP_VERSION}-mbstring         php${PHP_VERSION}-gd         php${PHP_VERSION}-zip         git         ffmpeg         sendmail         mediainfo         curl         wget         unzip         &&     apt-get clean
+# Add Ondrej Sury PHP repository for all PHP versions
+RUN curl -sSL https://packages.sury.org/php/apt.gpg | apt-key add -     && echo "deb https://packages.sury.org/php $(lsb_release -sc) main" > /etc/apt/sources.list.d/php.list
+
+# Validate PHP version (8.1 to 8.5)
+RUN case "${PHP_VERSION}" in     8.1|8.2|8.3|8.4|8.5) echo "PHP version ${PHP_VERSION} is valid" ;;     *) echo "Error: PHP_VERSION must be between 8.1 and 8.5 (inclusive)"; exit 1 ;; esac
+
+# Update package list after adding PHP repository
+RUN apt-get update
+
+# Install nginx and base tools
+RUN apt-get install -y --no-install-recommends     nginx-full     git     ffmpeg     sendmail     mediainfo     curl     wget     unzip     && rm -rf /var/lib/apt/lists/*
+
+# Install PHP pear (required for pecl)
+RUN apt-get update && apt-get install -y --no-install-recommends     php-pear     && rm -rf /var/lib/apt/lists/*
+
+# Install PHP and extensions
+RUN apt-get update && apt-get install -y --no-install-recommends     php${PHP_VERSION}-fpm     php${PHP_VERSION}-dev     php${PHP_VERSION}-curl     php${PHP_VERSION}-mysqli     php${PHP_VERSION}-xml     php${PHP_VERSION}-mbstring     php${PHP_VERSION}-gd     php${PHP_VERSION}-zip     && rm -rf /var/lib/apt/lists/*
 
 # Install MariaDB only if not in lite mode
-RUN if [ "$LITE" = "false" ]; then         apt-get update &&         apt-get install -y mariadb-server &&         apt-get clean;     fi
+RUN if [ "$LITE" = "false" ]; then         apt-get update &&         apt-get install -y --no-install-recommends mariadb-server &&         rm -rf /var/lib/apt/lists/*;     fi
 
 # Install Redis server if requested
-RUN if [ "$INSTALL_REDIS" = "true" ]; then         apt-get update &&         apt-get install -y redis-server &&         apt-get clean &&         sed -i 's/^bind 127.0.0.1/bind 0.0.0.0/' /etc/redis/redis.conf &&         sed -i 's/^# maxmemory/maxmemory 256mb/' /etc/redis/redis.conf &&         sed -i 's/^# maxmemory-policy/maxmemory-policy allkeys-lru/' /etc/redis/redis.conf;     fi
+RUN if [ "$INSTALL_REDIS" = "true" ]; then         apt-get update &&         apt-get install -y --no-install-recommends redis-server &&         rm -rf /var/lib/apt/lists/* &&         sed -i 's/^bind 127.0.0.1/bind 0.0.0.0/' /etc/redis/redis.conf &&         sed -i 's/^# maxmemory/maxmemory 256mb/' /etc/redis/redis.conf &&         sed -i 's/^# maxmemory-policy/maxmemory-policy allkeys-lru/' /etc/redis/redis.conf;     fi
 
 # Install PHP Xdebug if requested
-RUN if [ "$INSTALL_XDEBUG" = "true" ]; then         pecl install xdebug         && echo "zend_extension=xdebug.so" > /etc/php/${PHP_VERSION}/mods-available/xdebug.ini         && echo "xdebug.mode=debug,coverage" >> /etc/php/${PHP_VERSION}/mods-available/xdebug.ini         && echo "xdebug.start_with_request=yes" >> /etc/php/${PHP_VERSION}/mods-available/xdebug.ini         && echo "xdebug.client_host=host.docker.internal" >> /etc/php/${PHP_VERSION}/mods-available/xdebug.ini         && echo "xdebug.client_port=9003" >> /etc/php/${PHP_VERSION}/mods-available/xdebug.ini         && phpenmod xdebug;     fi
+RUN if [ "$INSTALL_XDEBUG" = "true" ]; then         apt-get update &&         apt-get install -y --no-install-recommends php${PHP_VERSION}-xdebug ||         (pecl install xdebug &&         echo "zend_extension=xdebug.so" > /etc/php/${PHP_VERSION}/mods-available/xdebug.ini) &&         echo "xdebug.mode=debug,coverage" >> /etc/php/${PHP_VERSION}/mods-available/xdebug.ini &&         echo "xdebug.start_with_request=yes" >> /etc/php/${PHP_VERSION}/mods-available/xdebug.ini &&         echo "xdebug.client_host=host.docker.internal" >> /etc/php/${PHP_VERSION}/mods-available/xdebug.ini &&         echo "xdebug.client_port=9003" >> /etc/php/${PHP_VERSION}/mods-available/xdebug.ini &&         phpenmod xdebug &&         rm -rf /var/lib/apt/lists/*;     fi
 
 # Install XHProf (always installed for profiling)
-RUN pecl install xhprof     && echo "extension=xhprof.so" > /etc/php/${PHP_VERSION}/mods-available/xhprof.ini     && phpenmod xhprof
+RUN apt-get update &&     (apt-get install -y --no-install-recommends php${PHP_VERSION}-xhprof ||     pecl install xhprof) &&     echo "extension=xhprof.so" > /etc/php/${PHP_VERSION}/mods-available/xhprof.ini &&     phpenmod xhprof &&     rm -rf /var/lib/apt/lists/*
 
 # Install phpMyAdmin via git clone if requested
-RUN if [ "$INSTALL_PHPMYADMIN" = "true" ]; then         mkdir -p /usr/share/phpmyadmin &&         cd /usr/share/phpmyadmin &&         git clone --depth 1 --branch STABLE https://github.com/phpmyadmin/phpmyadmin.git . &&         mkdir -p /var/lib/phpmyadmin/tmp &&         chmod 777 /var/lib/phpmyadmin/tmp &&         apt-get update &&         apt-get install -y php${PHP_VERSION}-bcmath php${PHP_VERSION}-opcache &&         apt-get clean &&         echo "<?php \\$cfg['blowfish_secret'] = '$(openssl rand -base64 32)'; \\$cfg['TempDir'] = '/var/lib/phpmyadmin/tmp'; \\$cfg['Servers'][1]['auth_type'] = 'cookie'; \\$cfg['Servers'][1]['host'] = 'localhost'; \\$cfg['Servers'][1]['compress'] = false; \\$cfg['Servers'][1]['AllowNoPassword'] = false;" > /usr/share/phpmyadmin/config.inc.php;     fi
+RUN if [ "$INSTALL_PHPMYADMIN" = "true" ]; then         mkdir -p /usr/share/phpmyadmin &&         cd /usr/share/phpmyadmin &&         git clone --depth 1 --branch STABLE https://github.com/phpmyadmin/phpmyadmin.git . &&         mkdir -p /var/lib/phpmyadmin/tmp &&         chmod 777 /var/lib/phpmyadmin/tmp &&         apt-get update &&         apt-get install -y --no-install-recommends php${PHP_VERSION}-bcmath php${PHP_VERSION}-opcache &&         echo "<?php \\$cfg['blowfish_secret'] = '$(openssl rand -base64 32)'; \\$cfg['TempDir'] = '/var/lib/phpmyadmin/tmp'; \\$cfg['Servers'][1]['auth_type'] = 'cookie'; \\$cfg['Servers'][1]['host'] = 'localhost'; \\$cfg['Servers'][1]['compress'] = false; \\$cfg['Servers'][1]['AllowNoPassword'] = false;" > /usr/share/phpmyadmin/config.inc.php &&         rm -rf /var/lib/apt/lists/*;     fi
 
 # PHP configuration
 RUN sed -i "s/max_execution_time = 30/max_execution_time = 7200/g" /etc/php/${PHP_VERSION}/fpm/php.ini
@@ -57,7 +72,7 @@ RUN rm -f /etc/nginx/sites-enabled/default &&     echo 'server {         listen 
 RUN if [ "$INSTALL_PHPMYADMIN" = "true" ]; then         echo 'server {         listen 8080;         server_name PHPMYADMIN_DOMAIN_PLACEHOLDER;         root /usr/share/phpmyadmin;         index index.php;         location ~* \.(php|phtml)$ {             fastcgi_pass unix:/run/php/phpPHP_VERSION_PLACEHOLDER-fpm.sock;             fastcgi_index index.php;             include fastcgi_params;             fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;         }         location / {             try_files $uri $uri/ /index.php;         }     }' >> /etc/nginx/sites-available/phpmyadmin &&         sed -i "s/phpPHP_VERSION_PLACEHOLDER-fpm/php${PHP_VERSION}-fpm/g" /etc/nginx/sites-available/phpmyadmin &&         ln -sf /etc/nginx/sites-available/phpmyadmin /etc/nginx/sites-enabled/;     fi
 
 # Activate ClipBucket site
-RUN ln -sf /etc/nginx/sites-available/clipbucket /etc/nginx/sites-enabled/     && sed -i "s/DOMAIN_NAME_PLACEHOLDER/${DOMAIN_NAME}/g" /etc/nginx/sites-available/clipbucket     && sed -i "s/phpPHP_VERSION_PLACEHOLDER-fpm/php${PHP_VERSION}-fpm/g" /etc/nginx/sites-available/clipbucket
+RUN ln -sf /etc/nginx/sites-available/clipbucket /etc/nginx/sites-enabled/     && sed -i "s/DOMAIN_NAME_PLACEHOLDER/${DOMAIN_NAME}/g" /etc/nginx/sites-available/clipbucket     && sed -i "s/phpPHP_VERSION_PLACEHOLDER-fpm/php${PHP_VERSION}-fpm/g" /etc/nginx/sites-available/clipbucket     && sed -i "s/PHPMYADMIN_DOMAIN_PLACEHOLDER/${PHPMYADMIN_DOMAIN}/g" /etc/nginx/sites-available/phpmyadmin
 
 # Add entrypoint script for database and sources initialization
 COPY docker/entrypoint.sh /usr/local/bin/
@@ -65,7 +80,6 @@ RUN sed -i 's/\r$//' /usr/local/bin/entrypoint.sh
 RUN chmod +x /usr/local/bin/entrypoint.sh
 
 # Create volumes (only in full mode, not in lite mode)
-# The volume for /var/lib/mysql is not needed in lite mode
 VOLUME ["/srv/http/clipbucket", "label=clipbucket_sources"]
 
 # Listening ports (8080 for phpMyAdmin if installed)
