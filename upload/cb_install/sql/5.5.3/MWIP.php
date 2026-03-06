@@ -5,32 +5,55 @@ require_once \DirPath::get('classes') . DIRECTORY_SEPARATOR . 'migration' . DIRE
 require_once \DirPath::get('classes') . 'video_thumbs.class.php';
 require_once \DirPath::get('classes') . 'update.class.php';
 
-class M00064 extends \Migration
+class MWIP extends \Migration
 {
     /**
      * @throws \Exception
      */
     public function start()
     {
-        self::insertTool('regenerate_all_video_thumbs', 'AdminTool::regenerateAllVideoThumbs');
-
-        self::generateTranslation('regenerate_all_video_thumbs_label', [
-            'fr' => 'Régénère les miniatures des vidéos',
-            'en' => 'Regenerate videos thumbs'
-        ]);
-
-        self::generateTranslation('regenerate_all_video_thumbs_description', [
-            'fr' => 'Régénère toutes les miniatures automatiques de toutes les vidéos',
-            'en' => 'Regenerate all extracted video thumbs'
-        ]);
 
         $limit = 100;
         $offset = 0;
+        $video_done = [];
+        $thumbs = new \GlobIterator(\DirPath::get('thumbs') . '[0-9]*/[0-9]*/[0-9]*/*.*' );
+        foreach ($thumbs as $thumb) {
+            if (!in_array(pathinfo($thumb)['extension'], ['jpg', 'png', 'jpeg', 'gif'])) {
+                continue;
+            }
+            $video_file_name = explode('-', pathinfo($thumb)['filename'])[0];
+            if (in_array($video_file_name, $video_done)) {
+                continue;
+            }
+            $video = \Video::getInstance()->getOne(['file_name' => $video_file_name]);
+            if (!empty($video)) {
+                $video_done[] = $video_file_name;
+                $sql = 'UPDATE ' . tbl('video_image') . ' VI
+                INNER JOIN ' . tbl('video_thumb') . ' VT ON VT.id_video_image = VI.id_video_image
+                SET VT.version = \'' . $video['video_version'] . '\'
+                WHERE videoid = ' . $video['videoid'] . ' AND type = \'thumbnail\'';
+                self::query($sql);
+
+                $sql_delete = 'DELETE vt_old
+                    FROM ' . tbl(\VideoThumbs::getTableNameThumb()) . '  vt_old
+                    JOIN ' . tbl(\VideoThumbs::getTableNameThumb()) . ' vt_new
+                      ON vt_new.id_video_image = vt_old.id_video_image
+                     AND vt_new.is_original_size = 1
+                     AND vt_new.width != 0
+                     AND vt_new.height != 0
+                    WHERE vt_old.is_original_size = 1
+                      AND (vt_old.width = 0 OR vt_old.height = 0)
+                      AND vt_old.id_video_image IN (SELECT id_video_image FROM ' . tbl(\VideoThumbs::getTableName()) . ' WHERE videoid = ' . $video['videoid'] . ');';
+                self::query($sql_delete);
+            }
+
+            if (count($video_done) >= $limit) {
+                $video_done = [];
+            }
+        }
+
 
         $new_path = \DirPath::get('thumbs') . 'video';
-        if (!is_dir($new_path)) {
-            mkdir($new_path, 0777, true);
-        }
         do {
             $videos_images = \VideoThumbs::getAllThumbs([
                 'param_version_inf_or_eq' => '5.5.2',
@@ -51,6 +74,7 @@ class M00064 extends \Migration
                 if (!file_exists($old_thumb) && $videos_image['version'] <= '5.5.0') {
                     $old_thumb = \DirPath::get('thumbs') . \VideoThumbs::getThumbPath($videos_image['type'], $videos_image['file_directory'], $videos_image['file_name'], $videos_image['is_auto'], $videos_image['num'], $resolution, $videos_image['width'], $videos_image['height'], $videos_image['extension'], 0);
                 }
+
                 if (rename($old_thumb
                     , $new_path . DIRECTORY_SEPARATOR . \VideoThumbs::getThumbPath($videos_image['type'], $videos_image['file_directory'], $videos_image['file_name'], $videos_image['is_auto'], $videos_image['num'], $resolution, $videos_image['width'], $videos_image['height'], $videos_image['extension'], \Update::getInstance()->getCurrentCoreVersion())
                 )) {
