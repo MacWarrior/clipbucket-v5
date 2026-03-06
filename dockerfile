@@ -56,6 +56,9 @@ RUN apt-get install -y --no-install-recommends php${PHP_VERSION}-fpm ||     (ech
 # Install PHP-CLI (same version as FPM)
 RUN apt-get install -y --no-install-recommends php${PHP_VERSION}-cli ||     (echo "ERROR: Failed to install php${PHP_VERSION}-cli" && exit 1)
 
+# Configure update-alternatives to use the correct PHP version
+RUN update-alternatives --set php /usr/bin/php${PHP_VERSION} 2>/dev/null ||     update-alternatives --install /usr/bin/php php /usr/bin/php${PHP_VERSION} 100
+
 # Install PHP-Dev
 RUN apt-get install -y --no-install-recommends php${PHP_VERSION}-dev ||     (echo "ERROR: Failed to install php${PHP_VERSION}-dev" && exit 1)
 
