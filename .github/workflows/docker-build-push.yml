@@ -84,7 +84,7 @@ jobs:
             LITE=false
             INSTALL_PHPMYADMIN=false
             INSTALL_XDEBUG=false
-            INSTALL_REDIS=false
+            INSTALL_REDIS=true
             DOMAIN_NAME=clipbucket.local
             PHPMYADMIN_DOMAIN=phpmyadmin.local
           labels: |
