@@ -51,40 +51,11 @@ RUN if [ "$INSTALL_XDEBUG" = "true" ] || [ "$INSTALL_PROFILING" = "true" ]; then
 # Install PHP and extensions (one by one for debugging)
 RUN apt-get update
 
-# Install PHP-FPM and PHP-CLI (same version)
-RUN apt-get install -y --no-install-recommends php${PHP_VERSION}-fpm ||     (echo "ERROR: Failed to install php${PHP_VERSION}-fpm" && exit 1)
-
-# Install PHP-CLI (same version as FPM)
-RUN apt-get install -y --no-install-recommends php${PHP_VERSION}-cli ||     (echo "ERROR: Failed to install php${PHP_VERSION}-cli" && exit 1)
+# Install PHP and all extensions in one command
+RUN apt-get update && apt-get install -y --no-install-recommends     php${PHP_VERSION}-fpm     php${PHP_VERSION}-cli     php${PHP_VERSION}-dev     php${PHP_VERSION}-curl     php${PHP_VERSION}-mysqli     php${PHP_VERSION}-xml     php${PHP_VERSION}-mbstring     php${PHP_VERSION}-gd     php${PHP_VERSION}-zip     php${PHP_VERSION}-intl     php${PHP_VERSION}-fileinfo     php${PHP_VERSION}-tokenizer     php${PHP_VERSION}-ctype     php${PHP_VERSION}-iconv     php${PHP_VERSION}-simplexml     php${PHP_VERSION}-dom     php${PHP_VERSION}-sockets     php${PHP_VERSION}-posix     php${PHP_VERSION}-ffi     && rm -rf /var/lib/apt/lists/*
 
 # Configure update-alternatives to use the correct PHP version
 RUN update-alternatives --set php /usr/bin/php${PHP_VERSION} 2>/dev/null ||     update-alternatives --install /usr/bin/php php /usr/bin/php${PHP_VERSION} 100
-
-# Install PHP-Dev
-RUN apt-get install -y --no-install-recommends php${PHP_VERSION}-dev ||     (echo "ERROR: Failed to install php${PHP_VERSION}-dev" && exit 1)
-
-# Install PHP-Curl
-RUN apt-get install -y --no-install-recommends php${PHP_VERSION}-curl ||     (echo "ERROR: Failed to install php${PHP_VERSION}-curl" && exit 1)
-
-# Install PHP-MySQLi
-RUN apt-get install -y --no-install-recommends php${PHP_VERSION}-mysqli ||     (echo "ERROR: Failed to install php${PHP_VERSION}-mysqli" && exit 1)
-
-# Install PHP-XML
-RUN apt-get install -y --no-install-recommends php${PHP_VERSION}-xml ||     (echo "ERROR: Failed to install php${PHP_VERSION}-xml" && exit 1)
-
-# Install PHP-MBString
-RUN apt-get install -y --no-install-recommends php${PHP_VERSION}-mbstring ||     (echo "ERROR: Failed to install php${PHP_VERSION}-mbstring" && exit 1)
-
-# Install PHP-GD
-RUN apt-get install -y --no-install-recommends php${PHP_VERSION}-gd ||     (echo "ERROR: Failed to install php${PHP_VERSION}-gd" && exit 1)
-
-# Install PHP-Zip
-RUN apt-get install -y --no-install-recommends php${PHP_VERSION}-zip ||     (echo "ERROR: Failed to install php${PHP_VERSION}-zip" && exit 1)
-
-# Install common PHP extensions
-# Note: json and openssl are built into PHP 8.0+
-# Note: pcntl may not be available for PHP 8.5 yet
-RUN apt-get install -y --no-install-recommends     php${PHP_VERSION}-intl     php${PHP_VERSION}-fileinfo     php${PHP_VERSION}-tokenizer     php${PHP_VERSION}-ctype     php${PHP_VERSION}-iconv     php${PHP_VERSION}-simplexml     php${PHP_VERSION}-dom     php${PHP_VERSION}-sockets     php${PHP_VERSION}-posix     php${PHP_VERSION}-ffi ||     (echo "WARNING: Some PHP extensions could not be installed" && exit 0)
 
 # Clean apt cache after all PHP installs
 RUN rm -rf /var/lib/apt/lists/*
