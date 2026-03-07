@@ -13,8 +13,8 @@ return [
     'save.handler.pdo' => [
         'instance' => null,
         'dsn' => 'mysql:host=127.0.0.1;port=3306;dbname=xhgui;charset=utf8mb4',
-        'user' => 'root',
-        'pass' => '',
+        'user' => 'xhgui',
+        'pass' => 'xhgui',
         'table' => 'results',
         'tableWatch' => 'watches',
         'initSchema' => true,
