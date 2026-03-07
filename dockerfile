@@ -109,6 +109,15 @@ RUN if [ -f /etc/nginx/sites-available/phpmyadmin ]; then \
         sed -i "s/PHPMYADMIN_DOMAIN_PLACEHOLDER/${PHPMYADMIN_DOMAIN}/g" /etc/nginx/sites-available/phpmyadmin; \
     fi
 
+# Copy nginx config for XHGUI
+COPY docker/nginx-xhgui.conf /tmp/nginx-xhgui.conf
+RUN if [ "$INSTALL_PROFILING" = "true" ]; then \
+        mkdir -p /etc/nginx/sites-available /etc/nginx/sites-enabled && \
+        cp /tmp/nginx-xhgui.conf /etc/nginx/sites-available/xhgui && \
+        sed -i "s/phpPHP_VERSION_PLACEHOLDER-fpm/php${PHP_VERSION}-fpm/g" /etc/nginx/sites-available/xhgui && \
+        ln -sf /etc/nginx/sites-available/xhgui /etc/nginx/sites-enabled/; \
+    fi
+
 # Configure XHGUI domain if installed
 RUN if [ -f /etc/nginx/sites-available/xhgui ]; then \
         sed -i "s/PROFILING_DOMAIN_PLACEHOLDER/${PROFILING_DOMAIN}/g" /etc/nginx/sites-available/xhgui; \
