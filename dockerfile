@@ -53,7 +53,7 @@ RUN if [ "$INSTALL_XDEBUG" = "true" ] || [ "$INSTALL_PROFILING" = "true" ]; then
 RUN apt-get update
 
 # Install PHP and all extensions in one command
-RUN apt-get update && apt-get install -y --no-install-recommends     php${PHP_VERSION}-fpm     php${PHP_VERSION}-cli     php${PHP_VERSION}-dev     php${PHP_VERSION}-curl     php${PHP_VERSION}-mysqli     php${PHP_VERSION}-xml     php${PHP_VERSION}-mbstring     php${PHP_VERSION}-gd     php${PHP_VERSION}-zip     php${PHP_VERSION}-intl     php${PHP_VERSION}-fileinfo     php${PHP_VERSION}-tokenizer     php${PHP_VERSION}-ctype     php${PHP_VERSION}-iconv     php${PHP_VERSION}-simplexml     php${PHP_VERSION}-dom     php${PHP_VERSION}-sockets     php${PHP_VERSION}-posix     php${PHP_VERSION}-ffi   php${PHP_VERSION}-bcmath   php${PHP_VERSION}-opcache  && rm -rf /var/lib/apt/lists/*
+RUN apt-get update && apt-get install -y --no-install-recommends     php${PHP_VERSION}-fpm     php${PHP_VERSION}-cli     php${PHP_VERSION}-dev     php${PHP_VERSION}-curl     php${PHP_VERSION}-mysqli     php${PHP_VERSION}-xml     php${PHP_VERSION}-mbstring     php${PHP_VERSION}-gd     php${PHP_VERSION}-zip     php${PHP_VERSION}-intl     php${PHP_VERSION}-fileinfo     php${PHP_VERSION}-tokenizer     php${PHP_VERSION}-ctype     php${PHP_VERSION}-iconv     php${PHP_VERSION}-simplexml     php${PHP_VERSION}-dom     php${PHP_VERSION}-sockets     php${PHP_VERSION}-posix     php${PHP_VERSION}-ffi   && rm -rf /var/lib/apt/lists/*
 
 # Configure update-alternatives to use the correct PHP version
 RUN update-alternatives --set php /usr/bin/php${PHP_VERSION} 2>/dev/null ||     update-alternatives --install /usr/bin/php php /usr/bin/php${PHP_VERSION} 100
