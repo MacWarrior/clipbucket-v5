@@ -67,7 +67,7 @@ RUN update-alternatives --set php /usr/bin/php${PHP_VERSION} 2>/dev/null ||     
 RUN if [ "$LITE" = "false" ]; then                 apt-get install -y --no-install-recommends mariadb-server ;     fi
 
 # Install Redis server if requested
-RUN if [ "$INSTALL_REDIS" = "true" ]; then               apt-get install -y --no-install-recommends redis-server &&    sed -i 's/^bind 127.0.0.1/bind 0.0.0.0/' /etc/redis/redis.conf &&         sed -i 's/^# maxmemory/maxmemory 256mb/' /etc/redis/redis.conf &&         sed -i 's/^# maxmemory-policy/maxmemory-policy allkeys-lru/' /etc/redis/redis.conf;     fi
+RUN if [ "$INSTALL_REDIS" = "true" ]; then               apt-get install -y --no-install-recommends redis-server &&    sed -i 's/^bind 127.0.0.1/bind 0.0.0.0/' /etc/redis/redis.conf &&         echo 'maxmemory 256mb' >> /etc/redis/redis.conf &&         echo 'maxmemory-policy allkeys-lru' >> /etc/redis/redis.conf;     fi
 
 # Install PHP Xdebug if requested
 RUN if [ "$INSTALL_XDEBUG" = "true" ]; then               apt-get install -y --no-install-recommends php${PHP_VERSION}-xdebug ||         (pecl install xdebug &&         echo "zend_extension=xdebug.so" > /etc/php/${PHP_VERSION}/mods-available/xdebug.ini) &&         echo "xdebug.mode=debug,coverage" >> /etc/php/${PHP_VERSION}/mods-available/xdebug.ini &&         echo "xdebug.start_with_request=yes" >> /etc/php/${PHP_VERSION}/mods-available/xdebug.ini &&         echo "xdebug.client_host=host.docker.internal" >> /etc/php/${PHP_VERSION}/mods-available/xdebug.ini &&         echo "xdebug.client_port=9003" >> /etc/php/${PHP_VERSION}/mods-available/xdebug.ini &&         phpenmod xdebug ;     fi
