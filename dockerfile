@@ -68,7 +68,7 @@ RUN if [ "$INSTALL_REDIS" = "true" ]; then               apt-get install -y --no
 RUN if [ "$INSTALL_XDEBUG" = "true" ]; then               apt-get install -y --no-install-recommends php${PHP_VERSION}-xdebug ||         (pecl install xdebug &&         echo "zend_extension=xdebug.so" > /etc/php/${PHP_VERSION}/mods-available/xdebug.ini) &&         echo "xdebug.mode=debug,coverage" >> /etc/php/${PHP_VERSION}/mods-available/xdebug.ini &&         echo "xdebug.start_with_request=yes" >> /etc/php/${PHP_VERSION}/mods-available/xdebug.ini &&         echo "xdebug.client_host=host.docker.internal" >> /etc/php/${PHP_VERSION}/mods-available/xdebug.ini &&         echo "xdebug.client_port=9003" >> /etc/php/${PHP_VERSION}/mods-available/xdebug.ini &&         phpenmod xdebug ;     fi
 
 # Install XHProf and XHGUI only if profiling is requested
-RUN if [ "$INSTALL_PROFILING" = "true" ]; then                (apt-get install -y --no-install-recommends php${PHP_VERSION}-sqlite3 php${PHP_VERSION}-xhprof ||         pecl install xhprof) &&         echo "extension=xhprof.so" > /etc/php/${PHP_VERSION}/mods-available/xhprof.ini &&         phpenmod xhprof &&         phpenmod pdo_sqlite  ;     fi
+RUN if [ "$INSTALL_PROFILING" = "true" ]; then                (apt-get install -y --no-install-recommends php${PHP_VERSION}-xhprof ||         pecl install xhprof) &&         echo "extension=xhprof.so" > /etc/php/${PHP_VERSION}/mods-available/xhprof.ini &&         phpenmod xhprof &&         phpenmod pdo_mysql  ;     fi
 
 # Copy XHGUI configuration file
 COPY docker/xhgui-config.php /tmp/xhgui-config.php
