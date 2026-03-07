@@ -120,7 +120,8 @@ RUN if [ -f /etc/nginx/sites-available/xhgui ]; then \
 
 # Install phpMyAdmin via git clone with yarn build for assets
 RUN if [ "$INSTALL_PHPMYADMIN" = "true" ]; then \
-        apt-get install -y --no-install-recommends composer yarn && \
+        apt-get install -y --no-install-recommends composer nodejs && \
+        corepack enable && \
         mkdir -p /usr/share/phpmyadmin /var/lib/phpmyadmin/tmp && \
         git clone --depth 1 --branch STABLE https://github.com/phpmyadmin/phpmyadmin.git /usr/share/phpmyadmin && \
         chmod 777 /var/lib/phpmyadmin/tmp && \
