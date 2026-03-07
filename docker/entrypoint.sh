@@ -120,6 +120,7 @@ if [ "$LITE" != "true" ]; then
         mysql -uroot -e "FLUSH PRIVILEGES;"
     else
         echo "Database already exists. No init required."
+    fi
 
     # Create XHGUI database and user if profiling is enabled
     if [ "${INSTALL_PROFILING}" = "true" ]; then
@@ -129,7 +130,6 @@ if [ "$LITE" != "true" ]; then
         mysql -uroot -e "GRANT ALL PRIVILEGES ON xhgui.* TO 'xhgui'@'localhost';"
         mysql -uroot -e "FLUSH PRIVILEGES;"
         echo "XHGUI database created successfully."
-    fi
     fi
 else
     echo "Lite mode: MariaDB is disabled"
