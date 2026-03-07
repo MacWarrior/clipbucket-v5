@@ -1,202 +1,163 @@
-# Utiliser une image Debian stable comme base
+# Use a stable Debian image as base
 FROM debian:stable-slim
 
-# Variables d'environnement pour le runtime
-ENV DOMAIN_NAME=clipbucket.local
-ENV MYSQL_PASSWORD=clipbucket_password
+# Build arguments for customization
+ARG LITE=false
+ARG PHP_VERSION=8.4
+ARG INSTALL_PHPMYADMIN=false
+ARG INSTALL_XDEBUG=false
+ARG INSTALL_REDIS=false
+ARG INSTALL_PROFILING=false
+ARG DOMAIN_NAME=clipbucket.local
+ARG PHPMYADMIN_DOMAIN=phpmyadmin.local
+ARG PROFILING_DOMAIN=profiling.local
 
-# Ajouter un utilisateur avec un UID/GID dynamique
+# Environment variables for runtime
+ENV DOMAIN_NAME=${DOMAIN_NAME}
+ENV PHPMYADMIN_DOMAIN=${PHPMYADMIN_DOMAIN}
+ENV MYSQL_PASSWORD=clipbucket_password
+ENV LITE=${LITE}
+ENV PHP_VERSION=${PHP_VERSION}
+ENV INSTALL_PHPMYADMIN=${INSTALL_PHPMYADMIN}
+ENV INSTALL_XDEBUG=${INSTALL_XDEBUG}
+ENV INSTALL_REDIS=${INSTALL_REDIS}
+ENV INSTALL_PROFILING=${INSTALL_PROFILING}
+ENV PROFILING_DOMAIN=${PROFILING_DOMAIN}
+
+# Add a user with a dynamic UID/GID
 ENV UID=1000
 ENV GID=1000
 
-# Version de PHP fixée
-RUN apt-get update && \
-    apt-get dist-upgrade -y && \
-    apt-get install -y \
-        nginx-full \
-        mariadb-server \
-        php-pear \
-        php8.4-fpm \
-        php8.4-dev \
-        php8.4-curl \
-        php8.4-mysqli \
-        php8.4-xml \
-        php8.4-mbstring \
-        php8.4-gd \
-        git \
-        ffmpeg \
-        sendmail \
-        mediainfo && \
-    apt-get clean
+# Install base dependencies and add PHP repository
+RUN apt-get update && apt-get install -y --no-install-recommends     ca-certificates     curl     gnupg2     lsb-release  
 
-RUN pecl install xhprof \
-    && echo "extension=xhprof.so" > /etc/php/8.4/mods-available/xhprof.ini \
-    && phpenmod xhprof
+# Add Ondrej Sury PHP repository for all PHP versions (8.1-8.5)
+# This external repo is required because Debian stable only provides one PHP version
+RUN mkdir -p /etc/apt/keyrings \
+    && curl -sSL https://packages.sury.org/php/apt.gpg -o /etc/apt/keyrings/sury-php.gpg \
+    && echo "deb [signed-by=/etc/apt/keyrings/sury-php.gpg] https://packages.sury.org/php $(lsb_release -sc) main" > /etc/apt/sources.list.d/php.list \
+    && apt-get update
 
-# Configuration PHP
-RUN sed -i "s/max_execution_time = 30/max_execution_time = 7200/g" /etc/php/8.4/fpm/php.ini
-RUN sed -i "s/;ffi.enable=preload/ffi.enable=true/g" /etc/php/8.4/fpm/php.ini
-RUN sed -i "s/;ffi.enable=preload/ffi.enable=true/g" /etc/php/8.4/cli/php.ini
+# Debug: Show repository configuration
+RUN echo "=== Repository Configuration ===" && cat /etc/apt/sources.list.d/php.list \
+    && echo "=== Debian Version ===" && lsb_release -sc
 
-# change l'utilisateur de nginx et php-fpm
-RUN sed -i 's/^user www-data;/user containeruser;/g' /etc/nginx/nginx.conf ;\
-    sed -i 's/^user = www-data$/user = containeruser/' /etc/php/8.4/fpm/pool.d/www.conf ;\
-    sed -i 's/^group = www-data$/group = containeruser/' /etc/php/8.4/fpm/pool.d/www.conf
+# Validate PHP version (8.1 to 8.5)
+RUN case "${PHP_VERSION}" in     8.1|8.2|8.3|8.4|8.5) echo "PHP version ${PHP_VERSION} is valid" ;;     *) echo "Error: PHP_VERSION must be between 8.1 and 8.5 (inclusive)"; exit 1 ;; esac
 
-# Configure Nginx
+# Update package list after adding PHP repository
+RUN apt-get update
+
+# Install nginx and base tools
+RUN apt-get install -y --no-install-recommends     nginx-full     git     ffmpeg     sendmail     mediainfo     curl     wget     unzip  
+
+# Install PHP pear (required for pecl) only if needed
+RUN if [ "$INSTALL_XDEBUG" = "true" ] || [ "$INSTALL_PROFILING" = "true" ]; then  apt-get install -y --no-install-recommends         php-pear     ;     fi
+
+# Install PHP and extensions (one by one for debugging)
+RUN apt-get update
+
+# Install PHP and all extensions in one command
+RUN apt-get install -y --no-install-recommends     php${PHP_VERSION}-fpm     php${PHP_VERSION}-cli     php${PHP_VERSION}-dev     php${PHP_VERSION}-curl     php${PHP_VERSION}-mysqli     php${PHP_VERSION}-xml     php${PHP_VERSION}-mbstring     php${PHP_VERSION}-gd     php${PHP_VERSION}-zip     php${PHP_VERSION}-intl     php${PHP_VERSION}-fileinfo     php${PHP_VERSION}-tokenizer     php${PHP_VERSION}-ctype     php${PHP_VERSION}-iconv     php${PHP_VERSION}-simplexml     php${PHP_VERSION}-dom     php${PHP_VERSION}-sockets     php${PHP_VERSION}-posix     php${PHP_VERSION}-ffi 
+
+# Configure update-alternatives to use the correct PHP version
+RUN update-alternatives --set php /usr/bin/php${PHP_VERSION} 2>/dev/null ||     update-alternatives --install /usr/bin/php php /usr/bin/php${PHP_VERSION} 100
+
+# Install MariaDB only if not in lite mode
+RUN if [ "$LITE" = "false" ]; then                 apt-get install -y --no-install-recommends mariadb-server ;     fi
+
+# Install Redis server if requested
+RUN if [ "$INSTALL_REDIS" = "true" ]; then               apt-get install -y --no-install-recommends redis-server &&    sed -i 's/^bind 127.0.0.1/bind 0.0.0.0/' /etc/redis/redis.conf &&         echo 'maxmemory 256mb' >> /etc/redis/redis.conf &&         echo 'maxmemory-policy allkeys-lru' >> /etc/redis/redis.conf;     fi
+
+# Install PHP Xdebug if requested
+RUN if [ "$INSTALL_XDEBUG" = "true" ]; then               apt-get install -y --no-install-recommends php${PHP_VERSION}-xdebug ||         (pecl install xdebug &&         echo "zend_extension=xdebug.so" > /etc/php/${PHP_VERSION}/mods-available/xdebug.ini) &&         echo "xdebug.mode=debug,coverage" >> /etc/php/${PHP_VERSION}/mods-available/xdebug.ini &&         echo "xdebug.start_with_request=yes" >> /etc/php/${PHP_VERSION}/mods-available/xdebug.ini &&         echo "xdebug.client_host=host.docker.internal" >> /etc/php/${PHP_VERSION}/mods-available/xdebug.ini &&         echo "xdebug.client_port=9003" >> /etc/php/${PHP_VERSION}/mods-available/xdebug.ini &&         phpenmod xdebug ;     fi
+
+# Install XHProf and XHGUI only if profiling is requested
+RUN if [ "$INSTALL_PROFILING" = "true" ]; then                (apt-get install -y --no-install-recommends php${PHP_VERSION}-xhprof ||         pecl install xhprof) &&         echo "extension=xhprof.so" > /etc/php/${PHP_VERSION}/mods-available/xhprof.ini &&         phpenmod xhprof &&         phpenmod pdo_mysql  ;     fi
+
+# Copy XHGUI configuration file
+COPY docker/xhgui-config.php /tmp/xhgui-config.php
+
+# Install XHGUI if profiling is requested
+RUN if [ "$INSTALL_PROFILING" = "true" ]; then            apt-get install -y --no-install-recommends composer &&         mkdir -p /usr/share/xhgui /var/lib/xhgui &&         git clone --depth 1 https://github.com/perftools/xhgui.git /usr/share/xhgui &&         chmod 777 /var/lib/xhgui && mkdir -p /usr/share/xhgui/cache && chmod 777 /usr/share/xhgui/cache &&         cd /usr/share/xhgui &&         (composer install --no-dev --optimize-autoloader 2>&1 || echo "Composer install completed with warnings") &&         mkdir -p config &&         cp /tmp/xhgui-config.php /usr/share/xhgui/config/config.php ;     fi
+
+
+# PHP configuration
+RUN sed -i "s/max_execution_time = 30/max_execution_time = 7200/g" /etc/php/${PHP_VERSION}/fpm/php.ini
+RUN sed -i "s/;ffi.enable=preload/ffi.enable=true/g" /etc/php/${PHP_VERSION}/fpm/php.ini
+RUN sed -i "s/;ffi.enable=preload/ffi.enable=true/g" /etc/php/${PHP_VERSION}/cli/php.ini
+
+# Change the nginx and php-fpm user
+RUN sed -i 's/^user www-data;/user containeruser;/g' /etc/nginx/nginx.conf &&     sed -i "s/^user = www-data\$/user = containeruser/" /etc/php/${PHP_VERSION}/fpm/pool.d/www.conf &&     sed -i "s/^group = www-data\$/group = containeruser/" /etc/php/${PHP_VERSION}/fpm/pool.d/www.conf
+
+
+# Copy nginx configuration
+COPY docker/nginx-clipbucket.conf /etc/nginx/sites-available/clipbucket
 RUN rm -f /etc/nginx/sites-enabled/default && \
-    echo 'server { \
-        listen 80; \
-        server_name DOMAIN_NAME_PLACEHOLDER; \
-        root /srv/http/clipbucket/upload; \
-        index index.php; \
-        client_max_body_size 2M; \
-        proxy_connect_timeout 7200s; \
-        proxy_send_timeout 7200s; \
-        proxy_read_timeout 7200s; \
-        fastcgi_send_timeout 7200s; \
-        fastcgi_read_timeout 7200s; \
-        fastcgi_buffers 16 32k; \
-        fastcgi_buffer_size 64k; \
-        fastcgi_busy_buffers_size 64k; \
-        proxy_buffer_size 128k; \
-        proxy_buffers 4 256k; \
-        proxy_busy_buffers_size 256k; \
-        location ~* \.php$ { \
-            fastcgi_pass unix:/run/php/php8.4-fpm.sock; \
-            fastcgi_index index.php; \
-            fastcgi_split_path_info ^(.+\.php)(.*)$; \
-            include fastcgi_params; \
-            fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name; \
-        } \
-        error_page 404 /404; \
-        error_page 403 /403; \
-        location ~* ^(.*/)?403$ { \
-            try_files $uri $1403.php; \
-        } \
-        location ~* ^(.*/)?404$ { \
-            try_files $uri $1404.php; \
-        } \
-        # Forbidden access \
-        location ~ ^(.*/)?.(git|github|idea|gitignore|htaccess) { \
-            return 302 $1403; \
-        } \
-        location ~* ^(.*/)?(includes|changelog)/ { \
-            return 302 $1403; \
-        } \
-        location ~* ^(.*/)?files/temp/ { \
-            return 302 $1403; \
-        } \
-        # Direct acces to files \
-        location ~* ^(.*/)?files/ { \
-            try_files $uri $uri/ =404; \
-        } \
-        location ~* \.(css|js|jpe?g|png|gif|webp|svg|ico|woff2?|ttf|eot|otf|mp4|m3u8|ts|srt|webm|ogg|mp3)(\?[0-9]+)?$ { \
-            access_log off; \
-            log_not_found off; \
-            expires max; \
-            try_files $uri =404; \
-        } \
-        # External use \
-        location ~* ^(.*/)?sitemap.xml$ { \
-            rewrite ^(.*/)?sitemap.xml$ $1sitemap.php last; \
-        } \
-        location ~* ^(.*/)?rss(/([a-zA-Z0-9][^/]*))?$ { \
-            rewrite ^(.*/)?rss/?$ $1rss.php?$query_string last; \
-            rewrite ^(.*/)?rss/([a-zA-Z0-9][^/]*)$ $1rss.php?mode=$2&$query_string last; \
-        } \
-        # Collections \
-        location ~* ^(.*/)?collections(/(.*))?$ { \
-            rewrite ^(.*/)?collections/(.*)/(.*)/(.*)/(.*) $1collections.php?cat=$2&sort=$3&time=$4&page=$5&$query_string last; \
-            rewrite ^(.*/)?collections/(.*)/(.*)/(.*) $1collections.php?sort=$2&time=$3&page=$4&$query_string last; \
-            rewrite ^(.*/)?collections/([0-9]+) $1collections.php?page=$2&$query_string last; \
-            rewrite ^(.*/)?collections/?$ $1collections.php?$query_string last; \
-        } \
-        location ~* ^(.*/)?collection(/(.*))?$ { \
-            rewrite ^(.*/)?collection/(.*)/(.*)/(.*) $1view_collection.php?cid=$2&type=$3&page=$4&$query_string last; \
-        } \
-        # Videos \
-        location ~* ^(.*/)?videos(/(.*))?$ { \
-            rewrite ^(.*/)?videos/(.*)/(.*)/(.*)/(.*) $1videos.php?cat=$2&sort=$3&time=$4&page=$5&$query_string last; \
-            rewrite ^(.*/)?videos/(.*)/(.*)/(.*) $1videos.php?sort=$2&time=$3&page=$4&$query_string last; \
-            rewrite ^(.*/)?videos/([0-9]+) $1videos.php?page=$2&$query_string last; \
-            rewrite ^(.*/)?videos/?$ $1videos.php?$query_string last; \
-        } \
-        location ~* ^(.*/)?videos_public(/(.*))?$ { \
-            rewrite ^(.*/)?videos_public/(.*)/(.*)/(.*)/(.*) $1videos_public.php?cat=$2&sort=$3&time=$4&page=$5&$query_string last; \
-            rewrite ^(.*/)?videos_public/(.*)/(.*)/(.*) $1videos_public.php?sort=$2&time=$3&page=$4&$query_string last; \
-            rewrite ^(.*/)?videos_public/([0-9]+) $1videos_public.php?page=$2&$query_string last; \
-            rewrite ^(.*/)?videos_public/?$ $1videos_public.php?$query_string last; \
-        } \
-        location ~* ^(.*/)?video(/(.*))?$ { \
-            rewrite ^(.*/)?video/(.*)/(.*) $1watch_video.php?v=$2&$query_string last; \
-            rewrite ^(.*/)?video/([0-9]+)_(.*) $1watch_video.php?v=$2&$query_string last; \
-        } \
-        location ~* ^(.*/)?video_public(/(.*))?$ { \
-            rewrite ^(.*/)?video_public/(.*)/(.*) $1watch_video_public.php?v=$2&$query_string last; \
-            rewrite ^(.*/)?video_public/([0-9]+)_(.*) $1watch_video_public.php?v=$2&$query_string last; \
-        } \
-        location ~* ^(/.*/)?(.+)_v([0-9]+)$ { \
-            rewrite ^(.*/)?(.*)_v([0-9]+) $1watch_video.php?v=$3&$query_string last; \
-        } \
-        # Photos \
-        location ~* ^(.*/)?item(/(.*))?$ { \
-            rewrite ^(.*/)?item/(.*)/(.*)/(.*)/(.*) $1view_item.php?item=$4&type=$2&collection=$3&$query_string last; \
-        } \
-        location ~* ^(.*/)?photos(/(.*))?$ { \
-            rewrite ^(.*/)?photos/(.*)/(.*)/(.*)/(.*) $1photos.php?cat=$2&sort=$3&time=$4&page=$5&$query_string last; \
-            rewrite ^(.*/)?photos/(.*)/(.*)/(.*) $1photos.php?sort=$2&time=$3&page=$4&$query_string last; \
-            rewrite ^(.*/)?photos/([0-9]+) $1photos.php?page=$2&$query_string last; \
-            rewrite ^(.*/)?photos/?$ $1photos.php?$query_string last; \
-        } \
-        # Channels \
-        location ~* ^(.*/)?channels(/(.*))?$ { \
-            rewrite ^(.*/)?channels/(.*)/(.*)/(.*)/(.*) $1channels.php?cat=$2&sort=$3&time=$4&page=$5&$query_string last; \
-            rewrite ^(.*/)?channels/(.*)/(.*)/(.*) $1channels.php?sort=$2&time=$3&page=$4&$query_string last; \
-            rewrite ^(.*/)?channels/([0-9]+) $1channels.php?page=$2&$query_string last; \
-            rewrite ^(.*/)?channels/?$ $1channels.php?$query_string last; \
-        } \
-        location ~* ^(.*/)?user/(.*)$ { \
-            rewrite ^(.*/)?user/(.*) $1view_channel.php?user=$2&$query_string last; \
-        } \
-        # Uploads \
-        location ~* ^(.*/)?photo_upload(/(.*))?$ { \
-            rewrite ^(.*/)?photo_upload/(.*)$ $1photo_upload.php?collection=$2&$query_string last; \
-            rewrite ^(.*/)?photo_upload/?$ $1photo_upload.php?$query_string last; \
-        } \
-        location ~* ^(.*/)?upload/?$ { \
-            rewrite ^(.*/)?upload/?$ $1upload.php?$query_string last; \
-        } \
-        # Account \
-        location ~* ^(.*/)?my_account$ { \
-            rewrite ^(.*/)?my_account$ $1myaccount.php?$query_string last; \
-        } \
-        location ~* ^(.*/)?signup/?$ { \
-            rewrite ^(.*/)?signup/?$ $1signup.php?$query_string last; \
-        } \
-        location ~* ^(.*/)?signin/?$ { \
-            rewrite ^(.*/)?signin/?$ $1signup.php?mode=login&$query_string last; \
-        } \
-        # Custom pages \
-        location ~* ^(.*/)?page/([0-9]+)/(.*)$ { \
-            rewrite ^(.*/)?page/([0-9]+)/(.*) $1view_page.php?pid=$2&$query_string last; \
-        } \
-    }' > /etc/nginx/sites-available/clipbucket && \
     ln -s /etc/nginx/sites-available/clipbucket /etc/nginx/sites-enabled/
 
-RUN sed -i "s/DOMAIN_NAME_PLACEHOLDER/${DOMAIN_NAME}/g" /etc/nginx/sites-available/clipbucket
+# Replace placeholders in nginx config
+RUN sed -i "s/DOMAIN_NAME_PLACEHOLDER/${DOMAIN_NAME}/g" /etc/nginx/sites-available/clipbucket && \
+    sed -i "s/phpPHP_VERSION_PLACEHOLDER-fpm/php${PHP_VERSION}-fpm/g" /etc/nginx/sites-available/clipbucket
 
-# Ajouter un script d'entrée pour init bdd et sources si necessaire
+# Copy nginx config for phpMyAdmin
+COPY docker/nginx-phpmyadmin.conf /tmp/nginx-phpmyadmin.conf
+RUN if [ "$INSTALL_PHPMYADMIN" = "true" ]; then \
+        mkdir -p /etc/nginx/sites-available /etc/nginx/sites-enabled && \
+        cp /tmp/nginx-phpmyadmin.conf /etc/nginx/sites-available/phpmyadmin && \
+        sed -i "s/phpPHP_VERSION_PLACEHOLDER-fpm/php${PHP_VERSION}-fpm/g" /etc/nginx/sites-available/phpmyadmin && \
+        ln -sf /etc/nginx/sites-available/phpmyadmin /etc/nginx/sites-enabled/; \
+    fi
+
+# Configure phpMyAdmin domain if installed
+RUN if [ -f /etc/nginx/sites-available/phpmyadmin ]; then \
+        sed -i "s/PHPMYADMIN_DOMAIN_PLACEHOLDER/${PHPMYADMIN_DOMAIN}/g" /etc/nginx/sites-available/phpmyadmin; \
+    fi
+
+# Copy nginx config for XHGUI
+COPY docker/nginx-xhgui.conf /tmp/nginx-xhgui.conf
+RUN if [ "$INSTALL_PROFILING" = "true" ]; then \
+        mkdir -p /etc/nginx/sites-available /etc/nginx/sites-enabled && \
+        cp /tmp/nginx-xhgui.conf /etc/nginx/sites-available/xhgui && \
+        sed -i "s/phpPHP_VERSION_PLACEHOLDER-fpm/php${PHP_VERSION}-fpm/g" /etc/nginx/sites-available/xhgui && \
+        ln -sf /etc/nginx/sites-available/xhgui /etc/nginx/sites-enabled/; \
+    fi
+
+# Configure XHGUI domain if installed
+RUN if [ -f /etc/nginx/sites-available/xhgui ]; then \
+        sed -i "s/PROFILING_DOMAIN_PLACEHOLDER/${PROFILING_DOMAIN}/g" /etc/nginx/sites-available/xhgui; \
+    fi
+
+
+# Install phpMyAdmin via git clone with yarn build for assets
+RUN if [ "$INSTALL_PHPMYADMIN" = "true" ]; then \
+        apt-get install -y --no-install-recommends composer nodejs && \
+        corepack enable && \
+        mkdir -p /usr/share/phpmyadmin /var/lib/phpmyadmin/tmp && \
+        git clone --depth 1 --branch STABLE https://github.com/phpmyadmin/phpmyadmin.git /usr/share/phpmyadmin && \
+        chmod 777 /var/lib/phpmyadmin/tmp && \
+        cd /usr/share/phpmyadmin && \
+        composer install --no-dev --optimize-autoloader && \
+        yarn install --frozen-lockfile && \
+        yarn build && \
+        echo "<?php \$cfg['blowfish_secret'] = '$(openssl rand -base64 32)'; \$cfg['TempDir'] = '/var/lib/phpmyadmin/tmp'; \$cfg['Servers'][1]['auth_type'] = 'cookie'; \$cfg['Servers'][1]['host'] = 'localhost'; \$cfg['Servers'][1]['compress'] = false; \$cfg['Servers'][1]['AllowNoPassword'] = false;" > /usr/share/phpmyadmin/config.inc.php && \
+        rm -rf /usr/share/phpmyadmin/node_modules; \
+    fi
+
+
+# Clean apt cache apt
+RUN rm -rf /var/lib/apt/lists/*
+
+# Add entrypoint script
 COPY docker/entrypoint.sh /usr/local/bin/
-RUN sed -i 's/\r$//' /usr/local/bin/entrypoint.sh
-RUN chmod +x /usr/local/bin/entrypoint.sh
+RUN sed -i 's/\r$//' /usr/local/bin/entrypoint.sh && \
+    chmod +x /usr/local/bin/entrypoint.sh
 
-# Créer les volumes pour la bdd et les sources
-VOLUME ["/var/lib/mysql", "label=clipbucket_database"]
+# Create volumes
 VOLUME ["/srv/http/clipbucket", "label=clipbucket_sources"]
 
-# Port d'écoute
+# Expose port
 EXPOSE 80
 
-# Commande de démarrage
+# Start command
 ENTRYPOINT ["entrypoint.sh"]

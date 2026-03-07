@@ -163,6 +163,25 @@ Installing <a href="https://github.com/MacWarrior/clipbucket-v5">ClipBucket V5</
   <pre>id username</pre>
 Replace username with the name of the user. For example, for the user john, use id john.
 </details>
+<details>
+  <summary>Lite Image (External Database)</summary>
+
+For production environments or when using an external database, use the **lite** image which excludes MariaDB:
+
+```bash
+docker run \
+--restart unless-stopped \
+--pull=always \
+-e DOMAIN_NAME=clipbucket.local \
+-e LITE=true \
+-e UID=1000 \
+-e GID=1000 \
+-v clipbucket_files:/srv/http/clipbucket \
+-p 80:80 \
+--name clipbucket \
+-d oxygenz/clipbucket-v5:lite-latest
+```
+</details>
 
 ## On dedicated server
 <details>
