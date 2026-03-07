@@ -118,19 +118,26 @@ RUN if [ -f /etc/nginx/sites-available/xhgui ]; then \
     fi
 
 
-# Install phpMyAdmin via git clone if requested
+# Install phpMyAdmin via git clone with yarn build for assets
 RUN if [ "$INSTALL_PHPMYADMIN" = "true" ]; then \
-        apt-get update && apt-get install -y --no-install-recommends composer && \
+        apt-get update && \
+        apt-get install -y --no-install-recommends composer curl gnupg && \
         mkdir -p /usr/share/phpmyadmin /var/lib/phpmyadmin/tmp && \
         git clone --depth 1 --branch STABLE https://github.com/phpmyadmin/phpmyadmin.git /usr/share/phpmyadmin && \
         chmod 777 /var/lib/phpmyadmin/tmp && \
         cd /usr/share/phpmyadmin && \
-        composer install --no-dev --optimize-autoloader 2>/dev/null || true && \
+        composer install --no-dev --optimize-autoloader && \
+        curl -fsSL https://deb.nodesource.com/setup_20.x | bash - && \
+        apt-get install -y nodejs && \
+        corepack enable && \
+        yarn install --frozen-lockfile && \
+        yarn build && \
         (apt-get install -y --no-install-recommends php${PHP_VERSION}-bcmath php${PHP_VERSION}-opcache || \
          apt-get install -y --no-install-recommends php-bcmath php-opcache || true) && \
         echo "<?php \$cfg['blowfish_secret'] = '$(openssl rand -base64 32)'; \$cfg['TempDir'] = '/var/lib/phpmyadmin/tmp'; \$cfg['Servers'][1]['auth_type'] = 'cookie'; \$cfg['Servers'][1]['host'] = 'localhost'; \$cfg['Servers'][1]['compress'] = false; \$cfg['Servers'][1]['AllowNoPassword'] = false;" > /usr/share/phpmyadmin/config.inc.php && \
-        rm -rf /var/lib/apt/lists/*; \
+        rm -rf /var/lib/apt/lists/* node_modules .yarn; \
     fi
+
 
 # Add entrypoint script
 COPY docker/entrypoint.sh /usr/local/bin/
