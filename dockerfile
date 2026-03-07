@@ -53,7 +53,7 @@ RUN if [ "$INSTALL_XDEBUG" = "true" ] || [ "$INSTALL_PROFILING" = "true" ]; then
 RUN apt-get update
 
 # Install PHP and all extensions in one command
-RUN apt-get update && apt-get install -y --no-install-recommends     php${PHP_VERSION}-fpm     php${PHP_VERSION}-cli     php${PHP_VERSION}-dev     php${PHP_VERSION}-curl     php${PHP_VERSION}-mysqli     php${PHP_VERSION}-xml     php${PHP_VERSION}-mbstring     php${PHP_VERSION}-gd     php${PHP_VERSION}-zip     php${PHP_VERSION}-intl     php${PHP_VERSION}-fileinfo     php${PHP_VERSION}-tokenizer     php${PHP_VERSION}-ctype     php${PHP_VERSION}-iconv     php${PHP_VERSION}-simplexml     php${PHP_VERSION}-dom     php${PHP_VERSION}-sockets     php${PHP_VERSION}-posix     php${PHP_VERSION}-ffi     && rm -rf /var/lib/apt/lists/*
+RUN apt-get update && apt-get install -y --no-install-recommends     php${PHP_VERSION}-fpm     php${PHP_VERSION}-cli     php${PHP_VERSION}-dev     php${PHP_VERSION}-curl     php${PHP_VERSION}-mysqli     php${PHP_VERSION}-xml     php${PHP_VERSION}-mbstring     php${PHP_VERSION}-gd     php${PHP_VERSION}-zip     php${PHP_VERSION}-intl     php${PHP_VERSION}-fileinfo     php${PHP_VERSION}-tokenizer     php${PHP_VERSION}-ctype     php${PHP_VERSION}-iconv     php${PHP_VERSION}-simplexml     php${PHP_VERSION}-dom     php${PHP_VERSION}-sockets     php${PHP_VERSION}-posix     php${PHP_VERSION}-ffi   php${PHP_VERSION}-bcmath   php${PHP_VERSION}-opcache  && rm -rf /var/lib/apt/lists/*
 
 # Configure update-alternatives to use the correct PHP version
 RUN update-alternatives --set php /usr/bin/php${PHP_VERSION} 2>/dev/null ||     update-alternatives --install /usr/bin/php php /usr/bin/php${PHP_VERSION} 100
@@ -120,22 +120,16 @@ RUN if [ -f /etc/nginx/sites-available/xhgui ]; then \
 
 # Install phpMyAdmin via git clone with yarn build for assets
 RUN if [ "$INSTALL_PHPMYADMIN" = "true" ]; then \
-        apt-get update && \
-        apt-get install -y --no-install-recommends composer curl gnupg && \
+        apt-get install -y --no-install-recommends composer yarn && \
         mkdir -p /usr/share/phpmyadmin /var/lib/phpmyadmin/tmp && \
         git clone --depth 1 --branch STABLE https://github.com/phpmyadmin/phpmyadmin.git /usr/share/phpmyadmin && \
         chmod 777 /var/lib/phpmyadmin/tmp && \
         cd /usr/share/phpmyadmin && \
         composer install --no-dev --optimize-autoloader && \
-        curl -fsSL https://deb.nodesource.com/setup_20.x | bash - && \
-        apt-get install -y nodejs && \
-        corepack enable && \
         yarn install --frozen-lockfile && \
         yarn build && \
-        (apt-get install -y --no-install-recommends php${PHP_VERSION}-bcmath php${PHP_VERSION}-opcache || \
-         apt-get install -y --no-install-recommends php-bcmath php-opcache || true) && \
         echo "<?php \$cfg['blowfish_secret'] = '$(openssl rand -base64 32)'; \$cfg['TempDir'] = '/var/lib/phpmyadmin/tmp'; \$cfg['Servers'][1]['auth_type'] = 'cookie'; \$cfg['Servers'][1]['host'] = 'localhost'; \$cfg['Servers'][1]['compress'] = false; \$cfg['Servers'][1]['AllowNoPassword'] = false;" > /usr/share/phpmyadmin/config.inc.php && \
-        rm -rf /var/lib/apt/lists/* node_modules .yarn; \
+        rm -rf /var/lib/apt/lists/* /usr/share/phpmyadmin/node_modules; \
     fi
 
 
