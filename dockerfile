@@ -79,7 +79,7 @@ RUN if [ "$INSTALL_PROFILING" = "true" ]; then                (apt-get install -
 COPY docker/xhgui-config.php /tmp/xhgui-config.php
 
 # Install XHGUI if profiling is requested
-RUN if [ "$INSTALL_PROFILING" = "true" ]; then            apt-get install -y --no-install-recommends composer &&         mkdir -p /usr/share/xhgui /var/lib/xhgui &&         git clone --depth 1 https://github.com/perftools/xhgui.git /usr/share/xhgui &&         chmod 777 /var/lib/xhgui &&         cd /usr/share/xhgui &&         (composer install --no-dev --optimize-autoloader 2>&1 || echo "Composer install completed with warnings") &&         mkdir -p config &&         cp /tmp/xhgui-config.php /usr/share/xhgui/config/config.php ;     fi
+RUN if [ "$INSTALL_PROFILING" = "true" ]; then            apt-get install -y --no-install-recommends composer &&         mkdir -p /usr/share/xhgui /var/lib/xhgui &&         git clone --depth 1 https://github.com/perftools/xhgui.git /usr/share/xhgui &&         chmod 777 /var/lib/xhgui && mkdir -p /usr/share/xhgui/cache && chmod 777 /usr/share/xhgui/cache &&         cd /usr/share/xhgui &&         (composer install --no-dev --optimize-autoloader 2>&1 || echo "Composer install completed with warnings") &&         mkdir -p config &&         cp /tmp/xhgui-config.php /usr/share/xhgui/config/config.php ;     fi
 
 
 # PHP configuration
