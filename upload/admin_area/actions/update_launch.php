@@ -85,4 +85,7 @@ if (stristr(PHP_OS, 'WIN')) {
 } else { // for ubuntu or linux
     $complement = ' > /dev/null 2>&1 &';
 }
+
+$cmd .= $complement;
+shell_exec($cmd);
 die;
