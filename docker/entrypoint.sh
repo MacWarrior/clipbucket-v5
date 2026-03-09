@@ -89,6 +89,8 @@ if [ "${INSTALL_MARIADB}" = "true" ]; then
         mariadb-install-db --user=${USER_NAME} --basedir=/usr --datadir=/var/lib/mysql || true
     else
         echo "MariaDB already installed."
+    # Fix permissions for MariaDB data directory
+    chown -R ${USER_NAME}:${USER_NAME} /var/lib/mysql /run/mysqld
     fi
 
     # Start MariaDB
