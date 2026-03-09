@@ -2,7 +2,7 @@
 
 return [
 
-    // On force PDO (MySQL)
+    // Force PDO (MySQL)
     'save.handler' => 'pdo',
 
     'pdo' => [
@@ -10,7 +10,7 @@ return [
         'user' => 'xhgui',
         'pass' => 'xhgui',
 
-        // noms des tables attendus
+        // expected table names
         'table' => 'results',
         'tableWatch' => 'watches',
         'initSchema' => true

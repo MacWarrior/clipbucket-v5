@@ -1,120 +1,120 @@
 # ClipBucket v5 - Docker Build Options
 
-Ce Dockerfile supporte de multiples configurations pour répondre à différents besoins de développement et production.
+This Dockerfile supports multiple configurations to meet different development and production needs.
 
-## 🐳 Arguments de Build
+## 🐳 Build Arguments
 
-| Argument | Description | Valeurs possibles | Défaut |
-|----------|-------------|-------------------|--------|
-| `PHP_VERSION` | Version de PHP | `8.1`, `8.2`, `8.3`, `8.4`, `8.5` | `8.5` |
-| `DOMAIN_NAME` | Domaine pour ClipBucket | string | `clipbucket.local` |
-| `PHPMYADMIN_DOMAIN` | Domaine pour phpMyAdmin | string | `phpmyadmin.local` |
-| `LITE` | Mode sans MariaDB | `true`, `false` | `false` |
-| `INSTALL_PHPMYADMIN` | Installer phpMyAdmin | `true`, `false` | `false` |
-| `INSTALL_XDEBUG` | Installer Xdebug | `true`, `false` | `false` |
-| `INSTALL_REDIS` | Installer Redis Server | `true`, `false` | `false` |
+| Argument | Description | Possible Values | Default |
+|----------|-------------|-----------------|--------|
+| `PHP_VERSION` | PHP version | `8.1`, `8.2`, `8.3`, `8.4`, `8.5` | `8.5` |
+| `DOMAIN_NAME` | Domain for ClipBucket | string | `clipbucket.local` |
+| `PHPMYADMIN_DOMAIN` | Domain for phpMyAdmin | string | `phpmyadmin.local` |
+| `LITE` | Mode without MariaDB | `true`, `false` | `false` |
+| `INSTALL_PHPMYADMIN` | Install phpMyAdmin | `true`, `false` | `false` |
+| `INSTALL_XDEBUG` | Install Xdebug | `true`, `false` | `false` |
+| `INSTALL_REDIS` | Install Redis Server | `true`, `false` | `false` |
 
-## 🚀 Exemples de Build
+## 🚀 Build Examples
 
-### Build de base avec PHP 8.5
+### Basic build with PHP 8.5
 ```bash
 docker build -t clipbucket-v5:php8.5 .
 ```
 
-### Build avec PHP 8.3 + phpMyAdmin
+### Build with PHP 8.3 + phpMyAdmin
 ```bash
-docker build -t clipbucket-v5:php8.3-pma \
-  --build-arg PHP_VERSION=8.3 \
+docker build -t clipbucket-v5:php8.3-pma \\
+  --build-arg PHP_VERSION=8.3 \\
   --build-arg INSTALL_PHPMYADMIN=true .
 ```
 
-### Build mode développeur (tous les outils)
+### Developer mode build (all tools)
 ```bash
-docker build -t clipbucket-v5:dev \
-  --build-arg PHP_VERSION=8.5 \
-  --build-arg INSTALL_PHPMYADMIN=true \
-  --build-arg INSTALL_XDEBUG=true \
+docker build -t clipbucket-v5:dev \\
+  --build-arg PHP_VERSION=8.5 \\
+  --build-arg INSTALL_PHPMYADMIN=true \\
+  --build-arg INSTALL_XDEBUG=true \\
   --build-arg INSTALL_REDIS=true .
 ```
 
-### Build mode lite (sans MariaDB)
+### Lite mode build (without MariaDB)
 ```bash
-docker build -t clipbucket-v5:lite \
-  --build-arg INSTALL_MARIADB=false .
+docker build -t clipbucket-v5:lite \\
+  --build-arg LITE=true .
 ```
 
-### Build avec domaines personnalisés
+### Build with custom domains
 ```bash
-docker build -t clipbucket-v5:custom \
-  --build-arg DOMAIN_NAME=myvideo.local \
-  --build-arg PHPMYADMIN_DOMAIN=dbadmin.myvideo.local \
+docker build -t clipbucket-v5:custom \\
+  --build-arg DOMAIN_NAME=myvideo.local \\
+  --build-arg PHPMYADMIN_DOMAIN=dbadmin.myvideo.local \\
   --build-arg INSTALL_PHPMYADMIN=true .
 ```
 
-### Build production avec Redis
+### Production build with Redis
 ```bash
-docker build -t clipbucket-v5:production \
-  --build-arg PHP_VERSION=8.5 \
+docker build -t clipbucket-v5:production \\
+  --build-arg PHP_VERSION=8.5 \\
   --build-arg INSTALL_REDIS=true .
 ```
 
-## 🏷️ Tags Docker Hub (Build Automatique)
+## 🏷️ Docker Hub Tags (Automatic Build)
 
-Les images sont automatiquement buildées et publiées lors des releases :
+Images are automatically built and published during releases:
 
 | Tag | Description | PHP | MariaDB | Redis | phpMyAdmin | Xdebug |
 |-----|-------------|-----|---------|-------|------------|--------|
-| `latest` | Version stable recommandée | 8.5 | ✅ | ✅ | ❌ | ❌ |
-| `lite` | Version légère sans base de données | 8.5 | ❌ | ❌ | ❌ | ❌ |
-| `dev-php8.1` | Environnement développement | 8.1 | ✅ | ✅ | ✅ | ❌ |
-| `dev-php8.2` | Environnement développement | 8.2 | ✅ | ✅ | ✅ | ❌ |
-| `dev-php8.3` | Environnement développement | 8.3 | ✅ | ✅ | ✅ | ❌ |
-| `dev-php8.4` | Environnement développement | 8.4 | ✅ | ✅ | ✅ | ❌ |
-| `dev-php8.5` | Environnement développement | 8.5 | ✅ | ✅ | ✅ | ❌ |
-| `dev-php8.1-xdebug` | Dev avec débogage | 8.1 | ✅ | ✅ | ✅ | ✅ |
-| `dev-php8.2-xdebug` | Dev avec débogage | 8.2 | ✅ | ✅ | ✅ | ✅ |
-| `dev-php8.3-xdebug` | Dev avec débogage | 8.3 | ✅ | ✅ | ✅ | ✅ |
-| `dev-php8.4-xdebug` | Dev avec débogage | 8.4 | ✅ | ✅ | ✅ | ✅ |
-| `dev-php8.5-xdebug` | Dev avec débogage | 8.5 | ✅ | ✅ | ✅ | ✅ |
+| `latest` | Recommended stable version | 8.5 | ✅ | ✅ | ❌ | ❌ |
+| `lite` | Lightweight version without database | 8.5 | ❌ | ❌ | ❌ | ❌ |
+| `dev-php8.1` | Development environment | 8.1 | ✅ | ✅ | ✅ | ❌ |
+| `dev-php8.2` | Development environment | 8.2 | ✅ | ✅ | ✅ | ❌ |
+| `dev-php8.3` | Development environment | 8.3 | ✅ | ✅ | ✅ | ❌ |
+| `dev-php8.4` | Development environment | 8.4 | ✅ | ✅ | ✅ | ❌ |
+| `dev-php8.5` | Development environment | 8.5 | ✅ | ✅ | ✅ | ❌ |
+| `dev-php8.1-xdebug` | Dev with debugging | 8.1 | ✅ | ✅ | ✅ | ✅ |
+| `dev-php8.2-xdebug` | Dev with debugging | 8.2 | ✅ | ✅ | ✅ | ✅ |
+| `dev-php8.3-xdebug` | Dev with debugging | 8.3 | ✅ | ✅ | ✅ | ✅ |
+| `dev-php8.4-xdebug` | Dev with debugging | 8.4 | ✅ | ✅ | ✅ | ✅ |
+| `dev-php8.5-xdebug` | Dev with debugging | 8.5 | ✅ | ✅ | ✅ | ✅ |
 
-## 🌐 Ports Exposés
+## 🌐 Exposed Ports
 
 | Port | Service | Condition |
 |------|---------|-----------|
-| `80` | Nginx + ClipBucket | Toujours |
-| `80` | phpMyAdmin | Si `INSTALL_PHPMYADMIN=true` |
-| `6379` | Redis Server | Si `INSTALL_REDIS=true` |
+| `80` | Nginx + ClipBucket | Always |
+| `80` | phpMyAdmin | If `INSTALL_PHPMYADMIN=true` |
+| `6379` | Redis Server | If `INSTALL_REDIS=true` |
 
 ## 📁 Volumes
 
-| Chemin | Description |
+| Path | Description |
 |--------|-------------|
-| `/srv/http/clipbucket` | Sources de ClipBucket |
-| `/var/lib/mysql` | Données MariaDB (mode full) |
+| `/srv/http/clipbucket` | ClipBucket sources |
+| `/var/lib/mysql` | MariaDB data (full mode) |
 
-## 🔧 Variables d'Environnement
+## 🔧 Environment Variables
 
-| Variable | Description | Défaut |
+| Variable | Description | Default |
 |----------|-------------|--------|
-| `DOMAIN_NAME` | Domaine pour ClipBucket | `clipbucket.local` |
-| `PHPMYADMIN_DOMAIN` | Domaine pour phpMyAdmin | `phpmyadmin.local` |
-| `MYSQL_PASSWORD` | Mot de passe MySQL | `clipbucket_password` |
-| `UID` | UID utilisateur | `1000` |
-| `GID` | GID utilisateur | `1000` |
+| `DOMAIN_NAME` | Domain for ClipBucket | `clipbucket.local` |
+| `PHPMYADMIN_DOMAIN` | Domain for phpMyAdmin | `phpmyadmin.local` |
+| `MYSQL_PASSWORD` | MySQL password | `clipbucket_password` |
+| `UID` | User UID | `1000` |
+| `GID` | User GID | `1000` |
 
-## 🐛 Débogage avec Xdebug
+## 🐛 Debugging with Xdebug
 
-Quand `INSTALL_XDEBUG=true`, Xdebug est configuré pour :
-- Mode debug + coverage
-- Port client : `9003`
-- Host client : `host.docker.internal`
+When `INSTALL_XDEBUG=true`, Xdebug is configured for:
+- Debug + coverage mode
+- Client port: `9003`
+- Client host: `host.docker.internal`
 
-Configuration IDE recommandée :
-- Port : `9003`
-- Path mapping : `/srv/http/clipbucket` → `/chemin/local/clipbucket`
+Recommended IDE configuration:
+- Port: `9003`
+- Path mapping: `/srv/http/clipbucket` → `/local/path/clipbucket`
 
 ## 📝 Notes
 
-- phpMyAdmin est installé via `git clone` depuis la branche STABLE
-- Redis est configuré avec une limite de mémoire de 256MB et une politique `allkeys-lru`
-- Les versions PHP 8.1 à 8.5 sont validées lors du build
+- phpMyAdmin is installed via `git clone` from the STABLE branch
+- Redis is configured with a 256MB memory limit and `allkeys-lru` policy
+- PHP versions 8.1 to 8.5 are validated during build

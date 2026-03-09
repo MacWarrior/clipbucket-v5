@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-# Définir la version PHP par défaut si non spécifiée
+# Set default PHP version if not specified
 PHP_VERSION="${PHP_VERSION:-8.5}"
 
 echo "========================================="
@@ -23,21 +23,21 @@ else
     fi
 fi
 
-# Adapter les permissions pour le nouvel user
+# Adjust permissions for the new user
 mkdir -p /srv/http/clipbucket /var/lib/nginx && chown -R ${USER_NAME}:${USER_NAME} /srv/http/clipbucket /run/php
 
 if [ "$INSTALL_MARIADB" != "true" ]; then
     mkdir -p /var/lib/mysql /run/mysqld &&     chown -R ${USER_NAME}:${USER_NAME} /var/lib/mysql /run/mysqld /usr/lib/mysql
 fi
 
-# Configurer phpMyAdmin si installé
+# Configure phpMyAdmin if installed
 if [ "${INSTALL_PHPMYADMIN}" = "true" ] && [ -d "/usr/share/phpmyadmin" ]; then
     echo "phpMyAdmin is enabled on port 8080"
-    # Adapter les permissions
+    # Adjust permissions
     chown -R ${USER_NAME}:${USER_NAME} /var/lib/phpmyadmin /usr/share/phpmyadmin
 fi
 
-# Fonction pour terminer correctement les processus enfants
+# Function to properly terminate child processes
 terminate_processes() {
     echo "Terminating processes..."
     kill -TERM "$php_pid" "$nginx_pid" 2>/dev/null || true
@@ -54,16 +54,16 @@ terminate_processes() {
     exit 1
 }
 
-# Capturer les signaux pour arrêter proprement les processus
+# Capture signals to properly stop processes
 trap terminate_processes SIGTERM SIGINT
 
-# Démarrer Redis si installé et demandé
+# Start Redis if installed and requested
 if [ "${INSTALL_REDIS}" = "true" ]; then
     echo "Starting Redis Server..."
     redis-server /etc/redis/redis.conf --daemonize no &
     redis_pid=$!
 
-    # Attendre que Redis soit disponible
+    # Wait for Redis to be available
     timeout=100
     elapsed=0
     while [ $elapsed -lt $timeout ]; do
@@ -80,9 +80,9 @@ if [ "${INSTALL_REDIS}" = "true" ]; then
     fi
 fi
 
-# Mode sans MariaDB
+# Mode without MariaDB
 if [ "$INSTALL_MARIADB" = "true" ]; then
-    # Vérifier si mysql a déjà été installé
+    # Check if mysql has already been installed
     if [ ! -d "/var/lib/mysql/mysql" ]; then
         echo "Installing MariaDB..."
         mariadb-install-db --user=${USER_NAME} --basedir=/usr --datadir=/var/lib/mysql || true
@@ -90,28 +90,28 @@ if [ "$INSTALL_MARIADB" = "true" ]; then
         echo "MariaDB already installed."
     fi
 
-    # Démarrer MariaDB
+    # Start MariaDB
     echo "Starting MariaDB..."
     mariadbd --user=${USER_NAME} --datadir=/var/lib/mysql &
     mariadb_pid=$!
 
-    # Initialiser le compteur de temps d'attente
+    # Initialize timeout counter
     timeout=200
     elapsed=0
 
-    # Attendre que le fichier de socket MariaDB soit créé, avec une limite de 20 secondes
+    # Wait for MariaDB socket file to be created, with a 20 second limit
     while [ ! -e /var/run/mysqld/mysqld.sock ] && [ $elapsed -lt $timeout ]; do
       sleep 0.1
       elapsed=$((elapsed + 1))
     done
 
-    # Si le fichier de socket n'a pas été trouvé après 20 secondes, échouer
+    # If socket file was not found after 20 seconds, fail
     if [ ! -e /var/run/mysqld/mysqld.sock ]; then
       echo "Error: MariaDB socket file not created after 20 seconds."
       exit 1
     fi
 
-    # Vérifier si la base de données existe
+    # Check if database exists
     if [ ! -d "/var/lib/mysql/clipbucket" ]; then
         echo "Init database..."
         mysql -uroot -e "CREATE DATABASE IF NOT EXISTS clipbucket;"
@@ -135,31 +135,31 @@ else
     echo "MariaDB is disabled"
 fi
 
-# Démarrer PHP-FPM
+# Start PHP-FPM
 echo "Starting PHP-FPM ${PHP_VERSION}..."
 php-fpm${PHP_VERSION} -F --fpm-config /etc/php/${PHP_VERSION}/fpm/php-fpm.conf --nodaemonize &
 php_pid=$!
 
-# Initialiser le compteur de temps d'attente
+# Initialize timeout counter
 timeout=200
 elapsed=0
 
-# Attendre que le fichier de socket soit créé, avec une limite de 20 secondes
+# Wait for socket file to be created, with a 20 second limit
 while [ ! -e /run/php/php${PHP_VERSION}-fpm.sock ] && [ $elapsed -lt $timeout ]; do
   sleep 0.1
   elapsed=$((elapsed + 1))
 done
 
-# Si le fichier de socket n'a pas été trouvé après 20 secondes, échouer
+# If socket file was not found after 20 seconds, fail
 if [ ! -e /run/php/php${PHP_VERSION}-fpm.sock ]; then
   echo "Error: PHP-FPM socket file not created after 20 seconds."
   exit 1
 fi
 
-# Changer le propriétaire du fichier de socket une fois qu'il est disponible
+# Change socket file owner once available
 chown ${USER_NAME}:${USER_NAME} /run/php/php${PHP_VERSION}-fpm.sock
 
-# Vérifier si les sources existent
+# Check if sources exist
 if [ ! "$(ls -A /srv/http/clipbucket)" ]; then
     echo "Init sources..."
     mkdir -p /srv/http/clipbucket
@@ -172,12 +172,12 @@ else
     echo "Sources already exist. No init required."
 fi
 
-# Démarrer Nginx en mode foreground
+# Start Nginx in foreground mode
 echo "Starting Nginx..."
 nginx -g "daemon off;" &
 nginx_pid=$!
 
-# Surveiller les processus et détecter les arrêts
+# Monitor processes and detect shutdowns
 echo "========================================="
 echo "All services started successfully!"
 echo "========================================="
