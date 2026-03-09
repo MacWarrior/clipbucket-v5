@@ -1,6 +1,6 @@
 {
   "version":"5.5.3",
-  "revision":"67",
+  "revision":"68",
   "status":"stable",
   "detail":[
     {
@@ -86,6 +86,7 @@
       "description": [
         "Fix SQL error on installation"
         ,"Fix possible git issue with core update"
+        ,"Fix possible PHP error during update"
       ]
     },
     {

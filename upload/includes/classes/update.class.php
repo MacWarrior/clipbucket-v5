@@ -723,11 +723,11 @@ class Update
         return shell_exec(System::get_binaries('git') . ' rev-parse --show-toplevel') ?? '';
     }
 
-    private function resetGitRepository(string $root_directory)
+    private function resetGitRepository(string $root_directory): string
     {
         chdir($root_directory);
 
-        $output = shell_exec(System::get_binaries('git') . ' reset --hard --quiet 2>&1');
+        $output = $this->runGitCommandWithBusyRetry('reset --hard --quiet');
 
         $filepath_install_me = DirPath::get('temp') . 'install.me';
         $filepath_install_me_not = $filepath_install_me . '.not';
@@ -738,11 +738,33 @@ class Update
         return $output;
     }
 
-    private function updateGitRepository(string $root_directory)
+    private function updateGitRepository(string $root_directory): string
     {
         chdir($root_directory);
 
-        return shell_exec(System::get_binaries('git') . ' pull --quiet 2>&1');
+        $output = $this->runGitCommandWithBusyRetry('pull --quiet');
+
+        $output = preg_replace('/^Updating files:.*$/m', '', $output);
+        return trim($output);
+    }
+
+    private function runGitCommandWithBusyRetry(string $git_command): string
+    {
+        $max_attempts = 5;
+        $attempt = 1;
+        $output = '';
+
+        while ($attempt <= $max_attempts) {
+            $output = shell_exec(System::get_binaries('git') . ' ' . $git_command . ' 2>&1');
+            if (empty($output) || stripos($output, 'Text file busy') === false) {
+                return (string)$output;
+            }
+
+            sleep(2);
+            $attempt++;
+        }
+
+        return (string)$output;
     }
 
     /**
@@ -767,7 +789,7 @@ class Update
         }
 
         $return_reset = $update->resetGitRepository($root_directory);
-        if( !empty($return_reset) ){
+        if (!empty($return_reset) && stripos($return_reset, 'Text file busy') === false) {
             if( System::isInDev() ){
                 DiscordLog::sendDump($return_reset);
             }

@@ -66,16 +66,18 @@ if ($type == \'core\' && $core_tool->isAlreadyLaunch() === false) {
     $core_tool->launch();
 }
 Update::getInstance()->flush();
+sleep(2);
 
 if (($type == \'core\' || $type == \'db\') && AdminTool::getInstance()->isAlreadyLaunch() === false) {
     AdminTool::getInstance()->setToolInProgress();
     AdminTool::getInstance()->launch();
 }
 ?>';
+
 fwrite($tmp_file, $data);
 fclose($tmp_file);
 chdir(DirPath::get('root'));
-$cmd = System::get_binaries('php') . ' -q ' . DirPath::get('temp') . 'update_core_tmp.php';
+$cmd = System::get_binaries('php') . ' -q ' . escapeshellarg(DirPath::get('temp') . 'update_core_tmp.php') . ' ' . escapeshellarg($_POST['type']);
 if (stristr(PHP_OS, 'WIN')) {
     $complement = '';
 } elseif (stristr(PHP_OS, 'darwin')) {
