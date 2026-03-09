@@ -177,6 +177,9 @@ echo "Starting Nginx..."
 nginx -g "daemon off;" &
 nginx_pid=$!
 
+# Add composer aliases for convenience
+echo "alias composer_update='/usr/bin/php${PHP_VERSION} /usr/bin/composer update --ignore-platform-reqs --no-dev'" >> /root/.bashrc
+
 # Monitor processes and detect shutdowns
 echo "========================================="
 echo "All services started successfully!"
@@ -215,8 +218,3 @@ while true; do
 
     sleep 2
 done
-
-
-# Add composer aliases for convenience
-echo "alias composer_update='/usr/bin/php${PHP_VERSION} /usr/bin/composer update --ignore-platform-reqs --no-dev'" >> /root/.bashrc
-echo "alias composer_install='/usr/bin/php${PHP_VERSION} /usr/bin/composer install --ignore-platform-reqs --no-dev'" >> /root/.bashrc
