@@ -77,6 +77,20 @@ foreach ($tools_error as $tool) {
 }
 //need to flush here to get last version
 Update::getInstance()->flush();
+//check if update is over and maintenance is enable
+$last_tool = AdminTool::getLastestToolUpdate();
+$is_maintenance_enabled = config('closed');
+if (!$last_tool->isAlreadyLaunch()) {
+    if ($last_tool->isToolInError() || Update::getInstance()->needCodeDBUpdate()) {
+        $modal_error = lang('update_incomplete');
+        if ($is_maintenance_enabled) {
+            $modal_error .= '<br/><b>'.lang('maintenance_still_on').'</b>';
+        }
+    } elseif($is_maintenance_enabled) {
+        myquery::getInstance()->Set_Website_Details('closed', 0);
+        e(lang('update_completed_maintenance_off'), 'm');
+    }
+}
 $msg_template = getTemplateMsg();
 ob_start();
 Update::getInstance()->displayGlobalSQLUpdateAlert($current_update);
@@ -84,5 +98,6 @@ Update::getInstance()->displayGlobalSQLUpdateAlert($current_update);
 echo json_encode(['html'         => ob_get_clean(),
                   'is_updating'  => (!empty($current_update) ? 'true' : 'false'),
                   'update_info'  => $info_tool,
-                  'msg_template' => $msg_template
+                  'msg_template' => $msg_template,
+                  'modal_error'  => $modal_error ?? 0
 ]);
