@@ -691,11 +691,7 @@ class Update
             return true;
         }
 
-        $test = $this->checkAndfixGitSafeDirectory($output);
-        if( $test ){
-            return true;
-        }
-        return false;
+        return $this->checkAndfixGitSafeDirectory($output);
     }
 
     private function checkAndfixGitSafeDirectory($output): bool
@@ -715,7 +711,7 @@ class Update
 
         $filePath = trim($matches[1], " \t\n\r\0\x0B'");
 
-        $output = shell_exec(System::get_binaries('git') . ' config --global --add safe.directory ' . $filePath);
+        $output = shell_exec(System::get_binaries('git') . ' config --global --add safe.directory ' . $filePath . ' 2>&1');
         if( empty($output) ){
             return true;
         }
@@ -724,7 +720,7 @@ class Update
 
     private function getGitRootDirectory(): string
     {
-        return shell_exec(System::get_binaries('git') . ' rev-parse --show-toplevel');
+        return shell_exec(System::get_binaries('git') . ' rev-parse --show-toplevel') ?? '';
     }
 
     private function resetGitRepository(string $root_directory)
@@ -753,15 +749,15 @@ class Update
      * @return true
      * @throws Exception
      */
-    public static function updateGitSources()
+    public static function updateGitSources(): bool
     {
         $update = self::getInstance();
-        if( !$update->isGitInstalled() || !$update->isManagedWithGit() ){
-            throw new Exception('Git is not installed or not managed with git');
+        if( !$update->isManagedWithGit() ){
+            throw new Exception('Git is not correctly installed or directory is not managed with git');
         }
 
         $root_directory = trim($update->getGitRootDirectory());
-        if( !$root_directory ){
+        if( empty($root_directory) ){
             throw new Exception('Unable to get git root directory');
         }
 
