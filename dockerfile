@@ -64,17 +64,17 @@ RUN mkdir -p /etc/apt/keyrings \
 RUN update-alternatives --set php /usr/bin/php${PHP_VERSION} 2>/dev/null || update-alternatives --install /usr/bin/php php /usr/bin/php${PHP_VERSION} 100
 
 # Install PHP pear (required for pecl) only if needed
-RUN if [ "$INSTALL_XDEBUG" = "true" ] || [ "$INSTALL_PROFILING" = "true" ]; then \
+RUN if [ "${INSTALL_XDEBUG}" = "true" ] || [ "${INSTALL_PROFILING}" = "true" ]; then \
         apt-get install -y --no-install-recommends php-pear; \
     fi
 
 # Install MariaDB only if not in INSTALL_MARIADB mode
-RUN if [ "$INSTALL_MARIADB" = "true" ]; then \
+RUN if [ "${INSTALL_MARIADB}" = "true" ]; then \
         apt-get install -y --no-install-recommends mariadb-server ; \
     fi
 
 # Install Redis server if requested
-RUN if [ "$INSTALL_REDIS" = "true" ]; then \
+RUN if [ "${INSTALL_REDIS}" = "true" ]; then \
         apt-get install -y --no-install-recommends redis-server ; \
         sed -i 's/^bind 127.0.0.1/bind 0.0.0.0/' /etc/redis/redis.conf \
         && echo 'maxmemory 256mb' >> /etc/redis/redis.conf \
@@ -82,7 +82,7 @@ RUN if [ "$INSTALL_REDIS" = "true" ]; then \
     fi
 
 # Install PHP Xdebug if requested
-RUN if [ "$INSTALL_XDEBUG" = "true" ]; then \
+RUN if [ "${INSTALL_XDEBUG}" = "true" ]; then \
         apt-get install -y --no-install-recommends php${PHP_VERSION}-xdebug || (pecl install xdebug && echo "zend_extension=xdebug.so" > /etc/php/${PHP_VERSION}/mods-available/xdebug.ini) \
         && echo "xdebug.mode=debug,coverage" >> /etc/php/${PHP_VERSION}/mods-available/xdebug.ini \
         && echo "xdebug.start_with_request=yes" >> /etc/php/${PHP_VERSION}/mods-available/xdebug.ini \
@@ -91,7 +91,7 @@ RUN if [ "$INSTALL_XDEBUG" = "true" ]; then \
     fi
 
 # Install XHProf and XHGUI only if profiling is requested
-RUN if [ "$INSTALL_PROFILING" = "true" ]; then \
+RUN if [ "${INSTALL_PROFILING}" = "true" ]; then \
         (apt-get install -y --no-install-recommends php${PHP_VERSION}-xhprof || pecl install xhprof) \
         && echo "extension=xhprof.so" > /etc/php/${PHP_VERSION}/mods-available/xhprof.ini \
         && phpenmod xhprof && phpenmod pdo_mysql  ;\
@@ -101,7 +101,7 @@ RUN if [ "$INSTALL_PROFILING" = "true" ]; then \
 COPY docker/xhgui-config.php /tmp/xhgui-config.php
 
 # Install XHGUI if profiling is requested
-RUN if [ "$INSTALL_PROFILING" = "true" ]; then \
+RUN if [ "${INSTALL_PROFILING}" = "true" ]; then \
         apt-get install -y --no-install-recommends composer \
         && mkdir -p /usr/share/xhgui /var/lib/xhgui \
         && git clone --depth 1 https://github.com/perftools/xhgui.git /usr/share/xhgui \
@@ -133,7 +133,7 @@ RUN sed -i "s/DOMAIN_NAME_PLACEHOLDER/${DOMAIN_NAME}/g" /etc/nginx/sites-availab
 
 # Copy nginx config for phpMyAdmin
 COPY docker/nginx-phpmyadmin.conf /tmp/nginx-phpmyadmin.conf
-RUN if [ "$INSTALL_PHPMYADMIN" = "true" ]; then \
+RUN if [ "${INSTALL_PHPMYADMIN}" = "true" ]; then \
         mkdir -p /etc/nginx/sites-available /etc/nginx/sites-enabled && \
         cp /tmp/nginx-phpmyadmin.conf /etc/nginx/sites-available/phpmyadmin && \
         sed -i "s/phpPHP_VERSION_PLACEHOLDER-fpm/php${PHP_VERSION}-fpm/g" /etc/nginx/sites-available/phpmyadmin && \
@@ -147,7 +147,7 @@ RUN if [ -f /etc/nginx/sites-available/phpmyadmin ]; then \
 
 # Copy nginx config for XHGUI
 COPY docker/nginx-xhgui.conf /tmp/nginx-xhgui.conf
-RUN if [ "$INSTALL_PROFILING" = "true" ]; then \
+RUN if [ "${INSTALL_PROFILING}" = "true" ]; then \
         mkdir -p /etc/nginx/sites-available /etc/nginx/sites-enabled && \
         cp /tmp/nginx-xhgui.conf /etc/nginx/sites-available/xhgui && \
         sed -i "s/phpPHP_VERSION_PLACEHOLDER-fpm/php${PHP_VERSION}-fpm/g" /etc/nginx/sites-available/xhgui && \
@@ -160,7 +160,7 @@ RUN if [ -f /etc/nginx/sites-available/xhgui ]; then \
     fi
 
 # Install phpMyAdmin via git clone with yarn build for assets
-RUN if [ "$INSTALL_PHPMYADMIN" = "true" ]; then \
+RUN if [ "${INSTALL_PHPMYADMIN}" = "true" ]; then \
         apt-get install -y --no-install-recommends composer nodejs && \
         corepack enable && \
         mkdir -p /usr/share/phpmyadmin /var/lib/phpmyadmin/tmp && \

@@ -40,16 +40,16 @@ fi
 # Function to properly terminate child processes
 terminate_processes() {
     echo "Terminating processes..."
-    kill -TERM "$php_pid" "$nginx_pid" 2>/dev/null || true
+    kill -TERM "${php_pid}" "${nginx_pid}" 2>/dev/null || true
     if [ "$INSTALL_MARIADB" = "true" ]; then
-        kill -TERM "$mariadb_pid" 2>/dev/null || true
-        wait "$mariadb_pid" 2>/dev/null || true
+        kill -TERM "${mariadb_pid}" 2>/dev/null || true
+        wait "${mariadb_pid}" 2>/dev/null || true
     fi
     if [ "${INSTALL_REDIS}" = "true" ]; then
-        kill -TERM "$redis_pid" 2>/dev/null || true
-        wait "$redis_pid" 2>/dev/null || true
+        kill -TERM "${redis_pid}" 2>/dev/null || true
+        wait "${redis_pid}" 2>/dev/null || true
     fi
-    wait "$php_pid" "$nginx_pid" 2>/dev/null || true
+    wait "${php_pid}" "${nginx_pid}" 2>/dev/null || true
     echo "All processes terminated."
     exit 1
 }
@@ -66,7 +66,7 @@ if [ "${INSTALL_REDIS}" = "true" ]; then
     # Wait for Redis to be available
     timeout=100
     elapsed=0
-    while [ $elapsed -lt $timeout ]; do
+    while [ ${elapsed} -lt ${timeout} ]; do
         if redis-cli ping > /dev/null 2>&1; then
             echo "Redis Server is ready!"
             break
@@ -75,7 +75,7 @@ if [ "${INSTALL_REDIS}" = "true" ]; then
         elapsed=$((elapsed + 1))
     done
 
-    if [ $elapsed -ge $timeout ]; then
+    if [ ${elapsed} -ge ${timeout} ]; then
         echo "Warning: Redis Server did not start in time"
     fi
 fi
@@ -100,7 +100,7 @@ if [ "$INSTALL_MARIADB" = "true" ]; then
     elapsed=0
 
     # Wait for MariaDB socket file to be created, with a 20 second limit
-    while [ ! -e /var/run/mysqld/mysqld.sock ] && [ $elapsed -lt $timeout ]; do
+    while [ ! -e /var/run/mysqld/mysqld.sock ] && [ ${elapsed} -lt ${timeout} ]; do
       sleep 0.1
       elapsed=$((elapsed + 1))
     done
@@ -145,7 +145,7 @@ timeout=200
 elapsed=0
 
 # Wait for socket file to be created, with a 20 second limit
-while [ ! -e /run/php/php${PHP_VERSION}-fpm.sock ] && [ $elapsed -lt $timeout ]; do
+while [ ! -e /run/php/php${PHP_VERSION}-fpm.sock ] && [ ${elapsed} -lt ${timeout} ]; do
   sleep 0.1
   elapsed=$((elapsed + 1))
 done
@@ -190,24 +190,24 @@ fi
 
 while true; do
     if [ "$INSTALL_MARIADB" = "true" ]; then
-        if ! kill -0 "$mariadb_pid" 2>/dev/null; then
+        if ! kill -0 "${mariadb_pid}" 2>/dev/null; then
             echo "MariaDB process has exited. Exiting script..."
             terminate_processes
         fi
     fi
 
-    if ! kill -0 "$php_pid" 2>/dev/null; then
+    if ! kill -0 "${php_pid}" 2>/dev/null; then
         echo "PHP-FPM process has exited. Exiting script..."
         terminate_processes
     fi
 
-    if ! kill -0 "$nginx_pid" 2>/dev/null; then
+    if ! kill -0 "${nginx_pid}" 2>/dev/null; then
         echo "Nginx process has exited. Exiting script..."
         terminate_processes
     fi
 
     if [ "${INSTALL_REDIS}" = "true" ]; then
-        if ! kill -0 "$redis_pid" 2>/dev/null; then
+        if ! kill -0 "${redis_pid}" 2>/dev/null; then
             echo "Redis Server process has exited. Exiting script..."
             terminate_processes
         fi
