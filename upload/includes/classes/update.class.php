@@ -723,7 +723,7 @@ class Update
         return shell_exec(System::get_binaries('git') . ' rev-parse --show-toplevel') ?? '';
     }
 
-    private function resetGitRepository(string $root_directory)
+    private function resetGitRepository(string $root_directory): string
     {
         chdir($root_directory);
 
@@ -738,16 +738,19 @@ class Update
         return $output;
     }
 
-    private function updateGitRepository(string $root_directory)
+    private function updateGitRepository(string $root_directory): string
     {
         chdir($root_directory);
 
-        return $this->runGitCommandWithBusyRetry('pull --quiet');
+        $output = $this->runGitCommandWithBusyRetry('pull --quiet');
+
+        $output = preg_replace('/^Updating files:.*$/m', '', $output);
+        return trim($output);
     }
 
     private function runGitCommandWithBusyRetry(string $git_command): string
     {
-        $max_attempts = 30;
+        $max_attempts = 5;
         $attempt = 1;
         $output = '';
 
@@ -757,7 +760,7 @@ class Update
                 return (string)$output;
             }
 
-            usleep(2000000);
+            sleep(2);
             $attempt++;
         }
 
