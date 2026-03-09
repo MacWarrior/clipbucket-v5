@@ -173,13 +173,12 @@ docker run \
 --restart unless-stopped \
 --pull=always \
 -e DOMAIN_NAME=clipbucket.local \
--e LITE=true \
 -e UID=1000 \
 -e GID=1000 \
 -v clipbucket_files:/srv/http/clipbucket \
 -p 80:80 \
 --name clipbucket \
--d oxygenz/clipbucket-v5:lite-latest
+-d oxygenz/clipbucket-v5:lite
 ```
 </details>
 

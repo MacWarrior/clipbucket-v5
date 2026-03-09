@@ -8,7 +8,7 @@ on:
       php_version:
         description: 'PHP Version (8.1-8.5)'
         required: true
-        default: '8.4'
+        default: '8.5'
         type: choice
         options:
           - '8.1'
@@ -31,8 +31,8 @@ on:
         required: true
         default: false
         type: boolean
-      lite_mode:
-        description: 'Lite mode (without MariaDB)'
+      install_mariadb:
+        description: 'Install MARIADB'
         required: true
         default: false
         type: boolean
@@ -51,7 +51,7 @@ env:
   IMAGE_NAME: vekaserver/clipbucket-v5
 
 jobs:
-  # Build latest (PHP 8.4, full, no extra tools)
+  # Build latest (PHP 8.5, full, no extra tools)
   build-latest:
     if: github.event_name == 'release'
     runs-on: ubuntu-latest
@@ -78,10 +78,9 @@ jobs:
           push: true
           tags: |
             ${{ env.IMAGE_NAME }}:latest
-            ${{ env.IMAGE_NAME }}:php8.4
           build-args: |
-            PHP_VERSION=8.4
-            LITE=false
+            PHP_VERSION=8.5
+            INSTALL_MARIADB=true
             INSTALL_PHPMYADMIN=false
             INSTALL_XDEBUG=false
             INSTALL_REDIS=true
@@ -90,7 +89,7 @@ jobs:
           labels: |
             org.opencontainers.image.title=ClipBucket v5
             org.opencontainers.image.source=${{ github.server_url }}/${{ github.repository }}
-            org.opencontainers.image.php-version=8.4
+            org.opencontainers.image.php-version=8.5
           cache-from: type=gha
           cache-to: type=gha,mode=max
           platforms: linux/amd64
@@ -123,8 +122,8 @@ jobs:
           tags: |
             ${{ env.IMAGE_NAME }}:lite
           build-args: |
-            PHP_VERSION=8.4
-            LITE=true
+            PHP_VERSION=8.5
+            INSTALL_MARIADB=false
             INSTALL_PHPMYADMIN=false
             INSTALL_XDEBUG=false
             INSTALL_REDIS=false
@@ -133,8 +132,8 @@ jobs:
           labels: |
             org.opencontainers.image.title=ClipBucket v5 (lite)
             org.opencontainers.image.source=${{ github.server_url }}/${{ github.repository }}
-            org.opencontainers.image.php-version=8.4
-            org.opencontainers.image.lite=true
+            org.opencontainers.image.php-version=8.5
+            org.opencontainers.image.mariadb=true
           cache-from: type=gha
           cache-to: type=gha,mode=max
           platforms: linux/amd64
@@ -172,7 +171,7 @@ jobs:
             ${{ env.IMAGE_NAME }}:dev-php${{ matrix.php_version }}
           build-args: |
             PHP_VERSION=${{ matrix.php_version }}
-            LITE=false
+            INSTALL_MARIADB=true
             INSTALL_PHPMYADMIN=true
             INSTALL_XDEBUG=false
             INSTALL_REDIS=true
@@ -221,7 +220,7 @@ jobs:
             ${{ env.IMAGE_NAME }}:dev-php${{ matrix.php_version }}-xdebug
           build-args: |
             PHP_VERSION=${{ matrix.php_version }}
-            LITE=false
+            INSTALL_MARIADB=true
             INSTALL_PHPMYADMIN=true
             INSTALL_XDEBUG=true
             INSTALL_REDIS=true
@@ -261,7 +260,7 @@ jobs:
         id: tag
         run: |
           PHP_VER="${{ inputs.php_version }}"
-          LITE="${{ inputs.lite_mode }}"
+          INSTALL_MARIADB="${{ inputs.install_mariadb }}"
           PHPMYADMIN="${{ inputs.install_phpmyadmin }}"
           XDEBUG="${{ inputs.install_xdebug }}"
           REDIS="${{ inputs.install_redis }}"
@@ -279,7 +278,7 @@ jobs:
           if [ "$REDIS" = "true" ]; then
             TAG="${TAG}-redis"
           fi
-          if [ "$LITE" = "true" ]; then
+          if [ "$INSTALL_MARIADB" = "true" ]; then
             TAG="${TAG}-lite"
           fi
 
@@ -299,7 +298,7 @@ jobs:
           tags: ${{ steps.tag.outputs.tag }}
           build-args: |
             PHP_VERSION=${{ inputs.php_version }}
-            LITE=${{ inputs.lite_mode }}
+            INSTALL_MARIADB=${{ inputs.install_mariadb }}
             INSTALL_PHPMYADMIN=${{ inputs.install_phpmyadmin }}
             INSTALL_XDEBUG=${{ inputs.install_xdebug }}
             INSTALL_REDIS=${{ inputs.install_redis }}
@@ -309,7 +308,7 @@ jobs:
             org.opencontainers.image.title=ClipBucket v5
             org.opencontainers.image.source=${{ github.server_url }}/${{ github.repository }}
             org.opencontainers.image.php-version=${{ inputs.php_version }}
-            org.opencontainers.image.lite=${{ inputs.lite_mode }}
+            org.opencontainers.image.mariadb=${{ inputs.install_mariadb }}
             org.opencontainers.image.phpmyadmin=${{ inputs.install_phpmyadmin }}
             org.opencontainers.image.xdebug=${{ inputs.install_xdebug }}
             org.opencontainers.image.redis=${{ inputs.install_redis }}

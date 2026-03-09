@@ -40,7 +40,7 @@ docker build -t clipbucket-v5:dev \
 ### Build mode lite (sans MariaDB)
 ```bash
 docker build -t clipbucket-v5:lite \
-  --build-arg LITE=true .
+  --build-arg INSTALL_MARIADB=false .
 ```
 
 ### Build avec domaines personnalisés
@@ -64,7 +64,7 @@ Les images sont automatiquement buildées et publiées lors des releases :
 
 | Tag | Description | PHP | MariaDB | Redis | phpMyAdmin | Xdebug |
 |-----|-------------|-----|---------|-------|------------|--------|
-| `latest` | Version stable recommandée | 8.5 | ✅ | ❌ | ❌ | ❌ |
+| `latest` | Version stable recommandée | 8.5 | ✅ | ✅ | ❌ | ❌ |
 | `lite` | Version légère sans base de données | 8.5 | ❌ | ❌ | ❌ | ❌ |
 | `dev-php8.1` | Environnement développement | 8.1 | ✅ | ✅ | ✅ | ❌ |
 | `dev-php8.2` | Environnement développement | 8.2 | ✅ | ✅ | ✅ | ❌ |
@@ -117,5 +117,4 @@ Configuration IDE recommandée :
 
 - phpMyAdmin est installé via `git clone` depuis la branche STABLE
 - Redis est configuré avec une limite de mémoire de 256MB et une politique `allkeys-lru`
-- XHProf est toujours installé pour le profiling des performances
 - Les versions PHP 8.1 à 8.5 sont validées lors du build

@@ -2,7 +2,7 @@
 FROM debian:stable-slim
 
 # Build arguments for customization
-ARG LITE=false
+ARG INSTALL_MARIADB=false
 ARG PHP_VERSION=8.5
 ARG INSTALL_PHPMYADMIN=false
 ARG INSTALL_XDEBUG=false
@@ -16,7 +16,7 @@ ARG PROFILING_DOMAIN=profiling.local
 ENV DOMAIN_NAME=${DOMAIN_NAME}
 ENV PHPMYADMIN_DOMAIN=${PHPMYADMIN_DOMAIN}
 ENV MYSQL_PASSWORD=clipbucket_password
-ENV LITE=${LITE}
+ENV INSTALL_MARIADB=${INSTALL_MARIADB}
 ENV PHP_VERSION=${PHP_VERSION}
 ENV INSTALL_PHPMYADMIN=${INSTALL_PHPMYADMIN}
 ENV INSTALL_XDEBUG=${INSTALL_XDEBUG}
@@ -68,8 +68,8 @@ RUN if [ "$INSTALL_XDEBUG" = "true" ] || [ "$INSTALL_PROFILING" = "true" ]; then
         apt-get install -y --no-install-recommends php-pear; \
     fi
 
-# Install MariaDB only if not in lite mode
-RUN if [ "$LITE" = "false" ]; then \
+# Install MariaDB only if not in INSTALL_MARIADB mode
+RUN if [ "$INSTALL_MARIADB" = "true" ]; then \
         apt-get install -y --no-install-recommends mariadb-server ; \
     fi
 

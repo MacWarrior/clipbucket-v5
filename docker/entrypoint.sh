@@ -2,7 +2,7 @@
 set -e
 
 # Définir la version PHP par défaut si non spécifiée
-PHP_VERSION="${PHP_VERSION:-8.4}"
+PHP_VERSION="${PHP_VERSION:-8.5}"
 
 echo "========================================="
 echo "ClipBucket v5 Docker Container"
@@ -26,7 +26,7 @@ fi
 # Adapter les permissions pour le nouvel user
 mkdir -p /srv/http/clipbucket /var/lib/nginx && chown -R ${USER_NAME}:${USER_NAME} /srv/http/clipbucket /run/php
 
-if [ "$LITE" != "true" ]; then
+if [ "$INSTALL_MARIADB" != "true" ]; then
     mkdir -p /var/lib/mysql /run/mysqld &&     chown -R ${USER_NAME}:${USER_NAME} /var/lib/mysql /run/mysqld /usr/lib/mysql
 fi
 
@@ -41,7 +41,7 @@ fi
 terminate_processes() {
     echo "Terminating processes..."
     kill -TERM "$php_pid" "$nginx_pid" 2>/dev/null || true
-    if [ "$LITE" != "true" ]; then
+    if [ "$INSTALL_MARIADB" = "true" ]; then
         kill -TERM "$mariadb_pid" 2>/dev/null || true
         wait "$mariadb_pid" 2>/dev/null || true
     fi
@@ -80,8 +80,8 @@ if [ "${INSTALL_REDIS}" = "true" ]; then
     fi
 fi
 
-# Mode lite : sans MariaDB
-if [ "$LITE" != "true" ]; then
+# Mode sans MariaDB
+if [ "$INSTALL_MARIADB" = "true" ]; then
     # Vérifier si mysql a déjà été installé
     if [ ! -d "/var/lib/mysql/mysql" ]; then
         echo "Installing MariaDB..."
@@ -132,7 +132,7 @@ if [ "$LITE" != "true" ]; then
         echo "XHGUI database created successfully."
     fi
 else
-    echo "Lite mode: MariaDB is disabled"
+    echo "MariaDB is disabled"
 fi
 
 # Démarrer PHP-FPM
@@ -189,7 +189,7 @@ if [ "${INSTALL_REDIS}" = "true" ]; then
 fi
 
 while true; do
-    if [ "$LITE" != "true" ]; then
+    if [ "$INSTALL_MARIADB" = "true" ]; then
         if ! kill -0 "$mariadb_pid" 2>/dev/null; then
             echo "MariaDB process has exited. Exiting script..."
             terminate_processes
