@@ -91,6 +91,9 @@ if [ "${INSTALL_MARIADB}" = "true" ]; then
     fi
 
     # Start MariaDB
+    # Ensure correct permissions for MariaDB data directory
+    chown -R ${USER_NAME}:${USER_NAME} /var/lib/mysql /run/mysqld
+
     echo "Starting MariaDB..."
     mariadbd --user=${USER_NAME} --datadir=/var/lib/mysql &
     mariadb_pid=$!
