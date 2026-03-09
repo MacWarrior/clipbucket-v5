@@ -50,18 +50,32 @@ try {
                         error_log('type : '.$type);
                     case 'v':
                         $permission = 'view_video';
+                        $object = Video::getInstance()->getOne(['videoid' => $comment[0]['type_id']]);
                         break;
                     case 'p':
+                        $object = Photo::getInstance()->getOne(['photo_id' => $comment[0]['type_id']]);
                         $permission = 'view_photos';
                         break;
                     case 'cl':
+                        $object = Photo::getInstance()->getOne(['collection' => $comment[0]['type_id']]);
                         $permission = 'view_collections';
                         break;
                     case Comments::$libelle_type_channel:
+                        $object = User::getInstance()->getOne(['userid' => $comment[0]['type_id']]);
                         $permission = 'view_channel';
                         break;
                 }
                 User::getInstance()->hasPermissionAjax($permission);
+
+                if (empty($object)) {
+                    e(lang('insufficient_privileges'));
+                    echo json_encode([
+                        'template' => false,
+                        'success' => false,
+                        'msg'     => getTemplateMsg()
+                    ]);
+                    die;
+                }
                 Comments::ratingUpdate($id, $rating);
             }
             break;
