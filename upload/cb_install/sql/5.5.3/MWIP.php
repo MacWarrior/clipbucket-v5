@@ -12,7 +12,6 @@ class MWIP extends \Migration
      */
     public function start()
     {
-
         $limit = 100;
         $offset = 0;
         $video_done = [];
@@ -35,15 +34,15 @@ class MWIP extends \Migration
                 self::query($sql);
 
                 $sql_delete = 'DELETE vt_old
-                    FROM ' . tbl(\VideoThumbs::getTableNameThumb()) . '  vt_old
+                    FROM ' . tbl(\VideoThumbs::getTableNameThumb()) . ' vt_old
                     JOIN ' . tbl(\VideoThumbs::getTableNameThumb()) . ' vt_new
-                      ON vt_new.id_video_image = vt_old.id_video_image
-                     AND vt_new.is_original_size = 1
-                     AND vt_new.width != 0
-                     AND vt_new.height != 0
+                        ON vt_new.id_video_image = vt_old.id_video_image
+                        AND vt_new.is_original_size = 1
+                        AND vt_new.width != 0
+                        AND vt_new.height != 0
                     WHERE vt_old.is_original_size = 1
-                      AND (vt_old.width = 0 OR vt_old.height = 0)
-                      AND vt_old.id_video_image IN (SELECT id_video_image FROM ' . tbl(\VideoThumbs::getTableName()) . ' WHERE videoid = ' . $video['videoid'] . ');';
+                        AND (vt_old.width = 0 OR vt_old.height = 0)
+                        AND vt_old.id_video_image IN (SELECT id_video_image FROM ' . tbl(\VideoThumbs::getTableName()) . ' WHERE videoid = ' . $video['videoid'] . ');';
                 self::query($sql_delete);
             }
 
@@ -51,7 +50,6 @@ class MWIP extends \Migration
                 $video_done = [];
             }
         }
-
 
         $new_path = \DirPath::get('thumbs') . 'video';
         do {
@@ -84,7 +82,6 @@ class MWIP extends \Migration
                         ' to ' . $new_path . DIRECTORY_SEPARATOR . \VideoThumbs::getThumbPath($videos_image['type'], $videos_image['file_directory'], $videos_image['file_name'], $videos_image['is_auto'], $videos_image['num'], $resolution, $videos_image['width'], $videos_image['height'], $videos_image['extension'], \Update::getInstance()->getCurrentCoreVersion()));
                 }
             }
-
         } while (!empty($videos_images));
 
         delete_empty_directories(\DirPath::get('thumbs'));
