@@ -159,7 +159,6 @@ RUN if [ -f /etc/nginx/sites-available/xhgui ]; then \
         sed -i "s/PROFILING_DOMAIN_PLACEHOLDER/${PROFILING_DOMAIN}/g" /etc/nginx/sites-available/xhgui; \
     fi
 
-
 # Install phpMyAdmin via git clone with yarn build for assets
 RUN if [ "$INSTALL_PHPMYADMIN" = "true" ]; then \
         apt-get install -y --no-install-recommends composer nodejs && \
@@ -174,7 +173,6 @@ RUN if [ "$INSTALL_PHPMYADMIN" = "true" ]; then \
         echo "<?php \$cfg['blowfish_secret'] = '$(openssl rand -base64 32)'; \$cfg['TempDir'] = '/var/lib/phpmyadmin/tmp'; \$cfg['Servers'][1]['auth_type'] = 'cookie'; \$cfg['Servers'][1]['host'] = 'localhost'; \$cfg['Servers'][1]['compress'] = false; \$cfg['Servers'][1]['AllowNoPassword'] = false;" > /usr/share/phpmyadmin/config.inc.php && \
         rm -rf /usr/share/phpmyadmin/node_modules; \
     fi
-
 
 # Clean apt cache apt
 RUN rm -rf /var/lib/apt/lists/*

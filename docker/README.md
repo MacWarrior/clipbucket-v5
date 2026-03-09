@@ -18,7 +18,7 @@ Ce Dockerfile supporte de multiples configurations pour répondre à différents
 
 ### Build de base avec PHP 8.5
 ```bash
-docker build -t clipbucket-v5:php8.4 .
+docker build -t clipbucket-v5:php8.5 .
 ```
 
 ### Build avec PHP 8.3 + phpMyAdmin
@@ -64,8 +64,8 @@ Les images sont automatiquement buildées et publiées lors des releases :
 
 | Tag | Description | PHP | MariaDB | Redis | phpMyAdmin | Xdebug |
 |-----|-------------|-----|---------|-------|------------|--------|
-| `latest` | Version stable recommandée | 8.4 | ✅ | ❌ | ❌ | ❌ |
-| `lite` | Version légère sans base de données | 8.4 | ❌ | ❌ | ❌ | ❌ |
+| `latest` | Version stable recommandée | 8.5 | ✅ | ❌ | ❌ | ❌ |
+| `lite` | Version légère sans base de données | 8.5 | ❌ | ❌ | ❌ | ❌ |
 | `dev-php8.1` | Environnement développement | 8.1 | ✅ | ✅ | ✅ | ❌ |
 | `dev-php8.2` | Environnement développement | 8.2 | ✅ | ✅ | ✅ | ❌ |
 | `dev-php8.3` | Environnement développement | 8.3 | ✅ | ✅ | ✅ | ❌ |
@@ -82,7 +82,7 @@ Les images sont automatiquement buildées et publiées lors des releases :
 | Port | Service | Condition |
 |------|---------|-----------|
 | `80` | Nginx + ClipBucket | Toujours |
-| `8080` | phpMyAdmin | Si `INSTALL_PHPMYADMIN=true` |
+| `80` | phpMyAdmin | Si `INSTALL_PHPMYADMIN=true` |
 | `6379` | Redis Server | Si `INSTALL_REDIS=true` |
 
 ## 📁 Volumes
