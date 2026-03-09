@@ -90,10 +90,11 @@ if [ "${INSTALL_MARIADB}" = "true" ]; then
         echo "MariaDB already installed."
     fi
 
-    # Start MariaDB
-    # Ensure correct permissions for MariaDB data directory
+    # Ensure correct permissions before starting MariaDB
     mkdir -p /var/lib/mysql /run/mysqld
     chown -R ${USER_NAME}:${USER_NAME} /var/lib/mysql /run/mysqld
+
+    # Start MariaDB
 
     echo "Starting MariaDB..."
     mariadbd --user=${USER_NAME} --datadir=/var/lib/mysql &
