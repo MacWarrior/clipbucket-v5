@@ -66,7 +66,7 @@ if ($type == \'core\' && $core_tool->isAlreadyLaunch() === false) {
     $core_tool->launch();
 }
 Update::getInstance()->flush();
-sleep(10);
+sleep(2);
 
 if (($type == \'core\' || $type == \'db\') && AdminTool::getInstance()->isAlreadyLaunch() === false) {
     AdminTool::getInstance()->setToolInProgress();
