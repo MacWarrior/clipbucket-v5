@@ -41,6 +41,7 @@ try {
             User::getInstance()->hasPermissionAjax('view_channel');
             User::ratingUpdate($id, $rating);
             break;
+
         case 'comment':
             $comment = Comments::getAll(['comment_id' => $id]);
             if (!empty($comment)) {

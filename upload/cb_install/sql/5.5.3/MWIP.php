@@ -22,16 +22,15 @@ class MWIP extends \Migration
             'en'=>'Comment rating is disabled'
         ]);
 
-
-        self::alterTable('ALTER TABLE `{tbl_prefix}comments` DROP COLUMN  vote  ', [
+        self::alterTable('ALTER TABLE `{tbl_prefix}comments` DROP COLUMN `vote`;', [
             'table'  => 'comments',
             'column' => 'vote'
         ]);
-        self::alterTable('ALTER TABLE `{tbl_prefix}comments` ADD COLUMN rating INT NOT NULL DEFAULT 0 ', [],[
+        self::alterTable('ALTER TABLE `{tbl_prefix}comments` ADD COLUMN `rating` INT NOT NULL DEFAULT 0;', [],[
             'table'  => 'comments',
             'column' => 'rating'
         ]);
-        self::alterTable('ALTER TABLE `{tbl_prefix}comments` ADD COLUMN rated_by INT NOT NULL DEFAULT 0  ', [], [
+        self::alterTable('ALTER TABLE `{tbl_prefix}comments` ADD COLUMN `rated_by` INT NOT NULL DEFAULT 0;', [], [
             'table'  => 'comments',
             'column' => 'rated_by'
         ]);
