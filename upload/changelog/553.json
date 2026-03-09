@@ -1,6 +1,6 @@
 {
   "version":"5.5.3",
-  "revision":"66",
+  "revision":"67",
   "status":"stable",
   "detail":[
     {
@@ -34,6 +34,7 @@
         ,"Implement photo next/previous actions with keyboard"
         ,"Implement featured collection hierarchy display"
         ,"Implement add new collection button from owned collection"
+        ,"Implement breaking version warning and website maintenance mode during update"
         ,"Update media rating"
         ,"Update collection management"
         ,"Add signup date of birth calendar icon"
@@ -84,6 +85,7 @@
       "title": "Installation & Update",
       "description": [
         "Fix SQL error on installation"
+        ,"Fix possible git issue with core update"
       ]
     },
     {
