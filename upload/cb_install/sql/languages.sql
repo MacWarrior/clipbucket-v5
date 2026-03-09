@@ -1801,4 +1801,12 @@ VALUES ('ongoing_conversion'),
        ('display_collection_hierarchy_featured_hint'),
        ('hierarchy_featured'),
        ('regenerate_all_video_thumbs_label'),
-       ('regenerate_all_video_thumbs_description');
+       ('regenerate_all_video_thumbs_description'),
+       ('confirmation_upgrade_core_breaking_version'),
+       ('maintenance_recommended'),
+       ('do_want_to_update'),
+       ('website_closed'),
+       ('update_completed_maintenance_off'),
+       ('update_incomplete'),
+       ('maintenance_still_on'),
+       ('ok');
