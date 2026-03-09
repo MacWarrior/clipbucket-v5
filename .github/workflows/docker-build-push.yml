@@ -260,7 +260,7 @@ jobs:
         id: tag
         run: |
           PHP_VER="${{ inputs.php_version }}"
-          INSTALL_MARIADB="${{ inputs.install_mariadb }}"
+          MARIADB="${{ inputs.install_mariadb }}"
           PHPMYADMIN="${{ inputs.install_phpmyadmin }}"
           XDEBUG="${{ inputs.install_xdebug }}"
           REDIS="${{ inputs.install_redis }}"
@@ -278,7 +278,7 @@ jobs:
           if [ "$REDIS" = "true" ]; then
             TAG="${TAG}-redis"
           fi
-          if [ "$INSTALL_MARIADB" = "true" ]; then
+          if [ "$MARIADB" = "true" ]; then
             TAG="${TAG}-lite"
           fi
 
