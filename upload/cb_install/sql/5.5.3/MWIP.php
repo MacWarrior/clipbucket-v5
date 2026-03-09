@@ -31,7 +31,7 @@ class MWIP extends \Migration
                 $sql = 'UPDATE ' . tbl('video_image') . ' VI
                 INNER JOIN ' . tbl('video_thumb') . ' VT ON VT.id_video_image = VI.id_video_image
                 SET VT.version = \'' . $video['video_version'] . '\'
-                WHERE videoid = ' . $video['videoid'] . ' AND type = \'thumbnail\'';
+                WHERE VI.videoid = ' . $video['videoid'] . ' AND VI.type = \'thumbnail\'';
                 self::query($sql);
 
                 $sql_delete = 'DELETE vt_old
