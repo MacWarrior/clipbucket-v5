@@ -78,6 +78,11 @@ fi
 
 # Mode without MariaDB
 if [ "${INSTALL_MARIADB}" = "true" ]; then
+    # Debug: Check mysql directory state
+    echo "DEBUG: Checking /var/lib/mysql/mysql directory..."
+    ls -la /var/lib/mysql/ 2>/dev/null || echo "DEBUG: /var/lib/mysql does not exist"
+    ls -la /var/lib/mysql/mysql/ 2>/dev/null || echo "DEBUG: /var/lib/mysql/mysql does not exist"
+
     # Check if mysql has already been installed
     if [ ! -d "/var/lib/mysql/mysql" ]; then
         echo "Installing MariaDB..."
