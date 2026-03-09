@@ -42,8 +42,27 @@ try {
             User::ratingUpdate($id, $rating);
             break;
         case 'comment':
-            User::getInstance()->hasPermissionAjax('view_channel');
-            Comments::ratingUpdate($id, $rating);
+            $comment = Comments::getAll(['comment_id' => $id]);
+            if (!empty($comment)) {
+                switch ($comment[0]['type']) {
+                    default:
+                        error_log('type : '.$type);
+                    case 'v':
+                        $permission = 'view_video';
+                        break;
+                    case 'p':
+                        $permission = 'view_photos';
+                        break;
+                    case 'cl':
+                        $permission = 'view_collections';
+                        break;
+                    case Comments::$libelle_type_channel:
+                        $permission = 'view_channel';
+                        break;
+                }
+                User::getInstance()->hasPermissionAjax($permission);
+                Comments::ratingUpdate($id, $rating);
+            }
             break;
     }
     update_user_voted([

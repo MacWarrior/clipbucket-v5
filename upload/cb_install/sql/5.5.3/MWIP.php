@@ -27,13 +27,17 @@ class MWIP extends \Migration
             'table'  => 'comments',
             'column' => 'vote'
         ]);
-        self::alterTable('ALTER TABLE `{tbl_prefix}comments` add COLUMN rating INT NOT NULL DEFAULT 0 ', [],[
+        self::alterTable('ALTER TABLE `{tbl_prefix}comments` ADD COLUMN rating INT NOT NULL DEFAULT 0 ', [],[
             'table'  => 'comments',
             'column' => 'rating'
         ]);
         self::alterTable('ALTER TABLE `{tbl_prefix}comments` ADD COLUMN rated_by INT NOT NULL DEFAULT 0  ', [], [
             'table'  => 'comments',
-            'column' => 'rating_by'
+            'column' => 'rated_by'
+        ]);
+        self::alterTable('ALTER TABLE `{tbl_prefix}comments` ADD COLUMN voters TEXT ', [], [
+            'table'  => 'comments',
+            'column' => 'voters'
         ]);
 
     }
