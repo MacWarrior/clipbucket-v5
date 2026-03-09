@@ -74,7 +74,6 @@ if (($type == \'core\' || $type == \'db\') && AdminTool::getInstance()->isAlread
 }
 ?>';
 
-DiscordLog::sendDump($data);
 fwrite($tmp_file, $data);
 fclose($tmp_file);
 chdir(DirPath::get('root'));
