@@ -62,7 +62,29 @@
 {/if}
 
 <script type="text/javascript">
+
+    var clickTimeout = null;
+
+    clickHandler = function (event) {
+        if (clickTimeout) {
+            clearTimeout(clickTimeout);
+        }
+        console.log(clickTimeout);
+        clickTimeout = setTimeout(() => {
+            if (this.paused()) {
+                this.play();
+            } else {
+                this.pause();
+            }
+        }, 200);
+    }
+
     function doubleClickHandler(event) {
+        if (clickTimeout) {
+            clearTimeout(clickTimeout);
+            clickTimeout = null;
+        }
+        console.log(clickTimeout);
         if (this.isFullscreen()) {
             this.exitFullscreen();
         } else {
@@ -97,9 +119,9 @@
             ]
         },
         userActions: {
-            doubleClick: {
-                doubleClickHandler
-            }
+            click: clickHandler,
+            doubleClick: doubleClickHandler
+
         }
     };
 
