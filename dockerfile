@@ -3,7 +3,7 @@ FROM debian:stable-slim
 
 # Build arguments for customization
 ARG LITE=false
-ARG PHP_VERSION=8.4
+ARG PHP_VERSION=8.5
 ARG INSTALL_PHPMYADMIN=false
 ARG INSTALL_XDEBUG=false
 ARG INSTALL_REDIS=false
