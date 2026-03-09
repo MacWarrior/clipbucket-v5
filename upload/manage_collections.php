@@ -67,6 +67,12 @@ switch ($mode) {
         if (!empty($_GET['type']) && Collection::getInstance()->isValidType($_GET['type'])) {
             $params['type'] = $_GET['type'];
         }
+
+        if (!empty($_GET['parent_id'])) {
+            $parent_collection = Collection::getInstance()->getOne(['collection_id' => $_GET['parent_id']]);
+            $params['collection_id_parent'] = $parent_collection['collection_id'];
+            $params['type'] = $parent_collection['type'];
+        }
         $reqFields = Collections::getInstance()->load_required_fields($params);
         $otherFields = Collections::getInstance()->load_other_fields();
 

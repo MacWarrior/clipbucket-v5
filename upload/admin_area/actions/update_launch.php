@@ -16,8 +16,7 @@ if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.0', '367')) {
 
 if (($error_init['core'] === false && $_POST['type'] == 'core') || $error_init['db'] === false) {
     echo json_encode([
-        'success'   => false
-        ,
+        'success'   => false,
         'error_msg' => System::isInDev() ? 'Failed to find tools for update' : lang('technical_error')
     ]);
     die();
@@ -28,7 +27,7 @@ sendClientResponseAndContinue(function () {
     Update::getInstance()->displayGlobalSQLUpdateAlert($_POST['type'], true);
     echo json_encode([
         'success' => true,
-        'html'=>ob_get_clean()
+        'html'    => ob_get_clean()
     ]);
 });
 
@@ -38,10 +37,13 @@ if (file_exists(DirPath::get('temp') . 'update_core_tmp.php')) {
 }
 $tmp_file = fopen(DirPath::get('temp') . 'update_core_tmp.php', 'w');
 $data = /** @lang PHP */
-'<?php
+    '<?php
 if (php_sapi_name() != \'cli\') {
     die;
 }
+
+sleep(2);
+
 const THIS_PAGE = \'update_core_tmp\';
 include_once \'' . DirPath::get('includes') . 'admin_config.php' . '\';
 $type = \'' . $_POST['type'] . '\';
@@ -78,9 +80,10 @@ fclose($tmp_file);
 chdir(DirPath::get('root'));
 $cmd = System::get_binaries('php') . ' -q ' . escapeshellarg(DirPath::get('temp') . 'update_core_tmp.php') . ' ' . escapeshellarg($_POST['type']);
 if (stristr(PHP_OS, 'WIN')) {
-    shell_exec($cmd);
+    $complement = '';
+} elseif (stristr(PHP_OS, 'darwin')) {
+    $complement = ' </dev/null >/dev/null 2>&1 &';
 } else { // for ubuntu or linux
-    shell_exec('sh -c ' . escapeshellarg( $cmd . ' >/dev/null 2>&1 &'));
+    $complement = ' > /dev/null 2>&1 &';
 }
-
 die;

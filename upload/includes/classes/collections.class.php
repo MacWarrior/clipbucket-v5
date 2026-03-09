@@ -915,6 +915,7 @@ class Collection extends Objects
             $params['collection_id_parent'] = 0;
         }
         $params['display_indent'] = true;
+        $params['can_upload'] = true;
         $parents = $this->getAll($params);
 
         foreach ($parents as &$parent) {
@@ -966,8 +967,7 @@ class Collection extends Objects
     public function getAvailableParents($collection_id, $type, $display_group = false): array
     {
         $params = [
-            'type'   => $type,
-            'userid' => user_id()
+            'type' => $type
         ];
 
         if (!empty($collection_id)) {
