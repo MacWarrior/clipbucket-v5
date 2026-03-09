@@ -32,7 +32,7 @@ fi
 
 # Configure phpMyAdmin if installed
 if [ "${INSTALL_PHPMYADMIN}" = "true" ] && [ -d "/usr/share/phpmyadmin" ]; then
-    echo "phpMyAdmin is enabled on port 8080"
+    echo "phpMyAdmin is enabled"
     # Adjust permissions
     chown -R ${USER_NAME}:${USER_NAME} /var/lib/phpmyadmin /usr/share/phpmyadmin
 fi
@@ -182,7 +182,7 @@ echo "========================================="
 echo "All services started successfully!"
 echo "========================================="
 if [ "${INSTALL_PHPMYADMIN}" = "true" ]; then
-    echo "phpMyAdmin available at: http://${PHPMYADMIN_DOMAIN}:8080"
+    echo "phpMyAdmin available at: http://${PHPMYADMIN_DOMAIN}"
 fi
 if [ "${INSTALL_REDIS}" = "true" ]; then
     echo "Redis Server running on port 6379"
