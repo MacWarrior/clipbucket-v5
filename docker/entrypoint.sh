@@ -130,6 +130,8 @@ if [ "${INSTALL_MARIADB}" = "true" ]; then
         mysql -uroot -e "GRANT ALL PRIVILEGES ON xhgui.* TO 'xhgui'@'localhost';"
         mysql -uroot -e "FLUSH PRIVILEGES;"
         echo "XHGUI database created successfully."
+        # Create watches table for XHGUI
+        mysql -uroot xhgui -e "CREATE TABLE IF NOT EXISTS watches (id CHAR(24) NOT NULL, removed TEXT DEFAULT NULL, name TEXT NOT NULL, PRIMARY KEY (id)) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;"
     fi
 else
     echo "MariaDB is disabled"
