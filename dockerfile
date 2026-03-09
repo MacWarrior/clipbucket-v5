@@ -29,58 +29,88 @@ ENV UID=1000
 ENV GID=1000
 
 # Install base dependencies and add PHP repository
-RUN apt-get update && apt-get install -y --no-install-recommends     ca-certificates     curl     gnupg2     lsb-release  
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    ca-certificates  curl  gnupg2  lsb-release  nginx-full git \
+    ffmpeg  sendmail mediainfo curl wget unzip  
 
-# Add Ondrej Sury PHP repository for all PHP versions (8.1-8.5)
+# Add Ondrej Sury PHP repository for all PHP versions 
 # This external repo is required because Debian stable only provides one PHP version
 RUN mkdir -p /etc/apt/keyrings \
     && curl -sSL https://packages.sury.org/php/apt.gpg -o /etc/apt/keyrings/sury-php.gpg \
     && echo "deb [signed-by=/etc/apt/keyrings/sury-php.gpg] https://packages.sury.org/php $(lsb_release -sc) main" > /etc/apt/sources.list.d/php.list \
-    && apt-get update
-
-# Debug: Show repository configuration
-RUN echo "=== Repository Configuration ===" && cat /etc/apt/sources.list.d/php.list \
-    && echo "=== Debian Version ===" && lsb_release -sc
-
-# Validate PHP version (8.1 to 8.5)
-RUN case "${PHP_VERSION}" in     8.1|8.2|8.3|8.4|8.5) echo "PHP version ${PHP_VERSION} is valid" ;;     *) echo "Error: PHP_VERSION must be between 8.1 and 8.5 (inclusive)"; exit 1 ;; esac
-
-# Update package list after adding PHP repository
-RUN apt-get update
-
-# Install nginx and base tools
-RUN apt-get install -y --no-install-recommends     nginx-full     git     ffmpeg     sendmail     mediainfo     curl     wget     unzip  
-
-# Install PHP pear (required for pecl) only if needed
-RUN if [ "$INSTALL_XDEBUG" = "true" ] || [ "$INSTALL_PROFILING" = "true" ]; then  apt-get install -y --no-install-recommends         php-pear     ;     fi
-
-# Install PHP and extensions (one by one for debugging)
-RUN apt-get update
-
-# Install PHP and all extensions in one command
-RUN apt-get install -y --no-install-recommends     php${PHP_VERSION}-fpm     php${PHP_VERSION}-cli     php${PHP_VERSION}-dev     php${PHP_VERSION}-curl     php${PHP_VERSION}-mysqli     php${PHP_VERSION}-xml     php${PHP_VERSION}-mbstring     php${PHP_VERSION}-gd     php${PHP_VERSION}-zip     php${PHP_VERSION}-intl     php${PHP_VERSION}-fileinfo     php${PHP_VERSION}-tokenizer     php${PHP_VERSION}-ctype     php${PHP_VERSION}-iconv     php${PHP_VERSION}-simplexml     php${PHP_VERSION}-dom     php${PHP_VERSION}-sockets     php${PHP_VERSION}-posix     php${PHP_VERSION}-ffi 
+    && apt-get update \
+    && apt-get install -y --no-install-recommends \
+        php${PHP_VERSION}-fpm \
+        php${PHP_VERSION}-cli \
+        php${PHP_VERSION}-dev \
+        php${PHP_VERSION}-curl \
+        php${PHP_VERSION}-mysqli \
+        php${PHP_VERSION}-xml \
+        php${PHP_VERSION}-mbstring \
+        php${PHP_VERSION}-gd \
+        php${PHP_VERSION}-zip \
+        php${PHP_VERSION}-intl \
+        php${PHP_VERSION}-fileinfo \
+        php${PHP_VERSION}-tokenizer \
+        php${PHP_VERSION}-ctype \
+        php${PHP_VERSION}-iconv \
+        php${PHP_VERSION}-simplexml \
+        php${PHP_VERSION}-dom \
+        php${PHP_VERSION}-sockets \
+        php${PHP_VERSION}-posix \
+        php${PHP_VERSION}-ffi
 
 # Configure update-alternatives to use the correct PHP version
-RUN update-alternatives --set php /usr/bin/php${PHP_VERSION} 2>/dev/null ||     update-alternatives --install /usr/bin/php php /usr/bin/php${PHP_VERSION} 100
+RUN update-alternatives --set php /usr/bin/php${PHP_VERSION} 2>/dev/null || update-alternatives --install /usr/bin/php php /usr/bin/php${PHP_VERSION} 100
+
+# Install PHP pear (required for pecl) only if needed
+RUN if [ "$INSTALL_XDEBUG" = "true" ] || [ "$INSTALL_PROFILING" = "true" ]; then \
+        apt-get install -y --no-install-recommends php-pear; \
+    fi
 
 # Install MariaDB only if not in lite mode
-RUN if [ "$LITE" = "false" ]; then                 apt-get install -y --no-install-recommends mariadb-server ;     fi
+RUN if [ "$LITE" = "false" ]; then \
+        apt-get install -y --no-install-recommends mariadb-server ; \
+    fi
 
 # Install Redis server if requested
-RUN if [ "$INSTALL_REDIS" = "true" ]; then               apt-get install -y --no-install-recommends redis-server &&    sed -i 's/^bind 127.0.0.1/bind 0.0.0.0/' /etc/redis/redis.conf &&         echo 'maxmemory 256mb' >> /etc/redis/redis.conf &&         echo 'maxmemory-policy allkeys-lru' >> /etc/redis/redis.conf;     fi
+RUN if [ "$INSTALL_REDIS" = "true" ]; then \
+        apt-get install -y --no-install-recommends redis-server ; \
+        sed -i 's/^bind 127.0.0.1/bind 0.0.0.0/' /etc/redis/redis.conf \
+        && echo 'maxmemory 256mb' >> /etc/redis/redis.conf \
+        && echo 'maxmemory-policy allkeys-lru' >> /etc/redis/redis.conf;\
+    fi
 
 # Install PHP Xdebug if requested
-RUN if [ "$INSTALL_XDEBUG" = "true" ]; then               apt-get install -y --no-install-recommends php${PHP_VERSION}-xdebug ||         (pecl install xdebug &&         echo "zend_extension=xdebug.so" > /etc/php/${PHP_VERSION}/mods-available/xdebug.ini) &&         echo "xdebug.mode=debug,coverage" >> /etc/php/${PHP_VERSION}/mods-available/xdebug.ini &&         echo "xdebug.start_with_request=yes" >> /etc/php/${PHP_VERSION}/mods-available/xdebug.ini &&         echo "xdebug.client_host=host.docker.internal" >> /etc/php/${PHP_VERSION}/mods-available/xdebug.ini &&         echo "xdebug.client_port=9003" >> /etc/php/${PHP_VERSION}/mods-available/xdebug.ini &&         phpenmod xdebug ;     fi
+RUN if [ "$INSTALL_XDEBUG" = "true" ]; then \
+        apt-get install -y --no-install-recommends php${PHP_VERSION}-xdebug || (pecl install xdebug && echo "zend_extension=xdebug.so" > /etc/php/${PHP_VERSION}/mods-available/xdebug.ini) \
+        && echo "xdebug.mode=debug,coverage" >> /etc/php/${PHP_VERSION}/mods-available/xdebug.ini \
+        && echo "xdebug.start_with_request=yes" >> /etc/php/${PHP_VERSION}/mods-available/xdebug.ini \
+        && echo "xdebug.client_host=host.docker.internal" >> /etc/php/${PHP_VERSION}/mods-available/xdebug.ini \
+        && echo "xdebug.client_port=9003" >> /etc/php/${PHP_VERSION}/mods-available/xdebug.ini && phpenmod xdebug ;\
+    fi
 
 # Install XHProf and XHGUI only if profiling is requested
-RUN if [ "$INSTALL_PROFILING" = "true" ]; then                (apt-get install -y --no-install-recommends php${PHP_VERSION}-xhprof ||         pecl install xhprof) &&         echo "extension=xhprof.so" > /etc/php/${PHP_VERSION}/mods-available/xhprof.ini &&         phpenmod xhprof &&         phpenmod pdo_mysql  ;     fi
+RUN if [ "$INSTALL_PROFILING" = "true" ]; then \
+        (apt-get install -y --no-install-recommends php${PHP_VERSION}-xhprof || pecl install xhprof) \
+        && echo "extension=xhprof.so" > /etc/php/${PHP_VERSION}/mods-available/xhprof.ini \
+        && phpenmod xhprof && phpenmod pdo_mysql  ;\
+    fi
 
 # Copy XHGUI configuration file
 COPY docker/xhgui-config.php /tmp/xhgui-config.php
 
 # Install XHGUI if profiling is requested
-RUN if [ "$INSTALL_PROFILING" = "true" ]; then            apt-get install -y --no-install-recommends composer &&         mkdir -p /usr/share/xhgui /var/lib/xhgui &&         git clone --depth 1 https://github.com/perftools/xhgui.git /usr/share/xhgui &&         chmod 777 /var/lib/xhgui && mkdir -p /usr/share/xhgui/cache && chmod 777 /usr/share/xhgui/cache &&         cd /usr/share/xhgui &&         (composer install --no-dev --optimize-autoloader 2>&1 || echo "Composer install completed with warnings") &&         mkdir -p config &&         cp /tmp/xhgui-config.php /usr/share/xhgui/config/config.php ;     fi
-
+RUN if [ "$INSTALL_PROFILING" = "true" ]; then \
+        apt-get install -y --no-install-recommends composer \
+        && mkdir -p /usr/share/xhgui /var/lib/xhgui \
+        && git clone --depth 1 https://github.com/perftools/xhgui.git /usr/share/xhgui \
+        && chmod 777 /var/lib/xhgui && mkdir -p /usr/share/xhgui/cache \
+        && chmod 777 /usr/share/xhgui/cache && cd /usr/share/xhgui \
+        && (composer install --no-dev --optimize-autoloader 2>&1 || echo "Composer install completed with warnings") \
+        && mkdir -p config \
+        && cp /tmp/xhgui-config.php /usr/share/xhgui/config/config.php ;\
+    fi
 
 # PHP configuration
 RUN sed -i "s/max_execution_time = 30/max_execution_time = 7200/g" /etc/php/${PHP_VERSION}/fpm/php.ini
@@ -88,8 +118,9 @@ RUN sed -i "s/;ffi.enable=preload/ffi.enable=true/g" /etc/php/${PHP_VERSION}/fpm
 RUN sed -i "s/;ffi.enable=preload/ffi.enable=true/g" /etc/php/${PHP_VERSION}/cli/php.ini
 
 # Change the nginx and php-fpm user
-RUN sed -i 's/^user www-data;/user containeruser;/g' /etc/nginx/nginx.conf &&     sed -i "s/^user = www-data\$/user = containeruser/" /etc/php/${PHP_VERSION}/fpm/pool.d/www.conf &&     sed -i "s/^group = www-data\$/group = containeruser/" /etc/php/${PHP_VERSION}/fpm/pool.d/www.conf
-
+RUN sed -i 's/^user www-data;/user containeruser;/g' /etc/nginx/nginx.conf \
+    && sed -i "s/^user = www-data\$/user = containeruser/" /etc/php/${PHP_VERSION}/fpm/pool.d/www.conf \
+    && sed -i "s/^group = www-data\$/group = containeruser/" /etc/php/${PHP_VERSION}/fpm/pool.d/www.conf
 
 # Copy nginx configuration
 COPY docker/nginx-clipbucket.conf /etc/nginx/sites-available/clipbucket
