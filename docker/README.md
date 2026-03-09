@@ -6,7 +6,7 @@ Ce Dockerfile supporte de multiples configurations pour répondre à différents
 
 | Argument | Description | Valeurs possibles | Défaut |
 |----------|-------------|-------------------|--------|
-| `PHP_VERSION` | Version de PHP | `8.1`, `8.2`, `8.3`, `8.4`, `8.5` | `8.4` |
+| `PHP_VERSION` | Version de PHP | `8.1`, `8.2`, `8.3`, `8.4`, `8.5` | `8.5` |
 | `DOMAIN_NAME` | Domaine pour ClipBucket | string | `clipbucket.local` |
 | `PHPMYADMIN_DOMAIN` | Domaine pour phpMyAdmin | string | `phpmyadmin.local` |
 | `LITE` | Mode sans MariaDB | `true`, `false` | `false` |
@@ -16,7 +16,7 @@ Ce Dockerfile supporte de multiples configurations pour répondre à différents
 
 ## 🚀 Exemples de Build
 
-### Build de base avec PHP 8.4
+### Build de base avec PHP 8.5
 ```bash
 docker build -t clipbucket-v5:php8.4 .
 ```
@@ -31,7 +31,7 @@ docker build -t clipbucket-v5:php8.3-pma \
 ### Build mode développeur (tous les outils)
 ```bash
 docker build -t clipbucket-v5:dev \
-  --build-arg PHP_VERSION=8.4 \
+  --build-arg PHP_VERSION=8.5 \
   --build-arg INSTALL_PHPMYADMIN=true \
   --build-arg INSTALL_XDEBUG=true \
   --build-arg INSTALL_REDIS=true .
@@ -54,7 +54,7 @@ docker build -t clipbucket-v5:custom \
 ### Build production avec Redis
 ```bash
 docker build -t clipbucket-v5:production \
-  --build-arg PHP_VERSION=8.4 \
+  --build-arg PHP_VERSION=8.5 \
   --build-arg INSTALL_REDIS=true .
 ```
 
