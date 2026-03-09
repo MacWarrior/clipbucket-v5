@@ -26,7 +26,7 @@ fi
 # Adjust permissions for the new user
 mkdir -p /srv/http/clipbucket /var/lib/nginx && chown -R ${USER_NAME}:${USER_NAME} /srv/http/clipbucket /run/php
 
-if [ "$INSTALL_MARIADB" != "true" ]; then
+if [ "${INSTALL_MARIADB}" != "true" ]; then
     mkdir -p /var/lib/mysql /run/mysqld &&     chown -R ${USER_NAME}:${USER_NAME} /var/lib/mysql /run/mysqld /usr/lib/mysql
 fi
 
@@ -41,7 +41,7 @@ fi
 terminate_processes() {
     echo "Terminating processes..."
     kill -TERM "${php_pid}" "${nginx_pid}" 2>/dev/null || true
-    if [ "$INSTALL_MARIADB" = "true" ]; then
+    if [ "${INSTALL_MARIADB}" = "true" ]; then
         kill -TERM "${mariadb_pid}" 2>/dev/null || true
         wait "${mariadb_pid}" 2>/dev/null || true
     fi
@@ -81,7 +81,7 @@ if [ "${INSTALL_REDIS}" = "true" ]; then
 fi
 
 # Mode without MariaDB
-if [ "$INSTALL_MARIADB" = "true" ]; then
+if [ "${INSTALL_MARIADB}" = "true" ]; then
     # Check if mysql has already been installed
     if [ ! -d "/var/lib/mysql/mysql" ]; then
         echo "Installing MariaDB..."
@@ -189,7 +189,7 @@ if [ "${INSTALL_REDIS}" = "true" ]; then
 fi
 
 while true; do
-    if [ "$INSTALL_MARIADB" = "true" ]; then
+    if [ "${INSTALL_MARIADB}" = "true" ]; then
         if ! kill -0 "${mariadb_pid}" 2>/dev/null; then
             echo "MariaDB process has exited. Exiting script..."
             terminate_processes
