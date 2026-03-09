@@ -92,6 +92,7 @@ if [ "${INSTALL_MARIADB}" = "true" ]; then
 
     # Start MariaDB
     # Ensure correct permissions for MariaDB data directory
+    mkdir -p /var/lib/mysql /run/mysqld
     chown -R ${USER_NAME}:${USER_NAME} /var/lib/mysql /run/mysqld
 
     echo "Starting MariaDB..."
