@@ -1,6 +1,6 @@
 {
   "version":"5.5.3",
-  "revision":"65",
+  "revision":"68",
   "status":"stable",
   "detail":[
     {
@@ -10,6 +10,7 @@
         ,"Implement email alias allow option"
         ,"Implement templates edition"
         ,"Implement Regenerate videos thumbs tool"
+        ,"Implement breaking version warning and website maintenance mode during update"
         ,"Update advanced settings display"
         ,"Hide poster & backdrop tabs when empty on video edition page"
         ,"Fix JS error on playlist management page"
@@ -33,6 +34,7 @@
         ,"Implement support for ultrawide screens"
         ,"Implement photo next/previous actions with keyboard"
         ,"Implement featured collection hierarchy display"
+        ,"Implement add new collection button from owned collection"
         ,"Update media rating"
         ,"Update collection management"
         ,"Add signup date of birth calendar icon"
@@ -83,6 +85,8 @@
       "title": "Installation & Update",
       "description": [
         "Fix SQL error on installation"
+        ,"Fix possible git issue with core update"
+        ,"Fix possible PHP error during update"
       ]
     },
     {
