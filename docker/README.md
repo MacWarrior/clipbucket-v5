@@ -9,7 +9,7 @@ This Dockerfile supports multiple configurations to meet different development a
 | `PHP_VERSION` | PHP version | `8.1`, `8.2`, `8.3`, `8.4`, `8.5` | `8.5` |
 | `DOMAIN_NAME` | Domain for ClipBucket | string | `clipbucket.local` |
 | `PHPMYADMIN_DOMAIN` | Domain for phpMyAdmin | string | `phpmyadmin.local` |
-| `LITE` | Mode without MariaDB | `true`, `false` | `false` |
+| `INSTALL_MARIADB` | Install MariaDB | `true`, `false` | `false` |
 | `INSTALL_PHPMYADMIN` | Install phpMyAdmin | `true`, `false` | `false` |
 | `INSTALL_XDEBUG` | Install Xdebug | `true`, `false` | `false` |
 | `INSTALL_REDIS` | Install Redis Server | `true`, `false` | `false` |
@@ -34,13 +34,14 @@ docker build -t clipbucket-v5:dev \\
   --build-arg PHP_VERSION=8.5 \\
   --build-arg INSTALL_PHPMYADMIN=true \\
   --build-arg INSTALL_XDEBUG=true \\
+  --build-arg INSTALL_MARIADB=true \\
   --build-arg INSTALL_REDIS=true .
 ```
 
 ### Lite mode build (without MariaDB)
 ```bash
 docker build -t clipbucket-v5:lite \\
-  --build-arg LITE=true .
+  --build-arg INSTALL_MARIADB=false .
 ```
 
 ### Build with custom domains
