@@ -48,7 +48,7 @@ on:
         type: string
 
 env:
-  IMAGE_NAME: vekaserver/clipbucket-v5
+  IMAGE_NAME: oxygenz/clipbucket-v5
 
 jobs:
   # Build latest (PHP 8.5, full, no extra tools)
