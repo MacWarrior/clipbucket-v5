@@ -165,15 +165,15 @@ RUN if [ "${INSTALL_PHPMYADMIN}" = "true" ]; then \
         echo "---- Creating directories ----" && \
         mkdir -p /usr/share/phpmyadmin /var/lib/phpmyadmin/tmp && \
         echo "---- Downloading latest phpMyAdmin ----" && \
-        curl -fsSL https://www.phpmyadmin.net/downloads/phpMyAdmin-latest-all-languages.tar.xz -o /tmp/phpmyadmin.tar.xz && \
+        curl -fsSL https://www.phpmyadmin.net/downloads/phpMyAdmin-latest-all-languages.tar.gz -o /tmp/phpmyadmin.tar.gz && \
         echo "---- Extracting phpMyAdmin ----" && \
-        tar xJf /tmp/phpmyadmin.tar.xz --strip-components=1 -C /usr/share/phpmyadmin && \
+        tar xzf /tmp/phpmyadmin.tar.gz --strip-components=1 -C /usr/share/phpmyadmin && \
         echo "---- Setting permissions ----" && \
         chmod 777 /var/lib/phpmyadmin/tmp && \
         echo "---- Creating phpMyAdmin config ----" && \
         echo "<?php \$cfg['blowfish_secret'] = '$(openssl rand -base64 32)'; \$cfg['TempDir'] = '/var/lib/phpmyadmin/tmp'; \$cfg['Servers'][1]['auth_type'] = 'cookie'; \$cfg['Servers'][1]['host'] = 'localhost'; \$cfg['Servers'][1]['compress'] = false; \$cfg['Servers'][1]['AllowNoPassword'] = false;" > /usr/share/phpmyadmin/config.inc.php && \
         echo "---- Cleaning temporary files ----" && \
-        rm -f /tmp/phpmyadmin.tar.xz && \
+        rm -f /tmp/phpmyadmin.tar.gz && \
         echo "---- phpMyAdmin installation completed ----"; \
     fi
 
