@@ -161,28 +161,19 @@ RUN if [ -f /etc/nginx/sites-available/xhgui ]; then \
 
 # Install phpMyAdmin via git clone with yarn build for assets
 RUN if [ "${INSTALL_PHPMYADMIN}" = "true" ]; then \
-        echo "---- Installing dependencies (composer, nodejs) ----" && \
-        apt-get update && \
-        apt-get install -y --no-install-recommends composer nodejs && \
-        echo "---- Enabling corepack ----" && \
-        corepack enable && \
+        echo "---- Installing phpMyAdmin from official release ----" && \
         echo "---- Creating directories ----" && \
         mkdir -p /usr/share/phpmyadmin /var/lib/phpmyadmin/tmp && \
-        echo "---- Cloning phpMyAdmin repository ----" && \
-        git clone --depth 1 --branch STABLE https://github.com/phpmyadmin/phpmyadmin.git /usr/share/phpmyadmin && \
+        echo "---- Downloading latest phpMyAdmin ----" && \
+        curl -fsSL https://files.phpmyadmin.net/phpMyAdmin/latest/phpMyAdmin-latest-all-languages.tar.gz -o /tmp/phpmyadmin.tar.gz && \
+        echo "---- Extracting phpMyAdmin ----" && \
+        tar xzf /tmp/phpmyadmin.tar.gz --strip-components=1 -C /usr/share/phpmyadmin && \
         echo "---- Setting permissions ----" && \
         chmod 777 /var/lib/phpmyadmin/tmp && \
-        echo "---- Running composer install ----" && \
-        cd /usr/share/phpmyadmin && \
-        composer install --no-dev --optimize-autoloader && \
-        echo "---- Installing yarn dependencies ----" && \
-        yarn install --frozen-lockfile && \
-        echo "---- Building frontend assets ----" && \
-        yarn build && \
         echo "---- Creating phpMyAdmin config ----" && \
         echo "<?php \$cfg['blowfish_secret'] = '$(openssl rand -base64 32)'; \$cfg['TempDir'] = '/var/lib/phpmyadmin/tmp'; \$cfg['Servers'][1]['auth_type'] = 'cookie'; \$cfg['Servers'][1]['host'] = 'localhost'; \$cfg['Servers'][1]['compress'] = false; \$cfg['Servers'][1]['AllowNoPassword'] = false;" > /usr/share/phpmyadmin/config.inc.php && \
-        echo "---- Cleaning node_modules ----" && \
-        rm -rf /usr/share/phpmyadmin/node_modules && \
+        echo "---- Cleaning temporary files ----" && \
+        rm -f /tmp/phpmyadmin.tar.gz && \
         echo "---- phpMyAdmin installation completed ----"; \
     fi
 
