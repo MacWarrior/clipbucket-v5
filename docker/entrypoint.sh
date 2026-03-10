@@ -26,6 +26,10 @@ fi
 # Adjust permissions for the new user
 mkdir -p /srv/http/clipbucket /var/lib/nginx && chown -R ${USER_NAME}:${USER_NAME} /srv/http/clipbucket /run/php
 
+if [ "${INSTALL_MARIADB}" != "true" ]; then
+    mkdir -p /var/lib/mysql /run/mysqld && chown -R ${USER_NAME}:${USER_NAME} /var/lib/mysql /run/mysqld /usr/lib/mysql
+fi
+
 # Configure phpMyAdmin if installed
 if [ "${INSTALL_PHPMYADMIN}" = "true" ] && [ -d "/usr/share/phpmyadmin" ]; then
     echo "phpMyAdmin is enabled"
@@ -93,7 +97,7 @@ if [ "${INSTALL_MARIADB}" = "true" ]; then
 
     # Fix permissions for MariaDB data directory
     chown -R ${USER_NAME}:${USER_NAME} /var/lib/mysql /run/mysqld
-    
+
     # Start MariaDB
     echo "Starting MariaDB..."
     mariadbd --user=${USER_NAME} --datadir=/var/lib/mysql &
