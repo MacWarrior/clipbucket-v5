@@ -26,7 +26,7 @@ fi
 # Adjust permissions for the new user
 mkdir -p /srv/http/clipbucket /var/lib/nginx && chown -R ${USER_NAME}:${USER_NAME} /srv/http/clipbucket /run/php
 
-if [ "${INSTALL_MARIADB}" != "true" ]; then
+if [ "${INSTALL_MARIADB}" = "true" ]; then
     mkdir -p /var/lib/mysql /run/mysqld && chown -R ${USER_NAME}:${USER_NAME} /var/lib/mysql /run/mysqld /usr/lib/mysql
 fi
 
@@ -80,23 +80,8 @@ if [ "${INSTALL_REDIS}" = "true" ]; then
     fi
 fi
 
-# Mode without MariaDB
+# Mode with MariaDB
 if [ "${INSTALL_MARIADB}" = "true" ]; then
-    # Debug: Check mysql directory state
-    echo "DEBUG: Checking /var/lib/mysql/mysql directory..."
-    ls -la /var/lib/mysql/ 2>/dev/null || echo "DEBUG: /var/lib/mysql does not exist"
-    ls -la /var/lib/mysql/mysql/ 2>/dev/null || echo "DEBUG: /var/lib/mysql/mysql does not exist"
-
-    # Check if mysql has already been installed
-    if [ ! -d "/var/lib/mysql/mysql" ]; then
-        echo "Installing MariaDB..."
-        mariadb-install-db --user=${USER_NAME} --basedir=/usr --datadir=/var/lib/mysql || true
-    else
-        echo "MariaDB already installed."
-    fi
-
-    # Fix permissions for MariaDB data directory
-    chown -R ${USER_NAME}:${USER_NAME} /var/lib/mysql /run/mysqld
 
     # Start MariaDB
     echo "Starting MariaDB..."
