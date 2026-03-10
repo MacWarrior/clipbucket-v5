@@ -165,7 +165,7 @@ RUN if [ "${INSTALL_PHPMYADMIN}" = "true" ]; then \
         echo "---- Creating directories ----" && \
         mkdir -p /usr/share/phpmyadmin /var/lib/phpmyadmin/tmp && \
         echo "---- Downloading latest phpMyAdmin ----" && \
-        curl -fsSL https://files.phpmyadmin.net/phpMyAdmin/latest/phpMyAdmin-latest-all-languages.tar.gz -o /tmp/phpmyadmin.tar.gz && \
+        curl -fsSL https://www.phpmyadmin.net/downloads/phpMyAdmin-latest-all-languages.tar.xz -o /tmp/phpmyadmin.tar.gz && \
         echo "---- Extracting phpMyAdmin ----" && \
         tar xzf /tmp/phpmyadmin.tar.gz --strip-components=1 -C /usr/share/phpmyadmin && \
         echo "---- Setting permissions ----" && \
