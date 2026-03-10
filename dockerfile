@@ -161,17 +161,29 @@ RUN if [ -f /etc/nginx/sites-available/xhgui ]; then \
 
 # Install phpMyAdmin via git clone with yarn build for assets
 RUN if [ "${INSTALL_PHPMYADMIN}" = "true" ]; then \
+        echo "---- Installing dependencies (composer, nodejs) ----" && \
+        apt-get update && \
         apt-get install -y --no-install-recommends composer nodejs && \
+        echo "---- Enabling corepack ----" && \
         corepack enable && \
+        echo "---- Creating directories ----" && \
         mkdir -p /usr/share/phpmyadmin /var/lib/phpmyadmin/tmp && \
+        echo "---- Cloning phpMyAdmin repository ----" && \
         git clone --depth 1 --branch STABLE https://github.com/phpmyadmin/phpmyadmin.git /usr/share/phpmyadmin && \
+        echo "---- Setting permissions ----" && \
         chmod 777 /var/lib/phpmyadmin/tmp && \
+        echo "---- Running composer install ----" && \
         cd /usr/share/phpmyadmin && \
         composer install --no-dev --optimize-autoloader && \
+        echo "---- Installing yarn dependencies ----" && \
         yarn install --frozen-lockfile && \
+        echo "---- Building frontend assets ----" && \
         yarn build && \
+        echo "---- Creating phpMyAdmin config ----" && \
         echo "<?php \$cfg['blowfish_secret'] = '$(openssl rand -base64 32)'; \$cfg['TempDir'] = '/var/lib/phpmyadmin/tmp'; \$cfg['Servers'][1]['auth_type'] = 'cookie'; \$cfg['Servers'][1]['host'] = 'localhost'; \$cfg['Servers'][1]['compress'] = false; \$cfg['Servers'][1]['AllowNoPassword'] = false;" > /usr/share/phpmyadmin/config.inc.php && \
-        rm -rf /usr/share/phpmyadmin/node_modules; \
+        echo "---- Cleaning node_modules ----" && \
+        rm -rf /usr/share/phpmyadmin/node_modules && \
+        echo "---- phpMyAdmin installation completed ----"; \
     fi
 
 # Clean apt cache apt
