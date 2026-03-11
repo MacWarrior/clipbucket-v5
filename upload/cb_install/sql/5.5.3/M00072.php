@@ -9,7 +9,7 @@ class M00072 extends \Migration
 {
     private static function importOldThumbFromDisk($video)
     {
-
+        error_log('importing old thumbs for ' . $video['file_name']);
         $logFile = \DirPath::get('logs') . $video['file_directory'] . DIRECTORY_SEPARATOR . $video['file_name'] . '.log';
         $log = new \SLog($logFile);
         $ffmpeg_instance = new \FFMpeg($log);
@@ -27,10 +27,11 @@ class M00072 extends \Migration
                 $files_info = [];
                 //pattern must match :  /`file_name`-`size`-`num`.`extension`
                 preg_match('/\/\w*-(\w{1,16})-(\d{1,3})\.(\w{2,4})$/', $thumb, $files_info);
+                error_log($thumb);
                 if (!empty($files_info)) {
                     if (\Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '14')) {
                         $sql = 'SELECT id_video_image FROM ' . tbl('video_image') . ' WHERE videoid = ' . $video['videoid'] . ' AND type = \'thumbnail\' AND num = ' . (int)$files_info[2];
-                        $video_image = \Clipbucket_db::getInstance()->_select($sql);
+                        $video_image = \Clipbucket_db::getInstance()->_select($sql)[0];
                         if (empty($video_image)) {
                             $id_video_image = \Clipbucket_db::getInstance()->insert(tbl('video_image'), [
                                 'videoid',
@@ -44,6 +45,7 @@ class M00072 extends \Migration
                         } else {
                             $id_video_image = $video_image['id_video_image'];
                         }
+                        error_log($id_video_image);
                         if ($files_info[1] == 'original') {
                             $sizes['width'] = $ffmpeg_instance->input_details['video_width'] ?? '';
                             $sizes['height'] = $ffmpeg_instance->input_details['video_height'] ?? '';
