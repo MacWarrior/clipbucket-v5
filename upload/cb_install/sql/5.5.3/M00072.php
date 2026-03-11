@@ -7,6 +7,84 @@ require_once \DirPath::get('classes') . 'update.class.php';
 
 class M00072 extends \Migration
 {
+    private static function importOldThumbFromDisk($video)
+    {
+
+        $logFile = \DirPath::get('logs') . $video['file_directory'] . DIRECTORY_SEPARATOR . $video['file_name'] . '.log';
+        $log = new \SLog($logFile);
+        $ffmpeg_instance = new \FFMpeg($log);
+        $vid_file = get_high_res_file($video);
+        $ffmpeg_instance->input_details['duration'] = $video['duration'];
+        $ffmpeg_instance->input_file = $vid_file;
+        $ffmpeg_instance->file_directory = $video['file_directory'] . DIRECTORY_SEPARATOR;
+        $ffmpeg_instance->file_name = $video['file_name'];
+        $ffmpeg_instance->prepare();
+        //check files
+        $glob = \DirPath::get('thumbs') . $video['file_directory'] . $video['file_name'] . '*';
+        $vid_thumbs = glob($glob);
+        if (!empty($vid_thumbs) && !empty($video['file_directory']) && !empty($video['file_name'])) {
+            foreach ($vid_thumbs as $thumb) {
+                $files_info = [];
+                //pattern must match :  /`file_name`-`size`-`num`.`extension`
+                preg_match('/\/\w*-(\w{1,16})-(\d{1,3})\.(\w{2,4})$/', $thumb, $files_info);
+                if (!empty($files_info)) {
+                    if (\Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '14')) {
+                        $sql = 'SELECT id_video_image FROM ' . tbl('video_image') . ' WHERE videoid = ' . $video['videoid'] . ' AND type = \'thumbnail\' AND num = ' . (int)$files_info[2];
+                        $video_image = \Clipbucket_db::getInstance()->_select($sql);
+                        if (empty($video_image)) {
+                            $id_video_image = \Clipbucket_db::getInstance()->insert(tbl('video_image'), [
+                                'videoid',
+                                'type',
+                                'num'
+                            ], [
+                                $video['videoid'],
+                                'thumbnail',
+                                (int)$files_info[2]
+                            ]);
+                        } else {
+                            $id_video_image = $video_image['id_video_image'];
+                        }
+                        if ($files_info[1] == 'original') {
+                            $sizes['width'] = $ffmpeg_instance->input_details['video_width'] ?? '';
+                            $sizes['height'] = $ffmpeg_instance->input_details['video_height'] ?? '';
+                        } else {
+                            $sizes = \VideoThumbs::getWidthHeightFromSize($files_info[1]);
+                        }
+                        \Clipbucket_db::getInstance()->insert(tbl('video_thumb'), [
+                            'id_video_image',
+                            'width',
+                            'height',
+                            'extension',
+                            'version',
+                            'is_original_size'
+                        ], [
+                            $id_video_image,
+                            $sizes['width'] ?? null,
+                            $sizes['height'] ?? null,
+                            $files_info[3],
+                            $video['video_version'],
+                            (int)($files_info[1] == 'original')
+                        ], ignore: true);
+
+                    } else {
+                        \Clipbucket_db::getInstance()->insert(tbl('video_thumbs'), [
+                            'videoid',
+                            'resolution',
+                            'num',
+                            'extension',
+                            'version'
+                        ], [
+                            $video['videoid'],
+                            $files_info[1],
+                            $files_info[2],
+                            $files_info[3],
+                            $video['video_version']
+                        ], ignore: true);
+                    }
+                }
+            }
+        }
+    }
     /**
      * @throws \Exception
      */
@@ -30,11 +108,9 @@ class M00072 extends \Migration
             }
             $video = \Video::getInstance()->getOne(['file_name' => $video_file_name]);
             if (!empty($video)) {
-                $instance = new \VideoThumbs($video['videoid']);
-                $instance->prepareFFmpeg();
                 //count
                 $nb_video_image = \VideoThumbs::getAll(['videoid' => $video['videoid'], 'count'=>true]);
-                $instance->importOldThumbFromDisk(true);
+                self::importOldThumbFromDisk($video);
                 $nb_video_image_after_import = \VideoThumbs::getAll(['videoid' => $video['videoid'], 'count'=>true]);
 
                 if ($nb_video_image_after_import != $nb_video_image) {
