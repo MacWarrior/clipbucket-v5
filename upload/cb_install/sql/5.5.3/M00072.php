@@ -20,7 +20,8 @@ class M00072 extends \Migration
         $ffmpeg_instance->file_name = $video['file_name'];
         $ffmpeg_instance->prepare();
         //check files
-        $glob = \DirPath::get('thumbs') . $video['file_directory'] . $video['file_name'] . '*';
+        $glob = \DirPath::get('thumbs') . $ffmpeg_instance->file_directory . $ffmpeg_instance->file_name . '*';
+        error_log(\DirPath::get('thumbs') . $ffmpeg_instance->file_directory . $ffmpeg_instance->file_name . '*');
         $vid_thumbs = glob($glob);
         if (!empty($vid_thumbs) && !empty($video['file_directory']) && !empty($video['file_name'])) {
             foreach ($vid_thumbs as $thumb) {
