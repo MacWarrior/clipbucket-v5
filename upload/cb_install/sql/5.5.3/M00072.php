@@ -9,7 +9,6 @@ class M00072 extends \Migration
 {
     private static function importOldThumbFromDisk($video)
     {
-        error_log('importing old thumbs for ' . $video['file_name']);
         $logFile = \DirPath::get('logs') . $video['file_directory'] . DIRECTORY_SEPARATOR . $video['file_name'] . '.log';
         $log = new \SLog($logFile);
         $ffmpeg_instance = new \FFMpeg($log);
@@ -21,14 +20,12 @@ class M00072 extends \Migration
         $ffmpeg_instance->prepare();
         //check files
         $glob = \DirPath::get('thumbs') . $ffmpeg_instance->file_directory . $ffmpeg_instance->file_name . '*';
-        error_log(\DirPath::get('thumbs') . $ffmpeg_instance->file_directory . $ffmpeg_instance->file_name . '*');
         $vid_thumbs = glob($glob);
         if (!empty($vid_thumbs) && !empty($video['file_directory']) && !empty($video['file_name'])) {
             foreach ($vid_thumbs as $thumb) {
                 $files_info = [];
                 //pattern must match :  /`file_name`-`size`-`num`.`extension`
                 preg_match('/\/\w*-(\w{1,16})-(\d{1,3})\.(\w{2,4})$/', $thumb, $files_info);
-                error_log($thumb);
                 if (!empty($files_info)) {
                     if (\Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '14')) {
                         $sql = 'SELECT id_video_image FROM ' . tbl('video_image') . ' WHERE videoid = ' . $video['videoid'] . ' AND type = \'thumbnail\' AND num = ' . (int)$files_info[2];
@@ -46,7 +43,6 @@ class M00072 extends \Migration
                         } else {
                             $id_video_image = $video_image['id_video_image'];
                         }
-                        error_log($id_video_image);
                         if ($files_info[1] == 'original') {
                             $sizes['width'] = $ffmpeg_instance->input_details['video_width'] ?? '';
                             $sizes['height'] = $ffmpeg_instance->input_details['video_height'] ?? '';
