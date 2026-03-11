@@ -6,7 +6,7 @@ class Update
     private static $files = [];
     private $tableName = '';
     private $fields = [];
-    private $dbVersion = [];
+    private array $dbVersion = [];
     private $latest = [];
     private $changelog = [];
     private $version = '';
