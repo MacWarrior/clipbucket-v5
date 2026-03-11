@@ -24,5 +24,10 @@ class MWIP extends \Migration
            'fr'=>'Utilisateurs en ligne',
            'en'=>'Online users'
        ]);
+
+       self::generateTranslation('ongoing_tools', [
+           'fr'=>'Outils en cours',
+           'en'=>'Ongoing tools'
+       ]);
     }
 }

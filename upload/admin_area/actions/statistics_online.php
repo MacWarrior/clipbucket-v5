@@ -20,6 +20,9 @@ if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.0', '367')) {
         '  tools_histo.id_tools_histo_status IN (SELECT id_tools_histo_status FROM ' . tbl('tools_histo_status') . ' WHERE language_key_title IN(\'in_progress\',\'stopping\'))'
     ]);
 }
+if (count($progress_tools) > 0) {
+    $html .= '<h4>'.lang('ongoing_tools').'</h4>';
+}
 foreach ($progress_tools as $tool) {
     $html .= '
 <br/>
