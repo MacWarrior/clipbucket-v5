@@ -5,7 +5,7 @@ require_once \DirPath::get('classes') . DIRECTORY_SEPARATOR . 'migration' . DIRE
 require_once \DirPath::get('classes') . 'video_thumbs.class.php';
 require_once \DirPath::get('classes') . 'update.class.php';
 
-class MWIP extends \Migration
+class M00072 extends \Migration
 {
     /**
      * @throws \Exception
@@ -20,19 +20,33 @@ class MWIP extends \Migration
             if (!in_array(pathinfo($thumb)['extension'], ['jpg', 'png', 'jpeg', 'gif'])) {
                 continue;
             }
+            if (filesize($thumb) == 0) {
+                unlink($thumb);
+                continue;
+            }
             $video_file_name = explode('-', pathinfo($thumb)['filename'])[0];
             if (in_array($video_file_name, $video_done)) {
                 continue;
             }
             $video = \Video::getInstance()->getOne(['file_name' => $video_file_name]);
             if (!empty($video)) {
-                $video_done[] = $video_file_name;
+                $instance = new \VideoThumbs($video['videoid']);
+                $instance->prepareFFmpeg();
+                //count
+                $nb_video_image = \VideoThumbs::getAll(['videoid' => $video['videoid'], 'count'=>true]);
+                $instance->importOldThumbFromDisk(true);
+                $nb_video_image_after_import = \VideoThumbs::getAll(['videoid' => $video['videoid'], 'count'=>true]);
+
+                if ($nb_video_image_after_import != $nb_video_image) {
+                    continue;
+                }
                 $sql = 'UPDATE ' . tbl('video_image') . ' VI
                 INNER JOIN ' . tbl('video_thumb') . ' VT ON VT.id_video_image = VI.id_video_image
                 SET VT.version = \'' . $video['video_version'] . '\'
                 WHERE VI.videoid = ' . $video['videoid'] . ' AND VI.type = \'thumbnail\'';
                 self::query($sql);
 
+                //delete duplicate
                 $sql_delete = 'DELETE vt_old
                     FROM ' . tbl(\VideoThumbs::getTableNameThumb()) . ' vt_old
                     JOIN ' . tbl(\VideoThumbs::getTableNameThumb()) . ' vt_new
@@ -44,11 +58,12 @@ class MWIP extends \Migration
                         AND (vt_old.width = 0 OR vt_old.height = 0)
                         AND vt_old.id_video_image IN (SELECT id_video_image FROM ' . tbl(\VideoThumbs::getTableName()) . ' WHERE videoid = ' . $video['videoid'] . ');';
                 self::query($sql_delete);
+                if (count($video_done) >= $limit) {
+                    $video_done = [];
+                }
+                $video_done[] = $video_file_name;
             }
 
-            if (count($video_done) >= $limit) {
-                $video_done = [];
-            }
         }
 
         $new_path = \DirPath::get('thumbs') . 'video';
