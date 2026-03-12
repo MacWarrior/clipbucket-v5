@@ -1809,4 +1809,11 @@ VALUES ('ongoing_conversion'),
        ('update_completed_maintenance_off'),
        ('update_incomplete'),
        ('maintenance_still_on'),
-       ('ok');
+       ('ok'),
+       ('live_statistics'),
+       ('ongoing_videos_conversions'),
+       ('online_users'),
+       ('ongoing_tools'),
+       ('option_enable_own_comment_rating'),
+       ('comment_rate_disabled'),
+       ('you_cant_rate_own_comment');

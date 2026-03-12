@@ -24,7 +24,7 @@ if ($_GET['view'] == 'search') {
 $anonymous_id = userquery::getInstance()->get_anonymous_user();
 assign('anonymous_id', $anonymous_id);
 //Delete User
-if (isset($_GET['deleteuser']) && user_id() != $_GET['deleteuser']) {
+if (isset($_GET['deleteuser']) && User::getInstance()->getCurrentUserID() != $_GET['deleteuser']) {
     if ($anonymous_id == $_GET['deleteuser']) {
         e(lang('anonymous_locked'));
     } else {

@@ -5,7 +5,7 @@ require_once \DirPath::get('classes') . DIRECTORY_SEPARATOR . 'migration' . DIRE
 require_once \DirPath::get('classes') . 'video_thumbs.class.php';
 require_once \DirPath::get('classes') . 'update.class.php';
 
-class M00072 extends \Migration
+class M00075 extends \Migration
 {
     /**
      * @throws \Exception
