@@ -1,6 +1,6 @@
 {
   "version":"5.5.3",
-  "revision":"73",
+  "revision":"74",
   "status":"stable",
   "detail":[
     {
@@ -37,6 +37,7 @@
         ,"Implement photo next/previous actions with keyboard"
         ,"Implement featured collection hierarchy display"
         ,"Implement add new collection button from owned collection"
+        ,"Implement comment rating"
         ,"Update media rating"
         ,"Update collection management"
         ,"Add signup date of birth calendar icon"
