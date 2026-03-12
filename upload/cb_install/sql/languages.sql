@@ -1809,4 +1809,8 @@ VALUES ('ongoing_conversion'),
        ('update_completed_maintenance_off'),
        ('update_incomplete'),
        ('maintenance_still_on'),
-       ('ok');
+       ('ok'),
+       ('live_statistics'),
+       ('ongoing_videos_conversions'),
+       ('online_users'),
+       ('ongoing_tools');
