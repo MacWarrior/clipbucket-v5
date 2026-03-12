@@ -69,7 +69,6 @@
         if (clickTimeout) {
             clearTimeout(clickTimeout);
         }
-        console.log(clickTimeout);
         clickTimeout = setTimeout(() => {
             if (this.paused()) {
                 this.play();
@@ -84,7 +83,6 @@
             clearTimeout(clickTimeout);
             clickTimeout = null;
         }
-        console.log(clickTimeout);
         if (this.isFullscreen()) {
             this.exitFullscreen();
         } else {
@@ -121,7 +119,6 @@
         userActions: {
             click: clickHandler,
             doubleClick: doubleClickHandler
-
         }
     };
 
