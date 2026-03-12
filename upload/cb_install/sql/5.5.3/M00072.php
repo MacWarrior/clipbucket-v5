@@ -7,7 +7,10 @@ require_once \DirPath::get('classes') . 'update.class.php';
 
 class M00072 extends \Migration
 {
-    private static function importOldThumbFromDisk($video)
+    /**
+     * @throws \Exception
+     */
+    private static function importOldThumbFromDisk($video): void
     {
         $logFile = \DirPath::get('logs') . $video['file_directory'] . DIRECTORY_SEPARATOR . $video['file_name'] . '.log';
         $log = new \SLog($logFile);
@@ -116,9 +119,9 @@ class M00072 extends \Migration
                     continue;
                 }
                 $sql = 'UPDATE ' . tbl('video_image') . ' VI
-                INNER JOIN ' . tbl('video_thumb') . ' VT ON VT.id_video_image = VI.id_video_image
-                SET VT.version = \'' . $video['video_version'] . '\'
-                WHERE VI.videoid = ' . $video['videoid'] . ' AND VI.type = \'thumbnail\'';
+                    INNER JOIN ' . tbl('video_thumb') . ' VT ON VT.id_video_image = VI.id_video_image
+                    SET VT.version = \'' . $video['video_version'] . '\'
+                    WHERE VI.videoid = ' . $video['videoid'] . ' AND VI.type = \'thumbnail\'';
                 self::query($sql);
 
                 //delete duplicate
