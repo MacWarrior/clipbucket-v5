@@ -1,6 +1,6 @@
 {
   "version":"5.5.3",
-  "revision":"66",
+  "revision":"73",
   "status":"stable",
   "detail":[
     {
@@ -10,6 +10,8 @@
         ,"Implement email alias allow option"
         ,"Implement templates edition"
         ,"Implement Regenerate videos thumbs tool"
+        ,"Implement breaking version warning and website maintenance mode during update"
+        ,"Implement live statistics & ongoing tools on dashboard"
         ,"Update advanced settings display"
         ,"Hide poster & backdrop tabs when empty on video edition page"
         ,"Fix JS error on playlist management page"
@@ -21,6 +23,7 @@
         ,"Fix possible XSS injection (Thanks @sy460129 !)"
         ,"Fix flagged video count"
         ,"Fix possible error when updating after failed update"
+        ,"Fix pages creation error"
       ]
     },
     {
@@ -78,12 +81,15 @@
         ,"Fix SSRF vulnerability (Thanks @Takumi142857 !)"
         ,"Fix Readme"
         ,"Fix docker image <i>(#781, #782)</i>"
+        ,"Fix possible issue with failed redis connection"
       ]
     },
     {
       "title": "Installation & Update",
       "description": [
         "Fix SQL error on installation"
+        ,"Fix possible git issue with core update"
+        ,"Fix possible PHP error during update"
       ]
     },
     {
@@ -112,11 +118,23 @@
       ]
     },
     {
+      "title": "Player",
+      "description": [
+        "Implement fullscreen toggle through double click"
+      ]
+    },
+    {
       "title": "External components",
       "description": [
         "Update phpmailer/phpmailer to 7.0.2"
         ,"Update VideoJS to version 8.23.6"
-        ,"Update predis/predis to 3.4.0"
+        ,"Update predis/predis to 3.4.2"
+      ]
+    },
+    {
+      "title": "Internal components",
+      "description": [
+        "Update VideoJS player to version 2.2.0"
       ]
     }
   ]
