@@ -11,12 +11,12 @@ try {
     if (empty($_POST['type']) || empty($_POST['id']) || empty($_POST['rating'])) {
         throw new Exception(lang('missing_params'));
     }
-    $rating = mysql_clean($_POST['rating']) * 2;
+    $rating = (int)$_POST['rating'] * 2;
     if (!is_numeric($rating) || $rating <= 9) {
         $rating = 0;
     }
     $type = strtolower($_POST['type']);
-    $id = $_POST['id'];
+    $id = (int)$_POST['id'];
     switch ($type) {
         case 'v':
         case 'video':
