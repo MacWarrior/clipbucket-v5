@@ -10,7 +10,6 @@ abstract class Objects
      */
     private static function getClassInfo(): array
     {
-        //TODO optimiser
         switch (static::TYPE) {
             case 'photo':
                 $config_own_rate = 'own_photo_rating';
@@ -19,6 +18,7 @@ abstract class Objects
                 $table = 'photos';
                 $id_field = 'photo_id';
                 break;
+
             case 'collection':
                 $config_own_rate = 'own_collection_rating';
                 $config_rating = 'collection_rating';
@@ -26,6 +26,7 @@ abstract class Objects
                 $table = 'collections';
                 $id_field = 'collection_id';
                 break;
+
             case 'user':
                 $config_own_rate = 'own_channel_rating';
                 $config_rating = 'channel_rating';
@@ -33,6 +34,7 @@ abstract class Objects
                 $table = 'user_profile';
                 $id_field = 'user_profile_id';
                 break;
+
             case 'comment':
                 $config_own_rate = 'own_comment_rating';
                 $config_rating = 'comment_rating';
@@ -40,6 +42,7 @@ abstract class Objects
                 $table = 'comments';
                 $id_field = 'comment_id';
                 break;
+
             case 'video':
             default:
                 $config_own_rate = 'own_video_rating';
@@ -248,14 +251,17 @@ abstract class Objects
                 $tablename = Video::getInstance()->getTableName();
                 $object_id = Video::getInstance()->getFieldId();
                 break;
+
             case 'photo':
                 $tablename = Photo::getInstance()->getTableName();
                 $object_id = 'photo_id';
                 break;
+
             case 'collection':
                 $tablename = Collection::getInstance()->getTableName();
                 $object_id = 'collection_id';
                 break;
+
             default:
                 return [];
         }
@@ -389,10 +395,14 @@ abstract class Objects
         return false;
     }
 
+    /**
+     * @throws Exception
+     */
     public static function isObjectRated($userid, $item_id)
     {
         [$config_own_rate, $config_rating, $voters_key, $table, $id_field] = self::getClassInfo();
-        $raw_rating = Clipbucket_db::getInstance()->select(tbl($table), $voters_key, "$id_field = $item_id");
+        $cond = $id_field . ' = ' . (int)$item_id;
+        $raw_rating = Clipbucket_db::getInstance()->select(tbl($table), $voters_key, $cond);
         $ratedby_json = $raw_rating[0][$voters_key];
         $ratedby_cleaned = json_decode($ratedby_json, true);
         foreach ($ratedby_cleaned as $rating_data) {
