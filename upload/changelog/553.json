@@ -1,6 +1,6 @@
 {
   "version":"5.5.3",
-  "revision":"72",
+  "revision":"73",
   "status":"stable",
   "detail":[
     {
@@ -11,6 +11,7 @@
         ,"Implement templates edition"
         ,"Implement Regenerate videos thumbs tool"
         ,"Implement breaking version warning and website maintenance mode during update"
+        ,"Implement live statistics & ongoing tools on dashboard"
         ,"Update advanced settings display"
         ,"Hide poster & backdrop tabs when empty on video edition page"
         ,"Fix JS error on playlist management page"

@@ -1812,4 +1812,5 @@ VALUES ('ongoing_conversion'),
        ('ok'),
        ('live_statistics'),
        ('ongoing_videos_conversions'),
-       ('online_users');
+       ('online_users'),
+       ('ongoing_tools');
