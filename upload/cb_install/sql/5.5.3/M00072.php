@@ -7,7 +7,10 @@ require_once \DirPath::get('classes') . 'update.class.php';
 
 class M00072 extends \Migration
 {
-    private static function importOldThumbFromDisk($video)
+    /**
+     * @throws \Exception
+     */
+    private static function importOldThumbFromDisk($video): void
     {
         $logFile = \DirPath::get('logs') . $video['file_directory'] . DIRECTORY_SEPARATOR . $video['file_name'] . '.log';
         $log = new \SLog($logFile);
