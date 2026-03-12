@@ -341,7 +341,8 @@ INSERT INTO `{tbl_prefix}config` (`configid`, `name`, `value`) VALUES
     (NULL, 'random_video_order', 'yes'),
     (NULL, 'enable_favorite_icon_photo', 'yes'),
     (NULL, 'enable_favorite_icon_collection', 'yes'),
-    (NULL, 'enable_favorite_icon_video', 'yes');
+    (NULL, 'enable_favorite_icon_video', 'yes'),
+    (NULL, 'own_comment_rating', 'no');
 
 
 INSERT INTO `{tbl_prefix}video_resolution` (`title`, `ratio`, `enabled`, `width`, `height`, `video_bitrate`) VALUES
