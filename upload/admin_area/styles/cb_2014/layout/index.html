@@ -149,46 +149,8 @@
             </div>
         </div>
     </div>
-    <div class="col-md-6">
-        <ul class="nav nav-tabs">
-            <li class="active">
-                <a data-toggle="tab" href="#live_statistics">
-                    <h5>{lang('live_statistics')}</h5>
-                </a>
-            </li>
-        </ul>
-        <div class="tab-content">
-            <div id="online_statistics" class="tab-pane active">
-                <p>
-                    {lang('ongoing_videos_conversions')} : <b>{$ongoing_conversion}</b>
-                </p>
-                <p>
-                    {lang('online_users')} : <b>{$online_users}</b>
-                </p>
-                <br/>
-                {section name=tool_list loop=$progress_tools}
-                    <div class="row">
-                        <div class="col-md-3">
-                            <span >
-                                {lang code = ($progress_tools[tool_list].language_key_label)}
-                            </span>
-                        </div>
-                        <div class="col-md-9">
-                            <div style="text-align: center;  ">
-                                <div style="padding: 6px;"><span >{$progress_tools[tool_list].pourcentage_progress|string_format:"%.2f"}</span>%
-                                    (<span >{$progress_tools[tool_list].elements_done}</span> / <span >{$progress_tools[tool_list].elements_total}</span>)
-                                </div>
-                                <div class="progress">
-                                    <div class="progress-bar" role="progressbar"  aria-valuenow="{$progress_tools[tool_list].pourcentage_progress}"
-                                         aria-valuemin="0" aria-valuemax="100" style="width:{$progress_tools[tool_list].pourcentage_progress}%">
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                {/section}
-            </div>
-        </div>
+    <div class="col-md-6" id="online_statistics">
+        {include file="$style_dir/blocks/statistics_online.html"}
     </div>
 </div>
 <div class="modal fade" id="myModal" role="dialog">

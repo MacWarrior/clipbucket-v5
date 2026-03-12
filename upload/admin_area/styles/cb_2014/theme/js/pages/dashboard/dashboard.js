@@ -398,6 +398,7 @@ $(document).ready(function(){
             url: admin_url + 'actions/statistics_online.php',
             type: "post",
             dataType: "json",
+            data: {active: $('#online_statistics').find('li.active').attr('id')},
             success: function (data) {
                 if (data.html) {
                     $('#online_statistics').html(data.html);
@@ -407,7 +408,7 @@ $(document).ready(function(){
                 }
             }
         });
-    }, 60000)
+    }, 30000)
 });
 
 function setMaintenance() {
