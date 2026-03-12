@@ -97,10 +97,10 @@ class VideoThumbs
                 .' ) AS is_default';
         }
 
-        if ($param_videoid) {
+        if ($param_videoid !== false) {
             $conditions[] = self::$tableName . '.videoid = ' . (int)$param_videoid;
         }
-        if ($param_num) {
+        if ($param_num !== false) {
             $conditions[] = self::$tableName . '.num = ' . (int)$param_num;
         }
         if ($param_type) {
@@ -566,7 +566,7 @@ class VideoThumbs
     public function importOldThumbFromDisk(bool $ignore = false): void
     {
         //check files
-        $glob = DirPath::get('thumbs') . $this->ffmpeg_instance->file_directory . DIRECTORY_SEPARATOR . $this->ffmpeg_instance->file_name . '*';
+        $glob = DirPath::get('thumbs') . $this->ffmpeg_instance->file_directory . $this->ffmpeg_instance->file_name . '*';
         $vid_thumbs = glob($glob);
         if (!empty($vid_thumbs) && !empty($this->ffmpeg_instance->file_directory) && !empty($this->ffmpeg_instance->file_name)) {
             foreach ($vid_thumbs as $thumb) {

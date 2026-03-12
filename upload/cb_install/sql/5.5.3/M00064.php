@@ -15,13 +15,13 @@ class M00064 extends \Migration
         self::insertTool('regenerate_all_video_thumbs', 'AdminTool::regenerateAllVideoThumbs');
 
         self::generateTranslation('regenerate_all_video_thumbs_label', [
-            'fr'=>'Régénère les miniatures des vidéos',
-            'en'=>'Regenerate videos thumbs'
+            'fr' => 'Régénère les miniatures des vidéos',
+            'en' => 'Regenerate videos thumbs'
         ]);
 
         self::generateTranslation('regenerate_all_video_thumbs_description', [
-            'fr'=>'Régénère toutes les miniatures automatiques de toutes les vidéos',
-            'en'=>'Regenerate all extracted video thumbs'
+            'fr' => 'Régénère toutes les miniatures automatiques de toutes les vidéos',
+            'en' => 'Regenerate all extracted video thumbs'
         ]);
 
         $limit = 100;
@@ -41,17 +41,24 @@ class M00064 extends \Migration
                 'get_is_auto'             => true,
                 'get_type'                => true
             ]);
-
             foreach ($videos_images as $videos_image) {
                 $path = $videos_image['file_directory'] . DIRECTORY_SEPARATOR . $videos_image['file_name'];
                 if (!is_dir($new_path . DIRECTORY_SEPARATOR . $path)) {
                     mkdir($new_path . DIRECTORY_SEPARATOR . $path, 0777, true);
                 }
                 $resolution = $videos_image['is_original_size'] ? 'original' : '';
-                rename(\DirPath::get('thumbs') . \VideoThumbs::getThumbPath($videos_image['type'], $videos_image['file_directory'], $videos_image['file_name'], $videos_image['is_auto'], $videos_image['num'], $resolution, $videos_image['width'], $videos_image['height'], $videos_image['extension'], $videos_image['version'])
+                $old_thumb = \DirPath::get('thumbs') . \VideoThumbs::getThumbPath($videos_image['type'], $videos_image['file_directory'], $videos_image['file_name'], $videos_image['is_auto'], $videos_image['num'], $resolution, $videos_image['width'], $videos_image['height'], $videos_image['extension'], $videos_image['version']);
+                if (!file_exists($old_thumb) && $videos_image['version'] <= '5.5.0') {
+                    $old_thumb = \DirPath::get('thumbs') . \VideoThumbs::getThumbPath($videos_image['type'], $videos_image['file_directory'], $videos_image['file_name'], $videos_image['is_auto'], $videos_image['num'], $resolution, $videos_image['width'], $videos_image['height'], $videos_image['extension'], 0);
+                }
+                if (rename($old_thumb
                     , $new_path . DIRECTORY_SEPARATOR . \VideoThumbs::getThumbPath($videos_image['type'], $videos_image['file_directory'], $videos_image['file_name'], $videos_image['is_auto'], $videos_image['num'], $resolution, $videos_image['width'], $videos_image['height'], $videos_image['extension'], \Update::getInstance()->getCurrentCoreVersion())
-                );
-                self::query('UPDATE ' . tbl(\VideoThumbs::getTableNameThumb()) . ' SET version = \'' . \Update::getInstance()->getCurrentCoreVersion() . '\' WHERE id_video_thumb = ' . $videos_image['id_video_thumb']);
+                )) {
+                    self::query('UPDATE ' . tbl(\VideoThumbs::getTableNameThumb()) . ' SET version = \'' . \Update::getInstance()->getCurrentCoreVersion() . '\' WHERE id_video_thumb = ' . $videos_image['id_video_thumb']);
+                } else {
+                    throw new \Exception('Error renaming ' . $old_thumb .
+                        ' to ' . $new_path . DIRECTORY_SEPARATOR . \VideoThumbs::getThumbPath($videos_image['type'], $videos_image['file_directory'], $videos_image['file_name'], $videos_image['is_auto'], $videos_image['num'], $resolution, $videos_image['width'], $videos_image['height'], $videos_image['extension'], \Update::getInstance()->getCurrentCoreVersion()));
+                }
             }
 
         } while (!empty($videos_images));
