@@ -1815,4 +1815,5 @@ VALUES ('ongoing_conversion'),
        ('online_users'),
        ('ongoing_tools'),
        ('option_enable_own_comment_rating'),
-       ('comment_rate_disabled');
+       ('comment_rate_disabled'),
+       ('you_cant_rate_own_comment');

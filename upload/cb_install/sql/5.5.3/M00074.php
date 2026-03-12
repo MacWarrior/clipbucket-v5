@@ -3,7 +3,7 @@
 namespace V5_5_3;
 require_once \DirPath::get('classes') . DIRECTORY_SEPARATOR . 'migration' . DIRECTORY_SEPARATOR . 'migration.class.php';
 
-class MWIP extends \Migration
+class M00074 extends \Migration
 {
     /**
      * @throws \Exception
@@ -16,10 +16,13 @@ class MWIP extends \Migration
             'fr' => 'Voter pour ses propres commentaires',
             'en' => 'Rate own comments'
         ]);
-
         self::generateTranslation('comment_rate_disabled', [
             'fr'=>'Le vote des commentaires est désactivé',
             'en'=>'Comment rating is disabled'
+        ]);
+        self::generateTranslation('you_cant_rate_own_comment', [
+            'fr'=>'Vous ne pouvez voter pour vos propres commentaires',
+            'en'=>'You cannot rate your own comment'
         ]);
 
         self::alterTable('ALTER TABLE `{tbl_prefix}comments` DROP COLUMN `vote`;', [

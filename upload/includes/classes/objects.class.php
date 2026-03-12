@@ -313,11 +313,15 @@ abstract class Objects
                 case 'video':
                     $lang = 'you_cant_rate_own_video';
                     break;
+                case 'comment':
+                    $lang = 'you_cant_rate_own_comment';
+                    break;
                 default:
                     $lang = '';
             }
             throw new Exception(lang($lang));
         }
+
         $Old_histo = explode('|', $current_rating[$voters_key]);
         if (!empty($Old_histo) && is_array($Old_histo) && count($Old_histo) > 1) {
             foreach ($Old_histo as $voter) {

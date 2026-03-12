@@ -108,7 +108,7 @@ class Comments extends Objects
                 ,'users.email'
                 ,'CASE ' . $case_when . ' END AS title'
             ];
-            if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '999')) {
+            if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '74')) {
                 $select[] = 'comments.rating';
                 $select[] = 'comments.rated_by';
             }
@@ -614,7 +614,7 @@ class Comments extends Objects
      */
     public static function current_rating(int $object_id)
     {
-        if (!Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '999')){
+        if (!Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '74')){
             return false;
         }
 
