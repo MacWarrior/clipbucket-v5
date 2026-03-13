@@ -46,25 +46,17 @@ class M00075 extends \Migration
                         } else {
                             $id_video_image = $video_image['id_video_image'];
                         }
+
+                        $sql = ' UPDATE ' . tbl('video_thumb') . 'SET version =  \'' . ($video['video_version'] <= '5.5.2' ? $video['video_version'] : '5.5.2' ). '\'
+                         WHERE id_video_image = ' . $id_video_image . ' 
+                         AND ';
+
                         if ($files_info[1] == 'original') {
-                            $sizes['width'] = $ffmpeg_instance->input_details['video_width'] ?? '';
-                            $sizes['height'] = $ffmpeg_instance->input_details['video_height'] ?? '';
+                            $sql .= ' is_original_size = 1 ';
                         } else {
                             $sizes = \VideoThumbs::getWidthHeightFromSize($files_info[1]);
+                            $sql .= ' width = ' . (int)$sizes['width'] . ' AND height = ' . (int)$sizes['height'] . ' ';
                         }
-
-                        $sql = ' REPLACE INTO ' . tbl('video_thumb') . ' (`id_video_image`,
-                            `width`,
-                            `height`,
-                            `extension`,
-                            `version`,
-                            `is_original_size`) VALUES (
-                            ' . $id_video_image . ',
-                            ' . ($sizes['width'] ?? 0) . ',
-                            ' . ($sizes['height'] ?? 0) . ',
-                            \'' . $files_info[3] . '\',
-                            \'' . ($video['video_version'] <= '5.5.2' ? $video['video_version'] : '5.5.2' ). '\',
-                            ' . (int)($files_info[1] == 'original') . ' )';
                         error_log($sql);
                         self::query($sql);
                     }
