@@ -33,6 +33,7 @@ class M00075 extends \Migration
                     if (\Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '14')) {
                         $sql = 'SELECT id_video_image FROM ' . tbl('video_image') . ' WHERE videoid = ' . $video['videoid'] . ' AND type = \'thumbnail\' AND num = ' . (int)$files_info[2];
                         $video_image = \Clipbucket_db::getInstance()->_select($sql)[0];
+                        $num = (int)$files_info[2];
                         if (empty($video_image)) {
                             $id_video_image = \Clipbucket_db::getInstance()->insert(tbl('video_image'), [
                                 'videoid',
@@ -41,13 +42,14 @@ class M00075 extends \Migration
                             ], [
                                 $video['videoid'],
                                 'thumbnail',
-                                (int)$files_info[2]
+                                $num
                             ]);
                         } else {
                             $id_video_image = $video_image['id_video_image'];
                         }
 
-                        $sql = ' UPDATE ' . tbl('video_thumb') . 'SET version =  \'' . ($video['video_version'] <= '5.5.2' ? $video['video_version'] : '5.5.2' ). '\'
+
+                        $sql = ' UPDATE ' . tbl('video_thumb') . ' SET version =  \'' . ($video['video_version'] <= '5.5.2' ? $video['video_version'] : '5.5.2') . '\'
                          WHERE id_video_image = ' . $id_video_image . ' 
                          AND ';
 
@@ -57,7 +59,21 @@ class M00075 extends \Migration
                             $sizes = \VideoThumbs::getWidthHeightFromSize($files_info[1]);
                             $sql .= ' width = ' . (int)$sizes['width'] . ' AND height = ' . (int)$sizes['height'] . ' ';
                         }
-                        error_log($sql);
+                        if ($num == 0) {
+                            $sql_insert = ' INSERT IGNORE INTO ' . tbl('video_thumb') . ' (`id_video_image`,
+                            `width`,
+                            `height`,
+                            `extension`,
+                            `version`,
+                            `is_original_size`) VALUES (
+                            ' . $id_video_image . ',
+                            ' . ($sizes['width'] ?? 0) . ',
+                            ' . ($sizes['height'] ?? 0) . ',
+                            \'' . $files_info[3] . '\',
+                            \'' . ($video['video_version'] <= '5.5.2' ? $video['video_version'] : '5.5.2') . '\',
+                            ' . (int)($files_info[1] == 'original') . ' )';
+                            self::query($sql_insert);
+                        }
                         self::query($sql);
                     }
                 }
@@ -143,6 +159,6 @@ class M00075 extends \Migration
             }
         } while (!empty($videos_images));
 
-        delete_empty_directories(\DirPath::get('thumbs'));
+//        delete_empty_directories(\DirPath::get('thumbs'));
     }
 }
