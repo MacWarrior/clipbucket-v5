@@ -159,6 +159,6 @@ class M00075 extends \Migration
             }
         } while (!empty($videos_images));
 
-//        delete_empty_directories(\DirPath::get('thumbs'));
+        delete_empty_directories(\DirPath::get('thumbs'));
     }
 }
