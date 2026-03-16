@@ -1,6 +1,6 @@
 {
   "version":"5.5.3",
-  "revision":"72",
+  "revision":"74",
   "status":"stable",
   "detail":[
     {
@@ -11,6 +11,7 @@
         ,"Implement templates edition"
         ,"Implement Regenerate videos thumbs tool"
         ,"Implement breaking version warning and website maintenance mode during update"
+        ,"Implement live statistics & ongoing tools on dashboard"
         ,"Update advanced settings display"
         ,"Hide poster & backdrop tabs when empty on video edition page"
         ,"Fix JS error on playlist management page"
@@ -36,6 +37,7 @@
         ,"Implement photo next/previous actions with keyboard"
         ,"Implement featured collection hierarchy display"
         ,"Implement add new collection button from owned collection"
+        ,"Implement comment rating"
         ,"Update media rating"
         ,"Update collection management"
         ,"Add signup date of birth calendar icon"
@@ -117,11 +119,23 @@
       ]
     },
     {
+      "title": "Player",
+      "description": [
+        "Implement fullscreen toggle through double click"
+      ]
+    },
+    {
       "title": "External components",
       "description": [
         "Update phpmailer/phpmailer to 7.0.2"
         ,"Update VideoJS to version 8.23.6"
         ,"Update predis/predis to 3.4.2"
+      ]
+    },
+    {
+      "title": "Internal components",
+      "description": [
+        "Update VideoJS player to version 2.2.0"
       ]
     }
   ]

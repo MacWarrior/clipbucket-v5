@@ -392,6 +392,23 @@ $(document).ready(function(){
            }
        })
     });
+
+    setInterval(function () {
+        $.ajax({
+            url: admin_url + 'actions/statistics_online.php',
+            type: "post",
+            dataType: "json",
+            data: {active: $('#online_statistics').find('li.active').attr('id')},
+            success: function (data) {
+                if (data.html) {
+                    $('#online_statistics').html(data.html);
+                }
+                if (data.msg) {
+                    $(".page-content").prepend(data.msg);
+                }
+            }
+        });
+    }, 30000)
 });
 
 function setMaintenance() {
