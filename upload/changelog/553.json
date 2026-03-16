@@ -1,6 +1,6 @@
 {
   "version":"5.5.3",
-  "revision":"76",
+  "revision":"77",
   "status":"stable",
   "detail":[
     {
@@ -93,6 +93,7 @@
         ,"Fix possible git issue with core update"
         ,"Fix possible PHP error during update"
         ,"Fix old thumbs migration"
+        ,"Fix false error alert on update"
       ]
     },
     {
