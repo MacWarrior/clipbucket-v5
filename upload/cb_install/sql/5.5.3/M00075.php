@@ -37,6 +37,7 @@ class M00075 extends \Migration
                     $sql = 'SELECT * FROM ' . tbl('video_image') . ' WHERE videoid = ' . $video['videoid'] . ' AND type = \'thumbnail\' AND num = ' . (int)$files_info[2];
                     $video_image = \Clipbucket_db::getInstance()->_select($sql)[0];
                     $num = (int)$files_info[2];
+                    $extension = $files_info[3];
                     if (empty($video_image)) {
                         $id_video_image = \Clipbucket_db::getInstance()->insert(tbl('video_image'), [
                             'videoid',
@@ -80,12 +81,12 @@ class M00075 extends \Migration
                             ' . (int)($files_info[1] == 'original') . ' )';
                         self::query($sql_insert);
                     }
-                    $resolution = $files_info[1] == 'original' ?: '';
+                    $resolution = $files_info[1] == 'original' ? 'original' : '';
                     if (!rename($thumb
-                        , $new_path . DIRECTORY_SEPARATOR . \VideoThumbs::getThumbPath('thumbnail', $video['file_directory'], $video['file_name'], $video_image['is_auto'], $num, $resolution, $sizes['width'] ?? 0, $sizes['height'] ?? 0, $video_image['extension'], \Update::getInstance()->getCurrentCoreVersion())
+                        , $new_path . DIRECTORY_SEPARATOR . \VideoThumbs::getThumbPath('thumbnail', $video['file_directory'], $video['file_name'], $video_image['is_auto'], $num, $resolution, $sizes['width'] ?? 0, $sizes['height'] ?? 0, $extension, \Update::getInstance()->getCurrentCoreVersion())
                     )) {
                         throw new \Exception('Error renaming ' . $thumb .
-                            ' to ' . $new_path . DIRECTORY_SEPARATOR . \VideoThumbs::getThumbPath('thumbnail', $video['file_directory'], $video['file_name'], $video_image['is_auto'], $num, $resolution, $sizes['width'] ?? 0, $sizes['height'] ?? 0, $video_image['extension'], \Update::getInstance()->getCurrentCoreVersion()));
+                            ' to ' . $new_path . DIRECTORY_SEPARATOR . \VideoThumbs::getThumbPath('thumbnail', $video['file_directory'], $video['file_name'], $video_image['is_auto'], $num, $resolution, $sizes['width'] ?? 0, $sizes['height'] ?? 0, $extension, \Update::getInstance()->getCurrentCoreVersion()));
                     }
                 }
             }
