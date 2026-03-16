@@ -2362,7 +2362,7 @@ class userquery extends CBCategory
             }
             return false;
         }
-        return Clipbucket_db::getInstance()->count(tbl($this->dbtbl['subtbl']), 'subscription_id', " subscribed_to='$id' ");
+        return Clipbucket_db::getInstance()->count(tbl($this->dbtbl['subtbl']), 'subscription_id', ' subscribed_to='.mysql_clean($id).' ');
     }
 
     /**
@@ -2376,7 +2376,7 @@ class userquery extends CBCategory
      */
     function get_user_subscribers_detail($id, $limit = null)
     {
-        $result = Clipbucket_db::getInstance()->select(tbl('users,' . $this->dbtbl['subtbl']), '*', ' ' . tbl('subscriptions.subscribed_to') . " = '$id' AND " . tbl('subscriptions.userid') . '=' . tbl('users.userid'), $limit);
+        $result = Clipbucket_db::getInstance()->select(tbl('users,' . $this->dbtbl['subtbl']), '*', ' ' . tbl('subscriptions.subscribed_to') . " = '".mysql_clean($id)."' AND " . tbl('subscriptions.userid') . '=' . tbl('users.userid'), $limit);
         if (count($result) > 0) {
             return $result;
         }
