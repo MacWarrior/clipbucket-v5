@@ -91,6 +91,7 @@
         "Fix SQL error on installation"
         ,"Fix possible git issue with core update"
         ,"Fix possible PHP error during update"
+        ,"Fix old thumbs migration"
       ]
     },
     {
