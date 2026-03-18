@@ -62,6 +62,33 @@
 {/if}
 
 <script type="text/javascript">
+
+    var clickTimeout = null;
+
+    clickHandler = function (event) {
+        if (clickTimeout) {
+            clearTimeout(clickTimeout);
+        }
+        clickTimeout = setTimeout(() => {
+            if (this.paused()) {
+                this.play();
+            } else {
+                this.pause();
+            }
+        }, 200);
+    }
+
+    function doubleClickHandler(event) {
+        if (clickTimeout) {
+            clearTimeout(clickTimeout);
+            clickTimeout = null;
+        }
+        if (this.isFullscreen()) {
+            this.exitFullscreen();
+        } else {
+            this.requestFullscreen();
+        }
+    }
     //player settings
     var cb_player_setup = {
         plugins : { },
@@ -88,6 +115,10 @@
                 "FullscreenToggle", // Plein écran
                 {if config('chromecast')=='yes' && Network::is_ssl()}"ChromeCastButton",{/if}
             ]
+        },
+        userActions: {
+            click: clickHandler,
+            doubleClick: doubleClickHandler
         }
     };
 

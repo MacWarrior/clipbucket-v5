@@ -3203,41 +3203,19 @@ function has_rated($userid, $itemid, $type = false)
 {
     switch ($type) {
         case 'video':
-            $toselect = 'videoid';
-            $field = 'voter_ids';
-            break;
-
+            return Video::isObjectRated($userid, $itemid);
         case 'photo':
-            $type = 'photos';
-            $toselect = 'photo_id';
-            $field = 'voters';
-            break;
-
+            return Photo::isObjectRated($userid, $itemid);
         case 'user':
-            $type = 'user_profile';
-            $toselect = 'userid';
-            $field = 'voters';
-            break;
-
+            return User::isObjectRated($userid, $itemid);
+        case 'collection':
+            return Collection::isObjectRated($userid, $itemid);
+        case 'comment':
+            return Comments::isObjectRated($userid, $itemid);
         default:
             error_log('has_rated unknown type : ' . $type . PHP_EOL);
-            $type = 'video';
-            $toselect = 'videoid';
-            $field = 'voter_ids';
-            break;
+            return false;
     }
-    $raw_rating = Clipbucket_db::getInstance()->select(tbl($type), $field, "$toselect = $itemid");
-    $ratedby_json = $raw_rating[0][$field];
-    $ratedby_cleaned = json_decode($ratedby_json, true);
-    foreach ($ratedby_cleaned as $rating_data) {
-        if ($rating_data['userid'] == $userid) {
-            if ($rating_data['rating'] == 0) {
-                return 'disliked';
-            }
-            return 'liked';
-        }
-    }
-    return false;
 }
 
 /**

@@ -1,6 +1,6 @@
 {
   "version":"5.5.3",
-  "revision":"61",
+  "revision":"83",
   "status":"stable",
   "detail":[
     {
@@ -9,6 +9,9 @@
         "Refactor templates management"
         ,"Implement email alias allow option"
         ,"Implement templates edition"
+        ,"Implement Regenerate videos thumbs tool"
+        ,"Implement breaking version warning and website maintenance mode during update"
+        ,"Implement live statistics & ongoing tools on dashboard"
         ,"Update advanced settings display"
         ,"Hide poster & backdrop tabs when empty on video edition page"
         ,"Fix JS error on playlist management page"
@@ -18,6 +21,11 @@
         ,"Fix possible wrong error message display on core/db update from dashboard"
         ,"Fix todo deletion"
         ,"Fix possible XSS injection (Thanks @sy460129 !)"
+        ,"Fix flagged video count"
+        ,"Fix possible error when updating after failed update"
+        ,"Fix pages creation error"
+        ,"Fix video advanced search"
+        ,"Fix typo"
       ]
     },
     {
@@ -29,6 +37,9 @@
         ,"Implement random video order"
         ,"Implement support for ultrawide screens"
         ,"Implement photo next/previous actions with keyboard"
+        ,"Implement featured collection hierarchy display"
+        ,"Implement add new collection button from owned collection"
+        ,"Implement comment rating"
         ,"Update media rating"
         ,"Update collection management"
         ,"Add signup date of birth calendar icon"
@@ -46,6 +57,7 @@
         ,"Fix video favorite icon display and action"
         ,"Fix photo display"
         ,"Fix possible collection edition fron unauthorized user (Thanks @sy460129 !)"
+        ,"Fix featured user channel's link"
       ]
     },
     {
@@ -59,6 +71,7 @@
         ,"Drop support for PHP 8.0"
         ,"Drop outdated & unused columns"
         ,"Improve MySQL auto-reconnect handling"
+        ,"Migrate old video thumbs to newer storage structure"
         ,"Fix possible PHP error with discord logs"
         ,"Fix possible issue with migration 5.5.3 - 14"
         ,"Fix SQL error on video, photo & collection deletion"
@@ -67,17 +80,24 @@
         ,"Fix tools error handling"
         ,"Fix possible SQL error on video upload"
         ,"Fix thumbs deletion"
-        ,"Fix possible SQL injection"
+        ,"Fix possible SQL injection (Thanks @drkim-dev !)"
         ,"Fix possible duplicate configs"
         ,"Fix SSRF vulnerability (Thanks @Takumi142857 !)"
         ,"Fix Readme"
         ,"Fix docker image <i>(#781, #782)</i>"
+        ,"Fix possible issue with failed redis connection"
+        ,"Fix possible RCE (Thanks @Takumi142857 & @drkim-dev !)"
+        ,"Fix changelog"
       ]
     },
     {
       "title": "Installation & Update",
       "description": [
         "Fix SQL error on installation"
+        ,"Fix possible git issue with core update"
+        ,"Fix possible PHP error during update"
+        ,"Fix old thumbs migration"
+        ,"Fix false error alert on update"
       ]
     },
     {
@@ -106,11 +126,23 @@
       ]
     },
     {
+      "title": "Player",
+      "description": [
+        "Implement fullscreen toggle through double click"
+      ]
+    },
+    {
       "title": "External components",
       "description": [
         "Update phpmailer/phpmailer to 7.0.2"
         ,"Update VideoJS to version 8.23.6"
-        ,"Update predis/predis to 3.4.0"
+        ,"Update predis/predis to 3.4.2"
+      ]
+    },
+    {
+      "title": "Internal components",
+      "description": [
+        "Update VideoJS player to version 2.2.0"
       ]
     }
   ]

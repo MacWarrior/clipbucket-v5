@@ -108,6 +108,12 @@ class Migration
         Clipbucket_db::getInstance()->executeThrowException($sql);
         CacheRedis::flushAll();
         Update::getInstance()->flush();
+        Update::getInstance()->getDBVersion(true);
+        self::clearSingletonInstance(Video::class);
+        self::clearSingletonInstance(Photo::class);
+        self::clearSingletonInstance(Playlist::class);
+        self::clearSingletonInstance(Category::class);
+        self::clearSingletonInstance(User::class);
     }
 
     /**
@@ -132,6 +138,17 @@ class Migration
     public function getType()
     {
         return $this->type;
+    }
+
+    /**
+     * @param string $className
+     * @return void
+     */
+    private static function clearSingletonInstance(string $className): void
+    {
+        if (method_exists($className, 'clearInstance')) {
+            $className::clearInstance();
+        }
     }
 
     /**

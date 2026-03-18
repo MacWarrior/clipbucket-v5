@@ -9,7 +9,7 @@ if( config('videosSection') != 'yes' ){
     redirect_to(cblink(['name' => 'my_account']));
 }
 
-$udetails = userquery::getInstance()->get_user_details(user_id());
+$udetails = userquery::getInstance()->get_user_details(User::getInstance()->getCurrentUserID());
 assign('user', $udetails);
 assign('p', userquery::getInstance()->get_user_profile($udetails['userid']));
 
@@ -34,7 +34,7 @@ switch ($mode) {
         //Deleting Video
         if (!empty($_GET['vid_delete'])) {
             $videoid = (int)$_GET['vid_delete'];
-            if (CBvideo::getInstance()->is_video_owner($videoid, user_id())) {
+            if (CBvideo::getInstance()->is_video_owner($videoid, User::getInstance()->getCurrentUserID())) {
                 CBvideo::getInstance()->delete_video($videoid);
             }
         }

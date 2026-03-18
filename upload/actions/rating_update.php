@@ -11,12 +11,12 @@ try {
     if (empty($_POST['type']) || empty($_POST['id']) || empty($_POST['rating'])) {
         throw new Exception(lang('missing_params'));
     }
-    $rating = mysql_clean($_POST['rating']) * 2;
+    $rating = (int)$_POST['rating'] * 2;
     if (!is_numeric($rating) || $rating <= 9) {
         $rating = 0;
     }
     $type = strtolower($_POST['type']);
-    $id = $_POST['id'];
+    $id = (int)$_POST['id'];
     switch ($type) {
         case 'v':
         case 'video':
@@ -40,6 +40,44 @@ try {
         case 'user':
             User::getInstance()->hasPermissionAjax('view_channel');
             User::ratingUpdate($id, $rating);
+            break;
+
+        case 'comment':
+            $comment = Comments::getAll(['comment_id' => $id]);
+            if (!empty($comment)) {
+                switch ($comment[0]['type']) {
+                    default:
+                        error_log('type : '.$type);
+                    case 'v':
+                        $permission = 'view_video';
+                        $object = Video::getInstance()->getOne(['videoid' => $comment[0]['type_id']]);
+                        break;
+                    case 'p':
+                        $object = Photo::getInstance()->getOne(['photo_id' => $comment[0]['type_id']]);
+                        $permission = 'view_photos';
+                        break;
+                    case 'cl':
+                        $object = Photo::getInstance()->getOne(['collection' => $comment[0]['type_id']]);
+                        $permission = 'view_collections';
+                        break;
+                    case Comments::$libelle_type_channel:
+                        $object = User::getInstance()->getOne(['userid' => $comment[0]['type_id']]);
+                        $permission = 'view_channel';
+                        break;
+                }
+                User::getInstance()->hasPermissionAjax($permission);
+
+                if (empty($object)) {
+                    e(lang('insufficient_privileges'));
+                    echo json_encode([
+                        'template' => false,
+                        'success' => false,
+                        'msg'     => getTemplateMsg()
+                    ]);
+                    die;
+                }
+                Comments::ratingUpdate($id, $rating);
+            }
             break;
     }
     update_user_voted([

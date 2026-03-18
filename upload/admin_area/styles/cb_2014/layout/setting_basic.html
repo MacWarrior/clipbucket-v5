@@ -658,6 +658,16 @@
                                         </div>
                                         <hr/>
                                         <div class="row">
+                                            <div class="col-md-10">
+                                                <label class="nowrap" for="enable_featured_collection_hierarchy" title="{lang code='option_enable_featured_collection_hierarchy'}">{lang code='option_enable_featured_collection_hierarchy'}</label>
+                                            </div>
+                                            <div class="col-md-2 row-size no_padding">
+                                                <input value="yes" name="enable_featured_collection_hierarchy" id="enable_featured_collection_hierarchy" {if $row.enable_featured_collection_hierarchy=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+                                                <span class="lbl"></span>
+                                            </div>
+                                        </div>
+                                        <hr/>
+                                        <div class="row">
                                             <div class="col-md-8">
                                                 <label class="nowrap" for="homepage_collection_video_style" title="{lang code='option_homepage_collection_video_style'}">{lang code='option_homepage_collection_video_style'}</label>
                                             </div>
@@ -2167,7 +2177,16 @@
                                     <input value="yes" name="comment_rating" id="comment_rating" {if $row.comment_rating=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
                                     <span class="lbl"></span>
                                 </div>
-
+                            </div>
+                            <hr/>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <label class="nowrap" for="own_comment_rating" title="{lang('option_enable_own_comment_rating')}">{lang('option_enable_own_comment_rating')}</label>
+                                </div>
+                                <div class="col-md-2 row-size">
+                                    <input value="yes" name="own_comment_rating" id="own_comment_rating" {if $row.own_comment_rating=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+                                    <span class="lbl"></span>
+                                </div>
                             </div>
                             <hr/>
 
