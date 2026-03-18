@@ -27,7 +27,7 @@ if (!empty($mode)) {
             break;
 
         case 'load_more':
-            $limit = $_POST['limit'];
+            $limit = (int)$_POST['limit'];
             $total = $_POST['total'];
 
             if (empty($limit) || empty($total)) {
@@ -39,7 +39,7 @@ if (!empty($mode)) {
             switch ($inner_mode) {
                 case 'load_more_playlist':
                     $userid = $_POST['cat_id'];
-                    $play_arr = ['userid' => $userid, 'order' => 'date_added DESC', 'limit' => '' . $limit . ',' . $limit];
+                    $play_arr = ['userid' => $userid, 'order' => 'date_added DESC', 'limit' => $limit . ',' . $limit];
                     $results = Playlist::getInstance()->getAll($play_arr);
                     $next_limit = $limit + $limit;
                     $play_arr_next = ['userid' => $userid, 'order' => 'date_added DESC', 'limit' => '' . $next_limit . ',' . $next_limit];
@@ -49,7 +49,6 @@ if (!empty($mode)) {
                     } else {
                         $count_next = count($playlist_next);
                     }
-                    $count_next = (int)$count_next;
                     $total_results = $total;
                     $template_path = 'blocks/playlist/playlist.html';
                     $assigned_variable_smarty = 'playlist';
@@ -82,7 +81,7 @@ if (!empty($mode)) {
             switch ($_POST['type']) {
                 case 'video':
                     $rating = mysql_clean($_POST['rating']) * 2;
-                    $id = mysql_clean($_POST['id']);
+                    $id = (int)$_POST['id'];
                     $result = CBvideo::getInstance()->rate_video($id, $rating);
                     $result['is_rating'] = true;
                     CBvideo::getInstance()->show_video_rating($result);
@@ -159,8 +158,7 @@ if (!empty($mode)) {
                         echo json_encode(getTemplateMsg());
                         break;
                     }
-                    $id = mysql_clean($_POST['id']);
-                    $vdo = CBvideo::getInstance()->get_video($id);
+                    $vdo = CBvideo::getInstance()->get_video($_POST['id']);
                     CBvideo::getInstance()->set_share_email($vdo);
                     CBvideo::getInstance()->action->share_content($vdo['videoid']);
                     break;
@@ -312,12 +310,12 @@ if (!empty($mode)) {
                 e(lang('please_login'));
                 echo json_encode(['msg'=>getTemplateMsg()]);
                 break;
-            } elseif (empty($_POST['userid']) ) {
+            } else if (empty($_POST['userid']) || !is_numeric($_POST['userid']) ) {
                 e(lang('missing_params'));
                 echo json_encode(['msg'=>getTemplateMsg()]);
                 break;
             }
-            $userid = $_POST['userid'];
+            $userid = (int)$_POST['userid'];
             $sub_count = userquery::getInstance()->get_user_subscribers($userid, true);
             echo json_encode(['subscriber_count' => $sub_count]);
             break;
