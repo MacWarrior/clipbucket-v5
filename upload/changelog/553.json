@@ -79,13 +79,13 @@
         ,"Fix tools error handling"
         ,"Fix possible SQL error on video upload"
         ,"Fix thumbs deletion"
-        ,"Fix possible SQL injection (Thanks @drkim-dev !)"
+        ,"Fix possible SQL injection"
         ,"Fix possible duplicate configs"
         ,"Fix SSRF vulnerability (Thanks @Takumi142857 !)"
         ,"Fix Readme"
         ,"Fix docker image <i>(#781, #782)</i>"
         ,"Fix possible issue with failed redis connection"
-        ,"Fix possible RCE (Thanks @drkim-dev !)"
+        ,"Fix possible RCE (Thanks @Takumi142857 & @drkim-dev !)"
       ]
     },
     {
