@@ -116,11 +116,11 @@ class Clipbucket_db
             $redis = CacheRedis::getInstance();
             if ($redis->isEnabled() && $cached_time != -1) {
                 if (System::isInDev()) {
-                    $start = microtime(true);
-                    $return = $redis->get($cached_key . ':' . $query);
-                    $end = microtime(true);
-                    $timetook = $end - $start;
-                    if (!empty($return)) {
+                    if (!empty($return) && !defined('IS_AJAX') && !defined('IS_SSE') && php_sapi_name() != 'cli' ) {
+                        $start = microtime(true);
+                        $return = $redis->get($cached_key . ':' . $query);
+                        $end = microtime(true);
+                        $timetook = $end - $start;
                         devWitch($query, 'select', $timetook, true);
                     }
                 } else {
@@ -243,11 +243,15 @@ class Clipbucket_db
 
         try {
             if (System::isInDev()) {
-                $start = microtime(true);
-                $data = $this->mysqli->query($query);
-                $end = microtime(true);
-                $timetook = $end - $start;
-                devWitch($query, $type, $timetook, false);
+                if (!defined('IS_AJAX') && !defined('IS_SSE') && php_sapi_name() != 'cli') {
+                    $start = microtime(true);
+                    $data = $this->mysqli->query($query);
+                    $end = microtime(true);
+                    $timetook = $end - $start;
+                    devWitch($query, $type, $timetook, false);
+                } else {
+                    $data = $this->mysqli->query($query);
+                }
             } else {
                 $data = $this->mysqli->query($query);
             }
