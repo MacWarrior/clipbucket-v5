@@ -920,6 +920,7 @@ class CBPhotos
      * Setting Email Settings
      *
      * @param $data
+     * @throws Exception
      */
     function set_share_email($data): void
     {
