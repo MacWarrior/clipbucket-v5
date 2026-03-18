@@ -116,15 +116,16 @@ class Clipbucket_db
             $redis = CacheRedis::getInstance();
             if ($redis->isEnabled() && $cached_time != -1) {
                 if (System::isInDev()) {
-                    if (!empty($return)
-                        && (!defined('IS_AJAX') || (defined('IS_AJAX') && !IS_AJAX))
+                    if ((!defined('IS_AJAX') || (defined('IS_AJAX') && !IS_AJAX))
                         && (!defined('IS_SSE') || (defined('IS_SSE') && !IS_SSE))
                         && php_sapi_name() != 'cli') {
                         $start = microtime(true);
                         $return = $redis->get($cached_key . ':' . $query);
                         $end = microtime(true);
                         $timetook = $end - $start;
-                        devWitch($query, 'select', $timetook, true);
+                        if (!empty($return)) {
+                            devWitch($query, 'select', $timetook, true);
+                        }
                     }
                 } else {
                     $return = $redis->get($cached_key . ':' . $query);
