@@ -734,7 +734,6 @@ class AdminTool
                     break;
                 }
 
-                error_log('tasks : ' . memory_get_usage() . ' bytes' . PHP_EOL);
                 foreach ($tasks as $item) {
                     //check if user request stop
                     if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.0', '367')) {
@@ -751,9 +750,7 @@ class AdminTool
                     $result = null;
                     //call function
                     try {
-                        error_log('item before : ' . memory_get_usage() . ' bytes' . PHP_EOL);
                         $result = call_user_func($function, $item);
-                        error_log('item after : ' . memory_get_usage() . ' bytes' . PHP_EOL);
                         if (!empty($result) && is_string($result)) {
                             $this->tasks_processed++;
                             $this->addLog($result);
@@ -1317,14 +1314,12 @@ class AdminTool
      */
     public function getLastHistoNotEndedNotRunning(): array
     {
-        $sql = 'SELECT MAX( CTLD.loop_index) as elements_total, MIN(CTLD.loop_index) as loop_index
+        return Clipbucket_db::getInstance()->_select('SELECT MAX( CTLD.loop_index) as elements_total, MIN(CTLD.loop_index) as loop_index
             FROM ' . tbl('tools_histo') . ' th
             inner join ' . tbl('tools_tasks') . ' CTLD ON th.id_histo = CTLD.id_histo
             where id_tool = ' . (int)$this->id_tool . '
                 and id_tools_histo_status != (SELECT id_tools_histo_status FROM ' . tbl('tools_histo_status') . ' WHERE language_key_title = \'in_progress\')
-            GROUP BY (th.id_histo)';
-        return Clipbucket_db::getInstance()->_select($sql
-        );
+            GROUP BY (th.id_histo)');
     }
 
     /**
