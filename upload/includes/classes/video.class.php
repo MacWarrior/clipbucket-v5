@@ -1957,7 +1957,7 @@ class CBvideo extends CBCategory
         if ($this->video_exists($vid)) {
             $vdetails = $this->get_video($vid);
 
-            if ($this->is_video_owner($vid, user_id()) || User::getInstance()->hasAdminAccess()) {
+            if ($this->is_video_owner($vid, User::getInstance()->getCurrentUserID()) || User::getInstance()->hasAdminAccess()) {
                 #THIS SHOULD NOT BE REMOVED :O
                 //list of functions to perform while deleting a video
                 $del_vid_funcs = $this->video_delete_functions;
