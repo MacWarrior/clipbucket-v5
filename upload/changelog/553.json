@@ -1,6 +1,6 @@
 {
   "version":"5.5.3",
-  "revision":"82",
+  "revision":"83",
   "status":"stable",
   "detail":[
     {
@@ -25,6 +25,7 @@
         ,"Fix possible error when updating after failed update"
         ,"Fix pages creation error"
         ,"Fix video advanced search"
+        ,"Fix typo"
       ]
     },
     {
