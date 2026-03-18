@@ -6,4 +6,5 @@ $vendorDir = dirname(__DIR__);
 $baseDir = dirname($vendorDir);
 
 return array(
+    'Xhgui_' => array($vendorDir . '/perftools/xhgui-collector/src'),
 );

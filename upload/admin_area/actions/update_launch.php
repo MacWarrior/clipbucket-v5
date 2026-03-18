@@ -16,8 +16,7 @@ if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.0', '367')) {
 
 if (($error_init['core'] === false && $_POST['type'] == 'core') || $error_init['db'] === false) {
     echo json_encode([
-        'success'   => false
-        ,
+        'success'   => false,
         'error_msg' => System::isInDev() ? 'Failed to find tools for update' : lang('technical_error')
     ]);
     die();
@@ -28,7 +27,7 @@ sendClientResponseAndContinue(function () {
     Update::getInstance()->displayGlobalSQLUpdateAlert($_POST['type'], true);
     echo json_encode([
         'success' => true,
-        'html'=>ob_get_clean()
+        'html'    => ob_get_clean()
     ]);
 });
 
@@ -38,13 +37,20 @@ if (file_exists(DirPath::get('temp') . 'update_core_tmp.php')) {
 }
 $tmp_file = fopen(DirPath::get('temp') . 'update_core_tmp.php', 'w');
 $data = /** @lang PHP */
-'<?php
+    '<?php
 if (php_sapi_name() != \'cli\') {
     die;
 }
+
+sleep(2);
+
 const THIS_PAGE = \'update_core_tmp\';
 include_once \'' . DirPath::get('includes') . 'admin_config.php' . '\';
 $type = \'' . $_POST['type'] . '\';
+if (!in_array($type, [\'core\', \'db\']])) {
+    echo  \'false\';
+    die;
+}
 $core_tool = AdminTool::getUpdateCoreTool();
 if (empty($core_tool)) {
     echo  \'false\';
@@ -64,22 +70,24 @@ if ($type == \'core\' && $core_tool->isAlreadyLaunch() === false) {
     $core_tool->launch();
 }
 Update::getInstance()->flush();
+sleep(2);
 
 if (($type == \'core\' || $type == \'db\') && AdminTool::getInstance()->isAlreadyLaunch() === false) {
     AdminTool::getInstance()->setToolInProgress();
     AdminTool::getInstance()->launch();
 }
 ?>';
+
 fwrite($tmp_file, $data);
 fclose($tmp_file);
 chdir(DirPath::get('root'));
-$cmd = System::get_binaries('php') . ' -q ' . DirPath::get('temp') . 'update_core_tmp.php';
+$cmd = System::get_binaries('php') . ' -q ' . escapeshellarg(DirPath::get('temp') . 'update_core_tmp.php') . ' ' . escapeshellarg($_POST['type']);
 if (stristr(PHP_OS, 'WIN')) {
     $complement = '';
 } elseif (stristr(PHP_OS, 'darwin')) {
-    $complement = ' </dev/null >/dev/null &';
+    $complement = ' </dev/null >/dev/null 2>&1 &';
 } else { // for ubuntu or linux
-    $complement = ' > /dev/null &';
+    $complement = ' > /dev/null 2>&1 &';
 }
 
 $cmd .= $complement;

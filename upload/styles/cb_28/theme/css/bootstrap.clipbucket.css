@@ -1,0 +1,181 @@
+/*
+ * ClipBucket custom grid extensions
+ * - Only colcb-* classes are provided with breakpoint suffixes by min-width
+ * - Sizes from 1 to 15 with rule: width = calc(100% / N) (and 1 = 100%)
+ */
+
+.colcb-xs-1, .colcb-xs-2, .colcb-xs-3, .colcb-xs-4, .colcb-xs-5, .colcb-xs-6, .colcb-xs-7, .colcb-xs-8, .colcb-xs-9, .colcb-xs-10, .colcb-xs-11, .colcb-xs-12, .colcb-xs-13, .colcb-xs-14, .colcb-xs-15,
+.colcb-768-1, .colcb-768-2, .colcb-768-3, .colcb-768-4, .colcb-768-5, .colcb-768-6, .colcb-768-7, .colcb-768-8, .colcb-768-9, .colcb-768-10, .colcb-768-11, .colcb-768-12, .colcb-768-13, .colcb-768-14, .colcb-768-15,
+.colcb-992-1, .colcb-992-2, .colcb-992-3, .colcb-992-4, .colcb-992-5, .colcb-992-6, .colcb-992-7, .colcb-992-8, .colcb-992-9, .colcb-992-10, .colcb-992-11, .colcb-992-12, .colcb-992-13, .colcb-992-14, .colcb-992-15,
+.colcb-1200-1, .colcb-1200-2, .colcb-1200-3, .colcb-1200-4, .colcb-1200-5, .colcb-1200-6, .colcb-1200-7, .colcb-1200-8, .colcb-1200-9, .colcb-1200-10, .colcb-1200-11, .colcb-1200-12, .colcb-1200-13, .colcb-1200-14, .colcb-1200-15,
+.colcb-1600-1, .colcb-1600-2, .colcb-1600-3, .colcb-1600-4, .colcb-1600-5, .colcb-1600-6, .colcb-1600-7, .colcb-1600-8, .colcb-1600-9, .colcb-1600-10, .colcb-1600-11, .colcb-1600-12, .colcb-1600-13, .colcb-1600-14, .colcb-1600-15,
+.colcb-1920-1, .colcb-1920-2, .colcb-1920-3, .colcb-1920-4, .colcb-1920-5, .colcb-1920-6, .colcb-1920-7, .colcb-1920-8, .colcb-1920-9, .colcb-1920-10, .colcb-1920-11, .colcb-1920-12, .colcb-1920-13, .colcb-1920-14, .colcb-1920-15,
+.colcb-2560-1, .colcb-2560-2, .colcb-2560-3, .colcb-2560-4, .colcb-2560-5, .colcb-2560-6, .colcb-2560-7, .colcb-2560-8, .colcb-2560-9, .colcb-2560-10, .colcb-2560-11, .colcb-2560-12, .colcb-2560-13, .colcb-2560-14, .colcb-2560-15,
+.colcb-3840-1, .colcb-3840-2, .colcb-3840-3, .colcb-3840-4, .colcb-3840-5, .colcb-3840-6, .colcb-3840-7, .colcb-3840-8, .colcb-3840-9, .colcb-3840-10, .colcb-3840-11, .colcb-3840-12, .colcb-3840-13, .colcb-3840-14, .colcb-3840-15,
+.colcb-5120-1, .colcb-5120-2, .colcb-5120-3, .colcb-5120-4, .colcb-5120-5, .colcb-5120-6, .colcb-5120-7, .colcb-5120-8, .colcb-5120-9, .colcb-5120-10, .colcb-5120-11, .colcb-5120-12, .colcb-5120-13, .colcb-5120-14, .colcb-5120-15 {
+    position: relative;
+    min-height: 1px;
+    padding-right: 15px;
+    padding-left: 15px;
+    float: left;
+}
+
+.colcb-xs-1 { width: 100%; }
+.colcb-xs-2 { width: calc(100% / 2); }
+.colcb-xs-3 { width: calc(100% / 3); }
+.colcb-xs-4 { width: calc(100% / 4); }
+.colcb-xs-5 { width: calc(100% / 5); }
+.colcb-xs-6 { width: calc(100% / 6); }
+.colcb-xs-7 { width: calc(100% / 7); }
+.colcb-xs-8 { width: calc(100% / 8); }
+.colcb-xs-9 { width: calc(100% / 9); }
+.colcb-xs-10 { width: calc(100% / 10); }
+.colcb-xs-11 { width: calc(100% / 11); }
+.colcb-xs-12 { width: calc(100% / 12); }
+.colcb-xs-13 { width: calc(100% / 13); }
+.colcb-xs-14 { width: calc(100% / 14); }
+.colcb-xs-15 { width: calc(100% / 15); }
+
+@media (min-width: 768px) {
+    .colcb-768-1 { width: 100%; }
+    .colcb-768-2 { width: calc(100% / 2); }
+    .colcb-768-3 { width: calc(100% / 3); }
+    .colcb-768-4 { width: calc(100% / 4); }
+    .colcb-768-5 { width: calc(100% / 5); }
+    .colcb-768-6 { width: calc(100% / 6); }
+    .colcb-768-7 { width: calc(100% / 7); }
+    .colcb-768-8 { width: calc(100% / 8); }
+    .colcb-768-9 { width: calc(100% / 9); }
+    .colcb-768-10 { width: calc(100% / 10); }
+    .colcb-768-11 { width: calc(100% / 11); }
+    .colcb-768-12 { width: calc(100% / 12); }
+    .colcb-768-13 { width: calc(100% / 13); }
+    .colcb-768-14 { width: calc(100% / 14); }
+    .colcb-768-15 { width: calc(100% / 15); }
+}
+
+@media (min-width: 992px) {
+    .colcb-992-1 { width: 100%; }
+    .colcb-992-2 { width: calc(100% / 2); }
+    .colcb-992-3 { width: calc(100% / 3); }
+    .colcb-992-4 { width: calc(100% / 4); }
+    .colcb-992-5 { width: calc(100% / 5); }
+    .colcb-992-6 { width: calc(100% / 6); }
+    .colcb-992-7 { width: calc(100% / 7); }
+    .colcb-992-8 { width: calc(100% / 8); }
+    .colcb-992-9 { width: calc(100% / 9); }
+    .colcb-992-10 { width: calc(100% / 10); }
+    .colcb-992-11 { width: calc(100% / 11); }
+    .colcb-992-12 { width: calc(100% / 12); }
+    .colcb-992-13 { width: calc(100% / 13); }
+    .colcb-992-14 { width: calc(100% / 14); }
+    .colcb-992-15 { width: calc(100% / 15); }
+}
+
+@media (min-width: 1200px) {
+    .colcb-1200-1 { width: 100%; }
+    .colcb-1200-2 { width: calc(100% / 2); }
+    .colcb-1200-3 { width: calc(100% / 3); }
+    .colcb-1200-4 { width: calc(100% / 4); }
+    .colcb-1200-5 { width: calc(100% / 5); }
+    .colcb-1200-6 { width: calc(100% / 6); }
+    .colcb-1200-7 { width: calc(100% / 7); }
+    .colcb-1200-8 { width: calc(100% / 8); }
+    .colcb-1200-9 { width: calc(100% / 9); }
+    .colcb-1200-10 { width: calc(100% / 10); }
+    .colcb-1200-11 { width: calc(100% / 11); }
+    .colcb-1200-12 { width: calc(100% / 12); }
+    .colcb-1200-13 { width: calc(100% / 13); }
+    .colcb-1200-14 { width: calc(100% / 14); }
+    .colcb-1200-15 { width: calc(100% / 15); }
+}
+
+@media (min-width: 1600px) {
+    .colcb-1600-1 { width: 100%; }
+    .colcb-1600-2 { width: calc(100% / 2); }
+    .colcb-1600-3 { width: calc(100% / 3); }
+    .colcb-1600-4 { width: calc(100% / 4); }
+    .colcb-1600-5 { width: calc(100% / 5); }
+    .colcb-1600-6 { width: calc(100% / 6); }
+    .colcb-1600-7 { width: calc(100% / 7); }
+    .colcb-1600-8 { width: calc(100% / 8); }
+    .colcb-1600-9 { width: calc(100% / 9); }
+    .colcb-1600-10 { width: calc(100% / 10); }
+    .colcb-1600-11 { width: calc(100% / 11); }
+    .colcb-1600-12 { width: calc(100% / 12); }
+    .colcb-1600-13 { width: calc(100% / 13); }
+    .colcb-1600-14 { width: calc(100% / 14); }
+    .colcb-1600-15 { width: calc(100% / 15); }
+}
+
+@media (min-width: 1920px) {
+    .colcb-1920-1 { width: 100%; }
+    .colcb-1920-2 { width: calc(100% / 2); }
+    .colcb-1920-3 { width: calc(100% / 3); }
+    .colcb-1920-4 { width: calc(100% / 4); }
+    .colcb-1920-5 { width: calc(100% / 5); }
+    .colcb-1920-6 { width: calc(100% / 6); }
+    .colcb-1920-7 { width: calc(100% / 7); }
+    .colcb-1920-8 { width: calc(100% / 8); }
+    .colcb-1920-9 { width: calc(100% / 9); }
+    .colcb-1920-10 { width: calc(100% / 10); }
+    .colcb-1920-11 { width: calc(100% / 11); }
+    .colcb-1920-12 { width: calc(100% / 12); }
+    .colcb-1920-13 { width: calc(100% / 13); }
+    .colcb-1920-14 { width: calc(100% / 14); }
+    .colcb-1920-15 { width: calc(100% / 15); }
+}
+
+@media (min-width: 2560px) {
+    .colcb-2560-1 { width: 100%; }
+    .colcb-2560-2 { width: calc(100% / 2); }
+    .colcb-2560-3 { width: calc(100% / 3); }
+    .colcb-2560-4 { width: calc(100% / 4); }
+    .colcb-2560-5 { width: calc(100% / 5); }
+    .colcb-2560-6 { width: calc(100% / 6); }
+    .colcb-2560-7 { width: calc(100% / 7); }
+    .colcb-2560-8 { width: calc(100% / 8); }
+    .colcb-2560-9 { width: calc(100% / 9); }
+    .colcb-2560-10 { width: calc(100% / 10); }
+    .colcb-2560-11 { width: calc(100% / 11); }
+    .colcb-2560-12 { width: calc(100% / 12); }
+    .colcb-2560-13 { width: calc(100% / 13); }
+    .colcb-2560-14 { width: calc(100% / 14); }
+    .colcb-2560-15 { width: calc(100% / 15); }
+}
+
+@media (min-width: 3840px) {
+    .colcb-3840-1 { width: 100%; }
+    .colcb-3840-2 { width: calc(100% / 2); }
+    .colcb-3840-3 { width: calc(100% / 3); }
+    .colcb-3840-4 { width: calc(100% / 4); }
+    .colcb-3840-5 { width: calc(100% / 5); }
+    .colcb-3840-6 { width: calc(100% / 6); }
+    .colcb-3840-7 { width: calc(100% / 7); }
+    .colcb-3840-8 { width: calc(100% / 8); }
+    .colcb-3840-9 { width: calc(100% / 9); }
+    .colcb-3840-10 { width: calc(100% / 10); }
+    .colcb-3840-11 { width: calc(100% / 11); }
+    .colcb-3840-12 { width: calc(100% / 12); }
+    .colcb-3840-13 { width: calc(100% / 13); }
+    .colcb-3840-14 { width: calc(100% / 14); }
+    .colcb-3840-15 { width: calc(100% / 15); }
+}
+
+@media (min-width: 5120px) {
+    .colcb-5120-1 { width: 100%; }
+    .colcb-5120-2 { width: calc(100% / 2); }
+    .colcb-5120-3 { width: calc(100% / 3); }
+    .colcb-5120-4 { width: calc(100% / 4); }
+    .colcb-5120-5 { width: calc(100% / 5); }
+    .colcb-5120-6 { width: calc(100% / 6); }
+    .colcb-5120-7 { width: calc(100% / 7); }
+    .colcb-5120-8 { width: calc(100% / 8); }
+    .colcb-5120-9 { width: calc(100% / 9); }
+    .colcb-5120-10 { width: calc(100% / 10); }
+    .colcb-5120-11 { width: calc(100% / 11); }
+    .colcb-5120-12 { width: calc(100% / 12); }
+    .colcb-5120-13 { width: calc(100% / 13); }
+    .colcb-5120-14 { width: calc(100% / 14); }
+    .colcb-5120-15 { width: calc(100% / 15); }
+}
