@@ -2362,7 +2362,7 @@ class userquery extends CBCategory
             }
             return false;
         }
-        return Clipbucket_db::getInstance()->count(tbl($this->dbtbl['subtbl']), 'subscription_id', ' subscribed_to = ' . $id.' ');
+        return Clipbucket_db::getInstance()->count(tbl($this->dbtbl['subtbl']), 'subscription_id', ' subscribed_to = ' . $id);
     }
 
     /**
