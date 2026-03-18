@@ -233,9 +233,10 @@
                             </div>
                             <hr/>
                             <div class="row">
-                                <div class="col-md-12">
-                                    <label class="nowrap" for="allowed_photo_types" title="Allowed Photo extensions">Allowed Photo extensions</label>
-{*                                    <textarea class="form-control" name="allowed_photo_types" id="allowed_photo_types" cols="45" rows="5">{$row.allowed_photo_types}</textarea>*}
+                                <div class="col-md-4">
+                                    <label class="nowrap" for="list_allowed_photo_types" title="Allowed Photo extensions">Allowed Photo extensions</label>
+                                </div>
+                                <div class="col-md-8">
                                     <ul id="list_allowed_photo_types"></ul>
                                     <input name="allowed_photo_types" id="allowed_photo_types" value="{$row.allowed_photo_types}" type="hidden">
                                 </div>
