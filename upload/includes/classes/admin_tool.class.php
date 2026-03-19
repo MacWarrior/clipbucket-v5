@@ -1958,5 +1958,10 @@ class AdminTool
         generatingMoreThumbs($data, true);
         return true;
     }
+
+    public static function test_get_method()
+    {
+        DiscordLog::sendDump('coucou');
+    }
 }
 
