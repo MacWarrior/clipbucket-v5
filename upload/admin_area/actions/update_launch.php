@@ -47,7 +47,7 @@ sleep(2);
 const THIS_PAGE = \'update_core_tmp\';
 include_once \'' . DirPath::get('includes') . 'admin_config.php' . '\';
 $type = \'' . $_POST['type'] . '\';
-if (!in_array($type, [\'core\', \'db\']])) {
+if (!in_array($type, [\'core\', \'db\'])) {
     echo  \'false\';
     die;
 }
