@@ -1816,4 +1816,8 @@ VALUES ('ongoing_conversion'),
        ('ongoing_tools'),
        ('option_enable_own_comment_rating'),
        ('comment_rate_disabled'),
-       ('you_cant_rate_own_comment');
+       ('you_cant_rate_own_comment'),
+       ('option_photo_thumbs_format'),
+       ('photo_thumbs_format_tips'),
+       ('keep_photo_type'),
+       ('webp');

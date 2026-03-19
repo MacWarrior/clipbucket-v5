@@ -1,6 +1,6 @@
 {
   "version":"5.5.3",
-  "revision":"85",
+  "revision":"86",
   "status":"stable",
   "detail":[
     {
@@ -107,6 +107,7 @@
         "Implement Webp video thumbs"
         ,"Implement Gif image thumbs"
         ,"Implement Remove hard-coded letterboxing / pillarboxing option"
+        ,"Implement Webp photo thumbs"
         ,"Prevent photo thumbs generation when not needed"
         ,"Detect corrupted video files"
         ,"Update video rotation detection (Thanks @McArrow <i>#695</i> !)"

@@ -22,6 +22,9 @@ class PhotoThumbs
         'is_original_size'
     ];
 
+    /**
+     * @throws Exception
+     */
     public static function getAllThumbs(array $params)
     {
         $param_first_only = $params['first_only'] ?? false;
@@ -41,7 +44,7 @@ class PhotoThumbs
             if ($param_get_photo_info) {
                 $select[] = Photo::getInstance()->getTableName() . '.file_directory ';
                 $select[] = Photo::getInstance()->getTableName() . '.filename ';
-                $select[] = Photo::getInstance()->getTableName() . '.ext ';
+                $select[] = self::$tableNameThumb . '.extension AS ext ';
             }
         } else {
             $select[] = 'COUNT(DISTINCT ' . self::$tableNameThumb . '.id_photo_thumb) AS count';
@@ -135,6 +138,7 @@ class PhotoThumbs
                     $thumb_photo_directory = DirPath::getUrl('photos');
                 }
                 break;
+
             case 'filepath':
                 $thumb_photo_directory = $thumb_photo_directory_path;
                 break;
@@ -312,13 +316,22 @@ class PhotoThumbs
         foreach (self::$resolution_setting as $resolution_key => $res) {
             if ($resolution_key == 'original') {
                 $new_thumb_path = $original_photo_path;
+                $final_extension = $mime_type;
             } else {
                 $width = $res['width'] ;
                 if ($width > $original_sizes[0]) {
                     continue;
                 }
-                $new_thumb_path = $thumb_photo_directory . self::getThumbPath($photo['file_directory'], $photo['filename'], $width, $mime_type, Update::getInstance()->getCurrentCoreVersion());
-                PhotoThumbs::CreateThumb($original_photo_path, $new_thumb_path, $width, $mime_type, $original_sizes);
+                $thumb_format = strtolower((string)config('photo_thumbs_format'));
+                $convert_to_webp = ($thumb_format === 'webp' && $mime_type != 'gif');
+                if( $convert_to_webp ){
+                    $final_extension = 'webp';
+                } else {
+                    $final_extension = $mime_type;
+                }
+
+                $new_thumb_path = $thumb_photo_directory . self::getThumbPath($photo['file_directory'], $photo['filename'], $width, $final_extension, Update::getInstance()->getCurrentCoreVersion());
+                PhotoThumbs::CreateThumb($original_photo_path, $new_thumb_path, $width, $final_extension, $original_sizes);
             }
             if (file_exists($new_thumb_path)) {
                 //watermark
@@ -334,7 +347,7 @@ class PhotoThumbs
                 ], [
                     $photo['photo_id'],
                     $res['width'] ?? 0,
-                    $mime_type,
+                    $final_extension,
                     Update::getInstance()->getCurrentCoreVersion(),
                     (int)($resolution_key == 'original')
                 ], ignore: $ignore);
@@ -412,48 +425,60 @@ class PhotoThumbs
                 return;
             }
 
+            $data = file_get_contents($original_file_path);
+            if ($data === false) {
+                throw new Exception(lang('technical_error'));
+            }
+
+            $image = imagecreatefromstring($data);
+            if ($image === false) {
+                throw new Exception(lang('remote_play_invalid_extension'));
+            }
+
+            if (!imageistruecolor($image)) {
+                imagepalettetotruecolor($image);
+            }
+
             $ratio = $org_width / $destination_width;
             $width  = (int) round($org_width / $ratio);
             $height = (int) round($org_height / $ratio);
 
             $image_r = imagecreatetruecolor($width, $height);
 
+            imagealphablending($image, false);
+            imagesavealpha($image, true);
+
+            imagealphablending($image_r, false);
+            imagesavealpha($image_r, true);
+
+            $transparent = imagecolorallocatealpha($image_r, 0, 0, 0, 127);
+            imagefilledrectangle($image_r, 0, 0, $width, $height, $transparent);
+
+            imagecopyresampled(
+                $image_r, $image,
+                0, 0, 0, 0,
+                $width, $height,
+                $org_width, $org_height
+            );
+
             switch ($extension) {
                 case 'jpeg':
-                    $image = imagecreatefromjpeg($original_file_path);
-                    imagecopyresampled($image_r, $image, 0, 0, 0, 0, $width, $height, $org_width, $org_height);
+                case 'jpg':
                     imagejpeg($image_r, $destination_path, 90);
                     break;
 
                 case 'png':
-                    $image = imagecreatefrompng($original_file_path);
-
-                    if (!imageistruecolor($image)) {
-                        imagepalettetotruecolor($image);
-                    }
-
-                    imagealphablending($image, false);
-                    imagesavealpha($image, true);
-
-                    imagealphablending($image_r, false);
-                    imagesavealpha($image_r, true);
-
-                    $transparent = imagecolorallocatealpha($image_r, 0, 0, 0, 127);
-                    imagefilledrectangle($image_r, 0, 0, $width, $height, $transparent);
-
-                    imagecopyresampled(
-                        $image_r, $image,
-                        0, 0, 0, 0,
-                        $width, $height,
-                        $org_width, $org_height
-                    );
-
                     imagepng($image_r, $destination_path, 9);
+                    break;
+
+                case 'webp':
+                    imagewebp($image_r, $destination_path, 90);
                     break;
 
                 default:
                     throw new Exception(lang('remote_play_invalid_extension'));
             }
+
         } catch (Exception $e) {
             e($e->getMessage());
         } finally {
