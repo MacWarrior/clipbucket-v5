@@ -1,6 +1,6 @@
 {
   "version":"5.5.3",
-  "revision":"82",
+  "revision":"85",
   "status":"stable",
   "detail":[
     {
@@ -25,6 +25,7 @@
         ,"Fix possible error when updating after failed update"
         ,"Fix pages creation error"
         ,"Fix video advanced search"
+        ,"Fix typo"
       ]
     },
     {
@@ -87,6 +88,7 @@
         ,"Fix possible issue with failed redis connection"
         ,"Fix possible RCE (Thanks @Takumi142857 & @drkim-dev !)"
         ,"Fix changelog"
+        ,"Fix possible memory overflow while in dev mode"
       ]
     },
     {
@@ -107,6 +109,8 @@
         ,"Implement Remove hard-coded letterboxing / pillarboxing option"
         ,"Prevent photo thumbs generation when not needed"
         ,"Detect corrupted video files"
+        ,"Update video rotation detection (Thanks @McArrow <i>#695</i> !)"
+        ,"Update video thumbs generation"
         ,"Fix conversion logs"
         ,"Fix PNG transparency"
         ,"Fix temp file deletion on conversion failure"
