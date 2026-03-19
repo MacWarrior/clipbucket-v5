@@ -19,9 +19,20 @@ class MWIP extends \Migration
         ]);
 
         self::generateTranslation('unsupported_photo_type', [
-            'fr'=>'%s n\'est pas supporté pour le chargement de photo',
-            'en'=>'%s is not supported for uploading'
+            'fr' => '%s n\'est pas supporté pour le chargement de photo',
+            'en' => '%s is not supported for uploading'
         ]);
+
+        self::generateTranslation('allowed_photo_extensions', [
+            'fr' => 'Extensions de photo autorisées',
+            'en' => 'Allowed photo extensions'
+        ]);
+
+        self::generateTranslation('usr_background_update', [
+            'fr'=>'La couverture a été mise à jour',
+            'en'=>'Background have been updated'
+        ]);
+
         self::generateTranslation('file_size_exceeds', [
             'fr' => 'La taille du fichier dépasse \'%s mbs\''
         ]);
@@ -36,12 +47,21 @@ class MWIP extends \Migration
             'pt-BR' => 'Tamanho do arquivo excede \'%s mbs\'',
         ]);
 
-        $allowed_types = array_intersect(explode( ',', config('allowed_photo_types')), Photo::getAllowedUploadTypes());
+        $allowed_types = array_intersect(explode(',', config('allowed_photo_types')), Photo::getAllowedUploadTypes());
         if (empty($allowed_types)) {
             $allowed_types = Photo::getAllowedUploadTypes();
         }
         self::updateConfig('allowed_photo_types', implode(',', $allowed_types));
+        self::updateConfig('max_photo_size', config('max_upload_size'));
+        self::generateTranslation('file_width_exceeds', [
+            'fr' => 'La largeur de l’image ne peux dépasser %spx',
+            'en' => 'Image width can’t exceed %spx'
+        ]);
 
-
+        self::updateTranslationKey('usr_avatar_bg_update', 'usr_avatar_update');
+        self::updateTranslation('usr_avatar_update', [
+            'fr' => 'L\'avatar a été mis à jour',
+            'en'=> 'User avatar has been updated'
+        ]);
     }
 }

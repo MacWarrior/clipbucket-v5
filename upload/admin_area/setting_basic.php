@@ -3,10 +3,10 @@ const THIS_PAGE = 'basic_settings';
 require_once dirname(__FILE__, 2) . '/includes/admin_config.php';
 
 $permission = 'basic_settings';
-if( !Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '275') ){
+if (!Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '275')) {
     $permission = 'web_config_access';
 }
-User::getInstance()->hasPermissionOrRedirect($permission,true);
+User::getInstance()->hasPermissionOrRedirect($permission, true);
 pages::getInstance()->page_redir();
 
 /* Generating breadcrumb */
@@ -42,166 +42,166 @@ if (isset($_POST['reset_site_favicon'])) {
 
 if (isset($_POST['update'])) {
     $config_booleans = [
-        'seo'
-        , 'videosSection'
-        , 'photosSection'
-        , 'playlistsSection'
-        , 'collectionsSection'
-        , 'channelsSection'
-        , 'enable_advertisement'
-        , 'gravatars'
-        , 'picture_url'
-        , 'picture_upload'
-        , 'background_url'
-        , 'background_upload'
-        , 'background_color'
-        , 'allow_unicode_usernames'
-        , 'allow_username_spaces'
-        , 'feedsSection'
-        , 'video_round_views'
-        , 'anonym_comments'
-        , 'popup_video'
-        , 'enable_country'
-        , 'enable_gender'
-        , 'enable_user_category'
-        , 'enable_rss_feeds'
-        , 'enable_user_firstname_lastname'
-        , 'enable_user_relation_status'
-        , 'enable_user_postcode'
-        , 'enable_user_hometown'
-        , 'enable_user_city'
-        , 'enable_user_education'
-        , 'enable_user_schools'
-        , 'enable_user_occupation'
-        , 'enable_user_compagnies'
-        , 'enable_user_hobbies'
-        , 'enable_user_favorite_movies'
-        , 'enable_user_favorite_music'
-        , 'enable_user_favorite_books'
-        , 'enable_user_website'
-        , 'enable_user_about'
-        , 'enable_user_status'
-        , 'enable_video_social_sharing'
-        , 'enable_video_internal_sharing'
-        , 'enable_video_link_sharing'
-        , 'enable_age_restriction'
-        , 'enable_user_dob_edition'
-        , 'enable_blur_restricted_content'
-        , 'enable_hide_uploader_name'
-        , 'enable_global_age_restriction'
-        , 'enable_quicklist'
-        , 'hide_empty_collection'
-        , 'enable_sitemap'
-        , 'enable_tmdb'
-        , 'tmdb_get_genre'
-        , 'tmdb_get_actors'
-        , 'tmdb_get_producer'
-        , 'tmdb_get_executive_producer'
-        , 'tmdb_get_director'
-        , 'tmdb_get_crew'
-        , 'tmdb_get_poster'
-        , 'tmdb_get_release_date'
-        , 'tmdb_get_title'
-        , 'tmdb_get_description'
-        , 'tmdb_get_backdrop'
-        , 'tmdb_get_age_restriction'
-        , 'enable_video_genre'
-        , 'enable_video_actor'
-        , 'enable_video_producer'
-        , 'enable_video_executive_producer'
-        , 'enable_video_director'
-        , 'enable_video_crew'
-        , 'enable_video_poster'
-        , 'enable_video_backdrop'
-        , 'enable_edit_button'
-        , 'enable_sub_collection'
-        , 'enable_tmdb_mature_content'
-        , 'tmdb_enable_on_front_end'
-        , 'enable_comments_censor'
-        , 'enable_video_description_censor'
-        , 'enable_video_description_link'
-        , 'enable_edit_photo_button'
-        , 'enable_user_profil_censor'
-        , 'enable_comments_video'
-        , 'enable_comments_photo'
-        , 'enable_comments_collection'
-        , 'enable_comments_channel'
-        , 'photo_rating'
-        , 'own_photo_rating'
-        , 'enable_storage_history'
-        , 'enable_storage_history_fo'
-        , 'enable_social_networks_links_footer'
-        , 'enable_social_networks_links_home_sidebar'
-        , 'enable_video_view_history'
-        , 'home_enable_fullwidth'
-        , 'home_disable_sidebar'
-        , 'home_display_featured_collections'
-        , 'home_display_recent_videos'
-        , 'enable_access_view_video_history'
-        , 'enable_visual_editor_comments'
-        , 'display_featured_video'
-        , 'enable_collection_internal_sharing'
-        , 'enable_collection_link_sharing'
-        , 'enable_country_video_field'
-        , 'enable_location_video_field'
-        , 'enable_recorded_date_video_field'
-        , 'allow_tag_space'
-        , 'enable_video_thumbs_preview'
-        , 'enable_photo_categories'
-        , 'enable_video_categories'
-        , 'enable_collection_categories'
-        , 'enable_theme_change'
-        , 'enable_channel_slogan'
-        , 'enable_channel_description'
-        , 'enable_channels_slogan_display'
-        , 'enable_user_self_deletion'
-        , 'enable_cookie_banner'
-        , 'enable_public_video_page'
-        , 'can_upload_subtitles'
-        , 'enable_anonymous_stats'
-        , 'enable_video_embed_players'
-        , 'videos_enable_fullwidth'
-        , 'collections_enable_fullwidth'
-        , 'collection_enable_fullwidth'
-        , 'autoplay_video'
-        , 'autoplay_embed'
-        , 'contextual_menu_disabled'
-        , 'control_bar_logo'
-        , 'enable_360_video'
-        , 'chromecast'
-        , 'player_thumbnails'
-        , 'enable_allow_alias_email'
-        , 'enable_favorite_icon'
-        , 'keep_ratio_photo'
-        , 'video_rating'
-        , 'own_video_rating'
-        , 'comment_rating'
-        , 'collection_rating'
-        , 'own_collection_rating'
-        , 'channel_rating'
-        , 'own_channel_rating'
-        , 'random_video_order'
-        , 'enable_favorite_icon_photo'
-        , 'enable_favorite_icon_collection'
-        , 'own_comment_rating'
+        'seo',
+        'videosSection',
+        'photosSection',
+        'playlistsSection',
+        'collectionsSection',
+        'channelsSection',
+        'enable_advertisement',
+        'gravatars',
+        'picture_url',
+        'picture_upload',
+        'background_url',
+        'background_upload',
+        'background_color',
+        'allow_unicode_usernames',
+        'allow_username_spaces',
+        'feedsSection',
+        'video_round_views',
+        'anonym_comments',
+        'popup_video',
+        'enable_country',
+        'enable_gender',
+        'enable_user_category',
+        'enable_rss_feeds',
+        'enable_user_firstname_lastname',
+        'enable_user_relation_status',
+        'enable_user_postcode',
+        'enable_user_hometown',
+        'enable_user_city',
+        'enable_user_education',
+        'enable_user_schools',
+        'enable_user_occupation',
+        'enable_user_compagnies',
+        'enable_user_hobbies',
+        'enable_user_favorite_movies',
+        'enable_user_favorite_music',
+        'enable_user_favorite_books',
+        'enable_user_website',
+        'enable_user_about',
+        'enable_user_status',
+        'enable_video_social_sharing',
+        'enable_video_internal_sharing',
+        'enable_video_link_sharing',
+        'enable_age_restriction',
+        'enable_user_dob_edition',
+        'enable_blur_restricted_content',
+        'enable_hide_uploader_name',
+        'enable_global_age_restriction',
+        'enable_quicklist',
+        'hide_empty_collection',
+        'enable_sitemap',
+        'enable_tmdb',
+        'tmdb_get_genre',
+        'tmdb_get_actors',
+        'tmdb_get_producer',
+        'tmdb_get_executive_producer',
+        'tmdb_get_director',
+        'tmdb_get_crew',
+        'tmdb_get_poster',
+        'tmdb_get_release_date',
+        'tmdb_get_title',
+        'tmdb_get_description',
+        'tmdb_get_backdrop',
+        'tmdb_get_age_restriction',
+        'enable_video_genre',
+        'enable_video_actor',
+        'enable_video_producer',
+        'enable_video_executive_producer',
+        'enable_video_director',
+        'enable_video_crew',
+        'enable_video_poster',
+        'enable_video_backdrop',
+        'enable_edit_button',
+        'enable_sub_collection',
+        'enable_tmdb_mature_content',
+        'tmdb_enable_on_front_end',
+        'enable_comments_censor',
+        'enable_video_description_censor',
+        'enable_video_description_link',
+        'enable_edit_photo_button',
+        'enable_user_profil_censor',
+        'enable_comments_video',
+        'enable_comments_photo',
+        'enable_comments_collection',
+        'enable_comments_channel',
+        'photo_rating',
+        'own_photo_rating',
+        'enable_storage_history',
+        'enable_storage_history_fo',
+        'enable_social_networks_links_footer',
+        'enable_social_networks_links_home_sidebar',
+        'enable_video_view_history',
+        'home_enable_fullwidth',
+        'home_disable_sidebar',
+        'home_display_featured_collections',
+        'home_display_recent_videos',
+        'enable_access_view_video_history',
+        'enable_visual_editor_comments',
+        'display_featured_video',
+        'enable_collection_internal_sharing',
+        'enable_collection_link_sharing',
+        'enable_country_video_field',
+        'enable_location_video_field',
+        'enable_recorded_date_video_field',
+        'allow_tag_space',
+        'enable_video_thumbs_preview',
+        'enable_photo_categories',
+        'enable_video_categories',
+        'enable_collection_categories',
+        'enable_theme_change',
+        'enable_channel_slogan',
+        'enable_channel_description',
+        'enable_channels_slogan_display',
+        'enable_user_self_deletion',
+        'enable_cookie_banner',
+        'enable_public_video_page',
+        'can_upload_subtitles',
+        'enable_anonymous_stats',
+        'enable_video_embed_players',
+        'videos_enable_fullwidth',
+        'collections_enable_fullwidth',
+        'collection_enable_fullwidth',
+        'autoplay_video',
+        'autoplay_embed',
+        'contextual_menu_disabled',
+        'control_bar_logo',
+        'enable_360_video',
+        'chromecast',
+        'player_thumbnails',
+        'enable_allow_alias_email',
+        'enable_favorite_icon',
+        'keep_ratio_photo',
+        'video_rating',
+        'own_video_rating',
+        'comment_rating',
+        'collection_rating',
+        'own_collection_rating',
+        'channel_rating',
+        'own_channel_rating',
+        'random_video_order',
+        'enable_favorite_icon_photo',
+        'enable_favorite_icon_collection',
+        'own_comment_rating'
     ];
 
     $config_booleans_to_refactor = [
-        'closed'
-        , 'enable_update_checker'
-        , 'allow_language_change'
-        , 'allow_registeration'
-        , 'pick_geo_country'
-        , 'email_verification'
-        , 'use_subs'
-        , 'video_embed'
-        , 'video_download'
-        , 'bits_color_warning'
-        , 'photo_crop'
-        , 'show_collapsed_checkboxes'
-        , 'activation'
-        , 'photo_activation'
-        , 'player_subtitles'
+        'closed',
+        'enable_update_checker',
+        'allow_language_change',
+        'allow_registeration',
+        'pick_geo_country',
+        'email_verification',
+        'use_subs',
+        'video_embed',
+        'video_download',
+        'bits_color_warning',
+        'photo_crop',
+        'show_collapsed_checkboxes',
+        'activation',
+        'photo_activation',
+        'player_subtitles'
     ];
 
     $rows = [
@@ -520,16 +520,16 @@ if (isset($_POST['update'])) {
     foreach ($rows as $field) {
         $value = ($_POST[$field]);
         if (in_array($field, $num_array)) {
-            if ($field == 'min_age_reg' && ($value > 99 || $value <= 0 || !is_numeric($value) )) {
+            if ($field == 'min_age_reg' && ($value > 99 || $value <= 0 || !is_numeric($value))) {
                 e(lang('error_age_restriction_save'));
                 continue;
             }
-            if (($value <= 0 || !is_numeric($value)) && !in_array($field, ['video_categories', 'max_collection_categories', 'max_photo_categories']) ) {
+            if (($value <= 0 || !is_numeric($value)) && !in_array($field, ['video_categories', 'max_collection_categories', 'max_photo_categories'])) {
                 $value = 1;
             }
         }
 
-        if ($field=='date_format' && !validatePHPDateFormat($value)) {
+        if ($field == 'date_format' && !validatePHPDateFormat($value)) {
             e(lang('invalid_date_format'));
             continue;
         }
@@ -545,22 +545,22 @@ if (isset($_POST['update'])) {
         }
 
         if (!isset(myquery::getInstance()->Get_Website_Details()[$field])) {
-            if( !$has_missing_config ){
-                e(lang('error_missing_config_please_use_tool', DirPath::getUrl('admin_area') . 'admin_tool.php?code_tool=install_missing_config'),'w',false);
+            if (!$has_missing_config) {
+                e(lang('error_missing_config_please_use_tool', DirPath::getUrl('admin_area') . 'admin_tool.php?code_tool=install_missing_config'), 'w', false);
                 $has_missing_config = true;
             }
-            if( System::isInDev() ){
-                $tmp_text = 'Missing config: '.$field;
+            if (System::isInDev()) {
+                $tmp_text = 'Missing config: ' . $field;
                 error_log($tmp_text);
                 DiscordLog::sendDump($tmp_text);
             }
             continue;
         }
 
-        if( !is_null($value) ){
+        if (!is_null($value)) {
             myquery::getInstance()->Set_Website_Details($field, $value);
         } else {
-            DiscordLog::sendDump('Missing value for config: '.$field);
+            DiscordLog::sendDump('Missing value for config: ' . $field);
         }
     }
 
@@ -572,7 +572,7 @@ if (isset($_POST['update'])) {
         // function used to upload site logo.
         upload_image('favicon');
     }
-    if( !empty($_FILES['upload_player-logo']['name']) ){
+    if (!empty($_FILES['upload_player-logo']['name'])) {
         upload_image('player-logo');
     }
 
@@ -597,7 +597,7 @@ $filepath_custom_css = DirPath::get('files') . 'custom.css';
 assign('custom_css', $_POST['custom_css'] ?? file_get_contents($filepath_custom_css));
 
 if (!empty($_POST)) {
-    if( !empty($_POST['custom_css']) ){
+    if (!empty($_POST['custom_css'])) {
         if (is_writable(DirPath::get('files'))) {
             file_put_contents($filepath_custom_css, $_POST['custom_css']);
         } else {
@@ -607,7 +607,6 @@ if (!empty($_POST)) {
         unlink($filepath_custom_css);
     }
 }
-
 
 $min_suffixe = System::isInDev() ? '' : '.min';
 ClipBucket::getInstance()->addAdminJS([

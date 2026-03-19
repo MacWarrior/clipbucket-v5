@@ -135,22 +135,32 @@ class Photo extends Objects
             return self::$allowed_photo_types[$type_output];
         }
         $allowed_photo_types = explode(',', config('allowed_photo_types'));
-        $have_jpeg = array_search('jpeg', $allowed_photo_types) !== false;
-        $have_jpg = array_search('jpg', $allowed_photo_types) !== false;
-        if (($have_jpeg || $have_jpg) && !($have_jpeg && $have_jpg)) {
-            if ($have_jpeg) {
-                $allowed_photo_types[] = 'jpg';
-            }
-            if ($have_jpg) {
-                $allowed_photo_types[] = 'jpeg';
-            }
-        }
+        $allowed_photo_types = self::completeAllowedPhotoExtension($allowed_photo_types);
         self::$allowed_photo_types[$type_output]= $allowed_photo_types;
         if ($type_output == 'array') {
             return $allowed_photo_types;
         } else {
             return implode(', ', $allowed_photo_types);
         }
+    }
+
+    /**
+     * @param $types
+     * @return array
+     */
+    public static function completeAllowedPhotoExtension($types): array
+    {
+        $have_jpeg = in_array('jpeg', $types);
+        $have_jpg = in_array('jpg', $types);
+        if (($have_jpeg || $have_jpg) && !($have_jpeg && $have_jpg)) {
+            if ($have_jpeg) {
+                $types[] = 'jpg';
+            }
+            if ($have_jpg) {
+                $types[] = 'jpeg';
+            }
+        }
+        return $types;
     }
 
     public function getTableName(): string

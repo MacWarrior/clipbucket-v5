@@ -189,7 +189,7 @@ if (isset($_POST['update'])) {
         }
 
         if ($field == 'allowed_photo_types') {
-            $types = Photo::getAllowedPhotoExtension();
+            $types = Photo::completeAllowedPhotoExtension(explode(',', $value));
             $type_ok = true;
             foreach ($types as $type) {
                 if (!in_array($type, Photo::getAllowedUploadTypes())) {
@@ -198,6 +198,7 @@ if (isset($_POST['update'])) {
                 }
             }
             if (!$type_ok) {
+                $value = null;
                 continue;
             }
         }

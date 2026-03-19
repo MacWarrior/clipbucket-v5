@@ -823,12 +823,12 @@ class Upload
         switch ($type) {
             case 'avatar':
                 if ($av_details[0] > config('max_profile_pic_width')) {
-                    e(lang('File width exeeds') . ' ' . config('max_profile_pic_width') . 'px');
+                    e(lang('file_width_exceeds', config('max_profile_pic_width')));
                     return false;
                 }
             case 'background':
                 if ($av_details[0] > config('max_bg_width')) {
-                    e(lang('File width exeeds') . ' ' . config('max_bg_width') . 'px');
+                    e(lang('file_width_exceeds', config('max_bg_width')));
                     return false;
                 }
         }

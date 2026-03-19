@@ -160,9 +160,6 @@ $(document).ready(function(){
                     data : data,
                     dataType: "JSON",
                     success: function (msg) {
-                        debugger
-                        console.log('msg')
-                        console.log(msg)
 
                         $("#uploadMessage").removeClass("hidden");
                         if (msg.error) {
@@ -343,8 +340,6 @@ $(document).ready(function(){
             },
             dataType: "JSON",
             success: function(msg){
-                debugger;
-                console.log(msg)
                 if( msg.error ){
                     $("#uploadMessage").html(msg.error).attr("class", "alert alert-danger container");
                 } else {
@@ -377,7 +372,6 @@ $(document).ready(function(){
 
     uploader.bind('error', function(up, err) {
         $("#uploadMessage").removeClass("hidden");
-        debugger;
         if(err){
             $("#uploadMessage").html(err.message).attr("class", "alert alert-danger container");
         }

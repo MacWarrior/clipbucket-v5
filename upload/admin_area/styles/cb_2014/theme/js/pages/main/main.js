@@ -292,6 +292,4 @@ $(document).ready(function () {
         }
     });
 
-    init_tags('allowed_photo_types', available_tags_photo_types, '#list_allowed_photo_types');
-
 });

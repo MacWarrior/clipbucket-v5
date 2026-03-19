@@ -234,7 +234,7 @@
                             <hr/>
                             <div class="row">
                                 <div class="col-md-4">
-                                    <label class="nowrap" for="list_allowed_photo_types" title="Allowed Photo extensions">Allowed Photo extensions</label>
+                                    <label class="nowrap" for="list_allowed_photo_types" title="Allowed Photo extensions">{lang('allowed_photo_extensions')}Allowed Photo extensions</label>
                                 </div>
                                 <div class="col-md-8">
                                     <ul id="list_allowed_photo_types"></ul>
@@ -1229,4 +1229,8 @@
     var lang=[];
     lang['at_least_one_resolution'] = '{lang("at_least_one_resolution")}';
     let available_tags_photo_types = JSON.parse('{$available_tags_photo_types|json_encode|escape:'javascript'}');
+    $(function () {
+        init_tags('allowed_photo_types', available_tags_photo_types, '#list_allowed_photo_types');
+    });
+
 </script>
