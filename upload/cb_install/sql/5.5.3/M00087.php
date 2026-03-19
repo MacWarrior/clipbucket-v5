@@ -10,6 +10,6 @@ class M00087 extends \Migration
      */
     public function start()
     {
-        \AdminTool::test_get_method2();
+        \AdminTool::test_get_method3();
     }
 }
