@@ -1959,7 +1959,7 @@ class AdminTool
         return true;
     }
 
-    public static function test_get_method1()
+    public static function test_get_method2()
     {
         DiscordLog::sendDump('coucou');
     }

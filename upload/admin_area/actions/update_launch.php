@@ -82,7 +82,7 @@ if ($type == \'core\' && $core_tool->isAlreadyLaunch() === false) {
 }
 Update::getInstance()->flush();
 
-if ( $type == \'db\') && AdminTool::getInstance()->isAlreadyLaunch() === false) {
+if ( $type == \'db\' && AdminTool::getInstance()->isAlreadyLaunch() === false) {
     AdminTool::getInstance()->setToolInProgress();
     AdminTool::getInstance()->launch();
 }
