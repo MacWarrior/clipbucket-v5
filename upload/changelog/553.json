@@ -1,6 +1,6 @@
 {
   "version":"5.5.3",
-  "revision":"83",
+  "revision":"84",
   "status":"stable",
   "detail":[
     {
@@ -88,6 +88,7 @@
         ,"Fix possible issue with failed redis connection"
         ,"Fix possible RCE (Thanks @Takumi142857 & @drkim-dev !)"
         ,"Fix changelog"
+        ,"Fix possible memory overflow while in dev mode"
       ]
     },
     {
