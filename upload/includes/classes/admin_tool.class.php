@@ -889,12 +889,14 @@ class AdminTool
      */
     public function recreateThumb(): void
     {
-        $photos = Photo::getInstance()->getAll();
+        $photos = Photo::getInstance()->getAll([
+            'show_unlisted'=>true
+        ]);
         if (empty($photos)) {
             $photos = [];
         }
-        $this->tasks = array_column($photos, 'photo_id');
-        $this->executeTool('PhotoThumb::generatePhoto');
+        $this->insertTaskData(array_column($photos, 'photo_id'));
+        $this->executeTool('PhotoThumbs::generatePhoto');
     }
 
     /**
