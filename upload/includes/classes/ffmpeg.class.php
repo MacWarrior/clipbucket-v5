@@ -101,7 +101,21 @@ class FFMpeg
         $info['audio_bitrate'] = (int)$audio['bit_rate'];
         $info['audio_rate'] = (int)$audio['sample_rate'];
         $info['audio_channels'] = (float)$audio['channels'];
-        $info['rotation'] = (float)$video['tags']['rotate'];
+
+        if (isset($video['side_data_list'])) {
+            DiscordLog::sendDump($video['side_data_list']);
+            foreach ($video['side_data_list'] as $side_data) {
+                if(
+                    isset($side_data['side_data_type'], $side_data['rotation'])
+                    && $side_data['side_data_type'] === 'Display Matrix'
+                ) {
+                    $info['rotation'] = (float)$side_data['rotation'];
+                }
+            }
+        } elseif (isset($video['tags']['rotate'])) {
+            DiscordLog::sendDump('Old rotate : ' . $video['tags']['rotate']);
+            $info['rotation'] = (float)$video['tags']['rotate'];
+        }
 
         if (!$info['duration']) {
             $CMD = config('media_info') . ' \'--Inform=General;%Duration%\' \'' . $file_path . '\' 2>&1';
@@ -1004,25 +1018,20 @@ class FFMpeg
             $params['output_format'] = 'webp';
         }
 
-        $filter = '';
+        $vf = '';
         if( $params['size_tag'] != 'original' ){
             $color = self::convertHexToFFmpeg(config('thumb_background_color'));
             $width = $params['width'];
             $height = $params['height'];
-            $filter .= 'scale=\'if(gt(a,' . $width . '/' . $height . '),' . $width . ',-1)\':\'if(gt(a,' . $width . '/' . $height . '),-1,' . $height . ')\',pad=' . $width . ':' . $height . ':(' . $width . '-iw)/2:(' . $height . '-ih)/2:' . $color;
+            $vf = ' -vf "scale=\'if(gt(a,' . $width . '/' . $height . '),' . $width . ',-1)\':\'if(gt(a,' . $width . '/' . $height . '),-1,' . $height . ')\',pad=' . $width . ':' . $height . ':(' . $width . '-iw)/2:(' . $height . '-ih)/2:' . $color . '"';
         }
 
         $codecOptions = '-c:v libwebp';
         if( $params['output_format'] == 'jpg' ){
-            $codecOptions = '-c:v mjpeg';
+            $codecOptions = '-c:v mjpeg -q:v 2';
         }
 
-        $vf = '';
-        if ($filter !== '') {
-            $vf = ' -vf "' . $filter . '"';
-        }
-
-        $command = config('ffmpegpath') . ' -ss ' . $params['timecode'] . ' -i ' . $params['input_path'] . ' -pix_fmt yuvj422p -an -r 1 ' . $vf . ' ' . $codecOptions . ' -y -f image2 -vframes 1 ' . $params['output_path'] . ' 2>&1';
+        $command = config('ffmpegpath') . ' -ss ' . $params['timecode'] . ' -i ' . $params['input_path'] . ' -an -pix_fmt yuvj422p' . $vf . ' ' . $codecOptions . ' -y -frames:v 1 ' . $params['output_path'] . ' 2>&1';
 
         return [
             'command' => $command

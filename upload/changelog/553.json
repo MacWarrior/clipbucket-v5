@@ -1,6 +1,6 @@
 {
   "version":"5.5.3",
-  "revision":"84",
+  "revision":"87",
   "status":"stable",
   "detail":[
     {
@@ -99,6 +99,7 @@
         ,"Fix possible PHP error during update"
         ,"Fix old thumbs migration"
         ,"Fix false error alert on update"
+        ,"Fix syntax error"
       ]
     },
     {
@@ -107,8 +108,11 @@
         "Implement Webp video thumbs"
         ,"Implement Gif image thumbs"
         ,"Implement Remove hard-coded letterboxing / pillarboxing option"
+        ,"Implement Webp photo thumbs"
         ,"Prevent photo thumbs generation when not needed"
         ,"Detect corrupted video files"
+        ,"Update video rotation detection (Thanks @McArrow <i>#695</i> !)"
+        ,"Update video thumbs generation"
         ,"Fix conversion logs"
         ,"Fix PNG transparency"
         ,"Fix temp file deletion on conversion failure"
