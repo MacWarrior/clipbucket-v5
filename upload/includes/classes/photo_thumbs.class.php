@@ -786,4 +786,19 @@ class PhotoThumbs
         //if nothing is found return original
         return ['width' => 'original'];
     }
+
+    /**
+     * @param $photo_id
+     * @return void
+     * @throws Exception
+     */
+    public static function generatePhoto($photo_id): void
+    {
+        $photo = Photo::getInstance()->getOne(['photo_id' => $photo_id]);
+        $thumbs = self::getAllThumbs(['photo_id' => $photo_id, 'get_photo_info'=>true]);
+        foreach ($thumbs as $thumb) {
+            self::deletePhotoThumb($thumb);
+        }
+        self::generateThumbs($photo, true);
+    }
 }
