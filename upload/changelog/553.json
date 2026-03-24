@@ -1,6 +1,6 @@
 {
   "version":"5.5.3",
-  "revision":"88",
+  "revision":"89",
   "status":"stable",
   "detail":[
     {
@@ -27,6 +27,7 @@
         ,"Fix video advanced search"
         ,"Fix typo"
         ,"Fix Recreate photos thumbs tool"
+        ,"Fix Delete orphan files tool"
       ]
     },
     {
