@@ -417,7 +417,7 @@ class AdminTool
             $this->tasks = [];
 
             $this->addLog(lang('loading_file_list'));
-            $photo_extension = ['jpg', 'jpeg', 'png'];
+            $photo_extension = ['jpg', 'jpeg', 'png', 'webp', 'gif'];
             $video_extension = explode(',', config('allowed_video_types'));
             //LOGS
             $logs_path= [
@@ -889,12 +889,14 @@ class AdminTool
      */
     public function recreateThumb(): void
     {
-        $photos = Photo::getInstance()->getAll();
+        $photos = Photo::getInstance()->getAll([
+            'show_unlisted'=>true
+        ]);
         if (empty($photos)) {
             $photos = [];
         }
-        $this->tasks = array_column($photos, 'photo_id');
-        $this->executeTool('PhotoThumb::generatePhoto');
+        $this->insertTaskData(array_column($photos, 'photo_id'));
+        $this->executeTool('PhotoThumbs::generatePhoto');
     }
 
     /**
