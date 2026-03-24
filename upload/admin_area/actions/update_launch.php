@@ -75,7 +75,7 @@ if ($type == \'core\' && $core_tool->isAlreadyLaunch() === false) {
         if (stristr(PHP_OS, \'WIN\')) {
             shell_exec($cmd);
         } else {
-            shell_exec(\'sh -c \' . escapeshellarg(\'sleep 10; \' . $cmd . \' >/dev/null 2>&1 &\'));
+            shell_exec(\'sh \' .\'sleep 10; \' . $cmd . \' >/dev/null 2>&1 &\');
         }
     }
     die;
@@ -94,10 +94,8 @@ chdir(DirPath::get('root'));
 $cmd = System::get_binaries('php') . ' -q ' . escapeshellarg(DirPath::get('temp') . 'update_core_tmp.php') . ' ' . escapeshellarg($_POST['type']);
 if (stristr(PHP_OS, 'WIN')) {
     shell_exec($cmd);
-} elseif (stristr(PHP_OS, 'darwin')) {
-    shell_exec('sh -c ' . escapeshellarg('sleep 10; ' . $cmd . ' >/dev/null 2>&1 &'));
 } else { // for ubuntu or linux
-    shell_exec('sh -c ' . escapeshellarg('sleep 10; ' . $cmd . ' >/dev/null 2>&1 &'));
+    shell_exec('sh ' . 'sleep 10; ' . $cmd . ' >/dev/null 2>&1 &');
 }
 
 die;
