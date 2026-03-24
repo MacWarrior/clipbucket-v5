@@ -1,6 +1,6 @@
 {
   "version":"5.5.3",
-  "revision":"89",
+  "revision":"90",
   "status":"stable",
   "detail":[
     {
@@ -96,7 +96,8 @@
     {
       "title": "Installation & Update",
       "description": [
-        "Fix SQL error on installation"
+        "Generate old posters & backdrops thumbs"
+        ,"Fix SQL error on installation"
         ,"Fix possible git issue with core update"
         ,"Fix possible PHP error during update"
         ,"Fix old thumbs migration"
