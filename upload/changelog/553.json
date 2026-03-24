@@ -1,6 +1,6 @@
 {
   "version":"5.5.3",
-  "revision":"87",
+  "revision":"88",
   "status":"stable",
   "detail":[
     {
@@ -26,6 +26,7 @@
         ,"Fix pages creation error"
         ,"Fix video advanced search"
         ,"Fix typo"
+        ,"Fix Recreate photos thumbs tool"
       ]
     },
     {
