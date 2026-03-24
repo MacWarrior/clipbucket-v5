@@ -463,7 +463,6 @@ class Update
      */
     public function isCoreUpToDate(): bool
     {
-        return false;
         if( !ini_get('allow_url_fopen')
             || !$this->getWebVersion()
             || $this->getWebRevision() === false
