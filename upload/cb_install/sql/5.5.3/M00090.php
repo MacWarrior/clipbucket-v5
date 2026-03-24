@@ -5,9 +5,8 @@ require_once \DirPath::get('classes') . DIRECTORY_SEPARATOR . 'migration' . DIRE
 require_once \DirPath::get('classes') . 'video_thumbs.class.php';
 require_once \DirPath::get('classes') . 'update.class.php';
 
-class MWIP extends \Migration
+class M00090 extends \Migration
 {
-
     /**
      * @throws \Exception
      */
@@ -73,6 +72,5 @@ class MWIP extends \Migration
             }
 
         } while (!empty($videos));
-
     }
 }
