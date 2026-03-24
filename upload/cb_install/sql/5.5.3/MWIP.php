@@ -32,10 +32,8 @@ class MWIP extends \Migration
                 foreach ($videos_images as $videos_image) {
                     if ($videos_image['type'] == 'poster') {
                         $changed_poster = true;
-                    } else {
-                        if ($videos_image['type'] == 'backdrop') {
-                            $changed_backdrop = true;
-                        }
+                    } elseif ($videos_image['type'] == 'backdrop') {
+                        $changed_backdrop = true;
                     }
                     $resolution = $videos_image['is_original_size'] ? 'original' : '';
                     $video_thumbs = new \VideoThumbs($videos_image['videoid']);
@@ -57,7 +55,7 @@ class MWIP extends \Migration
                     \VideoThumbs::uploadThumbs($video['videoid'], [
                         'tmp_name' => [$file],
                         'name'     => [\VideoThumbs::getThumbName($videos_image['type'], $video['file_name'], $videos_image['is_auto'], $videos_image['num'], $resolution, $videos_image['width'], $videos_image['height'], $extension, \Update::getInstance()->getCurrentCoreVersion())]
-                    ], 'poster', true);
+                    ], $videos_image['type'], true);
 
                     //delete old video_image & thumbs
                     $sql = 'DELETE FROM ' . tbl('video_thumb') . ' WHERE id_video_image = ' . (int)$videos_image['id_video_image'];
