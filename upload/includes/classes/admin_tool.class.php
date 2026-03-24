@@ -417,7 +417,7 @@ class AdminTool
             $this->tasks = [];
 
             $this->addLog(lang('loading_file_list'));
-            $photo_extension = ['jpg', 'jpeg', 'png'];
+            $photo_extension = ['jpg', 'jpeg', 'png', 'webp', 'gif'];
             $video_extension = explode(',', config('allowed_video_types'));
             //LOGS
             $logs_path= [
