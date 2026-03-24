@@ -276,15 +276,15 @@ class AdminTool
         //get list of video without thumbs
 
         if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '1')) {
-            $this->tasks = Clipbucket_db::getInstance()->select(tbl('video') . ' AS V 
+            $this->insertTaskData(Clipbucket_db::getInstance()->select(tbl('video') . ' AS V 
                 LEFT JOIN ' . tbl('video_image') . ' AS VT ON V.videoid = VT.videoid AND VT.type = \'thumbnail\' AND is_auto = TRUE', 'V.*'
                 , ' 1 GROUP by videoid HAVING COUNT(VT.videoid) = 0'
-            );
+            ));
         } else {
-            $this->tasks = Clipbucket_db::getInstance()->select(tbl('video') . ' AS V 
+            $this->insertTaskData(Clipbucket_db::getInstance()->select(tbl('video') . ' AS V 
                 LEFT JOIN ' . tbl('video_thumbs') . ' AS VT ON V.videoid = VT.videoid AND VT.type = \'auto\'', 'V.*'
                 , ' 1 GROUP by videoid HAVING COUNT(VT.videoid) = 0'
-            );
+            ));
         }
         $this->executeTool('generatingMoreThumbs');
     }
@@ -1957,6 +1957,11 @@ class AdminTool
     {
         generatingMoreThumbs($data, true);
         return true;
+    }
+
+    public static function cleanUpTask()
+    {
+
     }
 }
 
