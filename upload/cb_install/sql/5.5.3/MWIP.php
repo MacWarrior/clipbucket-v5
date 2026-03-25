@@ -19,8 +19,8 @@ class MWIP extends \Migration
         ]);
 
         self::generateTranslation('unsupported_photo_type', [
-            'fr' => '%s n\'est pas supporté pour le chargement de photo',
-            'en' => '%s is not supported for uploading'
+            'fr' => '%s n\'est pas une extension supportée pour les photos',
+            'en' => '%s is not a supported photo extension'
         ]);
 
         self::generateTranslation('allowed_photo_extensions', [
@@ -38,8 +38,7 @@ class MWIP extends \Migration
         ]);
         self::deleteConfig('max_profile_pic_size');
         self::deleteConfig('max_bg_size');
-
-
+        
         self::updateTranslation('file_size_exceeds', [
             'en'    => 'File size exceeds \'%s mbs\'',
             'de'    => 'Dateigröße überschreitet \'%s mbs\'',
