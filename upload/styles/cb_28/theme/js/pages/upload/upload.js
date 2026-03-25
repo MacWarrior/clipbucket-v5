@@ -166,6 +166,7 @@ $(document).ready(function(){
 
             if( file.percent === 100 ){
                 $(oneUploadForm).find('.saveVideoDetails').removeAttr('disabled');
+                $(oneUploadForm).find('#button_info_tmdb').removeAttr('disabled');
             }
 
             wrapperDiv.appendChild(oneUploadForm);
@@ -271,6 +272,7 @@ $(document).ready(function(){
 
             if( up.files[i].percent < 100 ){
                 $('#tab'+index+' .saveVideoDetails').attr('disabled',true);
+                $('#tab'+index+' #button_info_tmdb').attr('disabled',true);
             }
             index++;
         }
@@ -365,6 +367,7 @@ $(document).ready(function(){
                         $('#tab' + index).find('.player-holder').html(players[video_id]);
                     });
                     $('#tab'+index+' .saveVideoDetails').removeAttr('disabled');
+                    $('#tab'+index+' #button_info_tmdb').removeAttr('disabled');
                     getUpdate();
                 }
             }
@@ -390,6 +393,7 @@ $(document).ready(function(){
                             $('#uploadMessage').html(msg.valid).attr('class', 'alert alert-success container');
 
                             $('#tab'+index+' .saveVideoDetails').attr('disabled',true);
+                            $('#tab'+index+' #button_info_tmdb').attr('disabled',true);
 
                             setTimeout(function(){
                                 $('#uploadMessage').addClass('hidden');
@@ -500,6 +504,9 @@ function getInfoTmdb(videoid, type, video_title, page,sort, sort_order) {
             modal.html(result['template']);
             modal.modal();
             $('.page-content').prepend(result['msg']);
+        },
+        complete: function () {
+            hideSpinner();
         }
     });
 }
@@ -542,6 +549,9 @@ function saveInfoTmdb(tmdb_video_id, type, videoid) {
                 });
             }
         },
+        complete: function () {
+            hideSpinner();
+        }
     });
 }
 

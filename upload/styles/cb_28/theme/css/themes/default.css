@@ -718,7 +718,7 @@ a:hover{
     100% {transform: rotate(0deg);}
 }
 
-.input-group > .input-group-addon {
+.form-group > .input-group > .input-group-addon {
     font-size: 15px;
     line-height: 20px;
     padding: 13px 20px;
