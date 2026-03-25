@@ -1961,9 +1961,42 @@ class AdminTool
         return true;
     }
 
-    public static function cleanUpTask()
+    public function cleanUpTask()
     {
+        if (empty($this->tasks_total)) {
+            $limit = 100;
+            $offset = 0;
+            do {
+                $sql = 'SELECT TH.id_histo
+            FROM ' . tbl('tools') . ' T
+            INNER JOIN ' . tbl('tools_histo') . ' TH ON T.id_tool = TH.id_tool
+            
+            WHERE TH.date_end < (NOW() - INTERVAL 1 MONTH)
+            AND TH.id_histo != (SELECT tools_histo.id_histo
+                FROM ' . tbl('tools_histo') . ' AS tools_histo
+                WHERE tools_histo.id_tool = T.id_tool
+                ORDER BY tools_histo.date_start DESC
+                LIMIT 1
+            )
+            LIMIT ' . $offset . ', ' . $limit;
+                $histo = Clipbucket_db::getInstance()->_select($sql);
+                $this->insertTaskData($histo);
+                $offset += $limit;
+            } while (!empty($histo));
+        }
+        $this->executeTool('AdminTool::deleteHistoAndTask');
+    }
 
+    public static function deleteHistoAndTask($data): bool
+    {
+        $delete_histo = $data['id_histo'];
+        $sql = 'DELETE FROM ' . tbl('tools_tasks'). ' WHERE id_histo = ' . (int)$delete_histo;
+        $success = (bool)Clipbucket_db::getInstance()->execute($sql);
+        $sql = 'DELETE FROM ' . tbl('tools_histo_log'). ' WHERE id_histo = ' . (int)$delete_histo;
+        $success = Clipbucket_db::getInstance()->execute($sql) || $success;
+        $sql = 'DELETE FROM ' . tbl('tools_histo') . ' WHERE id_histo = ' . (int)$delete_histo;
+        $success = Clipbucket_db::getInstance()->execute($sql) || $success;
+        return $success;
     }
 }
 

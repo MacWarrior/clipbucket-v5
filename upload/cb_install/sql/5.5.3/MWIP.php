@@ -10,7 +10,7 @@ class MWIP extends \Migration
      */
     public function start()
     {
-        self::insertTool('task_queue_cleaner', 'AdminTool::cleanUpTask');
+        self::insertTool('task_queue_cleaner', 'AdminTool::cleanUpTask', is_automatable: true);
 
         self::generateTranslation('task_queue_cleaner_label', [
             'fr'=>'Nettoyage des outils d\'administration',
