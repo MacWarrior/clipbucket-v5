@@ -1,6 +1,6 @@
 {
   "version":"5.5.3",
-  "revision":"91",
+  "revision":"92",
   "status":"stable",
   "detail":[
     {
@@ -44,6 +44,7 @@
         ,"Implement comment rating"
         ,"Update media rating"
         ,"Update collection management"
+        ,"Update TMDB import from video upload form"
         ,"Add signup date of birth calendar icon"
         ,"Fix possible JS error on register page"
         ,"Fix possible display issues on login & signup pages"
