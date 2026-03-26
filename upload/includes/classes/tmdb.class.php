@@ -285,8 +285,7 @@ class Tmdb
 
         $video_info = Video::getInstance()->getOne([
             'videoid' => $videoid,
-            'get_detail'=> true,
-            'condition' => ' video.convert_percent > 0 '
+            'get_detail'=> true
         ]);
         if (empty($video_info)) {
             e(lang('class_vdo_del_err'));
