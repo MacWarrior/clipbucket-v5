@@ -285,6 +285,7 @@ class Tmdb
         ]);
         if (empty($video_info)) {
             e(lang('class_vdo_del_err'));
+            return;
         }
 
         switch ($type) {

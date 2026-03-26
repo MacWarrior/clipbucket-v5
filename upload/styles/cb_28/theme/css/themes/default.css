@@ -731,3 +731,16 @@ a:hover{
     color: #999;
     cursor: pointer;
 }
+.modal-body.tmdb .input-group{
+    width:60%;
+    margin-bottom:5px;
+}
+
+.modal-body.tmdb .input-group-addon{
+    cursor: pointer;
+    background-color: #eee;
+}
+
+.modal-body.tmdb .input-group-addon:hover{
+    background-color: #d5d5d5;
+}
