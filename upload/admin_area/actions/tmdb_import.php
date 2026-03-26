@@ -8,8 +8,7 @@ Tmdb::getInstance()->importDataFromTmdb($_POST['videoid'] ?? 0, $_POST['tmdb_vid
 if (errorhandler::getInstance()->get_error()) {
     echo json_encode([
         'success' => false
-        ,
-        'msg'     => getTemplateMsg()
+        ,'msg'    => getTemplateMsg()
     ]);
 } else {
     echo json_encode(['success' => true]);
