@@ -44,7 +44,6 @@
         ,"Implement comment rating"
         ,"Update media rating"
         ,"Update collection management"
-        ,"Update TMDB import from video upload form"
         ,"Add signup date of birth calendar icon"
         ,"Fix possible JS error on register page"
         ,"Fix possible display issues on login & signup pages"
@@ -61,6 +60,7 @@
         ,"Fix photo display"
         ,"Fix possible collection edition fron unauthorized user (Thanks @sy460129 !)"
         ,"Fix featured user channel's link"
+        ,"Fix TMDB import from video upload form"
       ]
     },
     {
