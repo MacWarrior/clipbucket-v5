@@ -1,64 +1,61 @@
 <div class="heading">
-  <h2>{$total} users are online</h2>
+    <h2>{lang('nb_users_are_online', $total)}</h2>
 </div>
 <table class="table table-bordered table-striped">
-  <tr>
-    <td width="150">User</td>
-    <td>Details</td>
-    <td width="150">Access time</td>
-    <td width="100">IP</td>
-  </tr>
-  {if $online_users}
-    {foreach from=$online_users item=user}
-    {$user.agent|get_browser_details:theBrowser}
     <tr>
-      <td width="150">
-        {if $user.username}
-          <a href="{DirPath::getUrl('admin_area')}view_user.php?uid={$user.userid}"><label class="label label-success">{display_clean($user.username)}</label></a>
-          <br>
-          <a href="{DirPath::getUrl('admin_area')}view_user.php?uid={$user.userid}">
-             <img src="{userquery::getInstance()->getUserThumb([],'small', $user.userid)}" class="img-thumbnail oneUserImage"/>
-          </a>
-        {else}
-          {$user.session_string}
-        {/if}
-        <img class="browser {$theBrowser.bname}" src="{$imageurl}/dot.gif" title="{$theBrowser.name} {$theBrowser.version} on {$theBrowser.platform}"/>
-      </td>
-      <td>
-        <div class="dropdown marginBottom">
-          <button id="hideshow" class="btn btn-primary btn-xs drop" value="See Details">See Details..</button>
-        </div>
-
-        <span>
-          <b>Right Now</b> <a href="{$user.current_page}" title="{$user.current_page}">{$user.current_page|truncate:40:'...':false:true}</a>
-          {if $user.referer}
-          <a href="{$user.referer}" title="{$user.referer}" target="_blank">
-            <label class="label label-warning">View Referer</label>
-          </a>
-          {/if}
-        </span>
-
-        <div id="content" style="display:none;">
-          <label class="label label-info">{$user.email}</label>
-          <span class="label label-info">
-            {lang code='viewed'} <b>{$user.last_active|niceTime}</b>
-          </span>
-          <span class="label label-info">
-            Session Started <b>{$user.session_date|niceTime}</b>
-          </span>
-          <span class="label label-danger">
-            <b>{$user.agent}</b>
-          </span>
-        </div>
-      </td>
-      <td width="150">
-        <b>{$user.session_date|niceTime}</b><br>
-        <a href="{$queryString}kick={$user.session_id}" class="kick" title="This will make user force logout"><label class="label label-danger">KICK</label></a>
-      </td>
-      <td width="100"><b>{$user.ip}</b></td>
+        <td>{lang('user')}</td>
+        <td>{lang('details')}</td>
+        <td>{lang('user_date_last_login')}</td>
+        <td>{lang('user_date_last_active')}</td>
+        <td>{lang('ip')}</td>
     </tr>
-    {/foreach}
-  {/if}
+    {if $online_users}
+        {foreach from=$online_users item=user}
+            {$user.agent|get_browser_details:theBrowser}
+            <tr>
+                <td>
+                    {if $user.username}
+                        <a href="{DirPath::getUrl('admin_area')}view_user.php?uid={$user.userid}"><label class="label label-success">{display_clean($user.username)}</label></a>
+                        <br>
+                        <a href="{DirPath::getUrl('admin_area')}view_user.php?uid={$user.userid}">
+                            <img src="{userquery::getInstance()->getUserThumb([],'small', $user.userid)}" class="img-thumbnail oneUserImage"/>
+                        </a>
+                    {else}
+                        {$user.session_string}
+                    {/if}
+                    <img class="browser {$theBrowser.bname}" src="{$imageurl}/dot.gif" title="{$theBrowser.name} {$theBrowser.version} on {$theBrowser.platform}"/>
+                </td>
+                <td>
+                    <div class="dropdown marginBottom">
+                        <button id="hideshow" class="btn btn-primary btn-xs drop" value="{lang('see_detail')}">{lang('see_detail')}..</button>
+                    </div>
+                    <span>
+                        <b>{lang('right_now')}</b> <a href="{$user.current_page}" title="{$user.current_page}">{$user.current_page|truncate:40:'...':false:true}</a>
+                        {if $user.referer}
+                            <a href="{$user.referer}" title="{$user.referer}" target="_blank">
+                                <label class="label label-warning">{lang('view_referer')}</label>
+                            </a>
+                        {/if}
+                    </span>
+
+                    <div id="content" style="display:none;">
+                        <label class="label label-info">{$user.email}</label>
+                        <span class="label label-danger">
+                            <b>{$user.agent}</b>
+                        </span>
+                    </div>
+                </td>
+                <td>
+                    <b>{$user.session_date|niceTime}</b><br>
+                    <a href="{$queryString}kick={$user.session_id}" class="kick" title="{lang('kick_hint')}"><label class="label label-danger">{lang('kick')}</label></a>
+                </td>
+                <td>
+                    <b>{$user.last_active|niceTime}</b>
+                </td>
+                <td><b>{$user.ip}</b></td>
+            </tr>
+        {/foreach}
+    {/if}
 </table>
 
 
