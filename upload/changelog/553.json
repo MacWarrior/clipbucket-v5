@@ -1,6 +1,6 @@
 {
   "version":"5.5.3",
-  "revision":"91",
+  "revision":"92",
   "status":"stable",
   "detail":[
     {
@@ -60,6 +60,7 @@
         ,"Fix photo display"
         ,"Fix possible collection edition fron unauthorized user (Thanks @sy460129 !)"
         ,"Fix featured user channel's link"
+        ,"Fix TMDB import from video upload form"
       ]
     },
     {
