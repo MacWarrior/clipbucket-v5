@@ -1961,7 +1961,11 @@ class AdminTool
         return true;
     }
 
-    public function cleanUpTask()
+    /**
+     * @return void
+     * @throws Exception
+     */
+    public function cleanUpTask(): void
     {
         if (empty($this->tasks_total)) {
             $limit = 100;
@@ -1987,6 +1991,11 @@ class AdminTool
         $this->executeTool('AdminTool::deleteHistoAndTask');
     }
 
+    /**
+     * @param $data
+     * @return bool
+     * @throws Exception
+     */
     public static function deleteHistoAndTask($data): bool
     {
         $delete_histo = $data['id_histo'];
