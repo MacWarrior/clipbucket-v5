@@ -278,12 +278,18 @@ class Tmdb
      */
     public function importDataFromTmdb(int $videoid, int $tmdb_id, $type = 'movie')
     {
+        if( empty($videoid) ){
+            e(lang('class_vdo_del_err'));
+            return;
+        }
+
         $video_info = Video::getInstance()->getOne([
             'videoid' => $videoid,
-            'get_detail'=>true,
+            'get_detail'=> true
         ]);
         if (empty($video_info)) {
             e(lang('class_vdo_del_err'));
+            return;
         }
 
         switch ($type) {
