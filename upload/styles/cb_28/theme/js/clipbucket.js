@@ -626,27 +626,6 @@
 			}
 		};
 
-		/**
-		 * Function used to rate object
-		 */
-		this.rate = function(id,rating,type){
-			var page = baseurl+'actions/ajax.php';
-			$.post(page,
-				{
-					mode : 'rating',
-					id:id,
-					rating:rating,
-					type:type
-				},
-				function(data)
-				{
-					if(!data){
-						alert('No data');
-					} else {
-						$('#rating_container').html(data);
-					}
-				},'text');
-		};
 
 		this.setPageHash = function(Page){
 			// Removing this.baseurl
