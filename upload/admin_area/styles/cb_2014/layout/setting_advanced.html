@@ -96,9 +96,14 @@
                                 </div>
                             </div>
                             <hr/>
-                            <div class="row">
+                            <div class="row {if ($row.maximum_allowed_subtitle_size > config('max_upload_size'))}bg-danger {/if}" >
                                 <div class="col-md-6">
-                                    <label class="nowrap" for="maximum_allowed_subtitle_size" title="{lang('option_maximum_allowed_subtitle_size')}">{lang('option_maximum_allowed_subtitle_size')}</label>
+                                    <label class="nowrap" for="maximum_allowed_subtitle_size" title="{lang('option_maximum_allowed_subtitle_size')}">
+                                        {if ($row.maximum_allowed_subtitle_size > config('max_upload_size'))}
+                                            <img alt='warning' class="pointer" src="{$imageurl}/error.png" title="{lang('s_cant_exceed_s', [lang('option_maximum_allowed_subtitle_size'), lang('max_upload_size')])}"/>
+                                        {/if}
+                                        {lang('option_maximum_allowed_subtitle_size')}
+                                    </label>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="input-group">
@@ -177,9 +182,14 @@
                                 </div>
                             </div>
                             <hr/>
-                            <div class="row">
+                            <div class="row {if ($row.max_photo_size > config('max_upload_size'))}bg-danger {/if}">
                                 <div class="col-md-6">
-                                    <label class="nowrap" for="max_photo_size" title="{lang('maximum_image_size')}">{lang('maximum_image_size')}</label>
+                                    <label class="nowrap" for="max_photo_size" title="{lang('maximum_image_size')}">
+                                        {if ($row.max_photo_size > config('max_upload_size'))}
+                                            <img class="pointer" alt='warning' src="{$imageurl}/error.png" title="{lang('s_cant_exceed_s', [lang('maximum_image_size'), lang('max_upload_size')])}"/>
+                                        {/if}
+                                        {lang('maximum_image_size')}
+                                    </label>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="input-group">
@@ -233,10 +243,8 @@
                             </div>
                             <hr/>
                             <div class="row">
-                                <div class="col-md-4">
-                                    <label class="nowrap" for="list_allowed_photo_types" title="Allowed Photo extensions">{lang('allowed_photo_extensions')}Allowed Photo extensions</label>
-                                </div>
-                                <div class="col-md-8">
+                                <div class="col-md-12">
+                                    <label class="nowrap" for="list_allowed_photo_types" title="{lang('allowed_photo_extensions')}">{lang('allowed_photo_extensions')}</label>
                                     <ul id="list_allowed_photo_types"></ul>
                                     <input name="allowed_photo_types" id="allowed_photo_types" value="{$row.allowed_photo_types}" type="hidden">
                                 </div>
@@ -254,9 +262,9 @@
                             <hr/>
                             <div class="row">
                                 <div class="col-md-6">
-                                    <label class="nowrap" for="max_upload_size" title="Max upload file size">
-                                        <span class="fa fa-question-circle tips" title="Global maximum filesize allowed to be uploaded"></span>
-                                        Max upload file size
+                                    <label class="nowrap" for="max_upload_size" title="{lang('max_upload_size')}">
+                                        <span class="fa fa-question-circle tips" title="{lang('max_upload_size_hint')}"></span>
+                                        {lang('max_upload_size')}
                                     </label>
                                 </div>
                                 <div class="col-md-6">

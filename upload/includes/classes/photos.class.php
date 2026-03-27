@@ -91,6 +91,14 @@ class Photo extends Objects
     }
 
     /**
+     * @return int
+     */
+    public static function getMaxAllowedSize(): int
+    {
+        return min((int)config('max_photo_size'), (int)config('max_upload_size'));
+    }
+
+    /**
      * @param $file
      * @return bool
      */
@@ -1116,7 +1124,7 @@ class CBPhotos
      */
     function set_photo_max_size(): void
     {
-        $adminSize = config('max_photo_size');
+        $adminSize = Photo::getMaxAllowedSize();
         if (!$adminSize) {
             $this->max_file_size = 2 * 1024 * 1024;
         } else {

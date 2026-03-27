@@ -1824,4 +1824,8 @@ VALUES ('ongoing_conversion'),
        ('allowed_photo_extensions'),
        ('usr_background_update'),
        ('maximum_image_size'),
-       ('unsupported_photo_type');
+       ('unsupported_photo_type'),
+       ('file_width_exceeds'),
+       ('s_cant_exceed_s'),
+       ('max_upload_size'),
+       ('max_upload_size_hint');

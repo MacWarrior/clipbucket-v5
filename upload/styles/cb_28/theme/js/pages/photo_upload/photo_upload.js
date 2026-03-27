@@ -9,6 +9,8 @@ $(document).ready(function(){
         file_data_name : 'Filedata',
         chunk_size: chunk_upload ? max_upload_size : false,
         max_file_size : max_file_size,
+        max_file_size_error_message: max_file_size_error_message,
+
         filters: {
             mime_types : [
                 { title : 'Image files', extensions : photo_extensions }

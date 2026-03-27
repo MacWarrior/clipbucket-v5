@@ -1340,6 +1340,14 @@ class Video extends Objects
         return Clipbucket_db::getInstance()->insert(tbl('video_embed'), $fields, $values);
     }
 
+    /**
+     * @return int
+     */
+    public static function getMaxAllowedSubtitleSize():int
+    {
+        return min((int)config('maximum_allowed_subtitle_size'), (int)config('max_upload_size'));
+    }
+
 }
 
 class CBvideo extends CBCategory

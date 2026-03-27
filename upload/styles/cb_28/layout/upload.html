@@ -65,7 +65,7 @@
 </div>
 <script type="text/javascript">
     var uploadScriptPath ='{$uploaderDetails.uploadScriptPath}';
-    var max_upload_size ="{Clipbucket::getInstance()->getMaxUploadSize()}Mb";
+    var max_upload_size ="{config('max_upload_size')}Mb";
     var max_file_size ="{(!empty(config('max_upload_size')|intval)) ? config('max_upload_size') : 1000}Mb";
     var chunk_upload ="{config('enable_chunk_upload') == 'yes'}";
     var video_extensions = '{ClipBucket::getInstance()->get_extensions('video')}';
@@ -79,6 +79,7 @@
     var pourcent_completed = '{$pourcent_completed}';
     var cancel_uploading = '{$cancel_uploading}';
     let text_confirm_sub_file = '{lang code = "confirm_delete_subtitle_file"}';
+    var max_file_size_error_message = "{lang('file_size_exceeds', config('max_photo_size'))}";
     {if $selected_collection}
     var collection_id = '{$selected_collection.collection_id}';
     {/if}

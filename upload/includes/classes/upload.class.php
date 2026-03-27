@@ -816,8 +816,8 @@ class Upload
             return false;
         }
 
-        if ($file['size'] / 1024 / 1024 > config('max_photo_size')) {
-            e(lang('file_size_exceeds', config('max_photo_size')));
+        if ($file['size'] / 1024 / 1024 > Photo::getMaxAllowedSize()) {
+            e(lang('file_size_exceeds', Photo::getMaxAllowedSize()));
             return false;
         }
         switch ($type) {

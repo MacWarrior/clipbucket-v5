@@ -62,5 +62,21 @@ class MWIP extends \Migration
             'fr' => 'L\'avatar a été mis à jour',
             'en'=> 'User avatar has been updated'
         ]);
+
+        self::generateTranslation('s_cant_exceed_s', [
+            'fr'=>'%s ne peut pas dépasser %s',
+            'en'=>'%s can\'t exceed %s'
+        ]);
+
+        self::generateTranslation('max_upload_size', [
+            'fr'=>'Taille maximale de fichier téléversé',
+            'en'=>'Maximum upload file size'
+        ]);
+
+        self::generateTranslation('max_upload_size_hint', [
+            'fr'=>'Taille maximale globale des fichiers autorisés à être téléversés',
+            'en'=>'Global maximum filesize allowed to be uploaded'
+        ]);
+
     }
 }

@@ -3643,8 +3643,8 @@ function save_subtitle_ajax()
     } elseif (!FFMpeg::isValidWebVTTWithFFmpeg($_FILES['subtitles']['tmp_name'], $video['duration'])) {
         //gestion de l'affichage des erreurs dans la fonction
         $success = false;
-    } elseif ($_FILES['subtitles']['size'] >= (1024 * 1024 * config('maximum_allowed_subtitle_size')) ) {
-        e(lang('file_size_exceeded', config('maximum_allowed_subtitle_size') . lang('mb')));
+    } elseif ($_FILES['subtitles']['size'] >= (1024 * 1024 * Video::getMaxAllowedSubtitleSize()) ) {
+        e(lang('file_size_exceeded', Video::getMaxAllowedSubtitleSize() . lang('mb')));
         $success = false;
     } else {
         rename($_FILES['subtitles']['tmp_name'], $temp_file_path);
