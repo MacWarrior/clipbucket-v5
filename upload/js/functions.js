@@ -626,27 +626,6 @@ function checkUncheckAll(theElement) {
     }
 }
 
-/**
- * Function used to rate object
- */
-function rate(id,rating,type)
-{
-    var page = baseurl+'actions/ajax.php';
-    $.post(page, {
-        mode : 'rating',
-        id:id,
-        rating:rating,
-        type:type
-    },
-    function(data) {
-        if(!data){
-            alert('No data');
-        } else {
-            $("#rating_container").html(data);
-        }
-    },'text');
-}
-
 function setPageHash(Page)
 {
     // Removing baseurl
