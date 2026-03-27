@@ -816,72 +816,42 @@ class Upload
             return false;
         }
 
+        if ($file['size'] / 1024 / 1024 > Photo::getMaxAllowedSize()) {
+            e(lang('file_size_exceeds', Photo::getMaxAllowedSize()));
+            return false;
+        }
         switch ($type) {
             case 'avatar':
-                if ($file['size'] / 1024 > config('max_profile_pic_size')) {
-                    e(lang('file_size_exceeds', config('max_profile_pic_size')));
-                    return false;
-                }
-
                 if ($av_details[0] > config('max_profile_pic_width')) {
-                    e(lang('File width exeeds') . ' ' . config('max_profile_pic_width') . 'px');
+                    e(lang('file_width_exceeds', config('max_profile_pic_width')));
                     return false;
                 }
-
-                if (!file_exists($file['tmp_name'])) {
-                    e(lang('class_error_occured'));
-                    return false;
-                }
-
-                $ext = getExtMimeType($file['tmp_name']);
-                if (!VideoThumbs::ValidateImage($file['tmp_name'], $ext)) {
-                    e(lang('Invalid file type'));
-                    @unlink($file['tmp_name']);
-                    return false;
-                }
-                $file_name = $uid . '.' . $ext;
-                $file_path = DirPath::get('avatars') . $file_name;
-                if (move_uploaded_file($file['tmp_name'], $file_path)) {
-                    $small_size = DirPath::get('avatars') . $uid . '-small.' . $ext;
-                    CBPhotos::getInstance()->createImage($file_path, $file_path, $ext, AVATAR_SIZE, AVATAR_SIZE);
-                    CBPhotos::getInstance()->createImage($file_path, $small_size, $ext, AVATAR_SMALL_SIZE, AVATAR_SMALL_SIZE);
-                    return $file_name;
-                }
-                e(lang('class_error_occured'));
-                return false;
-
             case 'background':
-                if ($file['size'] / 1024 > config('max_bg_size')) {
-                    e(lang('file_size_exceeds', config('max_bg_size')));
-                    return false;
-                }
-
                 if ($av_details[0] > config('max_bg_width')) {
-                    e(lang('File width exeeds') . ' ' . config('max_bg_width') . 'px');
+                    e(lang('file_width_exceeds', config('max_bg_width')));
                     return false;
                 }
-
-                if (!file_exists($file['tmp_name'])) {
-                    e(lang('class_error_occured'));
-                    return false;
-                }
-
-                $ext = getExtMimeType($file['tmp_name']);
-                if (!VideoThumbs::ValidateImage($file['tmp_name'], $ext)) {
-                    e(lang('Invalid file type'));
-                    @unlink($file['tmp_name']);
-                    return false;
-                }
-
-                $file_name = $uid . '.' . $ext;
-                $file_path = DirPath::get('backgrounds') . $file_name;
-                if (move_uploaded_file($file['tmp_name'], $file_path)) {
-                    return $file_name;
-                }
-                e(lang('class_error_occured'));
-                return false;
-
         }
+        if (!file_exists($file['tmp_name'])) {
+            e(lang('class_error_occured'));
+            return false;
+        }
+
+        $ext = getExtMimeType($file['tmp_name']);
+        if (!Photo::ValidateImage($file['tmp_name'])) {
+            e(lang('Invalid file type'));
+            @unlink($file['tmp_name']);
+            return false;
+        }
+        $file_name = $uid . '.' . $ext;
+        $file_path = DirPath::get('avatars') . $file_name;
+        if (move_uploaded_file($file['tmp_name'], $file_path)) {
+            $small_size = DirPath::get('avatars') . $uid . '-small.' . $ext;
+            CBPhotos::getInstance()->createImage($file_path, $file_path, $ext, AVATAR_SIZE, AVATAR_SIZE);
+            CBPhotos::getInstance()->createImage($file_path, $small_size, $ext, AVATAR_SMALL_SIZE, AVATAR_SMALL_SIZE);
+            return $file_name;
+        }
+        e(lang('class_error_occured'));
         return false;
     }
 

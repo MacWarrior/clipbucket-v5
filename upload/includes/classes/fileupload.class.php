@@ -13,13 +13,16 @@ class FileUpload
     private $keepExtension = false;
     private $originalFileName = '';
 
+    private $checkMimeType = false;
+
     public function __construct($params){
         $this->fileData            = $params['fileData'];
         $this->mimeType            = $params['mimeType'];
         $this->destinationFilePath = $params['destinationFilePath'];
         $this->maxFileSize         = $params['maxFileSize'];
-        $this->allowedExtensions   = explode(',', strtolower($params['allowedExtensions']));
+        $this->allowedExtensions   = $params['allowedExtensions'];
         $this->keepExtension       = $params['keepExtension'];
+        $this->checkMimeType       = $params['checkMimeType'];
     }
 
     public static function getInstance($params = []): self
@@ -35,11 +38,11 @@ class FileUpload
      */
     private function error($error): void
     {
-        if( file_exists($this->tempFilePath) ){
+        if (file_exists($this->tempFilePath)) {
             unlink($this->tempFilePath);
         }
 
-        if( System::isInDev() ){
+        if (System::isInDev()) {
             error_log($error);
             DiscordLog::sendDump($error);
         } else {
@@ -183,7 +186,7 @@ class FileUpload
      */
     private function manageFile(): void
     {
-        if( config('enable_chunk_upload') == 'yes'){
+        if (config('enable_chunk_upload') == 'yes') {
             $this->manageChunkedFile();
         } else {
             $this->fileExtension = getExt($_FILES[$this->fileData]['name']);
@@ -192,26 +195,37 @@ class FileUpload
             $this->finalFileSize = @filesize($this->tempFilePath);
         }
 
+
         $extension = strtolower($this->fileExtension);
-        if( !in_array($extension, $this->allowedExtensions)) {
-            $this->error('Invalid extension');
+
+        if ($this->checkMimeType) {
+            $extension = getExtMimeType($this->tempFilePath);
+        }
+        if (!in_array($extension, $this->allowedExtensions)) {
+            $this->error(lang('wrong_image_extension',
+                    str_replace(
+                        ',blob', '',
+                        implode(',', $this->allowedExtensions)
+                    )
+                )
+            );
         }
 
         $max_file_size_in_bytes = getBytesFromFileSize($this->maxFileSize . 'M');
         if (empty($this->finalFileSize) || $this->finalFileSize > $max_file_size_in_bytes) {
-            $this->error(lang('file_size_cant_exceeds_x_x', [$this->maxFileSize,lang('mb')]));
+            $this->error(lang('file_size_cant_exceeds_x_x', [$this->maxFileSize, lang('mb')]));
         }
 
-        if( $this->keepExtension ){
+        if ($this->keepExtension) {
             $this->destinationFilePath .= '.' . $this->fileExtension;
         }
 
-        if( config('enable_chunk_upload') == 'yes'){
+        if (config('enable_chunk_upload') == 'yes') {
             $moved = rename($this->tempFilePath, $this->destinationFilePath);
         } else {
             $moved = move_uploaded_file($this->tempFilePath, $this->destinationFilePath);
         }
-        if( !$moved ) {
+        if (!$moved) {
             $this->error('manageFile : can\'t move temp file ' . $this->tempFilePath . ' to ' . $this->destinationFilePath);
         }
     }
