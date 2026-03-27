@@ -1943,7 +1943,7 @@ class AdminTool
                 ]);
                 $offset += $limit;
                 foreach ($videos as $video) {
-                    $this->insertTaskData(['video'=>$video]);
+                    $this->insertTaskData(['videoid'=>$video['videoid']]);
                 }
             } while (!empty($videos));
         }
@@ -1957,7 +1957,7 @@ class AdminTool
      */
     public static function generateVideoThumbs($data): bool
     {
-        generatingMoreThumbs($data, true);
+        generatingMoreThumbs(['videoid'=>$data], true);
         return true;
     }
 
