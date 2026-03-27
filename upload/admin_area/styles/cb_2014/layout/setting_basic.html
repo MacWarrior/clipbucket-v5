@@ -272,12 +272,13 @@
                             <ul class="nav nav-pills nav-stacked interfaces" style="margin:0;">
                                 <li class="active"><a data-toggle="tab" href="interfaces_global">{lang code='global'}</a></li>
                                 <li><a data-toggle="tab" href="interfaces_home">{lang code='menu_home'}</a></li>
+                                <li><a data-toggle="tab" href="interfaces_videos">{lang('videos')|ucfirst}</a></li>
                                 <li><a data-toggle="tab" href="interfaces_video">{lang('video')|ucfirst}</a></li>
+                                <li><a data-toggle="tab" href="interfaces_photos">{lang('photos')|ucfirst}</a></li>
                                 <li><a data-toggle="tab" href="interfaces_photo">{lang('photo')|ucfirst}</a></li>
+                                <li><a data-toggle="tab" href="interfaces_collections">{lang('collections')|ucfirst}</a></li>
                                 <li><a data-toggle="tab" href="interfaces_collection">{lang('collection')|ucfirst}</a></li>
                                 <li><a data-toggle="tab" href="interfaces_channels">{lang('channels')|ucfirst}</a></li>
-                                <li><a data-toggle="tab" href="interfaces_videos">{lang('videos')|ucfirst}</a></li>
-                                <li><a data-toggle="tab" href="interfaces_collections">{lang('collections')|ucfirst}</a></li>
                             </ul>
                         </div>
                         <div class="col-md-10 tab-content">
@@ -719,6 +720,46 @@
                                     </div>
                                 </div>
                             </div>
+                            <div class="tab-pane interfaces" id="interfaces_videos">
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <div class="row">
+                                            <div class="col-md-8">
+                                                <label class="nowrap" for="videos_video_style" title="{lang('option_video_bloc_style')}">{lang('option_video_bloc_style')}</label>
+                                            </div>
+                                            <div class="col-md-4 row-size">
+                                                <select class='form-control' name="videos_video_style" id="videos_video_style">
+                                                    <option value="classic"{if $row.videos_video_style=='classic'} selected{/if}>{lang('classic')}</option>
+                                                    <option value="modern"{if $row.videos_video_style=='modern'} selected{/if}>{lang('modern')}</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <hr/>
+                                        <div class="row">
+                                            <div class="col-md-10">
+                                                <label class="nowrap" for="videos_enable_fullwidth" title="{lang code='option_enable_fullwidth'}">{lang code='option_enable_fullwidth'}</label>
+                                            </div>
+                                            <div class="col-md-2 no_padding">
+                                                <input value="yes" name="videos_enable_fullwidth" id="videos_enable_fullwidth"{if $row.videos_enable_fullwidth=='yes'} checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+                                                <span class="lbl"></span>
+                                            </div>
+                                        </div>
+                                        <hr/>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="row">
+                                            <div class="col-md-10">
+                                                <label class="nowrap" for="random_video_order" title="{lang code='option_random_video_order'}">{lang code='option_random_video_order'}</label>
+                                            </div>
+                                            <div class="col-md-2 row-size">
+                                                <input value="yes" name="random_video_order" id="random_video_order" {if $row.random_video_order=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+                                                <span class="lbl"></span>
+                                            </div>
+                                        </div>
+                                        <hr/>
+                                    </div>
+                                </div>
+                            </div>
                             <div class="tab-pane interfaces" id="interfaces_video">
                                 <div class="row">
                                     <div class="col-md-10">
@@ -735,6 +776,22 @@
                                             </div>
                                             <div class="col-md-2 row-size">
                                                 <input value="yes" name="enable_favorite_icon" id="enable_favorite_icon" {if $row.enable_favorite_icon=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+                                                <span class="lbl"></span>
+                                            </div>
+                                        </div>
+                                        <hr/>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="tab-pane interfaces" id="interfaces_photos">
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <div class="row">
+                                            <div class="col-md-10">
+                                                <label class="nowrap" for="photos_enable_fullwidth" title="{lang code='option_enable_fullwidth'}">{lang code='option_enable_fullwidth'}</label>
+                                            </div>
+                                            <div class="col-md-2 no_padding">
+                                                <input value="yes" name="photos_enable_fullwidth" id="photos_enable_fullwidth"{if $row.photos_enable_fullwidth=='yes'} checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
                                                 <span class="lbl"></span>
                                             </div>
                                         </div>
@@ -802,6 +859,22 @@
                                             </div>
                                             <div class="col-md-2 row-size">
                                                 <input value="yes" name="enable_favorite_icon_photo" id="enable_favorite_icon_photo" {if $row.enable_favorite_icon_photo=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+                                                <span class="lbl"></span>
+                                            </div>
+                                        </div>
+                                        <hr/>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="tab-pane interfaces" id="interfaces_collections">
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <div class="row">
+                                            <div class="col-md-10">
+                                                <label class="nowrap" for="collections_enable_fullwidth" title="{lang code='option_enable_fullwidth'}">{lang code='option_enable_fullwidth'}</label>
+                                            </div>
+                                            <div class="col-md-2 no_padding">
+                                                <input value="yes" name="collections_enable_fullwidth" id="collections_enable_fullwidth"{if $row.collections_enable_fullwidth=='yes'} checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
                                                 <span class="lbl"></span>
                                             </div>
                                         </div>
@@ -881,62 +954,6 @@
                                                     <option value="classic" {if $row.channel_video_style=='classic'}selected{/if}>{lang('classic')}</option>
                                                     <option value="modern" {if $row.channel_video_style=='modern'}selected{/if}>{lang('modern')}</option>
                                                 </select>
-                                            </div>
-                                        </div>
-                                        <hr/>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="tab-pane interfaces" id="interfaces_videos">
-                                <div class="row">
-                                    <div class="col-md-4">
-                                        <div class="row">
-                                            <div class="col-md-8">
-                                                <label class="nowrap" for="videos_video_style" title="{lang('option_video_bloc_style')}">{lang('option_video_bloc_style')}</label>
-                                            </div>
-                                            <div class="col-md-4 row-size">
-                                                <select class='form-control' name="videos_video_style" id="videos_video_style">
-                                                    <option value="classic"{if $row.videos_video_style=='classic'} selected{/if}>{lang('classic')}</option>
-                                                    <option value="modern"{if $row.videos_video_style=='modern'} selected{/if}>{lang('modern')}</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <hr/>
-                                        <div class="row">
-                                            <div class="col-md-10">
-                                                <label class="nowrap" for="videos_enable_fullwidth" title="{lang code='option_enable_fullwidth'}">{lang code='option_enable_fullwidth'}</label>
-                                            </div>
-                                            <div class="col-md-2 no_padding">
-                                                <input value="yes" name="videos_enable_fullwidth" id="videos_enable_fullwidth"{if $row.videos_enable_fullwidth=='yes'} checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
-                                                <span class="lbl"></span>
-                                            </div>
-                                        </div>
-                                        <hr/>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <div class="row">
-                                            <div class="col-md-10">
-                                                <label class="nowrap" for="random_video_order" title="{lang code='option_random_video_order'}">{lang code='option_random_video_order'}</label>
-                                            </div>
-                                            <div class="col-md-2 row-size">
-                                                <input value="yes" name="random_video_order" id="random_video_order" {if $row.random_video_order=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
-                                                <span class="lbl"></span>
-                                            </div>
-                                        </div>
-                                        <hr/>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="tab-pane interfaces" id="interfaces_collections">
-                                <div class="row">
-                                    <div class="col-md-4">
-                                        <div class="row">
-                                            <div class="col-md-10">
-                                                <label class="nowrap" for="collections_enable_fullwidth" title="{lang code='option_enable_fullwidth'}">{lang code='option_enable_fullwidth'}</label>
-                                            </div>
-                                            <div class="col-md-2 no_padding">
-                                                <input value="yes" name="collections_enable_fullwidth" id="collections_enable_fullwidth"{if $row.collections_enable_fullwidth=='yes'} checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
-                                                <span class="lbl"></span>
                                             </div>
                                         </div>
                                         <hr/>
