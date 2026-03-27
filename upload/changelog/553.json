@@ -1,6 +1,6 @@
 {
   "version":"5.5.3",
-  "revision":"92",
+  "revision":"93",
   "status":"stable",
   "detail":[
     {
@@ -42,6 +42,7 @@
         ,"Implement featured collection hierarchy display"
         ,"Implement add new collection button from owned collection"
         ,"Implement comment rating"
+        ,"Implement fullwidth photos page"
         ,"Update media rating"
         ,"Update collection management"
         ,"Add signup date of birth calendar icon"
