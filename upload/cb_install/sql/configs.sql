@@ -124,7 +124,7 @@ INSERT INTO `{tbl_prefix}config` (`configid`, `name`, `value`) VALUES
 	(NULL, 'embed_player_width', '300'),
 	(NULL, 'autoplay_embed', 'no'),
 	(NULL, 'playlistsSection', 'yes'),
-	(NULL, 'photo_main_list', '9'),
+	(NULL, 'photo_main_list', '18'),
 	(NULL, 'photo_home_tabs', '30'),
 	(NULL, 'photo_search_result', '28'),
 	(NULL, 'photo_channel_page', '9'),
@@ -343,7 +343,8 @@ INSERT INTO `{tbl_prefix}config` (`configid`, `name`, `value`) VALUES
     (NULL, 'enable_favorite_icon_collection', 'yes'),
     (NULL, 'enable_favorite_icon_video', 'yes'),
     (NULL, 'own_comment_rating', 'no'),
-    (NULL, 'photo_thumbs_format', 'webp');
+    (NULL, 'photo_thumbs_format', 'webp'),
+    (NULL, 'photos_enable_fullwidth', 'yes');
 
 INSERT INTO `{tbl_prefix}video_resolution` (`title`, `ratio`, `enabled`, `width`, `height`, `video_bitrate`) VALUES
 	('240p', '16/9', 1, 426, 240, 240000),
