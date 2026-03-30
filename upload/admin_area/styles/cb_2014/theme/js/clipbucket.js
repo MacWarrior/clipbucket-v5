@@ -616,27 +616,6 @@
 
 		var comments_voting = 'no';
 
-		/**
-		 * Function used to rate object
-		 */
-		this.rate = function(id,rating,type){
-			let page = baseurl+'ajax.php';
-			$.post(page,
-				{
-					mode : 'rating',
-					id:id,
-					rating:rating,
-					type:type
-				},
-				function(data)
-				{
-					if(!data){
-						alert('No data');
-					} else {
-						$('#rating_container').html(data);
-					}
-				},'text');
-		};
 
 		this.setPageHash = function(Page){
 			// Removing this.baseurl
@@ -755,56 +734,6 @@
 
 			$('<div id="headErr" class="alert_messages_holder" style="display:none;"><div class="alert alert-'+tclass+' alert-messages alert-ajax" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>'+msg+'</div></div>').insertAfter('#header').fadeIn('slow').delay(hideAfter).fadeOut();
 		};
-
-		/**
-		 * New improved version of ClipBucket rating system
-		 * @since: 8th, April 2016 ClipBucket 2.8.1
-		 * @author: Saqib Razzaq
-		 */
-
-		this.rateNew = function (id,rating,type) {
-			curObj = this;
-			var page = baseurl+'ajax.php';
-			$.post(page, {
-					mode : 'rating',
-					id:id,
-					rating:rating,
-					type:type
-				},
-				function(data)
-				{
-					if(!data) {
-						alert('No data');
-					} else {
-						likesSect = $('.likes').find('span:nth-child(2)').html();
-						dislikesSect = $('.dislikes').find('span:nth-child(2)').html();
-						currLikes = parseInt(likesSect);
-						currDislikes = parseInt(dislikesSect);
-
-						isError = $(data).find('span.error').html();
-						isOk = $(data).find('span.msg').html();
-						if (isError) {
-							if (isError.length > 2) {
-								curObj.throwHeadMsg('danger',isError, 5000, true);
-							}
-						} else if (isOk) {
-							if (isOk.length > 2) {
-								if (rating == 5) {
-									newRating = currLikes + 1;
-									$('.likes').addClass('rated').find('span:nth-child(2)').html(newRating);
-								} else {
-									newRating = currDislikes + 1;
-									if (newRating < 0) {
-										newRating = 0;
-									}
-									$('.dislikes').addClass('rated').find('span:nth-child(2)').html(newRating);
-								}
-								curObj.throwHeadMsg('success',isOk, 5000, true);
-							}
-						}
-					}
-				},'text');
-		}
 
 		this.showMeTheMsg = function(data, alertDiv) {
 			curObj = this;

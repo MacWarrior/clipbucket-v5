@@ -1,4 +1,4 @@
-<div id="main" class="clearfix container">
+<div id="main" class="clearfix container{if config('photos_enable_fullwidth') == 'yes'} fullwidth{/if}">
     <div class="clearfix">
         <section id="content" class="clearfix photos">
             {if config("enable_advertisement") == "yes"}
@@ -71,8 +71,13 @@
 
             <div class="clearfix row">
                 {if $photos}
+                    {if config('photos_enable_fullwidth') == 'yes'}
+                        {$class = 'colcb-xs-1 colcb-768-2 colcb-992-3 colcb-1200-4 colcb-1600-5 colcb-1920-6 colcb-2560-8 colcb-3840-10 colcb-5120-12'}
+                    {else}
+                        {$class = 'colcb-xs-1 colcb-768-2 colcb-992-3 colcb-1200-4'}
+                    {/if}
                     {foreach from=$photos item=p_list}
-                        <div class="item-photo col-lg-4 col-md-4 col-sm-6 col-xs-12">
+                        <div class="item-photo {$class}">
                             {include file="$style_dir/blocks/photo.html" photo=$p_list display_type = "default_photo"}
                         </div>
                     {/foreach}
