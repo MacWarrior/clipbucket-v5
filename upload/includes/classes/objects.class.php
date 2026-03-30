@@ -251,7 +251,6 @@ abstract class Objects
                 $tablename = Video::getInstance()->getTableName();
                 $object_id = Video::getInstance()->getFieldId();
                 break;
-
             case 'photo':
                 $tablename = Photo::getInstance()->getTableName();
                 $object_id = 'photo_id';
@@ -260,6 +259,10 @@ abstract class Objects
             case 'collection':
                 $tablename = Collection::getInstance()->getTableName();
                 $object_id = 'collection_id';
+                break;
+            case 'user':
+                $tablename = User::getInstance()->getTableName();
+                $object_id = 'userid';
                 break;
 
             default:
