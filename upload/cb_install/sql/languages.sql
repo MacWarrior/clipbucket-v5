@@ -1820,4 +1820,6 @@ VALUES ('ongoing_conversion'),
        ('option_photo_thumbs_format'),
        ('photo_thumbs_format_tips'),
        ('keep_photo_type'),
-       ('webp');
+       ('webp'),
+       ('update_tmdb_info_label'),
+       ('update_tmdb_info_description');
