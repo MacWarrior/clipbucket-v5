@@ -98,6 +98,11 @@ class Video extends Objects
             $this->fields[] = 'default_thumbnail';
         }
 
+        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '999')) {
+            $this->fields[] = 'id_tmdb';
+            $this->fields[] = 'type_tmdb';
+        }
+
         $this->fields_categories = [
             'category_id'
             ,'parent_id'

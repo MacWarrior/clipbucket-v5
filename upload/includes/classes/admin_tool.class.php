@@ -1960,5 +1960,45 @@ class AdminTool
         generatingMoreThumbs($data, true);
         return true;
     }
+
+    /**
+     * @return void
+     * @throws Exception
+     */
+    public function updateTmdbInfo(): void
+    {
+        if (empty($this->tasks_total)) {
+            $this->tasks_total = 0;
+            $this->tasks_processed = 0;
+            $this->tasks = [];
+            $limit = 100;
+            $offset = 0;
+            do {
+                $videos = Video::getInstance()->getAll([
+                    'limit'                       => $offset . ', ' . $limit,
+                    'condition' => ' id_tmdb IS NOT NULL ',
+                ]);
+                $offset += $limit;
+                foreach ($videos as $video) {
+                    $this->insertTaskData([0=>['videoid'=>$video['videoid'], 'id_tmdb'=>$video['id_tmdb'], 'type_tmdb'=>$video['type_tmdb']]]);
+                }
+            } while (!empty($videos));
+        }
+        $this->executeTool('AdminTool::reimportTmdbInfo');
+    }
+
+    /**
+     * @param $info
+     * @return bool
+     * @throws Exception
+     */
+    public static function reimportTmdbInfo($info): bool
+    {
+        if (empty($info['videoid']) || empty($info['id_tmdb']) || empty($info['type_tmdb']))  {
+            return false;
+        }
+        Tmdb::getInstance()->importDataFromTmdb($info['videoid'], $info['id_tmdb'], $info['type_tmdb']);
+        return true;
+    }
 }
 
