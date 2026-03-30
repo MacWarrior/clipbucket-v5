@@ -1,6 +1,6 @@
 {
   "version":"5.5.3",
-  "revision":"94",
+  "revision":"95",
   "status":"stable",
   "detail":[
     {
@@ -12,7 +12,9 @@
         ,"Implement Regenerate videos thumbs tool"
         ,"Implement breaking version warning and website maintenance mode during update"
         ,"Implement live statistics & ongoing tools on dashboard"
+        ,"Implement tasks cleanup tool"
         ,"Update advanced settings display"
+        ,"Update video & photos thumbs regeneration tools"
         ,"Hide poster & backdrop tabs when empty on video edition page"
         ,"Fix JS error on playlist management page"
         ,"Fix missing video thumbs tool"
