@@ -222,7 +222,8 @@ $get_limit = create_query_limit($page, config('admin_pages'));
 $params = [
     'not_userid' => $anonymous_id,
     'limit'      => $get_limit,
-    'order'      => 'doj DESC'
+    'order'      => 'doj DESC',
+    'join_flag'  => true,
 ];
 if (isset($_GET['search'])) {
     $params['userid']   = $_GET['userid'] ?? false;
