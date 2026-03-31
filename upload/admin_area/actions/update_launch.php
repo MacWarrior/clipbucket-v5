@@ -26,21 +26,22 @@ if (($error_init['core'] === false && $_POST['type'] == 'core') || $error_init['
     die();
 }
 
-if (file_exists(DirPath::get('temp') . 'update_core_tmp.php')) {
-    if( !unlink(DirPath::get('temp') . 'update_core_tmp.php') ){
+$update_core_tmp_filepath = DirPath::get('temp') . 'update_core_tmp.php';
+if (file_exists($update_core_tmp_filepath)) {
+    if( !unlink($update_core_tmp_filepath) ){
         echo json_encode([
             'success'   => false,
-            'error_msg' => System::isInDev() ? DirPath::get('temp') . 'update_core_tmp.php file couldn\'t be removed, please check access rights' : lang('technical_error')
+            'error_msg' => System::isInDev() ? $update_core_tmp_filepath . ' file couldn\'t be removed, please check access rights' : lang('technical_error')
         ]);
         die();
     }
 }
-$tmp_file = fopen(DirPath::get('temp') . 'update_core_tmp.php', 'w');
+$tmp_file = fopen($update_core_tmp_filepath, 'w');
 
 if( $tmp_file === false ){
     echo json_encode([
         'success'   => false,
-        'error_msg' => System::isInDev() ? DirPath::get('temp') . 'update_core_tmp.php file couldn\'t be created, please check access rights' : lang('technical_error')
+        'error_msg' => System::isInDev() ? $update_core_tmp_filepath . ' file couldn\'t be created, please check access rights' : lang('technical_error')
     ]);
     die();
 }
@@ -100,19 +101,19 @@ if ( $type == \'db\' && AdminTool::getInstance()->isAlreadyLaunch() === false) {
 if( fwrite($tmp_file, $data) === false ){
     echo json_encode([
         'success'   => false,
-        'error_msg' => System::isInDev() ? DirPath::get('temp') . 'update_core_tmp.php file couldn\'t be written, please check access rights' : lang('technical_error')
+        'error_msg' => System::isInDev() ? $update_core_tmp_filepath . ' file couldn\'t be written, please check access rights' : lang('technical_error')
     ]);
     die();
 }
 if( !fclose($tmp_file) ){
     echo json_encode([
         'success'   => false,
-        'error_msg' => System::isInDev() ? DirPath::get('temp') . 'update_core_tmp.php file couldn\'t be closed, please check access rights' : lang('technical_error')
+        'error_msg' => System::isInDev() ? $update_core_tmp_filepath . ' file couldn\'t be closed, please check access rights' : lang('technical_error')
     ]);
     die();
 }
 chdir(DirPath::get('root'));
-$cmd = System::get_binaries('php') . ' -q ' . escapeshellarg(DirPath::get('temp') . 'update_core_tmp.php') . ' ' . escapeshellarg($_POST['type']);
+$cmd = System::get_binaries('php') . ' -q ' . escapeshellarg($update_core_tmp_filepath) . ' ' . escapeshellarg($_POST['type']);
 if (stristr(PHP_OS, 'WIN')) {
     shell_exec($cmd);
 } else { // for ubuntu or linux
