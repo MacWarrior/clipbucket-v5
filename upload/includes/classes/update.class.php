@@ -395,10 +395,10 @@ class Update
         assign('current_updating', $current_updating);
         $lastStart = 0;
         assign('id', null);
-        if ($current_updating== 'db') {
+        if ($current_updating == 'db') {
             //getting current execution time
             $tool = AdminTool::getUpdateDbTool();
-         } else {
+        } else {
             $tool = AdminTool::getUpdateCoreTool();
         }
         if (!empty($tool->getLastLogs()['logs'])) {

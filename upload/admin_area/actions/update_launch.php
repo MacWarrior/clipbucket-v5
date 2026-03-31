@@ -3,6 +3,10 @@ const THIS_PAGE = 'admin_launch_update';
 const IS_AJAX = true;
 require_once dirname(__FILE__, 3) . '/includes/admin_config.php';
 
+if (empty($_POST['type']) || !in_array($_POST['type'], ['core', 'db'])) {
+    die;
+}
+
 $core_tool = new AdminTool();
 
 $error_init = [];
@@ -22,20 +26,26 @@ if (($error_init['core'] === false && $_POST['type'] == 'core') || $error_init['
     die();
 }
 
-sendClientResponseAndContinue(function () {
-    ob_start();
-    Update::getInstance()->displayGlobalSQLUpdateAlert($_POST['type'], true);
-    echo json_encode([
-        'success' => true,
-        'html'    => ob_get_clean()
-    ]);
-});
-
-
-if (file_exists(DirPath::get('temp') . 'update_core_tmp.php')) {
-    unlink(DirPath::get('temp') . 'update_core_tmp.php');
+$update_core_tmp_filepath = DirPath::get('temp') . 'update_core_tmp.php';
+if (file_exists($update_core_tmp_filepath)) {
+    if( !unlink($update_core_tmp_filepath) ){
+        echo json_encode([
+            'success'   => false,
+            'error_msg' => System::isInDev() ? $update_core_tmp_filepath . ' file couldn\'t be removed, please check access rights' : lang('technical_error')
+        ]);
+        die();
+    }
 }
-$tmp_file = fopen(DirPath::get('temp') . 'update_core_tmp.php', 'w');
+$tmp_file = fopen($update_core_tmp_filepath, 'w');
+
+if( $tmp_file === false ){
+    echo json_encode([
+        'success'   => false,
+        'error_msg' => System::isInDev() ? $update_core_tmp_filepath . ' file couldn\'t be created, please check access rights' : lang('technical_error')
+    ]);
+    die();
+}
+
 $data = /** @lang PHP */
     '<?php
 if (php_sapi_name() != \'cli\') {
@@ -46,7 +56,7 @@ sleep(2);
 
 const THIS_PAGE = \'update_core_tmp\';
 include_once \'' . DirPath::get('includes') . 'admin_config.php' . '\';
-$type = \'' . $_POST['type'] . '\';
+$type =  $argv[1] ?? \'' . $_POST['type'] . '\';
 if (!in_array($type, [\'core\', \'db\'])) {
     echo  \'false\';
     die;
@@ -68,28 +78,52 @@ if (empty(AdminTool::getInstance())) {
 if ($type == \'core\' && $core_tool->isAlreadyLaunch() === false) {
     $core_tool->setToolInProgress();
     $core_tool->launch();
+    Update::getInstance()->flush();
+
+    if (AdminTool::getInstance()->isAlreadyLaunch() === false) {
+        $cmd = System::get_binaries(\'php\') . \' -q \' . escapeshellarg(__FILE__) . \' db\';
+        if (stristr(PHP_OS, \'WIN\')) {
+            shell_exec($cmd);
+        } else {
+            shell_exec(\'(sleep 10; \' . $cmd . \') >/dev/null 2>&1 &\');
+        }
+    }
+    die;
 }
 Update::getInstance()->flush();
-sleep(2);
 
-if (($type == \'core\' || $type == \'db\') && AdminTool::getInstance()->isAlreadyLaunch() === false) {
+if ( $type == \'db\' && AdminTool::getInstance()->isAlreadyLaunch() === false) {
     AdminTool::getInstance()->setToolInProgress();
     AdminTool::getInstance()->launch();
 }
 ?>';
 
-fwrite($tmp_file, $data);
-fclose($tmp_file);
+if( fwrite($tmp_file, $data) === false ){
+    echo json_encode([
+        'success'   => false,
+        'error_msg' => System::isInDev() ? $update_core_tmp_filepath . ' file couldn\'t be written, please check access rights' : lang('technical_error')
+    ]);
+    die();
+}
+if( !fclose($tmp_file) ){
+    echo json_encode([
+        'success'   => false,
+        'error_msg' => System::isInDev() ? $update_core_tmp_filepath . ' file couldn\'t be closed, please check access rights' : lang('technical_error')
+    ]);
+    die();
+}
 chdir(DirPath::get('root'));
-$cmd = System::get_binaries('php') . ' -q ' . escapeshellarg(DirPath::get('temp') . 'update_core_tmp.php') . ' ' . escapeshellarg($_POST['type']);
+$cmd = System::get_binaries('php') . ' -q ' . escapeshellarg($update_core_tmp_filepath) . ' ' . escapeshellarg($_POST['type']);
 if (stristr(PHP_OS, 'WIN')) {
-    $complement = '';
-} elseif (stristr(PHP_OS, 'darwin')) {
-    $complement = ' </dev/null >/dev/null 2>&1 &';
+    shell_exec($cmd);
 } else { // for ubuntu or linux
-    $complement = ' > /dev/null 2>&1 &';
+    shell_exec('(sleep 10; ' . $cmd . ') >/dev/null 2>&1 &');
 }
 
-$cmd .= $complement;
-shell_exec($cmd);
+ob_start();
+Update::getInstance()->displayGlobalSQLUpdateAlert($_POST['type'], true);
+echo json_encode([
+    'success' => true,
+    'html'    => ob_get_clean()
+]);
 die;
