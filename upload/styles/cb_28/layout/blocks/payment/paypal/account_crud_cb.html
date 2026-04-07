@@ -1,0 +1,132 @@
+<script>
+    // JavaScript pour gérer l'affichage du formulaire
+    document.addEventListener('DOMContentLoaded', function() {
+        const addCardBtn = document.querySelector('.add-card-btn');
+        const addCardForm = document.getElementById('addCardForm');
+        const closeFormBtn = document.getElementById('closeFormBtn');
+        const cancelFormBtn = document.getElementById('cancelFormBtn');
+        const cardForm = document.querySelector('.card-form');
+
+        // Ouvrir le formulaire
+        addCardBtn.addEventListener('click', function() {
+            addCardForm.style.display = 'block';
+            addCardForm.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        });
+
+        // Fermer le formulaire
+        function closeForm() {
+            addCardForm.style.display = 'none';
+            cardForm.reset();
+        }
+
+        closeFormBtn.addEventListener('click', closeForm);
+        cancelFormBtn.addEventListener('click', closeForm);
+
+        // Soumission du formulaire
+        cardForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            // Ici vous ajouteriez votre logique d'envoi au serveur
+            alert('Carte ajoutée avec succès !');
+            closeForm();
+        });
+    });
+</script>
+
+<!-- Section Cartes de paiement -->
+<div class="payment-cards-section">
+    <div class="section-header">
+        <h3>Cartes de paiement enregistrées</h3>
+        <button class="add-card-btn">+ Ajouter une carte</button>
+    </div>
+
+    <div class="cards-container">
+
+        <!-- Formulaire d'ajout de carte (masqué par défaut) -->
+        <div class="payment-card add-card-form" id="addCardForm" style="display: none;">
+            <div class="card-content" style="flex-direction: column; align-items: stretch;">
+                <div class="form-header">
+                    <h4 style="margin: 0; font-size: 16px; color: #333;">Ajouter une nouvelle carte</h4>
+                    <button class="close-form-btn" id="closeFormBtn" type="button">
+                        <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+                            <path d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"/>
+                        </svg>
+                    </button>
+                </div>
+
+                <div class="warning-box" style="margin: 16px 0;">
+                    <p><strong>ℹ️ Information :</strong> L'ajout d'une carte déclenchera une demande d'autorisation de paiement de 0,01 €. Ce montant ne sera pas prélevé, il s'agit uniquement d'une vérification de la validité de votre carte.</p>
+                </div>
+
+                <form class="card-form">
+                    <div class="form-row">
+                        <div class="form-group" style="flex: 1;">
+                            <label for="cardNumber">Numéro de carte</label>
+                            <input type="text" id="cardNumber" placeholder="1234 5678 9012 3456" maxlength="19" required>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group" style="flex: 1;">
+                            <label for="cardHolder">Titulaire de la carte</label>
+                            <input type="text" id="cardHolder" placeholder="Jean Dupont" required>
+                        </div>
+                    </div>
+
+                    <div class="form-row" style="gap: 12px;">
+                        <div class="form-group" style="flex: 1;">
+                            <label for="expiryMonth">Mois d'expiration</label>
+                            <select id="expiryMonth" required>
+                                <option value="">MM</option>
+                                <option value="01">01</option>
+                                <option value="02">02</option>
+                                <option value="03">03</option>
+                                <option value="04">04</option>
+                                <option value="05">05</option>
+                                <option value="06">06</option>
+                                <option value="07">07</option>
+                                <option value="08">08</option>
+                                <option value="09">09</option>
+                                <option value="10">10</option>
+                                <option value="11">11</option>
+                                <option value="12">12</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group" style="flex: 1;">
+                            <label for="expiryYear">Année d'expiration</label>
+                            <select id="expiryYear" required>
+                                <option value="">YYYY</option>
+                                <option value="2026">2026</option>
+                                <option value="2027">2027</option>
+                                <option value="2028">2028</option>
+                                <option value="2029">2029</option>
+                                <option value="2030">2030</option>
+                                <option value="2031">2031</option>
+                                <option value="2032">2032</option>
+                                <option value="2033">2033</option>
+                                <option value="2034">2034</option>
+                                <option value="2035">2035</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group" style="flex: 1;">
+                            <label for="cvv">CVV</label>
+                            <input type="text" id="cvv" placeholder="123" maxlength="4" required>
+                        </div>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="button" class="cancel-btn" id="cancelFormBtn">Annuler</button>
+                        <button type="submit" class="save-btn">Enregistrer la carte</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    var lang_failed_delete_vault = "{lang code='failed_delete_vault'}";
+    var lang_failed_get_vault = "{lang code='failed_get_vault'}";
+</script>

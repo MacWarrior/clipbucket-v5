@@ -7196,9 +7196,9 @@ h4:has(i) {
 }
 
 .switch-inline .row .col-md-1,
-.switch-inline .row .col-md-7{
-  padding-left:0;
-  padding-right:0;
-  width:auto;
-  flex:0 0 auto;
+.switch-inline .row .col-md-7 {
+  padding-left: 0;
+  padding-right: 0;
+  width: auto;
+  flex: 0 0 auto;
 }

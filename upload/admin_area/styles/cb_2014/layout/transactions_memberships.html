@@ -1,0 +1,55 @@
+<div class="heading clearfix">
+    <h2 class="pull-left">{lang('transactions')}</h2>
+</div>
+
+<form name="video_manage marginBottomLarge" method="post">
+    <table class="table table-bordered table-striped manageUsersTable marginTop">
+        <tr>
+            <th>Id_paypal_transaction</th>
+            <th>Type</th>
+            <th>Customer_id</th>
+            <th>Comment</th>
+            <th>status</th>
+            <th>montant_total</th>
+            <th>montant net</th>
+            <th>frais paypal</th>
+            <th>currency</th>
+            <th>created_date</th>
+            <th>update_time</th>
+            <th>&nbsp;</th>
+        </tr>
+        {foreach from=$transactions_memberships item=transaction_membership}
+            <tr>
+                <td>{display_clean($transaction_membership.id_paypal_transaction)}</td>
+                <td>{display_clean($transaction_membership.type)}</td>
+                <td>{display_clean($transaction_membership.paypal_customer_id)}</td>
+                <td>{display_clean($transaction_membership.comment)}</td>
+                <td>{display_clean($transaction_membership.status)}</td>
+                <td>{display_clean($transaction_membership.amount)}</td>
+                <td>{display_clean($transaction_membership.net_amount)}</td>
+                <td>{display_clean($transaction_membership.paypal_fee)}</td>
+                <td>{display_clean($transaction_membership.currency)}</td>
+                <td>{display_clean($transaction_membership.created_at)}</td>
+                <td>{display_clean($transaction_membership.update_time)}</td>
+                <td>
+                    {if $transaction_membership.type == 'payment' AND $transaction_membership.status == 'COMPLETED' }
+                    <div class="dropdown">
+                        <button id="dropdownMenu1" class="btn btn-primary btn-xs dropdown-toggle" data-toggle="dropdown">
+                            Actions <i class="caret"></i>
+                        </button>
+                        <ul class="dropdown-menu pull-right" aria-labelledby="dropdownMenu1" role="menu">
+                            <li><a role="menuitem" class="refund" data-id_paypal_transaction="{$transaction_membership.id_paypal_transaction}" style="cursor:pointer;">{lang('refund')}</a></li>
+                            {if !empty($transaction_membership.paypal_vault_id) }
+                                <li><a role="menuitem" class="renew" data-id_paypal_transaction="{$transaction_membership.id_paypal_transaction}" style="cursor:pointer;">{lang('renew')}</a></li>
+                            {/if}
+                        </ul>
+                    </div>
+                    {/if}
+                </td>
+            </tr>
+        {/foreach}
+    </table>
+</form>
+<div class="modal fade" id="myModal" role="dialog"></div>
+{include file="$style_dir/blocks/pagination.html"}
+<div class="marginBottomLarge"></div>

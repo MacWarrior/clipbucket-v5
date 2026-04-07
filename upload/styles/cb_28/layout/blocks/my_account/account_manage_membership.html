@@ -1,0 +1,60 @@
+{if User::getInstance()->isUserHasActiveMembership()}
+
+    {include file="$style_dir/blocks/my_account/account_affichage_abonement_actif.html" membership=$current_membership}
+
+    {if User::getInstance()->isUserMustRenewMembership() && $can_renew_membership}
+        <h2>{lang code='renew_membership'}</h2>
+        <button class="btn-primary btn mb-2">{lang('renew')}</button>
+    {/if}
+
+    {$payment->getHtmlForCrudToken()}
+
+    {include file="$style_dir/blocks/my_account/account_histo_membership.html" memberships=$memberships }
+
+    {include file="$style_dir/blocks/my_account/account_cancel_membership.html"  membership=$current_membership}
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            let payment = new Payment();
+
+            /** abonnement crud card saved */
+            document.dispatchEvent(new CustomEvent('payment:capture_crud_card_saved'));
+
+            payment.capture_cancel_membership();
+            /** reload page after cancel */
+            document.addEventListener('payment:canceled', function (event) {
+                window.location.reload();
+            });
+            /** reload page after reEnable */
+            document.addEventListener('payment:reEnabled', function (event) {
+                window.location.reload();
+            });
+        });
+    </script>
+
+{else}
+
+    {include file="$style_dir/blocks/my_account/account_paiment_stepper.html"}
+    <div id="stepper-step-1">
+        {include file="$style_dir/blocks/my_account/account_select_membership.html"}
+    </div>
+
+    <div id="stepper-step-2" style="display: none">
+        {include file="$style_dir/blocks/my_account/account_billing_address.html"}
+    </div>
+
+    <div id="stepper-step-3" style="display: none">
+        {$payment->getHtmlPayment()}
+    </div>
+
+    {include file="$style_dir/blocks/my_account/account_histo_membership.html" memberships=$memberships }
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            let payment = new Payment();
+            payment.loadJsFiles();
+            payment.enable_step_payment();
+            payment.capture_select_membership();
+        });
+    </script>
+{/if}

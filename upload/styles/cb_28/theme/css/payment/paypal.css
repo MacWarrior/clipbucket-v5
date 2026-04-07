@@ -1,0 +1,353 @@
+
+/* Sélecteur de mode de paiement */
+.payment-method-selector {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+.payment-method-option {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 14px;
+    border: 2px solid var(--border-color);
+    border-radius: var(--border-radius);
+    cursor: pointer;
+    transition: all var(--transition);
+    background-color: white;
+}
+
+.payment-method-option:hover {
+    border-color: var(--primary-color);
+    background-color: var(--bg-blue-light);
+}
+
+.payment-method-option input[type="radio"] {
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+    accent-color: var(--primary-color);
+}
+
+.payment-method-option span {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.payment-method-option:has(input:checked) {
+    border-color: var(--primary-color);
+    background-color: var(--bg-blue-pale);
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.payment-section-content {
+    animation: fadeIn 0.3s ease-in;
+}
+
+
+
+/* Cartes enregistrées dans le paiement */
+.saved-cards-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.saved-card-item {
+    display: block;
+    border: 2px solid var(--border-color);
+    border-radius: var(--border-radius);
+    cursor: pointer;
+    transition: all var(--transition);
+    background-color: white;
+    position: relative;
+}
+
+.saved-card-item:hover {
+    border-color: var(--primary-color);
+    background-color: var(--bg-blue-light);
+}
+
+.saved-card-item input[type="radio"] {
+    position: absolute;
+    left: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+    accent-color: var(--primary-color);
+    margin: 0;
+}
+
+.saved-card-item input[type="radio"]:checked ~ .saved-card-info {
+    background-color: var(--bg-blue-pale);
+}
+
+.saved-card-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 14px 14px 44px;
+    transition: background-color var(--transition);
+}
+
+.card-brand-mini {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+}
+
+.saved-card-details {
+    flex: 1;
+    min-width: 0;
+}
+
+.saved-card-number {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 2px;
+}
+
+.saved-card-expiry {
+    font-size: 12px;
+    color: var(--text-secondary);
+}
+
+.cvv-input-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.cvv-input-group label {
+    font-size: 13px;
+    color: var(--text-secondary);
+    font-weight: 500;
+}
+
+.cvv-input-group input {
+    width: 120px;
+    padding: 10px 12px;
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    font-size: 14px;
+    color: var(--text-primary);
+    background-color: white;
+    transition: border-color var(--transition);
+}
+
+.cvv-input-group input:focus {
+    outline: none;
+    border-color: var(--primary-color);
+}
+
+.cvv-input-group small {
+    font-size: 12px;
+    color: var(--text-muted);
+}
+
+
+/* ===================================
+   CARTES DE PAIEMENT
+   =================================== */
+.add-card-btn {
+    padding: 8px 16px;
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: var(--border-radius);
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color var(--transition);
+}
+
+.add-card-btn:hover {
+    background-color: var(--primary-hover);
+}
+
+.cards-container {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.payment-card {
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    transition: border-color var(--transition);
+}
+
+.payment-card:hover {
+    border-color: var(--primary-color);
+}
+
+.card-content {
+    display: flex;
+    align-items: center;
+    padding: 16px;
+    gap: 16px;
+}
+
+.card-radio {
+    flex-shrink: 0;
+}
+
+.card-radio input[type="radio"] {
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+    accent-color: var(--primary-color);
+}
+
+.card-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex: 1;
+}
+
+.card-brand {
+    flex-shrink: 0;
+}
+
+.card-details {
+    flex: 1;
+}
+
+.card-number {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 4px;
+}
+
+.card-meta {
+    display: flex;
+    gap: 16px;
+    font-size: 13px;
+    color: var(--text-secondary);
+}
+
+.card-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-shrink: 0;
+}
+
+.delete-btn {
+    padding: 6px;
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    cursor: pointer;
+    border-radius: var(--border-radius);
+    transition: all var(--transition);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.delete-btn:hover {
+    background-color: #fee;
+    color: var(--danger-color);
+}
+
+.delete-btn.is-loading {
+    opacity: 0.6;
+    pointer-events: none;
+    position: relative;
+}
+
+.delete-btn.is-loading::after {
+    content: "... Loading ...";
+    margin-left: 4px;
+    animation: blink 1s infinite;
+}
+
+@keyframes blink {
+    0%, 100% { opacity: 0; }
+    50% { opacity: 1; }
+}
+
+
+/* Formulaire d'ajout de carte */
+.add-card-form {
+    border: 2px solid var(--primary-color);
+    background-color: var(--bg-blue-light);
+}
+
+.form-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.close-form-btn {
+    padding: 4px;
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    cursor: pointer;
+    border-radius: var(--border-radius);
+    transition: all var(--transition);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.close-form-btn:hover {
+    background-color: #fee;
+    color: var(--danger-color);
+}
+
+.card-form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin-top: 16px;
+}
+
+.payment-cards-empty {
+    padding: 24px;
+    text-align: center;
+    color: var(--text-secondary);
+}
+
+.empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+}
+
+.empty-icon {
+    font-size: 32px;
+}
+
+.empty-title {
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.empty-text {
+    font-size: 14px;
+}

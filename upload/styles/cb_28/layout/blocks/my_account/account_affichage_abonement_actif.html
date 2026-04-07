@@ -1,0 +1,69 @@
+<!-- Abonnement actuel -->
+<div class="current-subscription">
+    <div class="subscription-header">
+        <h3>{lang('title_current_membership')}</h3>
+
+        {if in_array( $membership['language_key_title'], ['completed']) }
+            <span class="status-badge status-active">
+                {lang('active')}
+                {if $membership['is_auto_renew'] == 'yes'  }
+                    - {lang('automatic_renew')}
+                {/if}
+            </span>
+        {elseif in_array( $membership['language_key_title'], ['canceled']) }
+           <span class="status-badge status-cancelled">{lang('canceled')}</span>
+        {/if}
+    </div>
+
+    <div class="subscription-grid">
+        <div class="subscription-item">
+            <label>{lang('user_level')}</label>
+            <div class="value">{$membership['user_level_name']}</div>
+        </div>
+
+        <div class="subscription-item">
+            <label>{lang('frequency')}</label>
+            <div class="value">
+                <span class="frequency-badge">{$membership['frequency']}</span>
+            </div>
+        </div>
+
+        <div class="subscription-item">
+            <label>{lang('price')}</label>
+            <div class="value highlight">{$membership['base_price']} {$membership['symbol']}</div>
+        </div>
+
+        <div class="subscription-item">
+            <label>{lang('next_paiement_date')}</label>
+            <div class="value">{$membership['next_date_renew']}</div>
+        </div>
+
+        <div class="subscription-item">
+            <label>{lang('storage_quota')}</label>
+            <div class="value">
+                {if $membership['storage_quota_included'] != 0}
+                    {$membership['storage_quota_included']}{lang('gb')}
+                {else}
+                    {lang('none')}
+                {/if}
+                </div>
+        </div>
+
+        <div class="subscription-item">
+            <label>{lang('storage_price')}</label>
+            <div class="value">
+                {if $membership['storage_price_per_go'] != 0}
+                    {$membership['storage_price_per_go']}
+                {else}
+                    {lang('free')}
+                {/if}
+                </div>
+        </div>
+    </div>
+
+    {if in_array( $membership['language_key_title'], ['canceled']) }
+        <div class="warning-box">
+            <p><strong>⚠️ Attention :</strong> Votre abonnement prendra fin le {$membership['next_date_renew']}. Après cette date, vous n'aurez plus accès aux fonctionnalités premium.</p>
+        </div>
+    {/if}
+</div>

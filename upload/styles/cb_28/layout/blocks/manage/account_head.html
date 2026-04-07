@@ -16,6 +16,10 @@
                                 <br/>
                                 <b>{lang code='user_current_storage'}</b> : {$storage_use}
                             {/if}
+                            {if $current_membership !== null}
+                                <br/>
+                                <b>{lang code='current_membership'}</b> : {if $current_membership}{lang($current_membership.user_level_name|strtolower|replace:' ':'_')} - {lang('frequency_'|cat:$current_membership.frequency)}{else}{lang('none')}{/if}
+                            {/if}
                         </div>
                     </div>
                 </div>

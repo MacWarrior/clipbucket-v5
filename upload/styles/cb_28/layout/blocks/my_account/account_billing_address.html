@@ -1,0 +1,62 @@
+<div class="payment-section">
+    <div class="section-header">
+        <h3>Adresse de facturation</h3>
+    </div>
+    <div class="section-content">
+        <div>
+            <div class="form-row">
+                <div class="form-group full-width">
+                    <label for="address_name">Name</label>
+                    <input type="text" id="address_name" name="address_name" placeholder="Numéro et rue" required>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group full-width">
+                    <label for="address_line_1">Adresse ligne 1</label>
+                    <input type="text" id="address_line_1" name="address_line_1" placeholder="Numéro et rue" required>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group full-width">
+                    <label for="address_line_2">Adresse ligne 2</label>
+                    <input type="text" id="address_line_2" name="address_line_2" placeholder="Appartement, suite, etc. (optionnel)">
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="admin_area_1">Ville</label>
+                    <input type="text" id="admin_area_1" name="admin_area_1" required>
+                </div>
+                <div class="form-group">
+                    <label for="admin_area_2">Région/Département</label>
+                    <input type="text" id="admin_area_2" name="admin_area_2" required>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="postal_code">Code postal</label>
+                    <input type="text" id="postal_code" name="postal_code" required>
+                </div>
+                <div class="form-group">
+                    <label for="country_code">Pays</label>
+                    <select id="country_code" name="country_code" required>
+                        <option value="">Sélectionner un pays</option>
+                        <option value="FR">France</option>
+                        <option value="BE">Belgique</option>
+                        <option value="CH">Suisse</option>
+                        <option value="CA">Canada</option>
+                        <option value="US">États-Unis</option>
+                    </select>
+                </div>
+            </div>
+            <button class="btn btn-default btn-primary btn-save-billing-adress ">{lang code='save'}</button>
+        </div>
+    </div>
+</div>
+<script>
+    var lang_unable_to_set_billing_address = "{lang code='unable_to_set_billing_address'}";
+</script>

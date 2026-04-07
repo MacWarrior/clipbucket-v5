@@ -1,0 +1,38 @@
+{if !empty($memberships)}
+
+<div class="current-subscription">
+    <div class="subscription-header">
+        <h3>{lang code='membership_history'}</h3>
+    </div>
+
+    <table class="table table-bordered table-striped">
+        <tr>
+            <th class="col-md-2" style="cursor:pointer;">{lang('date_start')} </th>
+            <th class="col-md-2" style="cursor:pointer;">{lang('date_end')}</th>
+            <th class="col-md-2" style="cursor:pointer;">{lang('status')}</th>
+            <th class="col-md-2" style="cursor:pointer;">{lang('user_levels')}</th>
+            <th class="col-md-1" style="cursor:pointer;">{lang('price')}</th>
+            {if config('enable_storage_history' == 'yes')}
+            <th class="col-md-2" style="cursor:pointer;">{lang('max_period_storage')}</th>
+            {/if}
+        </tr>
+        {section name=sub loop=$memberships}
+        <tr>
+            <td><span>{display_clean($memberships[sub].date_start)}</span></td>
+            <td><span>{if $memberships[sub].date_end}{display_clean($memberships[sub].date_end)}{else}{lang('never')}{/if}</span></td>
+            <td><span>{lang($memberships[sub].language_key_title)}</span></td>
+            <td><span>{lang($memberships[sub].user_level_name|strtolower|replace:' ':'_')} - {lang('frequency_'|cat:$memberships[sub].frequency)}</span></td>
+            <td><span>{display_clean($memberships[sub].base_price)} {display_clean($memberships[sub].symbol)}</span></td>
+            {if config('enable_storage_history' == 'yes')}
+                <td>
+                    {if !empty($memberships[sub].date_start)}
+                        {if $memberships[sub].date_end  == null}{assign var=date_end value='2999-01-01 00:00:00'}{else}{assign var=date_end value=$memberships[sub].date_end}{/if}
+                        <span>{System::get_readable_filesize(User::getInstance()->getPeriodMaxStorageUseByUser($memberships[sub].userid, $memberships[sub].date_start, $date_end),2)}</span>
+                    {/if}
+                </td>
+            {/if}
+        </tr>
+        {/section}
+    </table>
+</div>
+{/if}

@@ -873,3 +873,13 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 /* Cookie banner */
+
+/**
+ * Error visible client
+ * this error should be catch and the error message showed to user
+ */class ClientVisibleError extends Error {
+    constructor(message) {
+        super(message);
+        this.name = 'ClientVisibleError';
+    }
+}

@@ -55,6 +55,15 @@
             'aliases' => array(),
             'dev_requirement' => false,
         ),
+        'oxygenzsas/composer_lib_paypal' => array(
+            'pretty_version' => '0.4.2',
+            'version' => '0.4.2.0',
+            'reference' => 'bb048f746a97cc7f64326a37610f5a8f21c1ff21',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../oxygenzsas/composer_lib_paypal',
+            'aliases' => array(),
+            'dev_requirement' => false,
+        ),
         'paragonie/random_compat' => array(
             'pretty_version' => 'v9.99.100',
             'version' => '9.99.100.0',

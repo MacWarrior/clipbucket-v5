@@ -1,5 +1,5 @@
 # Paypal librairie
-Une librairie paypal pour une integration rapide des paiements en utilisant le "Standard Checkout"
+Une librairie paypal pour une integration rapide des paiements en utilisant les CardFields du SDK javascript v5 de paypal
 
 ## Installation
 
@@ -31,6 +31,20 @@ $client = new class(
         /** @todo recuperer ici le montant du paiement a partir des données de attributes */
         return 1234; // return amount
     }
+    
+    protected function getAdressFromAttribute(string $attribute) :array
+    {
+        /** @todo recuperer ici l'adresse de facturation a partir des données de attributes */
+        return [
+            'name' => 'Dupond Thomas',
+            'adress_line_1' => '15 rue des oliviers',
+            'adress_line_2' => 'Batiment 3',
+            'admin_area_2' => 'Vire',
+            'admin_area_1' => 'Calvados',
+            'postal_code' => '14500',
+            'country_code' => 'FR'
+        ];
+    }
 };
 
 /** Database config (PDO) */
@@ -58,22 +72,23 @@ $client->initRoute();
     <script src="/vendor/oxygenzsas/composer_lib_paypal/js/script.js"></script> <!-- @todo utiliser le script js depuis les sources composer -->
 </head>
 <body>
-<div id="payment_options"></div>
+
+<div id="paypal-card-form">
+    <div id="card-name"></div>
+    <div id="card-number"></div>
+    <div id="card-expiry"></div>
+    <div id="card-cvv"></div>
+
+    <button id="card-submit">Payer</button>
+</div>
 
 <script type="text/javascript">
     new PaypalCustom( {
         paypal_sdk_url: "<?php echo $client->getUrlJsSdk(); ?>"
         ,client_id: "<?php echo $client->getClientID(); ?>"
         ,currency: "<?php echo $client->getCurrency(); ?>"
-        ,attributes: {id_transaction: 45623} /** donnée pour identifier le paiement dans la classe paypal */
+        ,attributes: {id_commande: 45623} /** donnée pour identifier le paiement dans la classe paypal */
         ,url_paiement: "<?php echo $client->getUrlBack(); ?>"
-        ,boutonContainerSelector: "#payment_options"
-        ,buttonStyle: {
-            shape: 'rect'
-            ,color: 'gold'
-            ,layout: 'vertical'
-            ,label: 'paypal'
-        }
     });
 
     document.addEventListener('paypalOrderCreated', (event) => {

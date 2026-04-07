@@ -185,6 +185,11 @@ class User extends Objects
 
         $this->default_homepage_list = [
             'homepage'
+            ,'videos'
+            ,'public_videos'
+            ,'photos'
+            ,'collections'
+            ,'channels'
             ,'my_account'
         ];
 
@@ -996,7 +1001,9 @@ class User extends Objects
      */
     public static function redirectAfterLogin(): void
     {
-        if ($_COOKIE['pageredir']) {
+        if (User::getInstance()->isUserMustRenewMembership(userquery::getInstance()->userid) && !User::getInstance()->hasAdminAccess()) {
+            redirect_to(Network::get_server_url()  . 'manage_membership.php');
+        } elseif ($_COOKIE['pageredir']) {
             redirect_to($_COOKIE['pageredir']);
         } else {
             redirect_to(User::getInstance()->getDefaultHomepageFromUserLevel());
@@ -1033,6 +1040,61 @@ class User extends Objects
     public function getDefaultHomepageList()
     {
         return $this->default_homepage_list;
+    }
+
+    public function isUserMustRenewMembership($user_id = null): bool
+    {
+        if (empty($user_id)) {
+            $user_id = user_id();
+        }
+        if (!isset($this->user_data['need_to_active_membership'])) {
+            $need_to_active_membership = false;
+            if (config('enable_membership') == 'yes' && !empty($user_id) && !User::getInstance()->hasAdminAccess()) {
+                //gettings memberships for current userLevel
+                $memberships = Membership::getInstance()->getAll([
+                    'is_disabled'   => 0
+                ]);
+                if (!empty($memberships)) {
+                    $resutls = Membership::getInstance()->getAll([
+                        'first_only'          => true,
+                        'date_between'        => date('Y-m-d H:i:s'),
+                        'userid'              => $user_id,
+                        'get_user_membership' => true,
+                        'join_users' => true
+                    ]);
+                    $need_to_active_membership = empty($resutls);
+                }
+            }
+            $this->user_data['need_to_active_membership'] = $need_to_active_membership;
+        }
+        return $this->user_data['need_to_active_membership'];
+    }
+
+    public function isUserHasActiveMembership($user_id = null): bool
+    {
+        if (empty($user_id)) {
+            $user_id = user_id();
+        }
+
+        if (config('enable_membership') != 'yes' || empty($user_id)) {
+            return false;
+        }
+
+        $resutls = Membership::getInstance()->getCurrentMembershipForUser($user_id);
+
+        return !empty($resutls);
+    }
+
+    public function doesUserHaveAvailableMembership()
+    {
+        if (!isset($this->user_data['does_user_have_available_membership'])) {
+            $available_memberships = Membership::getInstance()->getAll([
+                'is_disabled'       => 0,
+                'not_user_level_id' => UserLevel::getDefaultId()
+            ]);
+            $this->user_data['does_user_have_available_membership'] = !empty($available_memberships);
+        }
+        return $this->user_data['does_user_have_available_membership'];
     }
 
     /**
@@ -1264,6 +1326,133 @@ class User extends Objects
         return $avcode;
     }
 
+    /**
+     * @param array $billingAddress
+     * @return false|int|mixed
+     * @throws Exception
+     */
+    public function setBillingAdress(array $billingAddress)
+    {
+        $fields = [
+            'userid'
+            ,'billing_name'
+            ,'billing_address_line_1'
+            ,'billing_address_line_2'
+            ,'billing_admin_area_1'
+            ,'billing_admin_area_2'
+            ,'billing_postal_code'
+            ,'billing_country_code'
+        ];
+
+        $id_user_billing_adress = 0;
+        $sets = [];
+
+        /** @odo check inputs */
+        foreach ($fields as $field) {
+            if (!isset($billingAddress[$field])) {
+                continue;
+            }
+
+            $value = $billingAddress[$field];
+            switch ($field) {
+                case 'userid':
+                    if (!is_numeric($value)) {
+                        e(lang('error_type'));
+                        return false;
+                    }
+                    break;
+                case 'billing_name':
+                case 'billing_address_line_1':
+                case 'billing_admin_area_1':
+                case 'billing_postal_code':
+                case 'billing_country_code':
+                    if (empty($value)) {
+                        e(lang('missing_params'));
+                        return false;
+                    }
+                    break;
+            }
+        }
+
+        if($this->isBillingAdressAlreadyExistForUser($billingAddress['userid'], $id_user_billing_adress)) {
+            foreach ($fields as $field) {
+                if (isset($billingAddress[$field])) {
+                    $sets[] = ' '.$field.' = \''.mysql_clean($billingAddress[$field]).'\' ' ;
+                }
+            }
+            $sql = 'UPDATE ' . tbl('user_billing_address').' SET
+             ' . implode(', ', $sets) . ' WHERE id_user_billing_address = '. (int) $id_user_billing_adress;
+            Clipbucket_db::getInstance()->execute($sql);
+        } else {
+            foreach ($fields as $field) {
+                if (isset($billingAddress[$field])) {
+                    $sets[] = $field;
+                    $values[] = '\''.mysql_clean($billingAddress[$field]).'\'';
+                }
+            }
+            $sql = 'INSERT INTO ' . tbl('user_billing_address').' (' . implode(', ', $sets) . ') VALUES (' . implode(', ', $values) . ') ';
+            Clipbucket_db::getInstance()->execute($sql);
+            $id_user_billing_adress = Clipbucket_db::getInstance()->insert_id();
+        }
+
+        return $id_user_billing_adress;
+    }
+
+    /**
+     * @param int $userid
+     * @return array
+     * @throws Exception
+     */
+    public function getBillingAdressForUser(int $userid) :array
+    {
+        $fields = [
+            'id_user_billing_address'
+            ,'userid'
+            ,'billing_name'
+            ,'billing_address_line_1'
+            ,'billing_address_line_2'
+            ,'billing_admin_area_1'
+            ,'billing_admin_area_2'
+            ,'billing_postal_code'
+            ,'billing_country_code'
+        ];
+
+        $sql = 'SELECT  ' . implode(', ', $fields) . '
+                FROM ' . cb_sql_table('user_billing_address').' 
+                WHERE userid = '.(int) $userid;
+
+        $result = Clipbucket_db::getInstance()->_select($sql);
+
+        if(empty($result)){
+            return [];
+        }
+
+        /** @todo remove when multi billing address support */
+        if(count($result) > 1){
+            throw new Exception('There is more than one billing address for this user.');
+        }
+
+        return $result;
+    }
+
+    /**
+     * @param int $userid
+     * @param int $id_user_billing_adress
+     * @return bool
+     * @throws Exception
+     */
+    public function isBillingAdressAlreadyExistForUser(int $userid, int &$id_user_billing_adress = 0) :bool
+    {
+        $result = $this->getBillingAdressForUser($userid);
+
+        if(empty($result)){
+            return false;
+        }
+
+        $id_user_billing_adress = $result[0]['id_user_billing_address'];
+
+        return true;
+    }
 }
 
 class userquery extends CBCategory
@@ -3661,6 +3850,9 @@ class userquery extends CBCategory
         if( config('channelsSection') == 'yes' && User::getInstance()->hasPermission('view_channel') ){
             $array[lang('account')][lang('com_manage_subs')] = 'edit_account.php?mode=subscriptions';
         }
+        if( config('enable_membership') == 'yes' && !User::getInstance()->hasPermission('admin_access') && User::getInstance()->doesUserHaveAvailableMembership()){
+            $array[lang('account')][lang('manage_membership')] = 'manage_membership.php';
+        }
 
         $check_before_551_136 = (!Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '136') && isSectionEnabled('channels') && User::getInstance()->hasPermission('view_channel'));
         $check_after_551_136 = (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '136') && isSectionEnabled('channels') && (User::getInstance()->hasPermission('view_channel') || (User::getInstance()->hasPermission('enable_channel_page') && User::getInstance()->get('disabled_channel') != 'yes')));
@@ -5663,5 +5855,4 @@ class userquery extends CBCategory
         }
         return '';
     }
-
 }
