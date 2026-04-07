@@ -1822,4 +1822,6 @@ VALUES ('ongoing_conversion'),
        ('keep_photo_type'),
        ('webp'),
        ('task_queue_cleaner_label'),
-       ('task_queue_cleaner_description');
+       ('task_queue_cleaner_description'),
+       ('template_compatible'),
+       ('template_not_compatible');

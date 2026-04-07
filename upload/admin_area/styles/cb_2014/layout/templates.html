@@ -47,12 +47,14 @@
     const format_date_js = '{get_date_js()}';
     const language = '{$lang_obj->getLang()}';
     const format_display = $.datepicker.regional[language].dateFormat.replace(/\W/g, ' ').replace('mm', 'M');
+    const version_compatibility = '{Update::getInstance()->getCurrentCoreVersion()}';
     let lang=[];
     lang['save'] = '{lang('save')}';
     lang['error_occurred'] = '{lang('error_occurred')}';
     lang['saved_success'] = '{lang('saved_success')}';
     lang['saved_success'] = '{lang('saved_success')}';
     lang['edit'] = '{lang('edit')}';
-    lang['end_edition'] = '{lang('end_edition')}';
-
+    lang['end_edition'] = "{lang('end_edition')}";
+    const html_icon_compatibility_ok = '<i class="glyphicon glyphicon-ok green" title="{lang('template_compatible')}"></i>';
+    const html_icon_compatibility_ko = '<i class="glyphicon glyphicon-warning-sign orange" title="{lang('template_not_compatible')}"></i>';
 </script>

@@ -20,7 +20,7 @@
                     <input type="text" name="description_{$index}" id="description_{$index}" value="{$template.description}" style="width: 100%; height: 34px;" placeholder="{lang('this_is_my_amazing_template')}">
                     <span title="{lang('save')}" data-num="{$index}" style="height: 34px; width: 40px;" class="input-group-addon glyphicon glyphicon-save save_description save_template_field" id="save_description_{$index}"></span>
                 </div>
-                <div>Version : <span id="version_text_{$index}">{$template.version}</span>
+                <div>Version : <span id="version_text_{$index}">{$template.version} </span>
                     <div class="input-group hidden" id="version_group_{$index}" style="width: 100%;">
                         <input type="text" name="version_{$index}" id="version_{$index}" value="{$template.version}" style="width: 100%; height: 34px;" placeholder="5.5.3">
                         <span data-num="{$index}" style="height: 34px; width: 40px;" class="input-group-addon glyphicon glyphicon-save save_version save_template_field" id="save_version_{$index}"></span>
@@ -31,6 +31,17 @@
                         <input type="text" name="released_{$index}" class="form-control toDatepicker" id="released_{$index}" value="{$template.released}" style="width: 100%; height: 34px;" placeholder="2026-01-01">
                         <span title="{lang('save')}" data-num="{$index}" style="height: 34px; width: 40px;" class="input-group-addon glyphicon glyphicon-save save_released save_template_field" id="save_released_{$index}"></span>
                     </div>
+                </div>
+                <p>
+                Compatibility : <span id="compatibility_text_{$index}">{$template.compatibility} <i class="glyphicon {if $template.compatibility_ok}glyphicon-ok green{else}glyphicon-warning-sign orange{/if}" title="{if $template.compatibility_ok}{lang('template_compatible')}{else}{lang('template_not_compatible')}{/if}"></i></span>
+                </p>
+                <div class="input-group hidden" id="compatibility_group_{$index}" style="width: 100%;">
+                    <select name="compatibility_{$index}" id="compatibility_{$index}" style="width: 100%; height: 34px;">
+                        {foreach from=$versions item=version}
+                            <option value="{$version}" {if $version == $template.compatibility} selected="selected" {/if}>{$version}</option>
+                        {/foreach}
+                    </select>
+                    <span data-num="{$index}" style="height: 34px; width: 40px;" class="input-group-addon glyphicon glyphicon-save save_version save_template_field" id="save_compatibility_{$index}"></span>
                 </div>
                 <p>Website : <a id="link_text_{$index}" href="{$template.website.link}">{$template.website.title}</a>
                     <div class="input-group hidden" id="link_group_{$index}" style="width: 100%;">
