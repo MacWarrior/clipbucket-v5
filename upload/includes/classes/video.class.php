@@ -134,6 +134,14 @@ class Video extends Objects
         return self::$video;
     }
 
+    /**
+     * @return void
+     */
+    public static function clearInstance(): void
+    {
+        self::$video = new self();
+    }
+
     public function getTableName(): string
     {
         return $this->tablename;
@@ -1949,7 +1957,7 @@ class CBvideo extends CBCategory
         if ($this->video_exists($vid)) {
             $vdetails = $this->get_video($vid);
 
-            if ($this->is_video_owner($vid, user_id()) || User::getInstance()->hasAdminAccess()) {
+            if ($this->is_video_owner($vid, User::getInstance()->getCurrentUserID()) || User::getInstance()->hasAdminAccess()) {
                 #THIS SHOULD NOT BE REMOVED :O
                 //list of functions to perform while deleting a video
                 $del_vid_funcs = $this->video_delete_functions;
@@ -2835,7 +2843,6 @@ class CBvideo extends CBCategory
         assign('disperc', $disperc);
         assign('id', $id);
         assign('type', $type);
-        assign('id', $id);
         assign('rating_msg', $rating_msg);
         assign('likes', $likes);
         assign('dislikes', $dislikes);

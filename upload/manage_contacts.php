@@ -10,10 +10,10 @@ if (!isSectionEnabled('channels') || User::getInstance()->get('disabled_channel'
 User::getInstance()->hasPermissionOrRedirect('view_channel', true);
 User::getInstance()->hasPermissionOrRedirect('enable_channel_page', true);
 
-$udetails = userquery::getInstance()->get_user_details(user_id());
+$udetails = userquery::getInstance()->get_user_details(User::getInstance()->getCurrentUserID());
 assign('user', $udetails);
 assign('p', userquery::getInstance()->get_user_profile($udetails['userid']));
-$friend_id = $_REQUEST['userid'];
+$friend_id = (int)$_REQUEST['userid'];
 switch ($_REQUEST['mode']) {
     case 'unfriend':
         userquery::getInstance()->remove_contact($friend_id);

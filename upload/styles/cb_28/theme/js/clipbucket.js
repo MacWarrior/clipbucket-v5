@@ -626,27 +626,6 @@
 			}
 		};
 
-		/**
-		 * Function used to rate object
-		 */
-		this.rate = function(id,rating,type){
-			var page = baseurl+'actions/ajax.php';
-			$.post(page,
-				{
-					mode : 'rating',
-					id:id,
-					rating:rating,
-					type:type
-				},
-				function(data)
-				{
-					if(!data){
-						alert('No data');
-					} else {
-						$('#rating_container').html(data);
-					}
-				},'text');
-		};
 
 		this.setPageHash = function(Page){
 			// Removing this.baseurl
@@ -780,59 +759,63 @@
 		 * @author: Saqib Razzaq
 		 */
 
-        this.rateNew = function (id, rating, type) {
-            curObj = this;
-            var page = baseurl + 'actions/rating_update.php';
+        this.rateNew = function (id, rating, type, button) {
+            let rating_parent = document;
+            if (typeof button !== 'undefined') {
+                rating_parent = $(button).parents('.rating-holder');
+            }
+            const curObj = this;
+            const page = baseurl + 'actions/rating_update.php';
             $.post(page, {
                     id: id,
                     rating: rating,
                     type: type
                 },
-				function (data) {
-					if (data.success) {
-						const currLikes = parseInt($('.likes').find('span:nth-child(2)').html());
-						const currDislikes = parseInt($('.dislikes').find('span:nth-child(2)').html());
-						let newRating;
-						if (rating == 5) {
-							if ($('.likes').hasClass('rated')) {
-								newRating = currLikes - 1;
-								if (newRating < 0) {
-									newRating = 0;
-								}
-								$('.likes').removeClass('rated').find('span:nth-child(2)').html(newRating);
-							} else {
-								newRating = currLikes + 1;
-								$('.likes').addClass('rated').find('span:nth-child(2)').html(newRating);
-								if ($('.dislikes').hasClass('rated')) {
-									newRating = currDislikes - 1;
-									if (newRating < 0) {
-										newRating = 0;
-									}
-									$('.dislikes').removeClass('rated').find('span:nth-child(2)').html(newRating);
-								}
-							}
-						} else {
-							if ($('.dislikes').hasClass('rated')) {
-								newRating = currDislikes - 1;
-								if (newRating < 0) {
-									newRating = 0;
-								}
-								$('.dislikes').removeClass('rated').find('span:nth-child(2)').html(newRating);
-							} else {
-								newRating = currDislikes + 1;
-								$('.dislikes').addClass('rated').find('span:nth-child(2)').html(newRating);
-								if ($('.likes').hasClass('rated')) {
-									newRating = currLikes - 1;
-									if (newRating < 0) {
-										newRating = 0;
-									}
-									$('.likes').removeClass('rated').find('span:nth-child(2)').html(newRating);
-								}
-							}
-						}
-					}
-					curObj.throwHeadDivMsg(data.msg, 5000, true);
-				}, 'json'
+                function (data) {
+                    if (data.success) {
+                        const currLikes = parseInt($(rating_parent).find('.likes').find('span:nth-child(2)').html());
+                        const currDislikes = parseInt($(rating_parent).find('.dislikes').find('span:nth-child(2)').html());
+                        let newRating;
+                        if (rating == 5) {
+                            if ($(rating_parent).find('.likes').hasClass('rated')) {
+                                newRating = currLikes - 1;
+                                if (newRating < 0) {
+                                    newRating = 0;
+                                }
+                                $(rating_parent).find('.likes').removeClass('rated').find('span:nth-child(2)').html(newRating);
+                            } else {
+                                newRating = currLikes + 1;
+                                $(rating_parent).find('.likes').addClass('rated').find('span:nth-child(2)').html(newRating);
+                                if ($(rating_parent).find('.dislikes').hasClass('rated')) {
+                                    newRating = currDislikes - 1;
+                                    if (newRating < 0) {
+                                        newRating = 0;
+                                    }
+                                    $(rating_parent).find('.dislikes').removeClass('rated').find('span:nth-child(2)').html(newRating);
+                                }
+                            }
+                        } else {
+                            if ($(rating_parent).find('.dislikes').hasClass('rated')) {
+                                newRating = currDislikes - 1;
+                                if (newRating < 0) {
+                                    newRating = 0;
+                                }
+                                $(rating_parent).find('.dislikes').removeClass('rated').find('span:nth-child(2)').html(newRating);
+                            } else {
+                                newRating = currDislikes + 1;
+                                $(rating_parent).find('.dislikes').addClass('rated').find('span:nth-child(2)').html(newRating);
+                                if ($(rating_parent).find('.likes').hasClass('rated')) {
+                                    newRating = currLikes - 1;
+                                    if (newRating < 0) {
+                                        newRating = 0;
+                                    }
+                                    $(rating_parent).find('.likes').removeClass('rated').find('span:nth-child(2)').html(newRating);
+                                }
+                            }
+                        }
+                    }
+                    curObj.throwHeadDivMsg(data.msg, 5000, true);
+                }, 'json'
             );
         }
 

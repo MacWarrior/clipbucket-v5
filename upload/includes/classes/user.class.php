@@ -235,6 +235,11 @@ class User extends Objects
         return self::$user[$user_id];
     }
 
+    public static function clearInstance(): void
+    {
+       self::$user = [];
+    }
+
     public function getTableName(): string
     {
         return $this->tablename;
@@ -687,7 +692,7 @@ class User extends Objects
     /**
      * @throws Exception
      */
-    public function delBackground($userid): void
+    public function delBackground(int $userid): void
     {
         $user = self::getOne(['userid'=>$userid]);
         $user_background = $user['background'];
@@ -697,7 +702,7 @@ class User extends Objects
             if( file_exists($file) ){
                 unlink($file);
             }
-            Clipbucket_db::getInstance()->update(tbl('users'), ['background'], [''], ' userid = ' . (int)$userid);
+            Clipbucket_db::getInstance()->update(tbl('users'), ['background'], [''], ' userid = ' . $userid);
         }
     }
 
@@ -820,11 +825,11 @@ class User extends Objects
      */
     public function getLastStorageUseByUser(): int
     {
-        $uid = $this->get('userid');
-        $sql = 'SELECT storage_used FROM ' . tbl('users_storage_histo') . ' WHERE id_user = ' . (int)$uid . ' AND datetime = (
+        $uid = (int)$this->get('userid');
+        $sql = 'SELECT storage_used FROM ' . tbl('users_storage_histo') . ' WHERE id_user = ' . $uid . ' AND datetime = (
                     SELECT MAX(datetime)
                     FROM ' . tbl('users_storage_histo') . '
-                    WHERE id_user = ' . (int)$uid . '
+                    WHERE id_user = ' . $uid . '
                 ) ';
         $results = Clipbucket_db::getInstance()->_select($sql);
         if (empty($results)) {
@@ -843,7 +848,7 @@ class User extends Objects
     public function getPeriodMaxStorageUseByUser(int $userid, string $date_start, string $date_end): int
     {
         $sql = 'SELECT MAX(storage_used) AS storage_used FROM ' . tbl('users_storage_histo') . ' 
-        WHERE id_user = ' . (int)$userid . ' 
+        WHERE id_user = ' . $userid . ' 
         AND datetime BETWEEN \'' . mysql_clean($date_start) . '\' AND \'' . mysql_clean($date_end) . '\' 
         GROUP BY id_user ';
         $results = Clipbucket_db::getInstance()->_select($sql);
@@ -2530,37 +2535,37 @@ class userquery extends CBCategory
     /**
      * Function used to get user subscribers
      *
-     * @param $id
+     * @param int $id
      * @param bool $count
      *
      * @return array|bool
      * @throws Exception
      */
-    function get_user_subscribers($id, $count = false)
+    function get_user_subscribers(int $id, $count = false)
     {
         if (!$count) {
             $result = Clipbucket_db::getInstance()->select(tbl('subscriptions'), '*',
-                " subscribed_to='$id' ");
+                ' subscribed_to = ' . $id);
             if (count($result) > 0) {
                 return $result;
             }
             return false;
         }
-        return Clipbucket_db::getInstance()->count(tbl($this->dbtbl['subtbl']), 'subscription_id', " subscribed_to='$id' ");
+        return Clipbucket_db::getInstance()->count(tbl($this->dbtbl['subtbl']), 'subscription_id', ' subscribed_to = ' . $id);
     }
 
     /**
      * function used to get user subscribers with details
      *
-     * @param      $id
+     * @param int $id
      * @param null $limit
      *
      * @return array|bool
      * @throws Exception
      */
-    function get_user_subscribers_detail($id, $limit = null)
+    function get_user_subscribers_detail(int $id, $limit = null)
     {
-        $result = Clipbucket_db::getInstance()->select(tbl('users,' . $this->dbtbl['subtbl']), '*', ' ' . tbl('subscriptions.subscribed_to') . " = '$id' AND " . tbl('subscriptions.userid') . '=' . tbl('users.userid'), $limit);
+        $result = Clipbucket_db::getInstance()->select(tbl('users,' . $this->dbtbl['subtbl']), '*', ' ' . tbl('subscriptions.subscribed_to') . ' = ' . $id . ' AND ' . tbl('subscriptions.userid') . '=' . tbl('users.userid'), $limit);
         if (count($result) > 0) {
             return $result;
         }
@@ -2570,16 +2575,16 @@ class userquery extends CBCategory
     /**
      * Function used to get user subscriptions
      *
-     * @param      $id
+     * @param int $id
      * @param null $limit
      *
      * @return array|bool
      * @throws Exception
      */
-    function get_user_subscriptions($id, $limit = null)
+    function get_user_subscriptions(int $id, $limit = null)
     {
         if ($limit != 'count') {
-            $result = Clipbucket_db::getInstance()->select(tbl('users,' . $this->dbtbl['subtbl']), '*', ' ' . tbl('subscriptions.userid') . " = '$id' AND " . tbl('subscriptions.subscribed_to') . '=' . tbl('users.userid'), $limit);
+            $result = Clipbucket_db::getInstance()->select(tbl('users,' . $this->dbtbl['subtbl']), '*', ' ' . tbl('subscriptions.userid') . ' = ' . $id . ' AND ' . tbl('subscriptions.subscribed_to') . '=' . tbl('users.userid'), $limit);
 
             if (count($result) > 0) {
                 return $result;
@@ -2587,7 +2592,7 @@ class userquery extends CBCategory
             return false;
         }
 
-        return Clipbucket_db::getInstance()->count(tbl($this->dbtbl['subtbl']), 'subscription_id', " userid = '$id'");
+        return Clipbucket_db::getInstance()->count(tbl($this->dbtbl['subtbl']), 'subscription_id', ' userid = ' . $id);
     }
 
     /**
@@ -2658,7 +2663,7 @@ class userquery extends CBCategory
      */
     function UpdateLastActive($username): void
     {
-        $sql = 'UPDATE ' . tbl('users') . " SET last_active = '" . now() . "' WHERE username='" . $username . "' OR userid='" . $username . "' ";
+        $sql = 'UPDATE ' . tbl('users') . " SET last_active = '" . now() . "' WHERE username='" . mysql_clean($username) . "' OR userid=" . (int)$username;
         Clipbucket_db::getInstance()->execute($sql);
     }
 
@@ -2777,9 +2782,9 @@ class userquery extends CBCategory
     function get_user_field($uid, $field)
     {
         if (is_numeric($uid)) {
-            $results = Clipbucket_db::getInstance()->select(tbl('users'), $field, "userid='$uid'");
+            $results = Clipbucket_db::getInstance()->select(tbl('users'), $field, 'userid = ' . (int)$uid);
         } else {
-            $results = Clipbucket_db::getInstance()->select(tbl('users'), $field, "username='$uid'");
+            $results = Clipbucket_db::getInstance()->select(tbl('users'), $field, 'username = \'' . mysql_clean($uid) . '\'');
         }
 
         if (count($results) > 0) {
@@ -2788,6 +2793,9 @@ class userquery extends CBCategory
         return false;
     }
 
+    /**
+     * @throws Exception
+     */
     function get_user_fields($uid, $field)
     {
         return $this->get_user_field($uid, $field);
@@ -2827,14 +2835,13 @@ class userquery extends CBCategory
     /**
      * Function used to get level details
      *
-     * @param : level_id INT
-     *
+     * @param int $lid
      * @return bool|array
      * @throws Exception
      */
-    function get_level_details($lid)
+    function get_level_details(int $lid)
     {
-        $results = Clipbucket_db::getInstance()->select(tbl('user_levels'), '*', " user_level_id='$lid' AND user_level_id NOT IN (SELECT user_level_id FROM ".tbl('user_levels')." WHERE user_level_name LIKE 'Anonymous')");
+        $results = Clipbucket_db::getInstance()->select(tbl('user_levels'), '*', ' user_level_id = ' . $lid . ' AND user_level_id NOT IN (SELECT user_level_id FROM '.tbl('user_levels').' WHERE user_level_name LIKE \'Anonymous\')');
         if (count($results) > 0) {
             return $results[0];
         }
@@ -4007,13 +4014,13 @@ class userquery extends CBCategory
         if ($user != user_name() && !is_numeric($user) && $this->user_exists($user)) {
             $banned_users = $this->udetails['banned_users'];
             if ($banned_users) {
-                $banned_users .= ",$user";
+                $banned_users .= ',' . mysql_clean($user);
             } else {
-                $banned_users = "$user";
+                $banned_users = mysql_clean($user);
             }
 
             if (!$this->is_user_banned($user)) {
-                Clipbucket_db::getInstance()->update(tbl($this->dbtbl['users']), ['banned_users'], [$banned_users], " userid='$uid'");
+                Clipbucket_db::getInstance()->update(tbl($this->dbtbl['users']), ['banned_users'], [$banned_users], ' userid= ' . (int)$uid);
                 e(lang('user_blocked'), 'm');
             } else {
                 e(lang('user_already_blocked'));
@@ -4041,9 +4048,9 @@ class userquery extends CBCategory
 
         if (!$banned_users) {
             if (is_numeric($user)) {
-                $result = Clipbucket_db::getInstance()->select(tbl($this->dbtbl['users']), 'banned_users', " userid='$user' ");
+                $result = Clipbucket_db::getInstance()->select(tbl($this->dbtbl['users']), 'banned_users', ' userid = ' . (int)$user);
             } else {
-                $result = Clipbucket_db::getInstance()->select(tbl($this->dbtbl['users']), 'banned_users', " username='$user' ");
+                $result = Clipbucket_db::getInstance()->select(tbl($this->dbtbl['users']), 'banned_users', ' username = \'' . mysql_clean($user) . '\'');
             }
             $banned_users = $result[0]['banned_users'];
         }
@@ -4872,18 +4879,18 @@ class userquery extends CBCategory
      * Function used to get anonymous user
      * @throws Exception
      */
-    function get_anonymous_user()
+    function get_anonymous_user(): int
     {
         /*Added to resolve bug 222*/
         $result = Clipbucket_db::getInstance()->select(tbl('users'), 'userid', " username='anonymous' AND email='anonymous@website'", '1');
         if (isset($result[0]['userid'])) {
-            return $result[0]['userid'];
+            return (int)$result[0]['userid'];
         }
 
         execute_sql_file(\DirPath::get('cb_install') . 'sql' .DIRECTORY_SEPARATOR . 'add_anonymous_user.sql');
 
         $result = Clipbucket_db::getInstance()->select(tbl('users'), 'userid', " username='anonymous' AND email='anonymous@website'", '1');
-        return $result[0]['userid'];
+        return (int)$result[0]['userid'];
     }
 
     /**
@@ -4925,11 +4932,11 @@ class userquery extends CBCategory
     /**
      * Function used to remove user private messages
      *
-     * @param        $uid
+     * @param int $uid
      * @param string $box
      * @throws Exception
      */
-    function remove_user_pms($uid, $box = 'both'): void
+    function remove_user_pms(int $uid, $box = 'both'): void
     {
         global $cbpm;
 
@@ -4955,8 +4962,8 @@ class userquery extends CBCategory
         }
         //UPDATE
         Clipbucket_db::getInstance()->execute('UPDATE ' . tbl('messages') . '
-                SET message_to = REPLACE(message_to, \'#'.mysql_clean($uid).'#\', \'#'.mysql_clean(userquery::getInstance()->get_anonymous_user()).'#\')
-                WHERE message_to LIKE \'%#'.mysql_clean($uid).'#%\'');
+            SET message_to = REPLACE(message_to, \'#' . $uid . '#\', \'#' . userquery::getInstance()->get_anonymous_user() . '#\')
+            WHERE message_to LIKE \'%#' . $uid . '#%\'');
     }
 
     /**
@@ -5763,25 +5770,6 @@ class userquery extends CBCategory
             if (!empty($votedEncode)) {
                 Clipbucket_db::getInstance()->update(tbl('users'), ['voted'], ["|no_mc|$votedEncode"], " userid='$userid'");
             }
-        }
-    }
-
-    /**
-     * Function used to display user manger link
-     *
-     * @param $link
-     * @param $vid
-     *
-     * @return string
-     */
-    function user_manager_link($link, $vid): string
-    {
-        if (function_exists($link) && !is_array($link)) {
-            return $link($vid);
-        }
-
-        if (!empty($link['title']) && !empty($link['link'])) {
-            return '<a href="' . $link['link'] . '">' . display_clean($link['title']) . '</a>';
         }
     }
 

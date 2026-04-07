@@ -161,6 +161,7 @@ if (isset($_POST['update'])) {
         , 'enable_anonymous_stats'
         , 'enable_video_embed_players'
         , 'videos_enable_fullwidth'
+        , 'photos_enable_fullwidth'
         , 'collections_enable_fullwidth'
         , 'collection_enable_fullwidth'
         , 'autoplay_video'
@@ -183,6 +184,7 @@ if (isset($_POST['update'])) {
         , 'random_video_order'
         , 'enable_favorite_icon_photo'
         , 'enable_favorite_icon_collection'
+        , 'own_comment_rating'
         , 'enable_membership'
         , 'enable_public_video_page'
     ];
@@ -448,6 +450,7 @@ if (isset($_POST['update'])) {
         'enable_anonymous_stats',
         'enable_multi_factor_authentification',
         'videos_enable_fullwidth',
+        'photos_enable_fullwidth',
         'collections_enable_fullwidth',
         'collection_enable_fullwidth',
         'enable_allow_alias_email',
@@ -458,6 +461,8 @@ if (isset($_POST['update'])) {
         'random_video_order',
         'ratio_photo',
         'enable_favorite_icon_photo',
+        'enable_favorite_icon_collection',
+        'own_comment_rating',
         'enable_favorite_icon_collection',
         'collection_enable_fullwidth',
         'videos_video_style',

@@ -197,7 +197,7 @@
                                         </ul>
                                     </li>
                                 {else}
-
+                                    {assign var=base_url_empty value=(empty(trim(config('base_url'))) || !filter_var(config('base_url'), FILTER_VALIDATE_URL))}
                                     {if config('allow_registeration')}
                                         <li class="navbar-sm-login-links" {if $base_url_empty}title="{lang('cant_perform_action_until_app_fully_updated')}{/if}">
                                             <a class="btn btn-default btn-newacc {if $base_url_empty}disabled{/if}" href="{cblink name='signup'}">

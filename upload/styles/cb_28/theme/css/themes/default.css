@@ -718,7 +718,7 @@ a:hover{
     100% {transform: rotate(0deg);}
 }
 
-.input-group > .input-group-addon {
+.form-group > .input-group > .input-group-addon {
     font-size: 15px;
     line-height: 20px;
     padding: 13px 20px;
@@ -730,4 +730,17 @@ a:hover{
     border-radius: 0 4px 4px 0;
     color: #999;
     cursor: pointer;
+}
+.modal-body.tmdb .input-group{
+    width:60%;
+    margin-bottom:5px;
+}
+
+.modal-body.tmdb .input-group-addon{
+    cursor: pointer;
+    background-color: #eee;
+}
+
+.modal-body.tmdb .input-group-addon:hover{
+    background-color: #d5d5d5;
 }

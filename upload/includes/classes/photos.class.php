@@ -66,6 +66,14 @@ class Photo extends Objects
         return self::$photo;
     }
 
+    /**
+     * @return void
+     */
+    public static function clearInstance()
+    {
+        self::$photo = new self();
+    }
+
     public function getTableName(): string
     {
         return $this->tablename;
@@ -912,6 +920,7 @@ class CBPhotos
      * Setting Email Settings
      *
      * @param $data
+     * @throws Exception
      */
     function set_share_email($data): void
     {

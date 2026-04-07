@@ -131,11 +131,14 @@ function getInfoTmdb(video_id, type, video_title, page,sort, sort_order,selected
         data: {videoid: video_id, video_title:video_title, type: type, page: page,sort: sort, sort_order: sort_order,selected_year },
         dataType: 'json',
         success: function (result) {
-            hideSpinner();
+
             var modal = $('#myModal');
             modal.html(result['template']);
             modal.modal();
             $('.page-content').prepend(result['msg']);
+        },
+        complete: function () {
+            hideSpinner();
         }
     });
 }
