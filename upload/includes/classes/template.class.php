@@ -130,8 +130,7 @@ class CBTemplate
         $templates = [];
         foreach ($templates_dirs as $template_dir) {
             $templates_details = CBTemplate::get_template_details($template_dir);
-            //TODO check if is copy
-            if ($templates_details && $templates_details['name'] != '') {
+            if ($templates_details && $templates_details['name'] != '' && ($templates_details['is_copy'] || $template_dir == ClipBucket::DEFAULT_TEMPLATE)) {
                 $templates[] = $templates_details;
             }
         }
@@ -151,6 +150,7 @@ class CBTemplate
             preg_match('/<description>(.*)<\/description>/', $content, $description);
             preg_match('/<website title="(.*)">(.*)<\/website>/', $content, $website_arr);
             preg_match('/<compatibility>(.*)<\/compatibility>/', $content, $compatibility);
+            preg_match('/<is_copy>([0-1])<\/is_copy>/', $content, $is_copy);
 
             /* For 2.7 and Smarty v3 Support */
             preg_match('/<min_version>(.*)<\/min_version>/', $content, $min_version);
@@ -164,6 +164,7 @@ class CBTemplate
             $min_version = $min_version[1] ?? false;
             $smarty_version = $smarty_version[1] ?? false;
             $compatibility = $compatibility[1] ?? false;
+            $is_copy = $is_copy[1] ?? false;
             $compatibility_ok = (
                 !empty($compatibility)
                 && $compatibility == Update::getInstance()->getCurrentCoreVersion()
@@ -183,7 +184,8 @@ class CBTemplate
                 'smarty_version'   => $smarty_version,
                 'compatibility'    => $compatibility,
                 'compatibility_ok' => $compatibility_ok,
-                'path'             => DirPath::get('styles') . $temp
+                'path'             => DirPath::get('styles') . $temp,
+                'is_copy'          => $is_copy
             ];
         }
         return false;
@@ -325,6 +327,7 @@ class CBTemplate
         $xml = simplexml_load_file($new_template);
         $xml->name = 'Copy of ' . $xml->name;
         $xml->description = 'Copy of ' . $xml->description;
+        $xml->is_copy = 1;
         $xml->saveXML($new_template);
         return true;
     }
