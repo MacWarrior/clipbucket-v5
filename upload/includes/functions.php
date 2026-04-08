@@ -1632,7 +1632,7 @@ function cbdate($format = null, $timestamp = null): string
 function cbdatetime($format = null, $timestamp = null): string
 {
     if (!$format) {
-        $format = config('date_format') . ' h:m:s';
+        $format = config('date_format') . ' H:i:s';
     }
 
     return cbdate($format, $timestamp);
