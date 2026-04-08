@@ -52,6 +52,7 @@ class Update
         $this->versionCode = '';
         $this->revision = '';
         $this->needCodeDBUpdate = '';
+        DiscordLog::sendDump('flush ok');
     }
 
     public function getDBVersion($force_refresh = false): array

@@ -83,6 +83,8 @@ $last_tool = AdminTool::getLastestToolUpdate();
 $is_maintenance_enabled = config('closed');
 if (!$last_tool->isAlreadyLaunch()) {
     if ($last_tool->isToolInError() || Update::getInstance()->needCodeDBUpdate()) {
+        DiscordLog::sendDump('last tool in error : ' . $last_tool->isToolInError());
+        DiscordLog::sendDump('need code db update : ' . Update::getInstance()->needCodeDBUpdate());
         $modal_error = lang('update_incomplete');
         if ($is_maintenance_enabled) {
             $modal_error .= '<br/><b>'.lang('maintenance_still_on').'</b>';
