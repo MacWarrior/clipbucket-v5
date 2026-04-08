@@ -1841,4 +1841,6 @@ VALUES ('ongoing_conversion'),
        ('right_now'),
        ('view_referer'),
        ('recent_activity_log'),
-       ('view_online_users');
+       ('view_online_users'),
+       ('update_tmdb_info_label'),
+       ('update_tmdb_info_description');
