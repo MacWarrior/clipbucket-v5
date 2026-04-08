@@ -1,6 +1,6 @@
 {
   "version":"5.5.3",
-  "revision":"97",
+  "revision":"98",
   "status":"stable",
   "detail":[
     {
@@ -17,6 +17,7 @@
         ,"Update video & photos thumbs regeneration tools"
         ,"Add links to flagged tags"
         ,"Hide poster & backdrop tabs when empty on video edition page"
+        ,"Only show template editor menu while in dev mode"
         ,"Fix JS error on playlist management page"
         ,"Fix missing video thumbs tool"
         ,"Fix possible PHP error on video edition page"
