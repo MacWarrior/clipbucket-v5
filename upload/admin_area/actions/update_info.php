@@ -39,6 +39,7 @@ try {
 } catch (Exception $e) {
     exit();
 }
+DiscordLog::sendDump('get tools');
 $current_update = false;
 $info_tool = false;
 foreach ($tools as $tool) {

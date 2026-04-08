@@ -703,6 +703,7 @@ class AdminTool
      */
     private function updateCore(): void
     {
+        DiscordLog::sendDump('Updating core');
         $this->tasks = ['updateGit'];
         $this->executeTool('Update::updateGitSources', true);
     }

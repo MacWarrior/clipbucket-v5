@@ -49,7 +49,9 @@ class Update
     {
         $this->dbVersion = [];
         $this->version = '';
+        $this->versionCode = '';
         $this->revision = '';
+        $this->needCodeDBUpdate = '';
     }
 
     public function getDBVersion($force_refresh = false): array
