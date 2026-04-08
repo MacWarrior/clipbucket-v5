@@ -1,6 +1,6 @@
 {
   "version":"5.5.3",
-  "revision":"95",
+  "revision":"96",
   "status":"stable",
   "detail":[
     {
@@ -15,6 +15,7 @@
         ,"Implement tasks cleanup tool"
         ,"Update advanced settings display"
         ,"Update video & photos thumbs regeneration tools"
+        ,"Add links to flagged tags"
         ,"Hide poster & backdrop tabs when empty on video edition page"
         ,"Fix JS error on playlist management page"
         ,"Fix missing video thumbs tool"
