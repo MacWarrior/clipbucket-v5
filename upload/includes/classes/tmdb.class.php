@@ -470,8 +470,9 @@ class Tmdb
         if (config('tmdb_get_crew') == 'yes' && config('enable_video_crew') == 'yes') {
             Tags::saveTags(implode(',', $crew_tags), 'crew', $videoid);
         }
-
-        Clipbucket_db::getInstance()->update(tbl('video'), ['id_tmdb', 'type_tmdb'], [$tmdb_id, $type], 'videoid = ' . $videoid);
+        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '999')) {
+            Clipbucket_db::getInstance()->update(tbl('video'), ['id_tmdb', 'type_tmdb'], [$tmdb_id, $type], 'videoid = ' . $videoid);
+        }
     }
 
     /**
