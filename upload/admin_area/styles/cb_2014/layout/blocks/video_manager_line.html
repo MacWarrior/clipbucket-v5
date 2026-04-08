@@ -60,7 +60,7 @@
                     {/if}
 
                     {if $video.is_flagged == 1}
-                        <span class="label label-danger">{lang('flagged')}</span>
+                        <a href="{$baseurl}admin_area/flagged_item.php?type=video"><span class="label label-danger">{lang('flagged')}</span></a>
                     {/if}
 
                     <div class="clearfix"></div>
