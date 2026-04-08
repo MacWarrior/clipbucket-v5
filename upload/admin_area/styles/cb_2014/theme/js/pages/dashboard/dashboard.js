@@ -151,9 +151,6 @@ $(document).ready(function(){
         e.stopPropagation();
     });
 
-    if (can_sse === 'true' && is_update_processing === 'true') {
-        // connectSSE();
-    }
     if (is_update_processing === 'true') {
         refreshUpdateProgression();
     }
@@ -565,7 +562,6 @@ async function update(type){
                 $('#update_div').html(response.html);
             }
 
-            // connectSSE();
             setTimeout(function () {
                 refreshUpdateProgression(type);
             }, 5000);
