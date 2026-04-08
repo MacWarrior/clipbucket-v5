@@ -242,6 +242,7 @@ abstract class Objects
 
     /**
      * @return array
+     * @throws Exception
      */
     protected static function getObjectTableAndFieldId(): array
     {
@@ -251,6 +252,7 @@ abstract class Objects
                 $tablename = Video::getInstance()->getTableName();
                 $object_id = Video::getInstance()->getFieldId();
                 break;
+
             case 'photo':
                 $tablename = Photo::getInstance()->getTableName();
                 $object_id = 'photo_id';
@@ -260,6 +262,7 @@ abstract class Objects
                 $tablename = Collection::getInstance()->getTableName();
                 $object_id = 'collection_id';
                 break;
+
             case 'user':
                 $tablename = User::getInstance()->getTableName();
                 $object_id = 'userid';
