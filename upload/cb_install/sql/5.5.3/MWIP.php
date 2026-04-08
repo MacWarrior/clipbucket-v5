@@ -19,5 +19,15 @@ class MWIP extends \Migration
           'fr'=>'Le thème est potentiellement incompatible avec la version actuelle de Clipbucket',
           'en'=>'Template might not be compatible with current Clipbucket version'
       ]);
+
+      self::generateTranslation('compatibility', [
+          'fr'=>'Compatibilité',
+          'en'=>'Compatibility'
+      ]);
+
+      self::generateTranslation('unknown', [
+          'fr'=>'Inconnue',
+          'en'=>'Unknown'
+      ]);
     }
 }

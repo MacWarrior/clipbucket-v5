@@ -1824,4 +1824,6 @@ VALUES ('ongoing_conversion'),
        ('task_queue_cleaner_label'),
        ('task_queue_cleaner_description'),
        ('template_compatible'),
-       ('template_not_compatible');
+       ('template_not_compatible'),
+       ('compatibility'),
+       ('unknown');

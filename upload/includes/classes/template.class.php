@@ -130,7 +130,7 @@ class CBTemplate
         $templates = [];
         foreach ($templates_dirs as $template_dir) {
             $templates_details = CBTemplate::get_template_details($template_dir);
-            if ($templates_details && $templates_details['name'] != '' && ($templates_details['is_copy'] || $template_dir == ClipBucket::DEFAULT_TEMPLATE)) {
+            if ($templates_details && $templates_details['name'] != '') {
                 $templates[] = $templates_details;
             }
         }

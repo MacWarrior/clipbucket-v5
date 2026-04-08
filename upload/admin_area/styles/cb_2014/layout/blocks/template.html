@@ -33,7 +33,7 @@
                     </div>
                 </div>
                 <p>
-                Compatibility : <span id="compatibility_text_{$index}">{$template.compatibility} <i class="glyphicon {if $template.compatibility_ok}glyphicon-ok green{else}glyphicon-warning-sign orange{/if}" title="{if $template.compatibility_ok}{lang('template_compatible')}{else}{lang('template_not_compatible')}{/if}"></i></span>
+                    {lang('compatibility')} : <span id="compatibility_text_{$index}">{if !empty($template.compatibility)}{$template.compatibility}{else}{lang('unknown')}{/if} <i class="glyphicon {if $template.compatibility_ok}glyphicon-ok green{else}glyphicon-warning-sign orange{/if}" title="{if $template.compatibility_ok}{lang('template_compatible')}{else}{lang('template_not_compatible')}{/if}"></i></span>
                 </p>
                 <div class="input-group hidden" id="compatibility_group_{$index}" style="width: 100%;">
                     <select name="compatibility_{$index}" id="compatibility_{$index}" style="width: 100%; height: 34px;">
@@ -62,7 +62,9 @@
                 {else}
                     <input type="hidden" name="path_{$index}" id="path_{$index}" value="{$template.dir}">
                     <i data-num="{$index}" class="glyphicon glyphicon-remove delete_default_theme text-danger paddingLeftSmall" style="float: right; cursor:pointer;" title="{lang('delete')}"></i>
-                    <i data-num="{$index}" class="glyphicon glyphicon-edit edit_theme text-primary" style="float: right; cursor:pointer;" title="{lang('edit')}"></i>
+                    {if !empty($template.is_copy)}
+                        <i data-num="{$index}" class="glyphicon glyphicon-edit edit_theme text-primary" style="float: right; cursor:pointer;" title="{lang('edit')}"></i>
+                    {/if}
                 {/if}
             </div>
         </div>
