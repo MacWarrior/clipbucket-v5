@@ -21,7 +21,5 @@ class M00095 extends \Migration
             'fr'=>'Supprime les anciennes tâches, historiques et journaux des outils d\'administration',
             'en'=>'Clean up old administration tools tasks, history and logs'
         ]);
-
-        \AdminTool::test_for_update_code();
     }
 }

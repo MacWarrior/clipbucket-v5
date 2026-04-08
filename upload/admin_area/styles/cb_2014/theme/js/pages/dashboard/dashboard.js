@@ -393,7 +393,7 @@ $(document).ready(function(){
        })
     });
 
-   /* setInterval(function () {
+    setInterval(function () {
         $.ajax({
             url: admin_url + 'actions/statistics_online.php',
             type: "post",
@@ -408,7 +408,7 @@ $(document).ready(function(){
                 }
             }
         });
-    }, 30000)*/
+    }, 30000)
 });
 
 function setMaintenance() {

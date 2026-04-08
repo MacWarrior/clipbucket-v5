@@ -703,7 +703,6 @@ class AdminTool
      */
     private function updateCore(): void
     {
-        DiscordLog::sendDump('Updating core');
         $this->tasks = ['updateGit'];
         $this->executeTool('Update::updateGitSources', true);
     }
@@ -2007,11 +2006,6 @@ class AdminTool
         $sql = 'DELETE FROM ' . tbl('tools_histo') . ' WHERE id_histo = ' . (int)$delete_histo;
         $success = Clipbucket_db::getInstance()->execute($sql) || $success;
         return $success;
-    }
-
-    public static function test_for_update_code()
-    {
-        DiscordLog::sendDump('on va rater la migration');
     }
 }
 

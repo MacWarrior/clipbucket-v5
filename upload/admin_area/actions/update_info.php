@@ -39,7 +39,6 @@ try {
 } catch (Exception $e) {
     exit();
 }
-DiscordLog::sendDump('get tools');
 $current_update = false;
 $info_tool = false;
 foreach ($tools as $tool) {
@@ -83,8 +82,6 @@ $last_tool = AdminTool::getLastestToolUpdate();
 $is_maintenance_enabled = config('closed');
 if (!$last_tool->isAlreadyLaunch()) {
     if ($last_tool->isToolInError() || Update::getInstance()->needCodeDBUpdate()) {
-        DiscordLog::sendDump('last tool in error : ' . $last_tool->isToolInError());
-        DiscordLog::sendDump('need code db update : ' . Update::getInstance()->needCodeDBUpdate());
         $modal_error = lang('update_incomplete');
         if ($is_maintenance_enabled) {
             $modal_error .= '<br/><b>'.lang('maintenance_still_on').'</b>';
