@@ -9,7 +9,7 @@ pages::getInstance()->page_redir();
 /* Generating breadcrumb */
 global $breadcrumb;
 $breadcrumb[0] = ['title' => lang('tool_box'), 'url' => ''];
-$breadcrumb[1] = ['title' => 'View online users', 'url' => DirPath::getUrl('admin_area') . 'online_users.php'];
+$breadcrumb[1] = ['title' => lang('view_online_users'), 'url' => DirPath::getUrl('admin_area') . 'online_users.php'];
 
 if ($_GET['kick']) {
     if (Session::getInstance()->kick(mysql_clean($_GET['kick']))) {
@@ -31,6 +31,6 @@ $online_users = userquery::getInstance()->get_online_users();
 assign('total', count($online_users));
 assign('online_users', $online_users);
 assign('queryString', queryString(null, 'kick'));
-subtitle("View online users");
+subtitle(lang('view_online_users'));
 template_files('online_users.html');
 display_it();

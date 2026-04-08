@@ -151,9 +151,6 @@ $(document).ready(function(){
         e.stopPropagation();
     });
 
-    if (can_sse === 'true' && is_update_processing === 'true') {
-        // connectSSE();
-    }
     if (is_update_processing === 'true') {
         refreshUpdateProgression();
     }
@@ -565,8 +562,10 @@ async function update(type){
                 $('#update_div').html(response.html);
             }
 
-            // connectSSE();
-            refreshUpdateProgression(type);
+            setTimeout(function () {
+                refreshUpdateProgression(type);
+            }, 5000);
+
         }
     });
 }
@@ -637,7 +636,7 @@ async function check_before_launch_update() {
 function refreshUpdateProgression(type) {
     var interval = setInterval(function () {
         updateInfo(interval, type);
-    }, 5000);
+    }, 10000);
 }
 function updateInfo(interval, type) {
     $.ajax({

@@ -1,6 +1,6 @@
 {
   "version":"5.5.3",
-  "revision":"98",
+  "revision":"100",
   "status":"stable",
   "detail":[
     {
@@ -18,6 +18,7 @@
         ,"Add links to flagged tags"
         ,"Hide poster & backdrop tabs when empty on video edition page"
         ,"Only show template editor menu while in dev mode"
+        ,"Prevent user read-only datas editions"
         ,"Fix JS error on playlist management page"
         ,"Fix missing video thumbs tool"
         ,"Fix possible PHP error on video edition page"
@@ -32,6 +33,7 @@
         ,"Fix typo"
         ,"Fix Recreate photos thumbs tool"
         ,"Fix Delete orphan files tool"
+        ,"Fix user recent activity datetime display"
       ]
     },
     {
