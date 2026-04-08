@@ -1839,4 +1839,6 @@ VALUES ('ongoing_conversion'),
        ('kick'),
        ('kick_hint'),
        ('right_now'),
-       ('view_referer');
+       ('view_referer'),
+       ('recent_activity_log'),
+       ('view_online_users');

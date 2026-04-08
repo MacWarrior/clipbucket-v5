@@ -94,5 +94,15 @@ class MWIP extends \Migration
             'fr'=>'Voir le référant',
             'en'=>'View referer'
         ]);
+
+        self::generateTranslation('recent_activity_log', [
+            'fr'=>'Journaux d\'activité récente',
+            'en'=>'Recent activity log'
+        ]);
+
+        self::generateTranslation('view_online_users', [
+            'fr'=>'Voir les utilisateurs en ligne',
+            'en'=>'View online users'
+        ]);
     }
 }
