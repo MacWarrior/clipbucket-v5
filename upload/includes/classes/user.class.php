@@ -668,7 +668,7 @@ class User extends Objects
                 'success' => false,
                 'msg'     => getTemplateMsg()
             ]);
-            die;
+            die();
         }
     }
 

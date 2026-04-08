@@ -4,7 +4,7 @@ const IS_AJAX = true;
 require_once dirname(__FILE__, 3) . '/includes/admin_config.php';
 
 if (empty($_POST['type']) || !in_array($_POST['type'], ['core', 'db'])) {
-    die;
+    die();
 }
 
 $core_tool = new AdminTool();
@@ -49,7 +49,7 @@ if( $tmp_file === false ){
 $data = /** @lang PHP */
     '<?php
 if (php_sapi_name() != \'cli\') {
-    die;
+    die();
 }
 
 sleep(2);
@@ -59,12 +59,12 @@ include_once \'' . DirPath::get('includes') . 'admin_config.php' . '\';
 $type =  $argv[1] ?? \'' . $_POST['type'] . '\';
 if (!in_array($type, [\'core\', \'db\'])) {
     echo  \'false\';
-    die;
+    die();
 }
 $core_tool = AdminTool::getUpdateCoreTool();
 if (empty($core_tool)) {
     echo  \'false\';
-    die;
+    die();
 }
 if (Update::IsCurrentDBVersionIsHigherOrEqualTo(\'5.5.0\', \'367\')) {
     AdminTool::getInstance()->initByCode(\'update_database_version\');
@@ -73,7 +73,7 @@ if (Update::IsCurrentDBVersionIsHigherOrEqualTo(\'5.5.0\', \'367\')) {
 }
 if (empty(AdminTool::getInstance())) {
     echo  \'false\';
-    die;
+    die();
 }
 if ($type == \'core\' && $core_tool->isAlreadyLaunch() === false) {
     $core_tool->setToolInProgress();
@@ -88,7 +88,7 @@ if ($type == \'core\' && $core_tool->isAlreadyLaunch() === false) {
             shell_exec(\'(sleep 3; \' . $cmd . \') >/dev/null 2>&1 &\');
         }
     }
-    die;
+    die();
 }
 Update::getInstance()->flush();
 
@@ -126,4 +126,4 @@ echo json_encode([
     'success' => true,
     'html'    => ob_get_clean()
 ]);
-die;
+die();
