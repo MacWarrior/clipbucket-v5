@@ -640,7 +640,7 @@ async function check_before_launch_update() {
 function refreshUpdateProgression(type) {
     var interval = setInterval(function () {
         updateInfo(interval, type);
-    }, 5000);
+    }, 10000);
 }
 function updateInfo(interval, type) {
     $.ajax({

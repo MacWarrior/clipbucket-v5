@@ -85,7 +85,7 @@ if ($type == \'core\' && $core_tool->isAlreadyLaunch() === false) {
         if (stristr(PHP_OS, \'WIN\')) {
             shell_exec($cmd);
         } else {
-            shell_exec(\'(sleep 10; \' . $cmd . \') >/dev/null 2>&1 &\');
+            shell_exec(\'(sleep 3; \' . $cmd . \') >/dev/null 2>&1 &\');
         }
     }
     die;
