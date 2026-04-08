@@ -68,7 +68,7 @@
 						<li class="divider"></li>
 						<li><a role="menuitem" tabindex="-1" href="{$baseurl}edit_video.php?vid={$video.videoid}">{lang code='edit'}</a></li>
 						{if $mode != 'favorites'}
-							<li><a role="menuitem" tabindex="-1" href="javascript:_cb.Confirm_Delete('?vid_delete={$video.videoid}')">{lang code='delete'}</a></li>
+							<li><a role="menuitem" tabindex="-1" href="javascript:_cb.Confirm_Delete('{$baseurl}manage_videos.php?vid_delete={$video.videoid}')">{lang code='delete'}</a></li>
 						{/if}
 					{/if}
 

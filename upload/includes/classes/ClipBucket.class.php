@@ -327,10 +327,12 @@ class ClipBucket
             , 'url' => DirPath::getUrl('admin_area') . 'setting_advanced.php'
         ];
 
-        $menu_configuration['sub'][] = [
-            'title' => lang('template_editor')
-            , 'url' => DirPath::getUrl('admin_area') . 'template_editor.php'
-        ];
+        if (System::isInDev()) {
+            $menu_configuration['sub'][] = [
+                'title' => lang('template_editor'),
+                'url'   => DirPath::getUrl('admin_area') . 'template_editor.php'
+            ];
+        }
 
         $menu_configuration['sub'][] = [
             'title' => lang('manage_x', strtolower(lang('pages')))
