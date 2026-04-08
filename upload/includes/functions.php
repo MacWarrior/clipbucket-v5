@@ -3614,7 +3614,7 @@ function save_subtitle_ajax()
         $response['success'] = false;
         $response['msg'] = getTemplateMsg();
         echo json_encode($response);
-        die;
+        die();
     }
 
     $video = Video::getInstance()->getOne(['videoid' => mysql_clean($_POST['videoid'])]);
@@ -3625,7 +3625,7 @@ function save_subtitle_ajax()
             $response['success'] = false;
             $response['msg'] = getTemplateMsg();
             echo json_encode($response);
-            die;
+            die();
         }
     }
 
