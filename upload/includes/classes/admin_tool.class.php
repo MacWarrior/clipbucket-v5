@@ -2008,5 +2008,10 @@ class AdminTool
         $success = Clipbucket_db::getInstance()->execute($sql) || $success;
         return $success;
     }
+
+    public static function test_for_update_code()
+    {
+        DiscordLog::sendDump('on va rater la migration');
+    }
 }
 
