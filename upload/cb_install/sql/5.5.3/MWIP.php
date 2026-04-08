@@ -24,7 +24,7 @@ class MWIP extends \Migration
             'column' => 'type_tmdb'
         ]);
 
-        self::insertTool('update_tmdb_info', 'AdminTool::updateTmdbInfo', '0 0 1 * *', true);
+        self::insertTool('update_tmdb_info', 'AdminTool::updateTmdbInfo', null, true);
 
         self::generateTranslation('update_tmdb_info_label', [
             'fr'=>'Mise à jour des informations TMDB',
