@@ -1821,5 +1821,7 @@ VALUES ('ongoing_conversion'),
        ('photo_thumbs_format_tips'),
        ('keep_photo_type'),
        ('webp'),
+       ('task_queue_cleaner_label'),
+       ('task_queue_cleaner_description'),
        ('update_tmdb_info_label'),
        ('update_tmdb_info_description');
