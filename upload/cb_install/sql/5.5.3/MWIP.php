@@ -10,7 +10,6 @@ class MWIP extends \Migration
      */
     public function start()
     {
-
         self::alterTable('ALTER TABLE `{tbl_prefix}video` ADD `id_tmdb` INT NULL;', [
             'table' => 'video'
         ], [
