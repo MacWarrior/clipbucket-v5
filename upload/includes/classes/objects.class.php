@@ -242,6 +242,7 @@ abstract class Objects
 
     /**
      * @return array
+     * @throws Exception
      */
     protected static function getObjectTableAndFieldId(): array
     {
@@ -260,6 +261,11 @@ abstract class Objects
             case 'collection':
                 $tablename = Collection::getInstance()->getTableName();
                 $object_id = 'collection_id';
+                break;
+
+            case 'user':
+                $tablename = User::getInstance()->getTableName();
+                $object_id = 'userid';
                 break;
 
             default:

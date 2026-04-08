@@ -143,12 +143,12 @@
                                 <li>
                                     <a href="#cb-item-addto" data-toggle="tab"><span class="icon-plusrounded"></span>{lang('add_to')}</a>
                                 </li>
-                                {if User::getInstance()->getCurrentUserID() != $photo.userid}
-                                    <li>
-                                        <a href="#cb-item-report" data-toggle="tab"><span class="icon-flag"></span>{lang('report_this')}
-                                        </a>
-                                    </li>
-                                {/if}
+                            {/if}
+                            {if User::getInstance()->getCurrentUserID() != $photo.userid}
+                                <li>
+                                    <a href="#cb-item-report" data-toggle="tab"><span class="icon-flag"></span>{lang('report_this')}
+                                    </a>
+                                </li>
                             {/if}
                         </ul>
                         <div class="tab-content clearfix">
@@ -219,7 +219,6 @@
                                     {/if}
                                 </div>
                             {/if}
-
                             {if User::getInstance()->getCurrentUserID() && $photo.userid != User::getInstance()->getCurrentUserID()}
                                 <div class="tab-pane fade in clearfix" id="cb-item-report">
                                     {show_flag_form id=$photo.photo_id type=Photo}
