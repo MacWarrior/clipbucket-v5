@@ -96,7 +96,7 @@
                                 </div>
                             </div>
                             <hr/>
-                            <div class="row {if ($row.maximum_allowed_subtitle_size > config('max_upload_size'))}bg-danger {/if}" >
+                            <div class="row" >
                                 <div class="col-md-6">
                                     <label class="nowrap" for="maximum_allowed_subtitle_size" title="{lang('option_maximum_allowed_subtitle_size')}">
                                         {if ($row.maximum_allowed_subtitle_size > config('max_upload_size'))}
@@ -182,7 +182,7 @@
                                 </div>
                             </div>
                             <hr/>
-                            <div class="row {if ($row.max_photo_size > config('max_upload_size'))}bg-danger {/if}">
+                            <div class="row">
                                 <div class="col-md-6">
                                     <label class="nowrap" for="max_photo_size" title="{lang('maximum_image_size')}">
                                         {if ($row.max_photo_size > config('max_upload_size'))}
