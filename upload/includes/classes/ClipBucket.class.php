@@ -493,7 +493,7 @@ class ClipBucket
                 , 'class' => 'glyphicon glyphicon-wrench'
                 , 'sub'   => [
                     [
-                        'title' => 'View online users'
+                        'title' => lang('view_online_users')
                         , 'url' => DirPath::getUrl('admin_area') . 'online_users.php'
                     ]
                     , [
