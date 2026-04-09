@@ -67,7 +67,7 @@
                                     <span class="label label-info">{lang code='type'} : <strong>{lang code=$collections[list].type}</strong></span>
                                     <span class="label label-info"><strong>{lang('created_x', $collections[list].date_added|niceTime)}</strong></span>
                                     {if $collections[list].is_flagged == 1}
-                                        <span class="label label-danger">{lang('flagged')}</span>
+                                        <a href="{$baseurl}admin_area/flagged_item.php?type=collection"><span class="label label-danger">{lang('flagged')}</span></a>
                                     {/if}
                                 </div>
                             </div>

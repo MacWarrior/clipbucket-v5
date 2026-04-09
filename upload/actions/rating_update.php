@@ -74,7 +74,7 @@ try {
                         'success' => false,
                         'msg'     => getTemplateMsg()
                     ]);
-                    die;
+                    die();
                 }
                 Comments::ratingUpdate($id, $rating);
             }

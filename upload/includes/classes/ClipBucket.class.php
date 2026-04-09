@@ -328,10 +328,12 @@ class ClipBucket
             , 'url' => DirPath::getUrl('admin_area') . 'setting_advanced.php'
         ];
 
-        $menu_configuration['sub'][] = [
-            'title' => lang('template_editor')
-            , 'url' => DirPath::getUrl('admin_area') . 'template_editor.php'
-        ];
+        if (System::isInDev()) {
+            $menu_configuration['sub'][] = [
+                'title' => lang('template_editor'),
+                'url'   => DirPath::getUrl('admin_area') . 'template_editor.php'
+            ];
+        }
 
         $menu_configuration['sub'][] = [
             'title' => lang('manage_x', strtolower(lang('pages')))
@@ -492,7 +494,7 @@ class ClipBucket
                 , 'class' => 'glyphicon glyphicon-wrench'
                 , 'sub'   => [
                     [
-                        'title' => 'View online users'
+                        'title' => lang('view_online_users')
                         , 'url' => DirPath::getUrl('admin_area') . 'online_users.php'
                     ]
                     , [

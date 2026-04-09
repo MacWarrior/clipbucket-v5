@@ -1632,7 +1632,7 @@ function cbdate($format = null, $timestamp = null): string
 function cbdatetime($format = null, $timestamp = null): string
 {
     if (!$format) {
-        $format = config('date_format') . ' h:m:s';
+        $format = config('date_format') . ' H:i:s';
     }
 
     return cbdate($format, $timestamp);
@@ -3614,7 +3614,7 @@ function save_subtitle_ajax()
         $response['success'] = false;
         $response['msg'] = getTemplateMsg();
         echo json_encode($response);
-        die;
+        die();
     }
 
     $video = Video::getInstance()->getOne(['videoid' => mysql_clean($_POST['videoid'])]);
@@ -3625,7 +3625,7 @@ function save_subtitle_ajax()
             $response['success'] = false;
             $response['msg'] = getTemplateMsg();
             echo json_encode($response);
-            die;
+            die();
         }
     }
 
