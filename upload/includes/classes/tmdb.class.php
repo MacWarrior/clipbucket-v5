@@ -422,7 +422,7 @@ class Tmdb
             foreach ($details['genres'] as $genre) {
                 $genre_tags[] = trim($genre['name']);
             }
-            Tags::saveTags(implode(',', $genre_tags), 'genre', $_POST['videoid']);
+            Tags::saveTags(implode(',', $genre_tags), 'genre', $videoid);
         }
 
         if (config('tmdb_get_actors') == 'yes' && config('enable_video_actor') == 'yes') {
@@ -430,7 +430,7 @@ class Tmdb
             foreach ($credits['cast'] as $actor) {
                 $actors_tags[] = str_replace(',','.',trim($actor['name']));
             }
-            Tags::saveTags(implode(',', $actors_tags), 'actors', $_POST['videoid']);
+            Tags::saveTags(implode(',', $actors_tags), 'actors', $videoid);
         }
 
         $producer_tags = [];
@@ -456,19 +456,22 @@ class Tmdb
         }
 
         if (config('tmdb_get_producer') == 'yes' && config('enable_video_producer') == 'yes') {
-            Tags::saveTags(implode(',', $producer_tags), 'producer', $_POST['videoid']);
+            Tags::saveTags(implode(',', $producer_tags), 'producer', $videoid);
         }
 
         if (config('tmdb_get_executive_producer') == 'yes' && config('enable_video_executive_producer') == 'yes') {
-            Tags::saveTags(implode(',', $executive_producer_tags), 'executive_producer', $_POST['videoid']);
+            Tags::saveTags(implode(',', $executive_producer_tags), 'executive_producer', $videoid);
         }
 
         if (config('tmdb_get_director') == 'yes' && config('enable_video_director') == 'yes') {
-            Tags::saveTags(implode(',', $director_tags), 'director', $_POST['videoid']);
+            Tags::saveTags(implode(',', $director_tags), 'director', $videoid);
         }
 
         if (config('tmdb_get_crew') == 'yes' && config('enable_video_crew') == 'yes') {
-            Tags::saveTags(implode(',', $crew_tags), 'crew', $_POST['videoid']);
+            Tags::saveTags(implode(',', $crew_tags), 'crew', $videoid);
+        }
+        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '101')) {
+            Clipbucket_db::getInstance()->update(tbl('video'), ['id_tmdb', 'type_tmdb'], [$tmdb_id, $type], 'videoid = ' . $videoid);
         }
     }
 

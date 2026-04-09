@@ -387,6 +387,7 @@ class User extends Objects
         $param_first_only = $params['first_only'] ?? false;
 
         $param_category = $params['category'] ?? false;
+        $param_join_flag = $params['join_flag'] ?? false;
 
         $conditions = [];
         if( $param_userid ){
@@ -525,6 +526,12 @@ class User extends Objects
             }
         }
 
+        if ($param_join_flag && Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '248') && !$param_count) {
+            $flag_constraint = self::getFlagConstraint();
+            $join[] = $flag_constraint['join'];
+            $select[] = $flag_constraint['select'];
+        }
+
         $having = '';
         if( $param_having ){
             $having = ' HAVING '.$param_having;
@@ -661,7 +668,7 @@ class User extends Objects
                 'success' => false,
                 'msg'     => getTemplateMsg()
             ]);
-            die;
+            die();
         }
     }
 
@@ -1269,6 +1276,19 @@ class User extends Objects
         $avcode = RandomString(10);
         Clipbucket_db::getInstance()->update(tbl(User::getInstance()->getTableName()), ['avcode'], [$avcode], ' userid=' . $userid);
         return $avcode;
+    }
+
+    /**
+     * @return array|string[]
+     * @throws Exception
+     */
+    public static function getFlagConstraint(): array
+    {
+        $info = static::getObjectTableAndFieldId();
+        return [
+            'join'   => ' LEFT JOIN ' . cb_sql_table(Flag::getTableName()) . ' ON ' . Flag::getTableName() . '.id_element = ' . $info['table_name'] . '.' . $info['field_id'] . ' AND ' . Flag::getTableName() . '.id_flag_element_type = ' . static::getTypeId(),
+            'select' => ' IF(COUNT(distinct ' . Flag::getTableName() . '.flag_id) > 0, 1, 0) AS is_flagged',
+        ];
     }
 
 }

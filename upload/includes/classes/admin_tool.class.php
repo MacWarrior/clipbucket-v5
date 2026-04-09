@@ -276,15 +276,15 @@ class AdminTool
         //get list of video without thumbs
 
         if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '1')) {
-            $this->tasks = Clipbucket_db::getInstance()->select(tbl('video') . ' AS V 
+            $this->insertTaskData(Clipbucket_db::getInstance()->select(tbl('video') . ' AS V 
                 LEFT JOIN ' . tbl('video_image') . ' AS VT ON V.videoid = VT.videoid AND VT.type = \'thumbnail\' AND is_auto = TRUE', 'V.*'
                 , ' 1 GROUP by videoid HAVING COUNT(VT.videoid) = 0'
-            );
+            ));
         } else {
-            $this->tasks = Clipbucket_db::getInstance()->select(tbl('video') . ' AS V 
+            $this->insertTaskData(Clipbucket_db::getInstance()->select(tbl('video') . ' AS V 
                 LEFT JOIN ' . tbl('video_thumbs') . ' AS VT ON V.videoid = VT.videoid AND VT.type = \'auto\'', 'V.*'
                 , ' 1 GROUP by videoid HAVING COUNT(VT.videoid) = 0'
-            );
+            ));
         }
         $this->executeTool('generatingMoreThumbs');
     }
@@ -1943,7 +1943,7 @@ class AdminTool
                 ]);
                 $offset += $limit;
                 foreach ($videos as $video) {
-                    $this->insertTaskData(['video'=>$video]);
+                    $this->insertTaskData(['videoid'=>$video['videoid']]);
                 }
             } while (!empty($videos));
         }
@@ -1957,8 +1957,91 @@ class AdminTool
      */
     public static function generateVideoThumbs($data): bool
     {
-        generatingMoreThumbs($data, true);
+        generatingMoreThumbs(['videoid'=>$data], true);
         return true;
+    }
+
+    /**
+     * @return void
+     * @throws Exception
+     */
+    public function updateTmdbInfo(): void
+    {
+        if (empty($this->tasks_total)) {
+            $this->tasks_total = 0;
+            $this->tasks_processed = 0;
+            $this->tasks = [];
+            $limit = 100;
+            $offset = 0;
+            do {
+                $videos = Video::getInstance()->getAll([
+                    'limit'                       => $offset . ', ' . $limit,
+                    'condition' => ' id_tmdb IS NOT NULL ',
+                ]);
+                $offset += $limit;
+                foreach ($videos as $video) {
+                    $this->insertTaskData([0=>['videoid'=>$video['videoid'], 'id_tmdb'=>$video['id_tmdb'], 'type_tmdb'=>$video['type_tmdb']]]);
+                }
+            } while (!empty($videos));
+        }
+        $this->executeTool('AdminTool::reimportTmdbInfo');
+    }
+
+    /**
+     * @param $info
+     * @return bool
+     * @throws Exception
+     */
+    public static function reimportTmdbInfo($info): bool
+    {
+        if (empty($info['videoid']) || empty($info['id_tmdb']) || empty($info['type_tmdb']))  {
+            return false;
+        }
+        Tmdb::getInstance()->importDataFromTmdb($info['videoid'], $info['id_tmdb'], $info['type_tmdb']);
+        return true;
+    }
+
+    public function cleanUpTask(): void
+    {
+        if (empty($this->tasks_total)) {
+            $limit = 100;
+            $offset = 0;
+            do {
+                $sql = 'SELECT TH.id_histo
+            FROM ' . tbl('tools') . ' T
+            INNER JOIN ' . tbl('tools_histo') . ' TH ON T.id_tool = TH.id_tool
+            
+            WHERE TH.date_end < (NOW() - INTERVAL 1 MONTH)
+            AND TH.id_histo != (SELECT tools_histo.id_histo
+                FROM ' . tbl('tools_histo') . ' AS tools_histo
+                WHERE tools_histo.id_tool = T.id_tool
+                ORDER BY tools_histo.date_start DESC
+                LIMIT 1
+            )
+            LIMIT ' . $offset . ', ' . $limit;
+                $histo = Clipbucket_db::getInstance()->_select($sql);
+                $this->insertTaskData($histo);
+                $offset += $limit;
+            } while (!empty($histo));
+        }
+        $this->executeTool('AdminTool::deleteHistoAndTask');
+    }
+
+    /**
+     * @param $data
+     * @return bool
+     * @throws Exception
+     */
+    public static function deleteHistoAndTask($data): bool
+    {
+        $delete_histo = $data['id_histo'];
+        $sql = 'DELETE FROM ' . tbl('tools_tasks'). ' WHERE id_histo = ' . (int)$delete_histo;
+        $success = (bool)Clipbucket_db::getInstance()->execute($sql);
+        $sql = 'DELETE FROM ' . tbl('tools_histo_log'). ' WHERE id_histo = ' . (int)$delete_histo;
+        $success = Clipbucket_db::getInstance()->execute($sql) || $success;
+        $sql = 'DELETE FROM ' . tbl('tools_histo') . ' WHERE id_histo = ' . (int)$delete_histo;
+        $success = Clipbucket_db::getInstance()->execute($sql) || $success;
+        return $success;
     }
 }
 
