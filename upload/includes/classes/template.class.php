@@ -3,7 +3,7 @@
 class CBTemplate
 {
 
-    public static array $allowed_fields = ['name', 'description', 'title', 'link', 'version','released', 'author'];
+    public static array $allowed_fields = ['name', 'description', 'title', 'link', 'version','released', 'author', 'compatibility'];
     public static function getInstance(): self
     {
         global $cbtpl;
@@ -123,20 +123,19 @@ class CBTemplate
         $dirs = scandir($dir);
         foreach ($dirs as $tpl) {
             if (!str_starts_with($tpl, '.')) {
-                $tpl_dirs[] = $tpl;
+                $templates_dirs[] = $tpl;
             }
         }
         //Now Checking for template template.xml
-        $tpls = [];
-        foreach ($tpl_dirs as $tpl_dir) {
-            $tpl_details = CBTemplate::get_template_details($tpl_dir);
-            //TODO check if is copy
-            if ($tpl_details && $tpl_details['name'] != '') {
-                $tpls[] = $tpl_details;
+        $templates = [];
+        foreach ($templates_dirs as $template_dir) {
+            $templates_details = CBTemplate::get_template_details($template_dir);
+            if ($templates_details && $templates_details['name'] != '') {
+                $templates[] = $templates_details;
             }
         }
 
-        return $tpls;
+        return $templates;
     }
 
     function get_template_details($temp)
@@ -150,6 +149,8 @@ class CBTemplate
             preg_match('/<released>(.*)<\/released>/', $content, $released);
             preg_match('/<description>(.*)<\/description>/', $content, $description);
             preg_match('/<website title="(.*)">(.*)<\/website>/', $content, $website_arr);
+            preg_match('/<compatibility>(.*)<\/compatibility>/', $content, $compatibility);
+            preg_match('/<is_copy>([0-1])<\/is_copy>/', $content, $is_copy);
 
             /* For 2.7 and Smarty v3 Support */
             preg_match('/<min_version>(.*)<\/min_version>/', $content, $min_version);
@@ -162,23 +163,45 @@ class CBTemplate
             $description = $description[1] ?? false;
             $min_version = $min_version[1] ?? false;
             $smarty_version = $smarty_version[1] ?? false;
+            $compatibility = $compatibility[1] ?? false;
+            $is_copy = $is_copy[1] ?? false;
+            $compatibility_ok = (
+                !empty($compatibility)
+                && $compatibility == Update::getInstance()->getCurrentCoreVersion()
+            );
 
             $website = ['title' => $website_arr[1], 'link' => $website_arr[2]];
 
             return [
-                'name'           => $name,
-                'author'         => $author,
-                'version'        => $version,
-                'released'       => $released,
-                'description'    => $description,
-                'website'        => $website,
-                'dir'            => $temp,
-                'min_version'    => $min_version,
-                'smarty_version' => $smarty_version,
-                'path'           => DirPath::get('styles') . $temp
+                'name'             => $name,
+                'author'           => $author,
+                'version'          => $version,
+                'released'         => $released,
+                'description'      => $description,
+                'website'          => $website,
+                'dir'              => $temp,
+                'min_version'      => $min_version,
+                'smarty_version'   => $smarty_version,
+                'compatibility'    => $compatibility,
+                'compatibility_ok' => $compatibility_ok,
+                'path'             => DirPath::get('styles') . $temp,
+                'is_copy'          => $is_copy
             ];
         }
         return false;
+    }
+
+    function getAvailableVersions()
+    {
+        $versions = [];
+        $version_glob = glob(DirPath::get('changelog') . '[0-9]*.json');
+        foreach ($version_glob as $item) {
+            $file_info = json_decode(file_get_contents($item), true);
+            $versions[] = $file_info['version'];
+        }
+        $versions = array_unique($versions);
+        rsort($versions);
+        return $versions;
     }
 
     /**
@@ -304,6 +327,7 @@ class CBTemplate
         $xml = simplexml_load_file($new_template);
         $xml->name = 'Copy of ' . $xml->name;
         $xml->description = 'Copy of ' . $xml->description;
+        $xml->is_copy = 1;
         $xml->saveXML($new_template);
         return true;
     }

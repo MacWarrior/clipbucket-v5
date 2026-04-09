@@ -1843,4 +1843,8 @@ VALUES ('ongoing_conversion'),
        ('recent_activity_log'),
        ('view_online_users'),
        ('update_tmdb_info_label'),
-       ('update_tmdb_info_description');
+       ('update_tmdb_info_description'),
+       ('template_compatible'),
+       ('template_not_compatible'),
+       ('compatibility'),
+       ('unknown');

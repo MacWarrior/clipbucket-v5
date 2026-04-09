@@ -1,6 +1,6 @@
 {
   "version":"5.5.3",
-  "revision":"101",
+  "revision":"102",
   "status":"stable",
   "detail":[
     {
@@ -14,6 +14,7 @@
         ,"Implement live statistics & ongoing tools on dashboard"
         ,"Implement tasks cleanup tool"
         ,"Implement TMDB data refresh tool"
+        ,"Implement template compatibility check"
         ,"Update advanced settings display"
         ,"Update video & photos thumbs regeneration tools"
         ,"Add links to flagged tags"
