@@ -3,10 +3,10 @@ const THIS_PAGE = 'basic_settings';
 require_once dirname(__FILE__, 2) . '/includes/admin_config.php';
 
 $permission = 'basic_settings';
-if( !Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '275') ){
+if (!Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '275')) {
     $permission = 'web_config_access';
 }
-User::getInstance()->hasPermissionOrRedirect($permission,true);
+User::getInstance()->hasPermissionOrRedirect($permission, true);
 pages::getInstance()->page_redir();
 
 /* Generating breadcrumb */
@@ -188,21 +188,21 @@ if (isset($_POST['update'])) {
     ];
 
     $config_booleans_to_refactor = [
-        'closed'
-        , 'enable_update_checker'
-        , 'allow_language_change'
-        , 'allow_registeration'
-        , 'pick_geo_country'
-        , 'email_verification'
-        , 'use_subs'
-        , 'video_embed'
-        , 'video_download'
-        , 'bits_color_warning'
-        , 'photo_crop'
-        , 'show_collapsed_checkboxes'
-        , 'activation'
-        , 'photo_activation'
-        , 'player_subtitles'
+        'closed',
+        'enable_update_checker',
+        'allow_language_change',
+        'allow_registeration',
+        'pick_geo_country',
+        'email_verification',
+        'use_subs',
+        'video_embed',
+        'video_download',
+        'bits_color_warning',
+        'photo_crop',
+        'show_collapsed_checkboxes',
+        'activation',
+        'photo_activation',
+        'player_subtitles'
     ];
 
     $rows = [
@@ -522,16 +522,16 @@ if (isset($_POST['update'])) {
     foreach ($rows as $field) {
         $value = ($_POST[$field]);
         if (in_array($field, $num_array)) {
-            if ($field == 'min_age_reg' && ($value > 99 || $value <= 0 || !is_numeric($value) )) {
+            if ($field == 'min_age_reg' && ($value > 99 || $value <= 0 || !is_numeric($value))) {
                 e(lang('error_age_restriction_save'));
                 continue;
             }
-            if (($value <= 0 || !is_numeric($value)) && !in_array($field, ['video_categories', 'max_collection_categories', 'max_photo_categories']) ) {
+            if (($value <= 0 || !is_numeric($value)) && !in_array($field, ['video_categories', 'max_collection_categories', 'max_photo_categories'])) {
                 $value = 1;
             }
         }
 
-        if ($field=='date_format' && !validatePHPDateFormat($value)) {
+        if ($field == 'date_format' && !validatePHPDateFormat($value)) {
             e(lang('invalid_date_format'));
             continue;
         }
@@ -547,22 +547,22 @@ if (isset($_POST['update'])) {
         }
 
         if (!isset(myquery::getInstance()->Get_Website_Details()[$field])) {
-            if( !$has_missing_config ){
-                e(lang('error_missing_config_please_use_tool', DirPath::getUrl('admin_area') . 'admin_tool.php?code_tool=install_missing_config'),'w',false);
+            if (!$has_missing_config) {
+                e(lang('error_missing_config_please_use_tool', DirPath::getUrl('admin_area') . 'admin_tool.php?code_tool=install_missing_config'), 'w', false);
                 $has_missing_config = true;
             }
-            if( System::isInDev() ){
-                $tmp_text = 'Missing config: '.$field;
+            if (System::isInDev()) {
+                $tmp_text = 'Missing config: ' . $field;
                 error_log($tmp_text);
                 DiscordLog::sendDump($tmp_text);
             }
             continue;
         }
 
-        if( !is_null($value) ){
+        if (!is_null($value)) {
             myquery::getInstance()->Set_Website_Details($field, $value);
         } else {
-            DiscordLog::sendDump('Missing value for config: '.$field);
+            DiscordLog::sendDump('Missing value for config: ' . $field);
         }
     }
 
@@ -574,7 +574,7 @@ if (isset($_POST['update'])) {
         // function used to upload site logo.
         upload_image('favicon');
     }
-    if( !empty($_FILES['upload_player-logo']['name']) ){
+    if (!empty($_FILES['upload_player-logo']['name'])) {
         upload_image('player-logo');
     }
 
@@ -599,7 +599,7 @@ $filepath_custom_css = DirPath::get('files') . 'custom.css';
 assign('custom_css', $_POST['custom_css'] ?? file_get_contents($filepath_custom_css));
 
 if (!empty($_POST)) {
-    if( !empty($_POST['custom_css']) ){
+    if (!empty($_POST['custom_css'])) {
         if (is_writable(DirPath::get('files'))) {
             file_put_contents($filepath_custom_css, $_POST['custom_css']);
         } else {
@@ -609,7 +609,6 @@ if (!empty($_POST)) {
         unlink($filepath_custom_css);
     }
 }
-
 
 $min_suffixe = System::isInDev() ? '' : '.min';
 ClipBucket::getInstance()->addAdminJS([

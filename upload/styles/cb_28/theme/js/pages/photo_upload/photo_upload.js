@@ -9,6 +9,8 @@ $(document).ready(function(){
         file_data_name : 'Filedata',
         chunk_size: chunk_upload ? max_upload_size : false,
         max_file_size : max_file_size,
+        max_file_size_error_message: max_file_size_error_message,
+
         filters: {
             mime_types : [
                 { title : 'Image files', extensions : photo_extensions }
@@ -158,11 +160,12 @@ $(document).ready(function(){
                     url : baseurl+"actions/photo_uploader.php",
                     type : "post",
                     data : data,
+                    dataType: "JSON",
                     success: function (msg) {
-                        msg = $.parseJSON(msg);
+
                         $("#uploadMessage").removeClass("hidden");
                         if (msg.error) {
-                            $('#uploadMessage').html(msg.error.val).attr('class', 'alert alert-danger container');
+                            $('#uploadMessage').html(msg.error).attr('class', 'alert alert-danger container');
                             $('html,body').animate({
                                 scrollTop: $("body").offset().top
                             }, 'medium');
@@ -340,7 +343,7 @@ $(document).ready(function(){
             dataType: "JSON",
             success: function(msg){
                 if( msg.error ){
-                    $("#uploadMessage").html(msg.error.val).attr("class", "alert alert-danger container");
+                    $("#uploadMessage").html(msg.error).attr("class", "alert alert-danger container");
                 } else {
                     $("#uploadMessage").html("All Files are uploaded Successfully").attr("class", "alert alert-success container");
                     setTimeout(function(){

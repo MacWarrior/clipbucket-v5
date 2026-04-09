@@ -195,6 +195,8 @@ class Migration
     }
 
     /**
+     * @param string $translation_key
+     * @param array $translations
      * @throws Exception
      */
     public static function updateTranslation(string $translation_key, array $translations): void
