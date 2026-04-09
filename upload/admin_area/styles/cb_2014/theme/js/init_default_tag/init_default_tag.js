@@ -1,7 +1,10 @@
 var alert_shown = false;
-function init_tags(id_input, available_tags, list_tag) {
+function init_tags(id_input, available_tags, list_tag, min_length) {
     if (typeof list_tag == 'undefined') {
         list_tag = '#list_tags';
+    }
+    if (typeof min_length == 'undefined') {
+        min_length = 3;
     }
     $(list_tag).tagit({
         singleField: true,
@@ -13,10 +16,10 @@ function init_tags(id_input, available_tags, list_tag) {
         availableTags: available_tags,
         allowSpaces: allow_tag_space,
         beforeTagAdded: function (event,info) {
-            if (info.tagLabel.length <= 2) {
+            if (info.tagLabel.length < min_length) {
                 if (!alert_shown) {
                     alert_shown = true;
-                    alert(tag_too_short);
+                    alert(lang['tag_too_short_dynamic_' + min_length]);
                 }
                 return false;
             }

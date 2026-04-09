@@ -13,7 +13,7 @@ class MWIP extends \Migration
      */
     public function start()
     {
-        self::generateTranslation('maximum_image_size', [
+        /*self::generateTranslation('maximum_image_size', [
             'fr' => 'Taille maximale de l\'image',
             'en' => 'Maximum image size'
         ]);
@@ -76,6 +76,16 @@ class MWIP extends \Migration
         self::generateTranslation('max_upload_size_hint', [
             'fr'=>'Taille maximale globale des fichiers autorisés à être téléversés',
             'en'=>'Global maximum filesize allowed to be uploaded'
+        ]);*/
+
+        self::generateTranslation('allowed_video_extensions', [
+            'fr'=>'Extensions de vidéo autorisées',
+            'en'=>'Allowed video extensions'
+        ]);
+
+        self::generateTranslation('tag_too_short_dynamic', [
+            'fr'=>'Les tags de moins de %s caractères ne sont pas autorisés',
+            'en'=>'Tags less than %s characters are not allowed'
         ]);
 
     }

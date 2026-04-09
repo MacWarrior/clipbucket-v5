@@ -158,8 +158,9 @@
                             <hr/>
                             <div class="row">
                                 <div class="col-md-12">
-                                    <label class="nowrap" for="allowed_video_types" title="Allowed Video extensions"><span class="fa fa-question-circle tips" title="{lang code='separated_by_commas'}"></span> Allowed Video extensions</label>
-                                    <textarea class="form-control" name="allowed_video_types" id="allowed_video_types" cols="45" rows="5">{$row.allowed_video_types}</textarea>
+                                    <label class="nowrap" for="list_allowed_video_types" title="{lang('allowed_video_extensions')}"><span class="fa fa-question-circle tips" title="{lang code='separated_by_commas'}"></span> {lang('allowed_video_extensions')}</label>
+                                    <ul id="list_allowed_video_types"></ul>
+                                    <input class="form-control" name="allowed_video_types" id="allowed_video_types" value="{$row.allowed_video_types}" type="hidden" />
                                 </div>
                             </div>
                             <hr/>
@@ -1252,9 +1253,12 @@
 <script>
     var lang=[];
     lang['at_least_one_resolution'] = '{lang("at_least_one_resolution")}';
+    lang['tag_too_short_dynamic_2'] = '{lang("tag_too_short_dynamic", 2)}';
+    lang['tag_too_short_dynamic_3'] = '{lang("tag_too_short_dynamic", 3)}';
     let available_tags_photo_types = JSON.parse('{$available_tags_photo_types|json_encode|escape:'javascript'}');
     $(function () {
-        init_tags('allowed_photo_types', available_tags_photo_types, '#list_allowed_photo_types');
+        init_tags('allowed_photo_types', available_tags_photo_types, '#list_allowed_photo_types',3);
+        init_tags('allowed_video_types', [], '#list_allowed_video_types', 2);
     });
 
 </script>

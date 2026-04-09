@@ -212,6 +212,20 @@ if (isset($_POST['update'])) {
                 continue;
             }
         }
+        if ($field == 'allowed_video_types') {
+            $types = explode(',', $value);
+            $type_ok = true;
+            foreach ($types as $type) {
+                if (strlen($type) < 2) {
+                    e(lang('tag_too_short_dynamic', 2));
+                    $type_ok = false;
+                }
+            }
+            if (!$type_ok) {
+                $value = null;
+                continue;
+            }
+        }
 
         if (!isset(myquery::getInstance()->Get_Website_Details()[$field])) {
             if (!$has_missing_config) {

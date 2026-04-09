@@ -1851,4 +1851,6 @@ VALUES ('ongoing_conversion'),
        ('file_width_exceeds'),
        ('s_cant_exceed_s'),
        ('max_upload_size'),
-       ('max_upload_size_hint');
+       ('max_upload_size_hint'),
+       ('allowed_video_extensions'),
+       ('tag_too_short_dynamic');
