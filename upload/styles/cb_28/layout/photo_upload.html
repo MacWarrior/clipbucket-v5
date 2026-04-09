@@ -122,8 +122,9 @@
 <script type="text/javascript">
     var photo_extensions = '{","|implode:CBPhotos::getInstance()->exts}';
     var theme = '{$theme}';
-    var max_upload_size ="{Clipbucket::getInstance()->getMaxUploadSize()}Mb";
-    var max_file_size ="{config('max_upload_size')}Mb";
+    var max_upload_size ="{config('max_upload_size')}Mb";
+    var max_file_size ="{config('max_photo_size')}Mb";
+    var max_file_size_error_message = "{lang('file_size_exceeds', config('max_photo_size'))}";
     var chunk_upload ="{config('enable_chunk_upload') == 'yes'}";
     var collection_id = '{$selected_collection.collection_id}';
     var available_tags = JSON.parse('{$available_tags|json_encode|escape:'javascript'}');

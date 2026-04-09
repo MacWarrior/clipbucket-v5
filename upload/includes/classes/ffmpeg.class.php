@@ -1358,6 +1358,5 @@ class FFMpeg
     {
         $cmd = config('ffmpegpath') .' -i ' . $input_file . ' -vf "scale=' . $width . ':-1:flags=lanczos,split[s0][s1];[s0]palettegen=stats_mode=full[p];[s1][p]paletteuse=dither=none" -gifflags -offsetting ' . $output_file;
         $output = shell_exec($cmd);
-        DiscordLog::sendDump($output);
     }
 }

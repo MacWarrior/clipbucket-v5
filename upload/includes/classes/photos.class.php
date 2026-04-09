@@ -8,6 +8,8 @@ class Photo extends Objects
     private $search_limit = 0;
     private $display_var_name = '';
 
+    private static $allowed_photo_types;
+
     public const TYPE = 'photo';
 
     /**
@@ -58,6 +60,63 @@ class Photo extends Objects
         $this->search_limit = (int)config('photo_search_result');
     }
 
+    /**
+     * @param $mime_type
+     * @return string|null
+     */
+    public static function getMimeType($mime_type): string|null
+    {
+        return match ($mime_type) {
+            'image/jpeg' => 'jpeg',
+            'image/png' => 'png',
+            'image/gif' => 'gif',
+            'image/webp' => 'webp',
+            'image/bmp' => 'bmp',
+            'image/tiff' => 'tiff',
+            default => null
+        };
+    }
+
+    /**
+     * @return string[]
+     */
+    public static function getAllowedUploadTypes(): array
+    {
+        return [
+            'jpeg',
+            'jpg',
+            'png',
+            'gif'
+        ];
+    }
+
+    /**
+     * @return int
+     */
+    public static function getMaxAllowedSize(): int
+    {
+        return min((int)config('max_photo_size'), (int)config('max_upload_size'));
+    }
+
+    /**
+     * @param $file
+     * @return bool
+     */
+    public static function ValidateImage($file): bool
+    {
+        $allowed_types = self::getAllowedPhotoExtension();
+        $array = getimagesize($file);
+        if (empty($array[0]) || empty($array[1])) {
+            return false;
+        }
+        $ext = Photo::getMimeType($array['mime']);
+        if (!in_array(strtolower($ext), $allowed_types)) {
+            return false;
+        }
+
+        return true;
+    }
+
     public static function getInstance(): self
     {
         if( empty(self::$photo) ){
@@ -72,6 +131,44 @@ class Photo extends Objects
     public static function clearInstance()
     {
         self::$photo = new self();
+    }
+
+    /**
+     * @param string $type_output
+     * @return string|string[]
+     */
+    public static function getAllowedPhotoExtension(string $type_output = 'array')
+    {
+        if (!empty(self::$allowed_photo_types[$type_output])) {
+            return self::$allowed_photo_types[$type_output];
+        }
+        $allowed_photo_types = explode(',', config('allowed_photo_types'));
+        $allowed_photo_types = self::completeAllowedPhotoExtension($allowed_photo_types);
+        self::$allowed_photo_types[$type_output]= $allowed_photo_types;
+        if ($type_output == 'array') {
+            return $allowed_photo_types;
+        } else {
+            return implode(', ', $allowed_photo_types);
+        }
+    }
+
+    /**
+     * @param $types
+     * @return array
+     */
+    public static function completeAllowedPhotoExtension($types): array
+    {
+        $have_jpeg = in_array('jpeg', $types);
+        $have_jpg = in_array('jpg', $types);
+        if (($have_jpeg || $have_jpg) && !($have_jpeg && $have_jpg)) {
+            if ($have_jpeg) {
+                $types[] = 'jpg';
+            }
+            if ($have_jpg) {
+                $types[] = 'jpeg';
+            }
+        }
+        return $types;
     }
 
     public function getTableName(): string
@@ -1027,7 +1124,7 @@ class CBPhotos
      */
     function set_photo_max_size(): void
     {
-        $adminSize = ClipBucket::getInstance()->configs['max_photo_size'];
+        $adminSize = Photo::getMaxAllowedSize();
         if (!$adminSize) {
             $this->max_file_size = 2 * 1024 * 1024;
         } else {
