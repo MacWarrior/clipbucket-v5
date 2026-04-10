@@ -72,6 +72,9 @@ $(function () {
             $('.input-group[id$=' + num + ']').each(function (index, elem) {
                 const field = $(this).attr('id').match(/(\w+)_group_\d+/)[1];
                 let val = $(this).find('input').val();
+                if (field === 'compatibility') {
+                    val = $(this).find('select').val();
+                }
                 if (field === 'released') {
                     const fixed = val.replace(/(\d{1,2})th/g, '$1');
                     val = format_date_to_display(new Date(fixed));
@@ -83,6 +86,14 @@ $(function () {
                     $('#author_text_' + num).attr('href', val);
                 } else if (field === 'title') {
                     $('#link_text_' + num).text(val);
+                } else if (field === 'compatibility') {
+                    let icon_compatibility;
+                    if (version_compatibility === val) {
+                        icon_compatibility = ' ' + html_icon_compatibility_ok;
+                    } else {
+                        icon_compatibility = ' ' + html_icon_compatibility_ko;
+                    }
+                    text_element.text(val).append(icon_compatibility);
                 } else {
                     text_element.text(val);
                 }
