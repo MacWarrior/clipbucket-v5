@@ -591,6 +591,19 @@ class Upload
             'validate_function' => 'yes_or_no'
         ];
 
+        if (config('use_backdrop_as_default_thumb') == 'allowed') {
+            $fields['use_backdrop_as_default_thumb'] = [
+                'type'              => 'checkboxv2',
+                'name'              => 'use_backdrop_as_default_thumb',
+                'value'             => 'yes',
+                'label'             => lang('use_backdrop_as_default_thumb'),
+                'checked'           => $default['use_backdrop_as_default_thumb'] ?? 'no',
+                'db_field'          => 'use_backdrop_as_default_thumb',
+                'required'          => 'no',
+                'validate_function' => 'yes_or_no'
+            ];
+        }
+
         return $fields;
     }
 

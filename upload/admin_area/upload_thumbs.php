@@ -5,16 +5,16 @@ require_once dirname(__FILE__, 2) . '/includes/admin_config.php';
 User::getInstance()->hasPermissionOrRedirect('video_moderation', true);
 pages::getInstance()->page_redir();
 
-$video = mysql_clean($_GET['video']);
+$video_id = mysql_clean($_GET['video']);
 if (!Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '14')) {
-    sessionMessageHandler::add_message('Sorry, you cannot change default thumbnail,poster or backdrop until the application has been fully updated by an administrator', 'e',  DirPath::getUrl('admin_area') . 'edit_video.php?video=' . display_clean($video));
+    sessionMessageHandler::add_message('Sorry, you cannot change default thumbnail,poster or backdrop until the application has been fully updated by an administrator', 'e',  DirPath::getUrl('admin_area') . 'edit_video.php?video=' . display_clean($video_id));
 }
-$data = get_video_details($video);
+$data = Video::getInstance()->getOne(['videoid' => $video_id]);
 /* Generating breadcrumb */
 global $breadcrumb;
 $breadcrumb[0] = ['title' => lang('videos'), 'url' => ''];
 $breadcrumb[1] = ['title' => lang('manage_x', strtolower(lang('videos'))), 'url' => DirPath::getUrl('admin_area') . 'video_manager.php'];
-$breadcrumb[2] = ['title' => 'Editing : ' . display_clean($data['title']), 'url' => DirPath::getUrl('admin_area') . 'edit_video.php?video=' . display_clean($video)];
+$breadcrumb[2] = ['title' => 'Editing : ' . display_clean($data['title']), 'url' => DirPath::getUrl('admin_area') . 'edit_video.php?video=' . display_clean($video_id)];
 
 $allowed_types = [
     'thumbs'=>'thumbnail',
@@ -35,7 +35,7 @@ assign('translation_type', $translation_type);
 assign('db_type',array_search(( $type=='thumbnail') ? 'custom': $type, Upload::getInstance()->types_thumb));
 
 /* Complete breadcrumb */
-$breadcrumb[3] = ['title' => str_replace('%s',strtolower(lang($translation_type)), lang('manage_x')), 'url' => DirPath::getUrl('admin_area') . 'upload_thumbs.php?video=' . display_clean($video) . '&type=' . display_clean($type)];
+$breadcrumb[3] = ['title' => str_replace('%s',strtolower(lang($translation_type)), lang('manage_x')), 'url' => DirPath::getUrl('admin_area') . 'upload_thumbs.php?video=' . display_clean($video_id) . '&type=' . display_clean($type)];
 
 if (@$_GET['msg']) {
     $msg[] = display_clean($_GET['msg']);
@@ -43,16 +43,23 @@ if (@$_GET['msg']) {
 
 $can_sse = System::can_sse() ? 'true' : 'false';
 assign('can_sse', $can_sse);
+
+$use_backdrop_default = Video::getUseBackdropDefault($data);
+assign('use_backdrop_default', $use_backdrop_default);
+
 //Check Video Exists or Not
-if (myquery::getInstance()->video_exists($video)) {
+if (myquery::getInstance()->video_exists($video_id)) {
 
     # Uploading Thumbs
-    if (isset($_POST['upload_thumbs'])) {
+    if (isset($_POST['upload_thumbs']) && !($use_backdrop_default && $type == 'thumbnail')) {
 
         if (!Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '14')) {
             e('Sorry, you cannot perform this action until the application has been fully updated by an administrator');
         } else {
             VideoThumbs::uploadThumbs($data['videoid'], $_FILES['vid_thumb'], $type, false);
+            if (empty($data['default_' . $type])) {
+                Video::getInstance()->resetDefaultPicture($data['videoid'], $type);
+            }
         }
     }
     switch ($type) {

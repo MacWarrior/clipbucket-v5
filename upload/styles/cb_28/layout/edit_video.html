@@ -90,12 +90,19 @@
                                         {lang('backdrop')|ucfirst} {if Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3','14')}<i class="glyphicon glyphicon-chevron-down pull-right"></i>{/if}
                                     </h4>
                                     <div class="sectionContent" style="display: none;">
+                                        {if (!empty($sharingOptions['fields']['use_backdrop_as_default_thumb']))}
+                                            <br/>
+                                            {$formObj->createField($sharingOptions['fields']['use_backdrop_as_default_thumb'])}
+                                            <hr/>
+                                        {/if}
                                         <div class="row">
                                             {foreach from=$vidthumbs_backdrop item=vid_thumb}
                                                 <div class="col-md-3">
                                                     <div class="form-group text-center">
                                                         <label for="{$vid_thumb.thumb_id}"><img class="edit-img-thumbnail" src="{$vid_thumb.thumb}" width="160" height="100" />
-                                                            <input class="show" style="margin:5px auto;" type="radio" value="{$vid_thumb.thumb_id}" id="{$vid_thumb.thumb_id}" name="default_backdrop" {if $v.default_backdrop==$vid_thumb.thumb_id}checked{/if} />{lang code='default'}
+                                                            {if !$use_backdrop_default}
+                                                                <input class="show" style="margin:5px auto;" type="radio" value="{$vid_thumb.thumb_id}" id="{$vid_thumb.thumb_id}" name="default_backdrop" {if $v.default_backdrop==$vid_thumb.thumb_id}checked{/if} />{lang code='default'}
+                                                            {/if}
                                                         </label>
                                                     </div>
                                                 </div>
@@ -215,7 +222,10 @@
                             <div class="formSection clear">
                                 <h4>{$sharingOptions.group_name}<i class="glyphicon glyphicon-chevron-down pull-right"></i></h4>
                                 <div class="sectionContent" style="display: none;">
-                                    {foreach $sharingOptions.fields as $field}
+                                    {foreach $sharingOptions.fields as $key => $field}
+                                        {if $key == 'use_backdrop_as_default_thumb'}
+                                            {continue}
+                                        {/if}
                                         {if $field.type == 'hidden' && $field.id != 'video_users'}
                                             {$formObj->createField($field)}
                                             {continue}

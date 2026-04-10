@@ -73,7 +73,7 @@ $available_tags = Tags::fill_auto_complete_tags('video');
 assign('available_tags', $available_tags);
 $subtitle_list = get_video_subtitles($vdetails) ?: [];
 assign('subtitle_list', $subtitle_list);
-
+assign('use_backdrop_default', Video::getUseBackdropDefault($vdetails));
 subtitle(lang('vdo_edit_vdo'));
 template_files('edit_video.html');
 display_it();

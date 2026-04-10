@@ -220,21 +220,20 @@ $( document ).ready(function() {
         deleteComment(id);
     });
 
-    $('.poster li').click(function(){
-            $('.poster li.selected').removeClass('selected');
-            $(this).addClass('selected');
-        }
-    );
-    $('.backdrop li').click(function(){
-            $('.backdrop li.selected').removeClass('selected');
-            $(this).addClass('selected');
-        }
-    );
-    $('.thumb li').click(function(){
+    $('.poster li').on('click', function () {
+        $('.poster li.selected').removeClass('selected');
+        $(this).addClass('selected');
+    });
+    $('.backdrop li').on('click', function () {
+        $('.backdrop li.selected').removeClass('selected');
+        $(this).addClass('selected');
+    });
+    $('.thumb li').on('click', function () {
+        if (!use_backdrop_default) {
             $('.thumb li.selected').removeClass('selected');
             $(this).addClass('selected');
         }
-    );
+    });
 
     if( visual_editor_comments_enabled ){
         Array.from(document.querySelectorAll('#comments .itemdiv .body .col-md-7 span')).forEach((comment,index) => {

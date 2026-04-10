@@ -141,7 +141,7 @@ $(document).ready(function () {
         , 'enable_video_director': 'tmdb_get_director'
         , 'enable_video_crew': 'tmdb_get_crew'
         , 'enable_video_poster': 'tmdb_get_poster'
-        , 'enable_video_backdrop': 'tmdb_get_backdrop'
+        , 'enable_video_backdrop': ['tmdb_get_backdrop', 'use_backdrop_as_default_thumb']
         , 'enable_tmdb': 'tmdb_token'
         , 'enable_tmdb_mature_content': 'tmdb_mature_content_age'
         , 'control_bar_logo' : ['player_logo_url','upload_player-logo']
@@ -150,7 +150,7 @@ $(document).ready(function () {
 
     }, function (index, value) {
 
-        $('#'+index).change(function () {
+        $('#'+index).on('change',function () {
             const input_to_disable = Array.isArray(value) ? value : [value];
             const initial_input = $(this)
             $(input_to_disable).each( function( index, elem) {
