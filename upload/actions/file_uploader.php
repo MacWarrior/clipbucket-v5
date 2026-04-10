@@ -95,7 +95,7 @@ switch ($mode) {
             'destinationFilePath' => $targetFile,
             'keepExtension'       => true,
             'maxFileSize'         => !empty((int)config('max_upload_size')) ? config('max_upload_size') : 1000,
-            'allowedExtensions'   => config('allowed_video_types')
+            'allowedExtensions'   => explode(',',config('allowed_video_types'))
         ];
 
         FileUpload::getInstance($params)->processUpload();
