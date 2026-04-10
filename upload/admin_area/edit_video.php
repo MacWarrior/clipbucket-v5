@@ -155,6 +155,7 @@ $available_tags = Tags::fill_auto_complete_tags('video');
 assign('available_tags',$available_tags);
 
 assign('link_user', DirPath::getUrl('admin_area') . 'view_user.php?uid=' . $data['userid']);
+assign('use_backdrop_default', Video::getUseBackdropDefault($data));
 
 subtitle('Edit Video');
 template_files('edit_video.html');

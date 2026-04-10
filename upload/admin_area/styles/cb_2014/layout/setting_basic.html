@@ -1728,7 +1728,7 @@
                             </div>
                             <hr/>
                             <div class="row">
-                                <div class="col-md-4">
+                                <div class="col-md-8">
                                     <label class="nowrap" for="enable_video_embed_players" title="{lang code='option_enable_video_embed_players'}">{lang code='option_enable_video_embed_players'}</label>
                                 </div>
                                 <div class="col-md-2 row-size">
@@ -1737,7 +1737,19 @@
                                 </div>
                             </div>
                             <hr/>
-
+                            <div class="row">
+                                <div class="col-md-8">
+                                    <label class="nowrap" for="use_backdrop_as_default_thumb" title="{lang code='option_use_backdrop_as_default_thumb'}">{lang code='option_use_backdrop_as_default_thumb'}</label>
+                                </div>
+                                <div class="col-md-4 row-size">
+                                    <select class="form-control" name="use_backdrop_as_default_thumb" id="use_backdrop_as_default_thumb" {if config('enable_video_backdrop')!='yes'}disabled="disabled"{/if}>
+                                        <option value="allowed" {if $row.use_backdrop_as_default_thumb == 'allowed'} selected {/if}>{lang('allowed')}</option>
+                                        <option value="disallowed" {if $row.use_backdrop_as_default_thumb == 'disallowed'} selected {/if}>{lang('disallowed')}</option>
+                                        <option value="forced" {if $row.use_backdrop_as_default_thumb == 'forced'} selected {/if}>{lang('forced')}</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <hr/>
                         </div>
                         <div class="col-md-4">
                             <div class="row">

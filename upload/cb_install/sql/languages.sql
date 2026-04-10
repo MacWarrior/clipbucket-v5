@@ -1843,4 +1843,9 @@ VALUES ('ongoing_conversion'),
        ('recent_activity_log'),
        ('view_online_users'),
        ('update_tmdb_info_label'),
-       ('update_tmdb_info_description');
+       ('update_tmdb_info_description'),
+       ('option_use_backdrop_as_default_thumb'),
+       ('use_backdrop_as_default_thumb'),
+       ('allowed'),
+       ('disallowed'),
+       ('forced');

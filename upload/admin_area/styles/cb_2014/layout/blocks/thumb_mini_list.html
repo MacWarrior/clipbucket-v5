@@ -2,12 +2,14 @@
   <h5>{lang code="extracted_thumbs"}</h5>
   <ul class="ace-thumbnails thumb">
     {foreach from=$vidthumbs item=vid_thumb}
-    <li style="background-image:url({$vid_thumb.thumb});" {if $vid_thumb.thumb_id==$data.default_thumbnail}class="selected"{/if} title="{lang('select_as_default_x',lang('thumbnail'))}">
+    <li style="background-image:url({$vid_thumb.thumb});" {if $vid_thumb.thumb_id==$data.default_thumbnail && !$use_backdrop_default}class="selected" title="{lang('select_as_default_x',lang('thumbnail'))}"{/if}>
+      {if !$use_backdrop_default}
       <label for="poster_{$vid_thumb.thumb_id}">
         <span class="content_bottom">
           <input type="radio" id="poster_{$vid_thumb.thumb_id}" value="{$vid_thumb.thumb_id}" name="default_thumb" {if $data.default_thumbnail==$vid_thumb.thumb_id}checked{/if}/>
         </span>
       </label>
+      {/if}
     </li>
     {/foreach}
   </ul>
@@ -18,12 +20,14 @@
     <h5>{lang code="custom_thumbs"}</h5>
     <ul class="ace-thumbnails thumb">
       {foreach from=$vidthumbs_custom item=vid_thumb}
-      <li style="background-image:url({$vid_thumb.thumb});" {if $vid_thumb.thumb_id==$data.default_thumbnail}class="selected"{/if} title="{lang('select_as_default_x',lang('thumbnail'))}">
+      <li style="background-image:url({$vid_thumb.thumb});" {if $vid_thumb.thumb_id==$data.default_thumbnail && !$use_backdrop_default}class="selected" title="{lang('select_as_default_x',lang('thumbnail'))}"{/if}>
+        {if !$use_backdrop_default}
         <label for="poster_{$vid_thumb.thumb_id}">
           <span class="content_bottom">
             <input type="radio" id="poster_{$vid_thumb.thumb_id}" value="{$vid_thumb.thumb_id}" name="default_thumb" {if $data.default_thumbnail==$vid_thumb.thumb_id}checked{/if}/>
           </span>
         </label>
+        {/if}
       </li>
       {/foreach}
     </ul>

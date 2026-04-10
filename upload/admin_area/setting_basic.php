@@ -460,7 +460,8 @@ if (isset($_POST['update'])) {
         'ratio_photo',
         'enable_favorite_icon_photo',
         'enable_favorite_icon_collection',
-        'own_comment_rating'
+        'own_comment_rating',
+        'use_backdrop_as_default_thumb'
     ];
 
     //Numeric Array
@@ -563,6 +564,10 @@ if (isset($_POST['update'])) {
             myquery::getInstance()->Set_Website_Details($field, $value);
         } else {
             DiscordLog::sendDump('Missing value for config: '.$field);
+        }
+
+        if ($field == 'use_backdrop_as_default_thumb' && !in_array($value, ['allowed', 'disallowed', 'forced']) ) {
+            $value = null;
         }
     }
 
