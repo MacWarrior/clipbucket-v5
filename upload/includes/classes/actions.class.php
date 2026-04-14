@@ -346,7 +346,7 @@ class cbactions
                     'total_items' => '|f|total_items+1'
                 ];
 
-                Clipbucket_db::getInstance()->update(tbl('playlists'), array_keys($fields), array_values($fields), ' playlist_id = \'' . mysql_clean($pid) . '\'');
+                Clipbucket_db::getInstance()->update(tbl('playlists'), array_keys($fields), array_values($fields), ' playlist_id = ' . (int)$pid);
 
                 e('<div class="alert alert-success">' . lang('video_added_to_playlist') . '</div>', 'm');
                 return $video;
@@ -396,7 +396,7 @@ class cbactions
                 $fields['first_item'] = '|no_mc|' . json_encode([]);
             }
 
-            Clipbucket_db::getInstance()->update(tbl('playlists'), array_keys($fields), array_values($fields), ' playlist_id = \'' . mysql_clean($item['playlist_id']) . '\'');
+            Clipbucket_db::getInstance()->update(tbl('playlists'), array_keys($fields), array_values($fields), ' playlist_id = ' . (int)$item['playlist_id']);
 
             e(lang('playlist_item_delete'), 'm');
 
@@ -445,7 +445,7 @@ class cbactions
             $query .= ' LEFT JOIN ' . cb_sql_table('playlists') . ' ON playlist_items.playlist_id = playlists.playlist_id';
         }
 
-        $query .= ' WHERE playlist_items.playlist_item_id = \'' . mysql_clean($id) . '\' LIMIT 1';
+        $query .= ' WHERE playlist_items.playlist_item_id = ' . (int)$id . ' LIMIT 1';
 
         $query_id = cb_query_id($query);
 
@@ -559,7 +559,7 @@ class cbactions
 
                 $query_values['last_update'] = NOW();
 
-                Clipbucket_db::getInstance()->update(tbl('playlists'), array_keys($query_values), array_values($query_values), ' playlist_id = \'' . mysql_clean($pdetails['playlist_id']) . '\'');
+                Clipbucket_db::getInstance()->update(tbl('playlists'), array_keys($query_values), array_values($query_values), ' playlist_id = ' . (int)$pdetails['playlist_id']);
 
                 Tags::saveTags($array['playlists_tags'], 'playlist', $pdetails['playlist_id']);
 

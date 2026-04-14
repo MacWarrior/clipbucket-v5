@@ -16,9 +16,6 @@ SSE::processSSE(function (){
      }
     $thumbs = display_thumb_list_regenerate($data);
     $results['is_max_thumb'] = $thumbs['nb_thumbs'] == $max_thumb;
-    if ($results['is_max_thumb'] ) {
-        e(lang('thumb_regen_end'), 'message');
-    }
     $results['html'] = $thumbs['html']['template'];
     $results['msg'] = $thumbs['html']['msg'];
     $output = 'data: ' . json_encode($results);

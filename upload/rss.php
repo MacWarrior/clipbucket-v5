@@ -84,7 +84,7 @@ header("Content-type: text/xml; charset=utf-8");
                     <![CDATA[
                     <table width="600" border="0" cellspacing="0" cellpadding="0">
                         <tr>
-                            <td width="130" height="90" align="center" valign="middle"><img src="<?php echo get_thumb($video); ?>" border="1"/></td>
+                            <td width="130" height="90" align="center" valign="middle"><img src="<?php echo VideoThumbs::getDefaultThumbFile($video['videoid'], '416', '260'); ?>" border="1"/></td>
                             <td valign="top">
                                 <a href="<?php echo video_link($video); ?>"><?php echo $video['title']; ?></a><br/>
                                 <?php echo $video['description']; ?>
@@ -103,7 +103,7 @@ header("Content-type: text/xml; charset=utf-8");
                 <guid isPermaLink="true"><?php echo video_link($video); ?></guid>
                 <pubDate><?php echo $video['date_added']; ?></pubDate>
                 <media:player url="<?php echo video_link($video); ?>"/>
-                <media:thumbnail url="<?php echo get_thumb($video); ?>" width="120" height="90"/>
+                <media:thumbnail url="<?php echo VideoThumbs::getDefaultThumbFile($video['videoid'], '416', '260'); ?>" width="120" height="90"/>
                 <![CDATA[
                 <media:title><?php echo substr($video['title'], 0, 500); ?></media:title>
                 <media:category label="Tags"><?php echo strip_tags(tags($video['tags'], 'video')); ?></media:category>

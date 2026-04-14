@@ -27,7 +27,7 @@
         }
             <ul class="social-share">
                 <li>
-                    <a href="http://www.facebook.com/sharer/sharer.php?s=100&p[url]={video_link($vdo)|urlencode}&p[images][0]={get_thumb vdetails=$vdo}&p[title]={$vdo.title|title|urlencode}&p[summary]={$vdo.description|description|urlencode}" target="_blank" class="btn-fb icon-facebook">
+                    <a href="http://www.facebook.com/sharer/sharer.php?s=100&p[url]={video_link($vdo)|urlencode}&p[images][0]={{VideoThumbs::getDefaultThumbFile($vdo.videoid)}}&p[title]={$vdo.title|title|urlencode}&p[summary]={$vdo.description|description|urlencode}" target="_blank" class="btn-fb icon-facebook">
                         <span>Facebook</span>
                     </a>
                 </li>

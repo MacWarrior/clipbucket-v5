@@ -1,5 +1,4 @@
 {assign var='photo_class' value='img-responsive photo-land no_select'}
-
 {if Photo::getInstance()->isToBlur($photo['photo_id'])}
 	{$photo_class = $photo_class|cat:' blur'}
 {/if}
@@ -8,7 +7,7 @@
 <div class="item-photo col-lg-4 col-md-4 col-sm-6 col-xs-6">
 	<a class="photo-holder" href="{CBPhotos::getInstance()->photo_links($photo,'view_item')}" title="{display_clean($photo.photo_title)}">
 		{ANCHOR place='in_photo_thumb' data=$photo}
-		{get_photo details=$photo size='l' class=$photo_class output='html'}
+        {PhotoThumbs::getHtmlThumbFile($photo.photo_id, 300, ['class'=>$photo_class, 'crop'=>true])}
 		<i class="icon-zoom"></i>
 	</a>
 	<div class="photo-info {if config('enable_hide_uploader_name') == 'yes'}nouploader{/if}">
@@ -30,11 +29,14 @@
 	<div class="photoAppending">
 		<a class="photo-holder no_overflow" href="{CBPhotos::getInstance()->photo_links($photo,'view_item')}" title="{display_clean($photo.photo_title)}">
 			{ANCHOR place='in_photo_thumb' data=$photo}
-			{get_photo details=$photo size='l' class=$photo_class output='html'}
+            {PhotoThumbs::getHtmlThumbFile($photo.photo_id, 300, ['class'=>$photo_class, 'crop'=>true])}
 			<i class="icon-zoom"></i>
 		</a>
 		<div class="photo-info {if config('enable_hide_uploader_name') == 'yes'}nouploader{/if}">
 			<strong><a href="{CBPhotos::getInstance()->photo_links($photo,'view_item')}" title="{display_clean($photo.photo_title)}">{display_clean($photo.photo_title)|truncate:30}</a></strong>
+            {if config('enable_favorite_icon_photo') == 'yes' && User::getInstance()->isUserConnected() && Photo::isFavorite($photo.photo_id)}
+                <span class="manage_favorite watch-rating-icon pointer glyphicon glyphicon-heart " title="{lang('remove_from_favorites')}" data-id="{$photo.photo_id}" style="position: absolute; right: 5px; top: 5px; left: auto;"></span>
+            {/if}
 			{if config('enable_hide_uploader_name') != 'yes'}
 			<span>
 				{if isSectionEnabled('channels') && $photo.userid != $anonymous_id && $photo.disabled_channel !='yes'}
@@ -54,11 +56,14 @@
     <div class="photoAppending">
         <a class="photo-holder" href="{CBPhotos::getInstance()->photo_links($photo,'view_item')}" title="{display_clean($photo.photo_title)}">
             {ANCHOR place='in_photo_thumb' data=$photo}
-            {get_photo details=$photo size='l' class=$photo_class output='html'}
+        {PhotoThumbs::getHtmlThumbFile($photo.photo_id, 300, ['class'=>$photo_class, 'crop'=>true])}
             <i class="icon-zoom"></i>
         </a>
         <div class="photo-info {if config('enable_hide_uploader_name') == 'yes'}nouploader{/if}">
             <strong><a href="{CBPhotos::getInstance()->photo_links($photo,'view_item')}" title="{display_clean($photo.photo_title)}">{display_clean($photo.photo_title)|truncate:50}</a></strong>
+            {if config('enable_favorite_icon_photo') == 'yes' && User::getInstance()->isUserConnected() && Photo::isFavorite($photo.photo_id)}
+                <span class="manage_favorite watch-rating-icon pointer glyphicon glyphicon-heart " title="{lang('remove_from_favorites')}" data-id="{$photo.photo_id}" style="position: absolute; right: 5px; top: 5px; left: auto;"></span>
+            {/if}
             {if config('enable_hide_uploader_name') != 'yes'}
             <span>
                 {if isSectionEnabled('channels') && $photo.userid != $anonymous_id && $photo.disabled_channel !='yes'}
@@ -76,7 +81,7 @@
 {if $display_type == "user_photos"}
 	<a class="photo-holder" href="{CBPhotos::getInstance()->photo_links($photo,'view_item')}" title="{display_clean($photo.photo_title)}">
 		{ANCHOR place='in_photo_thumb' data=$photo}
-		{get_photo details=$photo size='l' class=$photo_class output='html'}
+        {PhotoThumbs::getHtmlThumbFile($photo.photo_id, 300, ['class'=>$photo_class, 'crop'=>true])}
 		<i class="icon-zoom"></i>
 	</a>
 	<div class="photo-info {if config('enable_hide_uploader_name') == 'yes'}nouploader{/if}">
@@ -96,7 +101,7 @@
 {if $display_type == "featuredPhoto_sidebar"}
 	<a class="photo-holder" href="{CBPhotos::getInstance()->photo_links($photo,'view_item')}" title="{display_clean($photo.photo_title)}">
 		{ANCHOR place='in_photo_thumb' data=$photo}
-		{get_photo details=$photo size='l' class=$photo_class output='html'}
+        {PhotoThumbs::getHtmlThumbFile($photo.photo_id, 150, ['class'=>$photo_class, 'crop'=>true])}
 		<i class="icon-zoom"></i>
 	</a>
 {/if}
@@ -104,7 +109,7 @@
 {if $display_type == "search_photos"}
 	<a class="searchresult-photo" href="{CBPhotos::getInstance()->photo_links($photo,'view_item')}" title="{display_clean($photo.photo_title)}">
 		{ANCHOR place='in_photo_thumb' data=$photo}
-		{get_photo details=$photo size='l' class=$photo_class output='html'}
+        {PhotoThumbs::getHtmlThumbFile($photo.photo_id, 300, ['class'=>$photo_class, 'crop'=>true])}
 		<div class="hover hidden-xs hidden-sm">
 			<i class="icon-zoom"></i>
 		</div>
@@ -123,31 +128,18 @@
 	</div>
 {/if}
 
-{if $display_type == 'related_photos'}
-	<div class="relatedPhotos clearfix">
-		<a href="{CBPhotos::getInstance()->photo_links($photo,'view_item')}">
-			{ANCHOR place='in_photo_thumb' data=$photo}
-			{get_photo details=$photo output='html' width='120' class='photoThumbBox moveL' style='margin-right:5px;'}
-		</a>
-		<div class="photoTitle" style="margin-bottom:5px;">
-			<a href="{CBPhotos::getInstance()->photo_links($photo,'view_item')}" title="{display_clean($photo.photo_title)}">{display_clean($photo.photo_title)|truncate:15}</a>
-		</div>
-		<span class="photoInfo">{$photo.views|number_format} {lang code="views"} <br/> {$photo.total_comments} {lang code="comments"}</span>
-		{show_rating rating=$photo.rating total='10' class='rating moveL'}
-	</div>
-{/if}
 
 {if $display_type == "relatedPhoto_sidebar"}
 	<a class="photo-holder" href="{CBPhotos::getInstance()->photo_links($photo,'view_item')}" title="{display_clean($photo.photo_title)}">
 		{ANCHOR place='in_photo_thumb' data=$photo}
-		{get_photo details=$photo output='html' size='l' class='img-responsive'}
+        {PhotoThumbs::getHtmlThumbFile($photo.photo_id, 150, ['class'=>'img-responsive', 'crop'=>true])}
 		<i class="icon-zoom"></i>
 	</a>
 {/if}
 
 {if $display_type == 'subscription'}
 	<div class="grid_view clearfix" style="width:auto; margin-right:4px;">
-		<a href="{CBPhotos::getInstance()->photo_links($photo,'view_item')}">{get_photo details=$photo output='html' class='photoThumbBox' width='110'}</a>
+		<a href="{CBPhotos::getInstance()->photo_links($photo,'view_item')}">{PhotoThumbs::getHtmlThumbFile($photo_photo_id, 150, ['class'=>'photoThumbBox', 'crop'=>true])}</a>
 		<div class="photoTitle" style="margin:5px 0px; font:bold 11px Arial;">
 			<a href="{CBPhotos::getInstance()->photo_links($photo,'view_item')}" title="{display_clean($photo.photo_title)}">{display_clean($photo.photo_title)|truncate:15}</a>
 		</div>
@@ -161,7 +153,7 @@
 	<div style="display:inline-block; *display:inline; vertical-align:middle; padding:0 8px 5px 0px;">
 		<a href="{CBPhotos::getInstance()->photo_links($photo,'view_item')}">
 			{ANCHOR place='in_photo_thumb' data=$photo}
-			{get_photo details=$photo output='html' width='82' class='photoThumbBox'}
+			{PhotoThumbs::getHtmlThumbFile($photo.photo_id, 150, ['class'=>'photoThumbBox', 'crop'=>true])}
 		</a>
 		<div class="photoTitle" style="font:bold 10px Arial; margin:1px 0px;">
 			<a href="{CBPhotos::getInstance()->photo_links($photo,'view_item')}" title="{display_clean($photo.photo_title)}">{display_clean($photo.photo_title)|truncate:15}</a>
@@ -177,11 +169,14 @@
 <div class="photoAppending">
     <a class="photo-holder no_overflow" href="{CBPhotos::getInstance()->photo_links($photo,'view_item')}" title="{display_clean($photo.photo_title)}">
 		{ANCHOR place='in_photo_thumb' data=$photo}
-        {get_photo details=$photo size='l' class=$photo_class output='html'}
+        {PhotoThumbs::getHtmlThumbFile($photo.photo_id, 550, ['crop'=>true])}
         <i class="icon-zoom"></i>
     </a>
     <div class="photo-info {if config('enable_hide_uploader_name') == 'yes'}nouploader{/if}">
         <strong><a href="{CBPhotos::getInstance()->photo_links($photo,'view_item')}" title="{display_clean($photo.photo_title)}">{display_clean($photo.photo_title)|truncate:30}</a></strong>
+        {if config('enable_favorite_icon_photo') == 'yes' && User::getInstance()->isUserConnected() && Photo::isFavorite($photo.photo_id)}
+            <span class="manage_favorite watch-rating-icon pointer glyphicon glyphicon-heart " title="{lang('remove_from_favorites')}" data-id="{$photo.photo_id}" style="position: absolute; right: 5px; top: 5px; left: auto;"></span>
+        {/if}
 		{if config('enable_hide_uploader_name') != 'yes'}
         <span>
 			{if isSectionEnabled('channels') && $photo.userid != $anonymous_id && $photo.disabled_channel !='yes'}

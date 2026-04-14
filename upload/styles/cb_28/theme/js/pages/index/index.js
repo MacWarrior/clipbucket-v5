@@ -528,6 +528,7 @@ function initListenerHome() {
             $(".my-modal-content").html('');
         }
     });
+    _cb.listener_favorite_only_remove('video');
 }
 
 function progressVideoCheckHome(ids_to_check_progress, displayType, interval_name) {

@@ -24,7 +24,7 @@ if ($_GET['view'] == 'search') {
 $anonymous_id = userquery::getInstance()->get_anonymous_user();
 assign('anonymous_id', $anonymous_id);
 //Delete User
-if (isset($_GET['deleteuser']) && user_id() != $_GET['deleteuser']) {
+if (isset($_GET['deleteuser']) && User::getInstance()->getCurrentUserID() != $_GET['deleteuser']) {
     if ($anonymous_id == $_GET['deleteuser']) {
         e(lang('anonymous_locked'));
     } else {
@@ -220,9 +220,10 @@ $page = mysql_clean($_GET['page']);
 $get_limit = create_query_limit($page, config('admin_pages'));
 
 $params = [
-    'not_userid' => $anonymous_id,
-    'limit'      => $get_limit,
-    'order'      => 'doj DESC'
+    'not_userid' => $anonymous_id
+    ,'limit'      => $get_limit
+    ,'order'      => 'doj DESC'
+    ,'join_flag'  => true
 ];
 if (isset($_GET['search'])) {
     $params['userid']   = $_GET['userid'] ?? false;

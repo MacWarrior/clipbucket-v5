@@ -117,7 +117,7 @@ $(document).ready(function(){
 
     $("#todolist .delete").on("click", function(e){
         e.preventDefault();
-
+        const button = $(this);
         $.ajax({
             url: page,
             type: "post",
@@ -126,7 +126,7 @@ $(document).ready(function(){
                 mode: "delete_todo"
             },
             success: function (data) {
-                this.parents("li").remove();
+                button.parents("li").remove();
             }
         });
     });
@@ -151,9 +151,6 @@ $(document).ready(function(){
         e.stopPropagation();
     });
 
-    if (can_sse === 'true' && is_update_processing === 'true') {
-        // connectSSE();
-    }
     if (is_update_processing === 'true') {
         refreshUpdateProgression();
     }
@@ -392,12 +389,70 @@ $(document).ready(function(){
            }
        })
     });
+
+    setInterval(function () {
+        $.ajax({
+            url: admin_url + 'actions/statistics_online.php',
+            type: "post",
+            dataType: "json",
+            data: {active: $('#online_statistics').find('li.active').attr('id')},
+            success: function (data) {
+                if (data.html) {
+                    $('#online_statistics').html(data.html);
+                }
+                if (data.msg) {
+                    $(".page-content").prepend(data.msg);
+                }
+            }
+        });
+    }, 30000)
 });
+
+function setMaintenance() {
+    return new Promise((resolve, reject) => {
+        showSpinner();
+        $.ajax({
+            url: admin_url + 'actions/update_set_maintenance.php',
+            type: "post",
+            dataType: "json",
+            success: function (data) {
+                hideSpinner();
+                if (data.success == false) {
+                    $(".page-content").prepend(data.msg)
+                }
+                resolve(true);
+            },
+            error: function (data) {
+                hideSpinner();
+                reject(false);
+            }
+        });
+    });
+}
 
 function updateListeners () {
     $('.update_core').on('click', async function () {
+
         if (message_php !== '') {
-            if (await popinConfirm._confirm_it({message: message_php, title: lang['update']})) {
+            if (await popinConfirm._confirm_it({message: message_php, title: lang['update']} )) {
+                update('core');
+            }
+        } else if (message_breaking_version !== '') {
+            const okUpdate = await popinConfirm._confirm_it({
+                message: message_breaking_version,
+                title: lang['update']
+            });
+
+            if (okUpdate) {
+                const wantsMaintenance = await popinConfirm._confirm_it({
+                    message: lang['maintenance_recommended'],
+                    title: lang['update'],
+                    text_button_confirm: lang['yes'],
+                    text_button_cancel: lang['no']
+                });
+                if (wantsMaintenance) {
+                    await setMaintenance();
+                }
                 update('core');
             }
         } else {
@@ -433,19 +488,24 @@ function updateListeners () {
 
     $('.mark_as_failed').off('click').on('click', function () {
         var id = $(this).data('id');
-        if (confirm(lang.confirm_mark_as_failed)) {
+        let promise = popinConfirm._confirm_it({
+            'message': lang.confirm_mark_as_failed,
+            'title': lang.update
+        });
+        promise.then(function (result) {
+            showSpinner();
             $.ajax({
                 url: admin_url + "actions/tool_force_to_error.php",
                 type: "POST",
                 data: {id_tool: id},
-                dataType: 'json',
-                success: function (result) {
-                    showSpinner();
-                }
+                dataType: 'json'
+            }).done(function (data) {
+                $(".page-content").prepend(data.msg);
+            }).always(function () {
+                updateInfo(0);
+                hideSpinner();
             });
-        } else {
-            return false;
-        }
+        })
     })
 }
 
@@ -502,8 +562,10 @@ async function update(type){
                 $('#update_div').html(response.html);
             }
 
-            // connectSSE();
-            refreshUpdateProgression();
+            setTimeout(function () {
+                refreshUpdateProgression(type);
+            }, 5000);
+
         }
     });
 }
@@ -571,37 +633,46 @@ async function check_before_launch_update() {
     return true;
 }
 
-function refreshUpdateProgression() {
+function refreshUpdateProgression(type) {
     var interval = setInterval(function () {
-        $.ajax({
-            url: admin_url + "actions/update_info.php",
-            type: "post",
-            dataType: "json",
-            success: function (data) {
-                $('#update_div').html(data.html);
-                updateListeners();
-                hideSpinner();
-                if (data.msg_template) {
-                    $(".page-content").prepend(data.msg_template)
-                }
-                if (data.is_updating === 'false') {
-                    clearInterval(interval);
-                    checkStatus();
-                } else {
-                    var tool = data.update_info;
-                    $('.launch_wip').off('click');
-
-                    if (tool && tool.elements_done > 0) {
-                        $('#progress_div').show();
-                    }
-                    $('#progress-bar').attr('aria-valuenow', tool.pourcent).width(tool.pourcent + '%');
-                    $('#pourcent').html(tool.pourcent);
-                    $('#done').html(tool.elements_done);
-                    $('#total').html(tool.elements_total);
-                }
+        updateInfo(interval, type);
+    }, 10000);
+}
+function updateInfo(interval, type) {
+    $.ajax({
+        url: admin_url + "actions/update_info.php",
+        type: "post",
+        data: {type: type},
+        dataType: "json",
+        success: function (data) {
+            $('#update_div').html(data.html);
+            updateListeners();
+            hideSpinner();
+            if (data.msg_template) {
+                $(".page-content").prepend(data.msg_template)
             }
-        });
-    }, 5000);
+            if (data.modal_error != 0) {
+                var modal = $('#myModal');
+                modal.find('#error_update').html(data.modal_error);
+                modal.modal();
+            }
+            if (data.is_updating === 'false') {
+                clearInterval(interval);
+                checkStatus();
+            } else {
+                var tool = data.update_info;
+                $('.launch_wip').off('click');
+
+                if (tool && tool.elements_done > 0) {
+                    $('#progress_div').show();
+                }
+                $('#progress-bar').attr('aria-valuenow', tool.pourcent).width(tool.pourcent + '%');
+                $('#pourcent').html(tool.pourcent);
+                $('#done').html(tool.elements_done);
+                $('#total').html(tool.elements_total);
+            }
+        }
+    });
 }
 
 function checkStatus() {

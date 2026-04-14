@@ -1,10 +1,10 @@
 <div class="row">
   <ul class="ace-thumbnails poster">
     {foreach from=$vidthumbs_poster item=vid_thumb}
-    <li style="background-image:url({$vid_thumb});" {if $vid_thumb|get_thumb_num==$data.default_poster}class="selected"{/if} title="{lang('select_as_default_x',lang('poster'))}">
-      <label for="poster_{$vid_thumb|get_thumb_num}">
+    <li style="background-image:url({$vid_thumb.thumb});" {if $vid_thumb.thumb_id==$data.default_poster}class="selected"{/if} title="{lang('select_as_default_x',lang('poster'))}">
+      <label for="poster_{$vid_thumb.thumb_id}">
         <span class="content_bottom">
-          <input type="radio" id="poster_{$vid_thumb|get_thumb_num}" value="{GetName($vid_thumb)}.{getExt($vid_thumb)}" name="default_poster" {if $data.default_poster==$vid_thumb|get_thumb_num}checked{/if}/>
+          <input type="radio" id="poster_{$vid_thumb.thumb_id}" value="{$vid_thumb.thumb_id}" name="default_poster" {if $data.default_poster==$vid_thumb.thumb_id}checked{/if}/>
         </span>
       </label>
     </li>

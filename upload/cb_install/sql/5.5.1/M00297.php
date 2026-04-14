@@ -30,7 +30,7 @@ class M00297 extends \Migration
 
         foreach ($pages as $page) {
             if ($page['page_name'] == '403 Error' || $page['page_name'] == '404 Error') {
-                self::query('DELETE FROM '.tbl('pages').' WHERE page_id = ' . $page['page_id']);
+                self::query('DELETE FROM '.tbl('pages').' WHERE page_id = ' . (int)$page['page_id']);
             } else {
                 self::updateTranslationKey($page['page_name'], 'page_name_' . str_replace('page_name_', '', str_replace(' ', '_', strtolower($page['page_name']))));
                 self::query('UPDATE ' . tbl('pages') . ' SET page_name = \'' . str_replace(' ', '_', strtolower($page['page_name'])) .'\' where page_name = \'' . $page['page_name'] .'\'' );

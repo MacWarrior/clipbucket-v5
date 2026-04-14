@@ -27,7 +27,7 @@ if (!empty($mode)) {
             break;
 
         case 'load_more':
-            $limit = $_POST['limit'];
+            $limit = (int)$_POST['limit'];
             $total = $_POST['total'];
 
             if (empty($limit) || empty($total)) {
@@ -39,7 +39,7 @@ if (!empty($mode)) {
             switch ($inner_mode) {
                 case 'load_more_playlist':
                     $userid = $_POST['cat_id'];
-                    $play_arr = ['userid' => $userid, 'order' => 'date_added DESC', 'limit' => '' . $limit . ',' . $limit];
+                    $play_arr = ['userid' => $userid, 'order' => 'date_added DESC', 'limit' => $limit . ',' . $limit];
                     $results = Playlist::getInstance()->getAll($play_arr);
                     $next_limit = $limit + $limit;
                     $play_arr_next = ['userid' => $userid, 'order' => 'date_added DESC', 'limit' => '' . $next_limit . ',' . $next_limit];
@@ -49,7 +49,6 @@ if (!empty($mode)) {
                     } else {
                         $count_next = count($playlist_next);
                     }
-                    $count_next = (int)$count_next;
                     $total_results = $total;
                     $template_path = 'blocks/playlist/playlist.html';
                     $assigned_variable_smarty = 'playlist';
@@ -73,75 +72,6 @@ if (!empty($mode)) {
             }
             break;
 
-        case 'rating':
-            if (empty($_POST['type']) || empty($_POST['rating']) || empty($_POST['id'])) {
-                e(lang('missing_params'));
-                echo (getTemplateMsg());
-                break;
-            }
-            switch ($_POST['type']) {
-                case 'video':
-                    $rating = mysql_clean($_POST['rating']) * 2;
-                    $id = mysql_clean($_POST['id']);
-                    $result = CBvideo::getInstance()->rate_video($id, $rating);
-                    $result['is_rating'] = true;
-                    CBvideo::getInstance()->show_video_rating($result);
-
-                    $funcs = cb_get_functions('rate_video');
-                    if ($funcs) {
-                        foreach ($funcs as $func) {
-                            $func['func']($id);
-                        }
-                    }
-                    break;
-
-                case 'photo':
-                    $rating = mysql_clean($_POST['rating']) * 2;
-                    $id = mysql_clean($_POST['id']);
-                    $result = CBPhotos::getInstance()->rate_photo($id, $rating);
-                    $result['is_rating'] = true;
-                    CBvideo::getInstance()->show_video_rating($result);
-
-                    $funcs = cb_get_functions('rate_photo');
-                    if ($funcs) {
-                        foreach ($funcs as $func) {
-                            $func['func']($id);
-                        }
-                    }
-                    break;
-
-                case 'collection':
-                    $rating = mysql_clean($_POST['rating']) * 2;
-                    $id = mysql_clean($_POST['id']);
-                    $result = Collections::getInstance()->rate_collection($id, $rating);
-                    $result['is_rating'] = true;
-                    CBvideo::getInstance()->show_video_rating($result);
-
-                    $funcs = cb_get_functions('rate_collection');
-                    if ($funcs) {
-                        foreach ($funcs as $func) {
-                            $func['func']($id);
-                        }
-                    }
-                    break;
-
-                case 'user':
-                    $rating = mysql_clean($_POST['rating']) * 2;
-                    $id = mysql_clean($_POST['id']);
-                    $result = userquery::getInstance()->rate_user($id, $rating);
-                    $result['is_rating'] = true;
-                    CBvideo::getInstance()->show_video_rating($result);
-
-                    $funcs = cb_get_functions('rate_user');
-                    if ($funcs) {
-                        foreach ($funcs as $func) {
-                            $func['func']($id);
-                        }
-                    }
-                    break;
-            }
-            break;
-
         case 'share_object':
 
             if (empty($_POST['type']) || empty($_POST['id'])) {
@@ -159,8 +89,7 @@ if (!empty($mode)) {
                         echo json_encode(getTemplateMsg());
                         break;
                     }
-                    $id = mysql_clean($_POST['id']);
-                    $vdo = CBvideo::getInstance()->get_video($id);
+                    $vdo = CBvideo::getInstance()->get_video($_POST['id']);
                     CBvideo::getInstance()->set_share_email($vdo);
                     CBvideo::getInstance()->action->share_content($vdo['videoid']);
                     break;
@@ -312,12 +241,12 @@ if (!empty($mode)) {
                 e(lang('please_login'));
                 echo json_encode(['msg'=>getTemplateMsg()]);
                 break;
-            } elseif (empty($_POST['userid']) ) {
+            } else if (empty($_POST['userid']) || !is_numeric($_POST['userid']) ) {
                 e(lang('missing_params'));
                 echo json_encode(['msg'=>getTemplateMsg()]);
                 break;
             }
-            $userid = $_POST['userid'];
+            $userid = (int)$_POST['userid'];
             $sub_count = userquery::getInstance()->get_user_subscribers($userid, true);
             echo json_encode(['subscriber_count' => $sub_count]);
             break;
@@ -627,7 +556,11 @@ if (!empty($mode)) {
             break;
 
         case 'add_collection':
-            if (empty($_POST['collection_name']) || empty($_POST['collection_description']) || empty($_POST['category']) ) {
+            if (empty($_POST['collection_name'])
+                || empty($_POST['collection_description'])
+                || (
+                    empty($_POST['category']) && config('enable_collection_categories') == 'yes')
+                ) {
                 e(lang('missing_params'));
                 $insert_id = 0;
             } else {
@@ -745,33 +678,6 @@ if (!empty($mode)) {
 
                 Template('blocks/comments/comments.html');
                 Template('blocks/pagination.html');
-            }
-            break;
-
-        case 'photo_ajax':
-            try {
-                if (!User::getInstance()->hasPermission('view_photo')) {
-                    throw new Exception(lang('insufficient_privileges'));
-                }
-                if (!empty($_POST['photo_pre']) && !empty($_POST['item'])) {
-                    $photo = $_POST['photo_pre'];
-                    $items = $_POST['item'];
-                    $ci_id = $photo['ci_id'];
-                    $collection = $photo['collection_id'];    // collection id.
-                    $link = Collections::getInstance()->get_next_prev_item($ci_id, $collection, $items, $limit = 1, $check_only = false); // getting Previous item
-                    $srcString = '/files/photos/' . $link[0]['file_directory'] . '/' . $link[0]['filename'] . '.' . $link[0]['ext']; // Image Source...
-                    $response['photo'] = $link;
-                    $response['photo_key'] = $link[0]['photo_key'];
-                    $response['src_string'] = $srcString; // Image source.
-                    $response['collection_id'] = $collection;
-                    echo json_encode($response);
-                } else {
-                    throw new Exception(lang('missing_params'));
-                }
-            } catch (Exception $e) {
-                $response["error_ex"] = true;
-                $response["msg"] = 'Message: ' . $e->getMessage();
-                echo(json_encode($response));
             }
             break;
 

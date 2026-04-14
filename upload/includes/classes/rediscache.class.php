@@ -41,7 +41,7 @@ class CacheRedis
      * @throws \Predis\Response\ServerException
      * @throws Exception
      */
-    private function init($params)
+    private function init($params): void
     {
         try {
             $this->client = new Predis\Client($params);
@@ -64,6 +64,7 @@ class CacheRedis
                 throw $e;
             }
         } catch (\Exception $e) {
+            $this->isEnabled = false;
             error_log($e->getMessage());
         }
         self::$_instance = $this;

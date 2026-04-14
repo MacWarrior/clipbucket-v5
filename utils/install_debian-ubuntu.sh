@@ -236,14 +236,16 @@ esac
 
 echo ""
 echo -ne "Installing requiered elements..."
-apt install php${PHP_VERSION}-fpm mariadb-server git php${PHP_VERSION}-curl ffmpeg php${PHP_VERSION}-mysqli php${PHP_VERSION}-xml php${PHP_VERSION}-mbstring php${PHP_VERSION}-gd sendmail mediainfo --yes > /dev/null 2>&1
-echo -ne " OK"
+apt install php${PHP_VERSION}-fpm mariadb-server git php-pear php${PHP_VERSION}-dev php${PHP_VERSION}-curl ffmpeg php${PHP_VERSION}-mysqli php${PHP_VERSION}-xml php${PHP_VERSION}-mbstring php${PHP_VERSION}-gd sendmail mediainfo --yes > /dev/null 2>&1
+pecl install xhprof > /dev/null 2>&1
 
 echo ""
 echo -ne "Updating PHP ${PHP_VERSION} configs..."
+echo "extension=xhprof.so" > /etc/php/${PHP_VERSION}/mods-available/xhprof.ini
 sed -i "s/max_execution_time = 30/max_execution_time = 7200/g" /etc/php/${PHP_VERSION}/fpm/php.ini
 sed -i "s/;ffi.enable=preload/ffi.enable=true/g" /etc/php/${PHP_VERSION}/fpm/php.ini
 sed -i "s/;ffi.enable=preload/ffi.enable=true/g" /etc/php/${PHP_VERSION}/cli/php.ini
+phpenmod xhprof
 
 systemctl restart php${PHP_VERSION}-fpm
 echo -ne " OK"

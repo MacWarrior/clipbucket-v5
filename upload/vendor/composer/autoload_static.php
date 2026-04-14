@@ -7,6 +7,10 @@ namespace Composer\Autoload;
 class ComposerStaticInitc5bfc8e5670876b11014ce9f23d445ff
 {
     public static $prefixLengthsPsr4 = array (
+        'X' => 
+        array (
+            'Xhgui\\Profiler\\' => 15,
+        ),
         'W' => 
         array (
             'Whoops\\' => 7,
@@ -32,6 +36,10 @@ class ComposerStaticInitc5bfc8e5670876b11014ce9f23d445ff
     );
 
     public static $prefixDirsPsr4 = array (
+        'Xhgui\\Profiler\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/perftools/php-profiler/src',
+        ),
         'Whoops\\' => 
         array (
             0 => __DIR__ . '/..' . '/filp/whoops/src/Whoops',
@@ -42,8 +50,8 @@ class ComposerStaticInitc5bfc8e5670876b11014ce9f23d445ff
         ),
         'Psr\\Http\\Server\\' => 
         array (
-            0 => __DIR__ . '/..' . '/psr/http-server-handler/src',
-            1 => __DIR__ . '/..' . '/psr/http-server-middleware/src',
+            0 => __DIR__ . '/..' . '/psr/http-server-middleware/src',
+            1 => __DIR__ . '/..' . '/psr/http-server-handler/src',
         ),
         'Psr\\Http\\Message\\' => 
         array (
@@ -72,6 +80,16 @@ class ComposerStaticInitc5bfc8e5670876b11014ce9f23d445ff
         'FFI\\Env\\' => 
         array (
             0 => __DIR__ . '/..' . '/veka-server/onnx-php/env/src',
+        ),
+    );
+
+    public static $prefixesPsr0 = array (
+        'X' => 
+        array (
+            'Xhgui_' => 
+            array (
+                0 => __DIR__ . '/..' . '/perftools/xhgui-collector/src',
+            ),
         ),
     );
 
@@ -257,6 +275,7 @@ class ComposerStaticInitc5bfc8e5670876b11014ce9f23d445ff
         return \Closure::bind(function () use ($loader) {
             $loader->prefixLengthsPsr4 = ComposerStaticInitc5bfc8e5670876b11014ce9f23d445ff::$prefixLengthsPsr4;
             $loader->prefixDirsPsr4 = ComposerStaticInitc5bfc8e5670876b11014ce9f23d445ff::$prefixDirsPsr4;
+            $loader->prefixesPsr0 = ComposerStaticInitc5bfc8e5670876b11014ce9f23d445ff::$prefixesPsr0;
             $loader->classMap = ComposerStaticInitc5bfc8e5670876b11014ce9f23d445ff::$classMap;
 
         }, null, ClassLoader::class);

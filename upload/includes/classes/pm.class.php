@@ -241,7 +241,7 @@ class cb_pm
      */
     function is_reply($id, $uid): bool
     {
-        $results = Clipbucket_db::getInstance()->select(tbl($this->tbl), 'message_to', ' message_id = \'' . mysql_clean($id) . '\' AND message_to LIKE \'%#' . mysql_clean($uid) . '#%\'');
+        $results = Clipbucket_db::getInstance()->select(tbl($this->tbl), 'message_to', ' message_id = ' . (int)$id . ' AND message_to LIKE \'%#' . mysql_clean($uid) . '#%\'');
         if (count($results) > 0) {
             return true;
         }

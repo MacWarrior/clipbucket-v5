@@ -11,7 +11,7 @@ if (empty($_POST['videoid'])) {
     $response['success'] = false;
     $response['msg'] = getTemplateMsg();
     echo json_encode($response);
-    die;
+    die();
 }
 
 $response['success'] = true;

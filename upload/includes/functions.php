@@ -6,7 +6,6 @@ include_once 'upload_forms.php';
 /**
  * This function is for Securing Password, you may change its combination for security reason but
  * make sure do not change once you made your script run
- * TODO : Multiple md5/sha1 is useless + this is totally unsecure, must be replaced by sha512 + salt
  *
  * @param $string
  *
@@ -144,6 +143,12 @@ function getExt($file): string
 {
     $parts = explode('.', $file);
     return strtolower(end($parts));
+}
+
+function getExtMimeType($file_path): string
+{
+    $image_sizes = getimagesize($file_path);
+    return PhotoThumbs::getMimeType($image_sizes['mime']);
 }
 
 /**
@@ -294,19 +299,6 @@ function getAd($params): string
         $data .= '</div>';
     }
     return $data;
-}
-
-/**
- * FUNCTION USED TO GET THUMBNAIL, MADE FOR SMARTY
- *
- * @param : { array } { $params } { array of parameters }
- *
- * @return mixed
- * @throws Exception
- */
-function getSmartyThumb($params)
-{
-    return get_thumb($params['vdetails'], $params['multi'], $params['size']);
 }
 
 /**
@@ -483,6 +475,7 @@ function pr($text, $pretty = false): void
  * if there is no user_id it will return false
  * @throws Exception
  * @uses : { class : userquery } { var : userid }
+ * @deprecated 
  */
 function user_id()
 {
@@ -1639,7 +1632,7 @@ function cbdate($format = null, $timestamp = null): string
 function cbdatetime($format = null, $timestamp = null): string
 {
     if (!$format) {
-        $format = config('date_format') . ' h:m:s';
+        $format = config('date_format') . ' H:i:s';
     }
 
     return cbdate($format, $timestamp);
@@ -1716,7 +1709,7 @@ function validate_cb_form($input, $array): void
                 if (!isUTF8($val)) {
                     $val = utf8_decode($val);
                 }
-                $length = strlen($val);
+                $length = mb_strlen($val);
             }
             $min_len = $field['min_length'] ?? 0;
             $max_len = $field['max_length'];
@@ -3210,41 +3203,19 @@ function has_rated($userid, $itemid, $type = false)
 {
     switch ($type) {
         case 'video':
-            $toselect = 'videoid';
-            $field = 'voter_ids';
-            break;
-
+            return Video::isObjectRated($userid, $itemid);
         case 'photo':
-            $type = 'photos';
-            $toselect = 'photo_id';
-            $field = 'voters';
-            break;
-
+            return Photo::isObjectRated($userid, $itemid);
         case 'user':
-            $type = 'user_profile';
-            $toselect = 'userid';
-            $field = 'voters';
-            break;
-
+            return User::isObjectRated($userid, $itemid);
+        case 'collection':
+            return Collection::isObjectRated($userid, $itemid);
+        case 'comment':
+            return Comments::isObjectRated($userid, $itemid);
         default:
             error_log('has_rated unknown type : ' . $type . PHP_EOL);
-            $type = 'video';
-            $toselect = 'videoid';
-            $field = 'voter_ids';
-            break;
+            return false;
     }
-    $raw_rating = Clipbucket_db::getInstance()->select(tbl($type), $field, "$toselect = $itemid");
-    $ratedby_json = $raw_rating[0][$field];
-    $ratedby_cleaned = json_decode($ratedby_json, true);
-    foreach ($ratedby_cleaned as $rating_data) {
-        if ($rating_data['userid'] == $userid) {
-            if ($rating_data['rating'] == 0) {
-                return 'disliked';
-            }
-            return 'liked';
-        }
-    }
-    return false;
 }
 
 /**
@@ -3293,11 +3264,11 @@ function get_player_logo_path(): string
 /**
  * @throws Exception
  */
-function upload_image($type = 'logo')
+function upload_image($type = 'logo'): bool
 {
     $file_post = 'upload_' . $type;
     if (!in_array($type, ['logo', 'favicon', 'player-logo'])) {
-        e(lang('unknown_type'));
+        e(lang('unknown_type', $type));
         return false;
     }
 
@@ -3322,7 +3293,11 @@ function upload_image($type = 'logo')
 
     $logo_path = DirPath::get('logos') . $type . '.' . $file_ext;
     unlink($logo_path);
-    move_uploaded_file($_FILES[$file_post]['tmp_name'], $logo_path);
+
+    if (!move_uploaded_file($_FILES[$file_post]['tmp_name'], $logo_path)) {
+        e(lang('class_error_occured'));
+        return false;
+    }
 
     myquery::getInstance()->Set_Website_Details($type . '_name', $type . '.' . $file_ext);
     myquery::getInstance()->Set_Website_Details('logo_update_timestamp', time());
@@ -3493,6 +3468,7 @@ function rglob($pattern, $flags = 0)
 }
 
 /**
+ * delete all empty folders recursively from a given path
  * @param $path
  * @return bool
  */
@@ -3513,6 +3489,28 @@ function delete_empty_directories($path): bool
     }
 
     return false;
+}
+/**
+ * @param $path
+ * @return bool
+ */
+function delete_directories_recursive($path): bool
+{
+    if (!is_dir($path)) {
+        return false;
+    }
+    $content = glob($path . '/*', GLOB_ONLYDIR);
+    foreach ($content as $sub_dir) {
+        delete_directories_recursive($sub_dir);
+    }
+    $content = glob($path . '/*');
+    $success = true;
+    // Si le répertoire est maintenant vide, le supprimer
+    foreach ($content as $file) {
+        $success = unlink($file) && $success;
+    }
+    return rmdir($path) && $success;
+
 }
 
 /**
@@ -3616,7 +3614,7 @@ function save_subtitle_ajax()
         $response['success'] = false;
         $response['msg'] = getTemplateMsg();
         echo json_encode($response);
-        die;
+        die();
     }
 
     $video = Video::getInstance()->getOne(['videoid' => mysql_clean($_POST['videoid'])]);
@@ -3627,7 +3625,7 @@ function save_subtitle_ajax()
             $response['success'] = false;
             $response['msg'] = getTemplateMsg();
             echo json_encode($response);
-            die;
+            die();
         }
     }
 

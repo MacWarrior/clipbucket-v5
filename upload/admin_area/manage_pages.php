@@ -1,6 +1,7 @@
 <?php
 const THIS_PAGE = 'manage_pages';
 require_once dirname(__FILE__, 2) . '/includes/admin_config.php';
+require_once DirPath::get('classes') . 'migration' . DIRECTORY_SEPARATOR . 'migration.class.php';
 pages::getInstance()->page_redir();
 
 $permission = 'basic_settings';
@@ -90,7 +91,7 @@ if (isset($_POST['update_order'])) {
     cbpage::getInstance()->update_order();
     if( !error() && !warning() ) {
         errorhandler::getInstance()->flush();
-        e(lang('Page order has been updated'), 'm');
+        e(lang('page_order_has_been_updated'), 'm');
     }
 }
 

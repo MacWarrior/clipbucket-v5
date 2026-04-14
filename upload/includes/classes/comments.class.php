@@ -1,8 +1,10 @@
 <?php
 
-class Comments
+class Comments extends Objects
 {
     public static $libelle_type_channel = 'channel';
+
+    public const TYPE = 'comment';
     /**
      * @throws Exception
      */
@@ -45,16 +47,16 @@ class Comments
             $conditions[] = 'comments.type = \''.mysql_clean($param_type).'\'';
         }
         if( $param_type_id ){
-            $conditions[] = 'comments.type_id = '.mysql_clean($param_type_id);
+            $conditions[] = 'comments.type_id = ' . (int)$param_type_id;
         }
         if( $param_comment_id ){
-            $conditions[] = 'comments.comment_id = '.mysql_clean($param_comment_id);
+            $conditions[] = 'comments.comment_id = ' . (int)$param_comment_id;
         }
         if( $param_userid ){
-            $conditions[] = 'comments.userid = '.mysql_clean($param_userid);
+            $conditions[] = 'comments.userid = ' . (int)$param_userid;
         }
         if( $param_parent_id ){
-            $conditions[] = 'comments.parent_id = '.mysql_clean($param_parent_id);
+            $conditions[] = 'comments.parent_id = ' . (int)$param_parent_id;
         }
         if( $param_hierarchy ){
             $conditions[] = 'comments.parent_id = 0';
@@ -106,6 +108,10 @@ class Comments
                 ,'users.email'
                 ,'CASE ' . $case_when . ' END AS title'
             ];
+            if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '74')) {
+                $select[] = 'comments.rating';
+                $select[] = 'comments.rated_by';
+            }
         }
 
         $sql ='SELECT ' . implode(', ', $select) . '
@@ -203,10 +209,10 @@ class Comments
             $conditions[] = 'type_id = ' . (int)$param_type_id;
         }
         if( $param_comment_id ){
-            $conditions[] = '(comment_id = '.(int)$param_comment_id . ' OR ' . ' parent_id = ' . (int)$param_comment_id . ')';
+            $conditions[] = '(comment_id = ' . (int)$param_comment_id . ' OR ' . ' parent_id = ' . (int)$param_comment_id . ')';
         }
         if( $param_userid ){
-            $conditions[] = 'userid = '.(int)$param_userid;
+            $conditions[] = 'userid = ' . (int)$param_userid;
         }
 
         $where = '';
@@ -261,7 +267,7 @@ class Comments
                 $cond = 'userid';
         }
 
-        Clipbucket_db::getInstance()->update(tbl($table), [$field], [$count_comment], $cond.' = '.mysql_clean($type_id));
+        Clipbucket_db::getInstance()->update(tbl($table), [$field], [$count_comment], $cond.' = ' . (int)$type_id);
     }
 
     /**
@@ -303,7 +309,7 @@ class Comments
         $spam_voters .= $user_id.'|';
         $spam_votes = $comment['spam_votes'] + 1;
 
-        Clipbucket_db::getInstance()->update(tbl('comments'), ['spam_votes', 'spam_voters'], [$spam_votes, $spam_voters], 'comment_id = '.mysql_clean($comment_id));
+        Clipbucket_db::getInstance()->update(tbl('comments'), ['spam_votes', 'spam_voters'], [$spam_votes, $spam_voters], 'comment_id = ' . (int)$comment_id);
         e(lang('spam_comment_ok'), 'm');
         return $spam_votes;
     }
@@ -334,7 +340,7 @@ class Comments
             return false;
         }
 
-        Clipbucket_db::getInstance()->update(tbl('comments'), ['spam_votes', 'spam_voters'], [0, 'NULL'], 'comment_id = '.mysql_clean($comment_id));
+        Clipbucket_db::getInstance()->update(tbl('comments'), ['spam_votes', 'spam_voters'], [0, 'NULL'], 'comment_id = ' . (int)$comment_id);
         e(lang('Spam removed from comment.'), 'm');
         return true;
     }
@@ -419,7 +425,7 @@ class Comments
         );
 
         if( $user_id ){
-            Clipbucket_db::getInstance()->update(tbl('users'), ['total_comments'], ['|f|total_comments+1'], 'userid=' . mysql_clean($user_id));
+            Clipbucket_db::getInstance()->update(tbl('users'), ['total_comments'], ['|f|total_comments+1'], 'userid = ' . (int)$user_id);
         }
 
         self::updateCommentsCount($type, $type_id);
@@ -539,7 +545,7 @@ class Comments
      */
     public static function update($comment_id, $comment)
     {
-        Clipbucket_db::getInstance()->update(tbl('comments'), ['comment'], [mysql_clean($comment)], ['comment_id = '.mysql_clean($comment_id)]);
+        Clipbucket_db::getInstance()->update(tbl('comments'), ['comment'], [mysql_clean($comment)], ['comment_id = ' . (int)$comment_id]);
     }
 
     /**
@@ -599,6 +605,24 @@ class Comments
                 'toastui/i18n/' . strtolower(Language::getInstance()->getLang()) . $min_suffixe . '.js' => 'libs'
             ]);
         }
+    }
+
+    /**
+     * @param int $object_id
+     * @return false|mixed
+     * @throws Exception
+     */
+    public static function current_rating(int $object_id)
+    {
+        if (!Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '74')){
+            return false;
+        }
+
+        $result = Clipbucket_db::getInstance()->select(tbl('comments'), 'userid,rating,rated_by,voters', ' comment_id = ' . $object_id);
+        if ($result) {
+            return $result[0];
+        }
+        return false;
     }
 
 }

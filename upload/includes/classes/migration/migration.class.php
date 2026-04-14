@@ -103,11 +103,17 @@ class Migration
         if (strtolower($type) == 'p') {
             $sql = 'UPDATE ' . tbl('plugins') . ' SET plugin_version = \'' . mysql_clean($version) . '\' WHERE plugin_folder = \'' . $revision . '\'';
         } else {
-            $sql = 'INSERT INTO ' . tbl('version') . ' SET version = \'' . mysql_clean($version) . '\' , revision = ' . mysql_clean($revision) . ', id = 1 ON DUPLICATE KEY UPDATE version = \'' . mysql_clean($version) . '\' , revision = ' . mysql_clean($revision);
+            $sql = 'INSERT INTO ' . tbl('version') . ' SET version = \'' . mysql_clean($version) . '\' , revision = ' . (int)$revision . ', id = 1 ON DUPLICATE KEY UPDATE version = \'' . mysql_clean($version) . '\' , revision = ' . (int)$revision;
         }
         Clipbucket_db::getInstance()->executeThrowException($sql);
         CacheRedis::flushAll();
         Update::getInstance()->flush();
+        Update::getInstance()->getDBVersion(true);
+        self::clearSingletonInstance(Video::class);
+        self::clearSingletonInstance(Photo::class);
+        self::clearSingletonInstance(Playlist::class);
+        self::clearSingletonInstance(Category::class);
+        self::clearSingletonInstance(User::class);
     }
 
     /**
@@ -132,6 +138,17 @@ class Migration
     public function getType()
     {
         return $this->type;
+    }
+
+    /**
+     * @param string $className
+     * @return void
+     */
+    private static function clearSingletonInstance(string $className): void
+    {
+        if (method_exists($className, 'clearInstance')) {
+            $className::clearInstance();
+        }
     }
 
     /**

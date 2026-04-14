@@ -24,4 +24,7 @@ $(document).ready(function(){
         url.search = params.toString();
         window.location = url.toString();
     });
+
+    _cb.listener_favorite('collection', collection_id);
+    _cb.listener_favorite_only_remove('photo', 'photo-info');
 });

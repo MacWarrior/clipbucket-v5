@@ -1,6 +1,6 @@
 <fieldset class="fieldset">
   <h4>
-    {if $type == 'thumbs'}
+    {if $type == 'thumbnail'}
       {lang code="extracted_thumbs"}
     {elseif $type == 'poster'}
       {lang code="poster_list"}
@@ -17,7 +17,14 @@
 
   {if !empty($vidthumbs_custom)}
   <hr/>
-  <h4>{lang code="custom_thumbs"}</h4>
+
+  <h4> {if $type == 'thumbnail'}
+          {lang code="custom_thumbs"}
+      {elseif $type == 'poster'}
+          {lang code="custom_poster"}
+      {else}
+          {lang code="custom_backdrop"}
+      {/if}</h4>
   <div id="custom_thumbs">
     {foreach from=$vidthumbs_custom item=vid_thumb}
       {include file="$style_dir/blocks/thumb_item.html" data=$data vid_thumb=$vid_thumb}

@@ -65,6 +65,9 @@ if( empty($collections) ){
 
 $total_pages = count_pages($count, config('collection_per_page'));
 
+$min_suffixe = System::isInDev() ? '' : '.min';
+ClipBucket::getInstance()->addJS(['pages/collections/collections' . $min_suffixe . '.js' => 'admin']);
+
 //Pagination
 pages::getInstance()->paginate($total_pages, $page);
 

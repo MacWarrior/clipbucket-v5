@@ -14,9 +14,14 @@ class SortType
             $type = 'photos';
         }
         $sortTypes = Clipbucket_db::getInstance()->_select('SELECT id, label, type, is_default FROM ' . tbl(self::$tableName) . ' WHERE type = \'' . mysql_clean($type) . '\'');
-        return array_combine(
+
+        $sortTypes = array_combine(
             array_column($sortTypes, 'id'), array_column($sortTypes, 'label')
         );
+        if (config('random_video_order') != 'yes' || $type != 'videos') {
+            unset($sortTypes[array_search('random', $sortTypes)]);
+        }
+        return $sortTypes;
     }
 
     /**

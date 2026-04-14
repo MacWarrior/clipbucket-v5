@@ -32,8 +32,8 @@ function add_to_editor_pick($vid): void
     if (CBvideo::getInstance()->video_exists($vid)) {
         if (!is_video_in_editors_pick($vid)) {
             $sort = get_highest_sort_number() + 1;
-            Clipbucket_db::getInstance()->insert(tbl('editors_picks'), ['videoid', 'sort', 'date_added'], [$vid, $sort, now()]);
-            Clipbucket_db::getInstance()->update(tbl('video'), ['in_editor_pick'], ['yes'], ' videoid = \'' . $vid . '\'');
+            Clipbucket_db::getInstance()->insert(tbl('editors_picks'), ['videoid', 'sort', 'date_added'], [(int)$vid, $sort, now()]);
+            Clipbucket_db::getInstance()->update(tbl('video'), ['in_editor_pick'], ['yes'], ' videoid = ' . (int)$vid);
             e(lang('plugin_editors_picks_added'), 'm');
         } else {
             e(lang('plugin_editors_picks_add_error'), 'e');
@@ -52,8 +52,8 @@ function remove_vid_editors_pick($vid)
         $vid = $vid['videoid'];
     }
     if (is_video_in_editors_pick($vid)) {
-        Clipbucket_db::getInstance()->delete(tbl('editors_picks'), ['videoid'], [$vid]);
-        Clipbucket_db::getInstance()->update(tbl('video'), ['in_editor_pick'], ['no'], ' videoid = \'' . $vid . '\'');
+        Clipbucket_db::getInstance()->delete(tbl('editors_picks'), ['videoid'], [(int)$vid]);
+        Clipbucket_db::getInstance()->update(tbl('video'), ['in_editor_pick'], ['no'], ' videoid = ' . (int)$vid);
         e(lang('plugin_editors_picks_removed'), 'm');
     }
 }
@@ -63,7 +63,7 @@ function remove_vid_editors_pick($vid)
  */
 function is_video_in_editors_pick($vid): bool
 {
-    $count = Clipbucket_db::getInstance()->count(tbl('editors_picks'), 'videoid', ' videoid = \'' . $vid . '\'');
+    $count = Clipbucket_db::getInstance()->count(tbl('editors_picks'), 'videoid', ' videoid = ' . (int)$vid);
     if ($count > 0) {
         return true;
     }

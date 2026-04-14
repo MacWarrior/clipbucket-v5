@@ -57,10 +57,10 @@ class SocialNetworks
         }
 
         $sql = 'INSERT INTO ' . tbl($this->tablename) . ' (id_fontawesome_icon, title, url, social_network_link_order) VALUES(
-            ' . mysql_clean($id_fontawesome_icon) . ',
+            ' . (int)$id_fontawesome_icon . ',
             \'' . mysql_clean($title) . '\',
             \'' . mysql_clean($url) . '\',
-            ' . mysql_clean($social_network_link_order) . '
+            ' . (int)$social_network_link_order . '
         )';
         Clipbucket_db::getInstance()->execute($sql);
         return true;
@@ -100,9 +100,9 @@ class SocialNetworks
         $sql = 'UPDATE ' . tbl($this->tablename) . ' 
             SET title = \'' . mysql_clean($title) . '\',
             url = \'' . mysql_clean($url) . '\',
-            social_network_link_order = ' . mysql_clean($social_network_link_order) . ',
-            id_fontawesome_icon = ' . mysql_clean($id_fontawesome_icon) . '
-           WHERE id_social_networks_link = ' . mysql_clean($id_social_networks_link);
+            social_network_link_order = ' . (int)$social_network_link_order . ',
+            id_fontawesome_icon = ' . (int)$id_fontawesome_icon . '
+           WHERE id_social_networks_link = ' . (int)$id_social_networks_link;
         return Clipbucket_db::getInstance()->execute($sql);
     }
 
@@ -113,7 +113,7 @@ class SocialNetworks
      */
     public function delete($id_social_networks_link)
     {
-        $sql = 'DELETE FROM ' . tbl($this->tablename) . ' WHERE id_social_networks_link = ' . mysql_clean($id_social_networks_link) ;
+        $sql = 'DELETE FROM ' . tbl($this->tablename) . ' WHERE id_social_networks_link = ' . (int)$id_social_networks_link;
         return Clipbucket_db::getInstance()->execute($sql);
     }
 
@@ -186,7 +186,7 @@ class SocialNetworks
         $conditions = [];
 
         if ($param_id_social_networks_link !== false) {
-            $conditions[] = 'id_social_networks_link = '. mysql_clean($param_id_social_networks_link);
+            $conditions[] = 'id_social_networks_link = '. (int)$param_id_social_networks_link;
         }
 
         $select = $this->getSQLFields();

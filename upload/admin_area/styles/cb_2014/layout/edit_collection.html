@@ -206,20 +206,25 @@
                 </ul>
                 <div class="tab-content">
                     <div id="fields" class="tab-pane in active">
-                        <legend>Other Fields</legend>
                         <div class="form-group">
                             {foreach from=$otherFields item=field}
-								<label class="label label-danger" for="{$field.id}">{$field.title} :</label>
-								{$field.hint_1}<br/>
-								{$formObj->createField($field)}<br/>
-								{$field.hint_2}
+                                {if $field.id == 'hierarchy_featured'}
+                                    <div class="switch-inline">
+                                        <label class="label label-danger" style="margin-top: 4px !important;" for="{$field.id}">{$field.title} :</label>{if $field.hint_icon}<span class="fa fa-question-circle tips" style="margin-left: 5px;" title="{$field.hint_icon}"></span> {/if}
+                                        {$formObj->createField($field)}
+                                    </div>
+                                {else}
+                                    <label class="label label-danger" for="{$field.id}">{$field.title} :</label>{if $field.hint_icon}<span class="fa fa-question-circle tips" style="margin-left: 5px;" title="{$field.hint_icon}"></span> {/if}
+                                    {$field.hint_1}<br/>
+                                    {$formObj->createField($field)}<br/>
+                                    {$field.hint_2}
+                                {/if}
                             {/foreach}
                         </div>
                     </div>
                     <div id="clpreview" class="tab-pane">
-                        <legend>Collection Preview</legend>
                         <div class="form-group">
-                            <img style="padding:2px; border:1px solid #ccc;" src="{Collections::getInstance()->coll_first_thumb($data,'l')}"/>
+                            <img style="padding:2px; border:1px solid #ccc;" src="{Collections::getInstance()->coll_first_thumb($data,'m')}" class="img-responsive{if config('keep_ratio_photo') && $data.type == 'photos'} crop_image_max {/if} "/>
                         </div>
                     </div>
                     {if config('enable_comments_collection') == 'yes'}

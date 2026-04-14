@@ -156,7 +156,6 @@ class ElasticSearch
                     "file_name"      => ["type" => "text"],
                     "file_directory" => ["type" => "text"],
                     "rating"         => ["type" => "text"],
-                    "photo_details"  => ["type" => "text"],
                     "active"         => ["type" => "text"],
                     "views"          => ["type" => "integer"],
                     "date_added"     => [

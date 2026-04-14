@@ -43,13 +43,19 @@
 							{if $field.hint_before}
 							<span class="help-block">{$field.hint_before}</span>
 							{/if}
-
-							{ANCHOR place=$field.anchor_before}
-							{$formObj->createField($field,false, true)}
-							{ANCHOR place=$field.anchor_after}
-							{if $field.hint_after}
-							<span class="help-block">{$field.hint_after}</span>
+							{if $field.name =='dob'}
+								<div class="input-group">
 							{/if}
+									{ANCHOR place=$field.anchor_before}
+									{$formObj->createField($field,false, true)}
+									{ANCHOR place=$field.anchor_after}
+									{if $field.hint_after}
+									<span class="help-block">{$field.hint_after}</span>
+									{/if}
+									{if $field.name =='dob'}
+										<span class="input-group-addon glyphicon glyphicon-calendar "></span>
+								</div>
+									{/if}
 						</div>
 					{/foreach}
 					{foreach from=$custom_fields item=field}

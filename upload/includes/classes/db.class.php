@@ -9,6 +9,9 @@ class Clipbucket_db
     private string $db_port = '3306';
     private int $total_queries = 0;
 
+    private int $lastKeepAlive = 0;
+    private int $keepAliveEverySec = 60;
+
     private static bool $available = false;
 
     private static self $db;
@@ -81,6 +84,7 @@ class Clipbucket_db
 
             $this->execute('SET NAMES "utf8mb4"');
             self::$available = true;
+            $this->lastKeepAlive = time();
         } catch (\Exception $e) {
             $error = $e->getMessage();
             error_log($error);
@@ -111,7 +115,11 @@ class Clipbucket_db
         try {
             $redis = CacheRedis::getInstance();
             if ($redis->isEnabled() && $cached_time != -1) {
-                if (System::isInDev()) {
+                if( System::isInDev()
+                    && (!defined('IS_AJAX') || (defined('IS_AJAX') && !IS_AJAX))
+                    && (!defined('IS_SSE') || (defined('IS_SSE') && !IS_SSE))
+                    && php_sapi_name() != 'cli')
+                {
                     $start = microtime(true);
                     $return = $redis->get($cached_key . ':' . $query);
                     $end = microtime(true);
@@ -239,11 +247,18 @@ class Clipbucket_db
 
         try {
             if (System::isInDev()) {
-                $start = microtime(true);
-                $data = $this->mysqli->query($query);
-                $end = microtime(true);
-                $timetook = $end - $start;
-                devWitch($query, $type, $timetook, false);
+                if (
+                    (!defined('IS_AJAX') || (defined('IS_AJAX') && !IS_AJAX))
+                    && (!defined('IS_SSE') || (defined('IS_SSE') && !IS_SSE))
+                    && php_sapi_name() != 'cli') {
+                    $start = microtime(true);
+                    $data = $this->mysqli->query($query);
+                    $end = microtime(true);
+                    $timetook = $end - $start;
+                    devWitch($query, $type, $timetook, false);
+                } else {
+                    $data = $this->mysqli->query($query);
+                }
             } else {
                 $data = $this->mysqli->query($query);
             }
@@ -523,6 +538,7 @@ class Clipbucket_db
      * @param $var
      *
      * @return string
+     * @throws Exception
      */
     function clean_var($var): string
     {
@@ -545,7 +561,7 @@ class Clipbucket_db
             if (preg_match('/version.*doesn\'t exist/', $this->getError())) {
                 throw new \Exception('version_not_installed');
             }
-            if (preg_match('/doesn\'t exist/', $this->getError())) {
+            if (str_contains($this->getError(), 'doesn\'t exist')) {
                 error_log('SQL : ' . $query);
                 error_log('ERROR : ' . $this->getError());
                 DiscordLog::sendDump('SQL : ' . $query);
@@ -571,13 +587,22 @@ class Clipbucket_db
         }
     }
 
+    /**
+     * @throws Exception
+     */
     private function ping(): void
     {
-        try{
-            $this->mysqli->query('DO 1');
+        $now = time();
+        if (($now - $this->lastKeepAlive) < $this->keepAliveEverySec) {
+            return;
         }
-        catch(Exception $e){
-            error_log('SQL ERROR : ' . $this->mysqli->error);
+
+        try {
+            $this->mysqli->query('DO 1');
+            $this->lastKeepAlive = $now;
+            return;
+        } catch (\Throwable $e) {
+            error_log('SQL ERROR : ' . ($this->mysqli->error ?? $e->getMessage()));
             $this->connect();
         }
     }

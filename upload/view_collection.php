@@ -34,13 +34,39 @@ if (!$cdetails || (!isSectionEnabled($cdetails['type']) && !User::getInstance()-
 $page = $_GET['page'];
 $get_limit = create_query_limit($page, config('collection_items_page'));
 
+$complement_url = base64_encode(json_encode($cdetails['collection_id']));
+if ($cdetails['type'] == 'photos') {
+    $sort_list =  display_sort_lang_array(Photo::getInstance()->getSortList());
+    assign('sort_list',$sort_list);
+
+    $base_url = cblink(['name' => 'photo_upload']);
+    if (config('seo') == 'yes') {
+        $link = $base_url . '/' . $complement_url;
+    } else {
+        $link = $base_url . '?collection=' . $complement_url;
+    }
+} elseif ($cdetails['type'] == 'videos') {
+    $sort_list =  display_sort_lang_array(Video::getInstance()->getSortList());
+    assign('sort_list', $sort_list);
+    $base_url = cblink(['name' => 'upload']);
+
+    if (config('seo') == 'yes') {
+        $link = $base_url . '/' . $complement_url;
+    } else {
+        $link = $base_url . '?collection=' . $complement_url;
+    }
+}
 
 $params = [];
 $params['collection_id'] = $collection_id;
 $params['limit_item'] = $get_limit;
-$sort_id = $_GET['sort_id']?? $cdetails['sort_type'];
-assign('sort_id', $sort_id);
+if (empty($_GET['sort_id']) || !in_array($_GET['sort_id'],array_keys($sort_list) )) {
+    $sort_id = $cdetails['sort_type'];
+} else {
+    $sort_id = $_GET['sort_id'];
+}
 $sort_label = SortType::getSortLabelById($sort_id) ?? '';
+assign('sort_id', $sort_id);
 $params['order_item'] = $sort_id;
 $items = Collection::getInstance()->getItems($params);
 
@@ -98,26 +124,6 @@ Assign('ids_to_check_progress', json_encode($ids_to_check_progress));
 assign('objects', $items);
 assign('c', $cdetails);
 subtitle($cdetails['collection_name']);
-$complement_url = base64_encode(json_encode($cdetails['collection_id']));
-if ($cdetails['type'] == 'photos') {
-    assign('sort_list', display_sort_lang_array(Photo::getInstance()->getSortList()));
-
-    $base_url = cblink(['name' => 'photo_upload']);
-    if (config('seo') == 'yes') {
-        $link = $base_url . '/' . $complement_url;
-    } else {
-        $link = $base_url . '?collection=' . $complement_url;
-    }
-} elseif ($cdetails['type'] == 'videos') {
-    assign('sort_list', display_sort_lang_array(Video::getInstance()->getSortList()));
-    $base_url = cblink(['name' => 'upload']);
-
-    if (config('seo') == 'yes') {
-        $link = $base_url . '/' . $complement_url;
-    } else {
-        $link = $base_url . '?collection=' . $complement_url;
-    }
-}
 
 assign('link_add_more',  $link);
 assign('featured', Photo::getInstance()->getAll(['featured'=>true, 'limit'=>6]));
@@ -144,6 +150,8 @@ if( config('enable_collection_categories') == 'yes' ){
     }
     assign('category_links', implode(',', $category_links));
 }
+
+assign('is_favorite', Collection::isFavorite($collection_id));
 
 if( !empty($cdetails['tags']) ){
     ClipBucket::getInstance()->addJS([

@@ -272,12 +272,13 @@
                             <ul class="nav nav-pills nav-stacked interfaces" style="margin:0;">
                                 <li class="active"><a data-toggle="tab" href="interfaces_global">{lang code='global'}</a></li>
                                 <li><a data-toggle="tab" href="interfaces_home">{lang code='menu_home'}</a></li>
+                                <li><a data-toggle="tab" href="interfaces_videos">{lang('videos')|ucfirst}</a></li>
                                 <li><a data-toggle="tab" href="interfaces_video">{lang('video')|ucfirst}</a></li>
+                                <li><a data-toggle="tab" href="interfaces_photos">{lang('photos')|ucfirst}</a></li>
                                 <li><a data-toggle="tab" href="interfaces_photo">{lang('photo')|ucfirst}</a></li>
+                                <li><a data-toggle="tab" href="interfaces_collections">{lang('collections')|ucfirst}</a></li>
                                 <li><a data-toggle="tab" href="interfaces_collection">{lang('collection')|ucfirst}</a></li>
                                 <li><a data-toggle="tab" href="interfaces_channels">{lang('channels')|ucfirst}</a></li>
-                                <li><a data-toggle="tab" href="interfaces_videos">{lang('videos')|ucfirst}</a></li>
-                                <li><a data-toggle="tab" href="interfaces_collections">{lang('collections')|ucfirst}</a></li>
                             </ul>
                         </div>
                         <div class="col-md-10 tab-content">
@@ -658,6 +659,16 @@
                                         </div>
                                         <hr/>
                                         <div class="row">
+                                            <div class="col-md-10">
+                                                <label class="nowrap" for="enable_featured_collection_hierarchy" title="{lang code='option_enable_featured_collection_hierarchy'}">{lang code='option_enable_featured_collection_hierarchy'}</label>
+                                            </div>
+                                            <div class="col-md-2 row-size no_padding">
+                                                <input value="yes" name="enable_featured_collection_hierarchy" id="enable_featured_collection_hierarchy" {if $row.enable_featured_collection_hierarchy=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+                                                <span class="lbl"></span>
+                                            </div>
+                                        </div>
+                                        <hr/>
+                                        <div class="row">
                                             <div class="col-md-8">
                                                 <label class="nowrap" for="homepage_collection_video_style" title="{lang code='option_homepage_collection_video_style'}">{lang code='option_homepage_collection_video_style'}</label>
                                             </div>
@@ -709,6 +720,46 @@
                                     </div>
                                 </div>
                             </div>
+                            <div class="tab-pane interfaces" id="interfaces_videos">
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <div class="row">
+                                            <div class="col-md-8">
+                                                <label class="nowrap" for="videos_video_style" title="{lang('option_video_bloc_style')}">{lang('option_video_bloc_style')}</label>
+                                            </div>
+                                            <div class="col-md-4 row-size">
+                                                <select class='form-control' name="videos_video_style" id="videos_video_style">
+                                                    <option value="classic"{if $row.videos_video_style=='classic'} selected{/if}>{lang('classic')}</option>
+                                                    <option value="modern"{if $row.videos_video_style=='modern'} selected{/if}>{lang('modern')}</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <hr/>
+                                        <div class="row">
+                                            <div class="col-md-10">
+                                                <label class="nowrap" for="videos_enable_fullwidth" title="{lang code='option_enable_fullwidth'}">{lang code='option_enable_fullwidth'}</label>
+                                            </div>
+                                            <div class="col-md-2 no_padding">
+                                                <input value="yes" name="videos_enable_fullwidth" id="videos_enable_fullwidth"{if $row.videos_enable_fullwidth=='yes'} checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+                                                <span class="lbl"></span>
+                                            </div>
+                                        </div>
+                                        <hr/>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="row">
+                                            <div class="col-md-10">
+                                                <label class="nowrap" for="random_video_order" title="{lang code='option_random_video_order'}">{lang code='option_random_video_order'}</label>
+                                            </div>
+                                            <div class="col-md-2 row-size">
+                                                <input value="yes" name="random_video_order" id="random_video_order" {if $row.random_video_order=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+                                                <span class="lbl"></span>
+                                            </div>
+                                        </div>
+                                        <hr/>
+                                    </div>
+                                </div>
+                            </div>
                             <div class="tab-pane interfaces" id="interfaces_video">
                                 <div class="row">
                                     <div class="col-md-10">
@@ -725,6 +776,22 @@
                                             </div>
                                             <div class="col-md-2 row-size">
                                                 <input value="yes" name="enable_favorite_icon" id="enable_favorite_icon" {if $row.enable_favorite_icon=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+                                                <span class="lbl"></span>
+                                            </div>
+                                        </div>
+                                        <hr/>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="tab-pane interfaces" id="interfaces_photos">
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <div class="row">
+                                            <div class="col-md-10">
+                                                <label class="nowrap" for="photos_enable_fullwidth" title="{lang code='option_enable_fullwidth'}">{lang code='option_enable_fullwidth'}</label>
+                                            </div>
+                                            <div class="col-md-2 no_padding">
+                                                <input value="yes" name="photos_enable_fullwidth" id="photos_enable_fullwidth"{if $row.photos_enable_fullwidth=='yes'} checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
                                                 <span class="lbl"></span>
                                             </div>
                                         </div>
@@ -750,6 +817,64 @@
                                             </div>
                                             <div class="col-md-2 row-size">
                                                 <input value="yes" name="enable_edit_photo_button" id="enable_edit_photo_button" {if $row.enable_edit_photo_button=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+                                                <span class="lbl"></span>
+                                            </div>
+                                        </div>
+                                        <hr/>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="row">
+                                            <div class="col-md-8">
+                                                <label class="nowrap" for="keep_ratio_photo" title="{lang('option_keep_ratio_photo')}">{lang('option_keep_ratio_photo')}</label>
+                                            </div>
+                                            <div class="col-md-4 row-size">
+                                                <input value="yes" name="keep_ratio_photo" id="keep_ratio_photo" {if $row.keep_ratio_photo=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+                                                <span class="lbl"></span>
+                                            </div>
+                                        </div>
+                                        <hr/>
+                                        <div class="row">
+                                            <div class="col-md-8">
+                                                <label class="nowrap" for="ratio_photo" title="{lang code='option_ratio_photo'}">{lang code='option_ratio_photo'}</label>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <select class="form-control" name="ratio_photo" id="ratio_photo">
+                                                    {assign var=array_styles value=[
+                                                    '1.3333' => '4/3'
+                                                    ,'1.7777' => '16/9'
+                                                    ,'1.6' => '16/10'
+                                                    ]}
+                                                    {foreach from=$array_styles item=value key=code}
+                                                        <option {if $code==$row.ratio_photo}selected{/if} value="{$code}">
+                                                            {$value}
+                                                        </option>
+                                                    {/foreach}
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <hr/>
+                                        <div class="row">
+                                            <div class="col-md-8">
+                                                <label class="nowrap" for="enable_favorite_icon_photo" title="{lang code='option_enable_favorite_icon'}"><span class="fa fa-question-circle tips" title="{lang code='option_enable_favorite_icon_hint_photo'}"></span>{lang code='option_enable_favorite_icon'}</label>
+                                            </div>
+                                            <div class="col-md-2 row-size">
+                                                <input value="yes" name="enable_favorite_icon_photo" id="enable_favorite_icon_photo" {if $row.enable_favorite_icon_photo=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+                                                <span class="lbl"></span>
+                                            </div>
+                                        </div>
+                                        <hr/>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="tab-pane interfaces" id="interfaces_collections">
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <div class="row">
+                                            <div class="col-md-10">
+                                                <label class="nowrap" for="collections_enable_fullwidth" title="{lang code='option_enable_fullwidth'}">{lang code='option_enable_fullwidth'}</label>
+                                            </div>
+                                            <div class="col-md-2 no_padding">
+                                                <input value="yes" name="collections_enable_fullwidth" id="collections_enable_fullwidth"{if $row.collections_enable_fullwidth=='yes'} checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
                                                 <span class="lbl"></span>
                                             </div>
                                         </div>
@@ -791,6 +916,18 @@
                                         </div>
                                         <hr/>
                                     </div>
+                                    <div class="col-md-4">
+                                        <div class="row">
+                                            <div class="col-md-8">
+                                                <label class="nowrap" for="enable_favorite_icon_collection" title="{lang code='option_enable_favorite_icon'}"><span class="fa fa-question-circle tips" title="{lang code='option_enable_favorite_icon_hint'}"></span>{lang code='option_enable_favorite_icon'}</label>
+                                            </div>
+                                            <div class="col-md-2 row-size">
+                                                <input value="yes" name="enable_favorite_icon_collection" id="enable_favorite_icon_collection" {if $row.enable_favorite_icon_collection=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+                                                <span class="lbl"></span>
+                                            </div>
+                                        </div>
+                                        <hr/>
+                                    </div>
                                 </div>
                             </div>
                             <div class="tab-pane interfaces" id="interfaces_channels">
@@ -817,50 +954,6 @@
                                                     <option value="classic" {if $row.channel_video_style=='classic'}selected{/if}>{lang('classic')}</option>
                                                     <option value="modern" {if $row.channel_video_style=='modern'}selected{/if}>{lang('modern')}</option>
                                                 </select>
-                                            </div>
-                                        </div>
-                                        <hr/>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="tab-pane interfaces" id="interfaces_videos">
-                                <div class="row">
-                                    <div class="col-md-4">
-                                        <div class="row">
-                                            <div class="col-md-8">
-                                                <label class="nowrap" for="videos_video_style" title="{lang('option_video_bloc_style')}">{lang('option_video_bloc_style')}</label>
-                                            </div>
-                                            <div class="col-md-4 row-size">
-                                                <select class='form-control' name="videos_video_style" id="videos_video_style">
-                                                    <option value="classic"{if $row.videos_video_style=='classic'} selected{/if}>{lang('classic')}</option>
-                                                    <option value="modern"{if $row.videos_video_style=='modern'} selected{/if}>{lang('modern')}</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <hr/>
-                                        <div class="row">
-                                            <div class="col-md-10">
-                                                <label class="nowrap" for="videos_enable_fullwidth" title="{lang code='option_enable_fullwidth'}">{lang code='option_enable_fullwidth'}</label>
-                                            </div>
-                                            <div class="col-md-2 no_padding">
-                                                <input value="yes" name="videos_enable_fullwidth" id="videos_enable_fullwidth"{if $row.videos_enable_fullwidth=='yes'} checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
-                                                <span class="lbl"></span>
-                                            </div>
-                                        </div>
-                                        <hr/>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="tab-pane interfaces" id="interfaces_collections">
-                                <div class="row">
-                                    <div class="col-md-4">
-                                        <div class="row">
-                                            <div class="col-md-10">
-                                                <label class="nowrap" for="collections_enable_fullwidth" title="{lang code='option_enable_fullwidth'}">{lang code='option_enable_fullwidth'}</label>
-                                            </div>
-                                            <div class="col-md-2 no_padding">
-                                                <input value="yes" name="collections_enable_fullwidth" id="collections_enable_fullwidth"{if $row.collections_enable_fullwidth=='yes'} checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
-                                                <span class="lbl"></span>
                                             </div>
                                         </div>
                                         <hr/>
@@ -2022,7 +2115,7 @@
                                     <label class="nowrap" for="video_rating" title="Video rating">Video rating</label>
                                 </div>
                                 <div class="col-md-2 row-size">
-                                    <input value="1" name="video_rating" id="video_rating" {if $row.video_rating=='1'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+                                    <input value="yes" name="video_rating" id="video_rating" {if $row.video_rating=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
                                     <span class="lbl"></span>
                                 </div>
                                 <div class="col-md-4">
@@ -2039,7 +2132,7 @@
                                     <label class="nowrap" for="own_video_rating" title="Rate own video">Rate own video</label>
                                 </div>
                                 <div class="col-md-2 row-size">
-                                    <input value="1" name="own_video_rating" id="own_video_rating" {if $row.own_video_rating=='1'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+                                    <input value="yes" name="own_video_rating" id="own_video_rating" {if $row.own_video_rating=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
                                     <span class="lbl"></span>
                                 </div>
                                 <div class="col-md-4">
@@ -2059,14 +2152,14 @@
                                     <label class="nowrap" for="collection_rating" title="Collection rating">Collection rating</label>
                                 </div>
                                 <div class="col-md-2 row-size">
-                                    <input value="1" name="collection_rating" id="collection_rating" {if $row.collection_rating=='1'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+                                    <input value="yes" name="collection_rating" id="collection_rating" {if $row.collection_rating=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
                                     <span class="lbl"></span>
                                 </div>
                                 <div class="col-md-4">
                                     <label class="nowrap" for="channel_rating" title="Channel rating">Channel rating</label>
                                 </div>
                                 <div class="col-md-2 row-size">
-                                    <input value="1" name="channel_rating" id="channel_rating" {if $row.channel_rating=='1'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+                                    <input value="yes" name="channel_rating" id="channel_rating" {if $row.channel_rating=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
                                     <span class="lbl"></span>
                                 </div>
 
@@ -2077,14 +2170,14 @@
                                     <label class="nowrap" for="own_collection_rating" title="Rate own collection">Rate own collection</label>
                                 </div>
                                 <div class="col-md-2 row-size">
-                                    <input value="1" name="own_collection_rating" id="own_collection_rating" {if $row.own_collection_rating=='1'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+                                    <input value="yes" name="own_collection_rating" id="own_collection_rating" {if $row.own_collection_rating=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
                                     <span class="lbl"></span>
                                 </div>
                                 <div class="col-md-4">
                                     <label class="nowrap" for="own_channel_rating" title="Rate own channel">Rate own channel</label>
                                 </div>
                                 <div class="col-md-2 row-size">
-                                    <input value="1" name="own_channel_rating" id="own_channel_rating" {if $row.own_channel_rating=='1'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+                                    <input value="yes" name="own_channel_rating" id="own_channel_rating" {if $row.own_channel_rating=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
                                     <span class="lbl"></span>
                                 </div>
 
@@ -2098,10 +2191,19 @@
                                     <label class="nowrap" for="comment_rating" title="Comments rating">Comments rating</label>
                                 </div>
                                 <div class="col-md-2 row-size">
-                                    <input value="1" name="comment_rating" id="comment_rating" {if $row.comment_rating=='1'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+                                    <input value="yes" name="comment_rating" id="comment_rating" {if $row.comment_rating=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
                                     <span class="lbl"></span>
                                 </div>
-
+                            </div>
+                            <hr/>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <label class="nowrap" for="own_comment_rating" title="{lang('option_enable_own_comment_rating')}">{lang('option_enable_own_comment_rating')}</label>
+                                </div>
+                                <div class="col-md-2 row-size">
+                                    <input value="yes" name="own_comment_rating" id="own_comment_rating" {if $row.own_comment_rating=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+                                    <span class="lbl"></span>
+                                </div>
                             </div>
                             <hr/>
 

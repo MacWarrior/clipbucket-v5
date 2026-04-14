@@ -3,7 +3,7 @@ const THIS_PAGE = 'upload';
 const PARENT_PAGE = 'upload';
 require 'includes/config.inc.php';
 
-if (!Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.2', '148')) {
+if (!Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '14')) {
     sessionMessageHandler::add_message('Sorry, you cannot upload new videos until the application has been fully updated by an administrator', 'e', User::getInstance()->getDefaultHomepageFromUserLevel());
 }
 
@@ -12,8 +12,12 @@ Pages::getInstance()->page_redir();
 subtitle('upload');
 
 if (isset($_GET['collection'])) {
-    $selected_collection = json_decode(base64_decode($_GET['collection']));
-    assign('selected_collection', Collection::getInstance()->getOne(['collection_id'=>$selected_collection]));
+    $selected_collection = json_decode(base64_decode($_GET['collection'])) ?? 0;
+    $selected_collection = Collection::getInstance()->getOne(['collection_id'=>$selected_collection, 'can_upload'=>true]);
+    if (empty($selected_collection)) {
+        e(lang('collection_not_exist'));
+    }
+    assign('selected_collection', $selected_collection);
 }
 
 if (empty(Upload::getInstance()->get_upload_options())) {

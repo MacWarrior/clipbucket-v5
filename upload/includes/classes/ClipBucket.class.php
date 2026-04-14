@@ -327,10 +327,12 @@ class ClipBucket
             , 'url' => DirPath::getUrl('admin_area') . 'setting_advanced.php'
         ];
 
-        $menu_configuration['sub'][] = [
-            'title' => lang('template_editor')
-            , 'url' => DirPath::getUrl('admin_area') . 'template_editor.php'
-        ];
+        if (System::isInDev()) {
+            $menu_configuration['sub'][] = [
+                'title' => lang('template_editor'),
+                'url'   => DirPath::getUrl('admin_area') . 'template_editor.php'
+            ];
+        }
 
         $menu_configuration['sub'][] = [
             'title' => lang('manage_x', strtolower(lang('pages')))
@@ -491,7 +493,7 @@ class ClipBucket
                 , 'class' => 'glyphicon glyphicon-wrench'
                 , 'sub'   => [
                     [
-                        'title' => 'View online users'
+                        'title' => lang('view_online_users')
                         , 'url' => DirPath::getUrl('admin_area') . 'online_users.php'
                     ]
                     , [
@@ -624,6 +626,7 @@ class ClipBucket
 
         return $this->template = $template;
     }
+
     function get_extensions($type = 'video'): string
     {
         switch ($type) {
@@ -631,6 +634,7 @@ class ClipBucket
             case 'video':
                 $exts = config('allowed_video_types');
                 break;
+
             case 'photo':
                 $exts = config('allowed_photo_types');
                 break;

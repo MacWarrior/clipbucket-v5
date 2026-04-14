@@ -5,24 +5,76 @@ abstract class Objects
 
     private static array $type_array = [];
 
-    protected static function getTableNameObjectType(): string
+    /**
+     * @return string[]
+     */
+    private static function getClassInfo(): array
     {
-        //TODO optimiser pour ne pas faire le test à chaque appel
-        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '8')) {
-            return 'object_type';
-        } else {
-            return 'categories_type';
+        switch (static::TYPE) {
+            case 'photo':
+                $config_own_rate = 'own_photo_rating';
+                $config_rating = 'photo_rating';
+                $voters_key = 'voters';
+                $table = 'photos';
+                $id_field = 'photo_id';
+                break;
+
+            case 'collection':
+                $config_own_rate = 'own_collection_rating';
+                $config_rating = 'collection_rating';
+                $voters_key = 'voters';
+                $table = 'collections';
+                $id_field = 'collection_id';
+                break;
+
+            case 'user':
+                $config_own_rate = 'own_channel_rating';
+                $config_rating = 'channel_rating';
+                $voters_key = 'voters';
+                $table = 'user_profile';
+                $id_field = 'user_profile_id';
+                break;
+
+            case 'comment':
+                $config_own_rate = 'own_comment_rating';
+                $config_rating = 'comment_rating';
+                $voters_key = 'voters';
+                $table = 'comments';
+                $id_field = 'comment_id';
+                break;
+
+            case 'video':
+            default:
+                $config_own_rate = 'own_video_rating';
+                $config_rating = 'video_rating';
+                $voters_key = 'voter_ids';
+                $table = 'video';
+                $id_field = 'videoid';
+                break;
         }
+        return [$config_own_rate, $config_rating, $voters_key, $table, $id_field];
     }
 
+    /**
+     * @return string
+     */
+    protected static function getTableNameObjectType(): string
+    {
+        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '8')) {
+            return 'object_type';
+        }
+        return 'categories_type';
+    }
+
+    /**
+     * @return string
+     */
     protected static function getIdFieldObjectType(): string
     {
-        //TODO optimiser pour ne pas faire le test à chaque appel
         if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '8')) {
             return 'id_object_type';
-        } else {
-            return 'id_category_type';
         }
+        return 'id_category_type';
     }
 
     /**
@@ -58,12 +110,12 @@ abstract class Objects
             $field = 'type';
             $value = '\'' . static::TYPE . '\'';
         }
-        return !empty(Clipbucket_db::getInstance()->select(tbl('favorites'), 'favorite_id', ' id = ' . mysql_clean($object_id) . ' AND userid = ' . mysql_clean($user_id) . ' AND ' . $field . ' = ' . $value));
+        return !empty(Clipbucket_db::getInstance()->select(tbl('favorites'), 'favorite_id', ' id = ' . (int)$object_id . ' AND userid = ' . (int)$user_id . ' AND ' . $field . ' = ' . $value));
     }
 
     /**
      * @param int $object_id
-     * @param int|null $user_id
+     * @param int $user_id
      * @return bool
      * @throws Exception
      */
@@ -116,6 +168,16 @@ abstract class Objects
         Clipbucket_db::getInstance()->delete(tbl('favorites'), ['userid', 'id_type', 'id'], [$user_id, static::getTypeId(), $object_id]);
         e(lang('fav_remove_msg', ucfirst(lang(static::TYPE))), 'm');
         return true;
+    }
+
+    /**
+     * @param int $object_id
+     * @return void
+     * @throws Exception
+     */
+    public function removeFromFavoritesForAllUsers(int $object_id): void
+    {
+        Clipbucket_db::getInstance()->delete(tbl('favorites'), ['id_type', 'id'], [static::getTypeId(), $object_id]);
     }
 
     /**
@@ -178,6 +240,10 @@ abstract class Objects
         ];
     }
 
+    /**
+     * @return array
+     * @throws Exception
+     */
     protected static function getObjectTableAndFieldId(): array
     {
         //TODO optimiser pour supprimer le switch
@@ -186,63 +252,88 @@ abstract class Objects
                 $tablename = Video::getInstance()->getTableName();
                 $object_id = Video::getInstance()->getFieldId();
                 break;
+
             case 'photo':
                 $tablename = Photo::getInstance()->getTableName();
                 $object_id = 'photo_id';
                 break;
+
             case 'collection':
                 $tablename = Collection::getInstance()->getTableName();
                 $object_id = 'collection_id';
                 break;
+
+            case 'user':
+                $tablename = User::getInstance()->getTableName();
+                $object_id = 'userid';
+                break;
+
             default:
                 return [];
         }
         return ['table_name' => $tablename, 'field_id' => $object_id];
     }
 
-    public static function ratingUpdate($object_id, $rating)
+    /**
+     * @param $object_id
+     * @param $rating
+     * @return void
+     * @throws Exception
+     */
+    public static function ratingUpdate($object_id, $rating): void
     {
         if (!User::getInstance()->isUserConnected()) {
             throw new Exception(lang('please_login_to_rate'));
         }
         $current_rating = static::ratingGet($object_id);
-        switch (static::TYPE) {
-            case 'photo':
-                $config_own_rate = 'own_photo_rating';
-                $config_rating = 'photo_rating';
-                $voters_key = 'voters';
-                $table = 'photos';
-                $id_field = 'photo_id';
-                break;
-            case 'collection':
-                $config_own_rate = 'own_collection_rating';
-                $config_rating = 'collection_rating';
-                $voters_key = 'voters';
-                $table = 'collections';
-                $id_field = 'collection_id';
-                break;
-            case 'user':
-                $config_own_rate = 'own_channel_rating';
-                $config_rating = 'channel_rating';
-                $voters_key = 'voters';
-                $table = 'user_profile';
-                $id_field = 'user_profile_id';
-                break;
-            case 'video':
-            default:
-                $config_own_rate = 'own_video_rating';
-                $config_rating = 'video_rating';
-                $voters_key = 'voter_ids';
-                $table = 'video';
-                $id_field = 'videoid';
-                break;
+        [$config_own_rate, $config_rating, $voters_key, $table, $id_field] = self::getClassInfo();
+
+        if ($current_rating['allow_rating'] == 'no' || config($config_rating) != 'yes') {
+            switch (static::TYPE) {
+                case 'photo':
+                    $lang = 'photo_rate_disabled';
+                    break;
+                case 'collection':
+                    $lang = 'collection_rate_disabled';
+                    break;
+                case 'user':
+                    $lang = 'channel_rate_disabled';
+                    break;
+                case 'video':
+                    $lang = 'vid_rate_disabled';
+                    break;
+                case 'comment':
+                    $lang = 'comment_rate_disabled';
+                    break;
+                default:
+                    $lang = '';
+            }
+            throw new Exception(lang($lang));
         }
-        if (User::getInstance()->getCurrentUserID() == $current_rating['userid'] && !config($config_own_rate)) {
-            throw new Exception(lang('you_cant_rate_own_' . static::TYPE));
+
+        if (User::getInstance()->getCurrentUserID() == $current_rating['userid'] && config($config_own_rate) != 'yes') {
+            switch (static::TYPE) {
+                case 'photo':
+                    $lang = 'you_cant_rate_own_photo';
+                    break;
+                case 'collection':
+                    $lang = 'you_cant_rate_own_collection';
+                    break;
+                case 'user':
+                    $lang = 'you_cant_rate_own_channel';
+                    break;
+                case 'video':
+                    $lang = 'you_cant_rate_own_video';
+                    break;
+                case 'comment':
+                    $lang = 'you_cant_rate_own_comment';
+                    break;
+                default:
+                    $lang = '';
+            }
+            throw new Exception(lang($lang));
         }
-        if ($current_rating['allow_rating'] =='no' || !config($config_rating)) {
-            throw new Exception(lang( static::TYPE . '_rate_disabled' ));
-        }
+
         $Old_histo = explode('|', $current_rating[$voters_key]);
         if (!empty($Old_histo) && is_array($Old_histo) && count($Old_histo) > 1) {
             foreach ($Old_histo as $voter) {
@@ -276,14 +367,14 @@ abstract class Objects
                 'rating'   => $rating
             ];
             $total_voters = empty($histo) ? 0 : count($histo);
-            $newrate = ($t + $rating) / ($total_voters?:1);
+            $newrate = ($t + $rating) / ($total_voters ?: 1);
             if ($newrate > 10) {
                 $newrate = 10;
             }
         }
 
         Clipbucket_db::getInstance()->update(
-            tbl($table),  ['rating', 'rated_by', $voters_key], [$newrate, $total_voters, '|no_mc|' . (!empty($histo) ? json_encode($histo): '')], ' ' . $id_field . ' = ' . mysql_clean($object_id)
+            tbl($table), ['rating', 'rated_by', $voters_key], [$newrate, $total_voters, '|no_mc|' . (!empty($histo) ? json_encode($histo) : '')], ' ' . $id_field . ' = ' . (int)$object_id
         );
 
     }
@@ -304,6 +395,29 @@ abstract class Objects
                 return Collections::getInstance()->current_rating($object_id);
             case 'user':
                 return userquery::getInstance()->current_rating($object_id);
+            case 'comment':
+                return Comments::current_rating($object_id);
+        }
+        return false;
+    }
+
+    /**
+     * @throws Exception
+     */
+    public static function isObjectRated($userid, $item_id)
+    {
+        [$config_own_rate, $config_rating, $voters_key, $table, $id_field] = self::getClassInfo();
+        $cond = $id_field . ' = ' . (int)$item_id;
+        $raw_rating = Clipbucket_db::getInstance()->select(tbl($table), $voters_key, $cond);
+        $ratedby_json = $raw_rating[0][$voters_key];
+        $ratedby_cleaned = json_decode($ratedby_json, true);
+        foreach ($ratedby_cleaned as $rating_data) {
+            if ($rating_data['userid'] == $userid) {
+                if ($rating_data['rating'] == 0) {
+                    return 'disliked';
+                }
+                return 'liked';
+            }
         }
         return false;
     }

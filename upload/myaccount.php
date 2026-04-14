@@ -5,8 +5,8 @@ require 'includes/config.inc.php';
 
 User::getInstance()->isUserConnectedOrRedirect();
 
-assign('user', userquery::getInstance()->get_user_details(user_id()));
-$videos = userquery::getInstance()->get_user_vids(user_id(), false, false, true);
+assign('user', userquery::getInstance()->get_user_details(User::getInstance()->getCurrentUserID()));
+$videos = userquery::getInstance()->get_user_vids(User::getInstance()->getCurrentUserID(), false, false, true);
 assign('videos', $videos);
 $ids_to_check_progress = [];
 if( Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '279') ) {
@@ -19,8 +19,8 @@ if( Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '279') ) {
 Assign('ids_to_check_progress', json_encode($ids_to_check_progress));
 
 if (isset($_GET['delete_video'])) {
-    $video = mysql_clean($_GET['delete_video']);
-    CBvideo::getInstance()->delete_video($video);
+    $video_id = (int)$_GET['delete_video'];
+    CBvideo::getInstance()->delete_video($video_id);
 }
 $storage_use = null;
 if (config('enable_storage_history_fo') == 'yes') {

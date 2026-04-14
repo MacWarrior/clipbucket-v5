@@ -102,6 +102,11 @@ class System{
                 'display' => 'Fileinfo'
                 ,'version_tags' => ['fileinfo support']
                 ,'required' => true
+            ],
+            'xhprof' => [
+                'display' => 'Xhprof'
+                ,'version_tags' => ['xhprof']
+                ,'required' => false
             ]
         ];
     }

@@ -243,7 +243,7 @@ class CBEmail
      */
     function get_email($id)
     {
-        $result = Clipbucket_db::getInstance()->select(tbl('mass_emails'), '*', 'id='.mysql_clean($id));
+        $result = Clipbucket_db::getInstance()->select(tbl('mass_emails'), '*', 'id = ' . (int)$id);
         if (count($result) > 0) {
             return $result[0];
         }

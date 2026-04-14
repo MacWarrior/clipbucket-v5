@@ -88,7 +88,7 @@ $values = [$ffmpeg->conversion_type, 'Waiting'];
 
 update_video_by_filename($fileName, $fields, $values);
 
-$ffmpeg->ClipBucket();
+$ffmpeg->ClipBucket($videoDetails['videoid']);
 
 $video_files = json_encode($ffmpeg->video_files);
 
@@ -110,14 +110,14 @@ update_video_by_filename($fileName, $fields, $values);
 $videoDetails = CBvideo::getInstance()->get_video($fileName, true);
 if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.2', '148')) {
     $queue = VideoConversionQueue::getOne(['videoid' => $videoDetails['videoid'], 'not_complete' => true]);
-    Clipbucket_db::getInstance()->update(tbl(VideoConversionQueue::getTableName()), ['date_ended', 'is_completed'],['|no_mc||f|NOW()', true], 'id = ' . mysql_clean($queue['id']));
+    Clipbucket_db::getInstance()->update(tbl(VideoConversionQueue::getTableName()), ['date_ended', 'is_completed'],['|no_mc||f|NOW()', true], 'id = ' . (int)$queue['id']);
 }
 update_bits_color($videoDetails);
 update_castable_status($videoDetails);
 
 $active = config('activation') ? 'no' : 'yes';
 if (config('video_enable_nsfw_check') == 'yes' && AIVision::isAvailable()) {
-    $thumbs = get_thumb($videoDetails, true, 'original', 'auto', null, 'filepath');
+    $thumbs = VideoThumbs::getAllThumbFiles($videoDetails['videoid'],'original','original','thumbnail', true, 'filepath');
 
     if (!empty($thumbs)) {
         switch (config('video_nsfw_check_model')) {
@@ -150,7 +150,7 @@ if (config('video_enable_nsfw_check') == 'yes' && AIVision::isAvailable()) {
     }
 }
 if ($active == 'yes') {
-    Clipbucket_db::getInstance()->update(tbl('video'), ['active'], ['yes'], 'videoid = ' . mysql_clean($videoDetails['videoid']));
+    Clipbucket_db::getInstance()->update(tbl('video'), ['active'], ['yes'], 'videoid = ' . (int)$videoDetails['videoid']);
 }
 
 $default_cmd = System::get_binaries('php') . ' -q ' . DirPath::get('actions') . 'verify_converted_videos.php ' . $fileName;

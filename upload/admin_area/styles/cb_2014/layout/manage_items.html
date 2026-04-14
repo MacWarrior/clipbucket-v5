@@ -45,7 +45,7 @@
                                     <div class="col-md-10">
                                         <div class="row">
                                             <div class="col-md-3">
-                                                <img src="{get_photo details=$obj[list]}" class="img-responsive" id="photo" style="padding:2px;border:1px solid #ccc;"/>
+                                                <img src="{PhotoThumbs::getThumbFile($obj[list].photo_id, '300')}" class="img-responsive" id="photo" style="padding:2px;border:1px solid #ccc;"/>
                                             </div>
                                             <div class="col-md-9">
                                                 <a class="block" href="{DirPath::getUrl('admin_area')}edit_photo.php?photo={$obj[list].photo_id}">{display_clean($obj[list].photo_title)}</a>
@@ -82,7 +82,7 @@
                                     <div class="col-md-10">
                                         <div class="row">
                                             <div class="col-md-3">
-                                                <img src="{get_thumb($obj[list],FALSE,'168x105')}" width="120" height="70" id="video_{$obj[list].videoid}" style="padding:2px; border:1px solid #ccc" />
+                                                <img src="{VideoThumbs::getDefaultThumbFile($obj[list].videoid)}" width="120" height="70" id="video_{$obj[list].videoid}" style="padding:2px; border:1px solid #ccc" />
                                             </div>
                                             <div class="col-md-9">
                                                 <a href="{DirPath::getUrl('admin_area')}edit_collection.php?collection={$obj[list].collection_id}" target="_blank">{display_clean($obj[list].title)}</a>
@@ -141,7 +141,7 @@
                                                     <div class="collection-holder">
                                                         <div class="photo-block no_select no_overflow">
                                                             <a href="{DirPath::getUrl('root')}{$main_url}" title="{display_clean($collection.collection_name)}">
-                                                                <img alt="{display_clean($collection.collection_name)}" title="{display_clean($collection.collection_name)}" class="img-responsive {if $blur}blur{/if}" id="collection_{$collection.collection_id}" src="{Collections::getInstance()->coll_first_thumb($collection,'l')}"/>
+                                                                <img alt="{display_clean($collection.collection_name)}" title="{display_clean($collection.collection_name)}" class="img-responsive{if $blur} blur{/if}" id="collection_{$collection.collection_id}" src="{Collections::getInstance()->coll_first_thumb($collection,'l')}"/>
                                                                 {ANCHOR place='in_collection_thumb' data=$collection}
                                                                 <div class="collection-info">
                                                                     <span>{$collection.total_objects}</span>{lang code=$collection.type}

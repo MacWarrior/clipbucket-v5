@@ -164,7 +164,7 @@ class Tmdb
 
         $sql_year = '';
         if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '106') && ($year != '0000' && !empty($year))) {
-            $sql_year = ' AND YEAR(`release_date`) = ' . mysql_clean($year);
+            $sql_year = ' AND YEAR(`release_date`) = ' . (int)$year;
         }
         $sql_type = '';
 
@@ -278,12 +278,18 @@ class Tmdb
      */
     public function importDataFromTmdb(int $videoid, int $tmdb_id, $type = 'movie')
     {
+        if( empty($videoid) ){
+            e(lang('class_vdo_del_err'));
+            return;
+        }
+
         $video_info = Video::getInstance()->getOne([
             'videoid' => $videoid,
-            'get_detail'=>true,
+            'get_detail'=> true
         ]);
         if (empty($video_info)) {
             e(lang('class_vdo_del_err'));
+            return;
         }
 
         switch ($type) {
@@ -333,8 +339,8 @@ class Tmdb
             CBvideo::getInstance()->update_video($video_info);
         }
 
-        if (config('tmdb_get_poster') == 'yes' && config('enable_video_poster') == 'yes') {
-            Video::getInstance()->deletePictures($video_info, 'poster');
+        if (config('tmdb_get_poster') == 'yes' && config('enable_video_poster') == 'yes' && Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '14')) {
+            Video::getInstance()->dropPictures($video_info, 'poster', true);
 
             switch ($type) {
                 case 'movie':
@@ -354,24 +360,27 @@ class Tmdb
             } else {
                 $poster_iterate = $posters;
             }
+            $video_thumbs = new VideoThumbs($videoid);
+            $video_thumbs->prepareFFmpeg();
             foreach ($poster_iterate as $poster) {
                 $path_without_slash = str_replace('/', '', $poster['file_path']);
                 $url = self::IMAGE_URL . $poster['file_path'];
                 $tmp_path = DirPath::get('temp') . $path_without_slash;
                 file_put_contents($tmp_path, file_get_contents($url));
-                Upload::getInstance()->upload_thumbs($video_info['file_name'], [
+                VideoThumbs::uploadThumbs($video_info['videoid'], [
                     'tmp_name' => [$tmp_path],
-                    'name'     => [$path_without_slash],
-                ], $video_info['file_directory'], 'p');
+                    'name'     => [$path_without_slash]
+                ], 'poster', true);
             }
+            Video::getInstance()->resetDefaultPicture($videoid, 'poster');
 
             if (empty(errorhandler::getInstance()->get_error())) {
                 errorhandler::getInstance()->flush();
             }
         }
 
-        if (config('tmdb_get_backdrop') == 'yes' && config('enable_video_backdrop') == 'yes') {
-            Video::getInstance()->deletePictures($video_info, 'backdrop');
+        if (config('tmdb_get_backdrop') == 'yes' && config('enable_video_backdrop') == 'yes' && Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '14')) {
+            Video::getInstance()->dropPictures($video_info, 'backdrop',true);
 
             switch ($type) {
                 case 'movie':
@@ -396,11 +405,12 @@ class Tmdb
                 $url = self::IMAGE_URL . $backdrop['file_path'];
                 $tmp_path = DirPath::get('temp') . $path_without_slash;
                 file_put_contents($tmp_path, file_get_contents($url));
-                Upload::getInstance()->upload_thumbs($video_info['file_name'], [
+                VideoThumbs::uploadThumbs($video_info['videoid'], [
                     'tmp_name' => [$tmp_path],
-                    'name'     => [$path_without_slash],
-                ], $video_info['file_directory'], 'b');
+                    'name'     => [$path_without_slash]
+                ], 'backdrop', true);
             }
+            Video::getInstance()->resetDefaultPicture($videoid, 'backdrop');
 
             if (empty(errorhandler::getInstance()->get_error())) {
                 errorhandler::getInstance()->flush();
@@ -412,7 +422,7 @@ class Tmdb
             foreach ($details['genres'] as $genre) {
                 $genre_tags[] = trim($genre['name']);
             }
-            Tags::saveTags(implode(',', $genre_tags), 'genre', $_POST['videoid']);
+            Tags::saveTags(implode(',', $genre_tags), 'genre', $videoid);
         }
 
         if (config('tmdb_get_actors') == 'yes' && config('enable_video_actor') == 'yes') {
@@ -420,7 +430,7 @@ class Tmdb
             foreach ($credits['cast'] as $actor) {
                 $actors_tags[] = str_replace(',','.',trim($actor['name']));
             }
-            Tags::saveTags(implode(',', $actors_tags), 'actors', $_POST['videoid']);
+            Tags::saveTags(implode(',', $actors_tags), 'actors', $videoid);
         }
 
         $producer_tags = [];
@@ -446,19 +456,22 @@ class Tmdb
         }
 
         if (config('tmdb_get_producer') == 'yes' && config('enable_video_producer') == 'yes') {
-            Tags::saveTags(implode(',', $producer_tags), 'producer', $_POST['videoid']);
+            Tags::saveTags(implode(',', $producer_tags), 'producer', $videoid);
         }
 
         if (config('tmdb_get_executive_producer') == 'yes' && config('enable_video_executive_producer') == 'yes') {
-            Tags::saveTags(implode(',', $executive_producer_tags), 'executive_producer', $_POST['videoid']);
+            Tags::saveTags(implode(',', $executive_producer_tags), 'executive_producer', $videoid);
         }
 
         if (config('tmdb_get_director') == 'yes' && config('enable_video_director') == 'yes') {
-            Tags::saveTags(implode(',', $director_tags), 'director', $_POST['videoid']);
+            Tags::saveTags(implode(',', $director_tags), 'director', $videoid);
         }
 
         if (config('tmdb_get_crew') == 'yes' && config('enable_video_crew') == 'yes') {
-            Tags::saveTags(implode(',', $crew_tags), 'crew', $_POST['videoid']);
+            Tags::saveTags(implode(',', $crew_tags), 'crew', $videoid);
+        }
+        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '101')) {
+            Clipbucket_db::getInstance()->update(tbl('video'), ['id_tmdb', 'type_tmdb'], [$tmdb_id, $type], 'videoid = ' . $videoid);
         }
     }
 

@@ -161,6 +161,7 @@ if (isset($_POST['update'])) {
         , 'enable_anonymous_stats'
         , 'enable_video_embed_players'
         , 'videos_enable_fullwidth'
+        , 'photos_enable_fullwidth'
         , 'collections_enable_fullwidth'
         , 'collection_enable_fullwidth'
         , 'autoplay_video'
@@ -172,6 +173,18 @@ if (isset($_POST['update'])) {
         , 'player_thumbnails'
         , 'enable_allow_alias_email'
         , 'enable_favorite_icon'
+        , 'keep_ratio_photo'
+        , 'video_rating'
+        , 'own_video_rating'
+        , 'comment_rating'
+        , 'collection_rating'
+        , 'own_collection_rating'
+        , 'channel_rating'
+        , 'own_channel_rating'
+        , 'random_video_order'
+        , 'enable_favorite_icon_photo'
+        , 'enable_favorite_icon_collection'
+        , 'own_comment_rating'
     ];
 
     $config_booleans_to_refactor = [
@@ -185,13 +198,6 @@ if (isset($_POST['update'])) {
         , 'video_embed'
         , 'video_download'
         , 'bits_color_warning'
-        , 'video_rating'
-        , 'own_video_rating'
-        , 'comment_rating'
-        , 'collection_rating'
-        , 'own_collection_rating'
-        , 'channel_rating'
-        , 'own_channel_rating'
         , 'photo_crop'
         , 'show_collapsed_checkboxes'
         , 'activation'
@@ -442,10 +448,19 @@ if (isset($_POST['update'])) {
         'enable_anonymous_stats',
         'enable_multi_factor_authentification',
         'videos_enable_fullwidth',
+        'photos_enable_fullwidth',
         'collections_enable_fullwidth',
         'collection_enable_fullwidth',
         'enable_allow_alias_email',
-        'enable_favorite_icon'
+        'enable_favorite_icon',
+        'keep_ratio_photo',
+        'ratio_photo',
+        'enable_favorite_icon',
+        'random_video_order',
+        'ratio_photo',
+        'enable_favorite_icon_photo',
+        'enable_favorite_icon_collection',
+        'own_comment_rating'
     ];
 
     //Numeric Array
@@ -499,7 +514,8 @@ if (isset($_POST['update'])) {
         'video_thumbs_preview_count',
 
         'max_photo_categories',
-        'max_collection_categories'
+        'max_collection_categories',
+        'ratio_photo'
     ];
 
     $has_missing_config = false;

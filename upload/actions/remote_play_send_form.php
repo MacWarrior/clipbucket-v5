@@ -2,6 +2,10 @@
 const THIS_PAGE = 'remote_play_send_form';
 require_once dirname(__FILE__, 2) . '/includes/config.inc.php';
 
+if (!Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '14')) {
+    sessionMessageHandler::add_message('Sorry, you cannot upload new videos until the application has been fully updated by an administrator', 'e', User::getInstance()->getDefaultHomepageFromUserLevel());
+}
+
 if( !User::getInstance()->hasPermission('allow_video_upload') ){
     echo json_encode(['error'=>lang('insufficient_privileges')]);
     die();
@@ -27,8 +31,33 @@ if( !empty($_POST['form_data']) ){
 $video_url = $_POST['remote_play_url'] = $_POST['remote_play_file_url'];
 unset($_POST['remote_play_file_url']);
 if (filter_var($video_url, FILTER_VALIDATE_URL) === FALSE) {
-    echo json_encode(['error'=>lang('remote_play_invalid_url')]);
+    echo json_encode(['error' => lang('remote_play_invalid_url')]);
     die();
+}
+
+$parts = parse_url($video_url);
+if (!$parts || empty($parts['host'])) {
+    echo json_encode(['error' => lang('remote_play_invalid_url')]);
+    die();
+}
+
+$host = $parts['host'];
+$ipv4 = gethostbyname($host);
+if (!filter_var(
+    $ipv4,
+    FILTER_VALIDATE_IP,
+    FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE
+)) {
+    echo json_encode(['error' => lang('remote_play_invalid_url')]);
+    die();
+}
+
+$records = dns_get_record($host, DNS_A + DNS_AAAA);
+foreach ($records as $record) {
+    if (isset($record['ip']) && !filter_var($record['ip'], FILTER_VALIDATE_IP, FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE)) {
+        echo json_encode(['error' => lang('remote_play_invalid_url')]);
+        die();
+    }
 }
 
 $extension = strtolower(getExt($video_url));
@@ -77,12 +106,14 @@ switch($step){
 
         $errors = errorhandler::getInstance()->get_error();
         if (empty($errors)) {
-            Video::getInstance()->setDefautThumb($_POST['default_thumb'], 'thumb', $video_id);
+            if ( !empty($_POST['default_thumb'])) {
+                Video::getInstance()->setDefaultPicture($video_id, $_POST['default_thumb'], 'thumbnail');
+            }
             if (config('enable_video_poster') == 'yes' && !empty($_POST['default_poster'])) {
-                Video::getInstance()->setDefautThumb($_POST['default_poster'], 'poster', $video_id);
+                Video::getInstance()->setDefaultPicture($video_id, $_POST['default_poster'], 'poster');
             }
             if (config('enable_video_backdrop') == 'yes' && !empty($_POST['default_backdrop'])) {
-                Video::getInstance()->setDefautThumb($_POST['default_backdrop'], 'backdrop', $video_id);
+                Video::getInstance()->setDefaultPicture($video_id, $_POST['default_backdrop'], 'backdrop');
             }
         }
         $response = [];
