@@ -1847,4 +1847,9 @@ VALUES ('ongoing_conversion'),
        ('template_compatible'),
        ('template_not_compatible'),
        ('compatibility'),
-       ('unknown');
+       ('unknown'),
+       ('option_use_backdrop_as_default_thumb'),
+       ('use_backdrop_as_default_thumb'),
+       ('allowed'),
+       ('disallowed'),
+       ('forced');
