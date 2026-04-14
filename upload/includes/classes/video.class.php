@@ -1355,17 +1355,17 @@ class Video extends Objects
      */
     public static function getUseBackdropDefault(mixed $data): bool
     {
-        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '107')) {
-            return (
-                config('enable_video_backdrop') == 'yes'
-                && (
-                    (config('use_backdrop_as_default_thumb') == 'allowed' && !empty($data['default_backdrop']) && $data['use_backdrop_as_default_thumb'] == 'yes')
-                    || config('use_backdrop_as_default_thumb') == 'forced' && !empty($data['default_backdrop'])
-                )
-            );
-        } else {
+        if( !Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '107') ){
             return false;
         }
+
+        return (
+            config('enable_video_backdrop') == 'yes'
+            && (
+                (config('use_backdrop_as_default_thumb') == 'allowed' && !empty($data['default_backdrop']) && $data['use_backdrop_as_default_thumb'] == 'yes')
+                || config('use_backdrop_as_default_thumb') == 'forced' && !empty($data['default_backdrop'])
+            )
+        );
     }
 }
 
