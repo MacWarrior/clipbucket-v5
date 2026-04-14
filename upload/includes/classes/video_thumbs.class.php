@@ -678,10 +678,8 @@ class VideoThumbs
             }
             return $is_multi ? [self::getDefaultMissingThumb($return_type, $return_with_num)] : self::getDefaultMissingThumb($return_type, $return_with_num);
         }
-        if ($is_default && $type == 'thumbnail') {
-            if (Video::getUseBackdropDefault($video)) {
-                $type = 'backdrop';
-            }
+        if ($is_default && $type == 'thumbnail' && Video::getUseBackdropDefault($video)) {
+            $type = 'backdrop';
         }
 
         $thumb_video_directory_path = DirPath::get('thumbs') ;
