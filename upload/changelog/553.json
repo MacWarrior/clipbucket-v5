@@ -1,6 +1,6 @@
 {
   "version":"5.5.3",
-  "revision":"106",
+  "revision":"107",
   "status":"stable",
   "detail":[
     {
@@ -51,6 +51,7 @@
         ,"Implement add new collection button from owned collection"
         ,"Implement comment rating"
         ,"Implement fullwidth photos page"
+        ,"Implement backdrop as default thumb"
         ,"Update media rating"
         ,"Update collection management"
         ,"Add signup date of birth calendar icon"

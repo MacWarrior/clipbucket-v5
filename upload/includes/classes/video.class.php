@@ -103,7 +103,7 @@ class Video extends Objects
             $this->fields[] = 'type_tmdb';
         }
 
-        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '999')) {
+        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '107')) {
             $this->fields[] = 'use_backdrop_as_default_thumb';
         }
 
@@ -1355,7 +1355,7 @@ class Video extends Objects
      */
     public static function getUseBackdropDefault(mixed $data): bool
     {
-        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '999')) {
+        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '107')) {
             return (
                 config('enable_video_backdrop') == 'yes'
                 && (
