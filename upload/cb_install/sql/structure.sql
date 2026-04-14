@@ -1282,7 +1282,7 @@ CREATE TABLE `{tbl_prefix}video_conversion_queue`
     `is_completed` BOOLEAN               DEFAULT 0 NOT NULL,
     `audio_track`  VARCHAR(255) NULL,
     INDEX (is_completed)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;;
 
 ALTER TABLE `{tbl_prefix}video_conversion_queue`
     ADD CONSTRAINT `video_conversion_fk` FOREIGN KEY (`videoid`) REFERENCES `{tbl_prefix}video` (`videoid`) ON DELETE NO ACTION ON UPDATE NO ACTION;
@@ -1299,7 +1299,7 @@ CREATE TABLE `{tbl_prefix}video_image`
     num            INT                                     NOT NULL,
     is_auto        BOOL DEFAULT TRUE                       NOT NULL,
     UNIQUE KEY (videoid, type, num, is_auto)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;;
 
 ALTER TABLE `{tbl_prefix}video_image`
     ADD CONSTRAINT `video_image_ibfk_1` FOREIGN KEY (videoid) REFERENCES `{tbl_prefix}video` (videoid);
@@ -1314,7 +1314,7 @@ CREATE TABLE `{tbl_prefix}video_thumb`
     version          VARCHAR(16)        NOT NULL,
     is_original_size BOOL DEFAULT FALSE NOT NULL,
     UNIQUE KEY (id_video_image, width, height)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;;
 ALTER TABLE `{tbl_prefix}video_thumb`
     ADD CONSTRAINT `video_thumb_ibfk_1` FOREIGN KEY (id_video_image) REFERENCES `{tbl_prefix}video_image` (id_video_image);
 
@@ -1327,7 +1327,7 @@ CREATE TABLE `{tbl_prefix}photo_thumb`
     version          VARCHAR(16)        NOT NULL,
     is_original_size BOOL DEFAULT FALSE NOT NULL,
     UNIQUE KEY (photo_id, width)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;;
 ALTER TABLE `{tbl_prefix}photo_thumb`
     ADD CONSTRAINT `photo_thumb_ibfk_1` FOREIGN KEY (photo_id) REFERENCES `{tbl_prefix}photos` (photo_id);
 

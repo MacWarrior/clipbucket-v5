@@ -10,45 +10,223 @@ class MWIP extends \Migration
      */
     public function start()
     {
-        self::query('CREATE TABLE IF NOT EXISTS `{tbl_prefix}ratings` 
-        (
-            id_rating INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-            object_id INT NOT NULL,
-            id_object_type INT NOT NULL,
-            userid BIGINT(20) NOT NULL,
-            date_added DATETIME NOT NULL,
-            vote BOOLEAN NOT NULL,
-            UNIQUE KEY `unique_rating_per_vote` (`object_id`,`id_object_type`,`userid`), INDEX(object_id)
-        )');
-
-        self::alterTable('ALTER TABLE `{tbl_prefix}ratings` ADD FOREIGN KEY fk_rating_user(userid) REFERENCES `{tbl_prefix}users`(`userid`) ON DELETE NO ACTION ON UPDATE NO ACTION;', [
-            'table'  => 'ratings',
-            'column' => 'userid'
-        ], [
-            'constraint' => [
-                'type' => 'FOREIGN KEY',
-                'name' => 'fk_rating_user',
-            ]
-        ]);
-        self::alterTable('ALTER TABLE `{tbl_prefix}ratings` ADD FOREIGN KEY fk_rating_object_type(id_object_type) REFERENCES `{tbl_prefix}object_type`(`id_object_type`) ON DELETE NO ACTION ON UPDATE NO ACTION;', [
-            'table'  => 'ratings',
-            'column' => 'id_object_type'
-        ], [
-            'constraint' => [
-                'type' => 'FOREIGN KEY',
-                'name' => 'fk_rating_object_type',
-            ]
-        ]);
-
-        $videos_rated = self::req('SELECT * FROM `{tbl_prefix}video` WHERE rated_by > 0 ');
-        $id_type_video = \Video::getTypeId();
-        foreach ($videos_rated as $video) {
-            $vote_infos = json_decode($video['voter_ids'], true);
-            foreach ($vote_infos as $vote) {
-                self::query('INSERT IGNORE INTO `{tbl_prefix}ratings` SET object_id = ' . mysql_clean($video['videoid']) . ', id_object_type = ' . mysql_clean($id_type_video) . ', userid = ' . mysql_clean($vote['userid']) . ', date_added = \'' . mysql_clean($vote['time']) . '\', vote = ' . mysql_clean($vote['rating'] == 10));
+        self::doAlterTable();
+        /** migrate videos */
+        $limit = 100;
+        $offset = 0;
+        do {
+            $sql = 'SELECT videoid,userid,allow_rating,rating,rated_by,voter_ids FROM ' . tbl('video') . ' WHERE `voter_ids` != \'\' limit ';
+            $videos = \Clipbucket_db::getInstance()->_select($sql . $offset . ',' . $limit);
+            foreach ($videos as $video) {
+                $vote_infos = json_decode($video['voter_ids'], true);
+                foreach ($vote_infos as $vote) {
+                    self::query('INSERT IGNORE INTO `{tbl_prefix}ratings` SET object_id = ' . mysql_clean($video['videoid']) . ', id_object_type = ' . mysql_clean($id_type_video) . ', userid = ' . mysql_clean($vote['userid']) . ', date_added = \'' . mysql_clean($vote['time']) . '\', vote = ' . mysql_clean($vote['rating'] == 10));
+                }
             }
-        }
-/**
+            $offset += $limit;
+        } while (!empty($videos));
+        /** migrate photos */
+        $offset = 0;
+        do {
+            $sql = 'SELECT photo_id,userid,allow_rating,rating,rated_by,voters FROM ' . tbl('photos') . ' WHERE `voters` != \'\' limit ';
+            $photos = \Clipbucket_db::getInstance()->_select($sql . $offset . ',' . $limit);
+            foreach ($photos as $photo) {
+                $vote_infos = json_decode($photo['voters'], true);
+                foreach ($vote_infos as $vote) {
+                    self::query('INSERT IGNORE INTO `{tbl_prefix}ratings` SET object_id = ' . mysql_clean($photo['photo_id']) . ', id_object_type = ' . mysql_clean($id_type_photo) . ', userid = ' . mysql_clean($vote['userid']) . ', date_added = \'' . mysql_clean($vote['time']) . '\', vote = ' . mysql_clean($vote['rating'] == 10));
+                }
+            }
+            $offset += $limit;
+        } while (!empty($photos));
+        /** migrate comment */
+        $offset = 0;
+        do {
+            $sql = 'SELECT comment_id,userid,rating,rated_by,voters FROM ' . tbl('comments') . ' WHERE `voters` != \'\' limit ';
+            $comments = \Clipbucket_db::getInstance()->_select($sql . $offset . ',' . $limit);
+            foreach ($comments as $comment) {
+            }
+            $offset += $limit;
+        } while (!empty($comments));
+        /** migrate channels */
+        $offset = 0;
+        do {
+            $sql = 'SELECT userid,allow_ratings,rating,rated_by,voters FROM ' . tbl('user_profile') . ' WHERE `voters` != \'\' limit ';
+            $channels = \Clipbucket_db::getInstance()->_select($sql . $offset . ',' . $limit);
+            foreach ($channels as $channel) {
+                $vote_infos = json_decode($channel['voters'], true);
+                foreach ($vote_infos as $vote) {
+                    self::query('INSERT IGNORE INTO `{tbl_prefix}ratings` SET object_id = ' . mysql_clean($channel['userid']) . ', id_object_type = ' . mysql_clean($id_type_user) . ', userid = ' . mysql_clean($vote['userid']) . ', date_added = \'' . mysql_clean($vote['time']) . '\', vote = ' . mysql_clean($vote['rating'] == 10));
+                }
+            }
+            $offset += $limit;
+        } while (!empty($channels));
+        /** migrate collections */
+        $offset = 0;
+        do {
+            $sql = 'SELECT collection_id,allow_rating,rating,rated_by,voters,userid FROM ' . tbl('collections') . ' WHERE `voters` != \'\' limit ';
+            $collections = \Clipbucket_db::getInstance()->_select($sql . $offset . ',' . $limit);
+            foreach ($collections as $collection) {
+                $vote_infos = json_decode($collection['voters'], true);
+                foreach ($vote_infos as $vote) {
+                    self::query('INSERT IGNORE INTO `{tbl_prefix}ratings` SET object_id = ' . mysql_clean($collection['collection_id']) . ', id_object_type = ' . mysql_clean($id_type_collection) . ', userid = ' . mysql_clean($vote['userid']) . ', date_added = \'' . mysql_clean($vote['time']) . '\', vote = ' . mysql_clean($vote['rating'] == 10));
+                }
+            }
+            $offset += $limit;
+        } while (!empty($collections));
+
+
+    }
+        /**
+         * @return void
+         * @throws \Exception
+         */
+    private static function doAlterTable()
+    {
+        self::alterTable('CREATE TABLE IF NOT EXISTS `{tbl_prefix}video_votes` (
+            id_vote INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+            id_video BIGINT(20) NOT NULL,
+            id_user BIGINT(20) NOT NULL,
+            value BOOL NOT NULL,
+            UNIQUE KEY (id_video , id_user)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
+        ', [], [
+            'table' => 'video_votes'
+        ]);
+        self::alterTable('ALTER TABLE `{tbl_prefix}video_votes` ADD CONSTRAINT `votes_id_video_ibfk_1` FOREIGN KEY (id_video) REFERENCES `{tbl_prefix}video` (videoid) ON DELETE NO ACTION ON UPDATE NO ACTION;', [
+            'table'  => 'video_votes',
+            'column' => 'id_video'
+        ], [
+            'constraint' => [
+                'type' => 'FOREIGN KEY',
+                'name' => 'votes_id_video_ibfk_1'
+            ]
+        ]);
+
+        self::alterTable('ALTER TABLE `{tbl_prefix}_votes` ADD CONSTRAINT `votes_id_user_ibfk_1` FOREIGN KEY (id_user) REFERENCES `{tbl_prefix}users` (userid) ON DELETE NO ACTION ON UPDATE NO ACTION;', [
+            'table' => 'users'
+        ], [
+            'constraint' => [
+                'type' => 'FOREIGN KEY',
+                'name' => 'votes_id_user_ibfk_1'
+            ]
+        ]);
+
+        self::alterTable('CREATE TABLE IF NOT EXISTS `{tbl_prefix}photo_votes` (
+            id_vote INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+            id_photo BIGINT(255) NOT NULL,
+            id_user BIGINT(20) NOT NULL,
+            value BOOL NOT NULL,
+            UNIQUE KEY (id_photo , id_user)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
+        ', [], [
+            'table' => 'photo_votes'
+        ]);
+        self::alterTable('ALTER TABLE `{tbl_prefix}photo_votes` ADD CONSTRAINT `votes_id_photo_ibfk_1` FOREIGN KEY (id_photo) REFERENCES `{tbl_prefix}photos` (photo_id) ON DELETE NO ACTION ON UPDATE NO ACTION;', [
+            'table'  => 'photo_votes',
+            'column' => 'id_photo'
+        ], [
+            'constraint' => [
+                'type' => 'FOREIGN KEY',
+                'name' => 'votes_id_photo_ibfk_1'
+            ]
+        ]);
+
+        self::alterTable('ALTER TABLE `{tbl_prefix}_votes` ADD CONSTRAINT `votes_id_user_ibfk_2` FOREIGN KEY (id_user) REFERENCES `{tbl_prefix}users` (userid) ON DELETE NO ACTION ON UPDATE NO ACTION;', [
+            'table' => 'users'
+        ], [
+            'constraint' => [
+                'type' => 'FOREIGN KEY',
+                'name' => 'votes_id_user_ibfk_2'
+            ]
+        ]);
+
+        self::alterTable('CREATE TABLE IF NOT EXISTS `{tbl_prefix}comment_votes` (
+            id_vote INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+            id_comment INT(60) NOT NULL,
+            id_user BIGINT(20) NOT NULL,
+            value BOOL NOT NULL,
+            UNIQUE KEY (id_comment , id_user)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
+        ', [], [
+            'table' => 'comment_votes'
+        ]);
+        self::alterTable('ALTER TABLE `{tbl_prefix}comment_votes` ADD CONSTRAINT `votes_id_comment_ibfk_1` FOREIGN KEY (id_comment) REFERENCES `{tbl_prefix}comments` (comment_id) ON DELETE NO ACTION ON UPDATE NO ACTION;', [
+            'table'  => 'comment_votes',
+            'column' => 'id_comment'
+        ], [
+            'constraint' => [
+                'type' => 'FOREIGN KEY',
+                'name' => 'votes_id_comment_ibfk_1'
+            ]
+        ]);
+
+        self::alterTable('ALTER TABLE `{tbl_prefix}_votes` ADD CONSTRAINT `votes_id_user_ibfk_3` FOREIGN KEY (id_user) REFERENCES `{tbl_prefix}users` (userid) ON DELETE NO ACTION ON UPDATE NO ACTION;', [
+            'table' => 'users'
+        ], [
+            'constraint' => [
+                'type' => 'FOREIGN KEY',
+                'name' => 'votes_id_user_ibfk_3'
+            ]
+        ]);
+
+        self::alterTable('CREATE TABLE IF NOT EXISTS `{tbl_prefix}channel_votes` (
+            id_vote INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+            id_channel BIGINT(20) NOT NULL,
+            id_user BIGINT(20) NOT NULL,
+            value BOOL NOT NULL,
+            UNIQUE KEY (id_channel , id_user)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
+        ', [], [
+            'table' => 'channel_votes'
+        ]);
+        self::alterTable('ALTER TABLE `{tbl_prefix}channel_votes` ADD CONSTRAINT `votes_id_channel_ibfk_1` FOREIGN KEY (id_channel) REFERENCES `{tbl_prefix}users` (userid) ON DELETE NO ACTION ON UPDATE NO ACTION;', [
+            'table'  => 'channel_votes',
+            'column' => 'id_channel'
+        ], [
+            'constraint' => [
+                'type' => 'FOREIGN KEY',
+                'name' => 'votes_id_channel_ibfk_1'
+            ]
+        ]);
+
+        self::alterTable('ALTER TABLE `{tbl_prefix}_votes` ADD CONSTRAINT `votes_id_user_ibfk_4` FOREIGN KEY (id_user) REFERENCES `{tbl_prefix}users` (userid) ON DELETE NO ACTION ON UPDATE NO ACTION;', [
+            'table' => 'users'
+        ], [
+            'constraint' => [
+                'type' => 'FOREIGN KEY',
+                'name' => 'votes_id_user_ibfk_4'
+            ]
+        ]);
+
+        self::alterTable('CREATE TABLE IF NOT EXISTS `{tbl_prefix}collection_votes` (
+            id_vote INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+            id_collection BIGINT(25) NOT NULL,
+            id_user BIGINT(20) NOT NULL,
+            value BOOL NOT NULL,
+            UNIQUE KEY (id_collection , id_user)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
+        ', [], [
+            'table' => 'collection_votes'
+        ]);
+        self::alterTable('ALTER TABLE `{tbl_prefix}collection_votes` ADD CONSTRAINT `votes_id_collection_ibfk_1` FOREIGN KEY (id_collection) REFERENCES `{tbl_prefix}collections` (collection_id) ON DELETE NO ACTION ON UPDATE NO ACTION;', [
+            'table'  => 'collection_votes',
+            'column' => 'id_collection'
+        ], [
+            'constraint' => [
+                'type' => 'FOREIGN KEY',
+                'name' => 'votes_id_collection_ibfk_1'
+            ]
+        ]);
+
+        self::alterTable('ALTER TABLE `{tbl_prefix}_votes` ADD CONSTRAINT `votes_id_user_ibfk_5` FOREIGN KEY (id_user) REFERENCES `{tbl_prefix}users` (userid) ON DELETE NO ACTION ON UPDATE NO ACTION;', [
+            'table' => 'users'
+        ], [
+            'constraint' => [
+                'type' => 'FOREIGN KEY',
+                'name' => 'votes_id_user_ibfk_5'
+            ]
+        ]);
+
         self::alterTable('ALTER TABLE `{tbl_prefix}video` DROP COLUMN `rated_by`;', [
             'table'  => 'video',
             'column' => 'rated_by'
@@ -60,78 +238,45 @@ class MWIP extends \Migration
         self::alterTable('ALTER TABLE `{tbl_prefix}video` DROP COLUMN `rating`;', [
             'table'  => 'video',
             'column' => 'rating'
-        ]);**/
-
-        $id_type_photo = \Photo::getTypeId();
-        $photos_rated = self::req('SELECT * FROM `{tbl_prefix}photos` WHERE rated_by > 0 ');
-        foreach ($photos_rated as $photo) {
-            $vote_infos = json_decode($photo['voters'], true);
-            foreach ($vote_infos as $vote) {
-                self::query('INSERT IGNORE INTO `{tbl_prefix}ratings` SET object_id = ' . mysql_clean($photo['photo_id']) . ', id_object_type = ' . mysql_clean($id_type_photo) . ', userid = ' . mysql_clean($vote['userid']) . ', date_added = \'' . mysql_clean($vote['time']) . '\', vote = ' . mysql_clean($vote['rating'] == 10));
-            }
-        }
-
-        /**
-        self::alterTable('ALTER TABLE `{tbl_prefix}photos` DROP COLUMN `rated_by`;', [
-        'table'  => 'photos',
-        'column' => 'rated_by'
         ]);
-        self::alterTable('ALTER TABLE `{tbl_prefix}photos` DROP COLUMN `voters`;', [
-        'table'  => 'photos',
-        'column' => 'voter_ids'
-        ]);
-        self::alterTable('ALTER TABLE `{tbl_prefix}photos` DROP COLUMN `rating`;', [
-        'table'  => 'photos',
-        'column' => 'rating'
-        ]);**/
 
-
-        $id_type_collection = \Collection::getTypeId();
-        $collections_rated = self::req('SELECT * FROM `{tbl_prefix}collections` WHERE rated_by > 0 ');
-        foreach ($collections_rated as $collection) {
-            $vote_infos = json_decode($collection['voters'], true);
-            foreach ($vote_infos as $vote) {
-                self::query('INSERT IGNORE INTO `{tbl_prefix}ratings` SET object_id = ' . mysql_clean($collection['collection_id']) . ', id_object_type = ' . mysql_clean($id_type_collection) . ', userid = ' . mysql_clean($vote['userid']) . ', date_added = \'' . mysql_clean($vote['time']) . '\', vote = ' . mysql_clean($vote['rating'] == 10));
-            }
-        }
-
-        /**
-        self::alterTable('ALTER TABLE `{tbl_prefix}collections` DROP COLUMN `rated_by`;', [
-        'table'  => 'collections',
-        'column' => 'rated_by'
-        ]);
-        self::alterTable('ALTER TABLE `{tbl_prefix}collections` DROP COLUMN `voters`;', [
-        'table'  => 'collections',
-        'column' => 'voter_ids'
-        ]);
-        self::alterTable('ALTER TABLE `{tbl_prefix}collections` DROP COLUMN `rating`;', [
-        'table'  => 'collections',
-        'column' => 'rating'
-        ]);**/
-
-        $id_type_user = \User::getTypeId();
-        $channels_rated = self::req('SELECT * FROM `{tbl_prefix}user_profile` WHERE rated_by > 0 ');
-        foreach ($channels_rated as $channel) {
-            $vote_infos = json_decode($channel['voters'], true);
-            foreach ($vote_infos as $vote) {
-                self::query('INSERT IGNORE INTO `{tbl_prefix}ratings` SET object_id = ' . mysql_clean($channel['userid']) . ', id_object_type = ' . mysql_clean($id_type_user) . ', userid = ' . mysql_clean($vote['userid']) . ', date_added = \'' . mysql_clean($vote['time']) . '\', vote = ' . mysql_clean($vote['rating'] == 10));
-            }
-        }
-
-        /**
         self::alterTable('ALTER TABLE `{tbl_prefix}user_profile` DROP COLUMN `rated_by`;', [
-        'table'  => 'user_profile',
-        'column' => 'rated_by'
+            'table'  => 'user_profile',
+            'column' => 'rated_by'
         ]);
         self::alterTable('ALTER TABLE `{tbl_prefix}user_profile` DROP COLUMN `voters`;', [
-        'table'  => 'user_profile',
-        'column' => 'voter_ids'
+            'table'  => 'user_profile',
+            'column' => 'voter_ids'
         ]);
         self::alterTable('ALTER TABLE `{tbl_prefix}user_profile` DROP COLUMN `rating`;', [
-        'table'  => 'user_profile',
-        'column' => 'rating'
-        ]);**/
+            'table'  => 'user_profile',
+            'column' => 'rating'
+        ]);
 
+        self::alterTable('ALTER TABLE `{tbl_prefix}collections` DROP COLUMN `rated_by`;', [
+            'table'  => 'collections',
+            'column' => 'rated_by'
+        ]);
+        self::alterTable('ALTER TABLE `{tbl_prefix}collections` DROP COLUMN `voters`;', [
+            'table'  => 'collections',
+            'column' => 'voter_ids'
+        ]);
+        self::alterTable('ALTER TABLE `{tbl_prefix}collections` DROP COLUMN `rating`;', [
+            'table'  => 'collections',
+            'column' => 'rating'
+        ]);
 
+        self::alterTable('ALTER TABLE `{tbl_prefix}photos` DROP COLUMN `rated_by`;', [
+            'table'  => 'photos',
+            'column' => 'rated_by'
+        ]);
+        self::alterTable('ALTER TABLE `{tbl_prefix}photos` DROP COLUMN `voters`;', [
+            'table'  => 'photos',
+            'column' => 'voter_ids'
+        ]);
+        self::alterTable('ALTER TABLE `{tbl_prefix}photos` DROP COLUMN `rating`;', [
+            'table'  => 'photos',
+            'column' => 'rating'
+        ]);
     }
 }
