@@ -1,6 +1,6 @@
 {
   "version":"5.5.3",
-  "revision":"105",
+  "revision":"106",
   "status":"stable",
   "detail":[
     {
@@ -72,6 +72,7 @@
         ,"Fix TMDB import from video upload form"
         ,"Fix video deletion from my account dashboard"
         ,"Fix collection item removal"
+        ,"Fix video preview on similar videos"
       ]
     },
     {
