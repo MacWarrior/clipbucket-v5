@@ -66,6 +66,12 @@ class Migration
             }
             error_log('ERROR : ' . $e->getMessage());
             throw new Exception('ERROR : ' . $e->getMessage());
+        } catch (NoRollbackException $e) {
+            Clipbucket_db::getInstance()->commit();
+            e($e->getMessage());
+            error_log($e->getMessage());
+            DiscordLog::sendDump($e->getMessage());
+            throw new Exception($e->getMessage());
         } catch (Exception $e) {
             Clipbucket_db::getInstance()->rollback();
             e($e->getMessage());
