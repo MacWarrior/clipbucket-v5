@@ -1,12 +1,13 @@
 {
   "version":"5.5.3",
-  "revision":"107",
+  "revision":"108",
   "status":"stable",
   "detail":[
     {
       "title": "Back office",
       "description": [
         "Refactor templates management"
+        ,"Refactor and mutualize images uploads"
         ,"Implement email alias allow option"
         ,"Implement templates edition"
         ,"Implement Regenerate videos thumbs tool"

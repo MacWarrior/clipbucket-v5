@@ -6,7 +6,7 @@ use Photo;
 
 require_once \DirPath::get('classes') . DIRECTORY_SEPARATOR . 'migration' . DIRECTORY_SEPARATOR . 'migration.class.php';
 
-class MWIP extends \Migration
+class M00108 extends \Migration
 {
     /**
      * @throws \Exception
