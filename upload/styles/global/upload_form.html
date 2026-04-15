@@ -158,7 +158,10 @@
                 <div class="formSection clear">
                     <h4>{$sharingOptions.group_name}<i class="glyphicon glyphicon-chevron-down pull-right"></i></h4>
                     <div class="sectionContent" style="display: none;">
-                        {foreach $sharingOptions.fields as $field}
+                        {foreach $sharingOptions.fields as $key => $field}
+                            {if $key == 'use_backdrop_as_default_thumb'}
+                                {continue}
+                            {/if}
                             <div class="form-group">
                             {$field.class='form-control'}
                             {$field.notShowSeprator='yes'}
