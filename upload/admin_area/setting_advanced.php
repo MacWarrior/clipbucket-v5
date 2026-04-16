@@ -227,6 +227,29 @@ if (isset($_POST['update'])) {
             }
         }
 
+        if ($field == 'max_photo_size' || $field == 'maximum_allowed_subtitle_size') {
+            $max_size = !empty($_POST['max_upload_size']) ? $_POST['max_upload_size'] : config('max_upload_size');
+            $lang = ($field == 'max_photo_size' ? 'maximum_image_size' : 'option_maximum_allowed_subtitle_size');
+            if ($value > $max_size) {
+                e(lang('s_cant_exceed_s', [lang($lang), lang('max_upload_size')]),'w');
+            }
+        }
+
+        if ($field == 'allowed_photo_types') {
+            $types = Photo::completeAllowedPhotoExtension(explode(',', $value));
+            $type_ok = true;
+            foreach ($types as $type) {
+                if (!in_array($type, Photo::getAllowedUploadTypes())) {
+                    e(lang('unsupported_photo_type', $type));
+                    $type_ok = false;
+                }
+            }
+            if (!$type_ok) {
+                $value = null;
+                continue;
+            }
+        }
+
         if (!isset(myquery::getInstance()->Get_Website_Details()[$field])) {
             if (!$has_missing_config) {
                 e(lang('error_missing_config_please_use_tool', DirPath::getUrl('admin_area') . 'admin_tool.php?code_tool=install_missing_config'), 'w', false);

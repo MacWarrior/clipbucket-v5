@@ -256,7 +256,10 @@
                             </div>
                         </div>
                         <div id="privacyoption" class="tab-pane fade">
-                            {foreach from=$video_privacyoption item=field}
+                            {foreach from=$video_privacyoption key=key item=field}
+                                {if $key == 'use_backdrop_as_default_thumb'}
+                                    {continue}
+                                {/if}
                                 {if $field.type == 'hidden' &&  $field.id != 'video_users'}
                                     {$formObj->createField($field)}
                                     {continue}
@@ -533,7 +536,7 @@
                         </li>
                         <li>
                             <a {if Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '14')} data-toggle="tab" href="#thumbnails" {else} class="disabled" disabled="disabled" title="{lang('cant_perform_action_until_app_fully_updated')}" {/if}>
-                                <i class="glyphicon glyphicon-picture"></i> {lang('default_x',lang('thumbnail'))|ucfirst}
+                                <i class="glyphicon glyphicon-picture"></i> {if $use_backdrop_default}{lang('thumbnail')|ucfirst}{else}{lang('default_x',lang('thumbnail'))|ucfirst}{/if}
                             </a>
                         </li>
                         {if config('enable_video_poster') == 'yes'}
@@ -593,6 +596,10 @@
                         {/if}
                         {if config('enable_video_backdrop') == 'yes'}
                         <div id="backdrops" class="tab-pane fade {if empty($vidthumbs_backdrop)} hidden{/if}">
+                            {if (!empty($video_privacyoption['use_backdrop_as_default_thumb']))}
+                                {$formObj->createField($video_privacyoption['use_backdrop_as_default_thumb'])}
+                            {/if}
+                            <br/>
                             {include file="$style_dir/blocks/backdrop_mini_list.html"}
                         </div>
                         {/if}
@@ -637,5 +644,6 @@
     let ids_to_check_progress = JSON.parse('{$ids_to_check_progress}');
     let format_date_js = '{get_date_js()}';
     let language = '{$lang_obj->getLang()}';
+    let use_backdrop_default = '{$use_backdrop_default}';
 </script>
 {/if}

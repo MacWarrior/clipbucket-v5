@@ -1,12 +1,13 @@
 {
   "version":"5.5.3",
-  "revision":"101",
+  "revision":"108",
   "status":"stable",
   "detail":[
     {
       "title": "Back office",
       "description": [
         "Refactor templates management"
+        ,"Refactor and mutualize images uploads"
         ,"Implement email alias allow option"
         ,"Implement templates edition"
         ,"Implement Regenerate videos thumbs tool"
@@ -14,6 +15,7 @@
         ,"Implement live statistics & ongoing tools on dashboard"
         ,"Implement tasks cleanup tool"
         ,"Implement TMDB data refresh tool"
+        ,"Implement template compatibility check"
         ,"Update advanced settings display"
         ,"Update video & photos thumbs regeneration tools"
         ,"Add links to flagged tags"
@@ -50,6 +52,7 @@
         ,"Implement add new collection button from owned collection"
         ,"Implement comment rating"
         ,"Implement fullwidth photos page"
+        ,"Implement backdrop as default thumb"
         ,"Update media rating"
         ,"Update collection management"
         ,"Add signup date of birth calendar icon"
@@ -70,6 +73,8 @@
         ,"Fix featured user channel's link"
         ,"Fix TMDB import from video upload form"
         ,"Fix video deletion from my account dashboard"
+        ,"Fix collection item removal"
+        ,"Fix video preview on similar videos"
       ]
     },
     {
@@ -113,6 +118,7 @@
         ,"Fix old thumbs migration"
         ,"Fix false error alert on update"
         ,"Fix syntax error"
+        ,"Fix SQL duplicate key error"
       ]
     },
     {
@@ -135,6 +141,7 @@
       "title": "Translations",
       "description": [
         "Translate hardcoded texts"
+        ,"Fix possible not-updated translations"
       ]
     },
     {

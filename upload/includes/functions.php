@@ -62,9 +62,12 @@ function getBytesFromFileSize($size)
         'YB' => pow(1024, 8)
     ];
 
-    $size = trim($size);
-    $unit = preg_replace('/[0-9.]/', '', $size);
-    $size = preg_replace('/[^0-9]/', '', $size);
+    $size = trim( $size);
+
+    //manage exponential form
+    preg_match('/^((?:[0-9.])+(?:E[+-]\d+)?)([a-zA-Z]{1,2})$/', $size, $matches);
+    $size = $matches[1];
+    $unit = $matches[2];
     if( !isset($units[$unit]) ) {
         $msg = 'getBytesFromFileSize - Unknown unit : ' . $unit;
         error_log($msg);

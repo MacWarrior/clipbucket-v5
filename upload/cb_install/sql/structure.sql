@@ -539,7 +539,8 @@ CREATE TABLE `{tbl_prefix}video` (
   `aspect_ratio` DECIMAL(10,6) NULL DEFAULT NULL,
   `remote_play_url` TEXT NULL DEFAULT NULL,
   `id_tmdb` INT NULL,
-  `type_tmdb` VARCHAR(255) NULL
+  `type_tmdb` VARCHAR(255) NULL,
+  `use_backdrop_as_default_thumb` ENUM ('yes','no') NOT NULL DEFAULT 'no'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_520_ci;
 
 CREATE TABLE `{tbl_prefix}video_views` (
