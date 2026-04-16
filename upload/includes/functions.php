@@ -62,9 +62,12 @@ function getBytesFromFileSize($size)
         'YB' => pow(1024, 8)
     ];
 
-    $size = trim($size);
-    $unit = preg_replace('/[0-9.]/', '', $size);
-    $size = preg_replace('/[^0-9]/', '', $size);
+    $size = trim( $size);
+
+    //manage exponential form
+    preg_match('/^((?:[0-9.])+(?:E[+-]\d+)?)([a-zA-Z]{1,2})$/', $size, $matches);
+    $size = $matches[1];
+    $unit = $matches[2];
     if( !isset($units[$unit]) ) {
         $msg = 'getBytesFromFileSize - Unknown unit : ' . $unit;
         error_log($msg);
@@ -148,7 +151,7 @@ function getExt($file): string
 function getExtMimeType($file_path): string
 {
     $image_sizes = getimagesize($file_path);
-    return PhotoThumbs::getMimeType($image_sizes['mime']);
+    return Photo::getMimeType($image_sizes['mime']);
 }
 
 /**
@@ -3275,7 +3278,7 @@ function upload_image($type = 'logo'): bool
     $filename = $_FILES[$file_post]['name'];
     $file_ext = getExt($filename);
     $filesize = $_FILES[$file_post]['size'];
-    $allowed_file_types = explode(',', strtolower(config('allowed_photo_types')));
+    $allowed_file_types = Photo::getAllowedPhotoExtension();
 
     $max_size = 4000000;
     if ($filesize > $max_size) {
@@ -3643,8 +3646,8 @@ function save_subtitle_ajax()
     } elseif (!FFMpeg::isValidWebVTTWithFFmpeg($_FILES['subtitles']['tmp_name'], $video['duration'])) {
         //gestion de l'affichage des erreurs dans la fonction
         $success = false;
-    } elseif ($_FILES['subtitles']['size'] >= (1024 * 1024 * config('maximum_allowed_subtitle_size')) ) {
-        e(lang('file_size_exceeded', config('maximum_allowed_subtitle_size') . lang('mb')));
+    } elseif ($_FILES['subtitles']['size'] >= (1024 * 1024 * Video::getMaxAllowedSubtitleSize()) ) {
+        e(lang('file_size_exceeded', Video::getMaxAllowedSubtitleSize() . lang('mb')));
         $success = false;
     } else {
         rename($_FILES['subtitles']['tmp_name'], $temp_file_path);

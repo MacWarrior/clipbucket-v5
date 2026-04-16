@@ -1,6 +1,7 @@
 <?php
 class ClipBucket
 {
+    private $allowed_photo_types;
     private static self $instance;
     public static function getInstance(): self
     {
@@ -636,7 +637,7 @@ class ClipBucket
                 break;
 
             case 'photo':
-                $exts = config('allowed_photo_types');
+                $exts = Photo::getAllowedPhotoExtension('string');
                 break;
         }
 
