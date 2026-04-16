@@ -109,7 +109,14 @@ foreach ($videos as $video) {
             $vidthumbs_custom = [];
         }
         assign('vidthumbs', $vidthumbs);
-        $data['thumbs'] = getTemplate('blocks/videos/thumb_form.html');
+        if( config('enable_video_poster') == 'yes' ) {
+            assign('vidthumbs_poster', VideoThumbs::getAllThumbFiles($video['videoid'], 90,140,type: 'poster', return_with_num: true));
+        }
+
+        if( config('enable_video_backdrop') == 'yes' ) {
+            assign('vidthumbs_backdrop', VideoThumbs::getAllThumbFiles($video['videoid'], 168,105,type: 'backdrop', return_with_num: true));
+        }
+        $data['thumbs'] = getTemplate('blocks/videos/thumb_form.html') . getTemplate('blocks/videos/poster_backdrop_form.html');
     }
     if (!empty($_POST['display_subtitles'])) {
         //TODO check config
