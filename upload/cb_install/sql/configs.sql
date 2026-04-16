@@ -73,14 +73,12 @@ INSERT INTO `{tbl_prefix}config` (`configid`, `name`, `value`) VALUES
 	(NULL, 'video_codec', 'libx264'),
 	(NULL, 'date_format', 'Y-m-d'),
 	(NULL, 'autoplay_video', 'no'),
-	(NULL, 'max_profile_pic_size', '2500'),
 	(NULL, 'max_profile_pic_width', '230'),
 	(NULL, 'gravatars', ''),
 	(NULL, 'picture_url', 'yes'),
 	(NULL, 'picture_upload', 'yes'),
 	(NULL, 'background_url', 'yes'),
 	(NULL, 'background_upload', 'yes'),
-	(NULL, 'max_bg_size', '2500'),
 	(NULL, 'max_bg_width', '1600'),
 	(NULL, 'background_color', 'yes'),
 	(NULL, 'send_comment_notification', 'yes'),
@@ -344,7 +342,8 @@ INSERT INTO `{tbl_prefix}config` (`configid`, `name`, `value`) VALUES
     (NULL, 'enable_favorite_icon_video', 'yes'),
     (NULL, 'own_comment_rating', 'no'),
     (NULL, 'photo_thumbs_format', 'webp'),
-    (NULL, 'photos_enable_fullwidth', 'yes');
+    (NULL, 'photos_enable_fullwidth', 'yes'),
+    (NULL, 'use_backdrop_as_default_thumb', 'allowed');
 
 INSERT INTO `{tbl_prefix}video_resolution` (`title`, `ratio`, `enabled`, `width`, `height`, `video_bitrate`) VALUES
 	('240p', '16/9', 1, 426, 240, 240000),

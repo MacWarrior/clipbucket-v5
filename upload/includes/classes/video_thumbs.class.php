@@ -678,6 +678,9 @@ class VideoThumbs
             }
             return $is_multi ? [self::getDefaultMissingThumb($return_type, $return_with_num)] : self::getDefaultMissingThumb($return_type, $return_with_num);
         }
+        if ($is_default && $type == 'thumbnail' && Video::getUseBackdropDefault($video)) {
+            $type = 'backdrop';
+        }
 
         $thumb_video_directory_path = DirPath::get('thumbs') ;
         switch ($return_type) {
@@ -993,7 +996,7 @@ class VideoThumbs
             $num = self::getLastNum($video['videoid'], $type, $is_auto) + 1;
             $temp_file_path = $temp_directory . $video['file_name'] . '-' . $num . '-' . $type . '.' . $ext_destination;
 
-            if (self::ValidateImage($file['tmp_name'][$file_array_key], $ext_original)) {
+            if (Photo::ValidateImage($file['tmp_name'][$file_array_key])) {
                 $id_video_image = Clipbucket_db::getInstance()->insert(tbl(self::$tableName), [
                     'videoid',
                     'type',
@@ -1047,6 +1050,8 @@ class VideoThumbs
                     }
                 }
                 unlink($temp_file_path);
+            } else {
+                e(lang('wrong_image_extension', Photo::getAllowedPhotoExtension('string')));
             }
         }
     }
@@ -1140,20 +1145,6 @@ class VideoThumbs
     }
 
     //Validating an Image
-    public static function ValidateImage($file, $ext = null): bool
-    {
-        $allowed_types = explode(',', config('allowed_photo_types'));
-        if( !in_array(strtolower($ext), $allowed_types) ) {
-            return false;
-        }
-
-        $array = getimagesize($file);
-        if (empty($array[0]) || empty($array[1])) {
-            return false;
-        }
-
-        return true;
-    }
 
     /**
      * @param array $image

@@ -1,12 +1,13 @@
 {
   "version":"5.5.3",
-  "revision":"106",
+  "revision":"108",
   "status":"stable",
   "detail":[
     {
       "title": "Back office",
       "description": [
         "Refactor templates management"
+        ,"Refactor and mutualize images uploads"
         ,"Implement email alias allow option"
         ,"Implement templates edition"
         ,"Implement Regenerate videos thumbs tool"
@@ -51,6 +52,7 @@
         ,"Implement add new collection button from owned collection"
         ,"Implement comment rating"
         ,"Implement fullwidth photos page"
+        ,"Implement backdrop as default thumb"
         ,"Update media rating"
         ,"Update collection management"
         ,"Add signup date of birth calendar icon"

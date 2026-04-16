@@ -103,6 +103,10 @@ class Video extends Objects
             $this->fields[] = 'type_tmdb';
         }
 
+        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '107')) {
+            $this->fields[] = 'use_backdrop_as_default_thumb';
+        }
+
         $this->fields_categories = [
             'category_id'
             ,'parent_id'
@@ -1345,6 +1349,32 @@ class Video extends Objects
         return Clipbucket_db::getInstance()->insert(tbl('video_embed'), $fields, $values);
     }
 
+    /**
+     * @return int
+     */
+    public static function getMaxAllowedSubtitleSize():int
+    {
+        return min((int)config('maximum_allowed_subtitle_size'), (int)config('max_upload_size'));
+    }
+
+    /**
+     * @param mixed $data
+     * @return bool
+     */
+    public static function getUseBackdropDefault(mixed $data): bool
+    {
+        if( !Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '107') ){
+            return false;
+        }
+
+        return (
+            config('enable_video_backdrop') == 'yes'
+            && (
+                (config('use_backdrop_as_default_thumb') == 'allowed' && !empty($data['default_backdrop']) && $data['use_backdrop_as_default_thumb'] == 'yes')
+                || config('use_backdrop_as_default_thumb') == 'forced' && !empty($data['default_backdrop'])
+            )
+        );
+    }
 }
 
 class CBvideo extends CBCategory

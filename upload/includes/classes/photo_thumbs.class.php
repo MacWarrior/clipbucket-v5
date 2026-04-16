@@ -297,7 +297,7 @@ class PhotoThumbs
         if (empty($original_sizes)) {
             return;
         }
-        $mime_type = self::getMimeType($original_sizes['mime']);
+        $mime_type = Photo::getMimeType($original_sizes['mime']);
         if (empty($mime_type)) {
             throw new Exception(lang('remote_play_invalid_extension'));
         }
@@ -489,23 +489,6 @@ class PhotoThumbs
                 imagedestroy($image);
             }
         }
-    }
-
-    /**
-     * @param $mime_type
-     * @return string|null
-     */
-    public static function getMimeType($mime_type): string|null
-    {
-        return match ($mime_type) {
-            'image/jpeg'  => 'jpeg'
-            ,'image/png'  => 'png'
-            ,'image/gif'  => 'gif'
-            ,'image/webp' => 'webp'
-            ,'image/bmp'  => 'bmp'
-            ,'image/tiff' => 'tiff'
-            ,default      => null
-        };
     }
 
     /**
