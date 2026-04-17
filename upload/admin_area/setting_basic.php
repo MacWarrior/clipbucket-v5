@@ -188,21 +188,21 @@ if (isset($_POST['update'])) {
     ];
 
     $config_booleans_to_refactor = [
-        'closed',
-        'enable_update_checker',
-        'allow_language_change',
-        'allow_registeration',
-        'pick_geo_country',
-        'email_verification',
-        'use_subs',
-        'video_embed',
-        'video_download',
-        'bits_color_warning',
-        'photo_crop',
-        'show_collapsed_checkboxes',
-        'activation',
-        'photo_activation',
-        'player_subtitles'
+        'closed'
+        ,'enable_update_checker'
+        ,'allow_language_change'
+        ,'allow_registeration'
+        ,'pick_geo_country'
+        ,'email_verification'
+        ,'use_subs'
+        ,'video_embed'
+        ,'video_download'
+        ,'bits_color_warning'
+        ,'photo_crop'
+        ,'show_collapsed_checkboxes'
+        ,'activation'
+        ,'photo_activation'
+        ,'player_subtitles'
     ];
 
     $rows = [
