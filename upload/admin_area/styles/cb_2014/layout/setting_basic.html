@@ -1747,6 +1747,7 @@
                                         <option value="disallowed" {if $row.use_backdrop_as_default_thumb == 'disallowed'} selected {/if}>{lang('disallowed')}</option>
                                         <option value="forced" {if $row.use_backdrop_as_default_thumb == 'forced'} selected {/if}>{lang('forced')}</option>
                                     </select>
+                                    <input type="hidden" name="use_backdrop_as_default_thumb" id="use_backdrop_as_default_thumb_hidden" value="{$row.use_backdrop_as_default_thumb}" {if config('enable_video_backdrop')=='yes'}disabled="disabled"{/if}/>
                                 </div>
                             </div>
                             <hr/>
