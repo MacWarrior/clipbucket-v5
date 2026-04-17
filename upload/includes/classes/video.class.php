@@ -1375,6 +1375,7 @@ class Video extends Objects
             )
         );
     }
+
 }
 
 class CBvideo extends CBCategory
