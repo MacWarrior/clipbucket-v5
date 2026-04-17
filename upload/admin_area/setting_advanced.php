@@ -74,9 +74,7 @@ if (isset($_POST['update'])) {
         'ffprobe_path',
         'media_info',
 
-        'max_bg_size',
         'max_conversion',
-        'max_profile_pic_size',
         'max_upload_size',
         'max_video_duration',
 
@@ -154,7 +152,7 @@ if (isset($_POST['update'])) {
     ];
 
     foreach (Upload::getInstance()->get_upload_options() as $optl) {
-        if( !empty($optl['load_func']) ){
+        if (!empty($optl['load_func'])) {
             $rows[] = $optl['load_func'];
         }
     }
@@ -192,22 +190,59 @@ if (isset($_POST['update'])) {
             continue;
         }
 
+        if ($field == 'max_photo_size' || $field == 'maximum_allowed_subtitle_size') {
+            $max_size = !empty($_POST['max_upload_size']) ? $_POST['max_upload_size'] : config('max_upload_size');
+            $lang = ($field == 'max_photo_size' ? 'maximum_image_size' : 'option_maximum_allowed_subtitle_size');
+            if ($value > $max_size) {
+                e(lang('s_cant_exceed_s', [lang($lang), lang('max_upload_size')]),'w');
+            }
+        }
+
+        if ($field == 'allowed_photo_types') {
+            $types = Photo::completeAllowedPhotoExtension(explode(',', $value));
+            $type_ok = true;
+            foreach ($types as $type) {
+                if (!in_array($type, Photo::getAllowedUploadTypes())) {
+                    e(lang('unsupported_photo_type', $type));
+                    $type_ok = false;
+                }
+            }
+            if (!$type_ok) {
+                $value = null;
+                continue;
+            }
+        }
+        if ($field == 'allowed_video_types') {
+            $types = explode(',', $value);
+            $type_ok = true;
+            foreach ($types as $type) {
+                if (strlen($type) < 2) {
+                    e(lang('tag_too_short_dynamic', 2));
+                    $type_ok = false;
+                }
+            }
+            if (!$type_ok) {
+                $value = null;
+                continue;
+            }
+        }
+
         if (!isset(myquery::getInstance()->Get_Website_Details()[$field])) {
-            if( !$has_missing_config ){
-                e(lang('error_missing_config_please_use_tool', DirPath::getUrl('admin_area') . 'admin_tool.php?code_tool=install_missing_config'),'w',false);
+            if (!$has_missing_config) {
+                e(lang('error_missing_config_please_use_tool', DirPath::getUrl('admin_area') . 'admin_tool.php?code_tool=install_missing_config'), 'w', false);
                 $has_missing_config = true;
             }
-            if( System::isInDev() ){
-                $tmp_text = 'Missing config: '.$field;
+            if (System::isInDev()) {
+                $tmp_text = 'Missing config: ' . $field;
                 error_log($tmp_text);
                 DiscordLog::sendDump($tmp_text);
             }
             continue;
         }
-        if( !is_null($value) ){
+        if (!is_null($value)) {
             myquery::getInstance()->Set_Website_Details($field, $value);
         } else {
-            DiscordLog::sendDump('Missing value for config: '.$field);
+            DiscordLog::sendDump('Missing value for config: ' . $field);
         }
     }
 
@@ -315,9 +350,15 @@ assign('allTimezone', $allTimezone);
 
 $min_suffixe = System::isInDev() ? '' : '.min';
 ClipBucket::getInstance()->addAdminJS([
-    'jquery-ui-1.13.2.min.js' => 'global'
-    ,
-    'pages/main/main' . $min_suffixe . '.js' => 'admin'
+    'jquery-ui-1.13.2.min.js'                                  => 'global',
+    'tag-it' . $min_suffixe . '.js'                            => 'admin',
+    'init_default_tag/init_default_tag' . $min_suffixe . '.js' => 'admin',
+    'pages/main/main' . $min_suffixe . '.js'                   => 'admin'
 ]);
+ClipBucket::getInstance()->addAdminCSS([
+    'jquery.tagit' . $min_suffixe . '.css'     => 'admin',
+    'tagit.ui-zendesk' . $min_suffixe . '.css' => 'admin'
+]);
+assign('available_tags_photo_types', Photo::getAllowedUploadTypes());
 template_files('setting_advanced.html');
 display_it();

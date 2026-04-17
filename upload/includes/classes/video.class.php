@@ -1350,6 +1350,14 @@ class Video extends Objects
     }
 
     /**
+     * @return int
+     */
+    public static function getMaxAllowedSubtitleSize():int
+    {
+        return min((int)config('maximum_allowed_subtitle_size'), (int)config('max_upload_size'));
+    }
+
+    /**
      * @param mixed $data
      * @return bool
      */
@@ -1367,6 +1375,7 @@ class Video extends Objects
             )
         );
     }
+
 }
 
 class CBvideo extends CBCategory
