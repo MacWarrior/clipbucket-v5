@@ -382,9 +382,14 @@ $(document).ready(function(){
         }, 8000);
     });
 
-
+    var creating_collection = false;
     $("#createNewCollection").on({
         click: function(e){
+            if (creating_collection) {
+                return;
+            }
+            creating_collection = true;
+            showSpinner();
             e.preventDefault();
             $.ajax({
                 type: "post",
@@ -401,7 +406,7 @@ $(document).ready(function(){
                     $('#collection_id_parent').select2({
                         width: '100%'
                     });
-
+                    creating_collection = false;
                     //listener submit
                     $("#addNewCollection").on({
                         click: function(e){
@@ -431,19 +436,21 @@ $(document).ready(function(){
                             });
                         }
                     });
+
+                    $("#cancelAddCollection").on('click', function (e) {
+                        e.preventDefault();
+                        $("#CollectionDIV").toggle("fast");
+                        $('.form_header').show();
+                        $(".upload-area").show();
+                    });
+
+                    hideSpinner();
                 }
             });
         }
     });
 
-    $("#cancelAddCollection").on({
-        click: function(e){
-            e.preventDefault();
-            $("#CollectionDIV").toggle("fast");
-            $('.form_header').show();
-            $(".upload-area").show();
-        }
-    });
+
 
     $("#selectedFilesList a").on({
         click: function(e){
@@ -482,9 +489,9 @@ $(document).ready(function(){
 });
 
 function showSpinner() {
-    $('.spinner-content').show();
+    $('.spinner-content').parent().show();
 }
 
 function hideSpinner() {
-    $('.spinner-content').hide();
+    $('.spinner-content').parent().hide();
 }
