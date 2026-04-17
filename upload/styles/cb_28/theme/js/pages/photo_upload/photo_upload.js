@@ -438,7 +438,6 @@ $(document).ready(function(){
                     });
 
                     $("#cancelAddCollection").on('click', function (e) {
-                        console.log('cancel');
                         e.preventDefault();
                         $("#CollectionDIV").toggle("fast");
                         $('.form_header').show();
