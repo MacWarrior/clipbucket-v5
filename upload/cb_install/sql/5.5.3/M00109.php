@@ -6,7 +6,7 @@ use Photo;
 
 require_once \DirPath::get('classes') . DIRECTORY_SEPARATOR . 'migration' . DIRECTORY_SEPARATOR . 'migration.class.php';
 
-class MWIP extends \Migration
+class M00109 extends \Migration
 {
     /**
      * @throws \Exception
@@ -22,6 +22,5 @@ class MWIP extends \Migration
             'fr'=>'Les tags de moins de %s caractères ne sont pas autorisés',
             'en'=>'Tags less than %s characters are not allowed'
         ]);
-
     }
 }

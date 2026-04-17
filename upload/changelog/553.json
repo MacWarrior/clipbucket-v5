@@ -1,6 +1,6 @@
 {
   "version":"5.5.3",
-  "revision":"108",
+  "revision":"109",
   "status":"stable",
   "detail":[
     {
@@ -18,6 +18,7 @@
         ,"Implement template compatibility check"
         ,"Update advanced settings display"
         ,"Update video & photos thumbs regeneration tools"
+        ,"Update video allowed extensions display"
         ,"Add links to flagged tags"
         ,"Hide poster & backdrop tabs when empty on video edition page"
         ,"Only show template editor menu while in dev mode"
