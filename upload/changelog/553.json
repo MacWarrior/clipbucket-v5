@@ -1,6 +1,6 @@
 {
   "version":"5.5.3",
-  "revision":"110",
+  "revision":"111",
   "status":"stable",
   "detail":[
     {
@@ -121,6 +121,7 @@
         ,"Fix false error alert on update"
         ,"Fix syntax error"
         ,"Fix SQL duplicate key error"
+        ,"Fix possible thumbs migration issues"
       ]
     },
     {
