@@ -100,23 +100,7 @@ foreach ($videos as $video) {
         $return['player']['id'] = $video['videoid'];
     }
     if (!empty($_POST['display_thumbs'])) {
-        assign('v', $video);
-        if ($video['status'] != 'Waiting') {
-            $vidthumbs= VideoThumbs::getAllThumbFiles($video['videoid'], '168','105',type: 'thumbnail', is_auto: true, return_with_num: true) ?: [VideoThumbs::getDefaultMissingThumb(return_with_num: true)];
-            $vidthumbs_custom = VideoThumbs::getAllThumbFiles($video['videoid'], '168','105',type: 'thumbnail', is_auto: false, return_with_num: true);
-        } else {
-            $vidthumbs = [VideoThumbs::getDefaultMissingThumb(return_with_num: true)];
-            $vidthumbs_custom = [];
-        }
-        assign('vidthumbs', $vidthumbs);
-        if( config('enable_video_poster') == 'yes' ) {
-            assign('vidthumbs_poster', VideoThumbs::getAllThumbFiles($video['videoid'], 90,140,type: 'poster', return_with_num: true));
-        }
-
-        if( config('enable_video_backdrop') == 'yes' ) {
-            assign('vidthumbs_backdrop', VideoThumbs::getAllThumbFiles($video['videoid'], 168,105,type: 'backdrop', return_with_num: true));
-        }
-        $data['thumbs'] = getTemplate('blocks/videos/thumb_form.html') . getTemplate('blocks/videos/poster_backdrop_form.html');
+        $data['thumbs'] = Upload::displayVideoThumbsForm($video);
     }
     if (!empty($_POST['display_subtitles'])) {
         //TODO check config

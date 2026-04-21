@@ -970,4 +970,37 @@ class Upload
 
         return $fields;
     }
-}	
+
+    /**
+     * @param $video
+     * @return string[]
+     * @throws Exception
+     */
+    public static function displayVideoThumbsForm($video): array
+    {
+        assign('v', $video);
+        if ($video['status'] != 'Waiting') {
+            $vidthumbs= VideoThumbs::getAllThumbFiles($video['videoid'], '168','105',type: 'thumbnail', is_auto: true, return_with_num: true) ?: [VideoThumbs::getDefaultMissingThumb(return_with_num: true)];
+            $vidthumbs_custom = VideoThumbs::getAllThumbFiles($video['videoid'], '168','105',type: 'thumbnail', is_auto: false, return_with_num: true);
+        } else {
+            $vidthumbs = [VideoThumbs::getDefaultMissingThumb(return_with_num: true)];
+            $vidthumbs_custom = [];
+        }
+        assign('vidthumbs', $vidthumbs);
+        assign('vidthumbs_custom', $vidthumbs_custom);
+        if( config('enable_video_poster') == 'yes' ) {
+            assign('vidthumbs_poster', VideoThumbs::getAllThumbFiles($video['videoid'], 90,140,type: 'poster', return_with_num: true));
+        }
+
+        if( config('enable_video_backdrop') == 'yes' ) {
+            assign('vidthumbs_backdrop', VideoThumbs::getAllThumbFiles($video['videoid'], 168,105,type: 'backdrop', return_with_num: true));
+        }
+        $videoFields = Upload::getInstance()->load_video_fields($video);
+        assign('sharingOptions', $videoFields[1]);
+        return [
+            'thumbs' =>getTemplate('blocks/videos/thumb_form.html'),
+            'posters' =>getTemplate('blocks/videos/poster_form.html'),
+            'backdrops' =>getTemplate('blocks/videos/backdrop_form.html')
+        ];
+    }
+}
