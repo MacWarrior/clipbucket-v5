@@ -14,7 +14,8 @@ abstract class Objects
             case 'photo':
                 $config_own_rate = 'own_photo_rating';
                 $config_rating = 'photo_rating';
-                $voters_key = 'voters';
+                $table_vote = 'photo_rates';
+                $id_vote = 'id_photo';
                 $table = 'photos';
                 $id_field = 'photo_id';
                 break;
@@ -22,7 +23,8 @@ abstract class Objects
             case 'collection':
                 $config_own_rate = 'own_collection_rating';
                 $config_rating = 'collection_rating';
-                $voters_key = 'voters';
+                $table_vote = 'collection_rates';
+                $id_vote = 'id_collection';
                 $table = 'collections';
                 $id_field = 'collection_id';
                 break;
@@ -30,7 +32,8 @@ abstract class Objects
             case 'user':
                 $config_own_rate = 'own_channel_rating';
                 $config_rating = 'channel_rating';
-                $voters_key = 'voters';
+                $table_vote = 'channel_rates';
+                $id_vote = 'id_channel';
                 $table = 'user_profile';
                 $id_field = 'user_profile_id';
                 break;
@@ -38,7 +41,8 @@ abstract class Objects
             case 'comment':
                 $config_own_rate = 'own_comment_rating';
                 $config_rating = 'comment_rating';
-                $voters_key = 'voters';
+                $table_vote = 'comment_rates';
+                $id_vote = 'id_comment';
                 $table = 'comments';
                 $id_field = 'comment_id';
                 break;
@@ -47,12 +51,13 @@ abstract class Objects
             default:
                 $config_own_rate = 'own_video_rating';
                 $config_rating = 'video_rating';
-                $voters_key = 'voter_ids';
+                $table_vote = 'video_rates';
+                $id_vote = 'id_video';
                 $table = 'video';
                 $id_field = 'videoid';
                 break;
         }
-        return [$config_own_rate, $config_rating, $voters_key, $table, $id_field];
+        return [$config_own_rate, $config_rating, $table_vote, $id_vote, $table, $id_field];
     }
 
     /**
@@ -286,7 +291,7 @@ abstract class Objects
             throw new Exception(lang('please_login_to_rate'));
         }
         $current_rating = static::ratingGet($object_id);
-        [$config_own_rate, $config_rating, $voters_key, $table, $id_field] = self::getClassInfo();
+        [$config_own_rate, $config_rating, $table_vote, $id_vote, $table, $id_field] = self::getClassInfo();
 
         if ($current_rating['allow_rating'] == 'no' || config($config_rating) != 'yes') {
             switch (static::TYPE) {
@@ -311,7 +316,7 @@ abstract class Objects
             throw new Exception(lang($lang));
         }
 
-        if (User::getInstance()->getCurrentUserID() == $current_rating['userid'] && config($config_own_rate) != 'yes') {
+        if (User::getInstance()->getCurrentUserID() == $current_rating['object_proprio'] && config($config_own_rate) != 'yes') {
             switch (static::TYPE) {
                 case 'photo':
                     $lang = 'you_cant_rate_own_photo';
@@ -334,49 +339,14 @@ abstract class Objects
             throw new Exception(lang($lang));
         }
 
-        $Old_histo = explode('|', $current_rating[$voters_key]);
-        if (!empty($Old_histo) && is_array($Old_histo) && count($Old_histo) > 1) {
-            foreach ($Old_histo as $voter) {
-                if ($voter) {
-                    $histo[$voter] = [
-                        'userid' => $voter,
-                        'time'   => now(),
-                        'method' => 'old'
-                    ];
-                }
-            }
+        $old_total = $current_rating['value'] == 0 ? 'total_rate_down' : 'total_rate_up';
+        Clipbucket_db::getInstance()->delete(tbl($table_vote), ['id_user', $id_vote], [User::getInstance()->getCurrentUserID(), $object_id]);
+        Clipbucket_db::getInstance()->execute('UPDATE ' . tbl($table) . ' SET ' . $old_total . ' = ' . $old_total . ' - 1 WHERE ' . $id_field . ' = ' . (int)$object_id);
+        if ($rating != $current_rating['value']) {
+            $new_total = $rating == 0 ? 'total_rate_down' : 'total_rate_up';
+            Clipbucket_db::getInstance()->insert(tbl($table_vote), ['id_user', $id_vote, 'value'], [User::getInstance()->getCurrentUserID(), $object_id, $rating]);
+            Clipbucket_db::getInstance()->execute('UPDATE ' . tbl($table) . ' SET ' . $new_total . ' = ' . $new_total . ' + 1 WHERE ' . $id_field . ' = ' . (int)$object_id);
         }
-        $histo = json_decode($current_rating[$voters_key], true);
-        $histo_value = false;
-        $t = $current_rating['rated_by'] * $current_rating['rating'];
-        if (!empty($histo) && in_array(User::getInstance()->getCurrentUserID(), array_keys($histo))) {
-            $histo_value = $histo[User::getInstance()->getCurrentUserID()]['rating'];
-            unset($histo[User::getInstance()->getCurrentUserID()]);
-            $total_voters = empty($histo) ? 0 : count($histo);
-            $t -= $histo_value;
-            $newrate = $t / ($total_voters ?: 1);
-            if ($newrate > 10) {
-                $newrate = 10;
-            }
-        }
-        if ($histo_value !== $rating) {
-            $histo[User::getInstance()->getCurrentUserID()] = [
-                'userid'   => User::getInstance()->getCurrentUserID(),
-                'username' => User::getInstance()->get('username'),
-                'time'     => now(),
-                'rating'   => $rating
-            ];
-            $total_voters = empty($histo) ? 0 : count($histo);
-            $newrate = ($t + $rating) / ($total_voters ?: 1);
-            if ($newrate > 10) {
-                $newrate = 10;
-            }
-        }
-
-        Clipbucket_db::getInstance()->update(
-            tbl($table), ['rating', 'rated_by', $voters_key], [$newrate, $total_voters, '|no_mc|' . (!empty($histo) ? json_encode($histo) : '')], ' ' . $id_field . ' = ' . (int)$object_id
-        );
-
     }
 
     /**
@@ -386,38 +356,35 @@ abstract class Objects
      */
     protected static function ratingGet($object_id): bool|array
     {
-        switch (static::TYPE) {
-            case 'video':
-                return CBvideo::getInstance()->get_video_rating($object_id);
-            case 'photo':
-                return CBPhotos::getInstance()->current_rating($object_id);
-            case 'collection':
-                return Collections::getInstance()->current_rating($object_id);
-            case 'user':
-                return userquery::getInstance()->current_rating($object_id);
-            case 'comment':
-                return Comments::current_rating($object_id);
+        [$config_own_rate, $config_rating, $table_vote, $id_vote, $table, $id_field] = self::getClassInfo();
+
+        $sql = 'SELECT ' . $table_vote . '.*, ' . $table . '.userid AS object_proprio, allow_rating, '.$table.'.total_rate_up, '.$table.'.total_rate_down 
+        FROM ' . cb_sql_table($table) . '
+        INNER JOIN  ' . cb_sql_table($table_vote) . ' ON ' . $table . '.' . $id_field . ' = ' . $table_vote . '.' . $id_vote . '
+        WHERE ' . $table_vote . '.' . $id_vote . ' = ' . (int)$object_id . ' AND ' . $table_vote . '.id_user = ' . User::getInstance()->getCurrentUserID();
+        $rating = Clipbucket_db::getInstance()->_select($sql);
+        if (count($rating) > 0) {
+            return $rating[0];
         }
         return false;
     }
 
     /**
+     * @param $userid
+     * @param $object_id
+     * @return false|mixed|string
      * @throws Exception
      */
-    public static function isObjectRated($userid, $item_id)
+    public static function isObjectRated($userid, $object_id): mixed
     {
-        [$config_own_rate, $config_rating, $voters_key, $table, $id_field] = self::getClassInfo();
-        $cond = $id_field . ' = ' . (int)$item_id;
-        $raw_rating = Clipbucket_db::getInstance()->select(tbl($table), $voters_key, $cond);
-        $ratedby_json = $raw_rating[0][$voters_key];
-        $ratedby_cleaned = json_decode($ratedby_json, true);
-        foreach ($ratedby_cleaned as $rating_data) {
-            if ($rating_data['userid'] == $userid) {
-                if ($rating_data['rating'] == 0) {
-                    return 'disliked';
-                }
-                return 'liked';
-            }
+        [$config_own_rate, $config_rating, $table_vote, $id_vote, $table, $id_field] = self::getClassInfo();
+
+        $sql = 'SELECT ' . $table_vote . '.*
+        FROM ' . cb_sql_table($table_vote) . ' 
+        WHERE ' . $id_vote . ' = ' . (int)$object_id . ' AND id_user = ' . (int)$userid;
+        $rating = Clipbucket_db::getInstance()->_select($sql);
+        if (count($rating) > 0) {
+            return $rating[0]['value'] ? 'liked' : 'disliked';
         }
         return false;
     }

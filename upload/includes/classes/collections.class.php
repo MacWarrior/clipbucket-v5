@@ -159,7 +159,13 @@ class Collection extends Objects
                 break;
 
             case 'top_rated':
-                $params['order'] = $this->getTableName() . '.rating DESC, ' . $this->getTableName() . '.rated_by DESC';
+                if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '999')) {
+                    //order by average like desc , total votes desc
+                    $params['order'] = '('.$this->getTableName(). 'total_rate_up - '.$this->getTableName(). 'total_rate_down) / ('.$this->getTableName(). 'total_rate_up + '.$this->getTableName(). 'total_rate_down) DESC
+                    , ' . $this->getTableName(). 'total_rate_up + '.$this->getTableName(). 'total_rate_down DESC';
+                } else {
+                    $params['order'] = $this->getTableName() . '.rating DESC, ' . $this->getTableName() . '.rated_by DESC';
+                }
                 break;
 
             case 'most_commented':

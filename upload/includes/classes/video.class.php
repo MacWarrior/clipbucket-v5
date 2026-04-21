@@ -40,9 +40,6 @@ class Video extends Objects
             ,'datecreated'
             ,'country'
             ,'allow_embedding'
-            ,'rating'
-            ,'rated_by'
-            ,'voter_ids'
             ,'allow_comments'
             ,'comment_voting'
             ,'comments_count'
@@ -96,6 +93,15 @@ class Video extends Objects
             $this->fields[] = 'thumbs_version';
         } else {
             $this->fields[] = 'default_thumbnail';
+        }
+
+        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '999')) {
+            $this->fields[] = 'total_rate_up';
+            $this->fields[] = 'total_rate_down';
+        } else {
+            $this->fields[] = 'rating';
+            $this->fields[] = 'rated_by';
+            $this->fields[] = 'voter_ids';
         }
 
         if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '101')) {
@@ -266,7 +272,14 @@ class Video extends Objects
                 break;
 
             case 'top_rated':
-                $params['order'] = $this->getTableName() . '.rating DESC, ' . $this->getTableName() . '.rated_by DESC';
+                if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '999')) {
+                    //order by average like desc , total votes desc
+                    $params['order'] = '('.$this->getTableName(). 'total_rate_up - '.$this->getTableName(). 'total_rate_down) / ('.$this->getTableName(). 'total_rate_up + '.$this->getTableName(). 'total_rate_down) DESC
+                    , ' . $this->getTableName(). 'total_rate_up + '.$this->getTableName(). 'total_rate_down DESC';
+                } else {
+                    $params['order'] = $this->getTableName() . '.rating DESC, ' . $this->getTableName() . '.rated_by DESC';
+                }
+
                 break;
 
             case 'longer':
@@ -668,42 +681,6 @@ class Video extends Objects
         if( !empty($video['age_restriction']) ){
             echo '<span class="restricted" title="' . lang('access_forbidden_under_age', $video['age_restriction']) . '">-' . $video['age_restriction'] . '</span>';
         }
-    }
-
-    private static function getRating($video, $type = 'like')
-    {
-        $rating = $video['rating'];
-        $ratings = $video['ratings'];
-        $total = $video['total'];
-
-        if (empty($ratings)) {
-            $ratings = $video['rated_by'];
-        }
-        //Checking Percent
-        if ($total <= 10) {
-            $total = 10;
-        }
-        $perc = round($rating * 100 / $total);
-        $likes = round($ratings * $perc / 100);
-
-        switch($type)
-        {
-            default:
-            case 'like':
-                return $likes;
-            case 'dislike':
-                return $ratings - $likes;
-        }
-    }
-
-    public static function getLike($video): int
-    {
-        return self::getRating($video, 'like');
-    }
-
-    public static function getDislike($video): int
-    {
-        return self::getRating($video, 'dislike');
     }
 
     /**
@@ -1879,20 +1856,6 @@ class CBvideo extends CBCategory
                     $query_val[] = $array['views'];
                 }
 
-                if (!empty($array['rating'])) {
-                    $query_field[] = 'rating';
-                    $rating = $array['rating'];
-                    if (!is_numeric($rating) || $rating < 0 || $rating > 10) {
-                        $rating = 1;
-                    }
-                    $query_val[] = $rating;
-                }
-
-                if (!empty($array['rated_by'])) {
-                    $query_field[] = 'rated_by';
-                    $query_val[] = $array['rated_by'];
-                }
-
                 if (!empty($array['embed_code'])) {
                     $query_field[] = 'embed_code';
                     $query_val[] = $array['embed_code'];
@@ -2789,102 +2752,6 @@ class CBvideo extends CBCategory
         if (!empty($link['title']) && !empty($link['link'])) {
             return '<a href="' . $link['link'] . '">' . $link['title'] . '</a>';
         }
-    }
-
-    /**
-     * Function used to get video rating details
-     *
-     * @param $id
-     *
-     * @return bool|array
-     * @throws Exception
-     */
-    function get_video_rating($id)
-    {
-        if (is_numeric($id)) {
-            $cond = ' videoid=\'' . mysql_clean($id) . '\'';
-        } else {
-            $cond = ' videokey=\'' . mysql_clean($id) . '\'';
-        }
-        $results = Clipbucket_db::getInstance()->select(tbl('video'), 'userid,allow_rating,rating,rated_by,voter_ids', $cond);
-
-        if (count($results) > 0) {
-            return $results[0];
-        }
-        return false;
-    }
-
-    /**
-     * Function used to display rating option for videos
-     * this is an OLD TYPICAL RATING SYSTEM
-     * and yes, still with AJAX
-     *
-     * @param $params
-     *
-     * @return array|void
-     */
-    function show_video_rating($params)
-    {
-        $rating = $params['rating'];
-        $ratings = $params['ratings'];
-        $total = $params['total'];
-        $id = $params['id'];
-        $type = $params['type'];
-        $data_only = $params['data_only'];
-
-        if (empty($ratings)) {
-            $ratings = $params['rated_by'];
-        }
-        //Checking Percent
-        if ($total <= 10) {
-            $total = 10;
-        }
-        $perc = $rating * 100 / $total;
-        $perc = round($perc);
-        $disperc = 100 - $perc;
-        if ($ratings <= 0 && $disperc == 100) {
-            $disperc = 0;
-        }
-
-        $perc = $perc . '%';
-        $disperc = $disperc . '%';
-
-        if ($params['is_rating']) {
-            if (error()) {
-                $rating_msg = error();
-                $rating_msg = '<span class="error">' . $rating_msg[0]['val'] . '</span>';
-            }
-            if (msg()) {
-                $rating_msg = msg();
-                $rating_msg = '<span class="msg">' . $rating_msg[0]['val'] . '</span>';
-            }
-        }
-
-        $likes = Video::getLike($params);
-        $dislikes = Video::getDislike($params);
-
-        if ($data_only) {
-            return [
-                'perc'       => $perc,
-                'disperc'    => $disperc,
-                'id'         => $id,
-                'type'       => $type,
-                'rating_msg' => $rating_msg,
-                'likes'      => $likes,
-                'dislikes'   => $dislikes,
-                'disable'    => $params['disable']
-            ];
-        }
-        assign('perc', $perc);
-        assign('disperc', $disperc);
-        assign('id', $id);
-        assign('type', $type);
-        assign('rating_msg', $rating_msg);
-        assign('likes', $likes);
-        assign('dislikes', $dislikes);
-        assign('disable', $params['disable']);
-
-        Template('blocks/common/rating.html');
     }
 
     /**

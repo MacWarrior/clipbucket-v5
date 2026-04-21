@@ -299,7 +299,13 @@ class User extends Objects
                 break;
 
             case 'top_rated':
-                $params['order'] = $this->getTableNameProfile() . '.rating DESC';
+                if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '999')) {
+                    //order by average like desc , total votes desc
+                    $params['order'] = '('.$this->getTableNameProfile(). 'total_rate_up - '.$this->getTableNameProfile(). 'total_rate_down) / ('.$this->getTableNameProfile(). 'total_rate_up + '.$this->getTableNameProfile(). 'total_rate_down) DESC
+                    , ' . $this->getTableNameProfile(). 'total_rate_up + '.$this->getTableNameProfile(). 'total_rate_down DESC';
+                } else {
+                    $params['order'] = $this->getTableNameProfile() . '.rating DESC';
+                }
                 break;
 
             case 'most_items':
@@ -5594,28 +5600,7 @@ class userquery extends CBCategory
         return $new_sessions;
     }
 
-    /**
-     * @throws Exception
-     */
-    function update_user_voted($array, $userid = null)
-    {
-        if (!$userid) {
-            $userid = user_id();
-        }
 
-        if (is_array($array)) {
-            $voted = '';
-            $votedDetails = Clipbucket_db::getInstance()->select(tbl('users'), 'voted', " userid = '$userid'");
-            if (!empty($votedDetails)) {
-                $voted = json_decode($votedDetails[0]['voted'], true);
-            }
-            $votedEncode = json_encode($voted);
-
-            if (!empty($votedEncode)) {
-                Clipbucket_db::getInstance()->update(tbl('users'), ['voted'], ["|no_mc|$votedEncode"], " userid='$userid'");
-            }
-        }
-    }
 
     /**
      * Fetches all friend requests sent by given user
