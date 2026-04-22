@@ -18,6 +18,7 @@ abstract class Objects
                 $id_vote = 'id_photo';
                 $table = 'photos';
                 $id_field = 'photo_id';
+                $allow_rating = 'allow_rating';
                 break;
 
             case 'collection':
@@ -27,6 +28,7 @@ abstract class Objects
                 $id_vote = 'id_collection';
                 $table = 'collections';
                 $id_field = 'collection_id';
+                $allow_rating = 'allow_rating';
                 break;
 
             case 'user':
@@ -36,6 +38,7 @@ abstract class Objects
                 $id_vote = 'id_channel';
                 $table = 'user_profile';
                 $id_field = 'user_profile_id';
+                $allow_rating = 'allow_ratings';
                 break;
 
             case 'comment':
@@ -45,6 +48,7 @@ abstract class Objects
                 $id_vote = 'id_comment';
                 $table = 'comments';
                 $id_field = 'comment_id';
+                $allow_rating = '';
                 break;
 
             case 'video':
@@ -55,9 +59,10 @@ abstract class Objects
                 $id_vote = 'id_video';
                 $table = 'video';
                 $id_field = 'videoid';
+                $allow_rating = 'allow_rating';
                 break;
         }
-        return [$config_own_rate, $config_rating, $table_vote, $id_vote, $table, $id_field];
+        return [$config_own_rate, $config_rating, $table_vote, $id_vote, $table, $id_field, $allow_rating];
     }
 
     /**
@@ -291,9 +296,9 @@ abstract class Objects
             throw new Exception(lang('please_login_to_rate'));
         }
         $current_rating = static::ratingGet($object_id);
-        [$config_own_rate, $config_rating, $table_vote, $id_vote, $table, $id_field] = self::getClassInfo();
+        [$config_own_rate, $config_rating, $table_vote, $id_vote, $table, $id_field, $allow_rating] = self::getClassInfo();
 
-        if ($current_rating['allow_rating'] == 'no' || config($config_rating) != 'yes') {
+        if ($current_rating[$allow_rating] == 'no' || config($config_rating) != 'yes') {
             switch (static::TYPE) {
                 case 'photo':
                     $lang = 'photo_rate_disabled';
@@ -341,11 +346,14 @@ abstract class Objects
 
         $old_total = $current_rating['value'] == 0 ? 'total_rate_down' : 'total_rate_up';
         Clipbucket_db::getInstance()->delete(tbl($table_vote), ['id_user', $id_vote], [User::getInstance()->getCurrentUserID(), $object_id]);
-        Clipbucket_db::getInstance()->execute('UPDATE ' . tbl($table) . ' SET ' . $old_total . ' = ' . $old_total . ' - 1 WHERE ' . $id_field . ' = ' . (int)$object_id);
-        if ($rating != $current_rating['value']) {
+        if ($current_rating[$old_total] > 0) {
+            Clipbucket_db::getInstance()->execute('UPDATE ' . tbl($table) . ' SET ' . $old_total . ' = ' . $old_total . ' - 1 WHERE ' . $id_field . ' = ' . (int)$object_id);
+        }
+        if (!isset($current_rating['value']) || $rating != $current_rating['value'] ) {
             $new_total = $rating == 0 ? 'total_rate_down' : 'total_rate_up';
-            Clipbucket_db::getInstance()->insert(tbl($table_vote), ['id_user', $id_vote, 'value'], [User::getInstance()->getCurrentUserID(), $object_id, $rating]);
-            Clipbucket_db::getInstance()->execute('UPDATE ' . tbl($table) . ' SET ' . $new_total . ' = ' . $new_total . ' + 1 WHERE ' . $id_field . ' = ' . (int)$object_id);
+            if (Clipbucket_db::getInstance()->insert(tbl($table_vote), ['id_user', $id_vote, 'value'], [User::getInstance()->getCurrentUserID(), $object_id, (int)$rating])) {
+                Clipbucket_db::getInstance()->execute('UPDATE ' . tbl($table) . ' SET ' . $new_total . ' = ' . $new_total . ' + 1 WHERE ' . $id_field . ' = ' . (int)$object_id);
+            }
         }
     }
 
@@ -356,9 +364,10 @@ abstract class Objects
      */
     protected static function ratingGet($object_id): bool|array
     {
-        [$config_own_rate, $config_rating, $table_vote, $id_vote, $table, $id_field] = self::getClassInfo();
+        [$config_own_rate, $config_rating, $table_vote, $id_vote, $table, $id_field, $allow_rating] = self::getClassInfo();
 
-        $sql = 'SELECT ' . $table_vote . '.*, ' . $table . '.userid AS object_proprio, allow_rating, '.$table.'.total_rate_up, '.$table.'.total_rate_down 
+        $allow_rating = ($allow_rating ? ', ' . $allow_rating : '');
+        $sql = 'SELECT ' . $table_vote . '.*, ' . $table . '.userid AS object_proprio ' . $allow_rating . ', ' . $table . '.total_rate_up, ' . $table . '.total_rate_down 
         FROM ' . cb_sql_table($table) . '
         INNER JOIN  ' . cb_sql_table($table_vote) . ' ON ' . $table . '.' . $id_field . ' = ' . $table_vote . '.' . $id_vote . '
         WHERE ' . $table_vote . '.' . $id_vote . ' = ' . (int)$object_id . ' AND ' . $table_vote . '.id_user = ' . User::getInstance()->getCurrentUserID();

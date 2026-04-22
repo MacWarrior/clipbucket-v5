@@ -11,122 +11,186 @@ class MWIP extends \Migration
     public function start()
     {
         self::doAlterTable();
-        $limit = 100;
-        /** migrate videos */
-        $offset = 0;
-        do {
-            $sql = 'SELECT videoid,userid, rating, rated_by,voter_ids FROM ' . tbl('video') . ' WHERE `voter_ids` != \'\' limit ' . $offset . ',  ' . $limit;
-            $videos = \Clipbucket_db::getInstance()->_select($sql);
-            foreach ($videos as $video) {
-                if (str_contains($video['voter_ids'], '|')) {
-                    $Oldvoters = explode('|', $video['voter_ids']);
-                    $vote_infos = [];
-                    foreach ($Oldvoters as $oldvoter) {
-                        if ($video['voter_ids']) {
-                            $vote_infos[$oldvoter] = [
-                                'userid' => $oldvoter,
-                                'time'   => now(),
-                                'value'  => 10
-                            ];
+
+        $sql = 'SELECT COUNT(*) as exist FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = \'' . \Clipbucket_db::getInstance()->getDBName() . '\' AND TABLE_NAME = \'' . tbl('video') . '\' AND COLUMN_NAME = \'rating\'';
+        $res = self::req($sql);
+
+        if ($res[0]['exist']) {
+            $limit = 100;
+            /** migrate videos */
+            $offset = 0;
+            do {
+                $sql = 'SELECT videoid,userid, rating, rated_by,voter_ids FROM ' . tbl('video') . ' WHERE `voter_ids` != \'\' limit ' . $offset . ',  ' . $limit;
+                $videos = \Clipbucket_db::getInstance()->_select($sql);
+                foreach ($videos as $video) {
+                    if (str_contains($video['voter_ids'], '|')) {
+                        $Oldvoters = explode('|', $video['voter_ids']);
+                        $vote_infos = [];
+                        foreach ($Oldvoters as $oldvoter) {
+                            if ($video['voter_ids']) {
+                                $vote_infos[$oldvoter] = [
+                                    'userid' => $oldvoter,
+                                    'time'   => now(),
+                                    'value'  => 10
+                                ];
+                            }
                         }
+                    } else {
+                        $vote_infos = json_decode($video['voter_ids'], true);
                     }
-                } else {
-                    $vote_infos = json_decode($video['voter_ids'], true);
+                    $total_rate_up = 0;
+                    $total_rate_down = 0;
+                    foreach ($vote_infos as $vote) {
+                        self::query('INSERT IGNORE INTO `{tbl_prefix}video_rates`  (id_video, id_user, date_rated, value) VALUE ( ' . mysql_clean($video['videoid']) . ',  ' . mysql_clean($vote['userid']) . ',  \'' . mysql_clean($vote['time']) . '\', ' . (int)mysql_clean($vote['rating'] == 10) . ')');
+                        $total_rate_up += ($vote['rating'] != 0 ? 1 : 0);
+                        $total_rate_down += ($vote['rating'] == 0 ? 1 : 0);
+                    }
+                    self::query('UPDATE `{tbl_prefix}video` SET total_rate_up = ' . $total_rate_up . ' , total_rate_down = ' . $total_rate_down . ' WHERE videoid = ' . mysql_clean($video['videoid']));
                 }
-                $total_rate_up = 0;
-                $total_rate_down = 0;
-                foreach ($vote_infos as $vote) {
-                    self::query('INSERT IGNORE INTO `{tbl_prefix}video_rates`  (id_video, id_user, date_rated, value) VALUE ( ' . mysql_clean($video['videoid']) . ',  ' . mysql_clean($vote['userid']) . ',  \'' . mysql_clean($vote['time']) . '\', ' . (int)mysql_clean($vote['rating'] == 10) . ')');
-                    $total_rate_up += ($vote['rating'] != 0 ? 1 : 0);
-                    $total_rate_down += ($vote['rating'] == 0 ? 1 : 0);
+                $offset += $limit;
+            } while (!empty($videos));
+            /** migrate photos */
+            $offset = 0;
+            do {
+                $sql = 'SELECT photo_id,userid, rating, rated_by,voters FROM ' . tbl('photos') . ' WHERE `voters` != \'\' limit ' . $offset . ',  ' . $limit;
+                $photos = \Clipbucket_db::getInstance()->_select($sql);
+                foreach ($photos as $photo) {
+                    $vote_infos = json_decode($photo['voters'], true);
+                    $total_rate_up = 0;
+                    $total_rate_down = 0;
+                    foreach ($vote_infos as $vote) {
+                        self::query('INSERT IGNORE INTO `{tbl_prefix}photo_rates`  (id_photo,  id_user, date_rated, value) VALUE ( ' . mysql_clean($photo['photo_id']) . ',  ' . mysql_clean($vote['userid']) . ',  \'' . mysql_clean($vote['time']) . '\',  ' . (int)mysql_clean($vote['rating'] == 10) . ')');
+                        $total_rate_up += ($vote['rating'] != 0 ? 1 : 0);
+                        $total_rate_down += ($vote['rating'] == 0 ? 1 : 0);
+                    }
+                    self::query('UPDATE `{tbl_prefix}photos` SET total_rate_up = ' . $total_rate_up . '  , total_rate_down = ' . $total_rate_down . ' WHERE photo_id = ' . mysql_clean($photo['photo_id']));
                 }
-                self::query('UPDATE `{tbl_prefix}video` SET total_rate_up = ' . $total_rate_up . ' , total_rate_down = ' . $total_rate_down . ' WHERE videoid = ' . mysql_clean($video['videoid']));
-            }
-            $offset += $limit;
-        } while (!empty($videos));
-        /** migrate photos */
-        $offset = 0;
-        do {
-            $sql = 'SELECT photo_id,userid, rating, rated_by,voters FROM ' . tbl('photos') . ' WHERE `voters` != \'\' limit ' . $offset . ',  ' . $limit;
-            $photos = \Clipbucket_db::getInstance()->_select($sql);
-            foreach ($photos as $photo) {
-                $vote_infos = json_decode($photo['voters'], true);
-                $total_rate_up = 0;
-                $total_rate_down = 0;
-                foreach ($vote_infos as $vote) {
-                    self::query('INSERT IGNORE INTO `{tbl_prefix}photo_rates`  (id_photo,  id_user, date_rated, value) VALUE ( ' . mysql_clean($photo['photo_id']) . ',  ' . mysql_clean($vote['userid']) . ',  \'' . mysql_clean($vote['time']) . '\',  ' . (int)mysql_clean($vote['rating'] == 10) . ')');
-                    $total_rate_up += ($vote['rating'] != 0 ? 1 : 0);
-                    $total_rate_down += ($vote['rating'] == 0 ? 1 : 0);
+                $offset += $limit;
+            } while (!empty($photos));
+            /** migrate comment */
+            $offset = 0;
+            do {
+                $sql = 'SELECT comment_id,userid,rating, rated_by,voters FROM ' . tbl('comments') . ' WHERE `voters` != \'\' limit ' . $offset . ',  ' . $limit;
+                $comments = \Clipbucket_db::getInstance()->_select($sql);
+                foreach ($comments as $comment) {
+                    $vote_infos = json_decode($comment['voters'], true);
+                    $total_rate_up = 0;
+                    $total_rate_down = 0;
+                    foreach ($vote_infos as $vote) {
+                        self::query('INSERT IGNORE INTO `{tbl_prefix}comment_rates`  (id_comment,  id_user, date_rated, value) VALUE ( ' . mysql_clean($comment['comment_id']) . ',  ' . mysql_clean($vote['userid']) . ',  \'' . mysql_clean($vote['time']) . '\',  ' . (int)mysql_clean($vote['rating'] == 10) . ')');
+                        $total_rate_up += ($vote['rating'] != 0 ? 1 : 0);
+                        $total_rate_down += ($vote['rating'] == 0 ? 1 : 0);
+                    }
+                    self::query('UPDATE `{tbl_prefix}comments` SET total_rate_up = ' . $total_rate_up . ' , total_rate_down = ' . $total_rate_down . ' WHERE comment_id = ' . mysql_clean($comment['comment_id']));
                 }
-                self::query('UPDATE `{tbl_prefix}photos` SET total_rate_up = ' . $total_rate_up . '  , total_rate_down = ' . $total_rate_down . ' WHERE photo_id = ' . mysql_clean($photo['photo_id']));
-            }
-            $offset += $limit;
-        } while (!empty($photos));
-        /** migrate comment */
-        $offset = 0;
-        do {
-            $sql = 'SELECT comment_id,userid,rating, rated_by,voters FROM ' . tbl('comments') . ' WHERE `voters` != \'\' limit ' . $offset . ',  ' . $limit;
-            $comments = \Clipbucket_db::getInstance()->_select($sql);
-            foreach ($comments as $comment) {
-                $vote_infos = json_decode($comment['voters'], true);
-                $total_rate_up = 0;
-                $total_rate_down = 0;
-                foreach ($vote_infos as $vote) {
-                    self::query('INSERT IGNORE INTO `{tbl_prefix}comment_rates`  (id_comment,  id_user, date_rated, value) VALUE ( ' . mysql_clean($comment['comment_id']) . ',  ' . mysql_clean($vote['userid']) . ',  \'' . mysql_clean($vote['time']) . '\',  ' . (int)mysql_clean($vote['rating'] == 10) . ')');
-                    $total_rate_up += ($vote['rating'] != 0 ? 1 : 0);
-                    $total_rate_down += ($vote['rating'] == 0 ? 1 : 0);
-                }
-                self::query('UPDATE `{tbl_prefix}comments` SET total_rate_up = ' . $total_rate_up . ' , total_rate_down = ' . $total_rate_down . ' WHERE comment_id = ' . mysql_clean($comment['comment_id']));
-            }
 
-            $offset += $limit;
-        } while (!empty($comments));
-        /** migrate channels */
-        $offset = 0;
-        do {
-            $sql = 'SELECT user_profile_id, userid, rating, rated_by,voters FROM ' . tbl('user_profile') . ' WHERE `voters` != \'\' limit ' . $offset . ',  ' . $limit;
-            $channels = \Clipbucket_db::getInstance()->_select($sql);
-            foreach ($channels as $channel) {
-                $vote_infos = json_decode($channel['voters'], true);
-                $total_rate_up = 0;
-                $total_rate_down = 0;
-                foreach ($vote_infos as $vote) {
-                    self::query('INSERT IGNORE INTO `{tbl_prefix}channel_rates`  (id_channel, id_user, date_rated, value) VALUE ( ' . mysql_clean($channel['user_profile_id']) . ',  ' . mysql_clean($vote['userid']) . ',  \'' . mysql_clean($vote['time']) . '\',  ' . (int)mysql_clean($vote['rating'] == 10) . ')');
-                    $total_rate_up += ($vote['rating'] != 0 ? 1 : 0);
-                    $total_rate_down += ($vote['rating'] == 0 ? 1 : 0);
+                $offset += $limit;
+            } while (!empty($comments));
+            /** migrate channels */
+            $offset = 0;
+            do {
+                $sql = 'SELECT user_profile_id, userid, rating, rated_by,voters FROM ' . tbl('user_profile') . ' WHERE `voters` != \'\' limit ' . $offset . ',  ' . $limit;
+                $channels = \Clipbucket_db::getInstance()->_select($sql);
+                foreach ($channels as $channel) {
+                    $vote_infos = json_decode($channel['voters'], true);
+                    $total_rate_up = 0;
+                    $total_rate_down = 0;
+                    foreach ($vote_infos as $vote) {
+                        self::query('INSERT IGNORE INTO `{tbl_prefix}channel_rates`  (id_channel, id_user, date_rated, value) VALUE ( ' . mysql_clean($channel['user_profile_id']) . ',  ' . mysql_clean($vote['userid']) . ',  \'' . mysql_clean($vote['time']) . '\',  ' . (int)mysql_clean($vote['rating'] == 10) . ')');
+                        $total_rate_up += ($vote['rating'] != 0 ? 1 : 0);
+                        $total_rate_down += ($vote['rating'] == 0 ? 1 : 0);
+                    }
+                    self::query('UPDATE `{tbl_prefix}user_profile` SET total_rate_up = ' . $total_rate_up . ' , total_rate_down = ' . $total_rate_down . ' WHERE user_profile_id = ' . mysql_clean($channel['user_profile_id']));
                 }
-                self::query('UPDATE `{tbl_prefix}user_profile` SET total_rate_up = ' . $total_rate_up . ' , total_rate_down = ' . $total_rate_down . ' WHERE user_profile_id = ' . mysql_clean($channel['user_profile_id']));
-            }
-            $offset += $limit;
-        } while (!empty($channels));
-        /** migrate collections */
-        $offset = 0;
-        do {
-            $sql = 'SELECT collection_id, rating,rated_by,voters,userid FROM ' . tbl('collections') . ' WHERE `voters` != \'\' limit ' . $offset . ',  ' . $limit;
-            $collections = \Clipbucket_db::getInstance()->_select($sql);
-            foreach ($collections as $collection) {
-                $vote_infos = json_decode($collection['voters'], true);
-                $total_rate_up = 0;
-                $total_rate_down = 0;
-                foreach ($vote_infos as $vote) {
-                    self::query('INSERT IGNORE INTO `{tbl_prefix}collection_rates`  (id_collection, id_user, date_rated, value) VALUE ( ' . mysql_clean($collection['collection_id']) . ', ' . mysql_clean($vote['userid']) . ', \'' . mysql_clean($vote['time']) . '\', ' . (int)mysql_clean($vote['rating'] == 10) . ')');
-                    $total_rate_up += ($vote['rating'] != 0 ? 1 : 0);
-                    $total_rate_down += ($vote['rating'] == 0 ? 1 : 0);
+                $offset += $limit;
+            } while (!empty($channels));
+            /** migrate collections */
+            $offset = 0;
+            do {
+                $sql = 'SELECT collection_id, rating,rated_by,voters,userid FROM ' . tbl('collections') . ' WHERE `voters` != \'\' limit ' . $offset . ',  ' . $limit;
+                $collections = \Clipbucket_db::getInstance()->_select($sql);
+                foreach ($collections as $collection) {
+                    $vote_infos = json_decode($collection['voters'], true);
+                    $total_rate_up = 0;
+                    $total_rate_down = 0;
+                    foreach ($vote_infos as $vote) {
+                        self::query('INSERT IGNORE INTO `{tbl_prefix}collection_rates`  (id_collection, id_user, date_rated, value) VALUE ( ' . mysql_clean($collection['collection_id']) . ', ' . mysql_clean($vote['userid']) . ', \'' . mysql_clean($vote['time']) . '\', ' . (int)mysql_clean($vote['rating'] == 10) . ')');
+                        $total_rate_up += ($vote['rating'] != 0 ? 1 : 0);
+                        $total_rate_down += ($vote['rating'] == 0 ? 1 : 0);
+                    }
+                    self::query('UPDATE `{tbl_prefix}collections` SET total_rate_up = ' . $total_rate_up . ' , total_rate_down = ' . $total_rate_down . ' WHERE collection_id = ' . mysql_clean($collection['collection_id']));
                 }
-                self::query('UPDATE `{tbl_prefix}collections` SET total_rate_up = ' . $total_rate_up . ' , total_rate_down = ' . $total_rate_down . ' WHERE collection_id = ' . mysql_clean($collection['collection_id']));
-            }
-            $offset += $limit;
-        } while (!empty($collections));
+                $offset += $limit;
+            } while (!empty($collections));
 
+        }
         self::generateTranslation('likes', [
-            'fr'=> 'J\'aime',
-            'en'=> 'Likes',
+            'fr' => 'J\'aime',
+            'en' => 'Likes',
         ]);
 
         self::generateTranslation('dislikes', [
-            'fr'=> 'Je n\'aime pas',
-            'en'=> 'Dislikes',
+            'fr' => 'Je n\'aime pas',
+            'en' => 'Dislikes',
         ]);
+
+        self::alterTable('ALTER TABLE `{tbl_prefix}video` DROP COLUMN `rated_by`;', [
+            'table'  => 'video',
+            'column' => 'rated_by'
+        ]);
+        self::alterTable('ALTER TABLE `{tbl_prefix}video` DROP COLUMN `voter_ids`;', [
+            'table'  => 'video',
+            'column' => 'voter_ids'
+        ]);
+        self::alterTable('ALTER TABLE `{tbl_prefix}video` DROP COLUMN `rating`;', [
+            'table'  => 'video',
+            'column' => 'rating'
+        ]);
+
+        self::alterTable('ALTER TABLE `{tbl_prefix}user_profile` DROP COLUMN `rated_by`;', [
+            'table'  => 'user_profile',
+            'column' => 'rated_by'
+        ]);
+        self::alterTable('ALTER TABLE `{tbl_prefix}user_profile` DROP COLUMN `voters`;', [
+            'table'  => 'user_profile',
+            'column' => 'voter_ids'
+        ]);
+        self::alterTable('ALTER TABLE `{tbl_prefix}user_profile` DROP COLUMN `rating`;', [
+            'table'  => 'user_profile',
+            'column' => 'rating'
+        ]);
+
+        self::alterTable('ALTER TABLE `{tbl_prefix}collections` DROP COLUMN `rated_by`;', [
+            'table'  => 'collections',
+            'column' => 'rated_by'
+        ]);
+        self::alterTable('ALTER TABLE `{tbl_prefix}collections` DROP COLUMN `voters`;', [
+            'table'  => 'collections',
+            'column' => 'voter_ids'
+        ]);
+        self::alterTable('ALTER TABLE `{tbl_prefix}collections` DROP COLUMN `rating`;', [
+            'table'  => 'collections',
+            'column' => 'rating'
+        ]);
+
+        self::alterTable('ALTER TABLE `{tbl_prefix}photos` DROP COLUMN `rated_by`;', [
+            'table'  => 'photos',
+            'column' => 'rated_by'
+        ]);
+        self::alterTable('ALTER TABLE `{tbl_prefix}photos` DROP COLUMN `voters`;', [
+            'table'  => 'photos',
+            'column' => 'voter_ids'
+        ]);
+        self::alterTable('ALTER TABLE `{tbl_prefix}photos` DROP COLUMN `rating`;', [
+            'table'  => 'photos',
+            'column' => 'rating'
+        ]);
+
+        self::alterTable('ALTER TABLE `{tbl_prefix}users` DROP COLUMN `voted`;', [
+            'table'  => 'users',
+            'column' => 'voted'
+        ]);
+
 
     }
 
@@ -354,65 +418,5 @@ class MWIP extends \Migration
                 'name' => 'votes_id_user_ibfk_5'
             ]
         ]);
-
-        /*
-        self::alterTable('ALTER TABLE `{tbl_prefix}video` DROP COLUMN `rated_by`;', [
-            'table'  => 'video',
-            'column' => 'rated_by'
-        ]);
-        self::alterTable('ALTER TABLE `{tbl_prefix}video` DROP COLUMN `voter_ids`;', [
-            'table'  => 'video',
-            'column' => 'voter_ids'
-        ]);
-        self::alterTable('ALTER TABLE `{tbl_prefix}video` DROP COLUMN `rating`;', [
-            'table'  => 'video',
-            'column' => 'rating'
-        ]);
-
-        self::alterTable('ALTER TABLE `{tbl_prefix}user_profile` DROP COLUMN `rated_by`;', [
-            'table'  => 'user_profile',
-            'column' => 'rated_by'
-        ]);
-        self::alterTable('ALTER TABLE `{tbl_prefix}user_profile` DROP COLUMN `voters`;', [
-            'table'  => 'user_profile',
-            'column' => 'voter_ids'
-        ]);
-        self::alterTable('ALTER TABLE `{tbl_prefix}user_profile` DROP COLUMN `rating`;', [
-            'table'  => 'user_profile',
-            'column' => 'rating'
-        ]);
-
-        self::alterTable('ALTER TABLE `{tbl_prefix}collections` DROP COLUMN `rated_by`;', [
-            'table'  => 'collections',
-            'column' => 'rated_by'
-        ]);
-        self::alterTable('ALTER TABLE `{tbl_prefix}collections` DROP COLUMN `voters`;', [
-            'table'  => 'collections',
-            'column' => 'voter_ids'
-        ]);
-        self::alterTable('ALTER TABLE `{tbl_prefix}collections` DROP COLUMN `rating`;', [
-            'table'  => 'collections',
-            'column' => 'rating'
-        ]);
-
-        self::alterTable('ALTER TABLE `{tbl_prefix}photos` DROP COLUMN `rated_by`;', [
-            'table'  => 'photos',
-            'column' => 'rated_by'
-        ]);
-        self::alterTable('ALTER TABLE `{tbl_prefix}photos` DROP COLUMN `voters`;', [
-            'table'  => 'photos',
-            'column' => 'voter_ids'
-        ]);
-        self::alterTable('ALTER TABLE `{tbl_prefix}photos` DROP COLUMN `rating`;', [
-            'table'  => 'photos',
-            'column' => 'rating'
-        ]);
-
-        self::alterTable('ALTER TABLE `{tbl_prefix}users` DROP COLUMN `voted`;', [
-            'table'  => 'users',
-            'column' => 'voted'
-        ]);
-
-        */
     }
 }

@@ -39,7 +39,7 @@
                                 type=comment
                                 likes=$comment.total_rate_up
                                 dislikes=$comment.total_rate_down
-                                disable=($comment.userid == User::getInstance()->getCurrentUserID() && config('own_comment_rating') != 'yes') *
+                                disable=($comment.userid == User::getInstance()->getCurrentUserID() && config('own_comment_rating') != 'yes')
                             }
                         {/if}
                     </strong>

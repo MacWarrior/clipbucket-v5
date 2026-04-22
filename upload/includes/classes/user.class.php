@@ -54,7 +54,6 @@ class User extends Objects
             ,'total_collections'
             ,'comments_count'
             ,'last_commented'
-            ,'voted'
             ,'ban_status'
             ,'upload'
             ,'subscribers'
@@ -108,15 +107,21 @@ class User extends Objects
             ,'icon_id'
             ,'browse_criteria'
             ,'background'
-            ,'rating'
-            ,'voters'
-            ,'rated_by'
             ,'show_my_videos'
             ,'show_my_photos'
             ,'show_my_subscriptions'
             ,'show_my_subscribers'
             ,'show_my_friends'
         ];
+
+        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '999')) {
+            $this->fields_profile[] = 'total_rate_up';
+            $this->fields_profile[] = 'total_rate_down';
+        } else {
+            $this->fields_profile[] = 'rating';
+            $this->fields_profile[] = 'rated_by';
+            $this->fields_profile[] = 'voters';
+        }
 
         if( config('enable_user_firstname_lastname') == 'yes' ){
             $this->fields_profile[] = 'first_name';
@@ -301,8 +306,8 @@ class User extends Objects
             case 'top_rated':
                 if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '999')) {
                     //order by average like desc , total votes desc
-                    $params['order'] = '('.$this->getTableNameProfile(). 'total_rate_up - '.$this->getTableNameProfile(). 'total_rate_down) / ('.$this->getTableNameProfile(). 'total_rate_up + '.$this->getTableNameProfile(). 'total_rate_down) DESC
-                    , ' . $this->getTableNameProfile(). 'total_rate_up + '.$this->getTableNameProfile(). 'total_rate_down DESC';
+                    $params['order'] = '('.$this->getTableNameProfile(). '.total_rate_up - '.$this->getTableNameProfile(). '.total_rate_down) / ('.$this->getTableNameProfile(). '.total_rate_up + '.$this->getTableNameProfile(). '.total_rate_down) DESC
+                    , ' . $this->getTableNameProfile(). '.total_rate_up + '.$this->getTableNameProfile(). '.total_rate_down DESC';
                 } else {
                     $params['order'] = $this->getTableNameProfile() . '.rating DESC';
                 }
@@ -2925,7 +2930,29 @@ class userquery extends CBCategory
         $select = [];
         $join = '';
         $group = [];
-        $user_profile_fields = ['userid','show_my_collections','featured_video', 'show_dob', 'time_zone', 'fb_url', 'twitter_url', 'insta_url', 'show_profile', 'allow_comments', 'allow_ratings', 'allow_subscription', 'content_filter', 'icon_id', 'browse_criteria', 'background', 'rating', 'voters', 'rated_by', 'show_my_videos', 'show_my_photos', 'show_my_subscriptions', 'show_my_subscribers', 'show_my_friends'];
+        $user_profile_fields = [
+            'userid',
+            'show_my_collections',
+            'featured_video',
+            'show_dob',
+            'time_zone',
+            'fb_url',
+            'twitter_url',
+            'insta_url',
+            'show_profile',
+            'allow_comments',
+            'allow_ratings',
+            'allow_subscription',
+            'content_filter',
+            'icon_id',
+            'browse_criteria',
+            'background',
+            'show_my_videos',
+            'show_my_photos',
+            'show_my_subscriptions',
+            'show_my_subscribers',
+            'show_my_friends'
+        ];
 
         if( config('enable_user_firstname_lastname') == 'yes' ){
             $user_profile_fields[] = 'first_name';
@@ -2985,6 +3012,15 @@ class userquery extends CBCategory
         }
         if( Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.2', '37') && config('enable_channel_slogan') == 'yes' ){
             $user_profile_fields[] = 'profile_slogan';
+        }
+
+        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '999')) {
+            $user_profile_fields[] = 'total_rate_up';
+            $user_profile_fields[] = 'total_rate_down';
+        } else {
+            $user_profile_fields[] = 'rating';
+            $user_profile_fields[] = 'rated_by';
+            $user_profile_fields[] = 'voters';
         }
 
         foreach($user_profile_fields as $field){
@@ -4366,8 +4402,10 @@ class userquery extends CBCategory
             $fields_data[] = '';
             $fields_list[] = 'background';
             $fields_data[] = '';
-            $fields_list[] = 'voters';
-            $fields_data[] = '';
+            if (!Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '999')) {
+                $fields_list[] = 'voters';
+                $fields_data[] = '';
+            }
 
             Clipbucket_db::getInstance()->insert(tbl(userquery::getInstance()->dbtbl['user_profile']), $fields_list, $fields_data);
 

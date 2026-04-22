@@ -37,9 +37,6 @@ class Photo extends Objects
             ,'total_comments'
             ,'last_commented'
             ,'total_favorites'
-            ,'rating'
-            ,'rated_by'
-            ,'voters'
             ,'filename'
             ,'file_directory'
             ,'ext'
@@ -53,6 +50,15 @@ class Photo extends Objects
         }
         if( Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.0', '305') ){
             $this->fields[] = 'age_restriction';
+        }
+
+        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '999')) {
+            $this->fields[] = 'total_rate_up';
+            $this->fields[] = 'total_rate_down';
+        } else {
+            $this->fields[] = 'rating';
+            $this->fields[] = 'rated_by';
+            $this->fields[] = 'voters';
         }
 
         $this->display_block = LAYOUT . '/blocks/photo.html';
@@ -234,8 +240,8 @@ class Photo extends Objects
             case 'top_rated':
                 if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '999')) {
                     //order by average like desc , total votes desc
-                    $params['order'] = '('.$this->getTableName(). 'total_rate_up - '.$this->getTableName(). 'total_rate_down) / ('.$this->getTableName(). 'total_rate_up + '.$this->getTableName(). 'total_rate_down) DESC
-                    , ' . $this->getTableName(). 'total_rate_up + '.$this->getTableName(). 'total_rate_down DESC';
+                    $params['order'] = '('.$this->getTableName(). '.total_rate_up - '.$this->getTableName(). '.total_rate_down) / ('.$this->getTableName(). '.total_rate_up + '.$this->getTableName(). '.total_rate_down) DESC
+                    , ' . $this->getTableName(). '.total_rate_up + '.$this->getTableName(). '.total_rate_down DESC';
                 } else {
                     $params['order'] = $this->getTableName() . '.rating DESC, ' . $this->getTableName() . '.rated_by DESC';
                 }

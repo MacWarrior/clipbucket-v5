@@ -11,7 +11,7 @@ try {
     if (empty($_POST['type']) || empty($_POST['id']) || empty($_POST['rating'])) {
         throw new Exception(lang('missing_params'));
     }
-    $rating = (bool)$_POST['rating'] ;
+    $rating = $_POST['rating'] ==5;
     $type = strtolower($_POST['type']);
     $id = (int)$_POST['id'];
     switch ($type) {

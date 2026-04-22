@@ -274,8 +274,8 @@ class Video extends Objects
             case 'top_rated':
                 if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '999')) {
                     //order by average like desc , total votes desc
-                    $params['order'] = '('.$this->getTableName(). 'total_rate_up - '.$this->getTableName(). 'total_rate_down) / ('.$this->getTableName(). 'total_rate_up + '.$this->getTableName(). 'total_rate_down) DESC
-                    , ' . $this->getTableName(). 'total_rate_up + '.$this->getTableName(). 'total_rate_down DESC';
+                    $params['order'] = '('.$this->getTableName(). '.total_rate_up - '.$this->getTableName(). '.total_rate_down) / ('.$this->getTableName(). '.total_rate_up + '.$this->getTableName(). '.total_rate_down) DESC
+                    , ' . $this->getTableName(). '.total_rate_up + '.$this->getTableName(). '.total_rate_down DESC';
                 } else {
                     $params['order'] = $this->getTableName() . '.rating DESC, ' . $this->getTableName() . '.rated_by DESC';
                 }
@@ -1526,7 +1526,7 @@ class CBvideo extends CBCategory
         $basic_fields = [
             'videoid', 'videokey', 'video_password', 'username', 'userid', 'title', 'file_name', 'file_type'
             , 'file_directory', 'description', 'broadcast', 'location', 'datecreated'
-            , 'country', 'allow_embedding', 'rating', 'rated_by', 'voter_ids', 'allow_comments'
+            , 'country', 'allow_embedding', 'allow_comments'
             , 'comment_voting', 'comments_count', 'last_commented', 'featured', 'featured_date', 'allow_rating'
             , 'active', 'favourite_count', 'playlist_count', 'views', 'last_viewed', 'date_added', 'flagged', 'duration', 'status'
             , 'default_thumb', 'embed_code', 'downloads', 'uploader_ip'
@@ -1556,6 +1556,15 @@ class CBvideo extends CBCategory
 
         if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '329')) {
             $basic_fields[] = 'aspect_ratio';
+        }
+
+        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '999')) {
+            $basic_fields[] = 'total_rate_up';
+            $basic_fields[] = 'total_rate_down';
+        } else {
+            $basic_fields[] = 'rating';
+            $basic_fields[] = 'rated_by';
+            $basic_fields[] = 'voter_ids';
         }
 
         return $this->set_basic_fields($basic_fields);
