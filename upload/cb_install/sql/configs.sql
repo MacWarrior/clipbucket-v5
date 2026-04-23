@@ -344,6 +344,7 @@ INSERT INTO `{tbl_prefix}config` (`configid`, `name`, `value`) VALUES
     (NULL, 'photo_thumbs_format', 'webp'),
     (NULL, 'photos_enable_fullwidth', 'yes'),
     (NULL, 'use_backdrop_as_default_thumb', 'allowed'),
+    (NULL, 'enable_featured_collection_hierarchy', 'yes'),
     (NULL, 'random_photo_order', 'yes');
 
 INSERT INTO `{tbl_prefix}video_resolution` (`title`, `ratio`, `enabled`, `width`, `height`, `video_bitrate`) VALUES

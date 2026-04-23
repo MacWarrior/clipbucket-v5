@@ -1,6 +1,6 @@
 {
   "version":"5.5.3",
-  "revision":"111",
+  "revision":"113",
   "status":"stable",
   "detail":[
     {
@@ -38,6 +38,7 @@
         ,"Fix Recreate photos thumbs tool"
         ,"Fix Delete orphan files tool"
         ,"Fix user recent activity datetime display"
+        ,"Fix featured collection hierarchy option"
       ]
     },
     {
@@ -77,6 +78,7 @@
         ,"Fix collection item removal"
         ,"Fix video preview on similar videos"
         ,"Fix unhandled double-click on photo upload form"
+        ,"Fix video backdrop ratio display"
       ]
     },
     {
