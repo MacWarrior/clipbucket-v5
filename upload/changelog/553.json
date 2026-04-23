@@ -1,6 +1,6 @@
 {
   "version":"5.5.3",
-  "revision":"112",
+  "revision":"113",
   "status":"stable",
   "detail":[
     {
@@ -38,6 +38,7 @@
         ,"Fix Recreate photos thumbs tool"
         ,"Fix Delete orphan files tool"
         ,"Fix user recent activity datetime display"
+        ,"Fix featured collection hierarchy option"
       ]
     },
     {
