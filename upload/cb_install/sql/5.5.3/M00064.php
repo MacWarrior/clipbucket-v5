@@ -8,6 +8,7 @@ require_once \DirPath::get('classes') . 'update.class.php';
 class M00064 extends \Migration
 {
     /**
+     * @throws \NoRollbackException
      * @throws \Exception
      */
     public function start()
@@ -51,13 +52,17 @@ class M00064 extends \Migration
                 if (!file_exists($old_thumb) && $videos_image['version'] <= '5.5.0') {
                     $old_thumb = \DirPath::get('thumbs') . \VideoThumbs::getThumbPath($videos_image['type'], $videos_image['file_directory'], $videos_image['file_name'], $videos_image['is_auto'], $videos_image['num'], $resolution, $videos_image['width'], $videos_image['height'], $videos_image['extension'], 0);
                 }
-                if (rename($old_thumb
-                    , $new_path . DIRECTORY_SEPARATOR . \VideoThumbs::getThumbPath($videos_image['type'], $videos_image['file_directory'], $videos_image['file_name'], $videos_image['is_auto'], $videos_image['num'], $resolution, $videos_image['width'], $videos_image['height'], $videos_image['extension'], \Update::getInstance()->getCurrentCoreVersion())
-                )) {
+                $new_thumb = $new_path . DIRECTORY_SEPARATOR . \VideoThumbs::getThumbPath($videos_image['type'], $videos_image['file_directory'], $videos_image['file_name'], $videos_image['is_auto'], $videos_image['num'], $resolution, $videos_image['width'], $videos_image['height'], $videos_image['extension'], \Update::getInstance()->getCurrentCoreVersion());
+                if (rename($old_thumb, $new_thumb)
+                    || (!file_exists($old_thumb) && file_exists($new_thumb))
+                ) {
                     self::query('UPDATE ' . tbl(\VideoThumbs::getTableNameThumb()) . ' SET version = \'' . \Update::getInstance()->getCurrentCoreVersion() . '\' WHERE id_video_thumb = ' . $videos_image['id_video_thumb']);
                 } else {
-                    throw new \Exception('Error renaming ' . $old_thumb .
-                        ' to ' . $new_path . DIRECTORY_SEPARATOR . \VideoThumbs::getThumbPath($videos_image['type'], $videos_image['file_directory'], $videos_image['file_name'], $videos_image['is_auto'], $videos_image['num'], $resolution, $videos_image['width'], $videos_image['height'], $videos_image['extension'], \Update::getInstance()->getCurrentCoreVersion()));
+                    if (!file_exists($old_thumb)) {
+                        self::query('DELETE FROM ' . tbl(\VideoThumbs::getTableNameThumb()) . ' WHERE id_video_thumb = ' . $videos_image['id_video_thumb']);
+                    } else {
+                        throw new \NoRollbackException('Error renaming ' . $old_thumb . ' to ' . $new_thumb);
+                    }
                 }
             }
 
