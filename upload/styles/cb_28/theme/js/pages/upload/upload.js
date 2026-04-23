@@ -399,9 +399,11 @@ $(document).ready(function(){
                             displayThumbSection('backdrop', response.id, response.html.backdrops);
                             slideFormSection();
                             //update player
+                            const parent = $('input[id^="videoid_"][value="'+response.id+'"]').parents('.tab-pane.uploadFormContainer');
+                            videojs(parent.find('.player-holder video')[0]).dispose();
                             players[response.id] = response.player;
-                            if (parent.hasClass('active') && parent.find('.player-holder video').length <= 0) {
-                                parent.find('.player-holder').html(video.html);
+                            if (parent.hasClass('active')) {
+                                parent.find('.player-holder').html(response.player);
                             }
                             let images = document.querySelectorAll("img[data-thumbs]")
                             listenerPreviewThumbs(images);
@@ -567,9 +569,11 @@ function saveInfoTmdb(tmdb_video_id, type, videoid) {
                         }
                         if (result.player) {
                             //update player
+                            const parent = $('input[id^="videoid_"][value="'+result.id+'"]').parents('.tab-pane.uploadFormContainer');
+                            videojs(parent.find('.player-holder video')[0]).dispose();
                             players[result.id] = result.player;
-                            if (parent.hasClass('active') && parent.find('.player-holder video').length <= 0) {
-                                parent.find('.player-holder').html(video.html);
+                            if (parent.hasClass('active')) {
+                                parent.find('.player-holder').html(result.player);
                             }
                             let images = document.querySelectorAll("img[data-thumbs]")
                             listenerPreviewThumbs(images);
