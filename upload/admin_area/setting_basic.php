@@ -185,6 +185,8 @@ if (isset($_POST['update'])) {
         , 'enable_favorite_icon_photo'
         , 'enable_favorite_icon_collection'
         , 'own_comment_rating'
+        , 'enable_featured_collection_hierarchy'
+        , 'random_photo_order'
     ];
 
     $config_booleans_to_refactor = [
@@ -462,6 +464,8 @@ if (isset($_POST['update'])) {
         ,'enable_favorite_icon_collection'
         ,'own_comment_rating'
         ,'use_backdrop_as_default_thumb'
+        ,'enable_featured_collection_hierarchy'
+        ,'random_photo_order'
     ];
 
     //Numeric Array

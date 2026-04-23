@@ -1,6 +1,6 @@
 {
   "version":"5.5.3",
-  "revision":"112",
+  "revision":"114",
   "status":"stable",
   "detail":[
     {
@@ -38,6 +38,7 @@
         ,"Fix Recreate photos thumbs tool"
         ,"Fix Delete orphan files tool"
         ,"Fix user recent activity datetime display"
+        ,"Fix featured collection hierarchy option"
       ]
     },
     {
@@ -54,6 +55,7 @@
         ,"Implement comment rating"
         ,"Implement fullwidth photos page"
         ,"Implement backdrop as default thumb"
+        ,"Implement random photo order"
         ,"Update media rating"
         ,"Update collection management"
         ,"Add signup date of birth calendar icon"
