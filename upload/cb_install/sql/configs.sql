@@ -343,7 +343,8 @@ INSERT INTO `{tbl_prefix}config` (`configid`, `name`, `value`) VALUES
     (NULL, 'own_comment_rating', 'no'),
     (NULL, 'photo_thumbs_format', 'webp'),
     (NULL, 'photos_enable_fullwidth', 'yes'),
-    (NULL, 'use_backdrop_as_default_thumb', 'allowed');
+    (NULL, 'use_backdrop_as_default_thumb', 'allowed'),
+    (NULL, 'enable_featured_collection_hierarchy', 'yes');
 
 INSERT INTO `{tbl_prefix}video_resolution` (`title`, `ratio`, `enabled`, `width`, `height`, `video_bitrate`) VALUES
 	('240p', '16/9', 1, 426, 240, 240000),
