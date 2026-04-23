@@ -496,6 +496,10 @@ $(window).resize(function(){
     loginHeight();
     headerFooter();
 });
+
+// force same size for all thumb even without resize
+$(window).on('load', preLoadingBlock);
+
 function listenerPreviewThumbs (images) {
     images.forEach(img => {
         let thumbnails;
