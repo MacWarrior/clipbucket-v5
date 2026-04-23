@@ -253,6 +253,10 @@ class Photo extends Objects
                 $params['order'] = $this->getTableName() . '.photo_title DESC';
                 break;
 
+            case 'random':
+                $params['order'] = 'RAND()';
+                break;
+
             case 'all_time':
             case 'today':
             case 'yesterday':
@@ -285,6 +289,9 @@ class Photo extends Objects
 
         if (config('photo_rating') != 'yes') {
             unset($sorts[array_search('top_rated', $sorts)]);
+        }
+        if (config('random_photo_order') != 'yes') {
+            unset($sorts[array_search('random', $sorts)]);
         }
 
         return $sorts;

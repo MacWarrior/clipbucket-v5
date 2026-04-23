@@ -1862,4 +1862,5 @@ VALUES ('ongoing_conversion'),
        ('max_upload_size'),
        ('max_upload_size_hint'),
        ('allowed_video_extensions'),
-       ('tag_too_short_dynamic');
+       ('tag_too_short_dynamic'),
+       ('option_random_photo_order');
