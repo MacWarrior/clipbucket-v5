@@ -1864,4 +1864,6 @@ VALUES ('ongoing_conversion'),
        ('allowed_video_extensions'),
        ('tag_too_short_dynamic'),
        ('likes'),
-       ('dislikes');
+       ('dislikes'),
+       ('recalcul_rates_label'),
+       ('recalcul_rates_description');
