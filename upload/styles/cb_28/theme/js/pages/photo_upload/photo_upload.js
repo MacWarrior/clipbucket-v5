@@ -353,6 +353,7 @@ $(document).ready(function(){
                     hiddenField_photoId.name = 'photo_id';
                     hiddenField_photoId.type = 'hidden';
                     hiddenField_photoId.value = msg.photoID;
+                    hideSpinner();
                     $('#tab'+current_index+' form').append(hiddenField_photoId);
                     $('#tab'+current_index+' form').find('.edit-img-thumbnail > img').prop('src',msg.photoPreview);
                     $('#tab'+current_index+' form').find('.edit-img-thumbnail').show();
