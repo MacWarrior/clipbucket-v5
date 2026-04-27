@@ -1138,6 +1138,7 @@ class User extends Objects
         foreach ($videos as $video) {
             CBvideo::getInstance()->delete_video($video['videoid']);
         }
+        $this->deleteUserRatings();
 
         //list of functions to perform while deleting a video
         $del_user_funcs = userquery::getInstance()->delete_user_functions;
@@ -1300,6 +1301,58 @@ class User extends Objects
             'join'   => ' LEFT JOIN ' . cb_sql_table(Flag::getTableName()) . ' ON ' . Flag::getTableName() . '.id_element = ' . $info['table_name'] . '.' . $info['field_id'] . ' AND ' . Flag::getTableName() . '.id_flag_element_type = ' . static::getTypeId(),
             'select' => ' IF(COUNT(distinct ' . Flag::getTableName() . '.flag_id) > 0, 1, 0) AS is_flagged',
         ];
+    }
+
+    public function deleteUserRatings($user_id = null)
+    {
+        if (!Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '999')) {
+            throw new Exception(lang('cant_perform_action_until_app_fully_updated'));
+        }
+        $user_id = (int)$user_id;
+        $video_rates = Video::getAllRates(['userid'=>$user_id]);
+        foreach ($video_rates as $video_rate) {
+            $total = $video_rate['value'] == 0 ? 'total_rate_down' : 'total_rate_up';
+            if ($video_rate[$total] > 0) {
+                Video::updateObjectRating($video_rate['id_video'], $total, '-');
+            }
+            Video::deleteObjectRating($video_rate['id_video'], $user_id);
+        }
+
+        $photo_rates = Photo::getAllRates(['userid'=>$user_id]);
+        foreach ($photo_rates as $photo_rate) {
+            $total = $photo_rate['value'] == 0 ? 'total_rate_down' : 'total_rate_up';
+            if ($photo_rate[$total] > 0) {
+                Photo::updateObjectRating($photo_rate['id_photo'], $total, '-');
+            }
+            Photo::deleteObjectRating($photo_rate['id_photo'], $user_id);
+        }
+
+        $collection_rates = Collection::getAllRates(['userid'=>$user_id]);
+        foreach ($collection_rates as $collection_rate) {
+            $total = $collection_rate['value'] == 0 ? 'total_rate_down' : 'total_rate_up';
+            if ($collection_rate[$total] > 0) {
+                Collection::updateObjectRating($collection_rate['id_collection'], $total, '-');
+            }
+            Collection::deleteObjectRating($collection_rate['id_collection'], $user_id);
+        }
+
+        $comment_rates = Comments::getAllRates(['userid'=>$user_id]);
+        foreach ($comment_rates as $comment_rate) {
+            $total = $comment_rate['value'] == 0 ? 'total_rate_down' : 'total_rate_up';
+            if ($comment_rate[$total] > 0) {
+                Comments::updateObjectRating($comment_rate['id_comment'], $total, '-');
+            }
+            Comments::deleteObjectRating($comment_rate['id_comment'], $user_id);
+        }
+
+        $user_rates = User::getAllRates(['userid'=>$user_id]);
+        foreach ($user_rates as $user_rate) {
+            $total = $user_rate['value'] == 0 ? 'total_rate_down' : 'total_rate_up';
+            if ($user_rate[$total] > 0) {
+                User::updateObjectRating($user_rate['id_channel'], $total, '-');
+            }
+            User::deleteObjectRating($user_rate['id_channel'], $user_id);
+        }
     }
 
 }
@@ -1762,6 +1815,8 @@ class userquery extends CBCategory
         Clipbucket_db::getInstance()->execute('DELETE FROM ' . tbl('users_storage_histo') . ' WHERE id_user =' . (int)$uid);
         Clipbucket_db::getInstance()->execute('DELETE FROM ' . tbl('email_histo') . ' WHERE userid =' . (int)$uid);
         User::getInstance()->removeFromFavoritesForAllUsers((int)$uid);
+        User::getInstance()->deleteUserRatings($uid);
+
         Clipbucket_db::getInstance()->execute('DELETE FROM ' . tbl('user_profile') . ' WHERE userid =' . (int)$uid);
         Clipbucket_db::getInstance()->execute('DELETE FROM ' . tbl('users') . ' WHERE userid =' . (int)$uid);
 

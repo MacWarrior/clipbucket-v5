@@ -753,19 +753,21 @@
 			$('<div id="headErr" class="alert_messages_holder alert-ajax" style="display:none;">'+msg+'</div>').insertAfter('#header').fadeIn('slow').delay(hideAfter).fadeOut();
 		};
 
-		/**
-		 * New improved version of ClipBucket rating system
-		 * @since: 8th, April 2016 ClipBucket 2.8.1
-		 * @author: Saqib Razzaq
-		 */
-
+        this.is_rating = false;
         this.rateNew = function (id, rating, type, button) {
+            if (this.is_rating) {
+                return false;
+            }
+            this.is_rating = true;
             let rating_parent = document;
             if (typeof button !== 'undefined') {
                 rating_parent = $(button).parents('.rating-holder');
             }
             const curObj = this;
             const page = baseurl + 'actions/rating_update.php';
+            const icon = $(button).children().first();
+            const classe = icon.attr('class');
+            icon.removeClass(classe).html(curObj.loading_img);
             $.post(page, {
                     id: id,
                     rating: rating,
@@ -815,6 +817,8 @@
                         }
                     }
                     curObj.throwHeadDivMsg(data.msg, 5000, true);
+                    curObj.is_rating = false;
+                    icon.addClass(classe).html('');
                 }, 'json'
             );
         }

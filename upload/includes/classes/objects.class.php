@@ -292,6 +292,9 @@ abstract class Objects
      */
     public static function ratingUpdate($object_id, $rating): void
     {
+        if (!Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '999')) {
+            throw new Exception(lang('cant_perform_action_until_app_fully_updated'));
+        }
         if (!User::getInstance()->isUserConnected()) {
             throw new Exception(lang('please_login_to_rate'));
         }
@@ -347,35 +350,82 @@ abstract class Objects
         $old_total = $current_rating['value'] == 0 ? 'total_rate_down' : 'total_rate_up';
         Clipbucket_db::getInstance()->delete(tbl($table_vote), ['id_user', $id_vote], [User::getInstance()->getCurrentUserID(), $object_id]);
         if ($current_rating[$old_total] > 0) {
-            Clipbucket_db::getInstance()->execute('UPDATE ' . tbl($table) . ' SET ' . $old_total . ' = ' . $old_total . ' - 1 WHERE ' . $id_field . ' = ' . (int)$object_id);
+            self::updateObjectRating($object_id, $old_total, '-');
         }
-        if (!isset($current_rating['value']) || $rating != $current_rating['value'] ) {
+        if (!isset($current_rating['value']) || $rating != $current_rating['value']) {
             $new_total = $rating == 0 ? 'total_rate_down' : 'total_rate_up';
             if (Clipbucket_db::getInstance()->insert(tbl($table_vote), ['id_user', $id_vote, 'value'], [User::getInstance()->getCurrentUserID(), $object_id, (int)$rating])) {
-                Clipbucket_db::getInstance()->execute('UPDATE ' . tbl($table) . ' SET ' . $new_total . ' = ' . $new_total . ' + 1 WHERE ' . $id_field . ' = ' . (int)$object_id);
+                self::updateObjectRating($object_id, $new_total, '+');
             }
         }
     }
 
     /**
      * @param $object_id
+     * @param null $userid
      * @return bool|array
      * @throws Exception
      */
-    protected static function ratingGet($object_id): bool|array
+    protected static function ratingGet($object_id, $userid = null): bool|array
     {
-        [$config_own_rate, $config_rating, $table_vote, $id_vote, $table, $id_field, $allow_rating] = self::getClassInfo();
-
-        $allow_rating = ($allow_rating ? ', ' . $allow_rating : '');
-        $sql = 'SELECT ' . $table_vote . '.*, ' . $table . '.userid AS object_proprio ' . $allow_rating . ', ' . $table . '.total_rate_up, ' . $table . '.total_rate_down 
-        FROM ' . cb_sql_table($table) . '
-        INNER JOIN  ' . cb_sql_table($table_vote) . ' ON ' . $table . '.' . $id_field . ' = ' . $table_vote . '.' . $id_vote . '
-        WHERE ' . $table_vote . '.' . $id_vote . ' = ' . (int)$object_id . ' AND ' . $table_vote . '.id_user = ' . User::getInstance()->getCurrentUserID();
-        $rating = Clipbucket_db::getInstance()->_select($sql);
-        if (count($rating) > 0) {
-            return $rating[0];
+        if (!Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '999')) {
+            return false;
         }
-        return false;
+        if (empty($userid)) {
+            $userid = User::getInstance()->getCurrentUserID();
+        }
+        return self::getAllRates(['object_id' => $object_id, 'userid' => $userid, 'first_only' => true]);
+    }
+
+    /**
+     * @param array $params
+     * @return array|false|mixed|void
+     * @throws Exception
+     */
+    public static function getAllRates(array $params = [])
+    {
+        if (!Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '999')) {
+            return;
+        }
+        $param_object_id = $params['object_id'] ?? false;
+        $param_userid = $params['userid'] ?? false;
+        $param_limit = $params['limit'] ?? false;
+        $param_order = $params['order'] ?? false;
+        $param_first_only = $params['first_only'] ?? false;
+        $param_conditions = $params['conditions'] ?? false;
+
+        [$config_own_rate, $config_rating, $table_vote, $id_vote, $table, $id_field, $allow_rating] = self::getClassInfo();
+        $conditions = [];
+        if ($param_object_id !== false) {
+            $conditions[] = $table . '.' . $id_field . ' = ' . (int)$param_object_id;
+        }
+        if ($param_userid !== false) {
+            $conditions[] = $table_vote . '.id_user = ' . (int)$param_userid;
+        }
+
+        if (!empty($param_conditions)) {
+            $conditions[] = $param_conditions;
+        }
+        $select = [];
+        $select[] = $table_vote . '.*';
+        $select[] = $table . '.userid AS object_proprio';
+        $select[] = $table . '.total_rate_up';
+        $select[] = $table . '.total_rate_down';
+        if (!empty($allow_rating)) {
+            $select[] = $allow_rating;
+        }
+
+        $sql = 'SELECT ' . implode(',', $select) . ' 
+        FROM ' . cb_sql_table($table) . '
+        LEFT JOIN ' . cb_sql_table($table_vote) . ' ON ' . $table . '.' . $id_field . ' = ' . $table_vote . '.' . $id_vote . '
+        WHERE ' . implode(' AND ', $conditions)
+        . (!empty($param_limit) ? ' LIMIT ' . $param_limit : '')
+        . (!empty($order) ? ' ORDER BY ' . $order : '');
+        $rates = Clipbucket_db::getInstance()->_select($sql, $param_limit, $param_order);
+        if ($param_first_only) {
+            return $rates[0] ?? false;
+        }
+        return $rates;
     }
 
     /**
@@ -386,6 +436,9 @@ abstract class Objects
      */
     public static function isObjectRated($userid, $object_id): mixed
     {
+        if (!Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '999')) {
+            return false;
+        }
         [$config_own_rate, $config_rating, $table_vote, $id_vote, $table, $id_field] = self::getClassInfo();
 
         $sql = 'SELECT ' . $table_vote . '.*
@@ -397,4 +450,73 @@ abstract class Objects
         }
         return false;
     }
+
+    /**
+     * @param $object_id
+     * @return void
+     * @throws Exception
+     */
+    public static function deleteObjectRatingByObjectId($object_id): void
+    {
+        self::deleteObjectRating($object_id);
+    }
+
+    /**
+     * @param $object_id
+     * @param $user_id
+     * @return void
+     * @throws Exception
+     */
+    public static function deleteObjectRating($object_id, $user_id = null): void
+    {
+        if (!Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '999')) {
+            return;
+        }
+        [$config_own_rate, $config_rating, $table_vote, $id_vote, $table, $id_field] = self::getClassInfo();
+        $fields = [$id_vote];
+        $values = [$object_id];
+        if (!empty($user_id)) {
+            $fields[] = 'id_user';
+            $values[] = $user_id;
+        }
+        Clipbucket_db::getInstance()->delete(tbl($table_vote), $fields, $values);
+    }
+
+    /**
+     * @param $object_id
+     * @param $total_field
+     * @param $plus_or_minus
+     * @return void
+     * @throws Exception
+     */
+    public static function updateObjectRating($object_id, $total_field, $plus_or_minus): void
+    {
+        if (!Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '999')) {
+            return;
+        }
+        if (!in_array($plus_or_minus, ['+', '-'])) {
+            throw new Exception(lang('missing_params'));
+        }
+        [$config_own_rate, $config_rating, $table_vote, $id_vote, $table, $id_field] = self::getClassInfo();
+        Clipbucket_db::getInstance()->execute('UPDATE ' . tbl($table) . ' SET ' . $total_field . ' = ' . $total_field . ' ' . $plus_or_minus . ' 1 WHERE ' . $id_field . ' = ' . (int)$object_id);
+    }
+
+    /**
+     * @param $object_id
+     * @return void
+     * @throws Exception
+     */
+    public static function resetTotal($object_id): void
+    {
+        if (!Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '999')) {
+            return;
+        }
+        [$config_own_rate, $config_rating, $table_vote, $id_vote, $table, $id_field] = self::getClassInfo();
+        Clipbucket_db::getInstance()->execute('UPDATE ' . tbl($table) . ' 
+        SET total_rate_up = (SELECT COUNT(*) FROM ' . tbl($table_vote) . ' WHERE ' . $id_vote . ' = ' . (int)$object_id . ' AND value = 1)
+        , total_rate_down = (SELECT COUNT(*) FROM ' . tbl($table_vote) . ' WHERE ' . $id_vote . ' = ' . (int)$object_id . ' AND value = 0)
+        WHERE ' . $id_field . ' = ' . (int)$object_id);
+
+    }
+
 }

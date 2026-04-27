@@ -1993,6 +1993,7 @@ class CBvideo extends CBCategory
 
                 Clipbucket_db::getInstance()->execute('DELETE FROM ' . tbl('playlist_items') . ' WHERE object_id = ' . (int)$vdetails['videoid'] . ' AND playlist_item_type=\'v\'');
                 Video::getInstance()->removeFromFavoritesForAllUsers($vdetails['videoid']);
+                Video::deleteObjectRatingByObjectId($vdetails['videoid']);
                 Clipbucket_db::getInstance()->delete(tbl('video_views'), ['id_video'], [$vdetails['videoid']]);
                 Clipbucket_db::getInstance()->delete(tbl('video_users'), ['videoid'], [$vdetails['videoid']]);
 

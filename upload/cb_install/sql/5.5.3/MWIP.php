@@ -153,7 +153,7 @@ class MWIP extends \Migration
         ]);
         self::alterTable('ALTER TABLE `{tbl_prefix}user_profile` DROP COLUMN `voters`;', [
             'table'  => 'user_profile',
-            'column' => 'voter_ids'
+            'column' => 'voters'
         ]);
         self::alterTable('ALTER TABLE `{tbl_prefix}user_profile` DROP COLUMN `rating`;', [
             'table'  => 'user_profile',
@@ -191,7 +191,17 @@ class MWIP extends \Migration
             'column' => 'voted'
         ]);
 
+        self::insertTool('recalcul_rates', 'AdminTool::recalculRates', '0 0 1 * *', true);
 
+        self::generateTranslation('recalcul_rates_label', [
+            'fr'=>'Recalculer les votes',
+            'en'=>'Recalculating rates'
+        ]);
+
+        self::generateTranslation('recalcul_rates_description', [
+            'fr'=>'Recalcule les totaux des votes pour chaque élément',
+            'en'=>'Recalculating rates\'s totals for each element'
+        ]);
     }
 
     /**

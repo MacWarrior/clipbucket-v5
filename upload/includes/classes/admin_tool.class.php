@@ -2043,5 +2043,88 @@ class AdminTool
         $success = Clipbucket_db::getInstance()->execute($sql) || $success;
         return $success;
     }
+
+    /**
+     * @return void
+     * @throws Exception
+     */
+    public function recalculRates(): void
+    {
+        $limit = 100;
+        $offset = 0;
+        do {
+            $sql = 'select videoid from ' . tbl('video') . ' V where total_rate_up + total_rate_down != 0 OR (select count(id_rate) from ' . tbl('video_rates') . ' R where R.id_video = V.videoid) != 0 LIMIT ' . $offset . ', ' . $limit;
+            $videos = Clipbucket_db::getInstance()->_select($sql);
+            foreach ($videos as $video) {
+                $this->insertTaskData([['id' => $video['videoid'], 'type' => 'video']]);
+            }
+            $offset += $limit;
+        } while (!empty($videos));
+
+        $offset = 0;
+        do {
+            $sql = 'select photo_id from ' . tbl('photos') . ' P where total_rate_up + total_rate_down != 0 OR (select count(id_rate) from ' . tbl('photo_rates') . ' R where R.id_photo = P.photo_id) != 0 LIMIT ' . $offset . ', ' . $limit;
+            $photos = Clipbucket_db::getInstance()->_select($sql);
+            foreach ($photos as $photo) {
+                $this->insertTaskData([['id' => $photo['photo_id'], 'type' => 'photo']]);
+            }
+            $offset += $limit;
+        } while (!empty($photos));
+
+        $offset = 0;
+        do {
+            $sql = 'select collection_id from ' . tbl('collections') . ' C where total_rate_up + total_rate_down != 0 OR (select count(id_rate) from ' . tbl('collection_rates') . ' R where R.id_collection = C.collection_id) != 0 LIMIT ' . $offset . ', ' . $limit;
+            $collections = Clipbucket_db::getInstance()->_select($sql);
+            foreach ($collections as $collection) {
+                $this->insertTaskData([['id' => $collection['collection_id'], 'type' => 'collection']]);
+            }
+            $offset += $limit;
+        } while (!empty($collections));
+
+        $offset = 0;
+        do {
+            $sql = 'select user_profile_id from ' . tbl('user_profile') . ' U where total_rate_up + total_rate_down != 0 OR (select count(id_rate) from ' . tbl('channel_rates') . ' R where R.id_channel = U.user_profile_id) != 0 LIMIT ' . $offset . ', ' . $limit;
+            $user_profiles = Clipbucket_db::getInstance()->_select($sql);
+            foreach ($user_profiles as $user_profile) {
+                $this->insertTaskData([['id' => $user_profile['user_profile_id'], 'type' => 'channel']]);
+            }
+            $offset += $limit;
+        } while (!empty($user_profiles));
+
+        $offset = 0;
+        do {
+            $sql = 'select comment_id from ' . tbl('comments') . ' C where total_rate_up + total_rate_down != 0 OR (select count(id_rate) from ' . tbl('comment_rates') . ' R where R.id_comment = C.comment_id) != 0 LIMIT ' . $offset . ', ' . $limit;
+            $comments = Clipbucket_db::getInstance()->_select($sql);
+            foreach ($comments as $comment) {
+                $this->insertTaskData([['id' => $comment['comment_id'], 'type' => 'comment']]);
+            }
+            $offset += $limit;
+        } while (!empty($comments));
+
+
+        $this->executeTool('AdminTool::recalculateRates');
+    }
+
+    public function recalculateRates($data)
+    {
+        $id = $data['id'];
+        switch ($data['type']) {
+            case 'video':
+                Video::resetTotal($id);
+                break;
+            case 'photo':
+                Photo::resetTotal($id);
+                break;
+            case 'collection':
+                Collection::resetTotal($id);
+                break;
+            case 'channel':
+                User::resetTotal($id);
+                break;
+            case 'comment':
+                Comments::resetTotal($id);
+                break;
+        }
+    }
 }
 
