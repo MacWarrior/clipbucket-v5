@@ -1633,6 +1633,7 @@ class CBPhotos
 
             //Removing Photo From Favorites
             Photo::getInstance()->removeFromFavoritesForAllUsers($photo['photo_id']);
+            Photo::deleteObjectRatingByObjectId($photo['photo_id']);
             errorhandler::getInstance()->flush_msg();
             //finally removing from Database
             $this->delete_from_db($photo);

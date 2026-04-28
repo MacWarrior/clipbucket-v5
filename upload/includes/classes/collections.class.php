@@ -1976,6 +1976,7 @@ class Collections extends CBCategory
 
         //Removing collection From Favorites
         Collection::getInstance()->removeFromFavoritesForAllUsers($cid);
+        Collection::deleteObjectRatingByObjectId($cid);
         Clipbucket_db::getInstance()->delete(tbl($this->section_tbl), ['collection_id'], [$cid]);
         //Decrementing users total collection
         Clipbucket_db::getInstance()->update(tbl('users'), ['total_collections'], ['|f|total_collections-1'], ' userid=\'' . $cid . '\'');

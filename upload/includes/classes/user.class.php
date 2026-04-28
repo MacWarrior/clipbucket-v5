@@ -1139,7 +1139,7 @@ class User extends Objects
             CBvideo::getInstance()->delete_video($video['videoid']);
         }
         $this->deleteUserRatings();
-
+        User::deleteObjectRatingByObjectId($uid);
         //list of functions to perform while deleting a video
         $del_user_funcs = userquery::getInstance()->delete_user_functions;
         if (is_array($del_user_funcs)) {
@@ -1816,6 +1816,7 @@ class userquery extends CBCategory
         Clipbucket_db::getInstance()->execute('DELETE FROM ' . tbl('email_histo') . ' WHERE userid =' . (int)$uid);
         User::getInstance()->removeFromFavoritesForAllUsers((int)$uid);
         User::getInstance()->deleteUserRatings($uid);
+        User::deleteObjectRatingByObjectId($uid);
 
         Clipbucket_db::getInstance()->execute('DELETE FROM ' . tbl('user_profile') . ' WHERE userid =' . (int)$uid);
         Clipbucket_db::getInstance()->execute('DELETE FROM ' . tbl('users') . ' WHERE userid =' . (int)$uid);

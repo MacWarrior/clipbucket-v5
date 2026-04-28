@@ -223,6 +223,8 @@ class Comments extends Objects
             $where = ' WHERE '.implode(' AND ', $conditions);
         }
 
+        self::deleteObjectRatingByObjectId($param_comment_id);
+
         $sql = 'DELETE FROM ' . tbl('comments') . $where;
         Clipbucket_db::getInstance()->execute($sql);
         $nb_delete = Clipbucket_db::getInstance()->Affected_Rows();
