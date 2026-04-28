@@ -45,6 +45,7 @@
       "title": "Front office",
       "description": [
         "Refactor medias rating"
+        ,"Refactor ratings storage"
         ,"Implement video, photo & collection favorite icon"
         ,"Implement collection rating"
         ,"Implement random video order"
