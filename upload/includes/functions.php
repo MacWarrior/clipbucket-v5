@@ -2888,13 +2888,6 @@ function get_browser_details($in = null, $assign = false)
     }
 }
 
-/**
- * @throws Exception
- */
-function update_user_voted($array, $userid = null): void
-{
-    userquery::getInstance()->update_user_voted($array, $userid);
-}
 
 /**
  * Deletes a video from a video collection

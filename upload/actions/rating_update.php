@@ -11,10 +11,7 @@ try {
     if (empty($_POST['type']) || empty($_POST['id']) || empty($_POST['rating'])) {
         throw new Exception(lang('missing_params'));
     }
-    $rating = (int)$_POST['rating'] * 2;
-    if (!is_numeric($rating) || $rating <= 9) {
-        $rating = 0;
-    }
+    $rating = $_POST['rating'] ==5;
     $type = strtolower($_POST['type']);
     $id = (int)$_POST['id'];
     switch ($type) {
@@ -80,14 +77,7 @@ try {
             }
             break;
     }
-    update_user_voted([
-        'object_id' => $id,
-        'type'      => $type,
-        'time'      => now(),
-        'rating'    => $rating,
-        'userid'    => User::getInstance()->getCurrentUserID(),
-        'username'  => User::getInstance()->get('username')
-    ]);
+
     e(lang('thnx_for_voting'), 'm');
 
 } catch (Exception $e) {
