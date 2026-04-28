@@ -88,7 +88,13 @@
                             <div class="clearfix like-rating col-lg-6 col-md-6 col-sm-6 col-xs-12" id="rating_container">
                                 <div class="watch-rating-inline">
                                     {if config('photo_rating') == 'yes' }
-                                        {show_video_rating rating=$photo.rating ratings=$photo.rated_by total='10' id=$photo.photo_id type=photo disable=($photo.userid == User::getInstance()->getCurrentUserID() && config('own_photo_rating') != 'yes')}
+                                        {include file="$style_dir/blocks/common/rating.html"
+                                            id=$photo.photo_id
+                                            type=photo
+                                            likes=$photo.total_rate_up
+                                            dislikes=$photo.total_rate_down
+                                            disable=($photo.userid == User::getInstance()->getCurrentUserID() && config('own_photo_rating') != 'yes')
+                                        }
                                     {/if}
                                     {if config('enable_favorite_icon_photo') == 'yes' && User::getInstance()->isUserConnected()}
                                         <span class="manage_favorite watch-rating-icon pointer glyphicon glyphicon-heart{if !$is_favorite}-empty " title="{lang('add_to_my_favorites')}{/if}" title="{lang('remove_from_favorites')}" style="font-size: 20px;"></span>

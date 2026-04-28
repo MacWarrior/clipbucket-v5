@@ -1,6 +1,6 @@
 {
   "version":"5.5.3",
-  "revision":"116",
+  "revision":"118",
   "status":"stable",
   "detail":[
     {
@@ -45,6 +45,7 @@
       "title": "Front office",
       "description": [
         "Refactor medias rating"
+        ,"Refactor ratings storage"
         ,"Implement video, photo & collection favorite icon"
         ,"Implement collection rating"
         ,"Implement random video order"

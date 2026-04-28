@@ -37,9 +37,6 @@ class Collection extends Objects
             ,'allow_rating'
             ,'total_comments'
             ,'last_commented'
-            ,'rating'
-            ,'rated_by'
-            ,'voters'
             ,'active'
             ,'public_upload'
             ,'type'
@@ -58,6 +55,15 @@ class Collection extends Objects
         }
         if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '63')) {
             $this->fields[] = 'hierarchy_featured';
+        }
+
+        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '117')) {
+            $this->fields[] = 'total_rate_up';
+            $this->fields[] = 'total_rate_down';
+        } else {
+            $this->fields[] = 'rating';
+            $this->fields[] = 'rated_by';
+            $this->fields[] = 'voters';
         }
 
         $this->fields_items = [
@@ -159,7 +165,13 @@ class Collection extends Objects
                 break;
 
             case 'top_rated':
-                $params['order'] = $this->getTableName() . '.rating DESC, ' . $this->getTableName() . '.rated_by DESC';
+                if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '117')) {
+                    //order by average like desc , total votes desc
+                    $params['order'] = '('.$this->getTableName(). '.total_rate_up - '.$this->getTableName(). '.total_rate_down) / ('.$this->getTableName(). '.total_rate_up + '.$this->getTableName(). '.total_rate_down) DESC
+                    , ' . $this->getTableName(). '.total_rate_up + '.$this->getTableName(). '.total_rate_down DESC';
+                } else {
+                    $params['order'] = $this->getTableName() . '.rating DESC, ' . $this->getTableName() . '.rated_by DESC';
+                }
                 break;
 
             case 'most_commented':
@@ -1964,6 +1976,7 @@ class Collections extends CBCategory
 
         //Removing collection From Favorites
         Collection::getInstance()->removeFromFavoritesForAllUsers($cid);
+        Collection::deleteObjectRatingByObjectId($cid);
         Clipbucket_db::getInstance()->delete(tbl($this->section_tbl), ['collection_id'], [$cid]);
         //Decrementing users total collection
         Clipbucket_db::getInstance()->update(tbl('users'), ['total_collections'], ['|f|total_collections-1'], ' userid=\'' . $cid . '\'');
