@@ -1,6 +1,6 @@
 {
   "version":"5.5.3",
-  "revision":"114",
+  "revision":"116",
   "status":"stable",
   "detail":[
     {
@@ -80,6 +80,8 @@
         ,"Fix video preview on similar videos"
         ,"Fix unhandled double-click on photo upload form"
         ,"Fix video backdrop ratio display"
+        ,"Fix chunk upload issue"
+        ,"Fix photo upload preview"
       ]
     },
     {
