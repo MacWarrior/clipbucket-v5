@@ -95,7 +95,7 @@ class Video extends Objects
             $this->fields[] = 'default_thumbnail';
         }
 
-        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '999')) {
+        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '117')) {
             $this->fields[] = 'total_rate_up';
             $this->fields[] = 'total_rate_down';
         } else {
@@ -272,7 +272,7 @@ class Video extends Objects
                 break;
 
             case 'top_rated':
-                if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '999')) {
+                if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '117')) {
                     //order by average like desc , total votes desc
                     $params['order'] = '('.$this->getTableName(). '.total_rate_up - '.$this->getTableName(). '.total_rate_down) / ('.$this->getTableName(). '.total_rate_up + '.$this->getTableName(). '.total_rate_down) DESC
                     , ' . $this->getTableName(). '.total_rate_up + '.$this->getTableName(). '.total_rate_down DESC';
@@ -1558,7 +1558,7 @@ class CBvideo extends CBCategory
             $basic_fields[] = 'aspect_ratio';
         }
 
-        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '999')) {
+        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '117')) {
             $basic_fields[] = 'total_rate_up';
             $basic_fields[] = 'total_rate_down';
         } else {

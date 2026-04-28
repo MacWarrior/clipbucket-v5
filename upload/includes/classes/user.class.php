@@ -114,7 +114,7 @@ class User extends Objects
             ,'show_my_friends'
         ];
 
-        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '999')) {
+        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '117')) {
             $this->fields_profile[] = 'total_rate_up';
             $this->fields_profile[] = 'total_rate_down';
         } else {
@@ -304,7 +304,7 @@ class User extends Objects
                 break;
 
             case 'top_rated':
-                if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '999')) {
+                if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '117')) {
                     //order by average like desc , total votes desc
                     $params['order'] = '('.$this->getTableNameProfile(). '.total_rate_up - '.$this->getTableNameProfile(). '.total_rate_down) / ('.$this->getTableNameProfile(). '.total_rate_up + '.$this->getTableNameProfile(). '.total_rate_down) DESC
                     , ' . $this->getTableNameProfile(). '.total_rate_up + '.$this->getTableNameProfile(). '.total_rate_down DESC';
@@ -1305,7 +1305,7 @@ class User extends Objects
 
     public function deleteUserRatings($user_id = null)
     {
-        if (!Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '999')) {
+        if (!Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '117')) {
             throw new Exception(lang('cant_perform_action_until_app_fully_updated'));
         }
         $user_id = (int)$user_id;
@@ -3070,7 +3070,7 @@ class userquery extends CBCategory
             $user_profile_fields[] = 'profile_slogan';
         }
 
-        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '999')) {
+        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '117')) {
             $user_profile_fields[] = 'total_rate_up';
             $user_profile_fields[] = 'total_rate_down';
         } else {
@@ -4458,7 +4458,7 @@ class userquery extends CBCategory
             $fields_data[] = '';
             $fields_list[] = 'background';
             $fields_data[] = '';
-            if (!Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '999')) {
+            if (!Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '117')) {
                 $fields_list[] = 'voters';
                 $fields_data[] = '';
             }

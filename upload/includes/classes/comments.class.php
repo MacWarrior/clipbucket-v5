@@ -108,7 +108,7 @@ class Comments extends Objects
                 ,'users.email'
                 ,'CASE ' . $case_when . ' END AS title'
             ];
-            if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '999')) {
+            if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '117')) {
                 $select[] = 'comments.total_rate_up';
                 $select[] = 'comments.total_rate_down';
             } elseif (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '74')) {

@@ -52,7 +52,7 @@ class Photo extends Objects
             $this->fields[] = 'age_restriction';
         }
 
-        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '999')) {
+        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '117')) {
             $this->fields[] = 'total_rate_up';
             $this->fields[] = 'total_rate_down';
         } else {
@@ -238,7 +238,7 @@ class Photo extends Objects
                 break;
 
             case 'top_rated':
-                if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '999')) {
+                if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '117')) {
                     //order by average like desc , total votes desc
                     $params['order'] = '('.$this->getTableName(). '.total_rate_up - '.$this->getTableName(). '.total_rate_down) / ('.$this->getTableName(). '.total_rate_up + '.$this->getTableName(). '.total_rate_down) DESC
                     , ' . $this->getTableName(). '.total_rate_up + '.$this->getTableName(). '.total_rate_down DESC';

@@ -292,7 +292,7 @@ abstract class Objects
      */
     public static function ratingUpdate($object_id, $rating): void
     {
-        if (!Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '999')) {
+        if (!Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '117')) {
             throw new Exception(lang('cant_perform_action_until_app_fully_updated'));
         }
         if (!User::getInstance()->isUserConnected()) {
@@ -368,7 +368,7 @@ abstract class Objects
      */
     protected static function ratingGet($object_id, $userid = null): bool|array
     {
-        if (!Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '999')) {
+        if (!Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '117')) {
             return false;
         }
         if (empty($userid)) {
@@ -384,7 +384,7 @@ abstract class Objects
      */
     public static function getAllRates(array $params = [])
     {
-        if (!Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '999')) {
+        if (!Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '117')) {
             return;
         }
         $param_object_id = $params['object_id'] ?? false;
@@ -436,7 +436,7 @@ abstract class Objects
      */
     public static function isObjectRated($userid, $object_id): mixed
     {
-        if (!Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '999')) {
+        if (!Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '117')) {
             return false;
         }
         [$config_own_rate, $config_rating, $table_vote, $id_vote, $table, $id_field] = self::getClassInfo();
@@ -469,7 +469,7 @@ abstract class Objects
      */
     public static function deleteObjectRating($object_id, $user_id = null): void
     {
-        if (!Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '999')) {
+        if (!Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '117')) {
             return;
         }
         [$config_own_rate, $config_rating, $table_vote, $id_vote, $table, $id_field] = self::getClassInfo();
@@ -491,7 +491,7 @@ abstract class Objects
      */
     public static function updateObjectRating($object_id, $total_field, $plus_or_minus): void
     {
-        if (!Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '999')) {
+        if (!Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '117')) {
             return;
         }
         if (!in_array($plus_or_minus, ['+', '-'])) {
@@ -508,7 +508,7 @@ abstract class Objects
      */
     public static function resetTotal($object_id): void
     {
-        if (!Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '999')) {
+        if (!Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '117')) {
             return;
         }
         [$config_own_rate, $config_rating, $table_vote, $id_vote, $table, $id_field] = self::getClassInfo();
