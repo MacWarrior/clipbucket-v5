@@ -54,7 +54,6 @@ class User extends Objects
             ,'total_collections'
             ,'comments_count'
             ,'last_commented'
-            ,'voted'
             ,'ban_status'
             ,'upload'
             ,'subscribers'
@@ -108,15 +107,21 @@ class User extends Objects
             ,'icon_id'
             ,'browse_criteria'
             ,'background'
-            ,'rating'
-            ,'voters'
-            ,'rated_by'
             ,'show_my_videos'
             ,'show_my_photos'
             ,'show_my_subscriptions'
             ,'show_my_subscribers'
             ,'show_my_friends'
         ];
+
+        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '117')) {
+            $this->fields_profile[] = 'total_rate_up';
+            $this->fields_profile[] = 'total_rate_down';
+        } else {
+            $this->fields_profile[] = 'rating';
+            $this->fields_profile[] = 'rated_by';
+            $this->fields_profile[] = 'voters';
+        }
 
         if( config('enable_user_firstname_lastname') == 'yes' ){
             $this->fields_profile[] = 'first_name';
@@ -299,7 +304,13 @@ class User extends Objects
                 break;
 
             case 'top_rated':
-                $params['order'] = $this->getTableNameProfile() . '.rating DESC';
+                if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '117')) {
+                    //order by average like desc , total votes desc
+                    $params['order'] = '('.$this->getTableNameProfile(). '.total_rate_up - '.$this->getTableNameProfile(). '.total_rate_down) / ('.$this->getTableNameProfile(). '.total_rate_up + '.$this->getTableNameProfile(). '.total_rate_down) DESC
+                    , ' . $this->getTableNameProfile(). '.total_rate_up + '.$this->getTableNameProfile(). '.total_rate_down DESC';
+                } else {
+                    $params['order'] = $this->getTableNameProfile() . '.rating DESC';
+                }
                 break;
 
             case 'most_items':
@@ -1127,7 +1138,8 @@ class User extends Objects
         foreach ($videos as $video) {
             CBvideo::getInstance()->delete_video($video['videoid']);
         }
-
+        $this->deleteUserRatings();
+        User::deleteObjectRatingByObjectId($uid);
         //list of functions to perform while deleting a video
         $del_user_funcs = userquery::getInstance()->delete_user_functions;
         if (is_array($del_user_funcs)) {
@@ -1289,6 +1301,58 @@ class User extends Objects
             'join'   => ' LEFT JOIN ' . cb_sql_table(Flag::getTableName()) . ' ON ' . Flag::getTableName() . '.id_element = ' . $info['table_name'] . '.' . $info['field_id'] . ' AND ' . Flag::getTableName() . '.id_flag_element_type = ' . static::getTypeId(),
             'select' => ' IF(COUNT(distinct ' . Flag::getTableName() . '.flag_id) > 0, 1, 0) AS is_flagged',
         ];
+    }
+
+    public function deleteUserRatings($user_id = null)
+    {
+        if (!Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '117')) {
+            throw new Exception(lang('cant_perform_action_until_app_fully_updated'));
+        }
+        $user_id = (int)$user_id;
+        $video_rates = Video::getAllRates(['userid'=>$user_id]);
+        foreach ($video_rates as $video_rate) {
+            $total = $video_rate['value'] == 0 ? 'total_rate_down' : 'total_rate_up';
+            if ($video_rate[$total] > 0) {
+                Video::updateObjectRating($video_rate['id_video'], $total, '-');
+            }
+            Video::deleteObjectRating($video_rate['id_video'], $user_id);
+        }
+
+        $photo_rates = Photo::getAllRates(['userid'=>$user_id]);
+        foreach ($photo_rates as $photo_rate) {
+            $total = $photo_rate['value'] == 0 ? 'total_rate_down' : 'total_rate_up';
+            if ($photo_rate[$total] > 0) {
+                Photo::updateObjectRating($photo_rate['id_photo'], $total, '-');
+            }
+            Photo::deleteObjectRating($photo_rate['id_photo'], $user_id);
+        }
+
+        $collection_rates = Collection::getAllRates(['userid'=>$user_id]);
+        foreach ($collection_rates as $collection_rate) {
+            $total = $collection_rate['value'] == 0 ? 'total_rate_down' : 'total_rate_up';
+            if ($collection_rate[$total] > 0) {
+                Collection::updateObjectRating($collection_rate['id_collection'], $total, '-');
+            }
+            Collection::deleteObjectRating($collection_rate['id_collection'], $user_id);
+        }
+
+        $comment_rates = Comments::getAllRates(['userid'=>$user_id]);
+        foreach ($comment_rates as $comment_rate) {
+            $total = $comment_rate['value'] == 0 ? 'total_rate_down' : 'total_rate_up';
+            if ($comment_rate[$total] > 0) {
+                Comments::updateObjectRating($comment_rate['id_comment'], $total, '-');
+            }
+            Comments::deleteObjectRating($comment_rate['id_comment'], $user_id);
+        }
+
+        $user_rates = User::getAllRates(['userid'=>$user_id]);
+        foreach ($user_rates as $user_rate) {
+            $total = $user_rate['value'] == 0 ? 'total_rate_down' : 'total_rate_up';
+            if ($user_rate[$total] > 0) {
+                User::updateObjectRating($user_rate['id_channel'], $total, '-');
+            }
+            User::deleteObjectRating($user_rate['id_channel'], $user_id);
+        }
     }
 
 }
@@ -1751,6 +1815,9 @@ class userquery extends CBCategory
         Clipbucket_db::getInstance()->execute('DELETE FROM ' . tbl('users_storage_histo') . ' WHERE id_user =' . (int)$uid);
         Clipbucket_db::getInstance()->execute('DELETE FROM ' . tbl('email_histo') . ' WHERE userid =' . (int)$uid);
         User::getInstance()->removeFromFavoritesForAllUsers((int)$uid);
+        User::getInstance()->deleteUserRatings($uid);
+        User::deleteObjectRatingByObjectId($uid);
+
         Clipbucket_db::getInstance()->execute('DELETE FROM ' . tbl('user_profile') . ' WHERE userid =' . (int)$uid);
         Clipbucket_db::getInstance()->execute('DELETE FROM ' . tbl('users') . ' WHERE userid =' . (int)$uid);
 
@@ -2919,7 +2986,29 @@ class userquery extends CBCategory
         $select = [];
         $join = '';
         $group = [];
-        $user_profile_fields = ['userid','show_my_collections','featured_video', 'show_dob', 'time_zone', 'fb_url', 'twitter_url', 'insta_url', 'show_profile', 'allow_comments', 'allow_ratings', 'allow_subscription', 'content_filter', 'icon_id', 'browse_criteria', 'background', 'rating', 'voters', 'rated_by', 'show_my_videos', 'show_my_photos', 'show_my_subscriptions', 'show_my_subscribers', 'show_my_friends'];
+        $user_profile_fields = [
+            'userid',
+            'show_my_collections',
+            'featured_video',
+            'show_dob',
+            'time_zone',
+            'fb_url',
+            'twitter_url',
+            'insta_url',
+            'show_profile',
+            'allow_comments',
+            'allow_ratings',
+            'allow_subscription',
+            'content_filter',
+            'icon_id',
+            'browse_criteria',
+            'background',
+            'show_my_videos',
+            'show_my_photos',
+            'show_my_subscriptions',
+            'show_my_subscribers',
+            'show_my_friends'
+        ];
 
         if( config('enable_user_firstname_lastname') == 'yes' ){
             $user_profile_fields[] = 'first_name';
@@ -2979,6 +3068,15 @@ class userquery extends CBCategory
         }
         if( Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.2', '37') && config('enable_channel_slogan') == 'yes' ){
             $user_profile_fields[] = 'profile_slogan';
+        }
+
+        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '117')) {
+            $user_profile_fields[] = 'total_rate_up';
+            $user_profile_fields[] = 'total_rate_down';
+        } else {
+            $user_profile_fields[] = 'rating';
+            $user_profile_fields[] = 'rated_by';
+            $user_profile_fields[] = 'voters';
         }
 
         foreach($user_profile_fields as $field){
@@ -4360,8 +4458,10 @@ class userquery extends CBCategory
             $fields_data[] = '';
             $fields_list[] = 'background';
             $fields_data[] = '';
-            $fields_list[] = 'voters';
-            $fields_data[] = '';
+            if (!Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '117')) {
+                $fields_list[] = 'voters';
+                $fields_data[] = '';
+            }
 
             Clipbucket_db::getInstance()->insert(tbl(userquery::getInstance()->dbtbl['user_profile']), $fields_list, $fields_data);
 
@@ -5594,28 +5694,7 @@ class userquery extends CBCategory
         return $new_sessions;
     }
 
-    /**
-     * @throws Exception
-     */
-    function update_user_voted($array, $userid = null)
-    {
-        if (!$userid) {
-            $userid = user_id();
-        }
 
-        if (is_array($array)) {
-            $voted = '';
-            $votedDetails = Clipbucket_db::getInstance()->select(tbl('users'), 'voted', " userid = '$userid'");
-            if (!empty($votedDetails)) {
-                $voted = json_decode($votedDetails[0]['voted'], true);
-            }
-            $votedEncode = json_encode($voted);
-
-            if (!empty($votedEncode)) {
-                Clipbucket_db::getInstance()->update(tbl('users'), ['voted'], ["|no_mc|$votedEncode"], " userid='$userid'");
-            }
-        }
-    }
 
     /**
      * Fetches all friend requests sent by given user

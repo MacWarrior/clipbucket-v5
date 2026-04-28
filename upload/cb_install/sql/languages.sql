@@ -1863,4 +1863,8 @@ VALUES ('ongoing_conversion'),
        ('max_upload_size_hint'),
        ('allowed_video_extensions'),
        ('tag_too_short_dynamic'),
-       ('option_random_photo_order');
+       ('option_random_photo_order'),
+       ('likes'),
+       ('dislikes'),
+       ('recalcul_rates_label'),
+       ('recalcul_rates_description');

@@ -37,9 +37,6 @@ class Photo extends Objects
             ,'total_comments'
             ,'last_commented'
             ,'total_favorites'
-            ,'rating'
-            ,'rated_by'
-            ,'voters'
             ,'filename'
             ,'file_directory'
             ,'ext'
@@ -53,6 +50,15 @@ class Photo extends Objects
         }
         if( Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.0', '305') ){
             $this->fields[] = 'age_restriction';
+        }
+
+        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '117')) {
+            $this->fields[] = 'total_rate_up';
+            $this->fields[] = 'total_rate_down';
+        } else {
+            $this->fields[] = 'rating';
+            $this->fields[] = 'rated_by';
+            $this->fields[] = 'voters';
         }
 
         $this->display_block = LAYOUT . '/blocks/photo.html';
@@ -232,7 +238,13 @@ class Photo extends Objects
                 break;
 
             case 'top_rated':
-                $params['order'] = $this->getTableName() . '.rating DESC, ' . $this->getTableName() . '.rated_by DESC';
+                if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '117')) {
+                    //order by average like desc , total votes desc
+                    $params['order'] = '('.$this->getTableName(). '.total_rate_up - '.$this->getTableName(). '.total_rate_down) / ('.$this->getTableName(). '.total_rate_up + '.$this->getTableName(). '.total_rate_down) DESC
+                    , ' . $this->getTableName(). '.total_rate_up + '.$this->getTableName(). '.total_rate_down DESC';
+                } else {
+                    $params['order'] = $this->getTableName() . '.rating DESC, ' . $this->getTableName() . '.rated_by DESC';
+                }
                 break;
 
             case 'most_commented':
@@ -1621,6 +1633,7 @@ class CBPhotos
 
             //Removing Photo From Favorites
             Photo::getInstance()->removeFromFavoritesForAllUsers($photo['photo_id']);
+            Photo::deleteObjectRatingByObjectId($photo['photo_id']);
             errorhandler::getInstance()->flush_msg();
             //finally removing from Database
             $this->delete_from_db($photo);
