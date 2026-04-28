@@ -6196,6 +6196,12 @@ textarea#comment_box {
 
 .item-video .video-link img{
   width: 100%;
+  
+  /* fix ratio image collection */
+  height: 100%;
+  object-fit: contain;
+  object-position: center;
+  background: black;
 }
 
 /* Social links */

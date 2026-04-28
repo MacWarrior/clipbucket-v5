@@ -1,6 +1,6 @@
 {
   "version":"5.5.3",
-  "revision":"118",
+  "revision":"119",
   "status":"stable",
   "detail":[
     {
@@ -83,6 +83,7 @@
         ,"Fix video backdrop ratio display"
         ,"Fix chunk upload issue"
         ,"Fix photo upload preview"
+        ,"Fix video block display"
       ]
     },
     {
