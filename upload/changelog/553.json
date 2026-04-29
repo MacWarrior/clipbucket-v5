@@ -1,6 +1,6 @@
 {
   "version":"5.5.3",
-  "revision":"119",
+  "revision":"120",
   "status":"stable",
   "detail":[
     {
@@ -39,6 +39,7 @@
         ,"Fix Delete orphan files tool"
         ,"Fix user recent activity datetime display"
         ,"Fix featured collection hierarchy option"
+        ,"Fix possible JS error on breaking version alert"
       ]
     },
     {
