@@ -34,7 +34,13 @@
                         {/if}
                         <span>{$comment.date_added|niceTime}</span>
                         {if User::getInstance()->getCurrentUserID() && config('comment_rating') == 'yes' && User::getInstance($user.userid)->get('allow_ratings') == 'yes' }
-                            {show_video_rating rating=$comment.rating ratings=$comment.rated_by total='10' id=$comment.comment_id type=comment disable=($comment.userid == User::getInstance()->getCurrentUserID() && config('own_comment_rating') != 'yes')}
+                            {include file="$style_dir/blocks/common/rating.html"
+                                id=$comment.comment_id
+                                type=comment
+                                likes=$comment.total_rate_up
+                                dislikes=$comment.total_rate_down
+                                disable=($comment.userid == User::getInstance()->getCurrentUserID() && config('own_comment_rating') != 'yes')
+                            }
                         {/if}
                     </strong>
                     <div class="clearfix commented-txt">
@@ -81,7 +87,13 @@
                         {/if}
                         <span>{$comment.date_added|niceTime}</span>
                         {if User::getInstance()->getCurrentUserID() && config('comment_rating') == 'yes' && User::getInstance($user.userid)->get('allow_ratings') == 'yes' }
-                            {show_video_rating rating=$comment.rating ratings=$comment.rated_by total='10' id=$comment.comment_id type=comment disable=($comment.userid == User::getInstance()->getCurrentUserID() && config('own_comment_rating') != 'yes')}
+                            {include file="$style_dir/blocks/common/rating.html"
+                                id=$comment.comment_id
+                                type=comment
+                                likes=$comment.total_rate_up
+                                dislikes=$comment.total_rate_down
+                                disable=($comment.userid == User::getInstance()->getCurrentUserID() && config('own_comment_rating') != 'yes')
+                            }
                         {/if}
                         <div id="says_{$comment.comment_id}" speaker="{display_clean($comment.username)}"></div>
                     {/if}
@@ -132,7 +144,13 @@
 
                                         <span>{$reply.date_added|niceTime}</span>
                                         {if User::getInstance()->getCurrentUserID() && config('comment_rating') == 'yes' && User::getInstance($user.userid)->get('allow_ratings') == 'yes' }
-                                            {show_video_rating rating=$reply.rating ratings=$reply.rated_by total='10' id=$reply.comment_id type=comment disable=($reply.userid == User::getInstance()->getCurrentUserID() && config('own_comment_rating') != 'yes')}
+                                            {include file="$style_dir/blocks/common/rating.html"
+                                                id=$reply.comment_id
+                                                type=comment
+                                                likes=$reply.total_rate_up
+                                                dislikes=$reply.total_rate_down
+                                                disable=($reply.userid == User::getInstance()->getCurrentUserID() && config('own_comment_rating') != 'yes')
+                                            }
                                         {/if}
                                     </strong>
                                     <div class="clearfix commented-txt">

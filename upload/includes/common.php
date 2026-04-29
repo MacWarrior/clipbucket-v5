@@ -267,12 +267,6 @@ $Smarty->assign_by_ref('cbtpl', $cbtpl);
 $Smarty->assign_by_ref('cbplayer', $cbplayer);
 $Smarty->assign_by_ref('cbpm', $cbpm);
 
-# REGISTERING FUNCTION FOR SMARTY TEMPLATES
-function show_video_rating($params)
-{
-    return CBvideo::getInstance()->show_video_rating($params);
-}
-
 $Smarty->register_function('AD', 'getAd');
 $Smarty->register_function('videoLink', 'videoSmartyLink');
 $Smarty->register_function('show_rating', 'show_rating');
@@ -292,7 +286,6 @@ $Smarty->register_function('get_videos', 'get_videos');
 $Smarty->register_function('get_users', 'get_users');
 $Smarty->register_function('get_photos', 'get_photos');
 $Smarty->register_function('private_message', 'private_message');
-$Smarty->register_function('show_video_rating', 'show_video_rating');
 $Smarty->register_function('load_captcha', 'load_captcha');
 $Smarty->register_function('cbtitle', 'cbtitle');
 $Smarty->register_function('foot_menu', 'foot_menu');

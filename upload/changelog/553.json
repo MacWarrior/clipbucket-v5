@@ -1,6 +1,6 @@
 {
   "version":"5.5.3",
-  "revision":"115",
+  "revision":"120",
   "status":"stable",
   "detail":[
     {
@@ -39,12 +39,14 @@
         ,"Fix Delete orphan files tool"
         ,"Fix user recent activity datetime display"
         ,"Fix featured collection hierarchy option"
+        ,"Fix possible JS error on breaking version alert"
       ]
     },
     {
       "title": "Front office",
       "description": [
         "Refactor medias rating"
+        ,"Refactor ratings storage"
         ,"Implement video, photo & collection favorite icon"
         ,"Implement collection rating"
         ,"Implement random video order"
@@ -81,6 +83,8 @@
         ,"Fix unhandled double-click on photo upload form"
         ,"Fix video backdrop ratio display"
         ,"Fix chunk upload issue"
+        ,"Fix photo upload preview"
+        ,"Fix video block display"
       ]
     },
     {

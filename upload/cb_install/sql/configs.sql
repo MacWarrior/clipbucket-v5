@@ -384,7 +384,8 @@ INSERT INTO `{tbl_prefix}tools` (`language_key_label`, `language_key_description
     ('install_missing_translation_label', 'install_missing_translation_description', 'AdminTool::installMissingTranslations', 'install_missing_translation', NULL, NULL, '1', '0'),
     ('regenerate_all_video_thumbs_label', 'regenerate_all_video_thumbs_description', 'AdminTool::regenerateAllVideoThumbs', 'regenerate_all_video_thumbs', NULL, NULL, '1', '0'),
     ('update_tmdb_info_label', 'update_tmdb_info_description', 'AdminTool::updateTmdbInfo', 'update_tmdb_info', NULL, NULL, '1', '0'),
-    ('task_queue_cleaner_label', 'task_queue_cleaner_description', 'AdminTool::cleanUpTask', 'task_queue_cleaner', '0 0 1 * *', CURRENT_TIMESTAMP, '1', '0');
+    ('task_queue_cleaner_label', 'task_queue_cleaner_description', 'AdminTool::cleanUpTask', 'task_queue_cleaner', '0 0 1 * *', CURRENT_TIMESTAMP, '1', '0'),
+    ('recalcul_rates_label', 'recalcul_rates_description', 'AdminTool::recalculRates', 'recalcul_rates_label', '0 0 1 * *', CURRENT_TIMESTAMP, '1', '0');
 
 INSERT INTO `{tbl_prefix}tags_type` (`name`) VALUES ('video'), ('photo'), ('collection'), ('profile'), ('playlist'), ('actors'), ('producer'), ('executive_producer'), ('director'), ('crew'), ('genre');
 

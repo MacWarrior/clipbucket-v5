@@ -156,14 +156,14 @@ function thakkiLoading(yawnTo) {
 }
 
 function preLoadingBlock(){
-    //two videos in a row
-    var ftthumbWidth = $('.featured-videos .thumb-video').width();
-    var	ftthumbHeight = ftthumbWidth * (10/16);
-    $(".featured-videos .thumb-video").css('height', ftthumbHeight+'px');
-    //three videos in a row
-    var thumbWidth = $('.videos .thumb-video').width();
-    var	thumbHeight = thumbWidth * (10/16);
-    $(".videos .thumb-video").css('height', thumbHeight+'px');
+    [
+        '.featured-videos .thumb-video',
+        '.videos .thumb-video',
+        '.videos .video-link'
+    ].forEach(selector => {
+        let height = ($(selector).width() * (10/16));
+        $(selector).css('height', height + 'px');
+    });
 }
 function loginHeight(){
     var loginHeight = $("#login_form").outerHeight();

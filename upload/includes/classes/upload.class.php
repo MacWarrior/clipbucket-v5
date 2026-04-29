@@ -96,9 +96,6 @@ class Upload
         $required_fields = $this->loadRequiredFields($array);
         $location_fields = $this->loadLocationFields($array);
         $option_fields = $this->loadOptionFields($array);
-        $empty_fields = [
-            'voter_ids'
-        ];
 
         $upload_fields = array_merge($required_fields, $location_fields, $option_fields);
         //Adding Custom Upload Fields

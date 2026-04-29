@@ -60,14 +60,13 @@ CREATE TABLE `{tbl_prefix}collections` (
   `allow_rating` enum('yes','no') NOT NULL DEFAULT 'yes',
   `total_comments` bigint(20) NOT NULL DEFAULT 0,
   `last_commented` datetime DEFAULT NULL,
-  `rating` bigint(20) NOT NULL DEFAULT 0,
-  `rated_by` bigint(20) NOT NULL DEFAULT 0,
-  `voters` longtext DEFAULT NULL,
   `active` varchar(4) NOT NULL,
   `public_upload` varchar(4) NOT NULL,
   `type` ENUM('photos', 'videos') NOT NULL,
   `thumb_objectid` BIGINT(20) NULL DEFAULT NULL,
-  sort_type INT NULL
+  `sort_type` INT NULL,
+  `total_rate_up` INT NOT NULL DEFAULT 0,
+  `total_rate_down` INT NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_520_ci;
 
 CREATE TABLE `{tbl_prefix}collection_items` (
@@ -89,13 +88,12 @@ CREATE TABLE `{tbl_prefix}comments` (
   `parent_id` int(60) NOT NULL,
   `type_id` int(225) NOT NULL,
   `type_owner_id` int(255) NOT NULL,
-  `rating` INT,
-  `rated_by` INT,
-  `voters` text NULL DEFAULT NULL,
   `spam_votes` bigint(20) NOT NULL DEFAULT 0,
   `spam_voters` text NULL DEFAULT NULL,
   `date_added` datetime NOT NULL,
-  `comment_ip` text NOT NULL
+  `comment_ip` text NOT NULL,
+  `total_rate_up` INT NOT NULL DEFAULT 0,
+  `total_rate_down` INT NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_520_ci;
 
 CREATE TABLE `{tbl_prefix}config` (
@@ -246,16 +244,15 @@ CREATE TABLE `{tbl_prefix}photos` (
   `total_comments` int(255) NOT NULL DEFAULT 0,
   `last_commented` datetime DEFAULT NULL,
   `total_favorites` int(255) NOT NULL DEFAULT 0,
-  `rating` int(15) NOT NULL DEFAULT 0,
-  `rated_by` int(25) NOT NULL DEFAULT 0,
-  `voters` mediumtext DEFAULT NULL,
   `filename` varchar(100) NOT NULL,
   `file_directory` varchar(25) NOT NULL,
   `ext` char(5) NOT NULL,
   `downloaded` bigint(255) NOT NULL DEFAULT 0,
   `server_url` text NULL DEFAULT NULL,
   `owner_ip` varchar(45) NOT NULL DEFAULT '',
-  `age_restriction` INT DEFAULT NULL
+  `age_restriction` INT DEFAULT NULL,
+  `total_rate_up` INT NOT NULL DEFAULT 0,
+  `total_rate_down` INT NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_520_ci;
 
 CREATE TABLE `{tbl_prefix}playlists` (
@@ -371,7 +368,6 @@ CREATE TABLE `{tbl_prefix}users` (
   `total_collections` bigint(255) NOT NULL DEFAULT 0,
   `comments_count` bigint(20) NOT NULL DEFAULT 0,
   `last_commented` datetime DEFAULT NULL,
-  `voted` int(11) NOT NULL DEFAULT 0,
   `ban_status` enum('yes','no') NOT NULL DEFAULT 'no',
   `upload` varchar(20) NOT NULL DEFAULT '1',
   `subscribers` bigint(225) NOT NULL DEFAULT 0,
@@ -474,15 +470,14 @@ CREATE TABLE `{tbl_prefix}user_profile` (
   `fav_music` mediumtext NOT NULL,
   `fav_books` mediumtext NOT NULL,
   `background` mediumtext NOT NULL,
-  `rating` tinyint(2) NOT NULL DEFAULT 0,
-  `voters` text NOT NULL,
-  `rated_by` int(150) NOT NULL DEFAULT 0,
   `show_my_videos` enum('yes','no') NOT NULL DEFAULT 'yes',
   `show_my_photos` enum('yes','no') NOT NULL DEFAULT 'yes',
   `show_my_subscriptions` enum('yes','no') NOT NULL DEFAULT 'yes',
   `show_my_subscribers` enum('yes','no') NOT NULL DEFAULT 'yes',
   `show_my_friends` enum('yes','no') NOT NULL DEFAULT 'yes',
-  `disabled_channel` ENUM('yes','no') NOT NULL DEFAULT 'no'
+  `disabled_channel` ENUM('yes','no') NOT NULL DEFAULT 'no',
+  `total_rate_up` INT NOT NULL DEFAULT 0,
+  `total_rate_down` INT NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_520_ci;
 
 CREATE TABLE `{tbl_prefix}video` (
@@ -501,9 +496,6 @@ CREATE TABLE `{tbl_prefix}video` (
   `datecreated` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `country` mediumtext DEFAULT NULL,
   `allow_embedding` char(3) NOT NULL DEFAULT '',
-  `rating` int(15) NOT NULL DEFAULT 0,
-  `rated_by` varchar(20) NOT NULL DEFAULT '0',
-  `voter_ids` mediumtext NOT NULL,
   `allow_comments` char(3) NOT NULL DEFAULT '',
   `comment_voting` char(3) NOT NULL DEFAULT '',
   `comments_count` int(15) NOT NULL DEFAULT 0,
@@ -540,7 +532,9 @@ CREATE TABLE `{tbl_prefix}video` (
   `remote_play_url` TEXT NULL DEFAULT NULL,
   `id_tmdb` INT NULL,
   `type_tmdb` VARCHAR(255) NULL,
-  `use_backdrop_as_default_thumb` ENUM ('yes','no') NOT NULL DEFAULT 'no'
+  `use_backdrop_as_default_thumb` ENUM ('yes','no') NOT NULL DEFAULT 'no',
+  `total_rate_up` INT NOT NULL DEFAULT 0,
+  `total_rate_down` INT NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_520_ci;
 
 CREATE TABLE `{tbl_prefix}video_views` (
@@ -625,7 +619,6 @@ ALTER TABLE `{tbl_prefix}photos`
   ADD KEY `userid` (`userid`),
   ADD KEY `featured` (`featured`),
   ADD KEY `last_viewed` (`last_viewed`),
-  ADD KEY `rating` (`rating`),
   ADD KEY `total_comments` (`total_comments`),
   ADD FULLTEXT KEY `photo_title` (`photo_title`);
 
@@ -672,7 +665,6 @@ ALTER TABLE `{tbl_prefix}video`
   ADD KEY `userid` (`userid`),
   ADD KEY `featured` (`featured`),
   ADD KEY `last_viewed` (`last_viewed`),
-  ADD KEY `rating` (`rating`),
   ADD KEY `comments_count` (`comments_count`),
   ADD KEY `status` (`status`,`active`,`broadcast`,`userid`),
   ADD KEY `videoid` (`videoid`,`videokey`(255)),
@@ -1283,7 +1275,7 @@ CREATE TABLE `{tbl_prefix}video_conversion_queue`
     `is_completed` BOOLEAN               DEFAULT 0 NOT NULL,
     `audio_track`  VARCHAR(255) NULL,
     INDEX (is_completed)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;;
 
 ALTER TABLE `{tbl_prefix}video_conversion_queue`
     ADD CONSTRAINT `video_conversion_fk` FOREIGN KEY (`videoid`) REFERENCES `{tbl_prefix}video` (`videoid`) ON DELETE NO ACTION ON UPDATE NO ACTION;
@@ -1300,7 +1292,7 @@ CREATE TABLE `{tbl_prefix}video_image`
     num            INT                                     NOT NULL,
     is_auto        BOOL DEFAULT TRUE                       NOT NULL,
     UNIQUE KEY (videoid, type, num, is_auto)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;;
 
 ALTER TABLE `{tbl_prefix}video_image`
     ADD CONSTRAINT `video_image_ibfk_1` FOREIGN KEY (videoid) REFERENCES `{tbl_prefix}video` (videoid);
@@ -1315,7 +1307,7 @@ CREATE TABLE `{tbl_prefix}video_thumb`
     version          VARCHAR(16)        NOT NULL,
     is_original_size BOOL DEFAULT FALSE NOT NULL,
     UNIQUE KEY (id_video_image, width, height)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;;
 ALTER TABLE `{tbl_prefix}video_thumb`
     ADD CONSTRAINT `video_thumb_ibfk_1` FOREIGN KEY (id_video_image) REFERENCES `{tbl_prefix}video_image` (id_video_image);
 
@@ -1328,7 +1320,7 @@ CREATE TABLE `{tbl_prefix}photo_thumb`
     version          VARCHAR(16)        NOT NULL,
     is_original_size BOOL DEFAULT FALSE NOT NULL,
     UNIQUE KEY (photo_id, width)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;;
 ALTER TABLE `{tbl_prefix}photo_thumb`
     ADD CONSTRAINT `photo_thumb_ibfk_1` FOREIGN KEY (photo_id) REFERENCES `{tbl_prefix}photos` (photo_id);
 
@@ -1338,3 +1330,68 @@ ALTER TABLE `{tbl_prefix}video`
     ADD CONSTRAINT `video_default_backdrop_ibfk_1` FOREIGN KEY (default_backdrop) REFERENCES `{tbl_prefix}video_image` (id_video_image) ON DELETE SET NULL;
 ALTER TABLE `{tbl_prefix}video`
     ADD CONSTRAINT `video_default_thumb_ibfk_1` FOREIGN KEY (default_thumbnail) REFERENCES `{tbl_prefix}video_image` (id_video_image) ON DELETE SET NULL;
+
+CREATE TABLE `{tbl_prefix}video_rates` (
+    id_rate INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    id_video BIGINT(20) NOT NULL,
+    id_user BIGINT(20) NOT NULL,
+    date_rated DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    value BOOL NOT NULL,
+    UNIQUE KEY (id_video , id_user)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
+
+ALTER TABLE `{tbl_prefix}video_rates`
+    ADD CONSTRAINT `votes_id_video_ibfk_1` FOREIGN KEY (id_video) REFERENCES `{tbl_prefix}video` (videoid) ON DELETE NO ACTION ON UPDATE NO ACTION,
+    ADD CONSTRAINT `votes_id_user_ibfk_1` FOREIGN KEY (id_user) REFERENCES `{tbl_prefix}users` (userid) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+CREATE TABLE IF NOT EXISTS `{tbl_prefix}photo_rates` (
+    id_rate INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    id_photo BIGINT(255) NOT NULL,
+    id_user BIGINT(20) NOT NULL,
+    date_rated DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    value BOOL NOT NULL,
+    UNIQUE KEY (id_photo , id_user)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
+
+ALTER TABLE `{tbl_prefix}photo_rates`
+    ADD CONSTRAINT `votes_id_photo_ibfk_1` FOREIGN KEY (id_photo) REFERENCES `{tbl_prefix}photos` (photo_id) ON DELETE NO ACTION ON UPDATE NO ACTION,
+    ADD CONSTRAINT `votes_id_user_ibfk_2` FOREIGN KEY (id_user) REFERENCES `{tbl_prefix}users` (userid) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+CREATE TABLE IF NOT EXISTS `{tbl_prefix}comment_rates` (
+    id_rate INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    id_comment INT(60) NOT NULL,
+    id_user BIGINT(20) NOT NULL,
+    date_rated DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    value BOOL NOT NULL,
+    UNIQUE KEY (id_comment , id_user)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
+
+ALTER TABLE `{tbl_prefix}comment_rates`
+    ADD CONSTRAINT `votes_id_comment_ibfk_1` FOREIGN KEY (id_comment) REFERENCES `{tbl_prefix}comments` (comment_id) ON DELETE NO ACTION ON UPDATE NO ACTION,
+    ADD CONSTRAINT `votes_id_user_ibfk_3` FOREIGN KEY (id_user) REFERENCES `{tbl_prefix}users` (userid) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+CREATE TABLE IF NOT EXISTS `{tbl_prefix}channel_rates` (
+    id_rate INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    id_channel BIGINT(20) NOT NULL,
+    id_user BIGINT(20) NOT NULL,
+    date_rated DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    value BOOL NOT NULL,
+    UNIQUE KEY (id_channel , id_user)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
+
+ALTER TABLE `{tbl_prefix}channel_rates`
+    ADD CONSTRAINT `votes_id_channel_ibfk_1` FOREIGN KEY (id_channel) REFERENCES `{tbl_prefix}users` (userid) ON DELETE NO ACTION ON UPDATE NO ACTION,
+    ADD CONSTRAINT `votes_id_user_ibfk_4` FOREIGN KEY (id_user) REFERENCES `{tbl_prefix}users` (userid) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+CREATE TABLE IF NOT EXISTS `{tbl_prefix}collection_rates` (
+    id_rate INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    id_collection BIGINT(25) NOT NULL,
+    id_user BIGINT(20) NOT NULL,
+    date_rated DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    value BOOL NOT NULL,
+    UNIQUE KEY (id_collection , id_user)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
+
+ALTER TABLE `{tbl_prefix}collection_rates`
+    ADD CONSTRAINT `votes_id_collection_ibfk_1` FOREIGN KEY (id_collection) REFERENCES `{tbl_prefix}collections` (collection_id) ON DELETE NO ACTION ON UPDATE NO ACTION,
+    ADD CONSTRAINT `votes_id_user_ibfk_5` FOREIGN KEY (id_user) REFERENCES `{tbl_prefix}users` (userid) ON DELETE NO ACTION ON UPDATE NO ACTION;

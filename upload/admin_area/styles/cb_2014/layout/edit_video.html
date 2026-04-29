@@ -437,17 +437,11 @@
                                 <label><strong>Video Stats</strong></label>
                             </div>
                             <div class="row">
-                                <div class="col-md-2">
-                                    <label for="rating">{lang code='rating'} :</label>
+                                <div class="col-md-4">
+                                    <label for="rating">{lang('likes')} : <b>{$data.total_rate_up}</b></label>
                                 </div>
-                                <div class="col-md-2">
-                                    <input class="form-control" name="rating" type="text" id="rating" value="{$data.rating|number_format}" size="5"/>
-                                </div>
-                                <div class="col-md-2">
-                                    <label for="rated_by">RatedBy :</label>
-                                </div>
-                                <div class="col-md-2">
-                                    <input class="form-control" name="rated_by" type="text" id="rated_by" value="{$data.rated_by|number_format}" size="45"/>
+                                <div class="col-md-4">
+                                    <label for="rated_by">{lang('dislikes')} : <b>{$data.total_rate_down}</b></label>
                                 </div>
                             </div>
                             {if count($custom_upload_fields) > 0}

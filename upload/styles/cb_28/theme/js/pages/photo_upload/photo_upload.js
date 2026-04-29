@@ -356,6 +356,8 @@ $(document).ready(function(){
                     hideSpinner();
                     $('#tab'+current_index+' form').append(hiddenField_photoId);
                     $('#tab'+current_index+' form').find('.edit-img-thumbnail > img').prop('src',msg.photoPreview);
+                    $('#tab'+current_index+' form').find('.edit-img-thumbnail').show();
+                    $('#tab'+current_index+' form').find('.edit-img-thumbnail #spinner-content').hide();
                     $('#tab'+current_index+' .savePhotoDetails').removeAttr('disabled');
 
                     fileDetails.data.photoThumb = msg.photoPreview;

@@ -108,7 +108,10 @@ class Comments extends Objects
                 ,'users.email'
                 ,'CASE ' . $case_when . ' END AS title'
             ];
-            if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '74')) {
+            if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '117')) {
+                $select[] = 'comments.total_rate_up';
+                $select[] = 'comments.total_rate_down';
+            } elseif (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '74')) {
                 $select[] = 'comments.rating';
                 $select[] = 'comments.rated_by';
             }
@@ -219,6 +222,8 @@ class Comments extends Objects
         if( !empty($conditions) ){
             $where = ' WHERE '.implode(' AND ', $conditions);
         }
+
+        self::deleteObjectRatingByObjectId($param_comment_id);
 
         $sql = 'DELETE FROM ' . tbl('comments') . $where;
         Clipbucket_db::getInstance()->execute($sql);
