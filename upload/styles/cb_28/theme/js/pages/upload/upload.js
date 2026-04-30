@@ -578,7 +578,9 @@ function saveInfoTmdb(tmdb_video_id, type, videoid) {
                             //update player
                             const parent = $('input[id^="videoid_"][value="'+result.id+'"]').parents('.tab-pane.uploadFormContainer');
                             videojs(parent.find('.player-holder video')[0]).dispose();
-                            players[result.id] = result.player;
+                            if (typeof players[result.id] !== 'undefined') {
+                                players[result.id] = result.player;
+                            }
                             if (parent.hasClass('active')) {
                                 parent.find('.player-holder').html(result.player);
                             }
