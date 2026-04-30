@@ -113,6 +113,10 @@ class Video extends Objects
             $this->fields[] = 'use_backdrop_as_default_thumb';
         }
 
+        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '999')) {
+            $this->fields[] = 'last_modified';
+        }
+
         $this->fields_categories = [
             'category_id'
             ,'parent_id'
@@ -1353,6 +1357,49 @@ class Video extends Objects
         );
     }
 
+    /**
+     * @param $videoid
+     * @return bool
+     * @throws Exception
+     */
+    public function updateLastModified($videoid): bool
+    {
+        if ( !Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '999') ) {
+            return false;
+        }
+        $sql = 'UPDATE ' . tbl('video') . ' SET last_modified = \'' . now() . '\' WHERE videoid = ' . (int)$videoid;
+        return (bool)Clipbucket_db::getInstance()->execute($sql);
+    }
+
+    /**
+     * @param $videoid
+     * @return string
+     * @throws Exception
+     */
+    public function getVideoCacheKeyById($videoid): string
+    {
+        if (!Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '999')) {
+            return '';
+        }
+        $video = $this->getOne(['videoid' => $videoid]);
+        if (empty($video)) {
+            return '';
+        }
+        return $this->getVideoCacheKey($video['last_modified']);
+    }
+
+    /**
+     * @param $last_modified
+     * @return string
+     */
+    public function getVideoCacheKey($last_modified): string
+    {
+        if (!Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '999') || empty($last_modified)) {
+            return '';
+        }
+        return '?v=' . preg_replace('/\D/', '', $last_modified);
+    }
+
 }
 
 class CBvideo extends CBCategory
@@ -1808,7 +1855,7 @@ class CBvideo extends CBCategory
                 if (isset($array['file_name'])) {
                     $params = [
                         'filename' => $array['file_name']
-                        , 'user'   => user_id()
+                        , 'user'   => User::getInstance()->getCurrentUserID()()
                     ];
                     $video = get_videos($params);
                     if (isset($video[0])) {
@@ -1885,7 +1932,7 @@ class CBvideo extends CBCategory
             //Tag index
             $query_val[3] = strtolower($query_val[3]);
 
-            if (!user_id()) {
+            if (!User::getInstance()->getCurrentUserID()) {
                 e(lang('you_dont_have_permission_to_update_this_video'));
                 return;
             }
@@ -1893,9 +1940,14 @@ class CBvideo extends CBCategory
                 e(lang('class_vdo_del_err'));
                 return;
             }
-            if (!$this->is_video_owner($vid, user_id()) && !User::getInstance()->hasAdminAccess()) {
+            if (!$this->is_video_owner($vid, User::getInstance()->getCurrentUserID()) && !User::getInstance()->hasAdminAccess()) {
                 e(lang('no_edit_video'));
                 return;
+            }
+
+            if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '999')) {
+                $query_field[] = 'last_modified';
+                $query_val[] = now();
             }
 
             Clipbucket_db::getInstance()->update(tbl('video'), $query_field, $query_val, ' videoid=\'' . $vid . '\'');

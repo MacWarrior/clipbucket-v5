@@ -976,6 +976,7 @@ class Upload
     public static function displayVideoThumbsForm($video): array
     {
         assign('v', $video);
+        assign('cache_key', Video::getInstance()->getVideoCacheKey($video['last_modified'] ?? ''));
         if ($video['status'] != 'Waiting') {
             $vidthumbs= VideoThumbs::getAllThumbFiles($video['videoid'], '168','105',type: 'thumbnail', is_auto: true, return_with_num: true) ?: [VideoThumbs::getDefaultMissingThumb(return_with_num: true)];
             $vidthumbs_custom = VideoThumbs::getAllThumbFiles($video['videoid'], '168','105',type: 'thumbnail', is_auto: false, return_with_num: true);

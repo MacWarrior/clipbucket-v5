@@ -975,6 +975,7 @@ class VideoThumbs
             $file = $file_array;
             self::uploadThumb($video, $file, 0, $type, $is_auto);
         }
+        Video::getInstance()->updateLastModified($id_video);
     }
 
     /**

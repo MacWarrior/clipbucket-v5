@@ -13,7 +13,7 @@
                 {foreach from=$vidthumbs_backdrop item=vid_thumb}
                     <div class="col-md-3">
                         <div class="form-group text-center">
-                            <label for="{$vid_thumb.thumb_id}"><img class="edit-img-thumbnail" src="{$vid_thumb.thumb}" width="160" height="100"/>
+                            <label for="{$vid_thumb.thumb_id}"><img class="edit-img-thumbnail" src="{$vid_thumb.thumb}{$cache_key}" width="160" height="100"/>
                                 <input class="show" style="margin:5px auto;" type="radio" value="{$vid_thumb.thumb_id}" id="{$vid_thumb.thumb_id}" name="default_backdrop" {if $v.default_backdrop==$vid_thumb.thumb_id}checked{/if} />
                             </label>
                         </div>
