@@ -4649,9 +4649,17 @@ class userquery extends CBCategory
 
         if (empty($params['count_only'])) {
             $fields = [
-                'users'   => get_user_fields(),
-                'profile' => ['rating', 'rated_by', 'voters']
+                'users'   => get_user_fields()
             ];
+
+            if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '117')) {
+                $fields['profile'][] = 'total_rate_up';
+                $fields['profile'][] = 'total_rate_down';
+            } else {
+                $fields['profile'][] = 'rating';
+                $fields['profile'][] = 'rated_by';
+                $fields['profile'][] = 'voters';
+            }
 
             if( config('enable_user_firstname_lastname') == 'yes' ){
                 $fields['profile'][] = 'first_name';

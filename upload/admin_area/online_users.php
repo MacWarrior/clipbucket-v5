@@ -23,10 +23,6 @@ if (!$array['order']) {
     $result_array['order'] = ' doj DESC ';
 }
 
-$users = get_users($result_array);
-
-Assign('users', $users);
-
 $online_users = userquery::getInstance()->get_online_users();
 assign('total', count($online_users));
 assign('online_users', $online_users);
