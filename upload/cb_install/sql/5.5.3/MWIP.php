@@ -41,7 +41,18 @@ class MWIP extends \Migration
             ]);
             $offset += $limit;
             foreach ($videos as $video) {
-                \Tmdb::getInstance()->updateVideoTmdbInfo($video['videoid'], $video['id_tmdb'] ?? 0, $video['type_tmdb'] ?? '', 0, 0);
+                //get rating
+                switch ($video['type_tmdb']) {
+                    case 'movie':
+                        $details =  \Tmdb::getInstance()->movieDetail($video['id_tmdb'])['response'];
+                        break;
+                    case 'series':
+                        $details =  \Tmdb::getInstance()->seriesDetail($video['id_tmdb'])['response'];
+                        break;
+                }
+                $sql = 'INSERT INTO ' . tbl('video_tmdb') . ' (video_id, type_tmdb, id_tmdb, rate_average_tmdb, rate_count_tmdb) VALUES ( ' . (int)$video['videoid'] . ', \'' . $video['type_tmdb'] . '\', ' . (int)$video['id_tmdb'] . ', ' . (float)$details['vote_average'] . ', ' . (int)$details['vote_count'] . ' )
+                    ON DUPLICATE KEY UPDATE id_tmdb = VALUES(id_tmdb), type_tmdb = VALUES(type_tmdb), rate_average_tmdb = VALUES(rate_average_tmdb), rate_count_tmdb = VALUES(rate_count_tmdb)';
+                \Clipbucket_db::getInstance()->execute($sql);
             }
         } while (!empty($videos));
     }
