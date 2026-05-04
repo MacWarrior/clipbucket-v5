@@ -58,9 +58,32 @@ class FileUpload
      */
     private function checkUploadedSize(): void
     {
-        if( (int)$_SERVER['CONTENT_LENGTH'] > getBytesFromFileSize(Clipbucket::getInstance()->getMaxUploadSize('M')) ){
+        if( (int)$_SERVER['CONTENT_LENGTH'] > getBytesFromFileSize($this->getMaxUploadSize('M')) ){
             $this->error('POST exceeded maximum allowed size.');
         }
+    }
+
+    public function getMaxUploadSize($suffix = ''): string
+    {
+        $list_upload_limits = [];
+
+        $post_max_size = ini_get('post_max_size');
+        $list_upload_limits[] = (float)$post_max_size * pow(1024, stripos('KMGT', strtoupper(substr($post_max_size, -1)))) / 1024;
+
+        $upload_max_filesize = ini_get('upload_max_filesize');
+        $list_upload_limits[] = (float)$upload_max_filesize * pow(1024, stripos('KMGT', strtoupper(substr($upload_max_filesize, -1)))) / 1024;
+
+        if( Network::is_cloudflare() ){
+            $list_upload_limits[] = (float)config('cloudflare_upload_limit');
+        }
+
+        return (min($list_upload_limits)-0.01).$suffix;
+    }
+
+    public function getChunkedUploadSize(): string
+    {
+        $chunk_upload_size = (float)config('chunk_upload_size');
+        return ($chunk_upload_size - 0.01).'Mb';
     }
 
     /**
