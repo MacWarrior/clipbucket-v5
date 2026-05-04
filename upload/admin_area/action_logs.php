@@ -16,7 +16,8 @@ if (isset($_GET['clean'])) {
     Clipbucket_db::getInstance()->execute('TRUNCATE TABLE ' . tbl('action_log'));
 }
 
-if (isset($_GET['type'])) {
+$allowed_types = ['login', 'signup', 'upload_video'];
+if (isset($_GET['type']) && in_array($_GET['type'], $allowed_types, true)) {
     $type = $_GET['type'];
     $result_array['type'] = $type;
 }
@@ -24,9 +25,6 @@ if (isset($_GET['limit'])) {
     $result_array['limit'] = $_GET['limit'];
 } else {
     $result_array['limit'] = 20;
-}
-if (!$array['order']) {
-    $result_array['order'] = " DESC ";
 }
 
 $logs = fetch_action_logs($result_array);

@@ -31,6 +31,7 @@ function pass_code($string, $userid): string
  * @param : { string } { $id } { string to be cleaned }
  *
  * @return string
+ * @throws Exception
  */
 function mysql_clean($var): string
 {
@@ -3143,14 +3144,14 @@ function fetch_action_logs($params)
     }
 
     if ($params['limit']) {
-        $limit = $params['limit'];
+        $limit = (int)$params['limit'];
     } else {
         $limit = 20;
     }
 
     if (isset($_GET['page'])) {
         $page = $_GET['page'];
-        $start = $limit * $page - $limit;
+        $start = (int)($limit * $page - $limit);
     } else {
         $start = 0;
     }
@@ -3159,10 +3160,9 @@ function fetch_action_logs($params)
     $final_query = '';
     foreach ($cond as $field => $value) {
         if ($count > 0) {
-            $final_query .= " AND `$field` = '$value' ";
-        } else {
-            $final_query .= " `$field` = '$value' ";
+            $final_query .= ' AND ';
         }
+        $final_query .= ' `' . $field . '` = \'' . mysql_clean($value) . '\'';
         $count++;
     }
     if (!empty($cond)) {
