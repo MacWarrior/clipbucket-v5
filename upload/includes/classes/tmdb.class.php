@@ -337,6 +337,7 @@ class Tmdb
             $category_list = json_decode($video_info['category_list'], true);
             $video_info['category'] = array_column($category_list, 'id');
             CBvideo::getInstance()->update_video($video_info);
+            $this->updateVideoTmdbInfo($videoid, $tmdb_id, $type, $details['vote_average'] ?? 0, $details['vote_count'] ?? 0);
         }
 
         if (config('tmdb_get_poster') == 'yes' && config('enable_video_poster') == 'yes' && Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '14')) {
@@ -576,5 +577,24 @@ class Tmdb
             'sort_order'    => $sort_order,
             'videoid'       => $video_info['videoid']
         ];
+    }
+
+    /**
+     * @param int $videoid
+     * @param int $id_tmdb
+     * @param string $type_tmdb
+     * @param $rate_average_tmdb
+     * @param $rate_count_tmdb
+     * @return bool
+     * @throws Exception
+     */
+    public function updateVideoTmdbInfo(int $videoid, int $id_tmdb, string $type_tmdb, $rate_average_tmdb, $rate_count_tmdb): bool
+    {
+        if (!Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '999')) {
+            return false;
+        }
+        $sql = 'INSERT INTO ' . tbl('video_tmdb') . ' (videoid, type_tmdb, id_tmdb, rate_average_tmdb, rate_count_tmdb) VALUES ( ' . (int)$videoid . ', \'' . $type_tmdb . '\', ' . (int)$id_tmdb . ', ' . (float)$rate_average_tmdb . ', ' . (int)$rate_count_tmdb . ' )
+        ON DUPLICATE KEY UPDATE id_tmdb = VALUES(id_tmdb), type_tmdb = VALUES(type_tmdb), rate_average_tmdb = VALUES(rate_average_tmdb), rate_count_tmdb = VALUES(rate_count_tmdb)';
+        return Clipbucket_db::getInstance()->execute($sql);
     }
 }
