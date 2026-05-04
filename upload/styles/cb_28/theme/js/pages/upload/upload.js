@@ -15,7 +15,7 @@ $(document).ready(function(){
         runtimes : 'html5,silverlight,html4',
         url : uploadurl,
         file_data_name : 'Filedata',
-        chunk_size: chunk_upload ? max_upload_size : false,
+        chunk_size: chunk_upload ? chunk_upload_size : false,
         max_file_size : max_file_size,
         max_file_size_error_message: max_file_size_error_message,
         filters: {
