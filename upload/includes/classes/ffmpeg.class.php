@@ -103,7 +103,6 @@ class FFMpeg
         $info['audio_channels'] = (float)$audio['channels'];
 
         if (isset($video['side_data_list'])) {
-            DiscordLog::sendDump($video['side_data_list']);
             foreach ($video['side_data_list'] as $side_data) {
                 if(
                     isset($side_data['side_data_type'], $side_data['rotation'])
@@ -113,7 +112,6 @@ class FFMpeg
                 }
             }
         } elseif (isset($video['tags']['rotate'])) {
-            DiscordLog::sendDump('Old rotate : ' . $video['tags']['rotate']);
             $info['rotation'] = (float)$video['tags']['rotate'];
         }
 
