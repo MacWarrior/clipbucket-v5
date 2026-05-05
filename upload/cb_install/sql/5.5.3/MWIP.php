@@ -13,8 +13,8 @@ class MWIP extends \Migration
     {
         self::alterTable('CREATE TABLE IF NOT EXISTS `{tbl_prefix}video_tmdb` (
             video_id BIGINT(20) NOT NULL PRIMARY KEY,
-            id_tmdb INT NOT NULL,
-            type_tmdb VARCHAR(255) NOT NULL,
+            tmdb_id INT NOT NULL,
+            tmdb_type VARCHAR(255) NOT NULL,
             rate_average_tmdb FLOAT NULL,
             rate_count_tmdb INT NULL
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;', [], [
@@ -42,7 +42,7 @@ class MWIP extends \Migration
             $offset += $limit;
             foreach ($videos as $video) {
                 //get rating
-                switch ($video['type_tmdb']) {
+                switch ($video['tmdb_type']) {
                     case 'movie':
                         $details =  \Tmdb::getInstance()->movieDetail($video['id_tmdb'])['response'];
                         break;
@@ -50,8 +50,8 @@ class MWIP extends \Migration
                         $details =  \Tmdb::getInstance()->seriesDetail($video['id_tmdb'])['response'];
                         break;
                 }
-                $sql = 'INSERT INTO ' . tbl('video_tmdb') . ' (video_id, type_tmdb, id_tmdb, rate_average_tmdb, rate_count_tmdb) VALUES ( ' . (int)$video['videoid'] . ', \'' . $video['type_tmdb'] . '\', ' . (int)$video['id_tmdb'] . ', ' . (float)$details['vote_average'] . ', ' . (int)$details['vote_count'] . ' )
-                    ON DUPLICATE KEY UPDATE id_tmdb = VALUES(id_tmdb), type_tmdb = VALUES(type_tmdb), rate_average_tmdb = VALUES(rate_average_tmdb), rate_count_tmdb = VALUES(rate_count_tmdb)';
+                $sql = 'INSERT INTO ' . tbl('video_tmdb') . ' (video_id, tmdb_type, tmdb_id, rate_average_tmdb, rate_count_tmdb) VALUES ( ' . (int)$video['videoid'] . ', \'' . $video['type_tmdb'] . '\', ' . (int)$video['id_tmdb'] . ', ' . (float)$details['vote_average'] . ', ' . (int)$details['vote_count'] . ' )
+                    ON DUPLICATE KEY UPDATE tmdb_id = VALUES(tmdb_id), tmdb_type = VALUES(tmdb_type), rate_average_tmdb = VALUES(rate_average_tmdb), rate_count_tmdb = VALUES(rate_count_tmdb)';
                 \Clipbucket_db::getInstance()->execute($sql);
             }
         } while (!empty($videos));

@@ -1396,8 +1396,8 @@ ALTER TABLE `{tbl_prefix}collection_rates`
 
 CREATE TABLE IF NOT EXISTS `{tbl_prefix}video_tmdb` (
     video_id          BIGINT(20)   NOT NULL PRIMARY KEY,
-    id_tmdb           INT          NOT NULL,
-    type_tmdb         VARCHAR(255) NOT NULL,
+    tmdb_id           INT          NOT NULL,
+    tmdb_type         VARCHAR(255) NOT NULL,
     rate_average_tmdb FLOAT        NULL,
     rate_count_tmdb   INT          NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;

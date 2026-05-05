@@ -593,7 +593,7 @@ class Tmdb
         if (!Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '999')) {
             return false;
         }
-        $sql = 'INSERT INTO ' . tbl('video_tmdb') . ' (videoid, type_tmdb, id_tmdb, rate_average_tmdb, rate_count_tmdb) VALUES ( ' . (int)$videoid . ', \'' . $type_tmdb . '\', ' . (int)$id_tmdb . ', ' . (float)$rate_average_tmdb . ', ' . (int)$rate_count_tmdb . ' )
+        $sql = 'INSERT INTO ' . tbl('video_tmdb') . ' (videoid, tmdb_type, tmdb_id, rate_average_tmdb, rate_count_tmdb) VALUES ( ' . (int)$videoid . ', \'' . $type_tmdb . '\', ' . (int)$id_tmdb . ', ' . (float)$rate_average_tmdb . ', ' . (int)$rate_count_tmdb . ' )
         ON DUPLICATE KEY UPDATE id_tmdb = VALUES(id_tmdb), type_tmdb = VALUES(type_tmdb), rate_average_tmdb = VALUES(rate_average_tmdb), rate_count_tmdb = VALUES(rate_count_tmdb)';
         return Clipbucket_db::getInstance()->execute($sql);
     }
