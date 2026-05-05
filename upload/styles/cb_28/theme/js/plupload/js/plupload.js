@@ -3387,7 +3387,6 @@
 				var _queueUpload, _queueResize;
 				var _initialized = false;
 				var _disabled = false;
-
 				var _options = normalizeOptions(plupload.extend({
 					backward_compatibility: true,
 					chunk_size: 0,
@@ -3419,13 +3418,11 @@
 					required_features: false,
 					preferred_caps: false
 				}, options));
-
+				plupload.max_file_size_error_message = options.max_file_size_error_message;
 				Queue.call(this);
-
 
 				// Add public methods
 				plupload.extend(this, {
-
 					_options: _options,
 
 					/**
@@ -3498,7 +3495,6 @@
 					 */
 					init: function() {
 						var self = this, preinitOpt, err;
-
 						preinitOpt = self.getOption('preinit');
 						if (typeof(preinitOpt) == "function") {
 							preinitOpt(self);
@@ -3927,7 +3923,6 @@
 					 @method unbindAll
 					 */
 				});
-
 
 				// keep alive deprecated properties
 				if (_options.backward_compatibility) {
@@ -4403,14 +4398,15 @@
 
 			addFileFilter('max_file_size', function(maxSize, file, cb) {
 				var undef;
-
 				maxSize = plupload.parseSize(maxSize);
-
+				if (typeof plupload.max_file_size_error_message === 'undefined' || plupload.max_file_size_error_message === '') {
+					plupload.max_file_size_error_message = plupload.translate('File size error.');
+				}
 				// Invalid file size
 				if (file.size !== undef && maxSize && file.size > maxSize) {
 					this.trigger('Error', {
 						code: plupload.FILE_SIZE_ERROR,
-						message: plupload.translate('File size error.'),
+						message: plupload.max_file_size_error_message,
 						file: file
 					});
 					cb(false);

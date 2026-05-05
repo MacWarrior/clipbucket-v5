@@ -6,7 +6,7 @@ require_once dirname(__FILE__, 2) . '/includes/config.inc.php';
 $type = $_POST['type'];
 $cid = $_POST['cid'];
 $id = $_POST['obj_id'];
-if (!user_id()) {
+if (!User::getInstance()->isUserConnected()) {
     e(lang('you_not_logged_in'));
 } elseif (empty($type) || empty($cid) || empty($id)) {
     e(lang('missing_params'));

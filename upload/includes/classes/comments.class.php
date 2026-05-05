@@ -1,8 +1,10 @@
 <?php
 
-class Comments
+class Comments extends Objects
 {
     public static $libelle_type_channel = 'channel';
+
+    public const TYPE = 'comment';
     /**
      * @throws Exception
      */
@@ -106,6 +108,13 @@ class Comments
                 ,'users.email'
                 ,'CASE ' . $case_when . ' END AS title'
             ];
+            if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '117')) {
+                $select[] = 'comments.total_rate_up';
+                $select[] = 'comments.total_rate_down';
+            } elseif (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '74')) {
+                $select[] = 'comments.rating';
+                $select[] = 'comments.rated_by';
+            }
         }
 
         $sql ='SELECT ' . implode(', ', $select) . '
@@ -213,6 +222,8 @@ class Comments
         if( !empty($conditions) ){
             $where = ' WHERE '.implode(' AND ', $conditions);
         }
+
+        self::deleteObjectRatingByObjectId($param_comment_id);
 
         $sql = 'DELETE FROM ' . tbl('comments') . $where;
         Clipbucket_db::getInstance()->execute($sql);
@@ -599,6 +610,24 @@ class Comments
                 'toastui/i18n/' . strtolower(Language::getInstance()->getLang()) . $min_suffixe . '.js' => 'libs'
             ]);
         }
+    }
+
+    /**
+     * @param int $object_id
+     * @return false|mixed
+     * @throws Exception
+     */
+    public static function current_rating(int $object_id)
+    {
+        if (!Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '74')){
+            return false;
+        }
+
+        $result = Clipbucket_db::getInstance()->select(tbl('comments'), 'userid,rating,rated_by,voters', ' comment_id = ' . $object_id);
+        if ($result) {
+            return $result[0];
+        }
+        return false;
     }
 
 }

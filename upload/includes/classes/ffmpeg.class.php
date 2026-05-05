@@ -101,7 +101,19 @@ class FFMpeg
         $info['audio_bitrate'] = (int)$audio['bit_rate'];
         $info['audio_rate'] = (int)$audio['sample_rate'];
         $info['audio_channels'] = (float)$audio['channels'];
-        $info['rotation'] = (float)$video['tags']['rotate'];
+
+        if (isset($video['side_data_list'])) {
+            foreach ($video['side_data_list'] as $side_data) {
+                if(
+                    isset($side_data['side_data_type'], $side_data['rotation'])
+                    && $side_data['side_data_type'] === 'Display Matrix'
+                ) {
+                    $info['rotation'] = (float)$side_data['rotation'];
+                }
+            }
+        } elseif (isset($video['tags']['rotate'])) {
+            $info['rotation'] = (float)$video['tags']['rotate'];
+        }
 
         if (!$info['duration']) {
             $CMD = config('media_info') . ' \'--Inform=General;%Duration%\' \'' . $file_path . '\' 2>&1';
@@ -280,10 +292,20 @@ class FFMpeg
         }
 
         $this->log->writeLine(date('Y-m-d H:i:s').' - Starting conversion...');
-        update_video_by_filename($this->file_name, ['status'], ['Processing']);
+        setVideoStatus($this->file_name, 'Processing', true);
 
         $this->start_time_check();
         $this->prepare();
+
+        if( !(int)$this->input_details['video_width'] > 0 || !(int)$this->input_details['video_height'] > 0 ){
+            $this->log->newSection('Conversion failed');
+            $this->log->writeLine('Input video file seems corrupted, or not supporter by FFMpeg - video resolution is not available');
+            $this->log->writeLine('Conversion_status : failed');
+            setVideoStatus($this->file_name, 'Failed', true);
+            unlink($this->input_file);
+            $this->unLock();
+            return;
+        }
 
         if( Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '329') && !empty($this->input_details['video_width']) && !empty($this->input_details['video_height'])) {
             $aspect_ratio = (int)$this->input_details['video_width'] / (int)$this->input_details['video_height'];
@@ -296,6 +318,8 @@ class FFMpeg
             $this->log->newSection('Conversion failed');
             $this->log->writeLine('Video duration was ' . $this->input_details['duration'] . ' minutes and Max video duration is ' . $max_duration_seconds . ' minutes');
             $this->log->writeLine('Conversion_status : failed');
+            setVideoStatus($this->file_name, 'Failed', true);
+            unlink($this->input_file);
             $this->unLock();
             return;
         }
@@ -307,9 +331,13 @@ class FFMpeg
             } catch (\Exception $e) {
                 $this->log->writeLine(date('Y-m-d H:i:s').' - Error occured : ' . $e->getMessage());
             }
-
         } else {
-            $this->log->writeLine('Input file is missing ; no thumbs generation !');
+            $this->log->newSection('Conversion failed');
+            $this->log->writeLine('Input file is missing');
+            $this->log->writeLine('Conversion_status : failed');
+            setVideoStatus($this->file_name, 'Failed', true);
+            $this->unLock();
+            return;
         }
 
         if (config('extract_subtitles')) {
@@ -330,35 +358,41 @@ class FFMpeg
                 $resolutions = [ $resolutions[$max_key] ];
             }
         }
+
+        if( empty($resolutions) ){
+            $this->log->newSection('Conversion failed');
+            $this->log->writeLine('Video resolution is lower than lower resolution enabled : no video resolution available for conversion');
+            $this->log->writeLine('Conversion_status : failed');
+            setVideoStatus($this->file_name, 'Failed', true);
+            unlink($this->input_file);
+            $this->unLock();
+            return;
+        }
+
         $this->log->newSection('FFMpeg '.strtoupper($this->conversion_type).' conversion');
-        if (!empty($resolutions)) {
-            switch ($this->conversion_type) {
-                default:
-                    $this->conversion_type = 'mp4';
-                case 'mp4':
-                    $ext = getExt($this->input_file);
-                    if (config('stay_mp4') == 'yes' && $ext == 'mp4') {
-                        $this->log->writeLine('<b>Stay MP4 as it is enabled, no conversion done</b>');
-                        $resolution = $this->get_max_resolution_from_file();
-                        $this->video_files[] = $resolution;
-                        $this->output_file = $this->output_dir . $this->file_name . '-' . $resolution . '.' . $this->conversion_type;
-                        copy($this->input_file, $this->output_file);
-                        break;
-                    }
-
-                    $this->set_total_pixels($resolutions);
-                    foreach ($resolutions as $res) {
-                        $this->convert_mp4($res);
-                    }
+        switch ($this->conversion_type) {
+            default:
+                $this->conversion_type = 'mp4';
+            case 'mp4':
+                $ext = getExt($this->input_file);
+                if (config('stay_mp4') == 'yes' && $ext == 'mp4') {
+                    $this->log->writeLine('<b>Stay MP4 as it is enabled, no conversion done</b>');
+                    $resolution = $this->get_max_resolution_from_file();
+                    $this->video_files[] = $resolution;
+                    $this->output_file = $this->output_dir . $this->file_name . '-' . $resolution . '.' . $this->conversion_type;
+                    copy($this->input_file, $this->output_file);
                     break;
+                }
 
-                case 'hls':
-                    $this->convert_hls($resolutions);
-                    break;
-            }
-        } else {
-            $this->log->writeLine('<b>Video resolution is lower than lower resolution enabled : no video resolution available for conversion</b>');
-            unset($this->input_file);
+                $this->set_total_pixels($resolutions);
+                foreach ($resolutions as $res) {
+                    $this->convert_mp4($res);
+                }
+                break;
+
+            case 'hls':
+                $this->convert_hls($resolutions);
+                break;
         }
 
         $this->end_time_check();
@@ -377,7 +411,7 @@ class FFMpeg
 
         $this->log->writeLine('Conversion_status : '.$conversion_status);
         setVideoStatus($this->file_name, $video_status, true);
-
+        unlink($this->input_file);
         $this->unLock();
     }
 
@@ -982,25 +1016,20 @@ class FFMpeg
             $params['output_format'] = 'webp';
         }
 
-        $filter = '';
+        $vf = '';
         if( $params['size_tag'] != 'original' ){
             $color = self::convertHexToFFmpeg(config('thumb_background_color'));
             $width = $params['width'];
             $height = $params['height'];
-            $filter .= 'scale=\'if(gt(a,' . $width . '/' . $height . '),' . $width . ',-1)\':\'if(gt(a,' . $width . '/' . $height . '),-1,' . $height . ')\',pad=' . $width . ':' . $height . ':(' . $width . '-iw)/2:(' . $height . '-ih)/2:' . $color;
+            $vf = ' -vf "scale=\'if(gt(a,' . $width . '/' . $height . '),' . $width . ',-1)\':\'if(gt(a,' . $width . '/' . $height . '),-1,' . $height . ')\',pad=' . $width . ':' . $height . ':(' . $width . '-iw)/2:(' . $height . '-ih)/2:' . $color . '"';
         }
 
         $codecOptions = '-c:v libwebp';
         if( $params['output_format'] == 'jpg' ){
-            $codecOptions = '-c:v mjpeg';
+            $codecOptions = '-c:v mjpeg -q:v 2';
         }
 
-        $vf = '';
-        if ($filter !== '') {
-            $vf = ' -vf "' . $filter . '"';
-        }
-
-        $command = config('ffmpegpath') . ' -ss ' . $params['timecode'] . ' -i ' . $params['input_path'] . ' -pix_fmt yuvj422p -an -r 1 ' . $vf . ' ' . $codecOptions . ' -y -f image2 -vframes 1 ' . $params['output_path'] . ' 2>&1';
+        $command = config('ffmpegpath') . ' -ss ' . $params['timecode'] . ' -i ' . $params['input_path'] . ' -an -pix_fmt yuvj422p' . $vf . ' ' . $codecOptions . ' -y -frames:v 1 ' . $params['output_path'] . ' 2>&1';
 
         return [
             'command' => $command
@@ -1327,6 +1356,5 @@ class FFMpeg
     {
         $cmd = config('ffmpegpath') .' -i ' . $input_file . ' -vf "scale=' . $width . ':-1:flags=lanczos,split[s0][s1];[s0]palettegen=stats_mode=full[p];[s1][p]paletteuse=dither=none" -gifflags -offsetting ' . $output_file;
         $output = shell_exec($cmd);
-        DiscordLog::sendDump($output);
     }
 }

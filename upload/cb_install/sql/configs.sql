@@ -73,14 +73,12 @@ INSERT INTO `{tbl_prefix}config` (`configid`, `name`, `value`) VALUES
 	(NULL, 'video_codec', 'libx264'),
 	(NULL, 'date_format', 'Y-m-d'),
 	(NULL, 'autoplay_video', 'no'),
-	(NULL, 'max_profile_pic_size', '2500'),
 	(NULL, 'max_profile_pic_width', '230'),
 	(NULL, 'gravatars', ''),
 	(NULL, 'picture_url', 'yes'),
 	(NULL, 'picture_upload', 'yes'),
 	(NULL, 'background_url', 'yes'),
 	(NULL, 'background_upload', 'yes'),
-	(NULL, 'max_bg_size', '2500'),
 	(NULL, 'max_bg_width', '1600'),
 	(NULL, 'background_color', 'yes'),
 	(NULL, 'send_comment_notification', 'yes'),
@@ -124,7 +122,7 @@ INSERT INTO `{tbl_prefix}config` (`configid`, `name`, `value`) VALUES
 	(NULL, 'embed_player_width', '300'),
 	(NULL, 'autoplay_embed', 'no'),
 	(NULL, 'playlistsSection', 'yes'),
-	(NULL, 'photo_main_list', '9'),
+	(NULL, 'photo_main_list', '18'),
 	(NULL, 'photo_home_tabs', '30'),
 	(NULL, 'photo_search_result', '28'),
 	(NULL, 'photo_channel_page', '9'),
@@ -340,8 +338,14 @@ INSERT INTO `{tbl_prefix}config` (`configid`, `name`, `value`) VALUES
     (NULL, 'video_remove_black_bars', 'yes'),
     (NULL, 'random_video_order', 'yes'),
     (NULL, 'enable_favorite_icon_photo', 'yes'),
-    (NULL, 'enable_favorite_icon_collection', 'yes');
-
+    (NULL, 'enable_favorite_icon_collection', 'yes'),
+    (NULL, 'enable_favorite_icon_video', 'yes'),
+    (NULL, 'own_comment_rating', 'no'),
+    (NULL, 'photo_thumbs_format', 'webp'),
+    (NULL, 'photos_enable_fullwidth', 'yes'),
+    (NULL, 'use_backdrop_as_default_thumb', 'allowed'),
+    (NULL, 'enable_featured_collection_hierarchy', 'yes'),
+    (NULL, 'random_photo_order', 'yes');
 
 INSERT INTO `{tbl_prefix}video_resolution` (`title`, `ratio`, `enabled`, `width`, `height`, `video_bitrate`) VALUES
 	('240p', '16/9', 1, 426, 240, 240000),
@@ -377,7 +381,11 @@ INSERT INTO `{tbl_prefix}tools` (`language_key_label`, `language_key_description
     ('anonymous_stats_label', 'anonymous_stats_description', 'AdminTool::anonymousStats', 'anonymous_stats', '0 1 * * 7', CURRENT_TIMESTAMP, '1', '0'),
     ('launch_video_conversion_label', 'launch_video_conversion_description', 'AdminTool::launchVideoConversion', 'launch_video_conversion', '* * * * *', CURRENT_TIMESTAMP, '1', '0'),
     ('install_missing_config_label', 'install_missing_config_description', 'AdminTool::installMissingConfigs', 'install_missing_config', NULL, NULL, '1', '0'),
-    ('install_missing_translation_label', 'install_missing_translation_description', 'AdminTool::installMissingTranslations', 'install_missing_translation', NULL, NULL, '1', '0');
+    ('install_missing_translation_label', 'install_missing_translation_description', 'AdminTool::installMissingTranslations', 'install_missing_translation', NULL, NULL, '1', '0'),
+    ('regenerate_all_video_thumbs_label', 'regenerate_all_video_thumbs_description', 'AdminTool::regenerateAllVideoThumbs', 'regenerate_all_video_thumbs', NULL, NULL, '1', '0'),
+    ('update_tmdb_info_label', 'update_tmdb_info_description', 'AdminTool::updateTmdbInfo', 'update_tmdb_info', NULL, NULL, '1', '0'),
+    ('task_queue_cleaner_label', 'task_queue_cleaner_description', 'AdminTool::cleanUpTask', 'task_queue_cleaner', '0 0 1 * *', CURRENT_TIMESTAMP, '1', '0'),
+    ('recalcul_rates_label', 'recalcul_rates_description', 'AdminTool::recalculRates', 'recalcul_rates_label', '0 0 1 * *', CURRENT_TIMESTAMP, '1', '0');
 
 INSERT INTO `{tbl_prefix}tags_type` (`name`) VALUES ('video'), ('photo'), ('collection'), ('profile'), ('playlist'), ('actors'), ('producer'), ('executive_producer'), ('director'), ('crew'), ('genre');
 
@@ -1742,4 +1750,5 @@ VALUES ('most_old', 'videos', FALSE),
        ('reverse_alphabetical', 'photos', false),
        ('reverse_alphabetical', 'collections', false),
        ('reverse_alphabetical', 'channels', false),
-       ('random', 'videos', false);
+       ('random', 'videos', false),
+       ('random', 'photos', false);

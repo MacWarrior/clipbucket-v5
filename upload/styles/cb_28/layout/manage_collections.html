@@ -73,15 +73,22 @@
                                         </div>
                                     {/foreach}
                                     {foreach from=$other_fields item=field}
-                                        <div class="form-group col-md-6 col-sm-6 col-xs-12 {if in_array($field.id, ['broadcast','allow_comments']) || ($field.id == 'public_upload' && config('enable_comments_collection') != 'yes')}no_padding_left{elseif $field.id == 'sort_type' || $field.id == 'public_upload'}no_padding_right{/if}">
-                                            <label for="{$field.id}" class="show">{$field.title}</label>
-                                            {if $field.hint_1}
-                                                <div class="hint">{$field.hint_1}</div>{/if}
-                                            {$field.label_class='radio-inline'}
-                                            {$field.notShowSeprator=true}
-                                            {$formObj->createField($field)}
-                                            {if $field.hint_2}
-                                                <small>{$field.hint_2}</small>
+                                        <div class="form-group col-md-6 col-sm-6 col-xs-12 {if in_array($field.id, ['broadcast','allow_comments']) || ($field.id == 'public_upload' && config('enable_comments_collection') != 'yes') || ($field.id == 'hierarchy_featured') && config('enable_featured_collection_hierarchy')}no_padding_left{elseif $field.id == 'sort_type' || $field.id == 'public_upload'}no_padding_right{/if}">
+                                            {if $field.id == 'hierarchy_featured'}
+                                                <div class="switch-inline">
+                                                    <label for="{$field.id}" class="show">{$field.title} {if $field.hint_icon}<span class="fa fa-question-circle tips cursor_help" title="{$field.hint_icon}"></span> {/if}</label>
+                                                    {$formObj->createField($field)}
+                                                </div>
+                                            {else}
+                                                <label for="{$field.id}" class="show">{$field.title} {if $field.hint_icon}<span class="fa fa-question-circle tips cursor_help" title="{$field.hint_icon}"></span> {/if}</label>
+                                                {if $field.hint_1}
+                                                    <div class="hint">{$field.hint_1}</div>{/if}
+                                                {$field.label_class='radio-inline'}
+                                                {$field.notShowSeprator=true}
+                                                {$formObj->createField($field)}
+                                                {if $field.hint_2}
+                                                    <small>{$field.hint_2}</small>
+                                                {/if}
                                             {/if}
                                         </div>
                                     {/foreach}

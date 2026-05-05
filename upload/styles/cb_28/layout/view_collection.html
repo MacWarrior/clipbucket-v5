@@ -53,6 +53,9 @@
                             {/if}
                         </div>
                         {/if}
+                        {if (User::getInstance()->hasPermission('allow_create_collection') && User::getInstance()->getCurrentUserID() == $c.userid) || User::getInstance()->hasAdminAccess()}
+                            <a class="btn btn-success pull-right" style="margin-left: 5px;" href="{$baseurl}manage_collections.php?mode=add_new&parent_id={$c.collection_id}">{lang code='add_new_collection'}</a>
+                        {/if}
                         {if (User::getInstance()->hasPermission($upload_permission) && $c.public_upload == 'yes')
                         || (User::getInstance()->isUserConnected() && User::getInstance()->get('userid') == $c.userid)
                         || User::getInstance()->hasAdminAccess()}
@@ -115,7 +118,13 @@
                 <div class="show clearfix photoStats">
                     {if User::getInstance()->getCurrentUserID() && config('collection_rating') == 'yes' }
                         <div class="user-ratting" id="rating_container" style="display:inline-block;">
-                            {show_video_rating rating=$c.rating ratings=$c.rated_by total='10' id=$c.collection_id type=collection disable=($c.userid == User::getInstance()->getCurrentUserID() && config('own_collection_rating')!= 'yes')}
+                            {include file="$style_dir/blocks/common/rating.html"
+                                id=$c.collection_id
+                                type=collection
+                                likes=$c.total_rate_up
+                                dislikes=$c.total_rate_down
+                                disable=($c.userid == User::getInstance()->getCurrentUserID() && config('own_collection_rating') != 'yes')
+                            }
                         </div>
                     {/if}
                     {if User::getInstance()->getCurrentUserID()}

@@ -1,0 +1,51 @@
+<ul class="nav nav-tabs">
+    <li {if $active_statistic_pane =='li_live_statistics'}class="active"{/if} id="li_live_statistics">
+        <a data-toggle="tab" href="#live_statistics">
+            <h5>{lang('live_statistics')}</h5>
+        </a>
+    </li>
+    <li {if $active_statistic_pane =='li_ongoing_tools'}class="active"{/if} id="li_ongoing_tools">
+        {if !empty($progress_tools)}
+            <a data-toggle="tab" href="#ongoing_tools">
+                <h5>{lang('ongoing_tools')}</h5>
+            </a>
+        {/if}
+    </li>
+</ul>
+<div class="tab-content">
+    <div class="tab-pane {if $active_statistic_pane == 'li_live_statistics'} active {/if}" id="live_statistics">
+        <p>
+            {lang('ongoing_videos_conversions')} : <b>{$ongoing_conversion}</b>
+        </p>
+        <p>
+            {lang('online_users')} : <b>{$online_users}</b>
+        </p>
+    </div>
+    {if !empty($progress_tools)}
+        <div class="tab-pane {if $active_statistic_pane == 'li_ongoing_tools'} active {/if}" id="ongoing_tools">
+            <table style="width: 100%">
+                {section name=tool_list loop=$progress_tools}
+                    <tr>
+                        <td class="col-md-3" style="vertical-align: middle;">
+                                <span>
+                                    {lang code = ($progress_tools[tool_list].language_key_label)}
+                                </span>
+                        </td>
+                        <td class="col-md-9" style="vertical-align: middle;">
+                            <div style="text-align: center;  ">
+                                <div style="padding: 6px;"><span>{$progress_tools[tool_list].pourcentage_progress|string_format:"%.2f"}</span>%
+                                    (<span>{$progress_tools[tool_list].elements_done}</span> / <span>{$progress_tools[tool_list].elements_total}</span>)
+                                </div>
+                                <div class="progress">
+                                    <div class="progress-bar" role="progressbar" aria-valuenow="{$progress_tools[tool_list].pourcentage_progress}"
+                                         aria-valuemin="0" aria-valuemax="100" style="width:{$progress_tools[tool_list].pourcentage_progress}%">
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                {/section}
+            </table>
+        </div>
+    {/if}
+</div>

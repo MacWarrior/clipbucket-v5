@@ -31,6 +31,7 @@ function pass_code($string, $userid): string
  * @param : { string } { $id } { string to be cleaned }
  *
  * @return string
+ * @throws Exception
  */
 function mysql_clean($var): string
 {
@@ -62,9 +63,12 @@ function getBytesFromFileSize($size)
         'YB' => pow(1024, 8)
     ];
 
-    $size = trim($size);
-    $unit = preg_replace('/[0-9.]/', '', $size);
-    $size = preg_replace('/[^0-9]/', '', $size);
+    $size = trim( $size);
+
+    //manage exponential form
+    preg_match('/^((?:[0-9.])+(?:E[+-]\d+)?)([a-zA-Z]{1,2})$/', $size, $matches);
+    $size = $matches[1];
+    $unit = $matches[2];
     if( !isset($units[$unit]) ) {
         $msg = 'getBytesFromFileSize - Unknown unit : ' . $unit;
         error_log($msg);
@@ -148,7 +152,7 @@ function getExt($file): string
 function getExtMimeType($file_path): string
 {
     $image_sizes = getimagesize($file_path);
-    return PhotoThumbs::getMimeType($image_sizes['mime']);
+    return Photo::getMimeType($image_sizes['mime']);
 }
 
 /**
@@ -1632,7 +1636,7 @@ function cbdate($format = null, $timestamp = null): string
 function cbdatetime($format = null, $timestamp = null): string
 {
     if (!$format) {
-        $format = config('date_format') . ' h:m:s';
+        $format = config('date_format') . ' H:i:s';
     }
 
     return cbdate($format, $timestamp);
@@ -2885,13 +2889,6 @@ function get_browser_details($in = null, $assign = false)
     }
 }
 
-/**
- * @throws Exception
- */
-function update_user_voted($array, $userid = null): void
-{
-    userquery::getInstance()->update_user_voted($array, $userid);
-}
 
 /**
  * Deletes a video from a video collection
@@ -3147,14 +3144,14 @@ function fetch_action_logs($params)
     }
 
     if ($params['limit']) {
-        $limit = $params['limit'];
+        $limit = (int)$params['limit'];
     } else {
         $limit = 20;
     }
 
     if (isset($_GET['page'])) {
         $page = $_GET['page'];
-        $start = $limit * $page - $limit;
+        $start = (int)($limit * $page - $limit);
     } else {
         $start = 0;
     }
@@ -3163,10 +3160,9 @@ function fetch_action_logs($params)
     $final_query = '';
     foreach ($cond as $field => $value) {
         if ($count > 0) {
-            $final_query .= " AND `$field` = '$value' ";
-        } else {
-            $final_query .= " `$field` = '$value' ";
+            $final_query .= ' AND ';
         }
+        $final_query .= ' `' . $field . '` = \'' . mysql_clean($value) . '\'';
         $count++;
     }
     if (!empty($cond)) {
@@ -3203,41 +3199,19 @@ function has_rated($userid, $itemid, $type = false)
 {
     switch ($type) {
         case 'video':
-            $toselect = 'videoid';
-            $field = 'voter_ids';
-            break;
-
+            return Video::isObjectRated($userid, $itemid);
         case 'photo':
-            $type = 'photos';
-            $toselect = 'photo_id';
-            $field = 'voters';
-            break;
-
+            return Photo::isObjectRated($userid, $itemid);
         case 'user':
-            $type = 'user_profile';
-            $toselect = 'userid';
-            $field = 'voters';
-            break;
-
+            return User::isObjectRated($userid, $itemid);
+        case 'collection':
+            return Collection::isObjectRated($userid, $itemid);
+        case 'comment':
+            return Comments::isObjectRated($userid, $itemid);
         default:
             error_log('has_rated unknown type : ' . $type . PHP_EOL);
-            $type = 'video';
-            $toselect = 'videoid';
-            $field = 'voter_ids';
-            break;
+            return false;
     }
-    $raw_rating = Clipbucket_db::getInstance()->select(tbl($type), $field, "$toselect = $itemid");
-    $ratedby_json = $raw_rating[0][$field];
-    $ratedby_cleaned = json_decode($ratedby_json, true);
-    foreach ($ratedby_cleaned as $rating_data) {
-        if ($rating_data['userid'] == $userid) {
-            if ($rating_data['rating'] == 0) {
-                return 'disliked';
-            }
-            return 'liked';
-        }
-    }
-    return false;
 }
 
 /**
@@ -3297,7 +3271,7 @@ function upload_image($type = 'logo'): bool
     $filename = $_FILES[$file_post]['name'];
     $file_ext = getExt($filename);
     $filesize = $_FILES[$file_post]['size'];
-    $allowed_file_types = explode(',', strtolower(config('allowed_photo_types')));
+    $allowed_file_types = Photo::getAllowedPhotoExtension();
 
     $max_size = 4000000;
     if ($filesize > $max_size) {
@@ -3636,7 +3610,7 @@ function save_subtitle_ajax()
         $response['success'] = false;
         $response['msg'] = getTemplateMsg();
         echo json_encode($response);
-        die;
+        die();
     }
 
     $video = Video::getInstance()->getOne(['videoid' => mysql_clean($_POST['videoid'])]);
@@ -3647,7 +3621,7 @@ function save_subtitle_ajax()
             $response['success'] = false;
             $response['msg'] = getTemplateMsg();
             echo json_encode($response);
-            die;
+            die();
         }
     }
 
@@ -3665,8 +3639,8 @@ function save_subtitle_ajax()
     } elseif (!FFMpeg::isValidWebVTTWithFFmpeg($_FILES['subtitles']['tmp_name'], $video['duration'])) {
         //gestion de l'affichage des erreurs dans la fonction
         $success = false;
-    } elseif ($_FILES['subtitles']['size'] >= (1024 * 1024 * config('maximum_allowed_subtitle_size')) ) {
-        e(lang('file_size_exceeded', config('maximum_allowed_subtitle_size') . lang('mb')));
+    } elseif ($_FILES['subtitles']['size'] >= (1024 * 1024 * Video::getMaxAllowedSubtitleSize()) ) {
+        e(lang('file_size_exceeded', Video::getMaxAllowedSubtitleSize() . lang('mb')));
         $success = false;
     } else {
         rename($_FILES['subtitles']['tmp_name'], $temp_file_path);

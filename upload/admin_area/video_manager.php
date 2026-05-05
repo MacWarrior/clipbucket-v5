@@ -150,15 +150,15 @@ if (!empty($_GET['active'])) {
 }
 if (isset($_POST['search'])) {
     $params = [
-        'videoid'  => $_POST['videoid'] ?? false,
-        'videokey' => $_POST['videokey'] ?? false,
-        'title'    => $_POST['title'] ?? false,
-        'tags'     => $_POST['tags'] ?? false,
-        'userid'   => $_POST['userid'] ?? false,
-        'category' => $_POST['category'] ?? false,
-        'featured' => $_POST['featured'] ?? false,
-        'active'   => $_POST['active'] ?? false,
-        'status'   => $_POST['status'] ?? false
+        'videoid'  => !empty($_POST['videoid']) ?$_POST['videoid'] :  false,
+        'videokey' => !empty($_POST['videokey']) ?$_POST['videokey'] :  false,
+        'title'    => !empty($_POST['title']) ?$_POST['title'] :  false,
+        'tags'     => !empty($_POST['tags']) ?$_POST['tags'] :  false,
+        'userid'   => !empty($_POST['userid']) ?$_POST['userid'] :  false,
+        'category' => !empty($_POST['category']) ? $_POST['category'] : false,
+        'featured' => !empty($_POST['featured']) ?$_POST['featured'] :  false,
+        'active'   => !empty($_POST['active']) ?$_POST['active'] :  false,
+        'status'   => !empty($_POST['status']) ?$_POST['status'] :  false
     ];
 }
 assign('param_search', $params);

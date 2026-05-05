@@ -1,6 +1,7 @@
 <?php
 class ClipBucket
 {
+    private $allowed_photo_types;
     private static self $instance;
     public static function getInstance(): self
     {
@@ -327,10 +328,12 @@ class ClipBucket
             , 'url' => DirPath::getUrl('admin_area') . 'setting_advanced.php'
         ];
 
-        $menu_configuration['sub'][] = [
-            'title' => lang('template_editor')
-            , 'url' => DirPath::getUrl('admin_area') . 'template_editor.php'
-        ];
+        if (System::isInDev()) {
+            $menu_configuration['sub'][] = [
+                'title' => lang('template_editor'),
+                'url'   => DirPath::getUrl('admin_area') . 'template_editor.php'
+            ];
+        }
 
         $menu_configuration['sub'][] = [
             'title' => lang('manage_x', strtolower(lang('pages')))
@@ -491,7 +494,7 @@ class ClipBucket
                 , 'class' => 'glyphicon glyphicon-wrench'
                 , 'sub'   => [
                     [
-                        'title' => 'View online users'
+                        'title' => lang('view_online_users')
                         , 'url' => DirPath::getUrl('admin_area') . 'online_users.php'
                     ]
                     , [
@@ -634,7 +637,7 @@ class ClipBucket
                 break;
 
             case 'photo':
-                $exts = config('allowed_photo_types');
+                $exts = Photo::getAllowedPhotoExtension('string');
                 break;
         }
 
@@ -817,27 +820,6 @@ class ClipBucket
             }
             $_REQUEST = $clean_request;
         }
-    }
-
-    public function getMaxUploadSize($suffix = ''): string
-    {
-        $list_upload_limits = [];
-
-        $post_max_size = ini_get('post_max_size');
-        $list_upload_limits[] = (float)$post_max_size * pow(1024, stripos('KMGT', strtoupper(substr($post_max_size, -1)))) / 1024;
-
-        $upload_max_filesize = ini_get('upload_max_filesize');
-        $list_upload_limits[] = (float)$upload_max_filesize * pow(1024, stripos('KMGT', strtoupper(substr($upload_max_filesize, -1)))) / 1024;
-
-        if( config('enable_chunk_upload') == 'yes' ){
-            $list_upload_limits[] = !empty((float)config('chunk_upload_size')) ? (float)config('chunk_upload_size') : 2;
-        }
-
-        if( Network::is_cloudflare() ){
-            $list_upload_limits[] = (float)config('cloudflare_upload_limit');
-        }
-
-        return (min($list_upload_limits)-0.01).$suffix;
     }
 
     public function get_custom_video_file_funcs()

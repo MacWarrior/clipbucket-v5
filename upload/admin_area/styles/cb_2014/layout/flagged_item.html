@@ -23,7 +23,7 @@
                 <td>
                     <div class="col-md-6">
                         <div class="row">
-                            <a href="{{$links.bo}}">{$flagged_item.element_name}</a>
+                            <a href="{{$links.bo}}">{display_clean($flagged_item.element_name)}</a>
                         </div>
                         <div class="row">
                             {if $type=='photo' && $flagged_item.is_photo_orphan}

@@ -21,13 +21,13 @@ if (php_sapi_name() == 'cli') {
                 $revision = readline('Revision : ');
             } elseif (empty($argv[1]) || empty($argv[2])) {
                 echo 'Version or revision is missing. Please retry ex: php ./actions/upgrade_db.php vers=5.3.0 rev=1' . PHP_EOL;
-                die;
+                die();
             } else {
                 parse_str($argv[1], $arg_version);
                 parse_str($argv[2], $arg_revision);
                 if (empty($arg_version['vers']) || empty($arg_revision['rev'])) {
                     echo 'Version or revision is missing. Please retry ex: php ./actions/upgrade_db.php vers=5.3.0 rev=1' . PHP_EOL;
-                    die;
+                    die();
                 }
                 $revision = (int)$arg_revision['rev'];
                 $version = $arg_version['vers'];
@@ -39,12 +39,12 @@ if (php_sapi_name() == 'cli') {
                 foreach ($version_list as $version_l => $revision_l) {
                     echo '- ' . $version_l . PHP_EOL;
                 }
-                die;
+                die();
             }
             if ($revision > $version_list[$version]) {
                 echo 'Revision provided is incorrect' . PHP_EOL;
                 echo 'Max revision allowed for selected version : ' . $version_list[$version] . PHP_EOL;
-                die;
+                die();
             }
         } else {
             $need_to_create_version_table = false;
@@ -67,7 +67,7 @@ if (php_sapi_name() == 'cli') {
                 $response = fgetc($stdin);
                 if (strtolower($response) != 'y') {
                     echo "Aborted.\n";
-                    die;
+                    die();
                 } else {
                     $core_tool->setToolError($core_tool->getId(),true);
                 }
@@ -85,7 +85,7 @@ if (php_sapi_name() == 'cli') {
                 $response = fgetc($stdin);
                 if (strtolower($response) != 'y') {
                     echo "Aborted.\n";
-                    die;
+                    die();
                 } else {
                     $db_tool->setToolError($db_tool->getId(),true);
                 }
@@ -98,7 +98,7 @@ if (php_sapi_name() == 'cli') {
                 $response = fgetc($stdin);
                 if (strtolower($response) != 'y') {
                     echo "Aborted.\n";
-                    die;
+                    die();
                 }
             }
         }

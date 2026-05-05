@@ -5,7 +5,7 @@ const IS_AJAX = true;
 
 require_once dirname(__FILE__, 2) . '/includes/config.inc.php';
 
-$friend_details = User::getInstance()->getOne(['userid' => mysql_clean($_POST['friend_id'])]);
+$friend_details = User::getInstance()->getOne(['userid' => (int)$_POST['friend_id']]);
 $return['nb_subscribers'] = $friend_details['subscribers'];
 $return['can_subscribe'] = false;
 if (!isSectionEnabled('channels') || (!User::getInstance()->hasPermission('view_channel') && (!User::getInstance()->hasPermission('enable_channel_page') || User::getInstance()->get('disabled_channel') == 'yes'))) {

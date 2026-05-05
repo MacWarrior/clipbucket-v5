@@ -8,6 +8,8 @@ class Photo extends Objects
     private $search_limit = 0;
     private $display_var_name = '';
 
+    private static $allowed_photo_types;
+
     public const TYPE = 'photo';
 
     /**
@@ -35,9 +37,6 @@ class Photo extends Objects
             ,'total_comments'
             ,'last_commented'
             ,'total_favorites'
-            ,'rating'
-            ,'rated_by'
-            ,'voters'
             ,'filename'
             ,'file_directory'
             ,'ext'
@@ -53,9 +52,75 @@ class Photo extends Objects
             $this->fields[] = 'age_restriction';
         }
 
+        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '117')) {
+            $this->fields[] = 'total_rate_up';
+            $this->fields[] = 'total_rate_down';
+        } else {
+            $this->fields[] = 'rating';
+            $this->fields[] = 'rated_by';
+            $this->fields[] = 'voters';
+        }
+
         $this->display_block = LAYOUT . '/blocks/photo.html';
         $this->display_var_name = 'photo';
         $this->search_limit = (int)config('photo_search_result');
+    }
+
+    /**
+     * @param $mime_type
+     * @return string|null
+     */
+    public static function getMimeType($mime_type): string|null
+    {
+        return match ($mime_type) {
+            'image/jpeg' => 'jpeg',
+            'image/png' => 'png',
+            'image/gif' => 'gif',
+            'image/webp' => 'webp',
+            'image/bmp' => 'bmp',
+            'image/tiff' => 'tiff',
+            default => null
+        };
+    }
+
+    /**
+     * @return string[]
+     */
+    public static function getAllowedUploadTypes(): array
+    {
+        return [
+            'jpeg',
+            'jpg',
+            'png',
+            'gif'
+        ];
+    }
+
+    /**
+     * @return int
+     */
+    public static function getMaxAllowedSize(): int
+    {
+        return min((int)config('max_photo_size'), (int)config('max_upload_size'));
+    }
+
+    /**
+     * @param $file
+     * @return bool
+     */
+    public static function ValidateImage($file): bool
+    {
+        $allowed_types = self::getAllowedPhotoExtension();
+        $array = getimagesize($file);
+        if (empty($array[0]) || empty($array[1])) {
+            return false;
+        }
+        $ext = Photo::getMimeType($array['mime']);
+        if (!in_array(strtolower($ext), $allowed_types)) {
+            return false;
+        }
+
+        return true;
     }
 
     public static function getInstance(): self
@@ -64,6 +129,52 @@ class Photo extends Objects
             self::$photo = new self();
         }
         return self::$photo;
+    }
+
+    /**
+     * @return void
+     */
+    public static function clearInstance()
+    {
+        self::$photo = new self();
+    }
+
+    /**
+     * @param string $type_output
+     * @return string|string[]
+     */
+    public static function getAllowedPhotoExtension(string $type_output = 'array')
+    {
+        if (!empty(self::$allowed_photo_types[$type_output])) {
+            return self::$allowed_photo_types[$type_output];
+        }
+        $allowed_photo_types = explode(',', config('allowed_photo_types'));
+        $allowed_photo_types = self::completeAllowedPhotoExtension($allowed_photo_types);
+        self::$allowed_photo_types[$type_output]= $allowed_photo_types;
+        if ($type_output == 'array') {
+            return $allowed_photo_types;
+        } else {
+            return implode(', ', $allowed_photo_types);
+        }
+    }
+
+    /**
+     * @param $types
+     * @return array
+     */
+    public static function completeAllowedPhotoExtension($types): array
+    {
+        $have_jpeg = in_array('jpeg', $types);
+        $have_jpg = in_array('jpg', $types);
+        if (($have_jpeg || $have_jpg) && !($have_jpeg && $have_jpg)) {
+            if ($have_jpeg) {
+                $types[] = 'jpg';
+            }
+            if ($have_jpg) {
+                $types[] = 'jpeg';
+            }
+        }
+        return $types;
     }
 
     public function getTableName(): string
@@ -127,7 +238,13 @@ class Photo extends Objects
                 break;
 
             case 'top_rated':
-                $params['order'] = $this->getTableName() . '.rating DESC, ' . $this->getTableName() . '.rated_by DESC';
+                if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '117')) {
+                    //order by average like desc , total votes desc
+                    $params['order'] = '('.$this->getTableName(). '.total_rate_up - '.$this->getTableName(). '.total_rate_down) / ('.$this->getTableName(). '.total_rate_up + '.$this->getTableName(). '.total_rate_down) DESC
+                    , ' . $this->getTableName(). '.total_rate_up + '.$this->getTableName(). '.total_rate_down DESC';
+                } else {
+                    $params['order'] = $this->getTableName() . '.rating DESC, ' . $this->getTableName() . '.rated_by DESC';
+                }
                 break;
 
             case 'most_commented':
@@ -146,6 +263,10 @@ class Photo extends Objects
 
             case 'reverse_alphabetical':
                 $params['order'] = $this->getTableName() . '.photo_title DESC';
+                break;
+
+            case 'random':
+                $params['order'] = 'RAND()';
                 break;
 
             case 'all_time':
@@ -180,6 +301,9 @@ class Photo extends Objects
 
         if (config('photo_rating') != 'yes') {
             unset($sorts[array_search('top_rated', $sorts)]);
+        }
+        if (config('random_photo_order') != 'yes') {
+            unset($sorts[array_search('random', $sorts)]);
         }
 
         return $sorts;
@@ -912,6 +1036,7 @@ class CBPhotos
      * Setting Email Settings
      *
      * @param $data
+     * @throws Exception
      */
     function set_share_email($data): void
     {
@@ -1018,7 +1143,7 @@ class CBPhotos
      */
     function set_photo_max_size(): void
     {
-        $adminSize = ClipBucket::getInstance()->configs['max_photo_size'];
+        $adminSize = Photo::getMaxAllowedSize();
         if (!$adminSize) {
             $this->max_file_size = 2 * 1024 * 1024;
         } else {
@@ -1508,6 +1633,7 @@ class CBPhotos
 
             //Removing Photo From Favorites
             Photo::getInstance()->removeFromFavoritesForAllUsers($photo['photo_id']);
+            Photo::deleteObjectRatingByObjectId($photo['photo_id']);
             errorhandler::getInstance()->flush_msg();
             //finally removing from Database
             $this->delete_from_db($photo);

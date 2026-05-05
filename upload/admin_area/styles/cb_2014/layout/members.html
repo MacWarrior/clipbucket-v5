@@ -65,6 +65,7 @@
                             <span class="label"><span>Active</span> : <span>{$u.last_active|nicetime}</span></span>
                             {if $u.featured=='yes'}<span class="label label-primary">{lang code='featured'}</span>{/if}
                             {if $u.ban_status == "yes"}<span class="label label-danger"><span>Banned</span></span>{/if}
+                            {if $u.is_flagged}<a href="{$baseurl}admin_area/flagged_item.php?type=user"><span class="label label-danger">{lang('flagged')}</span></a>{/if}
                         </div>
                     </div>
                 </div>

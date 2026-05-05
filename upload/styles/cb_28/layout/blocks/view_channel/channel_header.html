@@ -12,7 +12,13 @@
         <div class="ratting-counts clearfix">
             {if User::getInstance()->getCurrentUserID() && config('channel_rating') == 'yes' && User::getInstance($user.userid)->get('allow_ratings') == 'yes' }
                 <div class="user-ratting" id="rating_container">
-                    {show_video_rating rating=$p.rating ratings=$p.rated_by total='10' id=$user.userid type=user disable=(config('own_channel_rating') != 'yes' && $user.userid == User::getInstance()->getCurrentUserID()) }
+                    {include file="$style_dir/blocks/common/rating.html"
+                        id=$p.userid
+                        type=user
+                        likes=$p.total_rate_up
+                        dislikes=$p.total_rate_down
+                        disable=($p.userid == User::getInstance()->getCurrentUserID() && config('own_comment_rating') != 'yes')
+                    }
                 </div>
             {/if}
             <ul class="counters">

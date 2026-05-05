@@ -12,8 +12,12 @@ Pages::getInstance()->page_redir();
 subtitle('upload');
 
 if (isset($_GET['collection'])) {
-    $selected_collection = json_decode(base64_decode($_GET['collection']));
-    assign('selected_collection', Collection::getInstance()->getOne(['collection_id'=>$selected_collection]));
+    $selected_collection = json_decode(base64_decode($_GET['collection'])) ?? 0;
+    $selected_collection = Collection::getInstance()->getOne(['collection_id'=>$selected_collection, 'can_upload'=>true]);
+    if (empty($selected_collection)) {
+        e(lang('collection_not_exist'));
+    }
+    assign('selected_collection', $selected_collection);
 }
 
 if (empty(Upload::getInstance()->get_upload_options())) {
