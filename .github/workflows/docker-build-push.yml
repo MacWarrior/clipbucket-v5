@@ -1,0 +1,317 @@
+name: Docker Build and Push
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+    inputs:
+      php_version:
+        description: 'PHP Version (8.1-8.5)'
+        required: true
+        default: '8.5'
+        type: choice
+        options:
+          - '8.1'
+          - '8.2'
+          - '8.3'
+          - '8.4'
+          - '8.5'
+      install_phpmyadmin:
+        description: 'Install phpMyAdmin'
+        required: true
+        default: false
+        type: boolean
+      install_xdebug:
+        description: 'Install Xdebug'
+        required: true
+        default: false
+        type: boolean
+      install_redis:
+        description: 'Install Redis Server'
+        required: true
+        default: false
+        type: boolean
+      install_mariadb:
+        description: 'Install MARIADB'
+        required: true
+        default: false
+        type: boolean
+      domain_name:
+        description: 'Domain name for ClipBucket'
+        required: true
+        default: 'clipbucket.local'
+        type: string
+      phpmyadmin_domain:
+        description: 'Domain name for phpMyAdmin'
+        required: true
+        default: 'phpmyadmin.local'
+        type: string
+
+env:
+  IMAGE_NAME: oxygenz/clipbucket-v5
+
+jobs:
+  # Build latest (PHP 8.5, full, no extra tools)
+  build-latest:
+    if: github.event_name == 'release'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_TOKEN }}
+
+      - name: Build and push Docker image (latest)
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: true
+          tags: |
+            ${{ env.IMAGE_NAME }}:latest
+          build-args: |
+            PHP_VERSION=8.5
+            INSTALL_MARIADB=true
+            INSTALL_PHPMYADMIN=false
+            INSTALL_XDEBUG=false
+            INSTALL_REDIS=true
+            DOMAIN_NAME=clipbucket.local
+            PHPMYADMIN_DOMAIN=phpmyadmin.local
+          labels: |
+            org.opencontainers.image.title=ClipBucket v5
+            org.opencontainers.image.source=${{ github.server_url }}/${{ github.repository }}
+            org.opencontainers.image.php-version=8.5
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+          platforms: linux/amd64
+
+  # Build lite (no MariaDB, no Redis)
+  build-lite:
+    if: github.event_name == 'release'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_TOKEN }}
+
+      - name: Build and push Docker image (lite)
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: true
+          tags: |
+            ${{ env.IMAGE_NAME }}:lite
+          build-args: |
+            PHP_VERSION=8.5
+            INSTALL_MARIADB=false
+            INSTALL_PHPMYADMIN=false
+            INSTALL_XDEBUG=false
+            INSTALL_REDIS=false
+            DOMAIN_NAME=clipbucket.local
+            PHPMYADMIN_DOMAIN=phpmyadmin.local
+          labels: |
+            org.opencontainers.image.title=ClipBucket v5 (lite)
+            org.opencontainers.image.source=${{ github.server_url }}/${{ github.repository }}
+            org.opencontainers.image.php-version=8.5
+            org.opencontainers.image.mariadb=true
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+          platforms: linux/amd64
+
+  # Build dev-php8.X (all PHP versions with dev tools: Redis, MariaDB, phpMyAdmin)
+  build-dev:
+    if: github.event_name == 'release'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    strategy:
+      fail-fast: false
+      matrix:
+        php_version: ['8.1', '8.2', '8.3', '8.4', '8.5']
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_TOKEN }}
+
+      - name: Build and push Docker image (dev)
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: true
+          tags: |
+            ${{ env.IMAGE_NAME }}:dev-php${{ matrix.php_version }}
+          build-args: |
+            PHP_VERSION=${{ matrix.php_version }}
+            INSTALL_MARIADB=true
+            INSTALL_PHPMYADMIN=true
+            INSTALL_XDEBUG=false
+            INSTALL_REDIS=true
+            INSTALL_PROFILING=true
+            DOMAIN_NAME=clipbucket.local
+            PHPMYADMIN_DOMAIN=phpmyadmin.local
+          labels: |
+            org.opencontainers.image.title=ClipBucket v5 (dev)
+            org.opencontainers.image.source=${{ github.server_url }}/${{ github.repository }}
+            org.opencontainers.image.php-version=${{ matrix.php_version }}
+            org.opencontainers.image.variant=dev
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+          platforms: linux/amd64
+
+  # Build dev-php8.X-xdebug (all PHP versions with full dev tools including xdebug)
+  build-dev-xdebug:
+    if: github.event_name == 'release'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    strategy:
+      fail-fast: false
+      matrix:
+        php_version: ['8.1', '8.2', '8.3', '8.4', '8.5']
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_TOKEN }}
+
+      - name: Build and push Docker image (dev with xdebug)
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: true
+          tags: |
+            ${{ env.IMAGE_NAME }}:dev-php${{ matrix.php_version }}-xdebug
+          build-args: |
+            PHP_VERSION=${{ matrix.php_version }}
+            INSTALL_MARIADB=true
+            INSTALL_PHPMYADMIN=true
+            INSTALL_XDEBUG=true
+            INSTALL_REDIS=true
+            INSTALL_PROFILING=true
+            DOMAIN_NAME=clipbucket.local
+            PHPMYADMIN_DOMAIN=phpmyadmin.local
+          labels: |
+            org.opencontainers.image.title=ClipBucket v5 (dev with xdebug)
+            org.opencontainers.image.source=${{ github.server_url }}/${{ github.repository }}
+            org.opencontainers.image.php-version=${{ matrix.php_version }}
+            org.opencontainers.image.variant=dev-xdebug
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+          platforms: linux/amd64
+
+  # Manual build with custom options
+  build-manual:
+    if: github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_TOKEN }}
+
+      - name: Generate tag suffix
+        id: tag
+        run: |
+          PHP_VER="${{ inputs.php_version }}"
+          MARIADB="${{ inputs.install_mariadb }}"
+          PHPMYADMIN="${{ inputs.install_phpmyadmin }}"
+          XDEBUG="${{ inputs.install_xdebug }}"
+          REDIS="${{ inputs.install_redis }}"
+
+          # Base tag with PHP version
+          TAG="php${PHP_VER}"
+
+          # Add suffixes for optional components
+          if [ "$PHPMYADMIN" = "true" ]; then
+            TAG="${TAG}-pma"
+          fi
+          if [ "$XDEBUG" = "true" ]; then
+            TAG="${TAG}-xdebug"
+          fi
+          if [ "$REDIS" = "true" ]; then
+            TAG="${TAG}-redis"
+          fi
+          if [ "$MARIADB" = "true" ]; then
+            TAG="${TAG}-lite"
+          fi
+
+          # Add manual suffix
+          TAG="${TAG}-manual"
+
+          # Full tag name
+          FULL_TAG="${{ env.IMAGE_NAME }}:${TAG}"
+          echo "tag=${FULL_TAG}" >> $GITHUB_OUTPUT
+          echo "Generated tag: ${FULL_TAG}"
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: true
+          tags: ${{ steps.tag.outputs.tag }}
+          build-args: |
+            PHP_VERSION=${{ inputs.php_version }}
+            INSTALL_MARIADB=${{ inputs.install_mariadb }}
+            INSTALL_PHPMYADMIN=${{ inputs.install_phpmyadmin }}
+            INSTALL_XDEBUG=${{ inputs.install_xdebug }}
+            INSTALL_REDIS=${{ inputs.install_redis }}
+            DOMAIN_NAME=${{ inputs.domain_name }}
+            PHPMYADMIN_DOMAIN=${{ inputs.phpmyadmin_domain }}
+          labels: |
+            org.opencontainers.image.title=ClipBucket v5
+            org.opencontainers.image.source=${{ github.server_url }}/${{ github.repository }}
+            org.opencontainers.image.php-version=${{ inputs.php_version }}
+            org.opencontainers.image.mariadb=${{ inputs.install_mariadb }}
+            org.opencontainers.image.phpmyadmin=${{ inputs.install_phpmyadmin }}
+            org.opencontainers.image.xdebug=${{ inputs.install_xdebug }}
+            org.opencontainers.image.redis=${{ inputs.install_redis }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+          platforms: linux/amd64

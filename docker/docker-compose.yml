@@ -1,0 +1,15 @@
+services:
+  clipbucket:
+    image: oxygenz/clipbucket-v5:latest
+    container_name: clipbucket
+    restart: unless-stopped
+    ports:
+      - 80:80
+    environment:
+      DOMAIN_NAME: your-domain.com
+      MYSQL_PASSWORD: 12345
+      UID: 1000
+      GUID: 1000
+    volumes:
+      - /path/to/storage:/var/lib/mysql
+      - /path/to/code/files:/srv/http/clipbucket
