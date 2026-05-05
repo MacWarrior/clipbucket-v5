@@ -7,8 +7,10 @@ $(document).ready(function(){
         runtimes : 'html5,silverlight,html4',
         url : uploadScriptPath,
         file_data_name : 'Filedata',
-        chunk_size: chunk_upload ? max_upload_size : false,
+        chunk_size: chunk_upload ? chunk_upload_size : false,
         max_file_size : max_file_size,
+        max_file_size_error_message: max_file_size_error_message,
+
         filters: {
             mime_types : [
                 { title : 'Image files', extensions : photo_extensions }
@@ -158,11 +160,12 @@ $(document).ready(function(){
                     url : baseurl+"actions/photo_uploader.php",
                     type : "post",
                     data : data,
+                    dataType: "JSON",
                     success: function (msg) {
-                        msg = $.parseJSON(msg);
+
                         $("#uploadMessage").removeClass("hidden");
                         if (msg.error) {
-                            $('#uploadMessage').html(msg.error.val).attr('class', 'alert alert-danger container');
+                            $('#uploadMessage').html(msg.error).attr('class', 'alert alert-danger container');
                             $('html,body').animate({
                                 scrollTop: $("body").offset().top
                             }, 'medium');
@@ -340,7 +343,7 @@ $(document).ready(function(){
             dataType: "JSON",
             success: function(msg){
                 if( msg.error ){
-                    $("#uploadMessage").html(msg.error.val).attr("class", "alert alert-danger container");
+                    $("#uploadMessage").html(msg.error).attr("class", "alert alert-danger container");
                 } else {
                     $("#uploadMessage").html("All Files are uploaded Successfully").attr("class", "alert alert-success container");
                     setTimeout(function(){
@@ -353,6 +356,8 @@ $(document).ready(function(){
                     hideSpinner();
                     $('#tab'+current_index+' form').append(hiddenField_photoId);
                     $('#tab'+current_index+' form').find('.edit-img-thumbnail > img').prop('src',msg.photoPreview);
+                    $('#tab'+current_index+' form').find('.edit-img-thumbnail').show();
+                    $('#tab'+current_index+' form').find('.edit-img-thumbnail #spinner-content').hide();
                     $('#tab'+current_index+' .savePhotoDetails').removeAttr('disabled');
 
                     fileDetails.data.photoThumb = msg.photoPreview;
@@ -379,9 +384,14 @@ $(document).ready(function(){
         }, 8000);
     });
 
-
+    var creating_collection = false;
     $("#createNewCollection").on({
         click: function(e){
+            if (creating_collection) {
+                return;
+            }
+            creating_collection = true;
+            showSpinner();
             e.preventDefault();
             $.ajax({
                 type: "post",
@@ -398,7 +408,7 @@ $(document).ready(function(){
                     $('#collection_id_parent').select2({
                         width: '100%'
                     });
-
+                    creating_collection = false;
                     //listener submit
                     $("#addNewCollection").on({
                         click: function(e){
@@ -428,19 +438,21 @@ $(document).ready(function(){
                             });
                         }
                     });
+
+                    $("#cancelAddCollection").on('click', function (e) {
+                        e.preventDefault();
+                        $("#CollectionDIV").toggle("fast");
+                        $('.form_header').show();
+                        $(".upload-area").show();
+                    });
+
+                    hideSpinner();
                 }
             });
         }
     });
 
-    $("#cancelAddCollection").on({
-        click: function(e){
-            e.preventDefault();
-            $("#CollectionDIV").toggle("fast");
-            $('.form_header').show();
-            $(".upload-area").show();
-        }
-    });
+
 
     $("#selectedFilesList a").on({
         click: function(e){
@@ -479,9 +491,9 @@ $(document).ready(function(){
 });
 
 function showSpinner() {
-    $('.spinner-content').show();
+    $('.spinner-content').parent().show();
 }
 
 function hideSpinner() {
-    $('.spinner-content').hide();
+    $('.spinner-content').parent().hide();
 }

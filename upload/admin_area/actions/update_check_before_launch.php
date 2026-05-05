@@ -15,7 +15,7 @@ if (!$response['core_checked'])  {
         $response['id_tool'] = $core_tool->getId();
         $response['confirm_message_core'] = lang('alert_update_core_already_ongoing');
         echo json_encode($response);
-        die;
+        die();
     } else {
         $response['core_checked'] = true;
     }
@@ -27,7 +27,7 @@ if (!$response['db_checked'])  {
         $response['id_tool'] = $db_tool->getId();
         $response['confirm_message_db'] = lang('alert_update_db_already_ongoing');
         echo json_encode($response);
-        die;
+        die();
     } else {
         $response['db_checked'] = true;
     }
@@ -37,7 +37,7 @@ if (!$response['conversion_checked'])  {
     if (!empty(VideoConversionQueue::get_conversion_queue(['not_complete'=>true]))) {
         $response['confirm_message_conv'] = lang('alert_video_conversion_ongoing');
         echo json_encode($response);
-        die;
+        die();
     } else {
         $response['conversion_checked'] = true;
     }

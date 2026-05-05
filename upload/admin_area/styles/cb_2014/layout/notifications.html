@@ -13,7 +13,7 @@
     <tr>
         {if config('videosSection')=='yes' && User::getInstance()->hasPermission('video_moderation')}
             <td class="item"><a href="{DirPath::getUrl('admin_area')}video_manager.php?search=search&active=no">{lang('approve_x', lang('videos'))} ({get_videos active='no' count_only=true})</a>
-                <br/><a href="{DirPath::getUrl('admin_area')}flagged_item.php?type=video">{lang('video_flagged')} ({Flag::getAll(['count'=>true, 'element_type'=>'videoo'])})</a>
+                <br/><a href="{DirPath::getUrl('admin_area')}flagged_item.php?type=video">{lang('video_flagged')} ({Flag::getAll(['count'=>true, 'element_type'=>'video'])})</a>
             </td>
         {/if}
         {if config('channelsSection')=='yes' && User::getInstance()->hasPermission('member_moderation')}

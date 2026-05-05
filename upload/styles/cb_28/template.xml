@@ -6,4 +6,5 @@
 	<released>18th April 2025</released>
 	<description>Default ClipBucketV5 Theme</description>
 	<website title="Github ClipBucketV5">https://github.com/MacWarrior/clipbucket-v5</website>
+	<compatibility>5.5.3</compatibility>
 </template>

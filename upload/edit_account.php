@@ -13,7 +13,7 @@ assign('only_admin', $only_admin);
 //Updating Profile
 if (isset($_POST['update_profile'])) {
     $array = $_POST;
-    $array['userid'] = user_id();
+    $array['userid'] = User::getInstance()->getCurrentUserID();
     /*Checks profile fields data*/
     $post_clean = profile_fileds_check($array);
     if ($post_clean) {
@@ -25,12 +25,12 @@ if (isset($_POST['update_profile'])) {
 //Updating Avatar
 if (isset($_POST['update_avatar_bg'])) {
     $array = $_POST;
-    $array['userid'] = user_id();
+    $array['userid'] = User::getInstance()->getCurrentUserID();
     userquery::getInstance()->update_user_avatar_bg($array);
 }
 
 if (isset($_FILES['Filedata'])) {
-    $user_id = user_id();
+    $user_id = User::getInstance()->getCurrentUserID();
     if( !$user_id ){
         echo json_encode([
             'error' => lang('insufficient_privileges_loggin')
@@ -45,8 +45,8 @@ if (isset($_FILES['Filedata'])) {
         'mimeType'            => 'image',
         'destinationFilePath' => $destinationFilePath,
         'keepExtension'       => true,
-        'maxFileSize'         => config('max_bg_size') / 1024,
-        'allowedExtensions'   => config('allowed_photo_types')
+        'maxFileSize'         => (Photo::getMaxAllowedSize()),
+        'allowedExtensions'   => Photo::getAllowedPhotoExtension()
     ];
 
     FileUpload::getInstance($params)->processUpload();
@@ -60,7 +60,7 @@ if (isset($_FILES['Filedata'])) {
     $response = [
         'status' => $coverUpload['status'],
         'msg'    => $coverUpload['msg'],
-        'url'    => userquery::getInstance()->getBackground(user_id()) . '?' . $timeStamp
+        'url'    => userquery::getInstance()->getBackground(User::getInstance()->getCurrentUserID()) . '?' . $timeStamp
     ];
     echo json_encode($response);
     die();
@@ -69,14 +69,14 @@ if (isset($_FILES['Filedata'])) {
 //Changing Email
 if (isset($_POST['change_email'])) {
     $array = $_POST;
-    $array['userid'] = user_id();
+    $array['userid'] = User::getInstance()->getCurrentUserID();
     userquery::getInstance()->change_email($array);
 }
 
 //Changing User Password
 if (isset($_POST['change_password'])) {
     $array = $_POST;
-    $array['userid'] = user_id();
+    $array['userid'] = User::getInstance()->getCurrentUserID();
     userquery::getInstance()->change_password($array);
 }
 
@@ -93,7 +93,7 @@ if ($mode === 'profile' && !User::getInstance()->hasPermission('enable_channel_p
 assign('mode', $mode);
 
 $params = [
-    'userid' => user_id(),
+    'userid' => User::getInstance()->getCurrentUserID(),
     'limit'  => $sql_limit ?? '',
     'order'  => ' date_start DESC '
 ];
@@ -146,7 +146,7 @@ switch ($mode) {
             userquery::getInstance()->unsubscribe_user($sid);
         }
         assign('mode', 'subs');
-        assign('subs', userquery::getInstance()->get_user_subscriptions(user_id()));
+        assign('subs', userquery::getInstance()->get_user_subscriptions(User::getInstance()->getCurrentUserID()));
         break;
 }
 

@@ -31,7 +31,7 @@
             {/if}
 
             <div class="clearfix views-date">
-                <span>{$video.views}&nbsp;views</span>
+                <span>{$video.views}&nbsp;{lang('views')}</span>
                 <time class="date">{$video.date_added|niceTime}</time>
             </div>
         </div>
@@ -69,7 +69,7 @@
                 {/if}
             </h5>
             <div class="clearfix views-time">
-                <span><i class="icon-eye"></i> {$video.views} views</span>
+                <span><i class="icon-eye"></i> {$video.views} {lang('views')}</span>
             </div>
         </div>
     </div>

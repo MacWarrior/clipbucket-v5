@@ -15,8 +15,9 @@ $(document).ready(function(){
         runtimes : 'html5,silverlight,html4',
         url : uploadurl,
         file_data_name : 'Filedata',
-        chunk_size: chunk_upload ? max_upload_size : false,
+        chunk_size: chunk_upload ? chunk_upload_size : false,
         max_file_size : max_file_size,
+        max_file_size_error_message: max_file_size_error_message,
         filters: {
             mime_types : [
                 { title : 'Video files', extensions : video_extensions }
@@ -166,6 +167,7 @@ $(document).ready(function(){
 
             if( file.percent === 100 ){
                 $(oneUploadForm).find('.saveVideoDetails').removeAttr('disabled');
+                $(oneUploadForm).find('#button_info_tmdb').removeAttr('disabled');
             }
 
             wrapperDiv.appendChild(oneUploadForm);
@@ -271,6 +273,7 @@ $(document).ready(function(){
 
             if( up.files[i].percent < 100 ){
                 $('#tab'+index+' .saveVideoDetails').attr('disabled',true);
+                $('#tab'+index+' #button_info_tmdb').attr('disabled',true);
             }
             index++;
         }
@@ -365,6 +368,7 @@ $(document).ready(function(){
                         $('#tab' + index).find('.player-holder').html(players[video_id]);
                     });
                     $('#tab'+index+' .saveVideoDetails').removeAttr('disabled');
+                    $('#tab'+index+' #button_info_tmdb').removeAttr('disabled');
                     getUpdate();
                 }
             }
@@ -390,6 +394,7 @@ $(document).ready(function(){
                             $('#uploadMessage').html(msg.valid).attr('class', 'alert alert-success container');
 
                             $('#tab'+index+' .saveVideoDetails').attr('disabled',true);
+                            $('#tab'+index+' #button_info_tmdb').attr('disabled',true);
 
                             setTimeout(function(){
                                 $('#uploadMessage').addClass('hidden');
@@ -490,7 +495,7 @@ $(document).ready(function(){
 function getInfoTmdb(videoid, type, video_title, page,sort, sort_order) {
     showSpinner();
     $.ajax({
-        url: baseurl+"actions/info_tmdb.php",
+        url: baseurl+"actions/tmdb_info.php",
         type: "POST",
         data: {videoid: videoid, video_title:video_title, type: type,page: page,sort: sort, sort_order: sort_order },
         dataType: 'json',
@@ -500,6 +505,9 @@ function getInfoTmdb(videoid, type, video_title, page,sort, sort_order) {
             modal.html(result['template']);
             modal.modal();
             $('.page-content').prepend(result['msg']);
+        },
+        complete: function () {
+            hideSpinner();
         }
     });
 }
@@ -507,7 +515,7 @@ function getInfoTmdb(videoid, type, video_title, page,sort, sort_order) {
 function saveInfoTmdb(tmdb_video_id, type, videoid) {
     showSpinner();
     $.ajax({
-        url: baseurl+"actions/import_tmdb.php",
+        url: baseurl+"actions/tmdb_import.php",
         type: "POST",
         data: {tmdb_video_id: tmdb_video_id, videoid: videoid, type: type},
         dataType: 'json',
@@ -542,6 +550,9 @@ function saveInfoTmdb(tmdb_video_id, type, videoid) {
                 });
             }
         },
+        complete: function () {
+            hideSpinner();
+        }
     });
 }
 

@@ -1543,9 +1543,11 @@ function remove_empty_parent_directory($path, string $stop_path): void
 function clean_orphan_files($file): string
 {
     $filename = '';
+    $result = null;
+    $redis_type_key = null;
+    $cache_lookup_key = null;
     if (config('cache_enable') == 'yes') {
-        $redis_key = 'clean_orphan_files';
-        $tab_redis = CacheRedis::getInstance()->get($redis_key) ?: [];
+        $redis_key_prefix = 'clean_orphan_files';
     }
     $where_video_status = '';
     if (in_array($file['type'], ['convert_video_hls', 'convert_video_mp4'])) {
@@ -1553,7 +1555,6 @@ function clean_orphan_files($file): string
     } elseif ($file['type'] === 'video_temp') {
         $where_video_status = " AND status IN ('Successful','Failed')";
     }
-
     switch ($file['type']) {
         case 'convert_video_hls':
         case 'convert_video_mp4':
@@ -1569,7 +1570,8 @@ function clean_orphan_files($file): string
             $filename = $file['video'];
             if (config('cache_enable') == 'yes') {
                 $redis_type_key = 'video';
-                $result = $tab_redis[$redis_type_key][$filename] ?? null;
+                $cache_lookup_key = $redis_key_prefix . ':' . $redis_type_key . ':' . md5($filename . $where_video_status);
+                $result = CacheRedis::getInstance()->get($cache_lookup_key);
             }
             if (empty($result)) {
                 $result = Clipbucket_db::getInstance()->_select($query);
@@ -1582,7 +1584,8 @@ function clean_orphan_files($file): string
             $filename = $file['photo'];
             if (config('cache_enable') == 'yes') {
                 $redis_type_key = 'photo';
-                $result = $tab_redis[$redis_type_key][$filename] ?? null;
+                $cache_lookup_key = $redis_key_prefix . ':' . $redis_type_key . ':' . md5($filename);
+                $result = CacheRedis::getInstance()->get($cache_lookup_key);
             }
             if (empty($result)) {
                 $result = Clipbucket_db::getInstance()->_select($query);
@@ -1594,7 +1597,8 @@ function clean_orphan_files($file): string
             $filename = $file['user'];
             if (config('cache_enable') == 'yes') {
                 $redis_type_key = 'user';
-                $result = $tab_redis[$redis_type_key][$filename] ?? null;
+                $cache_lookup_key = $redis_key_prefix . ':' . $redis_type_key . ':' . md5($filename);
+                $result = CacheRedis::getInstance()->get($cache_lookup_key);
             }
             if (empty($result)) {
                 $result = Clipbucket_db::getInstance()->_select($query);
@@ -1608,7 +1612,8 @@ function clean_orphan_files($file): string
             $filename = str_replace(' ','_',$search_name);
             if (config('cache_enable') == 'yes') {
                 $redis_type_key = $file['type'];
-                $result = $tab_redis[$redis_type_key][$filename] ?? null;
+                $cache_lookup_key = $redis_key_prefix . ':' . $redis_type_key . ':' . md5($filename);
+                $result = CacheRedis::getInstance()->get($cache_lookup_key);
             }
             if (empty($result)) {
                 $result = Clipbucket_db::getInstance()->_select($query);
@@ -1625,7 +1630,8 @@ function clean_orphan_files($file): string
             $filename = $file['thumb'];
             if (config('cache_enable') == 'yes') {
                 $redis_type_key = 'category_thumb';
-                $result = $tab_redis[$redis_type_key][$filename] ?? null;
+                $cache_lookup_key = $redis_key_prefix . ':' . $redis_type_key . ':' . md5($filename);
+                $result = CacheRedis::getInstance()->get($cache_lookup_key);
             }
             if (empty($result)) {
                 $result = Clipbucket_db::getInstance()->_select($query);
@@ -1640,9 +1646,8 @@ function clean_orphan_files($file): string
             return false;
     }
     if (!empty($result)) {
-        if (config('cache_enable') == 'yes' && !(in_array($filename, $tab_redis[$redis_type_key] ?? []))) {
-            $tab_redis[$redis_type_key][] = $filename;
-            CacheRedis::getInstance()->set($redis_key, $tab_redis, 900);
+        if (config('cache_enable') == 'yes' && !empty($cache_lookup_key)) {
+            CacheRedis::getInstance()->set($cache_lookup_key, true, 900);
         }
         return '';
     }

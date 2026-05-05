@@ -1,7 +1,7 @@
 <div class="heading">
   <h2>Showing <b>{$total_logs}</b> log entries {if $smarty.get.type}for<b> {$smarty.get.type|ucfirst}</b> action{/if}</h2>
   <div class="btn-group-xs text-center" role="group" aria-label="...">
-  <a href="{DirPath::getUrl('admin_area')}action_logs.php?show=all"><button type="button" class="btn btn-primary">All</button></a>
+  <a href="{DirPath::getUrl('admin_area')}action_logs.php"><button type="button" class="btn btn-primary">All</button></a>
   <a href="{DirPath::getUrl('admin_area')}action_logs.php?type=login"><button type="button" class="btn btn-primary">Login Only</button>
   <a href="{DirPath::getUrl('admin_area')}action_logs.php?type=signup"><button type="button" class="btn btn-primary">Signup Only</button></a>
   <a href="{DirPath::getUrl('admin_area')}action_logs.php?type=upload_video"><button type="button" class="btn btn-primary">Uploads Only</button></a>

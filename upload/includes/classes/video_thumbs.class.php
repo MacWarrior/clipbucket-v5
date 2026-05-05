@@ -97,10 +97,10 @@ class VideoThumbs
                 .' ) AS is_default';
         }
 
-        if ($param_videoid) {
+        if ($param_videoid !== false) {
             $conditions[] = self::$tableName . '.videoid = ' . (int)$param_videoid;
         }
-        if ($param_num) {
+        if ($param_num !== false) {
             $conditions[] = self::$tableName . '.num = ' . (int)$param_num;
         }
         if ($param_type) {
@@ -566,7 +566,7 @@ class VideoThumbs
     public function importOldThumbFromDisk(bool $ignore = false): void
     {
         //check files
-        $glob = DirPath::get('thumbs') . $this->ffmpeg_instance->file_directory . DIRECTORY_SEPARATOR . $this->ffmpeg_instance->file_name . '*';
+        $glob = DirPath::get('thumbs') . $this->ffmpeg_instance->file_directory . $this->ffmpeg_instance->file_name . '*';
         $vid_thumbs = glob($glob);
         if (!empty($vid_thumbs) && !empty($this->ffmpeg_instance->file_directory) && !empty($this->ffmpeg_instance->file_name)) {
             foreach ($vid_thumbs as $thumb) {
@@ -677,6 +677,9 @@ class VideoThumbs
                 DiscordLog::sendDump($msg);
             }
             return $is_multi ? [self::getDefaultMissingThumb($return_type, $return_with_num)] : self::getDefaultMissingThumb($return_type, $return_with_num);
+        }
+        if ($is_default && $type == 'thumbnail' && Video::getUseBackdropDefault($video)) {
+            $type = 'backdrop';
         }
 
         $thumb_video_directory_path = DirPath::get('thumbs') ;
@@ -870,7 +873,7 @@ class VideoThumbs
      * @param $thumb_version
      * @return string
      */
-    private static function getThumbPath($type, $video_file_directory, $video_file_name, $thumb_is_auto, $thumb_num, $thumb_resolution, $thumb_width, $thumb_height, $thumb_extension, $thumb_version): string
+    public static function getThumbPath($type, $video_file_directory, $video_file_name, $thumb_is_auto, $thumb_num, $thumb_resolution, $thumb_width, $thumb_height, $thumb_extension, $thumb_version): string
     {
         if ($thumb_version > '5.5.2') {
             $filepath = $video_file_directory . DIRECTORY_SEPARATOR . $video_file_name .DIRECTORY_SEPARATOR;
@@ -892,7 +895,7 @@ class VideoThumbs
      * @param $thumb_version
      * @return string
      */
-    private static function getThumbName($type, $video_file_name, $thumb_is_auto, $thumb_num, $thumb_resolution, $thumb_width, $thumb_height, $thumb_extension, $thumb_version): string
+    public static function getThumbName($type, $video_file_name, $thumb_is_auto, $thumb_num, $thumb_resolution, $thumb_width, $thumb_height, $thumb_extension, $thumb_version): string
     {
         if ($thumb_version > '5.5.2') {
             $filename =  $video_file_name . '-'
@@ -993,7 +996,7 @@ class VideoThumbs
             $num = self::getLastNum($video['videoid'], $type, $is_auto) + 1;
             $temp_file_path = $temp_directory . $video['file_name'] . '-' . $num . '-' . $type . '.' . $ext_destination;
 
-            if (self::ValidateImage($file['tmp_name'][$file_array_key], $ext_original)) {
+            if (Photo::ValidateImage($file['tmp_name'][$file_array_key])) {
                 $id_video_image = Clipbucket_db::getInstance()->insert(tbl(self::$tableName), [
                     'videoid',
                     'type',
@@ -1047,6 +1050,8 @@ class VideoThumbs
                     }
                 }
                 unlink($temp_file_path);
+            } else {
+                e(lang('wrong_image_extension', Photo::getAllowedPhotoExtension('string')));
             }
         }
     }
@@ -1140,20 +1145,6 @@ class VideoThumbs
     }
 
     //Validating an Image
-    public static function ValidateImage($file, $ext = null): bool
-    {
-        $allowed_types = explode(',', config('allowed_photo_types'));
-        if( !in_array(strtolower($ext), $allowed_types) ) {
-            return false;
-        }
-
-        $array = getimagesize($file);
-        if (empty($array[0]) || empty($array[1])) {
-            return false;
-        }
-
-        return true;
-    }
 
     /**
      * @param array $image

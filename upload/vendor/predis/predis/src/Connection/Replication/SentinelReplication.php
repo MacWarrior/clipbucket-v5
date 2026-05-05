@@ -4,7 +4,7 @@
  * This file is part of the Predis package.
  *
  * (c) 2009-2020 Daniele Alessandri
- * (c) 2021-2025 Till Krüss
+ * (c) 2021-2026 Till Krüss
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -24,6 +24,7 @@ use Predis\Connection\NodeConnectionInterface;
 use Predis\Connection\Parameters;
 use Predis\Connection\ParametersInterface;
 use Predis\Connection\RelayFactory;
+use Predis\Connection\Resource\Exception\StreamInitException;
 use Predis\Replication\ReplicationStrategy;
 use Predis\Replication\RoleException;
 use Predis\Response\Error;
@@ -75,7 +76,15 @@ class SentinelReplication extends AbstractAggregateConnection implements Replica
     protected $strategy;
 
     /**
-     * @var NodeConnectionInterface[]
+     * Sentinel connection parameters.
+     *
+     * Can contain:
+     * - String URIs (e.g., "tcp://127.0.0.1:26379")
+     * - Arrays of connection parameters (e.g., ['host' => '127.0.0.1', 'port' => 26379])
+     * - ParametersInterface objects
+     * - NodeConnectionInterface objects
+     *
+     * @var array<string|array|ParametersInterface|NodeConnectionInterface>
      */
     protected $sentinels = [];
 
@@ -338,7 +347,7 @@ class SentinelReplication extends AbstractAggregateConnection implements Replica
                         'role' => 'sentinel',
                     ];
                 }
-            } catch (ConnectionException $exception) {
+            } catch (ConnectionException|StreamInitException $exception) {
                 $this->sentinelConnection = null;
 
                 goto SENTINEL_QUERY;
@@ -472,7 +481,7 @@ class SentinelReplication extends AbstractAggregateConnection implements Replica
                 $masterConnection = $this->connectionFactory->create($masterParameters);
 
                 $this->add($masterConnection);
-            } catch (ConnectionException $exception) {
+            } catch (ConnectionException|StreamInitException $exception) {
                 $this->sentinelConnection = null;
 
                 goto SENTINEL_QUERY;
@@ -504,7 +513,7 @@ class SentinelReplication extends AbstractAggregateConnection implements Replica
                 foreach ($slavesParameters as $slaveParameters) {
                     $this->add($this->connectionFactory->create($slaveParameters));
                 }
-            } catch (ConnectionException $exception) {
+            } catch (ConnectionException|StreamInitException $exception) {
                 $this->sentinelConnection = null;
 
                 goto SENTINEL_QUERY;
@@ -570,7 +579,7 @@ class SentinelReplication extends AbstractAggregateConnection implements Replica
     {
         $role = strtolower($role);
         $retry = $connection->getParameters()->retry;
-        $actualRole = $retry->callWithRetry(function () use ($connection) {
+        $actualRole = $retry->callWithRetry(static function () use ($connection) {
             return $connection->executeCommand(RawCommand::create('ROLE'));
         });
 
@@ -809,7 +818,23 @@ class SentinelReplication extends AbstractAggregateConnection implements Replica
         }
 
         if (!empty($this->sentinels)) {
-            return $this->sentinels[0]->getParameters();
+            $sentinel = $this->sentinels[0];
+
+            // Handle string URIs (e.g., "tcp://127.0.0.1:26379")
+            if (is_string($sentinel)) {
+                return new Parameters(Parameters::parse($sentinel));
+            }
+
+            // After querySentinels(), sentinels array contains plain arrays instead of connection objects
+            if (is_array($sentinel)) {
+                return new Parameters($sentinel);
+            }
+
+            if ($sentinel instanceof ParametersInterface) {
+                return $sentinel;
+            }
+
+            return $sentinel->getParameters();
         }
 
         return null;

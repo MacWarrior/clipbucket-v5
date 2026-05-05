@@ -2,7 +2,7 @@
     <div class="featured-video clearfix">
         <div class="video_thumb">
             <a href="{video_link($pop_video)}" class="no_overflow">
-                <img src="{VideoThumbs::getDefaultThumbFile($pop_video.videoid)}" {ANCHOR place="video_thumb" data=$pop_video} class="img-responsive {if Video::getInstance()->isToBlur($pop_video.videoid)}blur{/if}" {VideoThumbs::getDefaultThumbFile($pop_video.videoid)}/>
+                <img src="{VideoThumbs::getDefaultThumbFile($pop_video.videoid)}" {ANCHOR place="video_thumb" data=$pop_video} class="img-responsive {if Video::getInstance()->isToBlur($pop_video.videoid)}blur{/if}" {Video::get_thumbs_preview($pop_video, '168x105')}/>
                 {if $pop_video.duration>1}
                     <time class="duration" title="Video duration : {$pop_video.duration|SetTime}">{$pop_video.duration|SetTime}</time>
                 {/if}

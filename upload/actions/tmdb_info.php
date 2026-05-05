@@ -6,7 +6,7 @@ if (config('tmdb_enable_on_front_end') != 'yes' || config('enable_tmdb') != 'yes
     return false;
 }
 
-$results = Tmdb::getInstance()->getInfoTmdb($_POST['videoid'], ($_POST['type'] ?? 'movie'), [
+$results = Tmdb::getInstance()->getInfoTmdb($_POST['videoid'] ?? 0, ($_POST['type'] ?? 'movie'), [
     'video_title' => $_POST['video_title'],
     'sort'        => $_POST['sort'],
     'sort_order'  => $_POST['sort_order'],

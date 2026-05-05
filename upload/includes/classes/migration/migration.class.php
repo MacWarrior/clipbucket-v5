@@ -66,6 +66,12 @@ class Migration
             }
             error_log('ERROR : ' . $e->getMessage());
             throw new Exception('ERROR : ' . $e->getMessage());
+        } catch (NoRollbackException $e) {
+            Clipbucket_db::getInstance()->commit();
+            e($e->getMessage());
+            error_log($e->getMessage());
+            DiscordLog::sendDump($e->getMessage());
+            throw new Exception($e->getMessage());
         } catch (Exception $e) {
             Clipbucket_db::getInstance()->rollback();
             e($e->getMessage());
@@ -108,6 +114,12 @@ class Migration
         Clipbucket_db::getInstance()->executeThrowException($sql);
         CacheRedis::flushAll();
         Update::getInstance()->flush();
+        Update::getInstance()->getDBVersion(true);
+        self::clearSingletonInstance(Video::class);
+        self::clearSingletonInstance(Photo::class);
+        self::clearSingletonInstance(Playlist::class);
+        self::clearSingletonInstance(Category::class);
+        self::clearSingletonInstance(User::class);
     }
 
     /**
@@ -132,6 +144,17 @@ class Migration
     public function getType()
     {
         return $this->type;
+    }
+
+    /**
+     * @param string $className
+     * @return void
+     */
+    private static function clearSingletonInstance(string $className): void
+    {
+        if (method_exists($className, 'clearInstance')) {
+            $className::clearInstance();
+        }
     }
 
     /**
@@ -178,6 +201,8 @@ class Migration
     }
 
     /**
+     * @param string $translation_key
+     * @param array $translations
      * @throws Exception
      */
     public static function updateTranslation(string $translation_key, array $translations): void
@@ -190,7 +215,7 @@ class Migration
             $sql = 'SET ' . $language_id_sql . ' = (SELECT `language_id` FROM `' . tbl('languages') . '` WHERE language_code = \'' . mysql_clean(strtolower($language_code)) . '\');';
             Clipbucket_db::getInstance()->executeThrowException($sql);
 
-            $sql = 'UPDATE `' . tbl('languages_translations') . '` SET `translation` = \'' . mysql_clean($translation) . '\' WHERE id_language_key = @id_language_key AND language_id = ' . (int)$language_id_sql . ';';
+            $sql = 'UPDATE `' . tbl('languages_translations') . '` SET `translation` = \'' . mysql_clean($translation) . '\' WHERE id_language_key = @id_language_key AND language_id = ' . $language_id_sql . ';';
             Clipbucket_db::getInstance()->executeThrowException($sql);
         }
     }

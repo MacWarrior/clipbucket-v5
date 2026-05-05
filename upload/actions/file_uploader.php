@@ -81,6 +81,8 @@ switch ($mode) {
         $vid = $_POST['vid'];
         assign('videoid', $vid);
 
+        assign('use_backdrop_default', Video::getUseBackdropDefault($vidDetails));
+
         $videoFields = Upload::getInstance()->load_video_fields($vidDetails);
         Template('blocks/upload/upload_form.html');
         break;
@@ -95,7 +97,7 @@ switch ($mode) {
             'destinationFilePath' => $targetFile,
             'keepExtension'       => true,
             'maxFileSize'         => !empty((int)config('max_upload_size')) ? config('max_upload_size') : 1000,
-            'allowedExtensions'   => config('allowed_video_types')
+            'allowedExtensions'   => explode(',',config('allowed_video_types'))
         ];
 
         FileUpload::getInstance($params)->processUpload();

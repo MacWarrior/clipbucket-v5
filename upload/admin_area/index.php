@@ -143,6 +143,16 @@ if( config('enable_update_checker') == '1' ){
     Assign('update_checker_content', $update->getUpdateHTML());
 }
 
+assign('ongoing_conversion', VideoConversionQueue::getAll(['count' => true, 'not_complete'=>true]));
+assign('online_users', count(userquery::getInstance()->get_online_users()));
+$progress_tools = [];
+if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.0', '367')) {
+    $progress_tools = AdminTool::getTools([
+        '  tools_histo.id_tools_histo_status IN (SELECT id_tools_histo_status FROM ' . tbl('tools_histo_status') . ' WHERE language_key_title IN(\'in_progress\',\'stopping\'))'
+    ]);
+}
+assign('active_statistic_pane', 'li_live_statistics');
+assign('progress_tools', $progress_tools);
 ClipBucket::getInstance()->addAdminJS(['pages/dashboard/dashboard'.$min_suffixe.'.js' => 'admin']);
 
 $info_php = Update::getInstance()->CheckPHPVersion();
@@ -150,6 +160,15 @@ $message_php = '';
 if (!empty($info_php) && $info_php['version_update'] >= $info_php['cb_version_min']) {
     $message_php = lang('confirmation_upgrade_core_php_version_require', ['<b>' . $info_php['php_version'] . '</b>', '<b>' . $info_php['version_update'] . ' - ' . ($info_php['revision_update']?:'1') . '</b>']);
 }
+
+$message_breaking_version = '';
+$info_warning = Update::getInstance()->CheckBreakingVersion();
+if (!empty($info_warning)) {
+    $message_breaking_version = lang('confirmation_upgrade_core_breaking_version', ['<b>' . $info_warning['version'] . ' - ' . ($info_warning['revision']?:'1') . '</b>']) . '<br>' . lang('do_want_to_update');
+}
 assign('message_php', $message_php);
+assign('message_breaking_version', $message_breaking_version);
+assign('do_want_to_update', lang('do_want_to_update'));
+assign('maintenance_recommended', lang('maintenance_recommended'));
 template_files('index.html');
 display_it();

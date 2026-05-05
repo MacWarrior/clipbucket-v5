@@ -364,12 +364,14 @@ function collection_actions(form,mode,objID,result_con,type,cid)
                         alert('No Data returned');
                     } else {
                         if (data.msg) {
-                            $(result_con).html(data.msg).slideDown(350);
+                            _cb.throwHeadDivMsg(data.msg, '2000');
                             $(result_con).find('.container').css({
                                 'maxWidth': '100%'
                             });
                         }
                     }
+                    hideSpinner();
+
                 }, 'json');
             break;
 
@@ -391,14 +393,15 @@ function collection_actions(form,mode,objID,result_con,type,cid)
                         $(result_con+'_'+objID).hide();
                     }
                     if(data.msg) {
-                        $(result_con).html(data.msg).slideDown(350);
-                        $('#'+form).slideUp(350);
+                        $(result_con+'_'+objID).parent().parent().slideUp(350);
+                        _cb.throwHeadDivMsg(data.msg, '2000');
                     }
                 }
+                hideSpinner();
+
             },'json');
             break;
     }
-    hideSpinner();
 }
 
 // Simple function to open url with javascript
@@ -624,27 +627,6 @@ function checkUncheckAll(theElement) {
             theForm[z].checked = theElement.checked;
         }
     }
-}
-
-/**
- * Function used to rate object
- */
-function rate(id,rating,type)
-{
-    var page = baseurl+'actions/ajax.php';
-    $.post(page, {
-        mode : 'rating',
-        id:id,
-        rating:rating,
-        type:type
-    },
-    function(data) {
-        if(!data){
-            alert('No data');
-        } else {
-            $("#rating_container").html(data);
-        }
-    },'text');
 }
 
 function setPageHash(Page)
