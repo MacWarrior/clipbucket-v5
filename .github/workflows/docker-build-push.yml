@@ -36,6 +36,11 @@ on:
         required: true
         default: false
         type: boolean
+      install_profiling:
+        description: 'Install Profiling Tools'
+        required: true
+        default: false
+        type: boolean
       domain_name:
         description: 'Domain name for ClipBucket'
         required: true
@@ -45,6 +50,11 @@ on:
         description: 'Domain name for phpMyAdmin'
         required: true
         default: 'phpmyadmin.local'
+        type: string
+      profiling_domain:
+        description: 'Domain name for Profiling'
+        required: true
+        default: 'profiling.local'
         type: string
 
 env:
@@ -264,6 +274,7 @@ jobs:
           PHPMYADMIN="${{ inputs.install_phpmyadmin }}"
           XDEBUG="${{ inputs.install_xdebug }}"
           REDIS="${{ inputs.install_redis }}"
+          PROFILING="${{ inputs.install_profiling }}"
 
           # Base tag with PHP version
           TAG="php${PHP_VER}"
@@ -280,6 +291,9 @@ jobs:
           fi
           if [ "$MARIADB" = "true" ]; then
             TAG="${TAG}-lite"
+          fi
+          if [ "$PROFILING" = "true" ]; then
+            TAG="${TAG}-profiling"
           fi
 
           # Add manual suffix
@@ -302,8 +316,10 @@ jobs:
             INSTALL_PHPMYADMIN=${{ inputs.install_phpmyadmin }}
             INSTALL_XDEBUG=${{ inputs.install_xdebug }}
             INSTALL_REDIS=${{ inputs.install_redis }}
+            INSTALL_PROFILING=${{ inputs.install_profiling }}
             DOMAIN_NAME=${{ inputs.domain_name }}
             PHPMYADMIN_DOMAIN=${{ inputs.phpmyadmin_domain }}
+            PROFILING_DOMAIN=${{ inputs.profiling_domain }}
           labels: |
             org.opencontainers.image.title=ClipBucket v5
             org.opencontainers.image.source=${{ github.server_url }}/${{ github.repository }}
@@ -312,6 +328,7 @@ jobs:
             org.opencontainers.image.phpmyadmin=${{ inputs.install_phpmyadmin }}
             org.opencontainers.image.xdebug=${{ inputs.install_xdebug }}
             org.opencontainers.image.redis=${{ inputs.install_redis }}
-          cache-from: type=gha
+            org.opencontainers.image.profiling=${{ inputs.install_profiling }}
+            cache-from: type=gha
           cache-to: type=gha,mode=max
           platforms: linux/amd64
