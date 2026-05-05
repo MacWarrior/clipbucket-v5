@@ -166,7 +166,7 @@ Replace username with the name of the user. For example, for the user john, use 
 <details>
   <summary>Lite Image (External Database)</summary>
 
-For production environments or when using an external database, use the **lite** image which excludes MariaDB:
+When using an external database, use the **lite** image which excludes MariaDB:
 
 ```bash
 docker run \

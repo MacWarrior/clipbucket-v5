@@ -9,6 +9,7 @@ This Dockerfile supports multiple configurations to meet different development a
 | `PHP_VERSION` | PHP version | `8.1`, `8.2`, `8.3`, `8.4`, `8.5` | `8.5` |
 | `DOMAIN_NAME` | Domain for ClipBucket | string | `clipbucket.local` |
 | `PHPMYADMIN_DOMAIN` | Domain for phpMyAdmin | string | `phpmyadmin.local` |
+| `PROFILING_DOMAIN` | Domain for profiling | string | `profiling.local` |
 | `INSTALL_MARIADB` | Install MariaDB | `true`, `false` | `false` |
 | `INSTALL_PHPMYADMIN` | Install phpMyAdmin | `true`, `false` | `false` |
 | `INSTALL_XDEBUG` | Install Xdebug | `true`, `false` | `false` |
@@ -63,20 +64,20 @@ docker build -t clipbucket-v5:production \\
 
 Images are automatically built and published during releases:
 
-| Tag | Description | PHP | MariaDB | Redis | phpMyAdmin | Xdebug |
-|-----|-------------|-----|---------|-------|------------|--------|
-| `latest` | Recommended stable version | 8.5 | ✅ | ✅ | ❌ | ❌ |
-| `lite` | Lightweight version without database | 8.5 | ❌ | ❌ | ❌ | ❌ |
-| `dev-php8.1` | Development environment | 8.1 | ✅ | ✅ | ✅ | ❌ |
-| `dev-php8.2` | Development environment | 8.2 | ✅ | ✅ | ✅ | ❌ |
-| `dev-php8.3` | Development environment | 8.3 | ✅ | ✅ | ✅ | ❌ |
-| `dev-php8.4` | Development environment | 8.4 | ✅ | ✅ | ✅ | ❌ |
-| `dev-php8.5` | Development environment | 8.5 | ✅ | ✅ | ✅ | ❌ |
-| `dev-php8.1-xdebug` | Dev with debugging | 8.1 | ✅ | ✅ | ✅ | ✅ |
-| `dev-php8.2-xdebug` | Dev with debugging | 8.2 | ✅ | ✅ | ✅ | ✅ |
-| `dev-php8.3-xdebug` | Dev with debugging | 8.3 | ✅ | ✅ | ✅ | ✅ |
-| `dev-php8.4-xdebug` | Dev with debugging | 8.4 | ✅ | ✅ | ✅ | ✅ |
-| `dev-php8.5-xdebug` | Dev with debugging | 8.5 | ✅ | ✅ | ✅ | ✅ |
+| Tag | Description | PHP | MariaDB | Redis | phpMyAdmin | Xdebug | profiling |
+|-----|-------------|-----|---------|-------|------------|--------|-----------|
+| `latest` | Recommended stable version | 8.5 | ✅ | ✅ | ❌ | ❌ | ❌ |
+| `lite` | Lightweight version without database | 8.5 | ❌ | ❌ | ❌ | ❌ | ❌ |
+| `dev-php8.1` | Development environment | 8.1 | ✅ | ✅ | ✅ | ❌ | ✅ |
+| `dev-php8.2` | Development environment | 8.2 | ✅ | ✅ | ✅ | ❌ | ✅ |
+| `dev-php8.3` | Development environment | 8.3 | ✅ | ✅ | ✅ | ❌ | ✅ |
+| `dev-php8.4` | Development environment | 8.4 | ✅ | ✅ | ✅ | ❌ | ✅ |
+| `dev-php8.5` | Development environment | 8.5 | ✅ | ✅ | ✅ | ❌ | ✅ |
+| `dev-php8.1-xdebug` | Dev with debugging | 8.1 | ✅ | ✅ | ✅ | ✅ | ✅ |
+| `dev-php8.2-xdebug` | Dev with debugging | 8.2 | ✅ | ✅ | ✅ | ✅ | ✅ |
+| `dev-php8.3-xdebug` | Dev with debugging | 8.3 | ✅ | ✅ | ✅ | ✅ | ✅ |
+| `dev-php8.4-xdebug` | Dev with debugging | 8.4 | ✅ | ✅ | ✅ | ✅ | ✅ |
+| `dev-php8.5-xdebug` | Dev with debugging | 8.5 | ✅ | ✅ | ✅ | ✅ | ✅ |
 
 ## 🌐 Exposed Ports
 
@@ -99,6 +100,7 @@ Images are automatically built and published during releases:
 |----------|-------------|--------|
 | `DOMAIN_NAME` | Domain for ClipBucket | `clipbucket.local` |
 | `PHPMYADMIN_DOMAIN` | Domain for phpMyAdmin | `phpmyadmin.local` |
+| `PROFILING_DOMAIN` | Domain for profiling | `profiling.local` |
 | `MYSQL_PASSWORD` | MySQL password | `clipbucket_password` |
 | `UID` | User UID | `1000` |
 | `GID` | User GID | `1000` |
