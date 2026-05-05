@@ -64,7 +64,7 @@ docker build -t clipbucket-v5:production \\
 
 Images are automatically built and published during releases:
 
-| Tag | Description | PHP | MariaDB | Redis | phpMyAdmin | Xdebug | profiling |
+| Tag | Description | PHP | MariaDB | Redis | phpMyAdmin | Xdebug | Profiling |
 |-----|-------------|-----|---------|-------|------------|--------|-----------|
 | `latest` | Recommended stable version | 8.5 | ✅ | ✅ | ❌ | ❌ | ❌ |
 | `lite` | Lightweight version without database | 8.5 | ❌ | ❌ | ❌ | ❌ | ❌ |
