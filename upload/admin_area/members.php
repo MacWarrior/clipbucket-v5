@@ -28,7 +28,7 @@ if (isset($_GET['deleteuser']) && User::getInstance()->getCurrentUserID() != $_G
     if ($anonymous_id == $_GET['deleteuser']) {
         e(lang('anonymous_locked'));
     } else {
-        userquery::getInstance()->delete_user($_GET['deleteuser']);
+        User::getInstance((int)$_GET['deleteuser'])->delete();
     }
 }
 

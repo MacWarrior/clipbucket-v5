@@ -1219,7 +1219,57 @@
                                 </div>
                             </div>
                             <hr/>
-
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <h4>{lang('option_on_delete_user')}</h4>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <label class="nowrap" for="delete_video_on_delete_user" title="{lang('delete_user_s', lang('videos'))}">{lang('delete_user_s', lang('videos')|strtolower)}</label>
+                                </div>
+                                <div class="col-md-4 row-size">
+                                    <input value="yes" name="delete_video_on_delete_user" id="delete_video_on_delete_user" {if $row.delete_video_on_delete_user=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+                                    <span class="lbl"></span>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <label class="nowrap" for="delete_photo_on_delete_user" title="{lang('delete_user_s', lang('photos'))}">{lang('delete_user_s', lang('photos')|strtolower)}</label>
+                                </div>
+                                <div class="col-md-4 row-size">
+                                    <input value="yes" name="delete_photo_on_delete_user" id="delete_photo_on_delete_user" {if $row.delete_photo_on_delete_user=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+                                    <span class="lbl"></span>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <label class="nowrap" for="delete_playlist_on_delete_user" title="{lang('delete_user_s', lang('playlists'))}">{lang('delete_user_s', lang('playlists')|strtolower)}</label>
+                                </div>
+                                <div class="col-md-4 row-size">
+                                    <input value="yes" name="delete_playlist_on_delete_user" id="delete_playlist_on_delete_user" {if $row.delete_playlist_on_delete_user=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+                                    <span class="lbl"></span>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <label class="nowrap" for="delete_comments_on_delete_user" title="{lang('delete_user_s', lang('comments'))}">{lang('delete_user_s', lang('comments')|strtolower)}</label>
+                                </div>
+                                <div class="col-md-4 row-size">
+                                    <input value="yes" name="delete_comments_on_delete_user" id="delete_comments_on_delete_user" {if $row.delete_comments_on_delete_user=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+                                    <span class="lbl"></span>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <label class="nowrap" for="delete_collection_on_delete_user" title="{lang('delete_user_s', lang('collections'))}">{lang('delete_user_s', lang('collections')|strtolower)}</label>
+                                </div>
+                                <div class="col-md-4 row-size">
+                                    <input value="yes" name="delete_collection_on_delete_user" id="delete_collection_on_delete_user" {if $row.delete_collection_on_delete_user=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+                                    <span class="lbl"></span>
+                                </div>
+                            </div>
+                            <hr/>
                         </div>
 
                         <div class="col-md-4">

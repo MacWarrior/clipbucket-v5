@@ -2181,6 +2181,7 @@ class CBvideo extends CBCategory
      * @param $params
      *
      * @return bool|array|void|int
+     * @deprecated
      * @throws Exception
      */
     function get_videos($params)
