@@ -1,6 +1,6 @@
 {
   "version":"5.5.3",
-  "revision":"125",
+  "revision":"126",
   "status":"stable",
   "detail":[
     {
@@ -122,7 +122,8 @@
     {
       "title": "Installation & Update",
       "description": [
-        "Generate old posters & backdrops thumbs"
+        "Implement docker build automation through Github actions"
+        ,"Generate old posters & backdrops thumbs"
         ,"Fix SQL error on installation"
         ,"Fix possible git issue with core update"
         ,"Fix possible PHP error during update"
