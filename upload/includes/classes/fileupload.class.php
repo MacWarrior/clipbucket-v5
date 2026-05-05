@@ -58,12 +58,12 @@ class FileUpload
      */
     private function checkUploadedSize(): void
     {
-        if( (int)$_SERVER['CONTENT_LENGTH'] > getBytesFromFileSize($this->getMaxUploadSize('M')) ){
+        if( (int)$_SERVER['CONTENT_LENGTH'] > getBytesFromFileSize($this->getMaxUploadSize('M', false)) ){
             $this->error('POST exceeded maximum allowed size.');
         }
     }
 
-    public function getMaxUploadSize($suffix = ''): string
+    public function getMaxUploadSize($suffix = '', $reduced = true): string
     {
         $list_upload_limits = [];
 
@@ -77,13 +77,17 @@ class FileUpload
             $list_upload_limits[] = (float)config('cloudflare_upload_limit');
         }
 
-        return (min($list_upload_limits)-0.01).$suffix;
+        if( !$reduced ){
+            return min($list_upload_limits) . $suffix;
+        }
+
+        return (min($list_upload_limits) - 0.01) . $suffix;
     }
 
     public function getChunkedUploadSize(): string
     {
         $chunk_upload_size = (float)config('chunk_upload_size');
-        return ($chunk_upload_size - 0.01).'Mb';
+        return ($chunk_upload_size - 0.01) . 'Mb';
     }
 
     /**
