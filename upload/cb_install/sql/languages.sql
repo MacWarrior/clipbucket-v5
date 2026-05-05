@@ -1867,4 +1867,6 @@ VALUES ('ongoing_conversion'),
        ('likes'),
        ('dislikes'),
        ('recalcul_rates_label'),
-       ('recalcul_rates_description');
+       ('recalcul_rates_description'),
+       ('option_on_delete_user'),
+       ('delete_user_s');
