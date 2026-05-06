@@ -15,8 +15,8 @@ class MWIP extends \Migration
             video_id BIGINT(20) NOT NULL PRIMARY KEY,
             tmdb_id INT NOT NULL,
             tmdb_type VARCHAR(255) NOT NULL,
-            rate_average_tmdb FLOAT NULL,
-            rate_count_tmdb INT NULL
+            tmdb_rate_average FLOAT NULL,
+            tmdb_rate_count INT NULL
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;', [], [
             'table' => 'video_tmdb'
         ]);
@@ -50,8 +50,8 @@ class MWIP extends \Migration
                         $details =  \Tmdb::getInstance()->seriesDetail($video['id_tmdb'])['response'];
                         break;
                 }
-                $sql = 'INSERT INTO ' . tbl('video_tmdb') . ' (video_id, tmdb_type, tmdb_id, rate_average_tmdb, rate_count_tmdb) VALUES ( ' . (int)$video['videoid'] . ', \'' . $video['type_tmdb'] . '\', ' . (int)$video['id_tmdb'] . ', ' . (float)$details['vote_average'] . ', ' . (int)$details['vote_count'] . ' )
-                    ON DUPLICATE KEY UPDATE tmdb_id = VALUES(tmdb_id), tmdb_type = VALUES(tmdb_type), rate_average_tmdb = VALUES(rate_average_tmdb), rate_count_tmdb = VALUES(rate_count_tmdb)';
+                $sql = 'INSERT INTO ' . tbl('video_tmdb') . ' (video_id, tmdb_type, tmdb_id, tmdb_rate_average, tmdb_rate_count) VALUES ( ' . (int)$video['videoid'] . ', \'' . $video['type_tmdb'] . '\', ' . (int)$video['id_tmdb'] . ', ' . (float)$details['vote_average'] . ', ' . (int)$details['vote_count'] . ' )
+                    ON DUPLICATE KEY UPDATE tmdb_id = VALUES(tmdb_id), tmdb_type = VALUES(tmdb_type), tmdb_rate_average = VALUES(tmdb_rate_average), tmdb_rate_count = VALUES(tmdb_rate_count)';
                 \Clipbucket_db::getInstance()->execute($sql);
             }
         } while (!empty($videos));

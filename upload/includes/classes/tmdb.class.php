@@ -583,18 +583,18 @@ class Tmdb
      * @param int $videoid
      * @param int $id_tmdb
      * @param string $type_tmdb
-     * @param $rate_average_tmdb
-     * @param $rate_count_tmdb
+     * @param $tmdb_rate_average
+     * @param $tmdb_rate_count
      * @return bool
      * @throws Exception
      */
-    public function updateVideoTmdbInfo(int $videoid, int $id_tmdb, string $type_tmdb, $rate_average_tmdb, $rate_count_tmdb): bool
+    public function updateVideoTmdbInfo(int $videoid, int $id_tmdb, string $type_tmdb, $tmdb_rate_average, $tmdb_rate_count): bool
     {
         if (!Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '999')) {
             return false;
         }
-        $sql = 'INSERT INTO ' . tbl('video_tmdb') . ' (videoid, tmdb_type, tmdb_id, rate_average_tmdb, rate_count_tmdb) VALUES ( ' . (int)$videoid . ', \'' . $type_tmdb . '\', ' . (int)$id_tmdb . ', ' . (float)$rate_average_tmdb . ', ' . (int)$rate_count_tmdb . ' )
-        ON DUPLICATE KEY UPDATE id_tmdb = VALUES(id_tmdb), type_tmdb = VALUES(type_tmdb), rate_average_tmdb = VALUES(rate_average_tmdb), rate_count_tmdb = VALUES(rate_count_tmdb)';
+        $sql = 'INSERT INTO ' . tbl('video_tmdb') . ' (videoid, tmdb_type, tmdb_id, tmdb_rate_average, tmdb_rate_count) VALUES ( ' . (int)$videoid . ', \'' . $type_tmdb . '\', ' . (int)$id_tmdb . ', ' . (float)$tmdb_rate_average . ', ' . (int)$tmdb_rate_count . ' )
+        ON DUPLICATE KEY UPDATE id_tmdb = VALUES(id_tmdb), type_tmdb = VALUES(type_tmdb), tmdb_rate_average = VALUES(tmdb_rate_average), tmdb_rate_count = VALUES(tmdb_rate_count)';
         return Clipbucket_db::getInstance()->execute($sql);
     }
 }
