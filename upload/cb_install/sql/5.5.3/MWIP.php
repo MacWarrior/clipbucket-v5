@@ -23,7 +23,7 @@ class MWIP extends \Migration
        ]);
 
        self::generateTranslation('delete_user_s', [
-           'fr'=>'Supprime les %s de l\'+utilisateur',
+           'fr'=>'Supprime les %s de l\'utilisateur',
            'en'=>'Delete user\'s %s'
        ]);
     }

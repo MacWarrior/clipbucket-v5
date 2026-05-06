@@ -1100,7 +1100,7 @@ class User extends Objects
         // Delete reports on deleted user
         Flag::unFlagByElementId($uid, 'user');
         // reattribute reports by deleted user
-        Clipbucket_db::getInstance()->execute('UPDATE ' . tbl('flags') . ' SET userid=\'' . $anonymous_id . '\' WHERE userid=' . (int)$user_id);
+        Clipbucket_db::getInstance()->execute('UPDATE ' . tbl('flags') . ' SET userid=' . (int)$anonymous_id . ' WHERE userid=' . (int)$user_id);
         // Delete categories
         Category::getInstance()->unlinkAll('user', $uid);
         // Delete tags
@@ -1118,7 +1118,7 @@ class User extends Objects
         if (config('delete_comments_on_delete_user') == 'yes') {
             Comments::delete(['userid' => $uid]);
         } else {
-            Clipbucket_db::getInstance()->execute('UPDATE ' . tbl('comments') . ' SET userid=\'' . $anonymous_id . '\' WHERE userid=' . (int)$uid);
+            Clipbucket_db::getInstance()->execute('UPDATE ' . tbl('comments') . ' SET userid=' . (int)$anonymous_id . ' WHERE userid=' . (int)$uid);
         }
 
         // Delete user collections
@@ -1128,8 +1128,8 @@ class User extends Objects
                 Collections::getInstance()->delete_collection($collection['collection_id']);
             }
         } else {
-            Clipbucket_db::getInstance()->execute('UPDATE ' . tbl('collections') . ' SET userid=\'' . $anonymous_id . '\' WHERE userid=' . (int)$uid);
-            Clipbucket_db::getInstance()->execute('UPDATE ' . tbl('collection_items') . ' SET userid=\'' . $anonymous_id . '\' WHERE userid=' . (int)$uid);
+            Clipbucket_db::getInstance()->execute('UPDATE ' . tbl('collections') . ' SET userid=' . (int)$anonymous_id . ' WHERE userid=' . (int)$uid);
+            Clipbucket_db::getInstance()->execute('UPDATE ' . tbl('collection_items') . ' SET userid=' . (int)$anonymous_id . ' WHERE userid=' . (int)$uid);
         }
 
         // Delete user photos
@@ -1139,7 +1139,7 @@ class User extends Objects
                 CBPhotos::getInstance()->delete_photo($photo['photo_id']);
             }
         } else {
-            Clipbucket_db::getInstance()->execute('UPDATE ' . tbl('photos') . ' SET userid=\'' . $anonymous_id . '\' WHERE userid=' . (int)$uid);
+            Clipbucket_db::getInstance()->execute('UPDATE ' . tbl('photos') . ' SET userid=' . (int)$anonymous_id . ' WHERE userid=' . (int)$uid);
         }
 
         // Delete user playlists
@@ -1149,8 +1149,8 @@ class User extends Objects
                 CBvideo::getInstance()->action->delete_playlist($playlist['playlist_id']);
             }
         } else {
-            Clipbucket_db::getInstance()->execute('UPDATE ' . tbl('playlists') . ' SET userid=\'' . $anonymous_id . '\' WHERE userid=' . (int)$uid);
-            Clipbucket_db::getInstance()->execute('UPDATE ' . tbl('playlist_items') . ' SET userid=\'' . $anonymous_id . '\' WHERE userid=' . (int)$uid);
+            Clipbucket_db::getInstance()->execute('UPDATE ' . tbl('playlists') . ' SET userid=' . (int)$anonymous_id . ' WHERE userid=' . (int)$uid);
+            Clipbucket_db::getInstance()->execute('UPDATE ' . tbl('playlist_items') . ' SET userid=' . (int)$anonymous_id . ' WHERE userid=' . (int)$uid);
         }
 
         // Delete user videos
@@ -1160,7 +1160,7 @@ class User extends Objects
                 CBvideo::getInstance()->delete_video($video['videoid']);
             }
         } else {
-            Clipbucket_db::getInstance()->execute('UPDATE ' . tbl('video') . ' SET userid=\'' . $anonymous_id . '\' WHERE userid=' . (int)$uid);
+            Clipbucket_db::getInstance()->execute('UPDATE ' . tbl('video') . ' SET userid=' . (int)$anonymous_id . ' WHERE userid=' . (int)$uid);
         }
 
         $this->deleteUserRatings($uid);
@@ -1180,11 +1180,13 @@ class User extends Objects
         userquery::getInstance()->remove_user_subscribers($uid);
         //Deleting User PMS
         userquery::getInstance()->remove_user_pms($uid);
-        Clipbucket_db::getInstance()->execute('UPDATE ' . tbl('messages') . ' SET message_from=\'' . userquery::getInstance()->get_anonymous_user() . '\' WHERE message_from=' . (int)$uid);
+        Clipbucket_db::getInstance()->execute('UPDATE ' . tbl('messages') . ' SET message_from=' . (int)userquery::getInstance()->get_anonymous_user() . ' WHERE message_from=' . (int)$uid);
 
         Clipbucket_db::getInstance()->delete(tbl('video_users'), ['userid'], [(int)$uid]);
-        //Finally Removing Database entry of user
+        Session::kill_all_sessions($uid);
         $this->removeFromFavoritesForAllUsers((int)$uid);
+        $this->removeFromFavoritesByUser((int)$uid);
+        //Finally Removing Database entry of user
         Clipbucket_db::getInstance()->execute('DELETE FROM ' . tbl('users_storage_histo') . ' WHERE id_user =' . (int)$uid);
         Clipbucket_db::getInstance()->execute('DELETE FROM ' . tbl('email_histo') . ' WHERE userid =' . (int)$uid);
         Clipbucket_db::getInstance()->execute('DELETE FROM ' . tbl('user_profile') . ' WHERE userid =' . (int)$uid);
@@ -2879,7 +2881,7 @@ class userquery extends CBCategory
             $udetails = $this->get_user_details($udetails);
         }
         if ($udetails['userid'] == $this->get_anonymous_user()) {
-            return '';
+            return '#';
         }
 
         $username = display_clean($udetails['user_username'] ?? $udetails['username']);

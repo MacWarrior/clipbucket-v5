@@ -38,7 +38,7 @@ if (isset($_POST['delete_selected']) && is_array($_POST['check_user'])) {
         if ($anonymous_id == $userid) {
             e(lang('anynomous_locked'));
         } else {
-            userquery::getInstance()->delete_user($userid);
+            User::getInstance($userid)->delete();
         }
     }
     if( empty(errorhandler::getInstance()->get_error()) ) {
