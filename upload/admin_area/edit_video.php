@@ -151,7 +151,13 @@ ClipBucket::getInstance()->addAdminJS(['jquery_plugs/datepicker'.$datepicker_js_
 ClipBucket::getInstance()->addAdminCSS(['jquery_ui/jquery_ui' . $min_suffixe . '.css' => 'libs']);
 
 assign('anonymous_id', userquery::getInstance()->get_anonymous_user());
-$available_tags = Tags::fill_auto_complete_tags('video');
+$available_tags['video'] = Tags::fill_auto_complete_tags('video');
+$available_tags['actors'] = Tags::fill_auto_complete_tags('actors');
+$available_tags['crew'] = Tags::fill_auto_complete_tags('crew');
+$available_tags['director'] = Tags::fill_auto_complete_tags('director');
+$available_tags['executive_producer'] = Tags::fill_auto_complete_tags('executive_producer');
+$available_tags['producer'] = Tags::fill_auto_complete_tags('producer');
+$available_tags['genre'] = Tags::fill_auto_complete_tags('genre');
 assign('available_tags',$available_tags);
 
 assign('link_user', DirPath::getUrl('admin_area') . 'view_user.php?uid=' . $data['userid']);
