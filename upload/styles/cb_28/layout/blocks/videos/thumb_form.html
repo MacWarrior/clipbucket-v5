@@ -37,7 +37,7 @@
                     {/if}
                     <div class="col-md-3">
                         <div class="form-group text-center">
-                            <label for="thumb_{$thumb_id}"><img class="edit-img-thumbnail" src="{$vid_thumb.thumb}{$cache_key}"  />
+                            <label for="thumb_c_{$thumb_id}"><img class="edit-img-thumbnail" src="{$vid_thumb.thumb}{$cache_key}"  />
                                 {if !$use_backdrop_default}
                                     <input class="show" style="margin:5px auto;" type="radio" value="{$thumb_id}" id="thumb_c_{$thumb_id}" name="default_thumb" {if $v.default_thumbnail==$vid_thumb.thumb_id}checked{/if} />
                                 {/if}

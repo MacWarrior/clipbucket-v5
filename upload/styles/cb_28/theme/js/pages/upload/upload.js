@@ -814,7 +814,7 @@ function listenerUploadThumbs(parent, videoid) {
                 dataType: 'json'
                 , success: function (data) {
                     hideSpinner();
-                    displayThumbSection('thumbnail', videoid, data.thumbs)
+                    displayThumbSection('thumb', videoid, data.thumbs)
                 }
             }
         )
