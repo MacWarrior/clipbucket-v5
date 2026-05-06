@@ -1,6 +1,6 @@
 {
   "version":"5.5.3",
-  "revision":"127",
+  "revision":"128",
   "status":"stable",
   "detail":[
     {
@@ -19,6 +19,7 @@
         ,"Update advanced settings display"
         ,"Update video & photos thumbs regeneration tools"
         ,"Update video allowed extensions display"
+        ,"Update TMDB search interface"
         ,"Add links to flagged tags"
         ,"Hide poster & backdrop tabs when empty on video edition page"
         ,"Only show template editor menu while in dev mode"
@@ -61,6 +62,8 @@
         ,"Implement random photo order"
         ,"Update media rating"
         ,"Update collection management"
+        ,"Update TMDB search interface"
+        ,"Update video upload form"
         ,"Add signup date of birth calendar icon"
         ,"Fix possible JS error on register page"
         ,"Fix possible display issues on login & signup pages"
