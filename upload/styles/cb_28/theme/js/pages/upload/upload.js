@@ -375,7 +375,6 @@ $(document).ready(function(){
             index++
         });
 
-
         $('.updateVideoInfoForm').on({
             submit: function(e){
                 e.preventDefault();
