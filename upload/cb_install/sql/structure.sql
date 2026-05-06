@@ -534,7 +534,8 @@ CREATE TABLE `{tbl_prefix}video` (
   `type_tmdb` VARCHAR(255) NULL,
   `use_backdrop_as_default_thumb` ENUM ('yes','no') NOT NULL DEFAULT 'no',
   `total_rate_up` INT NOT NULL DEFAULT 0,
-  `total_rate_down` INT NOT NULL DEFAULT 0
+  `total_rate_down` INT NOT NULL DEFAULT 0,
+  `last_modified` DATETIME NOT NULL DEFAULT NOW()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_520_ci;
 
 CREATE TABLE `{tbl_prefix}video_views` (

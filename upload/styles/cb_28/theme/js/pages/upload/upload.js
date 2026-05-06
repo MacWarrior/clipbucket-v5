@@ -378,23 +378,44 @@ $(document).ready(function(){
         $('.updateVideoInfoForm').on({
             submit: function(e){
                 e.preventDefault();
-
-                var data = $(this).serialize();
-                data += '&updateVideo=yes';
+                const form_parent = $(this).parents('[id^=tab]');
+                form_parent.find('.saveVideoDetails').attr('disabled',true);
+                form_parent.find('#button_info_tmdb').attr('disabled',true);
+                var data = new FormData(this);
+                data.append('updateVideo', 'yes');
                 $.ajax({
                     url : uploadurl,
                     type : 'post',
                     data : data,
-                    success: function(msg){
-                        msg = $.parseJSON(msg);
+                    dataType: "json",
+                    processData: false,
+                    contentType: false,
+                    success: function(response){
                         $('#uploadMessage').removeClass('hidden');
-                        if(msg.error){
-                            $('#uploadMessage').html(msg.error.val).attr('class', 'alert alert-danger container');
+                        if(response.error){
+                            $('#uploadMessage').html(response.error.val).attr('class', 'alert alert-danger container');
                         } else {
-                            $('#uploadMessage').html(msg.valid).attr('class', 'alert alert-success container');
+                            $('#uploadMessage').html(response.msg).attr('class', 'alert alert-success container');
 
-                            $('#tab'+index+' .saveVideoDetails').attr('disabled',true);
-                            $('#tab'+index+' #button_info_tmdb').attr('disabled',true);
+                            displayThumbSection('thumb', response.id, response.html.thumbs);
+                            displayThumbSection('poster', response.id, response.html.posters);
+                            displayThumbSection('backdrop', response.id, response.html.backdrops);
+                            slideFormSection();
+                            //update player
+                            const parent = $('input[id^="videoid_"][value="'+response.id+'"]').parents('.tab-pane.uploadFormContainer');
+                            if (typeof parent.find('.player-holder video')[0] !== 'undefined') {
+                                videojs(parent.find('.player-holder video')[0]).dispose();
+                            }
+                            if (typeof players[response.id] !== 'undefined') {
+                                players[response.id] = response.player;
+                            }
+                            if (parent.hasClass('active')) {
+                                parent.find('.player-holder').html(response.player);
+                            }
+                            let images = document.querySelectorAll("img[data-thumbs]")
+                            listenerPreviewThumbs(images);
+                            form_parent.find('.saveVideoDetails').attr('disabled',false);
+                            form_parent.find('#button_info_tmdb').attr('disabled',false);
 
                             setTimeout(function(){
                                 $('#uploadMessage').addClass('hidden');
@@ -517,7 +538,7 @@ function saveInfoTmdb(tmdb_video_id, type, videoid) {
     $.ajax({
         url: baseurl+"actions/tmdb_import.php",
         type: "POST",
-        data: {tmdb_video_id: tmdb_video_id, videoid: videoid, type: type},
+        data: {tmdb_video_id: tmdb_video_id, videoid: videoid, type: type, from: 'upload'},
         dataType: 'json',
         success: function (result) {
             $('.close').click();
@@ -545,6 +566,28 @@ function saveInfoTmdb(tmdb_video_id, type, videoid) {
                                 }
                             }
                         });
+                        //update thumbs
+                        if (result.id && result.html) {
+                            displayThumbSection('thumb', result.id, result.html.thumbs);
+                            displayThumbSection('poster', result.id, result.html.posters);
+                            displayThumbSection('backdrop', result.id, result.html.backdrops);
+                            slideFormSection();
+                        }
+                        if (result.player) {
+                            //update player
+                            const parent = $('input[id^="videoid_"][value="'+result.id+'"]').parents('.tab-pane.uploadFormContainer');
+                            if (typeof parent.find('.player-holder video')[0] !== 'undefined') {
+                                videojs(parent.find('.player-holder video')[0]).dispose();
+                            }
+                            if (typeof players[result.id] !== 'undefined') {
+                                players[result.id] = result.player;
+                            }
+                            if (parent.hasClass('active')) {
+                                parent.find('.player-holder').html(result.player);
+                            }
+                            let images = document.querySelectorAll("img[data-thumbs]")
+                            listenerPreviewThumbs(images);
+                        }
                     }
                     index++;
                 });
@@ -574,23 +617,9 @@ function getUpdate() {
 
                     data.videos.forEach(function (video) {
                         if ( video.percent > 0 || typeof video.percent === "undefined" && video.status.toLowerCase() !== 'waiting') {
-                            if (typeof video.thumbs !== 'undefined' && video.thumbs.length > 0) {
-                                if ($('input[id^="videoid_"][value="' + video.videoid + '"]').parent().find('[name="default_thumb"]').length === 0) {
-                                    const thumbs = $(video.thumbs).hide();
-                                    thumbs.insertBefore($('input[id^="videoid_"][value="' + video.videoid + '"]').parent().find('.pad-bottom-sm.text-right'));
-                                    thumbs.slideDown('slow');
-                                } else {
-                                    let parent_div = $('input[id^="videoid_"][value="' + video.videoid + '"]').parent().find('[name="default_thumb"]').parents('.formSection.clear')[0];
-                                    const is_parent_visible = $(parent_div).find('.sectionContent')[0].checkVisibility();
-                                    $(parent_div).replaceWith(video.thumbs);
-                                    //getting parent div again because it has been replaced
-                                    if (is_parent_visible) {
-                                        let parent_div = $('input[id^="videoid_"][value="' + video.videoid + '"]').parent().find('[name="default_thumb"]').parents('.formSection.clear')[0];
-                                        $(parent_div).find('i').removeClass('glyphicon-chevron-down').addClass('glyphicon-chevron-up');
-                                        $(parent_div).find('.sectionContent').show();
-                                    }
-                                }
-                            }
+                            displayThumbSection('thumb', video.videoid, video.thumbs.thumbs);
+                            displayThumbSection('poster', video.videoid, video.thumbs.posters);
+                            displayThumbSection('backdrop', video.videoid, video.thumbs.backdrops);
                             if (typeof video.subtitles !== 'undefined' && video.subtitles.length > 0) {
                                 if (video.status.toLowerCase() == 'successful' && $('input[id^="videoid_"][value="' + video.videoid + '"]').parent().find('#subtitles_'+video.videoid).length === 0) {
                                     const subtitles = $(video.subtitles).hide();
@@ -730,4 +759,115 @@ function deleteSubtitle(number, videoid) {
             }
         });
     }
+}
+
+function displayThumbSection(type, video_id, html) {
+    if (type != 'thumb' && type != 'poster' && type != 'backdrop') {
+        return;
+    }
+    let check_if_exists = '[name="default_thumb"]';
+    if (type == 'poster' || type == 'backdrop') {
+        check_if_exists = '#new_thumbs_' + type;
+    }
+    if (typeof html !== 'undefined' && html.length > 0) {
+        if ($('input[id^="videoid_"][value="' + video_id + '"]').parent().find(check_if_exists).length === 0) {
+            const thumbs = $(html).hide();
+            thumbs.insertBefore($('input[id^="videoid_"][value="' + video_id + '"]').parent().find('.pad-bottom-sm.text-right'));
+            thumbs.slideDown('slow');
+        } else {
+            let parent_div = $('input[id^="videoid_"][value="' + video_id + '"]').parent().find(check_if_exists).parents('.formSection.clear')[0];
+            const is_parent_visible = $(parent_div).find('.sectionContent')[0].checkVisibility();
+            $(parent_div).replaceWith(html);
+            //getting parent div again because it has been replaced
+            if (is_parent_visible) {
+                let parent_div = $('input[id^="videoid_"][value="' + video_id + '"]').parent().find(check_if_exists).parents('.formSection.clear')[0];
+                $(parent_div).find('i').removeClass('glyphicon-chevron-down').addClass('glyphicon-chevron-up');
+                $(parent_div).find('.sectionContent').show();
+            }
+        }
+
+        listenerUploadThumbs($('input[id^="videoid_"][value="' + video_id + '"]').parents('[id^=tab]')[0], video_id)
+
+    }
+}
+
+function listenerUploadThumbs(parent, videoid) {
+//manage upload thumb/poster/ backdrops
+    $(parent).find('#upload_thumbs').off('click').on('click', function (e) {
+        e.preventDefault();
+        var fd = new FormData();
+
+        $.each($('#new_thumbs')[0].files, function (i, file) {
+            fd.append('vid_thumb[]', file);
+        });
+        fd.append('return_type', 'html');
+        showSpinner();
+        $.ajax(
+            'upload_thumb.php?video=' + videoid
+            , {
+                type: 'POST',
+                contentType: false,
+                processData: false,
+                cache: false,
+                data: fd,
+                dataType: 'json'
+                , success: function (data) {
+                    hideSpinner();
+                    displayThumbSection('thumb', videoid, data.thumbs)
+                }
+            }
+        )
+    });
+
+    $(parent).find('#upload_thumbs_poster').off('click').on('click', function (e) {
+        e.preventDefault();
+        var fd = new FormData();
+
+        $.each($('#new_thumbs_poster')[0].files, function (i, file) {
+            fd.append('vid_thumb_poster[]', file);
+        });
+        fd.append('return_type', 'html');
+        showSpinner();
+        $.ajax(
+            'upload_thumb.php?video=' + videoid
+            , {
+                type: 'POST',
+                contentType: false,
+                processData: false,
+                cache: false,
+                data: fd,
+                dataType: 'json'
+                , success: function (data) {
+                    hideSpinner();
+                    displayThumbSection('poster', videoid, data.posters);
+                }
+            }
+        )
+    });
+
+    $(parent).find('#upload_thumbs_backdrop').off('click').on('click', function (e) {
+        e.preventDefault();
+        var fd = new FormData();
+
+        $.each($('#new_thumbs_backdrop')[0].files, function (i, file) {
+            fd.append('vid_thumb_backdrop[]', file);
+        });
+        fd.append('return_type', 'html');
+        showSpinner();
+        $.ajax(
+            'upload_thumb.php?video=' + videoid
+            , {
+                type: 'POST',
+                contentType: false,
+                processData: false,
+                cache: false,
+                data: fd,
+                dataType: 'json'
+                , success: function (data) {
+                    hideSpinner();
+                    displayThumbSection('backdrop', videoid, data.backdrops)
+                }
+            }
+        )
+    });
 }

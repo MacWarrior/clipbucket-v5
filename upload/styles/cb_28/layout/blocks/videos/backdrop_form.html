@@ -1,0 +1,38 @@
+{if config('enable_video_backdrop') == 'yes' }
+    <div class="formSection clear">
+        <h4 {if !Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3','14')} title="{lang('cant_perform_action_until_app_fully_updated')}" class="disabled" {/if}>
+            {lang('default_x',lang('backdrop'))|ucfirst} {if Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3','14')}<i class="glyphicon glyphicon-chevron-down pull-right"></i>{/if}
+        </h4>
+        <div class="sectionContent" style="display: none;">
+            {if (!empty($sharingOptions['fields']['use_backdrop_as_default_thumb']))}
+                <br/>
+                {$formObj->createField($sharingOptions['fields']['use_backdrop_as_default_thumb'])}
+                <hr/>
+            {/if}
+            <div class="row">
+                {foreach from=$vidthumbs_backdrop item=vid_thumb}
+                    <div class="col-md-3">
+                        <div class="form-group text-center">
+                            <label for="{$vid_thumb.thumb_id}"><img class="edit-img-thumbnail" src="{$vid_thumb.thumb}{$cache_key}" width="160" height="100"/>
+                                <input class="show" style="margin:5px auto;" type="radio" value="{$vid_thumb.thumb_id}" id="{$vid_thumb.thumb_id}" name="default_backdrop" {if $v.default_backdrop==$vid_thumb.thumb_id}checked{/if} />
+                            </label>
+                        </div>
+                    </div>
+                {/foreach}
+            </div>
+            <div style="clear: both;"></div>
+            {ANCHOR place="before_edit_video_form_thumbs_upload"}
+            <div class="row">
+                <h5>{lang code='upload_backdrop'}</h5>
+                <input name="vid_thumb_backdrop[]" id="new_thumbs_backdrop" type="file"/>
+                <label for="upload_thumbs_backdrop"></label>
+                <div class="form-group pull-right">
+                    <input type="submit" id="upload_thumbs_backdrop" value="{lang code='upload'}" class="btn btn-primary btn-sm"
+                            {if !Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '14')} disabled="disabled" title="Sorry, you cannot perform this action until the application has been fully updated by an administrator"{/if}
+                    />
+                </div>
+            </div>
+            {ANCHOR place="after_edit_video_form_thumbs_upload"}
+        </div>
+    </div>
+{/if}
