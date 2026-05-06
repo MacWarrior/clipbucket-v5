@@ -6,25 +6,30 @@
         </div>
         <div class="modal-body tmdb">
             <div class="input-group">
+                <div style="display: table-cell; max-width: 60px;">
+                    <label class="form-control" style="border-bottom-right-radius: 0; border-top-right-radius: 0" for="type_tmdb">{lang('type')}</label>
+                    <label class="form-control" style="border-bottom-right-radius: 0; border-top-right-radius: 0" for="search_title">{lang('search')}</label>
+                    <label class="form-control" style="border-bottom-right-radius: 0; border-top-right-radius: 0" for="selected_year">{lang('year')|ucfirst}</label>
+                </div>
                 <select name="type" class="form-control" id="type_tmdb">
-                        <option value="movie" {if $type=='movie'}selected="selected"{/if}>{lang('movie')}</option>
-                        <option value="series" {if $type=='series'}selected="selected"{/if}>{lang('series')}</option>
+                    <option value="movie" {if $type=='movie'}selected="selected"{/if}>{lang('movie')}</option>
+                    <option value="series" {if $type=='series'}selected="selected"{/if}>{lang('series')}</option>
                 </select>
-                <input name="title" type="text" class="form-control" id="search_title" value="{$search}"/>
+                <input name="title" type="text" class="form-control " id="search_title" value="{$search}" style="font-size: 15px; line-height: 28px; height: 42px;"/>
                 {if $can_search_year}
-                    <select name="selected_year" class="form-control" id="selected_year">
+                    <select name="selected_year"  class="form-control" id="selected_year">
                         <option></option>
                         {section name=year loop=$years}
                             <option value="{$years[year]['year']}"
                                     {if $years[year]['year'] == $selected_year}
-                                        selected="selected"
+                                selected="selected"
                                     {/if}>
                                 {$years[year]['year']} ({$years[year]['count']})
                             </option>
                         {/section}
                     </select>
                 {/if}
-                <span class="input-group-addon pointer" id="search" title="{lang code='search'}">{lang code="search"}</span>
+                <span class="btn btn-primary input-group-addon pointer " id="search" title="{lang code='search'}">{lang code="search"}</span>
             </div>
 
             <table class="table table-bordered table-striped">
@@ -57,7 +62,7 @@
                         {/if}
                     </td>
                     <td>
-                        <button onclick="saveInfoTmdb({display_clean($results[sub].id_tmdb_movie)}, '{display_clean($type)}', {$videoid})">{lang code='import'}</button>
+                        <button class="btn-primary btn" onclick="saveInfoTmdb({display_clean($results[sub].id_tmdb_movie)}, '{display_clean($type)}', {$videoid})">{lang code='import'}</button>
                     </td>
                 </tr>
                 {/section}
