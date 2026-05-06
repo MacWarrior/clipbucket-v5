@@ -113,7 +113,7 @@ class Video extends Objects
             $this->fields[] = 'use_backdrop_as_default_thumb';
         }
 
-        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '999')) {
+        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '128')) {
             $this->fields[] = 'last_modified';
         }
 
@@ -1364,7 +1364,7 @@ class Video extends Objects
      */
     public function updateLastModified($videoid): bool
     {
-        if ( !Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '999') ) {
+        if ( !Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '128') ) {
             return false;
         }
         $sql = 'UPDATE ' . tbl('video') . ' SET last_modified = \'' . now() . '\' WHERE videoid = ' . (int)$videoid;
@@ -1378,7 +1378,7 @@ class Video extends Objects
      */
     public function getVideoCacheKeyById($videoid): string
     {
-        if (!Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '999')) {
+        if (!Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '128')) {
             return '';
         }
         $video = $this->getOne(['videoid' => $videoid]);
@@ -1394,7 +1394,7 @@ class Video extends Objects
      */
     public function getVideoCacheKey($last_modified): string
     {
-        if (!Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '999') || empty($last_modified)) {
+        if (!Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '128') || empty($last_modified)) {
             return '';
         }
         return '?v=' . preg_replace('/\D/', '', $last_modified);
@@ -1945,7 +1945,7 @@ class CBvideo extends CBCategory
                 return;
             }
 
-            if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '999')) {
+            if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '128')) {
                 $query_field[] = 'last_modified';
                 $query_val[] = now();
             }
