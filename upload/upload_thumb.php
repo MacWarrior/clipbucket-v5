@@ -11,16 +11,10 @@ if (@$_GET['msg']) {
 $video = mysql_clean($_GET['video']);
 
 //Check Video Exists or Not
-/**
- * @param $data
- * @param Clipbucket_db $db
- * @return void
- */
-
 
 if (myquery::getInstance()->video_exists($video)) {
 
-    $data = get_video_details($video);
+    $data = Video::getInstance()->getOne(['videoid'=>$video]);
 
     $is_file_to_upload= false;
     # Uploading Thumbs
@@ -47,7 +41,13 @@ if (myquery::getInstance()->video_exists($video)) {
         }
     }
 } else {
-    $msg[] = lang('class_vdo_del_err');
+    echo json_encode(['error'=>lang('class_vdo_del_err')]);
+    die();
 }
-
-echo json_encode(['redirect'=>DirPath::getUrl('root') . 'edit_video.php?vid=' . $data['videoid']]);
+if (!empty($_POST['return_type']) && $_POST['return_type'] == 'html') {
+    //refresh
+    $data = Video::getInstance()->getOne(['videoid'=>$video]);
+    echo json_encode(Upload::displayVideoThumbsForm($data));
+} else {
+    echo json_encode(['redirect'=>DirPath::getUrl('root') . 'edit_video.php?vid=' . $data['videoid']]);
+}

@@ -174,7 +174,7 @@ function pageViewHistory(page) {
 
 $( document ).ready(function() {
     $("[id^=tags]").each(function(elem){
-        init_tags(this.id, available_tags, '#list_'+this.id);
+        init_tags(this.id, available_tags[this.id.replace('tags_', '')], '#list_'+this.id);
     });
 
     $('#list_video_users').tagit({

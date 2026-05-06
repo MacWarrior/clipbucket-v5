@@ -52,8 +52,14 @@ ClipBucket::getInstance()->addCSS([
     'jquery.tagit' . $min_suffixe . '.css'     => 'admin',
     'tagit.ui-zendesk' . $min_suffixe . '.css' => 'admin'
 ]);
-$available_tags = Tags::fill_auto_complete_tags('video');
-assign('available_tags', $available_tags);
+$available_tags['video'] = Tags::fill_auto_complete_tags('video');
+$available_tags['actors'] = Tags::fill_auto_complete_tags('actors');
+$available_tags['crew'] = Tags::fill_auto_complete_tags('crew');
+$available_tags['director'] = Tags::fill_auto_complete_tags('director');
+$available_tags['executive_producer'] = Tags::fill_auto_complete_tags('executive_producer');
+$available_tags['producer'] = Tags::fill_auto_complete_tags('producer');
+$available_tags['genre'] = Tags::fill_auto_complete_tags('genre');
+assign('available_tags',$available_tags);
 
 if( Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.0', '331') ){
     $default_category_id = Category::getInstance()->getDefaultByType('video')['category_id'];

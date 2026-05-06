@@ -15,10 +15,21 @@ if (errorhandler::getInstance()->get_error()) {
         'msg'     => getTemplateMsg()
     ]);
 } else {
-    echo json_encode([
+    $video = Video::getInstance()->getOne(['videoid' => $_POST['videoid']]);
+    $return = [
         'success'      => true,
-        'video_detail' => Video::getInstance()->getOne([
-            'videoid' => $_POST['videoid']
-        ])
-    ]);
+        'video_detail' => $video
+    ];
+    if ($_POST['from']== 'upload') {
+        if ($video['status'] == 'Successful') {
+            assign('data', $video);
+            ob_start();
+            show_player(['vdetails' => $video]);
+            $return['player'] = ob_get_clean();
+        }
+        $return['id'] =  $video['videoid'];
+        $return['html'] = Upload::displayVideoThumbsForm($video);
+        $return['msg'] = lang('video_detail_saved');
+    }
+    echo json_encode($return);
 }

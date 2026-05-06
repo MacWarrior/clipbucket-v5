@@ -738,9 +738,7 @@ a:hover{
 
 .modal-body.tmdb .input-group-addon{
     cursor: pointer;
-    background-color: #eee;
-}
-
-.modal-body.tmdb .input-group-addon:hover{
-    background-color: #d5d5d5;
+    background-color: var(--color-main-01);
+    border-color: var(--color-main-01);
+    color: var(--color-main-02);
 }
