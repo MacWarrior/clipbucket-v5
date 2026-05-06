@@ -90,6 +90,7 @@
         ,"Fix photo upload preview"
         ,"Fix video block display"
         ,"Fix tags suggestion (<i>#839</i>)"
+        ,"Fix possible thumbs cache issue"
       ]
     },
     {
