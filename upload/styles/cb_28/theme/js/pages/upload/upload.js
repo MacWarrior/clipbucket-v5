@@ -99,7 +99,7 @@ $(document).ready(function(){
                     singleFieldNode: $(oneUploadForm).find('#' +this.id),
                     animate: true,
                     caseSensitive: false,
-                    availableTags: available_tags,
+                    availableTags: available_tags[this.id.replace('tags_', '').replace(index, '')],
                     allowSpaces: allow_tag_space,
                     beforeTagAdded: function (event, info) {
                         if (info.tagLabel.length <= 2) {

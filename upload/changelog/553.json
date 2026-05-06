@@ -1,6 +1,6 @@
 {
   "version":"5.5.3",
-  "revision":"126",
+  "revision":"127",
   "status":"stable",
   "detail":[
     {
@@ -86,6 +86,7 @@
         ,"Fix chunk upload issues (<i>#834</i>)"
         ,"Fix photo upload preview"
         ,"Fix video block display"
+        ,"Fix tags suggestion (<i>#839</i>)"
       ]
     },
     {
