@@ -345,7 +345,12 @@ INSERT INTO `{tbl_prefix}config` (`configid`, `name`, `value`) VALUES
     (NULL, 'photos_enable_fullwidth', 'yes'),
     (NULL, 'use_backdrop_as_default_thumb', 'allowed'),
     (NULL, 'enable_featured_collection_hierarchy', 'yes'),
-    (NULL, 'random_photo_order', 'yes');
+    (NULL, 'random_photo_order', 'yes'),
+    (NULL, 'delete_video_on_delete_user', 'no'),
+    (NULL, 'delete_collection_on_delete_user', 'no'),
+    (NULL, 'delete_photo_on_delete_user', 'no'),
+    (NULL, 'delete_playlist_on_delete_user', 'no'),
+    (NULL, 'delete_comments_on_delete_user', 'no');
 
 INSERT INTO `{tbl_prefix}video_resolution` (`title`, `ratio`, `enabled`, `width`, `height`, `video_bitrate`) VALUES
 	('240p', '16/9', 1, 426, 240, 240000),
