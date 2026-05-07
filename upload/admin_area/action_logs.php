@@ -9,7 +9,7 @@ pages::getInstance()->page_redir();
 /* Generating breadcrumb */
 global $breadcrumb;
 $breadcrumb[0] = ['title' => lang('tool_box'), 'url' => ''];
-$breadcrumb[1] = ['title' => lang('action_logs'), 'url' => DirPath::getUrl('admin_area') . 'action_logs.php?type=login'];
+$breadcrumb[1] = ['title' => lang('action_logs'), 'url' => DirPath::getUrl('admin_area') . 'action_logs.php'];
 $limit = 20;
 
 //Getting User List
@@ -17,8 +17,7 @@ if (isset($_GET['clean'])) {
     Clipbucket_db::getInstance()->execute('TRUNCATE TABLE ' . tbl('action_log'));
 }
 
-$allowed_types = ['login', 'signup', 'upload_video'];
-if (isset($_GET['type']) && in_array($_GET['type'], $allowed_types, true)) {
+if (isset($_GET['type']) && in_array($_GET['type'], CBLogs::$allowed_types, true)) {
     $type = $_GET['type'];
     $result_array['type'] = $type;
 }

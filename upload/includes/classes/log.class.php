@@ -1,6 +1,7 @@
 <?php
 class CBLogs
 {
+    public static array $allowed_types = ['login', 'signup', 'upload_video'];
     /**
      * Function used to insert log
      * @param string $type , type of action

@@ -1,32 +1,36 @@
 <div class="heading">
     <h2>{lang('show_x_logs_entries', '<b>'|cat:$total_logs|cat:'</b>')} {if $type}{lang('show_log_for_x_type', '<b>'|cat:lang($type)|cat:'</b>')}{/if}</h2>
-    <div class="btn-group-xs text-center" role="group" aria-label="...">
-        <a href="{DirPath::getUrl('admin_area')}action_logs.php">
-            <button type="button" class="btn btn-primary">All</button>
-        </a>
-        <a href="{DirPath::getUrl('admin_area')}action_logs.php?type=login">
-            <button type="button" class="btn btn-primary">Login Only</button>
-            <a href="{DirPath::getUrl('admin_area')}action_logs.php?type=signup">
-                <button type="button" class="btn btn-primary">Signup Only</button>
-            </a>
-            <a href="{DirPath::getUrl('admin_area')}action_logs.php?type=upload_video">
-                <button type="button" class="btn btn-primary">Uploads Only</button>
-            </a>
-            <a href="{DirPath::getUrl('admin_area')}action_logs.php?clean=all">
-                <button type="button" class="btn btn-primary">Clean All</button>
-            </a>
+
+    <div class="btn-group">
+        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+            {lang('actions')} <span class="caret caret_margin"></span>
+        </button>
+        <ul class="dropdown-menu" role="menu">
+            <li><a id="clean_all" href="{DirPath::getUrl('admin_area')}action_logs.php?clean=all">{lang('clean_all')}</a></li>
+        </ul>
+    </div>
+    <div class="btn-group">
+        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+            {lang('filter')} <span class="caret caret_margin"></span>
+        </button>
+        <ul class="dropdown-menu" role="menu">
+            <li><a href="{DirPath::getUrl('admin_area')}action_logs.php">{lang('all')}</a></li>
+            {foreach from=CBLogs::$allowed_types item=type}
+                <li><a href="{DirPath::getUrl('admin_area')}action_logs.php?type={$type}">{lang($type|cat:'_only')}</a></li>
+            {/foreach}
+        </ul>
     </div>
 </div>
-<table class="table table-bordered table-striped">
-    <tr>
-        <td>User</td>
-        <td>Log ID</td>
-        <td>User Email</td>
-        <td>Action perfomed</td>
-        <td>Action time</td>
-        <td>IP</td>
-    </tr>
-    {if $logs}
+{if $logs}
+    <table class="table table-bordered table-striped">
+        <tr>
+            <td>{lang('user')}</td>
+            <td>{lang('log_id')}</td>
+            <td>{lang('user_email')}</td>
+            <td>{lang('action_performed')}</td>
+            <td>{lang('action_time')}</td>
+            <td>IP</td>
+        </tr>
         {foreach from=$logs item=log}
             {$user.agent|get_browser_details:theBrowser}
             <tr>
@@ -55,10 +59,10 @@
                     <label class="label label-{if $log.action_type == 'login'}primary{elseif $log.action_type == 'signup'}warning{else}success{/if}">
                         {if $log.action_type}
                             <b>Action: </b>
-                            {$log.action_type}
+                            {lang($log.action_type|strtolower)}
                         {/if}
                         {if $log.action_details}
-                            <b>Details</b>
+                            <b>{lang('details')|ucfirst}</b>
                             : {$log.action_details}
                         {/if}
                     </label>
@@ -81,21 +85,28 @@
                 </td>
             </tr>
         {/foreach}
-    {/if}
-</table>
-{include file="$style_dir/blocks/pagination.html"}
-{$type = $smarty.get.type}
-
+    </table>
+    {include file="$style_dir/blocks/pagination.html"}
+{else}
+    {lang('no_logs')}
+{/if}
 
 <style type="text/css">
     #fetch_more_logs {
         margin-bottom: 20px;
     }
-
 </style>
 
 <script type="text/javascript">
-    $(document).ready(function () {
+    $(function () {
         $('dropdown-toggle').dropdown();
+        $('#clean_all').on('click', async function (e) {
+            e.preventDefault();
+            if (await popinConfirm._confirm_it({
+                message: '{lang('confirm_clean_all_logs')}', title: '{lang('clean_all')}'
+            })) {
+                location.href = e.target.href;
+            }
+        })
     });
 </script>
