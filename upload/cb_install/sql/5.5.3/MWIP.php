@@ -19,7 +19,7 @@ class MWIP extends \Migration
 
        self::generateTranslation('option_on_delete_user', [
            'fr'=>'Lors de la suppression d\'un utilisateur :',
-           'en'=>'On deleting a user :'
+           'en'=>'On user deletion :'
        ]);
 
        self::generateTranslation('delete_user_s', [
