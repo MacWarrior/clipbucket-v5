@@ -2,19 +2,19 @@
 const THIS_PAGE = 'manage_tags';
 
 require_once dirname(__FILE__, 2) . '/includes/admin_config.php';
-require_once(DirPath::get('classes')  . 'admin_tool.class.php');
+require_once(DirPath::get('classes') . 'admin_tool.class.php');
 
 $permission = 'advanced_settings';
-if( !Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '275') ){
+if (!Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '275')) {
     $permission = 'web_config_access';
 }
-User::getInstance()->hasPermissionOrRedirect($permission,true);
+User::getInstance()->hasPermissionOrRedirect($permission, true);
 pages::getInstance()->page_redir();
 
 /* Generating breadcrumb */
 global $breadcrumb;
-$breadcrumb[0] = ['title' => lang('general'), 'url'   => ''];
-$breadcrumb[1] = ['title' => lang('manage_x', strtolower(lang('tags'))), 'url'   => DirPath::getUrl('admin_area') . 'manage_tags.php'];
+$breadcrumb[0] = ['title' => lang('general'), 'url' => ''];
+$breadcrumb[1] = ['title' => lang('manage_x', strtolower(lang('tags'))), 'url' => DirPath::getUrl('admin_area') . 'manage_tags.php'];
 
 $limit = config('admin_pages');
 
@@ -31,12 +31,10 @@ if (!empty($_GET['id_tag_type'])) {
     $cond[] = ' T.id_tag_type = ' . (int)$_GET['id_tag_type'];
     $selected_tag_type = $_GET['id_tag_type'];
 }
-
-$tag_types =  [lang('all')];
-$tag_types = array_merge($tag_types, array_map(function ($item) {
+$tag_types[0] = lang('all');
+$tag_types += array_map(function ($item) {
     return ucfirst(lang($item));
-}, array_column(Tags::getTagTypes(), 'name', 'id_tag_type')));
-
+}, array_column(Tags::getTagTypes(), 'name', 'id_tag_type'));
 $tags = Tags::getTags($curr_limit, $cond);
 $count = Tags::countTags($cond);
 $total_pages = $count / $limit;
