@@ -163,17 +163,20 @@ class Playlist
                 $select[] = 'GROUP_CONCAT( DISTINCT(categories.category_id) SEPARATOR \',\') AS category';
             }
 
-            if( $param_category ){
+            if( !empty($param_category) ){
                 if( !is_array($param_category) ){
                     $conditions[] = 'categories.category_id = ' . (int)$param_category;
                 } else {
-                    $conditions[] = 'categories.category_id IN (' . implode(', ', $param_category) . ')';
+                    $categoryIds = clean_int_list($param_category);
+                    if (!empty($categoryIds)) {
+                        $conditions[] = 'categories.category_id IN (' . $categoryIds . ')';
+                    }
                 }
             }
         }
 
         if( !$param_count ){
-            $group[] = $this->getTablename() .'.playlist_id';
+            $group[] = $this->getTablename() . '.playlist_id';
         }
 
         if( $param_group ){
@@ -182,12 +185,12 @@ class Playlist
 
         $having = '';
         if( $param_having ){
-            $having = ' HAVING '.$param_having;
+            $having = ' HAVING ' . $param_having;
         }
 
         $order = '';
         if( $param_order ){
-            $order = ' ORDER BY '.$param_order;
+            $order = ' ORDER BY ' . $param_order;
         }
 
         $limit = '';
