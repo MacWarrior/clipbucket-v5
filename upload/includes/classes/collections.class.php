@@ -463,7 +463,8 @@ class Collection extends Objects
                 if( !is_array($param_category) ){
                     $conditions[] = 'categories.category_id = ' . (int)$param_category;
                 } else {
-                    $conditions[] = 'categories.category_id IN (' . implode(', ', $param_category) . ')';
+                    $categoryIds = clean_int_list($param_category);
+                    $conditions[] = 'categories.category_id IN (' . $categoryIds . ')';
                 }
             }
         }

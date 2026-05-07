@@ -24,7 +24,7 @@ switch ($type) {
         Collections::getInstance()->delete_collection($_POST['id_element']);
         break;
     case 'user':
-        userquery::getInstance()->delete_user($_POST['id_element']);
+        User::getInstance((int)$_GET['id_element'])->delete();
         break;
     case 'playlist':
         CBvideo::getInstance()->action->delete_playlist($_POST['id_element']);

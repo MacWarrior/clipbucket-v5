@@ -64,7 +64,6 @@ if( !$is_playlist ){
               'tags'              => $vdo['tags'],
               'limit'             => 12,
               'order'             => 'RAND()',
-              'join_user_profile' => true,
               'status'            => 'Successful'
     ];
     $param_public = [];
@@ -83,7 +82,6 @@ if( !$is_playlist ){
         $relMode = 'ono';
         $param = ['limit'             => 12,
                   'order'             => 'date_added DESC',
-                  'join_user_profile' => true,
                   'status'            => 'Successful'
         ];
         $param = array_merge($param_public, $param);
