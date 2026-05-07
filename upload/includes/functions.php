@@ -46,6 +46,20 @@ function display_clean($var, $clean_quote = true): string
     return htmlentities($var);
 }
 
+function clean_int_list(string|array $list): string
+{
+    if (is_string($list)) {
+        $list = explode(',', $list);
+    }
+
+    $ids = array_filter(
+        array_map('trim', $list),
+        fn($id) => filter_var($id, FILTER_VALIDATE_INT) !== false
+    );
+
+    return implode(', ', $ids);
+}
+
 function getBytesFromFileSize($size)
 {
     $units = [
