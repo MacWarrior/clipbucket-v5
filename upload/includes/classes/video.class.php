@@ -1860,7 +1860,7 @@ class CBvideo extends CBCategory
                 if (isset($array['file_name'])) {
                     $params = [
                         'filename' => $array['file_name']
-                        , 'user'   => User::getInstance()->getCurrentUserID()()
+                        , 'user'   => User::getInstance()->getCurrentUserID()
                     ];
                     $video = get_videos($params);
                     if (isset($video[0])) {
@@ -1993,7 +1993,7 @@ class CBvideo extends CBCategory
             ]);
 
             $videoDetails = CBvideo::getInstance()->get_video($vid);
-            if( !empty($videoDetails) && $videoDetails['status'] == 'Successful' && in_array($videoDetails['broadcast'], ['public', 'logged']) && $videoDetails['subscription_email'] == 'pending' && $videoDetails['active'] == 'yes' ){
+            if( !empty($videoDetails) && $videoDetails['status'] == 'Successful' && in_array($videoDetails['broadcast'], ['public', 'logged']) && $videoDetails['subscription_email'] == 'pending' && $videoDetails['active'] == 'yes' && $videoDetails['userid'] != userquery::getInstance()->get_anonymous_user()){
                 userquery::getInstance()->sendSubscriptionEmail($videoDetails, true);
             }
 
@@ -2238,6 +2238,7 @@ class CBvideo extends CBCategory
      * @param $params
      *
      * @return bool|array|void|int
+     * @deprecated
      * @throws Exception
      */
     function get_videos($params)
