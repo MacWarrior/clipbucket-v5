@@ -350,7 +350,10 @@ class Photo extends Objects
         if ($param_photo_id !== false) {
             $conditions[] = $this->getTableName() . '.photo_id = ' . (int)$param_photo_id;
         } elseif ($param_photo_ids) {
-            $conditions[] = $this->getTableName() . '.photo_id IN (' . mysql_clean($param_photo_ids) . ')';
+            $photoIds = clean_int_list($param_photo_ids);
+            if (!empty($photoIds)) {
+                $conditions[] = $this->getTableName() . '.photo_id IN (' .$photoIds . ')';
+            }
         }
         if ($param_photo_key ){
             $conditions[] = $this->getTableName() . '.photo_key = \''.mysql_clean($param_photo_key).'\'';
@@ -455,7 +458,8 @@ class Photo extends Objects
                 if (!is_array($param_category)) {
                     $conditions[] = 'categories.category_id = ' . (int)$param_category;
                 } else {
-                    $conditions[] = 'categories.category_id IN (' . implode(', ', $param_category) . ')';
+                    $categoryIds = clean_int_list($param_category);
+                    $conditions[] = 'categories.category_id IN (' . $categoryIds . ')';
                 }
             }
 
@@ -470,7 +474,8 @@ class Photo extends Objects
 
         if( $param_collection_id ){
             if( is_array($param_collection_id) ){
-                $tmp_cond = ' IN (' . implode(',', $param_collection_id) . ')';
+                $parentCollectionIds = clean_int_list($param_collection_id);
+                $tmp_cond = ' IN (' . $parentCollectionIds . ')';
             } else {
                 $tmp_cond = ' = ' . (int)$param_collection_id;
             }

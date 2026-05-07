@@ -1,6 +1,6 @@
 {
   "version":"5.5.3",
-  "revision":"128",
+  "revision":"130",
   "status":"stable",
   "detail":[
     {
@@ -8,6 +8,7 @@
       "description": [
         "Refactor templates management"
         ,"Refactor and mutualize images uploads"
+        ,"Refactor users deletion"
         ,"Implement email alias allow option"
         ,"Implement templates edition"
         ,"Implement Regenerate videos thumbs tool"
@@ -113,7 +114,7 @@
         ,"Fix tools error handling"
         ,"Fix possible SQL error on video upload"
         ,"Fix thumbs deletion"
-        ,"Fix possible SQL injection (Thanks @drkim-dev & @FutureBuildingEN !)"
+        ,"Fix possible SQL injection (Thanks @drkim-dev, @FutureBuildingEN & @Bnyt7 !)"
         ,"Fix possible duplicate configs"
         ,"Fix SSRF vulnerability (Thanks @Takumi142857 !)"
         ,"Fix Readme"

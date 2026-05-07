@@ -187,6 +187,11 @@ if (isset($_POST['update'])) {
         , 'own_comment_rating'
         , 'enable_featured_collection_hierarchy'
         , 'random_photo_order'
+        , 'delete_video_on_delete_user'
+        , 'delete_collection_on_delete_user'
+        , 'delete_photo_on_delete_user'
+        , 'delete_playlist_on_delete_user'
+        , 'delete_comments_on_delete_user'
     ];
 
     $config_booleans_to_refactor = [
@@ -466,6 +471,11 @@ if (isset($_POST['update'])) {
         ,'use_backdrop_as_default_thumb'
         ,'enable_featured_collection_hierarchy'
         ,'random_photo_order'
+        , 'delete_video_on_delete_user'
+        , 'delete_collection_on_delete_user'
+        , 'delete_photo_on_delete_user'
+        , 'delete_playlist_on_delete_user'
+        , 'delete_comments_on_delete_user'
     ];
 
     //Numeric Array

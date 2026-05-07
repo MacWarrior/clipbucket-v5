@@ -13,6 +13,9 @@ class VideoConversionQueue
         'is_completed'
     ];
 
+    /**
+     * @throws Exception
+     */
     public static function getAll(array $params)
     {
         $param_first_only = $params['first_only'] ?? false;
@@ -37,8 +40,11 @@ class VideoConversionQueue
             $order = $param_order;
         }
 
-        if ($param_ids) {
-            $conditions[] = ' ' . self::$tableName . '.id IN (' . implode(',', $param_ids) . ')';
+        if (!empty($param_ids)) {
+            $ids = clean_int_list($param_ids);
+            if (!empty($ids)) {
+                $conditions[] = self::$tableName . '.id IN (' . $ids . ')';
+            }
         }
         if ($param_videoid) {
             $conditions[] = ' ' . self::$tableName . '.videoid = ' . (int)$param_videoid;
@@ -97,6 +103,7 @@ class VideoConversionQueue
 
     /**
      * @param int $video_id
+     * @param null $audio_track
      * @return bool|mysqli_result
      * @throws Exception
      */
@@ -129,7 +136,10 @@ class VideoConversionQueue
         } else {
             $conditions = [];
             if (!empty($cond['ids'])) {
-                $conditions[] = ' cqueue_id IN (' . implode(',', $cond['ids']) . ')';
+                $cqueueIds = clean_int_list($cond['ids']);
+                if (!empty($cqueueIds)) {
+                    $conditions[] = 'cqueue_id IN (' . $cqueueIds . ')';
+                }
             }
             if (!empty($cond['not_complete'])) {
                 $conditions[] = 'time_completed is null or time_completed = \'\' or time_completed = 0';

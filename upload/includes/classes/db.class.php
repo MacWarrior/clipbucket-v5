@@ -451,7 +451,7 @@ class Clipbucket_db
      * @param array $vls
      * @param null $ep
      * @param bool $ignore
-     * @return mixed|void : { integer } { $insert_id } { id of inserted element }
+     * @return int|string|void : { integer } { $insert_id } { id of inserted element }
      *
      * @throws Exception
      * @internal param $ : { string } { $tbl } { table to insert values in }
@@ -525,7 +525,7 @@ class Clipbucket_db
      * Always use this right after calling insert method or before
      * making another mysqli query.
      *
-     * @return mixed
+     * @return int|string
      */
     function insert_id()
     {
