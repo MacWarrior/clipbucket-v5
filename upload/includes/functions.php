@@ -3143,35 +3143,29 @@ function fetch_action_logs($params)
         $cond['action_userlevel'] = $level;
     }
 
+    $limit='';
     if ($params['limit']) {
-        $limit = (int)$params['limit'];
-    } else {
-        $limit = 20;
-    }
-
-    if (isset($_GET['page'])) {
-        $page = $_GET['page'];
-        $start = (int)($limit * $page - $limit);
-    } else {
-        $start = 0;
+        $limit = ' LIMIT ' . $params['limit'];
     }
 
     $count = 0;
     $final_query = '';
-    foreach ($cond as $field => $value) {
-        if ($count > 0) {
-            $final_query .= ' AND ';
-        }
-        $final_query .= ' `' . $field . '` = \'' . mysql_clean($value) . '\'';
-        $count++;
-    }
     if (!empty($cond)) {
-        $final_query .= " ORDER BY `action_id` DESC LIMIT $start,$limit";
-        $logs = Clipbucket_db::getInstance()->select(tbl("action_log"), "*", "$final_query");
+        foreach ($cond as $field => $value) {
+            if ($count > 0) {
+                $final_query .= ' AND ';
+            }
+            $final_query .= ' `' . $field . '` = \'' . mysql_clean($value) . '\'';
+            $count++;
+        }
     } else {
-        $final_query = " `action_id` != '' ORDER BY `action_id` DESC LIMIT $start,$limit";
-        $logs = Clipbucket_db::getInstance()->select(tbl("action_log"), "*", "$final_query");
+        $final_query = " `action_id` != ''";
     }
+    if (!empty($params['count'])) {
+        return Clipbucket_db::getInstance()->count(tbl('action_log'), 'action_id',$final_query);
+    }
+    $final_query .= " ORDER BY `action_id` DESC " . $limit;
+    $logs = Clipbucket_db::getInstance()->select(tbl("action_log"), "*", "$final_query");
     if (is_array($logs)) {
         return $logs;
     }

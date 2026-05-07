@@ -9,7 +9,8 @@ pages::getInstance()->page_redir();
 /* Generating breadcrumb */
 global $breadcrumb;
 $breadcrumb[0] = ['title' => lang('tool_box'), 'url' => ''];
-$breadcrumb[1] = ['title' => 'Action Logs', 'url' => DirPath::getUrl('admin_area') . 'action_logs.php?type=login'];
+$breadcrumb[1] = ['title' => lang('action_logs'), 'url' => DirPath::getUrl('admin_area') . 'action_logs.php?type=login'];
+$limit = 20;
 
 //Getting User List
 if (isset($_GET['clean'])) {
@@ -21,15 +22,17 @@ if (isset($_GET['type']) && in_array($_GET['type'], $allowed_types, true)) {
     $type = $_GET['type'];
     $result_array['type'] = $type;
 }
-if (isset($_GET['limit'])) {
-    $result_array['limit'] = $_GET['limit'];
-} else {
-    $result_array['limit'] = 20;
-}
-
+assign('type', $type??false);
+$page = (int)$_GET['page'];
+$get_limit = create_query_limit($page, $limit);
+$result_array['limit'] = $get_limit;
 $logs = fetch_action_logs($result_array);
+$result_array['count'] = true;
+$total_rows = fetch_action_logs($result_array);
 assign('total_logs', count($logs));
 assign('logs', $logs);
-subtitle("Action Logs");
+subtitle(lang('action_logs'));
+$total_pages = count_pages($total_rows, $limit);
+pages::getInstance()->paginate($total_pages, $page);
 template_files('action_logs.html');
 display_it();

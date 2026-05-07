@@ -498,7 +498,7 @@ class ClipBucket
                         , 'url' => DirPath::getUrl('admin_area') . 'online_users.php'
                     ]
                     , [
-                        'title' => 'Action Logs'
+                        'title' => lang('action_logs')
                         , 'url' => DirPath::getUrl('admin_area') . 'action_logs.php?type=login'
                     ]
                     , [
