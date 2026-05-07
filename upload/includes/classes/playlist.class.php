@@ -91,6 +91,7 @@ class Playlist
         $param_playlist_id = $params['playlist_id'] ?? false;
         $param_playlist_name = $params['playlist_name'] ?? false;
         $param_userid = $params['userid'] ?? false;
+        $param_username = $params['username'] ?? false;
         $param_playlist_type = $params['playlist_type'] ?? false;
         $param_category = $params['category'] ?? false;
         $param_search = $params['search'] ?? false;
@@ -115,8 +116,16 @@ class Playlist
         if ($param_userid) {
             $conditions[] = $this->getTablename() . '.userid = ' . (int)$param_userid;
         }
-        if ($param_tags) {
-            $conditions[] = 'tags.name LIKE \'%' . mysql_clean($param_tags) . '%\'';
+        if ($param_username) {
+            $conditions[] = User::getInstance()->getTableName() . '.username LIKE \'%' . mysql_clean($param_username) . '%\'';
+        }
+        if( $param_tags && Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.0', '264') ){
+            if (!is_array($param_tags)) {
+                $param_tags = explode(',', $param_tags);
+            }
+            foreach ($param_tags as $param_tag) {
+                $conditions[] = '(MATCH(tags.name) AGAINST (\'' . mysql_clean($param_tag) . '\' IN NATURAL LANGUAGE MODE) OR LOWER(tags.name) LIKE \'%' . mysql_clean($param_tag) . '%\' )';
+            }
         }
         if ($param_condition) {
             $conditions[] = '(' . $param_condition . ')';
@@ -197,7 +206,7 @@ class Playlist
 
         $sql ='SELECT ' . implode(', ', $select) . '
                 FROM ' . cb_sql_table($this->getTableName()) . '
-                LEFT JOIN ' . cb_sql_table('users') . ' ON playlists.userid = users.userid '
+                LEFT JOIN ' . cb_sql_table(User::getInstance()->getTableName()) . ' ON playlists.userid = users.userid '
             . implode(' ', $join)
             . (empty($conditions) ? '' : ' WHERE ' . implode(' AND ', $conditions))
             . (empty($group) ? '' : ' GROUP BY ' . implode(',', $group))

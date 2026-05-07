@@ -21,6 +21,12 @@ function init_tags(id_input, available_tags, list_tag) {
                 return false;
             }
             alert_shown = false;
+        },
+        autocomplete: {
+            messages: {
+                noResults: "",
+                results: function () {}
+            }
         }
     });
 }

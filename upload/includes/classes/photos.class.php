@@ -373,9 +373,6 @@ class Photo extends Objects
         if( $param_featured ){
             $conditions[] = $this->getTableName() . '.featured = \'yes\'';
         }
-        if( $param_tags ){
-            $conditions[] = 'tags.name LIKE \'%'.mysql_clean($param_tags).'%\'';
-        }
 
         if( $param_condition ){
             $conditions[] = '(' . $param_condition . ')';
@@ -422,6 +419,15 @@ class Photo extends Objects
             $cond .= ')';
 
             $conditions[] = $cond;
+        }
+
+        if( $param_tags && Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.0', '264') ){
+            if (!is_array($param_tags)) {
+                $param_tags = explode(',', $param_tags);
+            }
+            foreach ($param_tags as $param_tag) {
+                $conditions[] = '(MATCH(tags.name) AGAINST (\'' . mysql_clean($param_tag) . '\' IN NATURAL LANGUAGE MODE) OR LOWER(tags.name) LIKE \'%' . mysql_clean($param_tag) . '%\' )';
+            }
         }
 
         $join = [];
