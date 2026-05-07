@@ -39,11 +39,13 @@ class FFMpeg
             $file_path = $this->input_file;
         }
 
+        $file_path_secured = escapeshellarg($file_path);
+
         $info['video_wh_ratio'] = 'N/A';
         $info['video_color'] = 'N/A';
         $info['path'] = $file_path;
 
-        $cmd = config('ffprobe_path') . ' -i "' . $file_path . '" -v quiet -print_format json -show_format -show_streams';
+        $cmd = config('ffprobe_path') . ' -i ' . $file_path_secured . ' -v quiet -print_format json -show_format -show_streams';
         $output = System::shell_output($cmd);
         $output = preg_replace('/([a-zA-Z 0-9\r\n]+){/', '{', $output, 1);
 
@@ -116,7 +118,7 @@ class FFMpeg
         }
 
         if (!$info['duration']) {
-            $CMD = config('media_info') . ' \'--Inform=General;%Duration%\' \'' . $file_path . '\' 2>&1';
+            $CMD = config('media_info') . ' \'--Inform=General;%Duration%\' ' . $file_path_secured . ' 2>&1';
             $info['duration'] = round((int)System::shell_output($CMD) / 1000, 2);
         }
 
@@ -124,7 +126,7 @@ class FFMpeg
         $int_1_video_rate = (int)$video_rate[0];
         $int_2_video_rate = (int)$video_rate[1];
 
-        $CMD = config('media_info') . ' \'--Inform=Video;\' ' . $file_path;
+        $CMD = config('media_info') . ' \'--Inform=Video;\' ' . $file_path_secured;
 
         $results = System::shell_output($CMD);
         $needle_start = 'Original height';

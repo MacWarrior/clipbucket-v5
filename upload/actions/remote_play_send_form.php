@@ -67,7 +67,15 @@ if( !in_array($extension, $allowed_extensions) ){
     die();
 }
 
-$check_url = get_headers($video_url);
+$context = stream_context_create([
+    'http' => [
+        'method'           => 'HEAD'
+        ,'timeout'         => 10
+        ,'follow_location' => 0
+    ]
+]);
+
+$check_url = @get_headers($video_url, false, $context);
 if( !isset($check_url[0]) ){
     echo json_encode(['error'=>lang('remote_play_website_not_responding')]);
     die();
