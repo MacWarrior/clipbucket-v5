@@ -14,6 +14,13 @@ if (empty($_POST['videoid'])) {
     die();
 }
 
+$data = Video::getInstance()->getOne(['videoid' => $_POST['videoid']]);
+if ($data['userid'] != User::getInstance()->getCurrentUserID() && !User::getInstance()->hasAdminAccess()) {
+    e(lang('insufficient_privileges'));
+    echo json_encode(['success' => false, 'msg'=>getTemplateMsg()]);
+    die();
+}
+
 $response['success'] = true;
 assign('videoid', mysql_clean($_POST['videoid']));
 $response += templateWithMsgJson('blocks/popin_upload_subtitle.html',false);
