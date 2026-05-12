@@ -32,9 +32,43 @@ if (!empty($_GET['id_tag_type'])) {
     $selected_tag_type = $_GET['id_tag_type'];
 }
 $tag_types[0] = lang('all');
-$tag_types += array_map(function ($item) {
-    return ucfirst(lang($item));
-}, array_column(Tags::getTagTypes(), 'name', 'id_tag_type'));
+$temp_tag_types = array_column(Tags::getTagTypes(), 'name', 'id_tag_type');
+foreach ($temp_tag_types as $key => &$item) {
+    if (config('enable_video_genre') != 'yes') {
+        if ('genre' == $item) {
+            continue;
+        }
+    }
+    if (config('enable_video_actor') != 'yes') {
+        if ('actors' == $item) {
+            continue;
+        }
+    }
+    if (config('enable_video_producer') != 'yes') {
+        if ('producer' == $item) {
+            continue;
+        }
+    }
+    if (config('enable_video_executive_producer') != 'yes') {
+        if ('executive_producer' == $item) {
+            continue;
+        }
+    }
+    if (config('enable_video_director') != 'yes') {
+        if ('director' == $item) {
+            continue;
+        }
+    }
+    if (config('enable_video_crew') != 'yes') {
+        if ('crew' == $item) {
+            continue;
+        }
+    }
+    $tag_types[$key] = ucfirst(lang($item));
+}
+
+
+$cond[]= ' T.id_tag_type IN ('.implode(',', array_keys($tag_types)).')';
 $tags = Tags::getTags($curr_limit, $cond);
 $count = Tags::countTags($cond);
 $total_pages = $count / $limit;
