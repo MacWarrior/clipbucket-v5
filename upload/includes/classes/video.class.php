@@ -386,7 +386,6 @@ class Video extends Objects
         $param_count = $params['count'] ?? false;
         $param_disable_generic_constraints = $params['disable_generic_constraints'] ?? false;
         $param_public = $params['public'];
-        $param_join_user_profile = $params['join_user_profile'] ?? false;
         $param_not_join_user_profile = $params['not_join_user_profile'] ?? false;
         $param_join_flag= $params['join_flag'];
         $param_get_detail = $params['get_detail'] ?? false;
@@ -394,18 +393,20 @@ class Video extends Objects
         $conditions = [];
         if( $param_videoid !== false ){
             $conditions[] = $this->getTableName() . '.videoid = ' . (int)$param_videoid;
-        }
-        if( $param_videoids ){
-            $conditions[] = $this->getTableName() . '.videoid IN ( '.mysql_clean(implode(', ', $param_videoids)).')';
+        } else if( $param_videoids ){
+            $videoIds = clean_int_list($param_videoids);
+            if (!empty($videoIds)) {
+                $conditions[] = $this->getTableName() . '.videoid IN (' . $videoIds . ')';
+            }
         }
         if( $param_videokey ){
-            $conditions[] = $this->getTableName() . '.videokey = \''.mysql_clean($param_videokey).'\'';
+            $conditions[] = $this->getTableName() . '.videokey = \'' . mysql_clean($param_videokey) . '\'';
         }
         if( $param_userid ){
             $conditions[] = $this->getTableName() . '.userid = ' . (int)$param_userid;
         }
         if( $param_file_name ){
-            $conditions[] = $this->getTableName() . '.file_name = \''.mysql_clean($param_file_name).'\'';
+            $conditions[] = $this->getTableName() . '.file_name = \'' . mysql_clean($param_file_name) . '\'';
         }
         if( $param_featured ){
             $conditions[] = $this->getTableName() . '.featured = \'yes\'';
@@ -519,11 +520,14 @@ class Video extends Objects
                 $select[] = 'CONCAT(\'[\', GROUP_CONCAT(DISTINCT JSON_OBJECT(\'id\', categories.category_id, \'name\', categories.category_name)),\']\') AS category_list';
             }
 
-            if( $param_category ){
+            if( !empty($param_category) ){
                 if( !is_array($param_category) ){
                     $conditions[] = 'categories.category_id = ' . (int)$param_category;
                 } else {
-                    $conditions[] = 'categories.category_id IN (' . implode(', ', $param_category) . ')';
+                    $categotyIds = clean_int_list($param_category);
+                    if( !empty($categotyIds) ){
+                        $conditions[] = 'categories.category_id IN (' . $categotyIds . ')';
+                    }
                 }
             }
         }
@@ -540,7 +544,8 @@ class Video extends Objects
             $collection_items_table = Collection::getInstance()->getTableNameItems();
 
             if( is_array($param_collection_id) ){
-                $tmp_cond = ' IN (' . implode(',', $param_collection_id) . ')';
+                $parentCollectionIds = clean_int_list($param_collection_id);
+                $tmp_cond = ' IN (' . $parentCollectionIds . ')';
             } else {
                 $tmp_cond = ' = ' . (int)$param_collection_id;
             }
@@ -1855,7 +1860,7 @@ class CBvideo extends CBCategory
                 if (isset($array['file_name'])) {
                     $params = [
                         'filename' => $array['file_name']
-                        , 'user'   => User::getInstance()->getCurrentUserID()()
+                        , 'user'   => User::getInstance()->getCurrentUserID()
                     ];
                     $video = get_videos($params);
                     if (isset($video[0])) {
@@ -1988,7 +1993,7 @@ class CBvideo extends CBCategory
             ]);
 
             $videoDetails = CBvideo::getInstance()->get_video($vid);
-            if( !empty($videoDetails) && $videoDetails['status'] == 'Successful' && in_array($videoDetails['broadcast'], ['public', 'logged']) && $videoDetails['subscription_email'] == 'pending' && $videoDetails['active'] == 'yes' ){
+            if( !empty($videoDetails) && $videoDetails['status'] == 'Successful' && in_array($videoDetails['broadcast'], ['public', 'logged']) && $videoDetails['subscription_email'] == 'pending' && $videoDetails['active'] == 'yes' && $videoDetails['userid'] != userquery::getInstance()->get_anonymous_user()){
                 userquery::getInstance()->sendSubscriptionEmail($videoDetails, true);
             }
 
@@ -2233,6 +2238,7 @@ class CBvideo extends CBCategory
      * @param $params
      *
      * @return bool|array|void|int
+     * @deprecated
      * @throws Exception
      */
     function get_videos($params)

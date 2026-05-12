@@ -47,7 +47,7 @@ if ($udetails) {
 
     //Deleting User
     if (isset($_GET['delete'])) {
-        userquery::getInstance()->delete_user($uid);
+        User::getInstance((int)$uid)->delete();
     }
 
     //Deleting User Videos

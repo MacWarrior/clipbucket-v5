@@ -183,7 +183,7 @@ class Comments extends Objects
             return false;
         }
 
-        if( empty($param_type) && empty($param_type_id) && empty($param_comment_id) ){
+        if( empty($param_type) && empty($param_type_id) && empty($param_comment_id) && empty($param_userid)){
             return false;
         }
 
