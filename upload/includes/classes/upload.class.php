@@ -436,6 +436,34 @@ class Upload
             ];
         }
 
+        if ((FRONT_END && config('enable_base_rate_ratings_on_fo') == 'yes') || BACK_END) {
+            if (config('enable_base_rate_field') == 'yes') {
+                $uploadFormRequiredFieldsArray['base_rate'] = [
+                    'title'             => lang('base_rate'),
+                    'type'              => 'number',
+                    'name'              => 'base_rate',
+                    'id'                => 'base_rate',
+                    'value'             => $default['base_rate'],
+                    'required'          => 'no',
+                    'validate_function' => 'validate_base_rate',
+                    'min'               => 0,
+                    'max'               => 10,
+                ];
+            }
+            if (config('enable_base_ratings_field') == 'yes') {
+                $uploadFormRequiredFieldsArray['base_ratings'] = [
+                    'title'             => lang('base_ratings'),
+                    'type'              => 'number',
+                    'name'              => 'base_ratings',
+                    'id'                => 'base_ratings',
+                    'value'             => $default['base_ratings'],
+                    'required'          => 'no',
+                    'validate_function' => 'validate_base_ratings',
+                    'min'               => 0,
+                ];
+            }
+        }
+
         $tracks = $default['tracks'];
         if (!empty($tracks)) {
             $uploadFormRequiredFieldsArray['audio_track'] = [

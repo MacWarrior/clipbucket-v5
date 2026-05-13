@@ -3700,6 +3700,29 @@ function upload_error($error)
     echo json_encode(['error' => $error]);
 }
 
+/**
+ * @param $value
+ * @return bool
+ */
+function validate_base_rate($value): bool
+{
+    $value = (int)$value;
+    return (
+        $value >= 0 &&
+        $value <= 10
+    );
+}
+
+/**
+ * @param $value
+ * @return bool
+ */
+function validate_base_ratings($value): bool
+{
+    $value = (int)$value;
+    return ($value >= 0);
+}
+
 include('functions_db.php');
 include('functions_filter.php');
 include('functions_player.php');

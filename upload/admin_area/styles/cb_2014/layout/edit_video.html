@@ -359,7 +359,7 @@
                     <div class="tab-content">
                         <div id="videoinfos" class="tab-pane fade active in">
                             {foreach from=$video_fields item=field}
-                                {if in_array($field.id, ['tags_genre','tags_actors','tags_executive_producer','tags_producer','tags_director','tags_crew','category'])}
+                                {if in_array($field.id, ['tags_genre','tags_actors','tags_executive_producer','tags_producer','tags_director','tags_crew','category', 'base_rate', 'base_ratings'])}
                                     {continue}
                                 {/if}
                             <div class="table">
@@ -481,10 +481,11 @@
                         </div>
                         {if config('enable_video_genre') == 'yes' || config('enable_video_actor') == 'yes' || config('enable_video_producer') == 'yes'
                         || config('enable_video_executive_producer') == 'yes' || config('enable_video_director') == 'yes' || config('enable_video_crew') == 'yes'
+                        || config('enable_base_rate_field') == 'yes' || config('enable_base_ratings_field') == 'yes'
                         }
                             <div id="movie_infos" class="tab-pane fade">
                                 {foreach from=$video_fields item=field}
-                                    {if !in_array($field.id, ['tags_genre','tags_actors','tags_executive_producer','tags_producer','tags_director','tags_crew'])}
+                                    {if !in_array($field.id, ['tags_genre','tags_actors','tags_executive_producer','tags_producer','tags_director','tags_crew', 'base_rate', 'base_ratings'])}
                                         {continue}
                                     {/if}
                                     <div class="table">

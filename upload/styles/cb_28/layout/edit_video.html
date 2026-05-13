@@ -38,7 +38,7 @@
                                             {/if}
                                             {$formObj->createField($field)}
                                             <ul id="list_{$field.id}"></ul>
-                                        {elseif !$field.id|strstr:'tags'}
+                                        {elseif !$field.id|strstr:'tags' && !in_array($field.id, ['base_rate','base_ratings'])}
                                             <label for="{$field.id}">{$field.title}</label>
                                             {$formObj->createField($field)}
                                         {/if}
@@ -82,6 +82,10 @@
                                                 <label for="{$field.id}">{$field.title}</label>
                                                 {$formObj->createField($field)}
                                                 <ul id="list_{$field.id}"></ul>
+                                            {/if}
+                                            {if config('enable_base_rate_ratings_on_fo') == 'yes' && in_array($field.id, ['base_rate','base_ratings'])}
+                                                <label for="{$field.id}">{$field.title}</label>
+                                                {$formObj->createField($field)}
                                             {/if}
                                         </div>
                                     {/foreach}

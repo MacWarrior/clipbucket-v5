@@ -1869,4 +1869,11 @@ VALUES ('ongoing_conversion'),
        ('recalcul_rates_label'),
        ('recalcul_rates_description'),
        ('option_on_delete_user'),
-       ('delete_user_s');
+       ('delete_user_s'),
+       ('option_enable_base_rate_field'),
+       ('option_enable_base_ratings_field'),
+       ('option_enable_base_rate_ratings_on_fo'),
+       ('option_enable_base_rate_from_tmdb'),
+       ('option_enable_base_ratings_from_tmdb'),
+       ('base_rate'),
+       ('base_ratings');

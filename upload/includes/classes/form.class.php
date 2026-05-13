@@ -47,6 +47,9 @@ class formObj
             case 'checkboxv2':
                 $fields = $this->createCheckBoxV2($field);
                 break;
+            case 'number':
+                $fields = $this->createNumberField($field, $multi);
+                break;
         }
         return $fields;
     }
@@ -598,5 +601,68 @@ class formObj
         $fieldOpts = $fieldOptsNull . $fieldOpts;
         $ddFieldEnd = '</select>';
         echo $hidden . $ddFieldStart . $fieldOpts . $ddFieldEnd;
+    }
+
+    private function createNumberField($field, bool $multi)
+    {
+        //Starting Text Field
+        $textField = '<input type="number"';
+
+
+        if (!empty($field['name'])) {
+            if (!$multi) {
+                $textField .= ' name="' . $field['name'] . '"';
+            } else {
+                $textField .= ' name="' . $field['name'] . '[]"';
+            }
+        }
+        if (!empty($field['id'])) {
+            $textField .= ' id="' . $field['id'] . '"';
+        }
+        if (!empty($field['class'])) {
+            $textField .= ' class="' . $field['class'] . '"';
+        }
+        if (!empty($field['title'])) {
+            $textField .= ' title="' . $field['title'] . '"';
+        }
+
+        if (!empty($field['max'])) {
+            $textField .= ' max="' . $field['max'] . '"';
+        }
+        if (isset($field['min']) && is_numeric($field['min'])) {
+            $textField .= ' min="' . $field['min'] . '"';
+        }
+
+        if (!empty($field['required']) && $field['required'] == 'yes') {
+            $textField .= ' required';
+        }
+
+        if (!empty($field['extra_tags'])) {
+            $textField .= ' ' . $field['extra_tags'];
+        }
+
+        if (!empty($field['disabled'])) {
+            $textField .= ' disabled';
+        }
+
+        if (!empty($field['style'])) {
+            $textField .= ' style="' . $field['style'] . '"';
+        }
+
+        if (!empty($field['value'])) {
+            $textField .= ' value="' . display_clean($field['value']) . '" ';
+        }
+
+        //Finishing It
+        $textField .= ' >';
+
+        //Checking Label
+        if (!empty($field['label']) && $field['type'] != 'hidden') {
+            $formTextField = '<label>' . $field['label'] . $textField . '</label>';
+        } else {
+            $formTextField = $textField;
+        }
+
+        return $formTextField;
     }
 }
