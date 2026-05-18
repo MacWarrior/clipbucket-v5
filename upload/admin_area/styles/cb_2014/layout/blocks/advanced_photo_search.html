@@ -6,102 +6,92 @@
     </a>
 </div>
 <div class="search_box well" id="searchdiv" {if $smarty.cookies.show_searchdiv_search!='show'} style="display:none;"{/if}>
-  <form action="{DirPath::getUrl('admin_area')}photo_manager.php" method="get" name="search_photos">
-    <div class="row">
-      <div class="col-md-4">
-        <div class="form-group">
-          <label for="title">Photo title</label>
-          <input class="form-control" name="title" type="text" id="title" value="{'title'|get_form_val:true}" />
+    <form action="{DirPath::getUrl('admin_area')}photo_manager.php" method="post" name="search_photos">
+        <div class="row">
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label for="title">Photo title</label>
+                    <input class="form-control" name="title" type="text" id="title" value="{$smarty.post.title}"/>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label for="photokey">Photo key</label>
+                    <input class="form-control" name="photokey" type="text" id="photokey" value="{$smarty.post.photokey}"/>
+                </div>
+            </div>
+            <div class="col-md-2">
+                <div class="form-group">
+                    <label for="photoid">Photo id</label>
+                    <input class="form-control" name="photoid" type="text" id="photoid" value="{$smarty.post.photoid}"/>
+                </div>
+            </div>
+            <div class="col-md-2">
+                <div class="form-group">
+                    <label for="userid">Userid</label>
+                    <input class="form-control" name="userid" type="text" id="userid" value="{$smarty.post.userid}"/>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label for="tags">Photo tags</label>
+                    <input class="form-control" name="tags" type="hidden" id="tags" value="{$smarty.post.tags}"/>
+                    <ul id="list_tags"></ul>
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label for="featured">{lang code='featured'}</label>
+                    <select class="form-control" name="featured" id="featured">
+                        <option value=""></option>
+                        <option value="yes" {if $smarty.post.featured=='yes'}selected{/if}>{lang code='yes'}</option>
+                        <option value="no" {if $smarty.post.featured=='no'}selected{/if}>{lang code='no'}</option>
+                    </select>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label for="extension">Extension</label>
+                    <select class="form-control" name="extension" id="extension">
+                        <option value=""></option>
+                        {foreach from=CBPhotos::getInstance()->exts item=ext}
+                            <option value="{$ext}"{if $smarty.post.extension == $ext} selected{/if}>{$ext|capitalize}</option>
+                        {/foreach}
+                    </select>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label for="order">Order</label>
+                    <select class="form-control" name="order" id="order">
+                        <option value=""></option>
+                        <option value="photo_id" {if $smarty.post.order == 'photo_id'}selected{/if}>ID</option>
+                        <option value="photo_title" {if $smarty.post.order == 'photo_title'}selected{/if}>
+                            Name
+                        </option>
+                        <option value="views" {if $smarty.post.order == 'views'}selected{/if}>Views</option>
+                    </select>
+                </div>
+            </div>
         </div>
-      </div>
-      <div class="col-md-4">
         <div class="form-group">
-          <label for="photokey">Photo key</label>
-          <input class="form-control" name="photokey" type="text" id="photokey" value="{'photokey'|get_form_val:true}" />
+            <input class="btn btn-success btn-sm" type="submit" name="search" id="search" value='{lang code="search"}'/>
         </div>
-      </div>
-      <div class="col-md-2">
-        <div class="form-group">
-            <label for="photoid">Photo id</label>
-            <input class="form-control" name="photoid" type="text" id="photoid" value="{'photoid'|get_form_val:true}" />
-        </div>
-      </div>
-      <div class="col-md-2">
-        <div class="form-group">
-          <label for="userid">Userid</label>
-          <input class="form-control" name="userid" type="text" id="userid" value="{'userid'|get_form_val:true}" />
-        </div>
-      </div>
-      <div class="col-md-3">
-        <div class="form-group">
-          <label for="tags">Photo tags</label>
-          <input class="form-control" name="tags" type="text" id="tags" value="{'tags'|get_form_val:true}" />
-        </div>
-      </div>
-      
-      <div class="col-md-3">
-        <div class="form-group">
-          <label for="featured">{lang code='featured'}</label>
-          <select class="form-control" name="featured" id="featured">
-            <option value="" ></option>
-            <option value="yes" {if $smarty.get.featured=='yes'}selected{/if}>{lang code='yes'}</option>
-            <option value="no" {if $smarty.get.featured=='no'}selected{/if}>{lang code='no'}</option>
-          </select>
-        </div>
-      </div>
-      <div class="col-md-3">
-        <div class="form-group">
-          <label for="extension">Extension</label>
-          <select class="form-control" name="extension" id="extension">
-            <option value="" ></option>
-            {foreach from=CBPhotos::getInstance()->exts item=ext}
-              <option value="{$ext}"{if $smarty.get.extension == $ext} selected{/if}>{$ext|capitalize}</option>
-            {/foreach}
-          </select>
-        </div>
-      </div>
-      <div class="col-md-3">
-        <div class="form-group">
-          <label for="order">Order</label>
-          <select class="form-control" name="order" id="order">
-            <option value="" ></option>
-            <option value="photo_id" {if $smarty.get.order == 'photo_id'}selected{/if}>ID</option>
-            <option value="photo_title" {if $smarty.get.order == 'photo_title'}selected{/if}>
-              Name
-            </option>        
-            <option value="views" {if $smarty.get.order == 'views'}selected{/if}>Views</option>
-          </select>
-        </div>
-      </div>
-    </div>
-    <div class="form-group">
-      <input class="btn btn-success btn-sm" type="submit" name="search" id="search" value='{lang code="search"}'/>
-    </div>
-  </form>
+    </form>
 </div>
 
 <script type="text/javascript">
-       
-
-        $(document).ready(function neww () {
-        $(".current").click(function() {
-        $(this).toggleClass('after');
-        if(!$(this).hasClass('after')) 
-           {
-      
-          $('.down').hide();
-          $('.up').show();
-           }
-    
-        else
-       {
- 
-        $('.down').show();
-         $('.up').hide();
-       }
- 
-});
-
-       })
-       
-</script >
+    $(document).ready(function neww() {
+        $(".current").click(function () {
+            $(this).toggleClass('after');
+            if (!$(this).hasClass('after')) {
+                $('.down').hide();
+                $('.up').show();
+            } else {
+                $('.down').show();
+                $('.up').hide();
+            }
+        });
+    })
+</script>

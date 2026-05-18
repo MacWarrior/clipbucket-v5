@@ -7,8 +7,12 @@ User::getInstance()->hasPermissionAjax('edit_video');
 
 $video = $_POST['videoid'];
 $number = $_POST['number'];
-$data = get_video_details($video);
-
+$data = Video::getInstance()->getOne(['videoid' => $video]);
+if ($data['userid'] != User::getInstance()->getCurrentUserID() && !User::getInstance()->hasAdminAccess()) {
+    e(lang('insufficient_privileges'));
+    echo json_encode(['success' => false, 'msg'=>getTemplateMsg()]);
+    die();
+}
 CBvideo::getInstance()->remove_subtitles($data, $number);
 assign('videoid', $data['videoid']);
 assign('vstatus', $data['status']);

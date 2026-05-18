@@ -12,7 +12,7 @@ if (empty($title)) {
 }
 $video = $_POST['videoid'];
 $number = $_POST['number'];
-$data = get_video_details($video);
+$data = Video::getInstance()->getOne(['videoid' => $video]);
 $subtitle_list = get_video_subtitles($data);
 foreach ($subtitle_list as $subtitle) {
     if ($subtitle['title'] == $title) {
@@ -20,6 +20,12 @@ foreach ($subtitle_list as $subtitle) {
         e(lang('subtitle_already_exists'));
         break;
     }
+}
+if ($data['userid'] != User::getInstance()->getCurrentUserID() && !User::getInstance()->hasAdminAccess()) {
+    $can_update = false;
+    e(lang('insufficient_privileges'));
+    echo json_encode(['success' => false, 'msg'=>getTemplateMsg()]);
+    die();
 }
 if ($can_update) {
     CBvideo::getInstance()->update_subtitle($video, $number, $title);

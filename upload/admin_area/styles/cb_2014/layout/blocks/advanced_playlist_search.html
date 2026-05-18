@@ -7,24 +7,24 @@
 </div>
 
 <div class="search_box well" id="searchdiv" {if $smarty.cookies.show_searchdiv_search!='show'} style="display:none;"{/if}>
-    <form id="video_search" name="video_search" method="get" action="{DirPath::getUrl('admin_area')}manage_playlist.php" class="video_search">
+    <form id="video_search" name="video_search" method="post" action="{DirPath::getUrl('admin_area')}manage_playlist.php" class="video_search">
         <div class="row">
             <div class="col-md-4">
                 <div class="form-group">
-                    <label for="userid">Userid</label>
-                    <input class="form-control" name="userid" type="text" id="userid" value="{'userid'|get_form_val:true}" />
+                    <label for="userid">{lang('username')}</label>
+                    <input class="form-control" name="username" type="text" id="username" value="{$smarty.post.username}" />
                 </div>
             </div>
             <div class="col-md-4">
               <div class="form-group">
                     <label for="title">Playlist title</label>
-                    <input name="playlist_name" type="text" class="form-control" id="title" value="{'playlist_name'|get_form_val:divue}" />
+                    <input name="playlist_name" type="text" class="form-control" id="title" value="{$smarty.post.playlist_name}" />
                 </div>  
             </div>
             <div class="col-md-4">
               <div class="form-group">
                     <label for="tags">Playlist tags</label>
-                    <input class="form-control" name="tags" type="hidden" id="playlists_tags" value="{'tags'|get_form_val:true}" />
+                    <input class="form-control" name="tags" type="hidden" id="playlists_tags" value="{$smarty.post.tags}" />
                     <ul id="list_tags"></ul>
                 </div>
             </div>

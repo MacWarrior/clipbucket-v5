@@ -52,15 +52,15 @@ switch ($mode) {
         }
 
         //if search is activated
-        if (isset($_GET['search'])) {
-            if (!empty($_GET['playlist_name'])) {
-                $array['playlist_name'] = $_GET['playlist_name'];
+        if (isset($_POST['search'])) {
+            if (!empty($_POST['playlist_name'])) {
+                $array['playlist_name'] = $_POST['playlist_name'];
             }
-            if (!empty($_GET['tags'])) {
-                $array['tags'] = $_GET['tags'];
+            if (!empty($_POST['tags'])) {
+                $array['tags'] = $_POST['tags'];
             }
-            if (!empty($_GET['userid'])) {
-                $array['userid'] = $_GET['userid'];
+            if (!empty($_POST['username'])) {
+                $array['username'] = $_POST['username'];
             }
         }
 
