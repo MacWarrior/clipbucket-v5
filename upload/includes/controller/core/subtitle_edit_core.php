@@ -12,7 +12,7 @@ if (empty($title)) {
 }
 $video = $_POST['videoid'];
 $number = $_POST['number'];
-$data = get_video_details($video);
+$data = Video::getInstance()->getOne(['videoid' => $video]);
 $subtitle_list = get_video_subtitles($data);
 foreach ($subtitle_list as $subtitle) {
     if ($subtitle['title'] == $title) {
