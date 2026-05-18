@@ -21,6 +21,12 @@ foreach ($subtitle_list as $subtitle) {
         break;
     }
 }
+if ($data['userid'] != User::getInstance()->getCurrentUserID() && !User::getInstance()->hasAdminAccess()) {
+    $can_update = false;
+    e(lang('insufficient_privileges'));
+    echo json_encode(['success' => false, 'msg'=>getTemplateMsg()]);
+    die();
+}
 if ($can_update) {
     CBvideo::getInstance()->update_subtitle($video, $number, $title);
 }
