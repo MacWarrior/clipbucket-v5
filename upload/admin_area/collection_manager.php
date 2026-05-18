@@ -147,11 +147,9 @@ if( isset($_POST['search']) ){
         switch($_POST['order']){
             default:
                 break;
-
             case 'total_objects':
                 $carray['order'] = $_POST['order'] . ' DESC';
                 break;
-
             case 'collection_id':
             case 'collection_name':
                 $carray['order'] = Collection::getInstance()->getTableName() . '.' . $_POST['order'] . ' DESC';

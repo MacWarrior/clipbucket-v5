@@ -121,24 +121,37 @@ if (isset($_POST['move_to_selected']) && is_array($_POST['check_photo'])) {
 
 $params = [];
 $params['join_flag'] = true;
-if (isset($_GET['search'])) {
-    $params['title'] = $_GET['title'] ?? false;
-    $params['photo_id'] = $_GET['photoid'] ?? false;
-    $params['photo_key'] = $_GET['photokey'] ?? false;
-    $params['tags'] = $_GET['tags'] ?? false;
-    $params['featured'] = $_GET['featured'] ?? false;
-    $params['userid'] = $_GET['userid'] ?? false;
-    $params['extension'] = $_GET['extension'] ?? false;
-    $params['active'] = $_GET['active'] ?? false;
+$params['active'] = $_REQUEST['active'] ?? false;
+if (isset($_POST['search'])) {
+    if (!empty($_POST['title'])) {
+        $params['title'] = $_POST['title'];
+    }
+    if (!empty($_POST['photoid'])) {
+        $params['photo_id'] = $_POST['photoid'];
+    }
+    if (!empty($_POST['userid'])) {
+        $params['userid'] = $_POST['userid'];
+    }
+    if (!empty($_POST['photokey'])) {
+        $params['photo_key'] = $_POST['photokey'];
+    }
+    if (!empty($_POST['tags'])) {
+        $params['tags'] = $_POST['tags'];
+    }
+    if (!empty($_POST['featured'])) {
+        $params['featured'] = $_POST['featured'];
+    }
+    if (!empty($_POST['extension'])) {
+        $params['extension'] = $_POST['extension'];
+    }
 
-    switch ($_GET['order']) {
+    switch ($_POST['order']) {
         default:
             break;
-
         case 'photo_id':
         case 'photo_title':
         case 'views':
-            $params['order'] = 'photos. ' . $_GET['order'] . ' DESC';
+            $params['order'] = 'photos. ' . $_POST['order'] . ' DESC';
             break;
     }
 }
@@ -172,6 +185,20 @@ if (empty($photos)) {
 $total_pages = count_pages($total_rows, config('admin_pages'));
 pages::getInstance()->paginate($total_pages, $page);
 
+$min_suffixe = System::isInDev() ? '' : '.min';
+ClipBucket::getInstance()->addAdminJS([
+    'tag-it' . $min_suffixe . '.js'                            => 'admin',
+    'advanced_search/advanced_search' . $min_suffixe . '.js'   => 'admin',
+    'init_default_tag/init_default_tag' . $min_suffixe . '.js' => 'admin'
+]);
+
+ClipBucket::getInstance()->addAdminCSS([
+    'jquery.tagit' . $min_suffixe . '.css'     => 'admin',
+    'tagit.ui-zendesk' . $min_suffixe . '.css' => 'admin'
+]);
+
+$available_tags = Tags::fill_auto_complete_tags('photo');
+assign('available_tags', $available_tags);
 assign('anonymous_id', userquery::getInstance()->get_anonymous_user());
 
 subtitle(lang('manage_x', strtolower(lang('photos'))));

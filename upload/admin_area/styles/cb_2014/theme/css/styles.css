@@ -1373,3 +1373,7 @@ a:disabled {
     width:auto;
     flex:0 0 auto;
 }
+
+ul.tagit.ui-widget-content {
+    background: #FFF;
+}

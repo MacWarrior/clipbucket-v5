@@ -362,10 +362,15 @@ class Collection extends Objects
             $conditions[] = $cond;
         }
 
-        if( $param_tags && Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.0', '264') ){
-            $match_tag = 'MATCH(tags.name) AGAINST (\'' . mysql_clean($param_tags) . '\' IN NATURAL LANGUAGE MODE) ';
-            $like_tag = 'LOWER(tags.name) LIKE \'%' . mysql_clean($param_tags) . '%\'';
-            $conditions[] = $match_tag . 'OR ' . $like_tag;
+        if ($param_tags && Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.0', '264')) {
+            if (!is_array($param_tags)) {
+                $param_tags = explode(',', $param_tags);
+            }
+            foreach ($param_tags as $param_tag) {
+                $match_tag = 'MATCH(tags.name) AGAINST (\'' . mysql_clean($param_tag) . '\' IN NATURAL LANGUAGE MODE) ';
+                $like_tag = 'LOWER(tags.name) LIKE \'%' . mysql_clean($param_tag) . '%\'';
+                $conditions[] = $match_tag . 'OR ' . $like_tag;
+            }
         }
 
         if( !User::getInstance()->hasAdminAccess() ){
