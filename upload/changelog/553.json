@@ -1,6 +1,6 @@
 {
   "version":"5.5.3",
-  "revision":"133",
+  "revision":"134",
   "status":"stable",
   "detail":[
     {
@@ -44,6 +44,7 @@
         ,"Fix possible JS error on breaking version alert"
         ,"Fix SQL error on View online users page"
         ,"Fix tags type search on manage tags page (<i>#843</i>)"
+        ,"Fix videos, photos, collections & playlists advanced search by tags (<i>#844</i>)"
       ]
     },
     {
