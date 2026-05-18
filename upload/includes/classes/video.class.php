@@ -1669,6 +1669,7 @@ class CBvideo extends CBCategory
      *
      * @return bool|mixed|STRING
      * @throws Exception
+     * @deprecated
      */
     function get_video($vid, bool $filename = false)
     {
@@ -2011,7 +2012,7 @@ class CBvideo extends CBCategory
     function update_subtitle($videoid, $number, $title): void
     {
         if ($this->video_exists($videoid)) {
-            Clipbucket_db::getInstance()->update(tbl('video_subtitle'), ['title'], [$title], ' videoid = ' . (int)$videoid . ' AND number LIKE \'' . $number . '\'');
+            Clipbucket_db::getInstance()->update(tbl('video_subtitle'), ['title'], [$title], ' videoid = ' . (int)$videoid . ' AND number LIKE \'' . mysql_clean($number) . '\'');
         }
     }
 
