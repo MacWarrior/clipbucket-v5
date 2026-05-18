@@ -1,6 +1,6 @@
 {
   "version":"5.5.3",
-  "revision":"132",
+  "revision":"133",
   "status":"stable",
   "detail":[
     {
@@ -93,6 +93,7 @@
         ,"Fix video block display"
         ,"Fix tags suggestion (<i>#839</i>)"
         ,"Fix possible video thumbs cache issue"
+        ,"Fix possible unauthorized access to video subtitles edition (Thanks @Bnyt7 !)"
       ]
     },
     {
