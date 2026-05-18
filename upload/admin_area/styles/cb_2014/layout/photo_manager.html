@@ -128,6 +128,9 @@
     {include file="$style_dir/blocks/pagination.html"}
 </form>
 <script>
+    let lang = [];
     var available_tags = JSON.parse('{$available_tags|json_encode|escape:'javascript'}');
     var id_input = 'tags';
+    lang['tag_too_short_dynamic_2'] = '{lang("tag_too_short_dynamic", 2)}';
+    lang['tag_too_short_dynamic_3'] = '{lang("tag_too_short_dynamic", 3)}';
 </script>

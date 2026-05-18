@@ -53,8 +53,11 @@
 {include file="$style_dir/blocks/pagination.html"}
 <div class="marginBottomLarge"></div>
 <script>
+    let lang = [];
     var ids_to_check_progress = JSON.parse('{$ids_to_check_progress}');
     const available_tags = JSON.parse('{$available_tags|json_encode|escape:'javascript'}');
+    lang['tag_too_short_dynamic_2'] = '{lang("tag_too_short_dynamic", 2)}';
+    lang['tag_too_short_dynamic_3'] = '{lang("tag_too_short_dynamic", 3)}';
 </script>
 <div class="modal fade" id="myModal" role="dialog">
 </div>
