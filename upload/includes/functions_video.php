@@ -381,6 +381,7 @@ function get_video_being_processed($queueName = null)
 }
 
 /**
+ * @deprecated
  * @throws Exception
  */
 function get_video_details($vid = null, $basic = false)
