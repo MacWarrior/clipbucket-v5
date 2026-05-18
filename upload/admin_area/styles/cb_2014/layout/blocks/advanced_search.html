@@ -2,35 +2,36 @@
     <a href="#" class="btn btn-primary btn-sm pull-right current after" onclick="$('#searchdiv').toggle();return false;" style="margin-bottom: 0;position: relative; top: 15px;">
         {lang code="com_advance_results"}
         <i class="glyphicon glyphicon-chevron-down down"></i>
-		<i class="glyphicon glyphicon-chevron-up up" style="display:none;"></i>
+        <i class="glyphicon glyphicon-chevron-up up" style="display:none;"></i>
     </a>
 </div>
 <div class="search_box well" id="searchdiv" {if !$param_search || $url_active} style="display:none;"{/if}>
     <form id="video_search" name="video_search" method="POST" action="{DirPath::getUrl('admin_area')}video_manager.php" class="video_search">
         <div class="row">
             <div class="col-md-4">
-              <div class="form-group">
+                <div class="form-group">
                     <label for="title">{lang code="vdo_title"}</label>
-                    <input name="title" type="text" class="form-control" id="title" value="{$param_search.title}" />
-                </div>  
+                    <input name="title" type="text" class="form-control" id="title" value="{$param_search.title}"/>
+                </div>
             </div>
             <div class="col-md-2">
                 <div class="form-group">
                     <label for="videokey">Video key</label>
-                    <input class="form-control" name="videokey" type="text" id="videokey" value="{$param_search.videokey}" />
+                    <input class="form-control" name="videokey" type="text" id="videokey" value="{$param_search.videokey}"/>
                 </div>
             </div>
             <div class="col-md-2">
                 <div class="form-group">
                     <label for="videoid">Video id</label>
-                    <input class="form-control" name="videoid" type="text" id="videoid" value="{$param_search.videoid}" />
+                    <input class="form-control" name="videoid" type="text" id="videoid" value="{$param_search.videoid}"/>
                 </div>
             </div>
             <div class="col-md-4">
-              <div class="form-group">
+                <div class="form-group">
                     <label for="tags">{lang code="tags"}</label>
-                    <input class="form-control" name="tags" type="text" id="tags" value="{$param_search.tags}" />
-                </div>  
+                    <input class="form-control" name="tags" type="hidden" id="tags" value="{$param_search.tags}"/>
+                    <ul id="list_tags" ></ul>
+                </div>
             </div>
         </div>
         <div class="row">
@@ -38,7 +39,7 @@
                 <div class="form-group">
                     <label for="featured">{lang code='featured'}</label>
                     <select class="form-control" name="featured" id="featured">
-                        <option value=""> </option>
+                        <option value=""></option>
                         <option value="no" {if $param_search.featured=='no'}selected{/if}>{lang code='no'}</option>
                         <option value="yes" {if $param_search.featured=='yes'}selected{/if}>{lang code='yes'}</option>
                     </select>
@@ -49,7 +50,7 @@
 
                     <label for="active">Active</label>
                     <select class="form-control" name="active" id="active">
-                        <option value=""> </option>
+                        <option value=""></option>
                         <option value="yes" {if $param_search.active=='yes'}selected{/if}>{lang code='yes'}</option>
                         <option value="no" {if $param_search.active=='no'}selected{/if}>{lang code='no'}</option>
                     </select>
@@ -59,7 +60,7 @@
                 <div class="form-group">
                     <label for="status">Conversion Status</label>
                     <select class="form-control" name="status" id="status">
-                        <option value=""> </option>
+                        <option value=""></option>
                         <option value="Successful" {if $param_search.status=='Successful'}selected{/if}>{lang code='successful'}</option>
                         <option value="Processing" {if $param_search.status=='Processing'}selected{/if}>{lang code='processing'}</option>
                         <option value="Waiting" {if $param_search.status=='Waiting'}selected{/if}>{lang code='waiting'}</option>
@@ -70,7 +71,7 @@
             <div class="col-md-2">
                 <div class="form-group">
                     <label for="userid">Userid</label>
-                    <input class="form-control" name="userid" type="text" id="userid" value="{'userid'|get_form_val:true}" />
+                    <input class="form-control" name="userid" type="text" id="userid" value="{'userid'|get_form_val:true}"/>
                 </div>
             </div>
             <div class="col-md-4">
@@ -87,17 +88,16 @@
 </div>
 
 <script type="text/javascript">
-$(document).ready(function neww () {
-	$(".current").click(function() {
-		$(this).toggleClass('after');
-		if(!$(this).hasClass('after'))
-		{
-			$('.down').hide();
-			$('.up').show();
-		} else {
-			$('.down').show();
-			$('.up').hide();
-		}
-	});
-})
+    $(document).ready(function neww() {
+        $(".current").click(function () {
+            $(this).toggleClass('after');
+            if (!$(this).hasClass('after')) {
+                $('.down').hide();
+                $('.up').show();
+            } else {
+                $('.down').show();
+                $('.up').hide();
+            }
+        });
+    })
 </script>
