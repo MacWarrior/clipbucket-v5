@@ -505,7 +505,7 @@ class Comments extends Objects
 
         switch($type){
             case 'v':
-                if( !CBvideo::getInstance()->video_exists($type_id) ){
+                if( !Video::getInstance()->getOne(['videoid'=>(int)$type_id, 'count'=>true]) ){
                     e(lang('class_vdo_del_err'));
                     return false;
                 }

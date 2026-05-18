@@ -51,7 +51,7 @@ if ($_GET['mode'] != '') {
 }
 
 //Check Video Exists or Not
-if (myquery::getInstance()->video_exists($video_id)) {
+if ($data) {
     assign('udata', userquery::getInstance()->get_user_details($data['userid']));
 
     $date_added = DateTime::createFRomFormat('Y-m-d', explode(' ', $data['date_added'])[0]);
