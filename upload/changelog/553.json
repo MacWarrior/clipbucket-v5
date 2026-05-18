@@ -1,6 +1,6 @@
 {
   "version":"5.5.3",
-  "revision":"131",
+  "revision":"134",
   "status":"stable",
   "detail":[
     {
@@ -44,6 +44,7 @@
         ,"Fix possible JS error on breaking version alert"
         ,"Fix SQL error on View online users page"
         ,"Fix tags type search on manage tags page (<i>#843</i>)"
+        ,"Fix videos, photos, collections & playlists advanced search by tags (<i>#844</i>)"
       ]
     },
     {
@@ -93,6 +94,7 @@
         ,"Fix video block display"
         ,"Fix tags suggestion (<i>#839</i>)"
         ,"Fix possible video thumbs cache issue"
+        ,"Fix possible unauthorized access to video subtitles edition (Thanks @Bnyt7 !)"
       ]
     },
     {

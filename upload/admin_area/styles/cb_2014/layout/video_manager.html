@@ -4,56 +4,60 @@
 </div>
 
 <form name="video_manage marginBottomLarge" method="post">
-{if $videos}
-    <div class="btn-group">
-        <input class="btn btn-primary btn-xs button" type="submit" name="activate_selected" value="{lang code='activate'}"/>
-        {if $smarty.get.active!='no'}
-        <input class="btn btn-primary btn-xs button" type="submit" name="deactivate_selected" value="{lang code='deactivate'}"/>
-        {/if}
-        <input class="btn btn-primary btn-xs button" type="submit" name="make_featured_selected" value="{lang code='make_featured'}"/>
-        <input class="btn btn-primary btn-xs button" type="submit" name="make_unfeatured_selected" value="{lang code='make_unfeatured'}"/>
-        <input class="btn btn-primary btn-xs button" type="submit" name="reconvert_selected" value="Reconvert"/>
-        {if config('chromecast')=='yes'}
-        <input class="btn btn-primary btn-xs button" type="submit" name="check_castable_selected" value="{lang code='castable_status_check'}"/>
-        {/if}
-        <input class="btn btn-primary btn-xs button" type="submit" name="update_bits_color_selected" value="{lang code='update_bits_color'}"/>
-        <input class="btn btn-primary btn-xs button" type="submit" name="delete_selected" value="{lang code='delete'}"
-               onclick="return _cb.confirm_it('Are you sure you want to delete selected video(s)')"/>
-    </div>
-    <table class="table table-bordered table-striped manageUsersTable marginTop">
-        <tr>
-            <td style="width:50px;">
-                <input type="checkbox" name="checkall" onclick="checkUncheckAll(this);"/>
-            </td>
-            <td>Videos Details</td>
-            <td style="width:200px;">&nbsp;</td>
-        </tr>
-       {foreach from=$videos item=video}
-           {include file="$style_dir/blocks/video_manager_line.html"}
-       {/foreach}
-    </table>
-    <div class="btn-group marginBotoomLarge marginTopLarge paddingBotoomLarge paddingTopLarge">
-        <input class="btn btn-primary btn-xs button" type="submit" name="activate_selected" value="{lang code='activate'}"/>
-        <input class="btn btn-primary btn-xs button" type="submit" name="deactivate_selected" value="{lang code='deactivate'}"/>
-        <input class="btn btn-primary btn-xs button" type="submit" name="make_featured_selected" value="{lang code='make_featured'}"/>
-        <input class="btn btn-primary btn-xs button" type="submit" name="make_unfeatured_selected" value="{lang code='make_unfeatured'}"/>
-        <input class="btn btn-primary btn-xs button" type="submit" name="reconvert_selected" value="Reconvert"/>
-        {if config('chromecast')=='yes'}
-        <input class="btn btn-primary btn-xs button" type="submit" name="check_castable_selected" value="{lang code='castable_status_check'}"/>
-        {/if}
-        <input class="btn btn-primary btn-xs button" type="submit" name="update_bits_color_selected" value="{lang code='update_bits_color'}"/>
-        <input class="btn btn-primary btn-xs button" type="submit" name="delete_selected" value="{lang code='delete'}"
-               onclick="return _cb.confirm_it('Are you sure you want to delete selected video(s)')"/>
-    </div>
+    {if $videos}
+        <div class="btn-group">
+            <input class="btn btn-primary btn-xs button" type="submit" name="activate_selected" value="{lang code='activate'}"/>
+            {if $smarty.get.active!='no'}
+                <input class="btn btn-primary btn-xs button" type="submit" name="deactivate_selected" value="{lang code='deactivate'}"/>
+            {/if}
+            <input class="btn btn-primary btn-xs button" type="submit" name="make_featured_selected" value="{lang code='make_featured'}"/>
+            <input class="btn btn-primary btn-xs button" type="submit" name="make_unfeatured_selected" value="{lang code='make_unfeatured'}"/>
+            <input class="btn btn-primary btn-xs button" type="submit" name="reconvert_selected" value="Reconvert"/>
+            {if config('chromecast')=='yes'}
+                <input class="btn btn-primary btn-xs button" type="submit" name="check_castable_selected" value="{lang code='castable_status_check'}"/>
+            {/if}
+            <input class="btn btn-primary btn-xs button" type="submit" name="update_bits_color_selected" value="{lang code='update_bits_color'}"/>
+            <input class="btn btn-primary btn-xs button" type="submit" name="delete_selected" value="{lang code='delete'}"
+                   onclick="return _cb.confirm_it('Are you sure you want to delete selected video(s)')"/>
+        </div>
+        <table class="table table-bordered table-striped manageUsersTable marginTop">
+            <tr>
+                <td style="width:50px;">
+                    <input type="checkbox" name="checkall" onclick="checkUncheckAll(this);"/>
+                </td>
+                <td>Videos Details</td>
+                <td style="width:200px;">&nbsp;</td>
+            </tr>
+            {foreach from=$videos item=video}
+                {include file="$style_dir/blocks/video_manager_line.html"}
+            {/foreach}
+        </table>
+        <div class="btn-group marginBotoomLarge marginTopLarge paddingBotoomLarge paddingTopLarge">
+            <input class="btn btn-primary btn-xs button" type="submit" name="activate_selected" value="{lang code='activate'}"/>
+            <input class="btn btn-primary btn-xs button" type="submit" name="deactivate_selected" value="{lang code='deactivate'}"/>
+            <input class="btn btn-primary btn-xs button" type="submit" name="make_featured_selected" value="{lang code='make_featured'}"/>
+            <input class="btn btn-primary btn-xs button" type="submit" name="make_unfeatured_selected" value="{lang code='make_unfeatured'}"/>
+            <input class="btn btn-primary btn-xs button" type="submit" name="reconvert_selected" value="Reconvert"/>
+            {if config('chromecast')=='yes'}
+                <input class="btn btn-primary btn-xs button" type="submit" name="check_castable_selected" value="{lang code='castable_status_check'}"/>
+            {/if}
+            <input class="btn btn-primary btn-xs button" type="submit" name="update_bits_color_selected" value="{lang code='update_bits_color'}"/>
+            <input class="btn btn-primary btn-xs button" type="submit" name="delete_selected" value="{lang code='delete'}"
+                   onclick="return _cb.confirm_it('Are you sure you want to delete selected video(s)')"/>
+        </div>
     {else}
-    <div align="center"><strong><em>No Video Found</em></strong></div>
+        <div align="center"><strong><em>No Video Found</em></strong></div>
     {/if}
 </form>
 
 {include file="$style_dir/blocks/pagination.html"}
 <div class="marginBottomLarge"></div>
 <script>
+    let lang = [];
     var ids_to_check_progress = JSON.parse('{$ids_to_check_progress}');
+    const available_tags = JSON.parse('{$available_tags|json_encode|escape:'javascript'}');
+    lang['tag_too_short_dynamic_2'] = '{lang("tag_too_short_dynamic", 2)}';
+    lang['tag_too_short_dynamic_3'] = '{lang("tag_too_short_dynamic", 3)}';
 </script>
 <div class="modal fade" id="myModal" role="dialog">
 </div>
