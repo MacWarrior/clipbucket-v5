@@ -1021,13 +1021,19 @@ function load_plugin()
  *
  * @return string
  */
-function create_query_limit($page, $result): string
+function create_query_limit($page, $result, $total_results = 0): string
 {
-    if (empty($page) || $page == 0 || !is_numeric($page)) {
+    if (empty($page) || $page <= 0 || !is_numeric($page)) {
         $page = 1;
     }
     $from = $page - 1;
     $from = $from * $result;
+    if ($from >= $total_results) {
+        $from = $total_results - $result;
+        if ($from < 0) {
+            $from = 0;
+        }
+    }
     return mysql_clean($from) . ',' . mysql_clean($result);
 }
 
@@ -1486,7 +1492,7 @@ function increment_views($id, $type = null): bool
                         'userid'        => $userid,
                         'details'       => $video['title']
                     ];
-                    insert_log('Watch a video', $log_array);
+                    insert_log('watch_a_video', $log_array);
                 }
                 $return = true;
             } else {

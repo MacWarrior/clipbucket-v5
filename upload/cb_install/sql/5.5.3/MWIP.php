@@ -81,7 +81,57 @@ class MWIP extends \Migration
             'en'=>'Do you really want to clean all logs ?'
         ]);
 
+        self::generateTranslation('watch_a_video', [
+            'fr'=>'Regarder une vidéo',
+            'en'=>'Watch a video'
+        ]);
+        self::generateTranslation('profile_update', [
+            'fr'=>'Mise à jours de profile',
+            'en'=>'Profile update'
+        ]);
+        self::generateTranslation('login_as', [
+            'fr'=>'Connexion en tant que',
+            'en'=>'Login as'
+        ]);
+        self::generateTranslation('add_friend', [
+            'fr'=>'Ajouter un ami',
+            'en'=>'Add friend'
+        ]);
+
+        self::generateTranslation('video_favorite', [
+            'fr'=>'Ajouter une vidéo aux favoris',
+            'en'=>'Add video to favorites'
+        ]);
+        self::generateTranslation('photo_favorite', [
+            'fr'=>'Ajouter une photo aux favoris',
+            'en'=>'Add photo to favorites'
+        ]);
+        self::generateTranslation('collection_favorite', [
+            'fr'=>'Ajouter une collection aux favoris',
+            'en'=>'Add collection to favorites'
+        ]);
+        self::generateTranslation('channel_comment', [
+            'fr'=>'Ajouter un commentaire de chaine',
+            'en'=>'Add a comment for channel'
+        ]);
+        self::generateTranslation('video_comment', [
+            'fr'=>'Ajouter un commentaire de vidéo',
+            'en'=>'Add a comment for video'
+        ]);
+        self::generateTranslation('photo_comment', [
+            'fr'=>'Ajouter un commentaire de photo',
+            'en'=>'Add a comment for photo'
+        ]);
+        self::generateTranslation('collection_comment', [
+            'fr'=>'Ajouter un commentaire de collection',
+            'en'=>'Add a comment for collection'
+        ]);
+
         $sql = 'UPDATE `{tbl_prefix}action_log` SET `action_type` = \'upload_video\' WHERE `action_type` LIKE \'Uploaded a video\'';
+        self::query($sql);
+        $sql = 'UPDATE `{tbl_prefix}action_log` SET `action_type` = \'watch_a_video\' WHERE `action_type` LIKE \'watch a video\'';
+        self::query($sql);
+        $sql = 'UPDATE `{tbl_prefix}action_log` SET `action_type` = \'login_as\' WHERE `action_type` LIKE \'Login as\'';
         self::query($sql);
     }
 }

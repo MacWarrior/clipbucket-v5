@@ -4768,7 +4768,7 @@ class userquery extends CBCategory
                 //Logging Action
                 $log_array['success'] = 'no';
                 $log_array['details'] = $msg[0]['val'];
-                insert_log('Login as', $log_array);
+                insert_log('login_as', $log_array);
             }
         }
 

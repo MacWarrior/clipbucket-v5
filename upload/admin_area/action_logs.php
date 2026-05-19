@@ -19,19 +19,20 @@ if (isset($_GET['clean'])) {
 
 if (isset($_GET['type']) && in_array($_GET['type'], CBLogs::$allowed_types, true)) {
     $type = $_GET['type'];
-    $result_array['type'] = $type;
+    $params['type'] = $type;
 }
 assign('type', $type??false);
 $page = (int)$_GET['page'];
-$get_limit = create_query_limit($page, $limit);
-$result_array['limit'] = $get_limit;
-$logs = fetch_action_logs($result_array);
-$result_array['count'] = true;
-$total_rows = fetch_action_logs($result_array);
+$params_count = $params;
+$params_count['count'] = true;
+$total_rows = fetch_action_logs($params_count);
+$get_limit = create_query_limit($page, $limit, $total_rows);
+$total_pages = count_pages($total_rows, $limit);
+$params['limit'] = $get_limit;
+$logs = fetch_action_logs($params);
 assign('total_logs', count($logs));
 assign('logs', $logs);
 subtitle(lang('action_logs'));
-$total_pages = count_pages($total_rows, $limit);
 pages::getInstance()->paginate($total_pages, $page);
 template_files('action_logs.html');
 display_it();
