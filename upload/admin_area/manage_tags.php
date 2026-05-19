@@ -55,13 +55,18 @@ foreach ($temp_tag_types as $key => $item) {
     if ((config('videosSection') != 'yes' || config('enable_video_crew') != 'yes') && 'crew' == $item) {
         continue;
     }
+    if ((config('videosSection') != 'yes' || config('collectionsSection') != 'yes') && 'collection' == $item) {
+        continue;
+    }
     if (config('photosSection') != 'yes' && 'photo' == $item) {
         continue;
     }
     if (config('channelsSection') != 'yes' && 'profile' == $item) {
         continue;
     }
-    if (config('collectionsSection') != 'yes' && 'collection' == $item) {
+    if ((config('videosSection') != 'yes' && config('photosSection') != 'yes')
+        || (config('collectionsSection') != 'yes'
+        ) && 'collection' == $item) {
         continue;
     }
     $tag_types[$key] = ucfirst(lang($item));
