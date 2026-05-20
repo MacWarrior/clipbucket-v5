@@ -1060,21 +1060,6 @@ function get($val)
     return get_form_val($val);
 }
 
-/**
- * Function used to get value from $_POST
- *
- * @param : { string } { $val } { value to fetch from $_POST }
- * @param bool $filter
- *
- * @return string
- */
-function post_form_val($val, $filter = false): string
-{
-    if ($filter) {
-        return display_clean($_POST[$val]);
-    }
-    return $_POST[$val];
-}
 
 /**
  * Function used to return LANG variable
