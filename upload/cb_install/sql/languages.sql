@@ -1869,4 +1869,5 @@ VALUES ('ongoing_conversion'),
        ('recalcul_rates_label'),
        ('recalcul_rates_description'),
        ('option_on_delete_user'),
-       ('delete_user_s');
+       ('delete_user_s'),
+       ('continue');

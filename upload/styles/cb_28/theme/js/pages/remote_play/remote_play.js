@@ -220,12 +220,14 @@ function getRemoteInfo(videoid) {
                     displayThumbSection('thumb', video.videoid, video.thumbs.thumbs, $('#link_video_link'));
                     displayThumbSection('poster', video.videoid, video.thumbs.posters, $('#link_video_link'));
                     displayThumbSection('backdrop', video.videoid, video.thumbs.backdrops, $('#link_video_link'));
-                    slideFormSection();
 
                     if ($('#remote_play_form').find('#subtitles_' + video.videoid).length === 0 && typeof video.subtitles !== 'undefined' && video.subtitles.length > 0) {
                         const subtitles = $(video.subtitles).hide();
                         subtitles.insertBefore($('#remote_play_form').find('.pad-bottom-sm.text-right'));
                         subtitles.slideDown('slow');
+                    } else {
+                        const parent_div = $('#subtitles_'+video.videoid).parents('.formSection.clear')[0];
+                        $(parent_div).replaceWith(video.subtitles);
                     }
                     slideFormSection();
                 }
