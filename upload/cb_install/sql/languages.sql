@@ -1894,4 +1894,11 @@ VALUES ('ongoing_conversion'),
        ('channel_comment'),
        ('video_comment'),
        ('photo_comment'),
-       ('collection_comment');
+       ('collection_comment'),
+       ('view_comment'),
+       ('view_all_comments'),
+       ('view_video_comments'),
+       ('view_collection_comments'),
+       ('view_photo_comments'),
+       ('confirm_delete_comment'),
+       ('comment_id');

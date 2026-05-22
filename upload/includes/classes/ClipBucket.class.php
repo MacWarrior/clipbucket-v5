@@ -408,7 +408,7 @@ class ClipBucket
                 , 'sub'   => []
             ];
 
-            if (config('enable_comments_video') == 'yes' || config('enable_comments_photo') == 'yes' || config('enable_comments_channel') == 'yes' || config('enable_comments_collection') == 'yes') {
+            if (config('enable_comments_video') == 'yes' || config('enable_comments_photo') == 'yes' || config('enable_comments_channel') == 'yes' ) {
                 $menu_general['sub'][] = [
                     'title' => lang('manage_x', strtolower(lang('comments')))
                     , 'url' => DirPath::getUrl('admin_area') . 'comments.php'
@@ -430,8 +430,9 @@ class ClipBucket
                     , 'url' => DirPath::getUrl('admin_area') . 'notifications.php'
                 ];
             }
-
-            $this->addMenuAdmin($menu_general, 10);
+            if (!empty($menu_general['sub'])) {
+                $this->addMenuAdmin($menu_general, 10);
+            }
         }
 
         if (User::getInstance()->hasPermission('member_moderation')) {

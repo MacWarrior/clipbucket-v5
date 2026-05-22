@@ -2,89 +2,98 @@
     <h2>{lang('manage_x', strtolower(lang('comments')))}</h2>
 </div>
 <div id="vid_opt-{$groups[gp_list].group_id}" class="dropdown">
-    <button id="dropdownMenu" class="btn btn-primary btn-xs dropdown-toggle pull-right" data-toggle="dropdown">View Comments <i class="caret"></i></button>
+    <button id="dropdownMenu" class="btn btn-primary btn-xs dropdown-toggle pull-right" data-toggle="dropdown">{lang('view_comment')} <i class="caret"></i></button>
     <ul class="dropdown-menu pull-right" aria-labelledby="dropdownMenu1" role="menu">
-        <li role="presentation"><a role="menuitem" tabindex="-1" href="?">View all Comments</a></li>
-        <li role="presentation"><a role="menuitem" tabindex="-1" href="?type=v">View Video Comments</a></li>
-        <li role="presentation"><a role="menuitem" tabindex="-1" href="?type=cl">View Collection Comments</a></li>
-        <li role="presentation"><a role="menuitem" tabindex="-1" href="?type=p">View Photo Comments</a></li>
-        <li role="presentation"><a role="menuitem" tabindex="-1" href="?type=channel">{lang('view_channel_comments')}</a></li>
+        {if config('enable_comments_video') == 'yes' || config('enable_comments_photo') == 'yes' || config('enable_comments_channel') == 'yes'}
+            <li role="presentation"><a role="menuitem" tabindex="-1" href="?">{lang('view_all_comments')}</a></li>
+        {/if}
+
+        {if config('enable_comments_video') == 'yes'}
+            <li role="presentation"><a role="menuitem" tabindex="-1" href="?type=v">{lang('view_video_comments')}</a></li>
+        {/if}
+        {if (config('enable_comments_video') == 'yes' || config('enable_comments_photo') == 'yes') && config('enable_comments_collection') == 'yes'}
+            <li role="presentation"><a role="menuitem" tabindex="-1" href="?type=cl">{lang('view_collection_comments')}</a></li>
+        {/if}
+        {if config('enable_comments_photo') == 'yes'}
+            <li role="presentation"><a role="menuitem" tabindex="-1" href="?type=p">{lang('view_photo_comments')}</a></li>
+        {/if}
+        {if config('enable_comments_channel') == 'yes'}
+            <li role="presentation"><a role="menuitem" tabindex="-1" href="?type=channel">{lang('view_channel_comments')}</a></li>
+        {/if}
     </ul>
 </div>
 <form name="comments_manager" method="post">
     <div class="btn-grp formOptions">
         <input class="btn btn-xs btn-primary button" type="submit" name="mark_spam" value="Mark {lang code='spam'}"/>
         <input class="btn btn-xs btn-primary button" type="submit" name="not_spam" value="{lang code='remove'} {lang code='spam'}"/>
-        <input class="btn btn-xs btn-primary button" type="submit" name="delete_selected" value="{lang code='delete'}" onclick="return confirm_it('Are you sure you want to delete selected comment(s)')"/>
+        <input class="btn btn-xs btn-primary button" type="submit" name="delete_selected" value="{lang code='delete'}" onclick="return confirm_it({lang('confirm_delete_comment')})"/>
     </div>
 
     {if $comments}
-    <table class="table table-bordered">
-        <tr>
-            <td width="40" align="center" valign="middle">
-                <input type="checkbox" name="checkall" onclick="checkUncheckAll(this);"/>
-            </td>
-            <td width="85" align="center"><strong>CID</strong></td>
-            <td><strong>Comment</strong></td>
-            <td width="120" align="center"><strong>Options</strong></td>
-        </tr>
+        <table class="table table-bordered">
+            <tr>
+                <td width="40" align="center" valign="middle">
+                    <input type="checkbox" name="checkall" onclick="checkUncheckAll(this);"/>
+                </td>
+                <td width="85" align="center"><strong>{lang('comment_id')}</strong></td>
+                <td><strong>{lang('comment')}</strong></td>
+                <td width="120" align="center"><strong>{lang('option')}</strong></td>
+            </tr>
 
-        {foreach from=$comments item=comment}
-            {if $comment.type == 'v'}
-                {assign var=comment_type value=lang('video')}
-                {assign var=comment_obj_baseurl value='./edit_video.php?video='}
-            {elseif $comment.type == 'p'}
-                {assign var=comment_type value=lang('photo')}
-                {assign var=comment_obj_baseurl value='./edit_photo.php?photo='}
-            {elseif $comment.type == 'cl'}
-                {assign var=comment_type value=lang('collection')}
-                {assign var=comment_obj_baseurl value='./edit_collection.php?collection='}
-            {elseif $comment.type == 'channel'}
-                {assign var=comment_type value=lang('channel')}
-                {assign var=comment_obj_baseurl value='./view_user.php?uid='}
-            {/if}
-
-        <tr>
-            <td width="40"><input style="margin-left:5px;margin-top:10px;" name="check_comments[]" type="checkbox" value="{$comment.comment_id}"/></td>
-            <td>{$comment.comment_id}</td>
-            <td>
-                {if $comment.username != ''}
-                <a href="./view_user.php?uid={$comment.userid}">
-                    <strong>{display_clean($comment.username)}</strong>
-                </a>
-                {else}
-                <strong>{display_clean($comment.anonym_name)} - {lang code="un_reg_user"}</strong>
+            {foreach from=$comments item=comment}
+                {if $comment.type == 'v'}
+                    {assign var=comment_type value=lang('video')}
+                    {assign var=comment_obj_baseurl value='./edit_video.php?video='}
+                {elseif $comment.type == 'p'}
+                    {assign var=comment_type value=lang('photo')}
+                    {assign var=comment_obj_baseurl value='./edit_photo.php?photo='}
+                {elseif $comment.type == 'cl'}
+                    {assign var=comment_type value=lang('collection')}
+                    {assign var=comment_obj_baseurl value='./edit_collection.php?collection='}
+                {elseif $comment.type == 'channel'}
+                    {assign var=comment_type value=lang('channel')}
+                    {assign var=comment_obj_baseurl value='./view_user.php?uid='}
                 {/if}
-                commented on a {$comment_type} named <a href="{$comment_obj_baseurl|cat:$comment.type_id}" title="{display_clean($comment.title)}">{display_clean($comment.title)|truncate:40}</a>
-                on {$comment.date_added|date_format} ({$comment.date_added|niceTime})
-                <div class="alert {if $comment.spam_votes==0}alert-info{else}alert-danger{/if}" id="comment_{$comment.comment_id}" style="padding:3px;margin-bottom:0;margin-top:3px; ">
-                    {Comments::getClean($comment.comment)}
-                </div>
-            </td>
-            <td>
-                <div class="dropdown" style="text-align:center;">
-                    <button class="btn btn-primary btn-xs dropdown-toggle" data-toggle="dropdown">Actions <i class="caret"></i></button>
-                    <ul class="dropdown-menu" aria-labelledby="dropdownMenu1" role="menu">
-                        <li role="presentation">
-                            <a role="menuitem" tabindex="-1" href="{$comment_obj_baseurl|cat:$comment.type_id}" target="_blank">{lang code='watch'}</a>
-                        </li>
-                        {if $comment.userid != user_id()}
-                            <li role="presentation">
-                                <a role="menuitem" style="{if $comment.spam_votes!=0}display: none;{/if}" id="spam_comment_{$comment.comment_id}" tabindex="-1" href="#" onclick='admin_spam_comment({$comment.comment_id});'>Mark {lang code='spam'}</a>
-                                <a role="menuitem" style="{if $comment.spam_votes==0}display: none;{/if}" id="remove_spam_comment_{$comment.comment_id}" tabindex="-1" href="#" onclick='admin_remove_spam({$comment.comment_id});'>{lang code='remove'} {lang code='spam'}</a>
-                            </li>
+                <tr>
+                    <td width="40"><input style="margin-left:5px;margin-top:10px;" name="check_comments[]" type="checkbox" value="{$comment.comment_id}"/></td>
+                    <td>{$comment.comment_id}</td>
+                    <td>
+                        {if $comment.username != ''}
+                            <a href="./view_user.php?uid={$comment.userid}">
+                                <strong>{display_clean($comment.username)}</strong>
+                            </a>
+                        {else}
+                            <strong>{display_clean($comment.anonym_name)} - {lang code="un_reg_user"}</strong>
                         {/if}
+                        commented on a {$comment_type} named <a href="{$comment_obj_baseurl|cat:$comment.type_id}" title="{display_clean($comment.title)}">{display_clean($comment.title)|truncate:40}</a>
+                        on {$comment.date_added|date_format} ({$comment.date_added|niceTime})
+                        <div class="alert {if $comment.spam_votes==0}alert-info{else}alert-danger{/if}" id="comment_{$comment.comment_id}" style="padding:3px;margin-bottom:0;margin-top:3px; ">
+                            {Comments::getClean($comment.comment)}
+                        </div>
+                    </td>
+                    <td>
+                        <div class="dropdown" style="text-align:center;">
+                            <button class="btn btn-primary btn-xs dropdown-toggle" data-toggle="dropdown">Actions <i class="caret"></i></button>
+                            <ul class="dropdown-menu" aria-labelledby="dropdownMenu1" role="menu">
+                                <li role="presentation">
+                                    <a role="menuitem" tabindex="-1" href="{$comment_obj_baseurl|cat:$comment.type_id}" target="_blank">{lang code='watch'}</a>
+                                </li>
+                                {if $comment.userid != user_id()}
+                                    <li role="presentation">
+                                        <a role="menuitem" style="{if $comment.spam_votes!=0}display: none;{/if}" id="spam_comment_{$comment.comment_id}" tabindex="-1" href="#" onclick='admin_spam_comment({$comment.comment_id});'>Mark {lang code='spam'}</a>
+                                        <a role="menuitem" style="{if $comment.spam_votes==0}display: none;{/if}" id="remove_spam_comment_{$comment.comment_id}" tabindex="-1" href="#" onclick='admin_remove_spam({$comment.comment_id});'>{lang code='remove'} {lang code='spam'}</a>
+                                    </li>
+                                {/if}
 
-                        <li role="presentation"><a role="menuitem" tabindex="-1" href="#" onclick="delete_comment('{$comment.comment_id}'); window.location.reload(); return false;">{lang code='delete'}</a></li>
-                    </ul>
-                </div>
-            </td>
-        </tr>
-
-        {/foreach}
-    </table>
+                                <li role="presentation"><a role="menuitem" tabindex="-1" href="#" onclick="delete_comment('{$comment.comment_id}'); window.location.reload(); return false;">{lang code='delete'}</a></li>
+                            </ul>
+                        </div>
+                    </td>
+                </tr>
+            {/foreach}
+        </table>
     {else}
-    <div align="center"><em>{lang code='no_comment'}</em></div>
+        <div align="center"><em>{lang code='no_comment'}</em></div>
     {/if}
 </form>
 <div style="height:10px;clear:both;"></div>
