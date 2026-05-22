@@ -1895,4 +1895,5 @@ VALUES ('ongoing_conversion'),
        ('video_comment'),
        ('photo_comment'),
        ('collection_comment'),
-       ('continue');
+       ('continue'),
+       ('cant_upload_subtitle_until_video_is_converted');
