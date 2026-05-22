@@ -307,6 +307,18 @@ class Tags
         }, $result);
     }
 
+    public static function fill_auto_complete_tags_for_video(): array
+    {
+        return array_merge(self::fill_auto_complete_tags('video'),
+            self::fill_auto_complete_tags('actors'),
+            self::fill_auto_complete_tags('crew'),
+            self::fill_auto_complete_tags('director'),
+            self::fill_auto_complete_tags('executive_producer'),
+            self::fill_auto_complete_tags('producer'),
+            self::fill_auto_complete_tags('genre')
+        );
+    }
+
     /**
      * @param array $cond
      * @return array

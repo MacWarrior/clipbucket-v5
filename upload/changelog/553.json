@@ -1,6 +1,6 @@
 {
   "version":"5.5.3",
-  "revision":"131",
+  "revision":"136",
   "status":"stable",
   "detail":[
     {
@@ -9,6 +9,7 @@
         "Refactor templates management"
         ,"Refactor and mutualize images uploads"
         ,"Refactor users deletion"
+        ,"Refactor action logs"
         ,"Implement email alias allow option"
         ,"Implement templates edition"
         ,"Implement Regenerate videos thumbs tool"
@@ -21,6 +22,7 @@
         ,"Update video & photos thumbs regeneration tools"
         ,"Update video allowed extensions display"
         ,"Update TMDB search interface"
+        ,"Update manage tags type filter"
         ,"Add links to flagged tags"
         ,"Hide poster & backdrop tabs when empty on video edition page"
         ,"Only show template editor menu while in dev mode"
@@ -44,6 +46,7 @@
         ,"Fix possible JS error on breaking version alert"
         ,"Fix SQL error on View online users page"
         ,"Fix tags type search on manage tags page (<i>#843</i>)"
+        ,"Fix videos, photos, collections & playlists advanced search by tags (<i>#844</i>)"
       ]
     },
     {
@@ -93,6 +96,7 @@
         ,"Fix video block display"
         ,"Fix tags suggestion (<i>#839</i>)"
         ,"Fix possible video thumbs cache issue"
+        ,"Fix possible unauthorized access to video subtitles edition (Thanks @Bnyt7 !)"
       ]
     },
     {

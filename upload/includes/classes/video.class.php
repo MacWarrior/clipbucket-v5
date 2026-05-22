@@ -468,7 +468,12 @@ class Video extends Objects
         }
 
         if( $param_tags && Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.0', '264') ){
-            $conditions[] = '(MATCH(tags.name) AGAINST (\'' . mysql_clean($param_search) . '\' IN NATURAL LANGUAGE MODE) OR LOWER(tags.name) LIKE \'%' . mysql_clean($param_search) . '%\' )';
+            if (!is_array($param_tags)) {
+                $param_tags = explode(',', $param_tags);
+            }
+            foreach ($param_tags as $param_tag) {
+                $conditions[] = '(MATCH(tags.name) AGAINST (\'' . mysql_clean($param_tag) . '\' IN NATURAL LANGUAGE MODE) OR LOWER(tags.name) LIKE \'%' . mysql_clean($param_tag) . '%\' )';
+            }
         }
 
         if ($param_title) {
@@ -481,16 +486,15 @@ class Video extends Objects
 
         $group = [];
 
-        if( $param_count ){
+        if ($param_count) {
             $select = ['COUNT(DISTINCT ' . $this->getTableName() . '.videoid) AS count'];
         } else {
             $select = $this->getVideoFields();
-
             foreach ($this->fields as $field) {
                 $group[] = $this->tablename . '.' . $field;
             }
-                $select[] = 'users.username AS user_username';
-                $group[] = 'users.username';
+            $select[] = 'users.username AS user_username';
+            $group[] = 'users.username';
         }
 
         $join = [];
@@ -1665,6 +1669,7 @@ class CBvideo extends CBCategory
      *
      * @return bool|mixed|STRING
      * @throws Exception
+     * @deprecated
      */
     function get_video($vid, bool $filename = false)
     {
@@ -2007,7 +2012,7 @@ class CBvideo extends CBCategory
     function update_subtitle($videoid, $number, $title): void
     {
         if (Video::getInstance()->getOne(['videoid'=>$videoid, 'count'=>true])) {
-            Clipbucket_db::getInstance()->update(tbl('video_subtitle'), ['title'], [$title], ' videoid = ' . (int)$videoid . ' AND number LIKE \'' . $number . '\'');
+            Clipbucket_db::getInstance()->update(tbl('video_subtitle'), ['title'], [$title], ' videoid = ' . (int)$videoid . ' AND number LIKE \'' . mysql_clean($number) . '\'');
         }
     }
 

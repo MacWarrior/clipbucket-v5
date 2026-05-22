@@ -23,7 +23,7 @@ if (isset($_POST['reconvert_selected']) || isset($_GET['reconvert_video'])) {
 }
 
 //Feature / UnFeature Video
-if( !empty($_GET['make_feature']) ){
+if (!empty($_GET['make_feature'])) {
     $video = (int)$_GET['make_feature'];
     CBvideo::getInstance()->action('feature', $video);
     $row = myquery::getInstance()->Get_Website_Details();
@@ -32,97 +32,97 @@ if( !empty($_GET['make_feature']) ){
     }
 }
 
-if( !empty($_GET['make_unfeature']) ){
+if (!empty($_GET['make_unfeature'])) {
     $video = (int)$_GET['make_unfeature'];
     CBvideo::getInstance()->action('unfeature', $video);
 }
 
-if( !empty($_GET['check_castable']) ){
+if (!empty($_GET['check_castable'])) {
     $videoid = (int)$_GET['check_castable'];
     $vdetails = get_video_details($videoid);
     update_castable_status($vdetails);
 }
-if( isset($_POST['check_castable_selected']) && is_array($_POST['check_video']) && !empty($_POST['check_video']) ){
-    foreach($_POST['check_video'] as $id){
+if (isset($_POST['check_castable_selected']) && is_array($_POST['check_video']) && !empty($_POST['check_video'])) {
+    foreach ($_POST['check_video'] as $id) {
         $vdetails = get_video_details((int)$id);
         update_castable_status($vdetails);
     }
 }
 
-if( !empty($_GET['update_bits_color']) ){
+if (!empty($_GET['update_bits_color'])) {
     $videoid = (int)$_GET['update_bits_color'];
     $vdetails = get_video_details($videoid);
     update_bits_color($vdetails);
 }
-if( isset($_POST['update_bits_color_selected']) && is_array($_POST['check_video']) && !empty($_POST['check_video']) ){
-    foreach($_POST['check_video'] as $id){
+if (isset($_POST['update_bits_color_selected']) && is_array($_POST['check_video']) && !empty($_POST['check_video'])) {
+    foreach ($_POST['check_video'] as $id) {
         $vdetails = get_video_details((int)$id);
         update_bits_color($vdetails);
     }
 }
 
 //Using Multiple Action
-if( isset($_POST['make_featured_selected']) && is_array($_POST['check_video']) && !empty($_POST['check_video']) ){
-    foreach($_POST['check_video'] as $id){
+if (isset($_POST['make_featured_selected']) && is_array($_POST['check_video']) && !empty($_POST['check_video'])) {
+    foreach ($_POST['check_video'] as $id) {
         CBvideo::getInstance()->action('feature', (int)$id);
     }
-    if( empty(errorhandler::getInstance()->get_error()) ){
+    if (empty(errorhandler::getInstance()->get_error())) {
         errorhandler::getInstance()->flush();
     }
     e('Selected videos have been set as featured', 'm');
 }
-if( isset($_POST['make_unfeatured_selected']) && is_array($_POST['check_video']) && !empty($_POST['check_video']) ){
+if (isset($_POST['make_unfeatured_selected']) && is_array($_POST['check_video']) && !empty($_POST['check_video'])) {
     for ($id = 0; $id < count($_POST['check_video']); $id++) {
         CBvideo::getInstance()->action('unfeature', $_POST['check_video'][$id]);
     }
-    if( empty(errorhandler::getInstance()->get_error()) ){
+    if (empty(errorhandler::getInstance()->get_error())) {
         errorhandler::getInstance()->flush();
     }
     e('Selected videos have been removed from featured list', 'm');
 }
 
 //Activate / Deactivate
-if( !empty($_GET['activate']) ){
+if (!empty($_GET['activate'])) {
     $video = (int)$_GET['activate'];
     CBvideo::getInstance()->action('activate', $video);
 }
-if( !empty($_GET['deactivate']) ){
+if (!empty($_GET['deactivate'])) {
     $video = (int)$_GET['deactivate'];
     CBvideo::getInstance()->action('deactivate', $video);
 }
 
 //Using Multiple Action
-if( isset($_POST['activate_selected']) && is_array($_POST['check_video']) && !empty($_POST['check_video']) ) {
-    foreach($_POST['check_video'] as $id){
+if (isset($_POST['activate_selected']) && is_array($_POST['check_video']) && !empty($_POST['check_video'])) {
+    foreach ($_POST['check_video'] as $id) {
         CBvideo::getInstance()->action('activate', (int)$id);
     }
-    if( empty(errorhandler::getInstance()->get_error()) ){
+    if (empty(errorhandler::getInstance()->get_error())) {
         errorhandler::getInstance()->flush();
     }
     e('Selected Videos Have Been Activated', 'm');
 }
-if( isset($_POST['deactivate_selected']) && is_array($_POST['check_video']) && !empty($_POST['check_video']) ) {
-    foreach($_POST['check_video'] as $id){
+if (isset($_POST['deactivate_selected']) && is_array($_POST['check_video']) && !empty($_POST['check_video'])) {
+    foreach ($_POST['check_video'] as $id) {
         CBvideo::getInstance()->action('deactivate', (int)$id);
     }
-    if( empty(errorhandler::getInstance()->get_error()) ){
+    if (empty(errorhandler::getInstance()->get_error())) {
         errorhandler::getInstance()->flush();
     }
     e('Selected Videos Have Been Dectivated', 'm');
 }
 
 //Delete Video
-if( !empty($_GET['delete_video']) ){
+if (!empty($_GET['delete_video'])) {
     $video = (int)$_GET['delete_video'];
     CBvideo::getInstance()->delete_video($video);
 }
 
 //Deleting Multiple Videos
-if( isset($_POST['delete_selected']) && is_array($_POST['check_video']) && !empty($_POST['check_video']) ){
-    foreach($_POST['check_video'] as $id){
+if (isset($_POST['delete_selected']) && is_array($_POST['check_video']) && !empty($_POST['check_video'])) {
+    foreach ($_POST['check_video'] as $id) {
         CBvideo::getInstance()->delete_video((int)$id);
     }
-    if( empty(errorhandler::getInstance()->get_error()) ){
+    if (empty(errorhandler::getInstance()->get_error())) {
         errorhandler::getInstance()->flush();
     }
     e(lang('vdo_multi_del_erro'), 'm');
@@ -134,7 +134,7 @@ call_functions(CBvideo::getInstance()->video_manager_funcs);
 $page = mysql_clean($_GET['page']);
 $get_limit = create_query_limit($page, config('admin_pages'));
 
-if( Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.0', '331') ){
+if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.0', '331')) {
     $all_categories = Category::getInstance()->getAll([
         'category_type' => Category::getInstance()->getIdsCategoriesType('video')
     ]);
@@ -150,15 +150,15 @@ if (!empty($_GET['active'])) {
 }
 if (isset($_POST['search'])) {
     $params = [
-        'videoid'  => !empty($_POST['videoid']) ?$_POST['videoid'] :  false,
-        'videokey' => !empty($_POST['videokey']) ?$_POST['videokey'] :  false,
-        'title'    => !empty($_POST['title']) ?$_POST['title'] :  false,
-        'tags'     => !empty($_POST['tags']) ?$_POST['tags'] :  false,
-        'userid'   => !empty($_POST['userid']) ?$_POST['userid'] :  false,
+        'videoid'  => !empty($_POST['videoid']) ? $_POST['videoid'] : false,
+        'videokey' => !empty($_POST['videokey']) ? $_POST['videokey'] : false,
+        'title'    => !empty($_POST['title']) ? $_POST['title'] : false,
+        'tags'     => !empty($_POST['tags']) ? $_POST['tags'] : false,
+        'userid'   => !empty($_POST['userid']) ? $_POST['userid'] : false,
         'category' => !empty($_POST['category']) ? $_POST['category'] : false,
-        'featured' => !empty($_POST['featured']) ?$_POST['featured'] :  false,
-        'active'   => !empty($_POST['active']) ?$_POST['active'] :  false,
-        'status'   => !empty($_POST['status']) ?$_POST['status'] :  false
+        'featured' => !empty($_POST['featured']) ? $_POST['featured'] : false,
+        'active'   => !empty($_POST['active']) ? $_POST['active'] : false,
+        'status'   => !empty($_POST['status']) ? $_POST['status'] : false
     ];
 }
 assign('param_search', $params);
@@ -168,9 +168,9 @@ if (!$params['order']) {
     $params['order'] = ' videoid DESC ';
 }
 
-$params['join_flag']=true;
-if (config('enable_video_categories') !='no') {
-    $params['get_detail']=true;
+$params['join_flag'] = true;
+if (config('enable_video_categories') != 'no') {
+    $params['get_detail'] = true;
 }
 assign('anonymous_id', userquery::getInstance()->get_anonymous_user());
 $videos = Video::getInstance()->getAll($params);
@@ -183,9 +183,9 @@ foreach ($videos as $video) {
 Assign('videos', $videos);
 Assign('ids_to_check_progress', json_encode($ids_to_check_progress));
 
-if( empty($videos) ){
+if (empty($videos)) {
     $total_rows = 0;
-} else if( count($videos) < config('admin_pages') && ($page == 1 || empty($page)) ){
+} elseif (count($videos) < config('admin_pages') && ($page == 1 || empty($page))) {
     $total_rows = count($videos);
 } else {
     $params['count'] = true;
@@ -196,9 +196,20 @@ if( empty($videos) ){
 $total_pages = count_pages($total_rows, config('admin_pages'));
 pages::getInstance()->paginate($total_pages, $page);
 
-$min_suffixe = System::isInDev() ? '' : '.min';
-ClipBucket::getInstance()->addAdminJS(['pages/video_manager/video_manager'.$min_suffixe.'.js' => 'admin']);
+$available_tags = Tags::fill_auto_complete_tags_for_video();
+assign('available_tags', $available_tags);
 
+$min_suffixe = System::isInDev() ? '' : '.min';
+ClipBucket::getInstance()->addAdminJS([
+    'pages/video_manager/video_manager' . $min_suffixe . '.js' => 'admin',
+    'tag-it' . $min_suffixe . '.js'                            => 'admin',
+    'init_default_tag/init_default_tag' . $min_suffixe . '.js' => 'admin'
+]);
+
+ClipBucket::getInstance()->addAdminCSS([
+    'jquery.tagit' . $min_suffixe . '.css'     => 'admin',
+    'tagit.ui-zendesk' . $min_suffixe . '.css' => 'admin'
+]);
 subtitle(lang('manage_x', strtolower(lang('videos'))));
 template_files('video_manager.html');
 display_it();

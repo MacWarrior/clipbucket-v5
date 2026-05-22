@@ -15,6 +15,7 @@ function init_tags(id_input, available_tags, list_tag, min_length) {
         caseSensitive: false,
         availableTags: available_tags,
         allowSpaces: allow_tag_space,
+        showAutocompleteOnFocus: false,
         beforeTagAdded: function (event,info) {
             if (info.tagLabel.length < min_length) {
                 if (!alert_shown) {
@@ -24,6 +25,12 @@ function init_tags(id_input, available_tags, list_tag, min_length) {
                 return false;
             }
             alert_shown = false;
+        },
+        autocomplete: {
+            messages: {
+                noResults: "",
+                results: function () {}
+            }
         }
     });
 }
