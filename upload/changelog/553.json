@@ -1,6 +1,6 @@
 {
   "version":"5.5.3",
-  "revision":"134",
+  "revision":"136",
   "status":"stable",
   "detail":[
     {
@@ -9,6 +9,7 @@
         "Refactor templates management"
         ,"Refactor and mutualize images uploads"
         ,"Refactor users deletion"
+        ,"Refactor action logs"
         ,"Implement email alias allow option"
         ,"Implement templates edition"
         ,"Implement Regenerate videos thumbs tool"
@@ -21,6 +22,7 @@
         ,"Update video & photos thumbs regeneration tools"
         ,"Update video allowed extensions display"
         ,"Update TMDB search interface"
+        ,"Update manage tags type filter"
         ,"Add links to flagged tags"
         ,"Hide poster & backdrop tabs when empty on video edition page"
         ,"Only show template editor menu while in dev mode"

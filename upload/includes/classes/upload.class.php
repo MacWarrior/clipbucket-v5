@@ -232,7 +232,7 @@ class Upload
                 'userid'        => $userid,
                 'details'       => $array['title']
             ];
-            insert_log('Uploaded a video', $log_array);
+            insert_log('upload_video', $log_array);
 
             Clipbucket_db::getInstance()->update(tbl('users'), ['total_videos'], ['|f|total_videos+1'], ' userid=\'' . $userid . '\'');
 

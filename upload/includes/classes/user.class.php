@@ -3179,29 +3179,6 @@ class userquery extends CBCategory
                 $uquery_val[] = $array['level'];
             }
 
-            //Checking for user stats
-            $uquery_field[] = 'profile_hits';
-            $uquery_val[] = $array['profile_hits'];
-            $uquery_field[] = 'total_watched';
-            $uquery_val[] = $array['total_watched'];
-            $uquery_field[] = 'total_videos';
-            $uquery_val[] = $array['total_videos'];
-            $uquery_field[] = 'total_comments';
-            $uquery_val[] = $array['total_comments'];
-            $uquery_field[] = 'subscribers';
-            $uquery_val[] = $array['subscribers'];
-            $uquery_field[] = 'comments_count';
-            $uquery_val[] = $array['comments_count'];
-            $query_field[] = 'rating';
-
-            $rating = $array['rating'];
-            if ($rating < 1 || $rating > 10) {
-                $rating = 1;
-            }
-            $query_val[] = $rating;
-            $query_field[] = 'rated_by';
-            $query_val[] = $array['rated_by'];
-
             //Changing Joined Date
             if (isset($array['doj'])) {
                 $uquery_field[] = 'doj';
@@ -4768,7 +4745,7 @@ class userquery extends CBCategory
                 //Logging Action
                 $log_array['success'] = 'no';
                 $log_array['details'] = $msg[0]['val'];
-                insert_log('Login as', $log_array);
+                insert_log('login_as', $log_array);
             }
         }
 

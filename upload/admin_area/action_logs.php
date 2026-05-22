@@ -9,27 +9,30 @@ pages::getInstance()->page_redir();
 /* Generating breadcrumb */
 global $breadcrumb;
 $breadcrumb[0] = ['title' => lang('tool_box'), 'url' => ''];
-$breadcrumb[1] = ['title' => 'Action Logs', 'url' => DirPath::getUrl('admin_area') . 'action_logs.php?type=login'];
+$breadcrumb[1] = ['title' => lang('action_logs'), 'url' => DirPath::getUrl('admin_area') . 'action_logs.php'];
+$limit = 20;
 
 //Getting User List
 if (isset($_GET['clean'])) {
     Clipbucket_db::getInstance()->execute('TRUNCATE TABLE ' . tbl('action_log'));
 }
 
-$allowed_types = ['login', 'signup', 'upload_video'];
-if (isset($_GET['type']) && in_array($_GET['type'], $allowed_types, true)) {
+if (isset($_GET['type']) && in_array($_GET['type'], CBLogs::$allowed_types, true)) {
     $type = $_GET['type'];
-    $result_array['type'] = $type;
+    $params['type'] = $type;
 }
-if (isset($_GET['limit'])) {
-    $result_array['limit'] = $_GET['limit'];
-} else {
-    $result_array['limit'] = 20;
-}
-
-$logs = fetch_action_logs($result_array);
+assign('type', $type??false);
+$page = (int)$_GET['page'];
+$params_count = $params;
+$params_count['count'] = true;
+$total_rows = fetch_action_logs($params_count);
+$get_limit = create_query_limit($page, $limit, $total_rows);
+$total_pages = count_pages($total_rows, $limit);
+$params['limit'] = $get_limit;
+$logs = fetch_action_logs($params);
 assign('total_logs', count($logs));
 assign('logs', $logs);
-subtitle("Action Logs");
+subtitle(lang('action_logs'));
+pages::getInstance()->paginate($total_pages, $page);
 template_files('action_logs.html');
 display_it();
