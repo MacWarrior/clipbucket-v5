@@ -1,6 +1,6 @@
 {
   "version":"5.5.3",
-  "revision":"135",
+  "revision":"136",
   "status":"stable",
   "detail":[
     {
@@ -9,6 +9,7 @@
         "Refactor templates management"
         ,"Refactor and mutualize images uploads"
         ,"Refactor users deletion"
+        ,"Refactor action logs"
         ,"Implement email alias allow option"
         ,"Implement templates edition"
         ,"Implement Regenerate videos thumbs tool"
