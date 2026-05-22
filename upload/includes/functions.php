@@ -3696,24 +3696,6 @@ function upload_error($error)
     echo json_encode(['error' => $error]);
 }
 
-/**
- * @param $value
- * @return bool
- */
-function validate_external_rate($value): bool
-{
-    return (is_numeric($value) && $value >= 0 && $value <= 10);
-}
-
-/**
- * @param $value
- * @return bool
- */
-function validate_external_ratings($value): bool
-{
-    return (is_numeric($value) && $value >= 0);
-}
-
 include('functions_db.php');
 include('functions_filter.php');
 include('functions_player.php');
