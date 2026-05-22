@@ -32,9 +32,48 @@ if (!empty($_GET['id_tag_type'])) {
     $selected_tag_type = $_GET['id_tag_type'];
 }
 $tag_types[0] = lang('all');
-$tag_types += array_map(function ($item) {
-    return ucfirst(lang($item));
-}, array_column(Tags::getTagTypes(), 'name', 'id_tag_type'));
+$temp_tag_types = array_column(Tags::getTagTypes(), 'name', 'id_tag_type');
+foreach ($temp_tag_types as $key => $item) {
+    if (config('videosSection') != 'yes' && 'video' == $item) {
+        continue;
+    }
+    if ((config('videosSection') != 'yes' || config('enable_video_genre') != 'yes') && 'genre' == $item) {
+        continue;
+    }
+    if ((config('videosSection') != 'yes' || config('enable_video_actor') != 'yes') && 'actors' == $item) {
+        continue;
+    }
+    if ((config('videosSection') != 'yes' || config('enable_video_producer') != 'yes') && 'producer' == $item) {
+        continue;
+    }
+    if ((config('videosSection') != 'yes' || config('enable_video_executive_producer') != 'yes') && 'executive_producer' == $item) {
+        continue;
+    }
+    if ((config('videosSection') != 'yes' || config('enable_video_director') != 'yes') && 'director' == $item) {
+        continue;
+    }
+    if ((config('videosSection') != 'yes' || config('enable_video_crew') != 'yes') && 'crew' == $item) {
+        continue;
+    }
+    if ((config('videosSection') != 'yes' || config('collectionsSection') != 'yes') && 'collection' == $item) {
+        continue;
+    }
+    if (config('photosSection') != 'yes' && 'photo' == $item) {
+        continue;
+    }
+    if (config('channelsSection') != 'yes' && 'profile' == $item) {
+        continue;
+    }
+    if ((config('videosSection') != 'yes' && config('photosSection') != 'yes')
+        || (config('collectionsSection') != 'yes'
+        ) && 'collection' == $item) {
+        continue;
+    }
+    $tag_types[$key] = ucfirst(lang($item));
+}
+
+
+$cond[]= ' T.id_tag_type IN ('.implode(',', array_keys($tag_types)).')';
 $tags = Tags::getTags($curr_limit, $cond);
 $count = Tags::countTags($cond);
 $total_pages = $count / $limit;
