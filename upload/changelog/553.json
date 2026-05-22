@@ -1,6 +1,6 @@
 {
   "version":"5.5.3",
-  "revision":"134",
+  "revision":"135",
   "status":"stable",
   "detail":[
     {
@@ -21,6 +21,7 @@
         ,"Update video & photos thumbs regeneration tools"
         ,"Update video allowed extensions display"
         ,"Update TMDB search interface"
+        ,"Update manage tags type filter"
         ,"Add links to flagged tags"
         ,"Hide poster & backdrop tabs when empty on video edition page"
         ,"Only show template editor menu while in dev mode"
