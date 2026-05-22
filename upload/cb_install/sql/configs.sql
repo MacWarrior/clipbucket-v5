@@ -351,11 +351,11 @@ INSERT INTO `{tbl_prefix}config` (`configid`, `name`, `value`) VALUES
     (NULL, 'delete_photo_on_delete_user', 'no'),
     (NULL, 'delete_playlist_on_delete_user', 'no'),
     (NULL, 'delete_comments_on_delete_user', 'no'),
-    (NULL, 'enable_base_rate_field', 'no'),
-    (NULL, 'enable_base_ratings_field', 'no'),
-    (NULL, 'enable_base_rate_ratings_on_fo', 'no'),
-    (NULL, 'enable_base_rate_from_tmdb', 'no'),
-    (NULL, 'enable_base_ratings_from_tmdb', 'no');
+    (NULL, 'enable_external_rate_field', 'no'),
+    (NULL, 'enable_external_ratings_field', 'no'),
+    (NULL, 'enable_external_rate_ratings_on_fo', 'no'),
+    (NULL, 'enable_external_rate_from_tmdb', 'no'),
+    (NULL, 'enable_external_ratings_from_tmdb', 'no');
 
 INSERT INTO `{tbl_prefix}video_resolution` (`title`, `ratio`, `enabled`, `width`, `height`, `video_bitrate`) VALUES
 	('240p', '16/9', 1, 426, 240, 240000),

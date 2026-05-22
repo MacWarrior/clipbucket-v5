@@ -117,6 +117,11 @@ class Video extends Objects
             $this->fields[] = 'last_modified';
         }
 
+        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '999')) {
+            $this->fields[] = 'external_rate';
+            $this->fields[] = 'external_ratings';
+        }
+
         $this->fields_categories = [
             'category_id'
             ,'parent_id'

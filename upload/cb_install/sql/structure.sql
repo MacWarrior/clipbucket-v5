@@ -534,8 +534,8 @@ CREATE TABLE `{tbl_prefix}video` (
   `total_rate_up` INT NOT NULL DEFAULT 0,
   `total_rate_down` INT NOT NULL DEFAULT 0,
   `last_modified` DATETIME NOT NULL DEFAULT NOW(),
-  `base_rate` FLOAT NOT NULL DEFAULT 0,
-  `base_ratings` INT NOT NULL DEFAULT 0
+  `external_rate` FLOAT NOT NULL DEFAULT 0,
+  `external_ratings` INT NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_520_ci;
 
 CREATE TABLE `{tbl_prefix}video_views` (
@@ -1400,9 +1400,7 @@ ALTER TABLE `{tbl_prefix}collection_rates`
 CREATE TABLE IF NOT EXISTS `{tbl_prefix}video_tmdb` (
     video_id     BIGINT(20)   NOT NULL PRIMARY KEY,
     tmdb_id      INT          NOT NULL,
-    tmdb_type    VARCHAR(255) NOT NULL,
-    tmdb_rate    FLOAT        NULL,
-    tmdb_ratings INT          NULL
+    tmdb_type    VARCHAR(255) NOT NULL
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_unicode_520_ci;
 
 ALTER TABLE `{tbl_prefix}video_tmdb`

@@ -333,11 +333,19 @@ class Tmdb
             }
             $update_video = true;
         }
+        if ( Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '999') ) {
+            if (config('enable_external_rate_from_tmdb') == 'yes' ) {
+                $video_info['external_rate'] = (float)$details['vote_average'] ?? 0;
+            }
+            if (config('enable_external_ratings_from_tmdb') == 'yes' ) {
+                $video_info['external_ratings'] = (int)$details['vote_count'] ?? 0;
+            }
+        }
         if ($update_video) {
             $category_list = json_decode($video_info['category_list'], true);
             $video_info['category'] = array_column($category_list, 'id');
             CBvideo::getInstance()->update_video($video_info);
-            $this->updateVideoTmdbInfo($videoid, $tmdb_id, $type, $details['vote_average'] ?? 0, $details['vote_count'] ?? 0);
+            $this->updateVideoTmdbInfo($videoid, $tmdb_id, $type);
         }
 
         if (config('tmdb_get_poster') == 'yes' && config('enable_video_poster') == 'yes' && Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '14')) {
@@ -588,21 +596,14 @@ class Tmdb
      * @return bool
      * @throws Exception
      */
-    public function updateVideoTmdbInfo(int $videoid, int $id_tmdb, string $type_tmdb, $tmdb_rate, $tmdb_ratings): bool
+    public function updateVideoTmdbInfo(int $videoid, int $id_tmdb, string $type_tmdb): bool
     {
         if (!Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '999')) {
             return false;
         }
         $fields = ['tmdb_id', 'tmdb_type'];
         $values = [$id_tmdb, '\''.$type_tmdb.'\''];
-        if (config('enable_base_rate_from_tmdb') == 'yes') {
-            $fields[] = 'tmdb_rate';
-            $values[] = (float)$tmdb_rate;
-        }
-        if (config('enable_base_ratings_from_tmdb') == 'yes') {
-            $fields[] = 'tmdb_ratings';
-            $values[] = (int)$tmdb_ratings;
-        }
+
         $sql = 'INSERT INTO ' . tbl('video_tmdb') . ' (video_id, '. implode(', ', $fields).') 
         VALUES ( ' . (int)$videoid . ', '.implode(', ', $values).' )
         ON DUPLICATE KEY UPDATE ';

@@ -341,6 +341,7 @@
                         </li>
                         {if config('enable_video_genre') == 'yes' || config('enable_video_actor') == 'yes' || config('enable_video_producer') == 'yes'
                         || config('enable_video_executive_producer') == 'yes' || config('enable_video_director') == 'yes' || config('enable_video_crew') == 'yes'
+                        || config('enable_external_rate_field') == 'yes' || config('enable_external_ratings_field') == 'yes'
                         }
                             <li>
                                 <a data-toggle="tab" href="#movie_infos">
@@ -359,7 +360,7 @@
                     <div class="tab-content">
                         <div id="videoinfos" class="tab-pane fade active in">
                             {foreach from=$video_fields item=field}
-                                {if in_array($field.id, ['tags_genre','tags_actors','tags_executive_producer','tags_producer','tags_director','tags_crew','category', 'base_rate', 'base_ratings'])}
+                                {if in_array($field.id, ['tags_genre','tags_actors','tags_executive_producer','tags_producer','tags_director','tags_crew','category', 'external_rate', 'external_ratings'])}
                                     {continue}
                                 {/if}
                             <div class="table">
@@ -481,11 +482,11 @@
                         </div>
                         {if config('enable_video_genre') == 'yes' || config('enable_video_actor') == 'yes' || config('enable_video_producer') == 'yes'
                         || config('enable_video_executive_producer') == 'yes' || config('enable_video_director') == 'yes' || config('enable_video_crew') == 'yes'
-                        || config('enable_base_rate_field') == 'yes' || config('enable_base_ratings_field') == 'yes'
+                        || config('enable_external_rate_field') == 'yes' || config('enable_external_ratings_field') == 'yes'
                         }
                             <div id="movie_infos" class="tab-pane fade">
                                 {foreach from=$video_fields item=field}
-                                    {if !in_array($field.id, ['tags_genre','tags_actors','tags_executive_producer','tags_producer','tags_director','tags_crew', 'base_rate', 'base_ratings'])}
+                                    {if !in_array($field.id, ['tags_genre','tags_actors','tags_executive_producer','tags_producer','tags_director','tags_crew'])}
                                         {continue}
                                     {/if}
                                     <div class="table">
@@ -505,6 +506,39 @@
                                         {/if}
                                     </div>
                                 {/foreach}
+                                {if Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '999')}
+                                    {assign var=field value=$video_fields.external_rate}
+                                    {$field.class='form-control'}
+                                    <div class="table">
+                                        <div class="row">
+                                            {if config('enable_external_rate_field') == 'yes'}
+                                                <div class="col-md-6" style="padding: 0 15px 0 0">
+                                                    <label><strong>{$field.title|truncate:80}</strong> {if $field.hint_icon}<span class="fa fa-question-circle tips cursor_help" title="{$field.hint_icon}"></span> {/if}</label><br>
+                                                    {if $field.hint_1}
+                                                        {$field.hint_1}
+                                                        <br/>
+                                                    {/if}
+                                                    <div class="input-group">
+                                                        {$formObj->createField($field)}
+                                                        <span class="input-group-addon">/10</span>
+                                                    </div>
+                                                </div>
+                                            {/if}
+                                            {assign var=field value=$video_fields.external_ratings}
+                                            {$field.class='form-control'}
+                                            {if config('enable_external_rate_field') == 'yes'}
+                                                <div class="col-md-6" style="padding: 0 0 0 15px">
+                                                    <label><strong>{$field.title|truncate:80}</strong> {if $field.hint_icon}<span class="fa fa-question-circle tips cursor_help" title="{$field.hint_icon}"></span> {/if}</label><br>
+                                                    {if $field.hint_1}
+                                                        {$field.hint_1}
+                                                        <br/>
+                                                    {/if}
+                                                    {$formObj->createField($field)}
+                                                </div>
+                                            {/if}
+                                        </div>
+                                    </div>
+                                {/if}
                             </div>
                         {/if}
                         {if config('enable_comments_video') == 'yes'}

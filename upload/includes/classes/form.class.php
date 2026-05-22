@@ -606,7 +606,7 @@ class formObj
     private function createNumberField($field, bool $multi)
     {
         //Starting Text Field
-        $textField = '<input type="number"';
+        $textField = '<input type="number" step="any"';
 
 
         if (!empty($field['name'])) {
@@ -649,7 +649,7 @@ class formObj
             $textField .= ' style="' . $field['style'] . '"';
         }
 
-        if (!empty($field['value'])) {
+        if (isset($field['value'])) {
             $textField .= ' value="' . display_clean($field['value']) . '" ';
         }
 

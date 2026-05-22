@@ -192,11 +192,11 @@ if (isset($_POST['update'])) {
         , 'delete_photo_on_delete_user'
         , 'delete_playlist_on_delete_user'
         , 'delete_comments_on_delete_user'
-        , 'enable_base_rate_field'
-        , 'enable_base_ratings_field'
-        , 'enable_base_rate_ratings_on_fo'
-        , 'enable_base_rate_from_tmdb'
-        , 'enable_base_ratings_from_tmdb'
+        , 'enable_external_rate_field'
+        , 'enable_external_ratings_field'
+        , 'enable_external_rate_ratings_on_fo'
+        , 'enable_external_rate_from_tmdb'
+        , 'enable_external_ratings_from_tmdb'
     ];
 
     $config_booleans_to_refactor = [
@@ -481,11 +481,11 @@ if (isset($_POST['update'])) {
         , 'delete_photo_on_delete_user'
         , 'delete_playlist_on_delete_user'
         , 'delete_comments_on_delete_user'
-        , 'enable_base_rate_field'
-        , 'enable_base_ratings_field'
-        , 'enable_base_rate_ratings_on_fo'
-        , 'enable_base_rate_from_tmdb'
-        , 'enable_base_ratings_from_tmdb'
+        , 'enable_external_rate_field'
+        , 'enable_external_ratings_field'
+        , 'enable_external_rate_ratings_on_fo'
+        , 'enable_external_rate_from_tmdb'
+        , 'enable_external_ratings_from_tmdb'
     ];
 
     //Numeric Array
