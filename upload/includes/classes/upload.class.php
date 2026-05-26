@@ -437,7 +437,7 @@ class Upload
         }
 
         if (((FRONT_END && config('enable_external_rate_ratings_on_fo') == 'yes') || BACK_END)
-            && Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '999')
+            && Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '138')
         ) {
             if (config('enable_external_rate_field') == 'yes') {
                 $uploadFormRequiredFieldsArray['external_rate'] = [

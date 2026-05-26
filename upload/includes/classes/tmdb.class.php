@@ -333,7 +333,7 @@ class Tmdb
             }
             $update_video = true;
         }
-        if ( Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '999') ) {
+        if ( Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '138') ) {
             if (config('enable_external_rate_from_tmdb') == 'yes' ) {
                 $video_info['external_rate'] = (float)$details['vote_average'] ?? 0;
             }
@@ -598,7 +598,7 @@ class Tmdb
      */
     public function updateVideoTmdbInfo(int $videoid, int $id_tmdb, string $type_tmdb): bool
     {
-        if (!Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '999')) {
+        if (!Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '138')) {
             return false;
         }
         $fields = ['tmdb_id', 'tmdb_type'];

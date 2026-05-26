@@ -4,7 +4,7 @@ namespace V5_5_3;
 
 require_once \DirPath::get('classes') . DIRECTORY_SEPARATOR . 'migration' . DIRECTORY_SEPARATOR . 'migration.class.php';
 
-class MWIP extends \Migration
+class M00138 extends \Migration
 {
     /**
      * @throws \Exception
@@ -14,7 +14,7 @@ class MWIP extends \Migration
         self::alterTable('CREATE TABLE IF NOT EXISTS `{tbl_prefix}video_tmdb` (
             video_id BIGINT(20) NOT NULL PRIMARY KEY,
             tmdb_id INT NOT NULL,
-            tmdb_type VARCHAR(255) NOT NULL,
+            tmdb_type VARCHAR(255) NOT NULL
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;', [], [
             'table' => 'video_tmdb'
         ]);

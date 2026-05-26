@@ -104,7 +104,7 @@ class Video extends Objects
             $this->fields[] = 'voter_ids';
         }
 
-        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '101') && !Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '999')) {
+        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '101') && !Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '138')) {
             $this->fields[] = 'id_tmdb';
             $this->fields[] = 'type_tmdb';
         }
@@ -117,7 +117,7 @@ class Video extends Objects
             $this->fields[] = 'last_modified';
         }
 
-        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '999')) {
+        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '138')) {
             $this->fields[] = 'external_rate';
             $this->fields[] = 'external_ratings';
         }
