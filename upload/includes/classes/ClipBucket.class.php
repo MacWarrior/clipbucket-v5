@@ -408,7 +408,7 @@ class ClipBucket
                 , 'sub'   => []
             ];
 
-            if (config('enable_comments_video') == 'yes' || config('enable_comments_photo') == 'yes' || config('enable_comments_channel') == 'yes' ) {
+            if (Comments::isChannelCommentEnabled() || Comments::isCollectionCommentEnabled() || Comments::isPhotoCommentEnabled() || Comments::isVideoCommentEnabled()) {
                 $menu_general['sub'][] = [
                     'title' => lang('manage_x', strtolower(lang('comments')))
                     , 'url' => DirPath::getUrl('admin_area') . 'comments.php'

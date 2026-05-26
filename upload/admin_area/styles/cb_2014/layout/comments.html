@@ -4,20 +4,20 @@
 <div id="vid_opt-{$groups[gp_list].group_id}" class="dropdown">
     <button id="dropdownMenu" class="btn btn-primary btn-xs dropdown-toggle pull-right" data-toggle="dropdown">{lang('view_comment')} <i class="caret"></i></button>
     <ul class="dropdown-menu pull-right" aria-labelledby="dropdownMenu1" role="menu">
-        {if config('enable_comments_video') == 'yes' || config('enable_comments_photo') == 'yes' || config('enable_comments_channel') == 'yes'}
+        {if Comments::isChannelCommentEnabled() || Comments::isCollectionCommentEnabled() || Comments::isPhotoCommentEnabled() || Comments::isVideoCommentEnabled()}
             <li role="presentation"><a role="menuitem" tabindex="-1" href="?">{lang('view_all_comments')}</a></li>
         {/if}
 
-        {if config('enable_comments_video') == 'yes'}
+        {if Comments::isVideoCommentEnabled()}
             <li role="presentation"><a role="menuitem" tabindex="-1" href="?type=v">{lang('view_video_comments')}</a></li>
         {/if}
-        {if (config('enable_comments_video') == 'yes' || config('enable_comments_photo') == 'yes') && config('enable_comments_collection') == 'yes'}
+        {if Comments::isCollectionCommentEnabled()}
             <li role="presentation"><a role="menuitem" tabindex="-1" href="?type=cl">{lang('view_collection_comments')}</a></li>
         {/if}
-        {if config('enable_comments_photo') == 'yes'}
+        {if Comments::isPhotoCommentEnabled()}
             <li role="presentation"><a role="menuitem" tabindex="-1" href="?type=p">{lang('view_photo_comments')}</a></li>
         {/if}
-        {if config('enable_comments_channel') == 'yes'}
+        {if Comments::isChannelCommentEnabled()}
             <li role="presentation"><a role="menuitem" tabindex="-1" href="?type=channel">{lang('view_channel_comments')}</a></li>
         {/if}
     </ul>

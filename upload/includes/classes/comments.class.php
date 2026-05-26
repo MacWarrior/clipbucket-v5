@@ -25,24 +25,36 @@ class Comments extends Objects
 
         $left_join = '';
         $case_when = '';
-        if( !$param_type || $param_type == 'v'){
+        if( (!$param_type || $param_type == 'v') && Comments::isVideoCommentEnabled()){
             $left_join .= ' LEFT JOIN '.cb_sql_table('video').' ON comments.type = \'v\' AND comments.type_id = video.videoid';
             $case_when .= ' WHEN comments.type = \'v\' THEN video.title';
         }
-        if( !$param_type || $param_type == 'p'){
+        if( (!$param_type || $param_type == 'p') && Comments::isPhotoCommentEnabled()){
             $left_join .= ' LEFT JOIN '.cb_sql_table('photos').' ON comments.type = \'p\' AND comments.type_id = photos.photo_id';
             $case_when .= ' WHEN comments.type = \'p\' THEN photos.photo_title';
         }
-        if( !$param_type || $param_type == 'cl'){
+        if( (!$param_type || $param_type == 'cl') && Comments::isCollectionCommentEnabled()){
             $left_join .= ' LEFT JOIN '.cb_sql_table('collections').' ON comments.type = \'cl\' AND comments.type_id = collections.collection_id';
             $case_when .= ' WHEN comments.type = \'cl\' THEN collections.collection_name';
         }
-        if( !$param_type || $param_type == Comments::$libelle_type_channel){
+        if(( !$param_type || $param_type == Comments::$libelle_type_channel) && Comments::isChannelCommentEnabled()){
             $left_join .= ' LEFT JOIN '.tbl('users').' channels ON comments.type = \''.Comments::$libelle_type_channel.'\' AND comments.type_id = channels.userid';
             $case_when .= ' WHEN comments.type = \''.Comments::$libelle_type_channel.'\' THEN channels.username';
         }
 
         $conditions = [];
+        if (!Comments::isVideoCommentEnabled()) {
+            $conditions[] = 'comments.type != \'v\'';
+        }
+        if (!Comments::isPhotoCommentEnabled()) {
+            $conditions[] = 'comments.type != \'p\'';
+        }
+        if (!Comments::isCollectionCommentEnabled()) {
+            $conditions[] = 'comments.type != \'cl\'';
+        }
+        if (!Comments::isChannelCommentEnabled()) {
+            $conditions[] = 'comments.type != \''.Comments::$libelle_type_channel.'\'';
+        }
         if( $param_type ){
             $conditions[] = 'comments.type = \''.mysql_clean($param_type).'\'';
         }
@@ -628,6 +640,39 @@ class Comments extends Objects
             return $result[0];
         }
         return false;
+    }
+
+    /**
+     * @return bool
+     */
+    public static function isVideoCommentEnabled()
+    {
+        return (config('enable_comments_video') == 'yes' && config('videosSection') == 'yes') ;
+    }
+
+    /**
+     * @return bool
+     */
+    public static function isPhotoCommentEnabled()
+    {
+        return (config('enable_comments_photo') == 'yes' && config('photosSection') == 'yes') ;
+    }
+
+    /**
+     * @return bool
+     */
+    public static function isChannelCommentEnabled()
+    {
+        return (config('enable_comments_channel') == 'yes' && config('channelsSection') == 'yes') ;
+    }
+
+    /**
+     * @return bool
+     */
+    public static function isCollectionCommentEnabled()
+    {
+        return (config('enable_comments_collection') == 'yes' && config('collectionsSection') == 'yes'
+        && (config('videosSection') == 'yes' || config('photosSection') == 'yes')) ;
     }
 
 }
