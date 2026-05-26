@@ -1946,7 +1946,7 @@ class CBvideo extends CBCategory
                 e(lang('you_dont_have_permission_to_update_this_video'));
                 return;
             }
-            if (!$this->video_exists($vid)) {
+            if (!Video::getInstance()->getOne(['videoid' => $vid, 'count'=>true])) {
                 e(lang('class_vdo_del_err'));
                 return;
             }
