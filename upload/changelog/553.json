@@ -1,6 +1,6 @@
 {
   "version":"5.5.3",
-  "revision":"136",
+  "revision":"137",
   "status":"stable",
   "detail":[
     {
@@ -47,6 +47,7 @@
         ,"Fix SQL error on View online users page"
         ,"Fix tags type search on manage tags page (<i>#843</i>)"
         ,"Fix videos, photos, collections & playlists advanced search by tags (<i>#844</i>)"
+        ,"Fix possible pagination overflow on action logs page"
       ]
     },
     {
