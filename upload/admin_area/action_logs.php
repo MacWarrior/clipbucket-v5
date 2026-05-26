@@ -28,6 +28,10 @@ $params_count['count'] = true;
 $total_rows = fetch_action_logs($params_count);
 $get_limit = create_query_limit($page, $limit, $total_rows);
 $total_pages = count_pages($total_rows, $limit);
+if ( $page > $total_pages ) {
+    $page = $total_pages;
+    $_GET['page'] = $page;
+}
 $params['limit'] = $get_limit;
 $logs = fetch_action_logs($params);
 assign('total_logs', count($logs));
