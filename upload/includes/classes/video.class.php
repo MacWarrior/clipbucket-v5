@@ -1648,17 +1648,15 @@ class CBvideo extends CBCategory
     /**
      * Function used to check weather video exists or not
      *
-     * @param int|string $vid
-     * @deprecated
-     * @return bool|int
+     * @param int $videoid
+     * @return bool
      * @throws Exception
+     *@deprecated
+     * @TODO remove action-> exist 
      */
-    function video_exists($vid)
+    function video_exists($videoid): bool
     {
-        if (is_numeric($vid)) {
-            return Clipbucket_db::getInstance()->count(tbl('video'), 'videoid', ' videoid = ' . (int)$vid);
-        }
-        return Clipbucket_db::getInstance()->count(tbl('video'), 'videoid', ' videokey=\'' . mysql_clean($vid) . '\' ');
+        return (bool)Video::getInstance()->getOne(['videoid' => $videoid, 'count' =>true]);
     }
 
     /**
