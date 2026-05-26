@@ -530,12 +530,12 @@ CREATE TABLE `{tbl_prefix}video` (
   `convert_percent` FLOAT NULL DEFAULT 0,
   `aspect_ratio` DECIMAL(10,6) NULL DEFAULT NULL,
   `remote_play_url` TEXT NULL DEFAULT NULL,
-  `id_tmdb` INT NULL,
-  `type_tmdb` VARCHAR(255) NULL,
   `use_backdrop_as_default_thumb` ENUM ('yes','no') NOT NULL DEFAULT 'no',
   `total_rate_up` INT NOT NULL DEFAULT 0,
   `total_rate_down` INT NOT NULL DEFAULT 0,
-  `last_modified` DATETIME NOT NULL DEFAULT NOW()
+  `last_modified` DATETIME NOT NULL DEFAULT NOW(),
+  `external_rate` FLOAT NOT NULL DEFAULT 0,
+  `external_ratings` INT NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_520_ci;
 
 CREATE TABLE `{tbl_prefix}video_views` (
@@ -1396,3 +1396,12 @@ CREATE TABLE IF NOT EXISTS `{tbl_prefix}collection_rates` (
 ALTER TABLE `{tbl_prefix}collection_rates`
     ADD CONSTRAINT `votes_id_collection_ibfk_1` FOREIGN KEY (id_collection) REFERENCES `{tbl_prefix}collections` (collection_id) ON DELETE NO ACTION ON UPDATE NO ACTION,
     ADD CONSTRAINT `votes_id_user_ibfk_5` FOREIGN KEY (id_user) REFERENCES `{tbl_prefix}users` (userid) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+CREATE TABLE IF NOT EXISTS `{tbl_prefix}video_tmdb` (
+    video_id     BIGINT(20)   NOT NULL PRIMARY KEY,
+    tmdb_id      INT          NOT NULL,
+    tmdb_type    VARCHAR(255) NOT NULL
+) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_unicode_520_ci;
+
+ALTER TABLE `{tbl_prefix}video_tmdb`
+    ADD CONSTRAINT `tmdb_video_ibfk_1` FOREIGN KEY (`video_id`) REFERENCES `{tbl_prefix}video` (`videoid`) ON DELETE NO ACTION ON UPDATE NO ACTION;
