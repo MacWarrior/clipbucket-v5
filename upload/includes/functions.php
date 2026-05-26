@@ -1021,14 +1021,14 @@ function load_plugin()
  *
  * @return string
  */
-function create_query_limit($page, $result, $total_results = 0): string
+function create_query_limit($page, $result, $total_results = null): string
 {
     if (empty($page) || $page <= 0 || !is_numeric($page)) {
         $page = 1;
     }
     $from = $page - 1;
     $from = $from * $result;
-    if ($from >= $total_results) {
+    if ($from >= $total_results && $total_results !== null) {
         $from = $total_results - $result;
         if ($from < 0) {
             $from = 0;
