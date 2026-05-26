@@ -441,7 +441,7 @@ class Upload
         ) {
             if (config('enable_external_rate_field') == 'yes') {
                 $uploadFormRequiredFieldsArray['external_rate'] = [
-                    'title'             => lang('external_rate'),
+                    'title'             => ucfirst(lang('external_rate')),
                     'type'              => 'number',
                     'name'              => 'external_rate',
                     'id'                => 'external_rate',
@@ -455,7 +455,7 @@ class Upload
             }
             if (config('enable_external_ratings_field') == 'yes') {
                 $uploadFormRequiredFieldsArray['external_ratings'] = [
-                    'title'             => lang('external_ratings'),
+                    'title'             => ucfirst(lang('external_ratings')),
                     'type'              => 'number',
                     'name'              => 'external_ratings',
                     'id'                => 'external_ratings',

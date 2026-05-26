@@ -77,12 +77,12 @@ class M00138 extends \Migration
             'en'=>'Enable external rate & external ratings edition on front end'
         ]);
         self::generateTranslation('option_enable_external_rate_from_tmdb', [
-            'fr'=>'Activer la notation depuis TMDB',
-            'en'=>'Enable external rate from TMDB'
+            'fr'=>'Récupérer la notation depuis TMDB',
+            'en'=>'Get external rate from TMDB'
         ]);
         self::generateTranslation('option_enable_external_ratings_from_tmdb', [
-            'fr'=>'Activer le nombre de notes depuis TMDB',
-            'en'=>'Enable external ratings from TMDB'
+            'fr'=>'Récupérer la notation depuis TMDB',
+            'en'=>'Get external rate from TMDB'
         ]);
         self::generateTranslation('external_rate', [
             'fr' => 'Note externe',
