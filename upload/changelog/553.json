@@ -1,6 +1,6 @@
 {
   "version":"5.5.3",
-  "revision":"139",
+  "revision":"140",
   "status":"stable",
   "detail":[
     {
@@ -163,6 +163,7 @@
         ,"Fix conversion logs"
         ,"Fix PNG transparency"
         ,"Fix temp file deletion on conversion failure"
+        ,"Fix possible remote code execution (Thanks @Bnyt7 !)"
       ]
     },
     {
