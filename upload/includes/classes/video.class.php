@@ -2016,8 +2016,12 @@ class CBvideo extends CBCategory
      */
     function update_subtitle($videoid, $number, $title): void
     {
+        if (!preg_match('/^\d{1,2}$/', $number)) {
+            e(lang('invalid_params'));
+            return;
+        }
         if ($this->video_exists($videoid)) {
-            Clipbucket_db::getInstance()->update(tbl('video_subtitle'), ['title'], [$title], ' videoid = ' . (int)$videoid . ' AND number LIKE \'' . mysql_clean($number) . '\'');
+            Clipbucket_db::getInstance()->update(tbl('video_subtitle'), ['title'], [$title], ' videoid = ' . (int)$videoid . ' AND number = \'' . mysql_clean($number) . '\'');
         }
     }
 
