@@ -2033,7 +2033,7 @@ class CBPhotos
 
             $query_field[] = 'userid';
             if (!$array['userid']) {
-                $userid = user_id();
+                $userid = User::getInstance()->getCurrentUserID();
                 $query_val[] = $userid;
             } else {
                 $query_val[] = $array['userid'];
@@ -2094,7 +2094,12 @@ class CBPhotos
             }
 
             Clipbucket_db::getInstance()->update(tbl('users'), ['total_photos'], ['|f|total_photos+1'], " userid='" . $userid . "'");
-
+            insert_log('photo_added', [
+                'userid' => $userid,
+                'success' => true,
+                'date_added' => NOW(),
+                'action_obj_id' => $insert_id,
+            ]);
             //Adding Photo Feed
             addFeed(['action' => 'upload_photo', 'object_id' => $insert_id, 'object' => 'photo']);
             return $insert_id;
