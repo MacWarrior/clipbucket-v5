@@ -147,7 +147,7 @@ abstract class Objects
 
         //Logging Favorite
         insert_log(static::TYPE . '_favorite', [
-            'success'        => 'yes',
+            'success'        => Clipbucket_db::getInstance()->insert_id() ? 'yes' : 'no',
             'details'        => 'added ' . static::TYPE . ' to favorites',
             'action_obj_id'  => $object_id,
             'action_done_id' => Clipbucket_db::getInstance()->insert_id()

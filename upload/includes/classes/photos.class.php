@@ -2094,11 +2094,10 @@ class CBPhotos
             }
 
             Clipbucket_db::getInstance()->update(tbl('users'), ['total_photos'], ['|f|total_photos+1'], " userid='" . $userid . "'");
-            insert_log('photo_added', [
-                'userid' => $userid,
-                'success' => true,
-                'date_added' => NOW(),
+            insert_log('upload_photo', [
+                'success'       => $insert_id ? 'yes' : 'no',
                 'action_obj_id' => $insert_id,
+                'details'       => $photo['photo_title']
             ]);
             //Adding Photo Feed
             addFeed(['action' => 'upload_photo', 'object_id' => $insert_id, 'object' => 'photo']);

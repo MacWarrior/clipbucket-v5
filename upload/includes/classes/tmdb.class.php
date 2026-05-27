@@ -482,6 +482,10 @@ class Tmdb
         if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '101')) {
             Clipbucket_db::getInstance()->update(tbl('video'), ['id_tmdb', 'type_tmdb'], [$tmdb_id, $type], 'videoid = ' . $videoid);
         }
+        insert_log('import_tmdb', [
+            'success'       => 'yes',
+            'action_obj_id' => $videoid,
+        ]);
     }
 
     /**

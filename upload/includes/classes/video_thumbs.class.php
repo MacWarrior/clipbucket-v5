@@ -1050,6 +1050,12 @@ class VideoThumbs
                         return;
                     }
                 }
+                insert_log('upload_thumb', [
+                    'action_obj_id'  => $video['videoid'],
+                    'action_done_id' => $id_video_image ?? 0,
+                    'success'        => $id_video_image ? 'yes' : 'no',
+                    'details'        => json_encode(['videoid' => $video['videoid'], 'type' => $type, 'num' => $num, 'is_auto' => $is_auto])
+                ]);
                 unlink($temp_file_path);
             } else {
                 e(lang('wrong_image_extension', Photo::getAllowedPhotoExtension('string')));
