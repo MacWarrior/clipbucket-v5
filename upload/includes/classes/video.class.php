@@ -104,7 +104,7 @@ class Video extends Objects
             $this->fields[] = 'voter_ids';
         }
 
-        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '101')) {
+        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '101') && !Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '138')) {
             $this->fields[] = 'id_tmdb';
             $this->fields[] = 'type_tmdb';
         }
@@ -115,6 +115,11 @@ class Video extends Objects
 
         if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '128')) {
             $this->fields[] = 'last_modified';
+        }
+
+        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '138')) {
+            $this->fields[] = 'external_rate';
+            $this->fields[] = 'external_ratings';
         }
 
         $this->fields_categories = [
@@ -2011,8 +2016,12 @@ class CBvideo extends CBCategory
      */
     function update_subtitle($videoid, $number, $title): void
     {
+        if (!preg_match('/^\d{1,2}$/', $number)) {
+            e(lang('invalid_params'));
+            return;
+        }
         if ($this->video_exists($videoid)) {
-            Clipbucket_db::getInstance()->update(tbl('video_subtitle'), ['title'], [$title], ' videoid = ' . (int)$videoid . ' AND number LIKE \'' . mysql_clean($number) . '\'');
+            Clipbucket_db::getInstance()->update(tbl('video_subtitle'), ['title'], [$title], ' videoid = ' . (int)$videoid . ' AND number = \'' . mysql_clean($number) . '\'');
         }
     }
 

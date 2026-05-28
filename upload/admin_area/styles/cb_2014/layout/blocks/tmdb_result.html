@@ -7,9 +7,9 @@
         <div class="modal-body tmdb">
             <div class="input-group">
                 <div style="display: table-cell; max-width: 60px;">
-                    <label class="form-control" style="border-bottom-right-radius: 0; border-top-right-radius: 0; margin-top: 0;" for="type_tmdb">{lang('type')}</label>
-                    <label class="form-control" style="border-bottom-right-radius: 0; border-top-right-radius: 0; margin-top: 0;" for="search_title">{lang('search')}</label>
-                    <label class="form-control" style="border-bottom-right-radius: 0; border-top-right-radius: 0; margin-top: 0;" for="selected_year">{lang('year')|ucfirst}</label>
+                    <label class="form-control" style="border-bottom-right-radius: 0; border-top-right-radius: 0; margin-top: 0 !important;" for="type_tmdb">{lang('type')}</label>
+                    <label class="form-control" style="border-bottom-right-radius: 0; border-top-right-radius: 0; margin-top: 0 !important;" for="search_title">{lang('search')}</label>
+                    <label class="form-control" style="border-bottom-right-radius: 0; border-top-right-radius: 0; margin-top: 0 !important;" for="selected_year">{lang('year')|ucfirst}</label>
                 </div>
                 <select name="type" class="form-control" id="type_tmdb">
                         <option value="movie" {if $type=='movie'}selected="selected"{/if}>{lang('movie')}</option>
