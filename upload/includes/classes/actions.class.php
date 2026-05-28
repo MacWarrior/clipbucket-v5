@@ -164,16 +164,6 @@ class cbactions
     }
 
     /**
-     * Function used to count total favorites only
-     * @throws Exception
-     */
-    function total_favorites()
-    {
-        return Clipbucket_db::getInstance()->count(tbl($this->fav_tbl), 'favorite_id', ' type=\'' . $this->type . '\'');
-    }
-
-
-    /**
      * @throws Exception
      */
     function load_basic_fields($array = null): array

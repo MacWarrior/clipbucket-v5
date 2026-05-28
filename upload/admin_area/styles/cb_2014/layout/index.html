@@ -113,12 +113,14 @@
 <div class="row">
     <div class="col-md-6">
         <ul class="nav nav-tabs">
-            <li class="active">
-                <a data-toggle="tab" href="#overall_statistics">
-                    <h5>{lang('overall_statistics')}</h5>
-                </a>
-            </li>
-            <li>
+            {if config('videosSection') =='yes' || config('photosSection') == 'yes' || config('collectionsSection') == 'yes'}
+                <li class="active">
+                    <a data-toggle="tab" href="#overall_statistics">
+                        <h5>{lang('overall_statistics')}</h5>
+                    </a>
+                </li>
+            {/if}
+            <li {if config('videosSection') !='yes' && config('photosSection') != 'yes' && config('collectionsSection') != 'yes'} class="active" {/if}>
                 <a data-toggle="tab" href="#flagged_objects">
                     <h5>{lang code="flagged_obj"}</h5>
                 </a>
@@ -128,25 +130,31 @@
                     <h5>{lang('user_statistics')}</h5>
                 </a>
             </li>
-            <li>
-                <a data-toggle="tab" href="#video_statistics">
-                    <h5>{lang('video_statistics')}</h5>
-                </a>
-            </li>
+            {if config('videosSection')=='yes'}
+                <li>
+                    <a data-toggle="tab" href="#video_statistics">
+                        <h5>{lang('video_statistics')}</h5>
+                    </a>
+                </li>
+            {/if}
         </ul>
         <div class="tab-content">
-            <div id="overall_statistics" class="tab-pane active">
-                <div id="piechart" style="height:400px;"></div>
-            </div>
-            <div id="flagged_objects" class="tab-pane">
+            {if config('videosSection') =='yes' || config('photosSection') == 'yes' || config('collectionsSection') == 'yes'}
+                <div id="overall_statistics" class="tab-pane active">
+                    <div id="piechart" style="height:400px;"></div>
+                </div>
+            {/if}
+            <div id="flagged_objects" class="tab-pane {if config('videosSection') !='yes' && config('photosSection') != 'yes' && config('collectionsSection') != 'yes'} active {/if}">
                 <div id="donutchart" style="height:400px;"></div>
             </div>
             <div id="users_statistics" class="tab-pane">
                 <div id="ubarchart" style="height:400px;"></div>
             </div>
-            <div id="video_statistics" class="tab-pane">
-                <div id="vbarchart" style="height:400px;"></div>
-            </div>
+            {if config('videosSection')=='yes'}
+                <div id="video_statistics" class="tab-pane">
+                    <div id="vbarchart" style="height:400px;"></div>
+                </div>
+            {/if}
         </div>
     </div>
     <div class="col-md-6" id="online_statistics">
@@ -173,24 +181,42 @@
     let can_sse = {$can_sse};
 
     let piechart_users = '{User::getInstance()->getAll(['count'=>'yes','not_userid'=>userquery::getInstance()->get_anonymous_user()])}';
-    let piechart_photos = '{Photo::getInstance()->getAll(['count'=>'yes'])}';
-    let piechart_videos = '{Video::getInstance()->getAll(['count'=>'yes'])}';
-    let piechart_collections = '{Collection::getInstance()->getAll(['count'=>'yes'])}';
-
-    let donutchart_photos = '{Flag::getAll(['count'=>true, 'element_type'=>'photo'])}';
-    let donutchart_videos = '{Flag::getAll(['count'=>true, 'element_type'=>'video'])}';
     let donutchart_users = '{Flag::getAll(['count'=>true, 'element_type'=>'user'])}';
-    let donutchart_collections = '{Flag::getAll(['count'=>true, 'element_type'=>'collection'])}';
+
+    let piechart_photos = '';
+    let donutchart_photos = '';
+
+    {if config('photosSection') == 'yes'}
+        piechart_photos = '{Photo::getInstance()->getAll(['count'=>'yes'])}';
+        donutchart_photos = '{Flag::getAll(['count'=>true, 'element_type'=>'photo'])}';
+    {/if}
+
+    let piechart_collections ='';
+    let donutchart_collections ='';
+    {if config('collectionsSection') == 'yes'}
+        piechart_collections = '{Collection::getInstance()->getAll(['count'=>'yes'])}';
+        donutchart_collections = '{Flag::getAll(['count'=>true, 'element_type'=>'collection'])}';
+    {/if}
 
     let ubarchart_users = '{User::getInstance()->getAll(['count'=>'yes','not_userid'=>userquery::getInstance()->get_anonymous_user()])}';
     let ubarchart_users_active = '{User::getInstance()->getAll(['count'=>'yes','status'=>'ok','not_userid'=>userquery::getInstance()->get_anonymous_user()])}';
     let ubarchart_users_inactive = '{User::getInstance()->getAll(['count'=>'yes','status'=>'ToActivate','not_userid'=>userquery::getInstance()->get_anonymous_user()])}';
 
-    let vbarchart_total = piechart_videos;
-    let vbarchart_active = '{Video::getInstance()->getAll(['count'=>'yes','active'=>'yes'])}';
-    let vbarchart_deactive = '{Video::getInstance()->getAll(['count'=>'yes','active'=>'no'])}';
-    let vbarchart_reported = donutchart_videos;
+    let piechart_videos = '';
+    let donutchart_videos = '';
+    let vbarchart_total = '';
+    let vbarchart_active = '';
+    let vbarchart_deactive = '';
+    let vbarchart_reported = '';
+    {if config('videosSection')=='yes'}
+        piechart_videos = '{Video::getInstance()->getAll(['count'=>'yes'])}';
+        donutchart_videos = '{Flag::getAll(['count'=>true, 'element_type'=>'video'])}';
 
+        vbarchart_total = piechart_videos;
+        vbarchart_active = '{Video::getInstance()->getAll(['count'=>'yes','active'=>'yes'])}';
+        vbarchart_deactive = '{Video::getInstance()->getAll(['count'=>'yes','active'=>'no'])}';
+        vbarchart_reported = donutchart_videos;
+    {/if}
     let lang = [];
     lang['technical_error'] = "{lang code='technical_error'}";
     lang['users'] = "{lang('users')}";

@@ -118,8 +118,12 @@ class Comments extends Objects
                 ,'comments.comment_ip'
                 ,'users.username'
                 ,'users.email'
-                ,'CASE ' . $case_when . ' END AS title'
             ];
+            if (!empty($case_when)) {
+                $select[] = 'CASE ' . $case_when . ' END AS title';
+            } else {
+                $select[] = '\'\' AS title ';
+            }
             if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '117')) {
                 $select[] = 'comments.total_rate_up';
                 $select[] = 'comments.total_rate_down';
