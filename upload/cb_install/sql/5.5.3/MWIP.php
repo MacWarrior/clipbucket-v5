@@ -19,5 +19,9 @@ class MWIP extends \Migration
             'fr'=>'Vous ne pouvez pas téléverser de soustitre tant que la vidéo n\'est pas convertie',
             'en'=>'You cannot upload subtitles until the video is converted'
         ]);
+        self::generateTranslation('video_isnt_saved_yet', [
+            'fr'=>'La vidéo n\'a pas encore été sauvegardée !',
+            'en'=>'Video hasn\'t been saved yet !'
+        ]);
     }
 }

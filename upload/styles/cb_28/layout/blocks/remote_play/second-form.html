@@ -161,7 +161,7 @@
                 {if config('enable_tmdb') == 'yes' && config('tmdb_token') != '' && config('tmdb_enable_on_front_end') == 'yes'}
                     <a class="btn btn-primary btn-lg" tabindex="-1" href="javascript:void(0);" data-id="{$videoFields.videoid}" id="button_info_tmdb" disabled="disabled">{lang code='get_data_tmdb'}</a>
                 {/if}
-                <button class="btn btn-primary btn-lg" id="remote_play_submit_form2">{lang('continue')}</button>
+                <button class="btn btn-primary btn-lg borderPulse" id="remote_play_submit_form2" title="{lang('video_isnt_saved_yet')}">{lang('continue')}</button>
             </div>
             {ANCHOR place="after_upload_form_submit"}
         </div>

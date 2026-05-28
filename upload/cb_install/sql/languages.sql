@@ -1907,4 +1907,5 @@ VALUES ('ongoing_conversion'),
        ('external_video_rate'),
        ('external_video_ratings'),
        ('continue'),
-       ('cant_upload_subtitle_until_video_is_converted');
+       ('cant_upload_subtitle_until_video_is_converted'),
+       ('video_isnt_saved_yet');

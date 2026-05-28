@@ -144,6 +144,7 @@ $(function () {
                         $('#remote_play_form').find('#button_info_tmdb').removeAttr('disabled');
                     }
                     $('#second-form').slideDown(1000);
+                    $('#remote_play_submit_form2').attr('disabled', false).html(remote_play_lang_submit_now);
                 }
             },
             //error: function(){},
@@ -193,7 +194,7 @@ $(function () {
                             getRemoteInfo(videoid);
                         }, 30000);
                     }
-                    $('#remote_play_submit_form2').attr('disabled', false).html(remote_play_lang_submit_now);
+                    $('#remote_play_submit_form2').attr('disabled', false).html(remote_play_lang_submit_now).removeClass('borderPulse').attr('title', '');
                 }
             },
         });
