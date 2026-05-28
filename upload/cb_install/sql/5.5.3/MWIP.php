@@ -11,7 +11,7 @@ class MWIP extends \Migration
      */
     public function start()
     {
-        self::generateTranslation('create_new_playlist', [
+        self::generateTranslation('created_new_playlist', [
             'fr' => 'Création d\'une playlist',
             'en' => 'Create new playlist'
         ]);
@@ -38,10 +38,6 @@ class MWIP extends \Migration
         self::generateTranslation('cl_comment', [
             'fr' => 'Commentaire de collection',
             'en' => 'Collection comment'
-        ]);
-        self::generateTranslation('channel_comment', [
-            'fr' => 'Commentaire de chaine',
-            'en' => 'Channel comment'
         ]);
         self::generateTranslation('import_tmdb', [
             'fr' => 'Import TMDb',

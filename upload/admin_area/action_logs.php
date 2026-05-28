@@ -39,7 +39,7 @@ $links = [
     'watch_a_video'                              => ['link' => DirPath::getUrl('root').'admin_area/edit_video.php?video=', 'right' => 'video_moderation'],
     'upload_thumb'                               => ['link' => DirPath::getUrl('root').'admin_area/upload_thumbs.php?type=%s&video=%d', 'right' => 'video_moderation'],
     'upload_photo'                               => ['link' => DirPath::getUrl('root').'admin_area/edit_photo.php?photo=', 'right' => 'photos_moderation'],
-    'create_new_playlist'                        => ['link' => DirPath::getUrl('root').'admin_area/manage_playlist.php?mode=edit_playlist&pid=', 'right' => 'member_moderation'],
+    'created_new_playlist'                       => ['link' => DirPath::getUrl('root').'admin_area/manage_playlist.php?mode=edit_playlist&pid=', 'right' => 'member_moderation'],
     'login'                                      => ['link' => DirPath::getUrl('root').'admin_area/view_user.php?uid=', 'right' => 'member_moderation'],
     'signup'                                     => ['link' => DirPath::getUrl('root').'admin_area/view_user.php?uid=', 'right' => 'member_moderation'],
     'profile_update'                             => ['link' => DirPath::getUrl('root').'admin_area/view_user.php?uid=', 'right' => 'member_moderation'],

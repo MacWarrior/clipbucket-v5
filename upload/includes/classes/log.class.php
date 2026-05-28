@@ -6,7 +6,7 @@ class CBLogs
         'watch_a_video',
         'upload_thumb',
         'photo_upload',
-        'create_new_playlist',
+        'created_new_playlist',
         'login',
         'signup',
         'profile_update',
