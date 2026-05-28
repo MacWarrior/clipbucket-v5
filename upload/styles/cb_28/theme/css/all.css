@@ -339,6 +339,42 @@
   }
 }
 
+.borderPulse {
+  position: relative;
+}
+
+.borderPulse::after {
+  content: "";
+  position: absolute;
+  top: -7px;
+  left: -7px;
+  right: -7px;
+  bottom: -7px;
+  border: 2px solid var(--color-main-01);
+  border-radius: 6px;
+  pointer-events: none;
+  animation: borderPulse 15s infinite;
+  opacity: 0;
+}
+
+@keyframes borderPulse {
+  0% {
+    opacity: 0;
+  }
+  8.33% {
+    opacity: 1;
+  }
+  16.66% {
+    opacity: 1;
+  }
+  25% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
 .alert-msg-holder {
   margin: 0 auto;
   text-align: center;
