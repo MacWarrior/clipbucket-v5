@@ -43,7 +43,7 @@ class FFMpeg
         $info['video_color'] = 'N/A';
         $info['path'] = $file_path;
 
-        $cmd = config('ffprobe_path') . ' -i "' . $file_path . '" -v quiet -print_format json -show_format -show_streams';
+        $cmd = config('ffprobe_path') . ' -i ' . escapeshellarg($file_path) . ' -v quiet -print_format json -show_format -show_streams';
         $output = System::shell_output($cmd);
         $output = preg_replace('/([a-zA-Z 0-9\r\n]+){/', '{', $output, 1);
 
@@ -116,7 +116,7 @@ class FFMpeg
         }
 
         if (!$info['duration']) {
-            $CMD = config('media_info') . ' \'--Inform=General;%Duration%\' \'' . $file_path . '\' 2>&1';
+            $CMD = config('media_info') . ' \'--Inform=General;%Duration%\' ' . escapeshellarg($file_path) . ' 2>&1';
             $info['duration'] = round((int)System::shell_output($CMD) / 1000, 2);
         }
 
@@ -124,7 +124,7 @@ class FFMpeg
         $int_1_video_rate = (int)$video_rate[0];
         $int_2_video_rate = (int)$video_rate[1];
 
-        $CMD = config('media_info') . ' \'--Inform=Video;\' ' . $file_path;
+        $CMD = config('media_info') . ' \'--Inform=Video;\' ' . escapeshellarg($file_path);
 
         $results = System::shell_output($CMD);
         $needle_start = 'Original height';
@@ -456,7 +456,7 @@ class FFMpeg
 
                 $count++;
                 $display_count = str_pad((string)$count, 2, '0', STR_PAD_LEFT);
-                $command = config('ffmpegpath') . ' -y -i ' . $this->input_file . ' -map 0:' . $map_id . ' -f ' . config('subtitle_format') . ' ' . $subtitle_dir . $this->file_name . '-' . $display_count . '.srt 2>&1';
+                $command = config('ffmpegpath') . ' -y -i ' . escapeshellarg($this->input_file) . ' -map 0:' . $map_id . ' -f ' . config('subtitle_format') . ' ' . $subtitle_dir . $this->file_name . '-' . $display_count . '.srt 2>&1';
                 if (System::isInDev()) {
                     $this->log->writeLine('<div class="showHide"><p class="title glyphicon-chevron-right">Command : </p><p class="content">'.$command.'</p></div>', false, true);
                 }
@@ -821,7 +821,7 @@ class FFMpeg
     {
         $command = config('ffmpegpath');
         $command .= $this->get_conversion_option('global');
-        $command .= ' -i ' . $this->input_file;
+        $command .= ' -i ' . escapeshellarg($this->input_file);
         $command .= $this->get_conversion_option('video_global');
         $command .= $this->get_conversion_option('audio_global');
         $command .= $this->get_conversion_option('video_hls', $resolutions);
@@ -855,7 +855,7 @@ class FFMpeg
     function convert_mp4(array $resolution): void
     {
         $opt_av = $this->get_conversion_option('global');
-        $opt_av .= ' -i ' . $this->input_file;
+        $opt_av .= ' -i ' . escapeshellarg($this->input_file);
         $opt_av .= $this->get_conversion_option('video_global');
         $opt_av .= $this->get_conversion_option('video_mp4', $resolution);
         $opt_av .= $this->get_conversion_option('audio_global');
@@ -1029,7 +1029,7 @@ class FFMpeg
             $codecOptions = '-c:v mjpeg -q:v 2';
         }
 
-        $command = config('ffmpegpath') . ' -ss ' . $params['timecode'] . ' -i ' . $params['input_path'] . ' -an -pix_fmt yuvj422p' . $vf . ' ' . $codecOptions . ' -y -frames:v 1 ' . $params['output_path'] . ' 2>&1';
+        $command = config('ffmpegpath') . ' -ss ' . $params['timecode'] . ' -i ' . escapeshellarg($params['input_path']) . ' -an -pix_fmt yuvj422p' . $vf . ' ' . $codecOptions . ' -y -frames:v 1 ' . $params['output_path'] . ' 2>&1';
 
         return [
             'command' => $command
@@ -1042,7 +1042,7 @@ class FFMpeg
         $cmd = config('ffmpegpath');
         $cmd .= ' -y -hide_banner';
         $cmd .= ' -loglevel error';
-        $cmd .= ' -i ' . $this->input_file;
+        $cmd .= ' -i ' . escapeshellarg($this->input_file);
         $cmd .= ' -map 0:' . $track_id . ' -c:s mov_text';
         $cmd .= ' -f mp4 -movflags faststart+frag_keyframe+empty_moov /dev/null 2>&1';
 
@@ -1057,7 +1057,7 @@ class FFMpeg
 
     public static function get_track_infos(string $filepath, string $type): array
     {
-        $json = shell_exec(config('ffprobe_path') . ' -i "' . $filepath . '" -loglevel panic -print_format json -show_entries stream 2>&1');
+        $json = shell_exec(config('ffprobe_path') . ' -i ' . escapeshellarg($filepath) . ' -loglevel panic -print_format json -show_entries stream 2>&1');
         $tracks_json = json_decode($json, true)['streams'];
         $data = [];
         foreach ($tracks_json as $track) {
@@ -1106,7 +1106,7 @@ class FFMpeg
     {
         $stats = stat($filepath);
         if ($stats && is_array($stats)) {
-            $json = shell_exec(config('ffprobe_path') . ' -i "' . $filepath . '" -loglevel panic -print_format json -show_entries stream 2>&1');
+            $json = shell_exec(config('ffprobe_path') . ' -i ' . escapeshellarg($filepath) . ' -loglevel panic -print_format json -show_entries stream 2>&1');
             $tracks_json = json_decode($json, true)['streams'];
             $langs = [];
             foreach ($tracks_json as $track) {
@@ -1151,7 +1151,7 @@ class FFMpeg
     public static function get_media_stream_id($type, $filepath)
     {
         if (file_exists($filepath)) {
-            $json = shell_exec(config('ffprobe_path') . ' -i "' . $filepath . '" -loglevel panic -print_format json -show_entries stream 2>&1');
+            $json = shell_exec(config('ffprobe_path') . ' -i ' . escapeshellarg($filepath) . ' -loglevel panic -print_format json -show_entries stream 2>&1');
             $tracks_json = json_decode($json, true)['streams'];
             $streams_ids = [];
             foreach ($tracks_json as $track) {
@@ -1178,7 +1178,7 @@ class FFMpeg
     {
         $stats = stat($filepath);
         if ($stats && is_array($stats)) {
-            $json = shell_exec(config('ffprobe_path') . ' -v quiet -print_format json -show_format -show_streams "' . $filepath . '"');
+            $json = shell_exec(config('ffprobe_path') . ' -v quiet -print_format json -show_format -show_streams ' . escapeshellarg($filepath));
             $data = json_decode($json, true);
 
             $video = null;
@@ -1354,7 +1354,7 @@ class FFMpeg
 
     public static function generateGif(string $input_file, string $output_file, int $width = 100): void
     {
-        $cmd = config('ffmpegpath') .' -i ' . $input_file . ' -vf "scale=' . $width . ':-1:flags=lanczos,split[s0][s1];[s0]palettegen=stats_mode=full[p];[s1][p]paletteuse=dither=none" -gifflags -offsetting ' . $output_file;
+        $cmd = config('ffmpegpath') .' -i ' . escapeshellarg($input_file) . ' -vf "scale=' . $width . ':-1:flags=lanczos,split[s0][s1];[s0]palettegen=stats_mode=full[p];[s1][p]paletteuse=dither=none" -gifflags -offsetting ' . $output_file;
         $output = shell_exec($cmd);
     }
 }

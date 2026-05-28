@@ -436,6 +436,38 @@ class Upload
             ];
         }
 
+        if (((FRONT_END && config('enable_external_rate_ratings_on_fo') == 'yes') || BACK_END)
+            && Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '138')
+        ) {
+            if (config('enable_external_rate_field') == 'yes') {
+                $uploadFormRequiredFieldsArray['external_rate'] = [
+                    'title'             => ucfirst(lang('external_rate')),
+                    'type'              => 'number',
+                    'name'              => 'external_rate',
+                    'id'                => 'external_rate',
+                    'value'             => $default['external_rate'],
+                    'required'          => 'no',
+                    'min'               => 0,
+                    'max'               => 10,
+                    'db_field'          => 'external_rate',
+                    'hint_icon'         => lang('external_video_rate')
+                ];
+            }
+            if (config('enable_external_ratings_field') == 'yes') {
+                $uploadFormRequiredFieldsArray['external_ratings'] = [
+                    'title'             => ucfirst(lang('external_ratings')),
+                    'type'              => 'number',
+                    'name'              => 'external_ratings',
+                    'id'                => 'external_ratings',
+                    'value'             => $default['external_ratings'],
+                    'required'          => 'no',
+                    'min'               => 0,
+                    'db_field'          => 'external_ratings',
+                    'hint_icon'         => lang('external_video_ratings')
+                ];
+            }
+        }
+
         $tracks = $default['tracks'];
         if (!empty($tracks)) {
             $uploadFormRequiredFieldsArray['audio_track'] = [
