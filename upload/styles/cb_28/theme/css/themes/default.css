@@ -742,3 +742,8 @@ a:hover{
     border-color: var(--color-main-01);
     color: var(--color-main-02);
 }
+
+/* Tags */
+ul.tagit input[type="text"]{
+    color: var(--color-02) !important;
+}
