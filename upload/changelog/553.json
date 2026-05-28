@@ -1,6 +1,6 @@
 {
   "version":"5.5.3",
-  "revision":"142",
+  "revision":"143",
   "status":"stable",
   "detail":[
     {
@@ -133,6 +133,7 @@
         ,"Fix changelog"
         ,"Fix possible memory overflow while in dev mode"
         ,"Fix pagination (<i>#855</i>)"
+        ,"Fix TMDB import SQL error"
       ]
     },
     {
