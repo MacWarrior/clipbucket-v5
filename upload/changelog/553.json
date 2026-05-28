@@ -1,6 +1,6 @@
 {
   "version":"5.5.3",
-  "revision":"139",
+  "revision":"141",
   "status":"stable",
   "detail":[
     {
@@ -99,7 +99,7 @@
         ,"Fix video block display"
         ,"Fix tags suggestion (<i>#839</i>)"
         ,"Fix possible video thumbs cache issue"
-        ,"Fix possible unauthorized access to video subtitles edition (Thanks @Bnyt7 !)"
+        ,"Fix possible unauthorized access to video subtitles edition (Thanks @Bnyt7 & @Mr-In4inci3le !)"
       ]
     },
     {
@@ -163,6 +163,7 @@
         ,"Fix conversion logs"
         ,"Fix PNG transparency"
         ,"Fix temp file deletion on conversion failure"
+        ,"Fix possible remote code execution (Thanks @Bnyt7 !)"
       ]
     },
     {
