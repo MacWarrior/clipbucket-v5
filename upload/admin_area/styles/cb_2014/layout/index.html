@@ -183,16 +183,12 @@
     let piechart_users = '{User::getInstance()->getAll(['count'=>'yes','not_userid'=>userquery::getInstance()->get_anonymous_user()])}';
     let donutchart_users = '{Flag::getAll(['count'=>true, 'element_type'=>'user'])}';
 
-    let piechart_photos = '';
-    let donutchart_photos = '';
 
     {if config('photosSection') == 'yes'}
         piechart_photos = '{Photo::getInstance()->getAll(['count'=>'yes'])}';
         donutchart_photos = '{Flag::getAll(['count'=>true, 'element_type'=>'photo'])}';
     {/if}
 
-    let piechart_collections ='';
-    let donutchart_collections ='';
     {if config('collectionsSection') == 'yes'}
         piechart_collections = '{Collection::getInstance()->getAll(['count'=>'yes'])}';
         donutchart_collections = '{Flag::getAll(['count'=>true, 'element_type'=>'collection'])}';
@@ -202,12 +198,6 @@
     let ubarchart_users_active = '{User::getInstance()->getAll(['count'=>'yes','status'=>'ok','not_userid'=>userquery::getInstance()->get_anonymous_user()])}';
     let ubarchart_users_inactive = '{User::getInstance()->getAll(['count'=>'yes','status'=>'ToActivate','not_userid'=>userquery::getInstance()->get_anonymous_user()])}';
 
-    let piechart_videos = '';
-    let donutchart_videos = '';
-    let vbarchart_total = '';
-    let vbarchart_active = '';
-    let vbarchart_deactive = '';
-    let vbarchart_reported = '';
     {if config('videosSection')=='yes'}
         piechart_videos = '{Video::getInstance()->getAll(['count'=>'yes'])}';
         donutchart_videos = '{Flag::getAll(['count'=>true, 'element_type'=>'video'])}';

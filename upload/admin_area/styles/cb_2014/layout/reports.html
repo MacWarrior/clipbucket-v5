@@ -133,61 +133,67 @@
     </table>
 </div>
 
-<div class="table-responsive">
-    <span><legend>Other Reports</legend></span>
-    <table class="table table-striped table-bordered">
-        <thead>
-        {if config('videosSection')=='yes' && config('photosSection') == 'yes'}
-            <th>{lang code='comments'}</th>
-        {/if}
-        <th>Flags</th>
-        {if config('videosSection')=='yes' && config('playlistsSection') == 'yes'}
-            <th>{lang code='playlists'}</th>
-        {/if}
-        {if config('videosSection')=='yes'}
-            <th>{lang code='favourites'}</th>
-        {/if}
-        </thead>
-        <tbody class="reports">
-        <tr>
-            {if config('videosSection')=='yes' || config('photosSection') == 'yes'}
-                <td>
-                    {if config('videosSection')=='yes'}
-                        <span class="show">Video Comments : <strong>{Comments::getAll(['count'=>true,'type'=>'v'])}</strong></span>
-                    {/if}
-                    {if config('photosSection')=='yes'}
-                        <span class="show">Photo Comments : <strong>{Comments::getAll(['count'=>true,'type'=>'p'])}</strong></span>
-                    {/if}
-                    {if config('videosSection')=='yes' || config('photosSection') == 'yes'}
-                        <span class="show">Collection Comments : <strong>{Comments::getAll(['count'=>true,'type'=>'cl'])}</strong></span>
-                    {/if}
-                </td>
+{if config('videosSection')=='yes' || config('photosSection') == 'yes' || config('channelsSection')=='yes'}
+    <div class="table-responsive">
+        <span><legend>Other Reports</legend></span>
+        <table class="table table-striped table-bordered">
+            <thead>
+            {if config('videosSection')=='yes' && config('photosSection') == 'yes'}
+                <th>{lang code='comments'}</th>
             {/if}
-            <td>
-                {if config('videosSection')=='yes'}
-                    <span class="show">Videos Reported : <strong>{Flag::getAll(['count'=>true, 'element_type'=>'video'])}</strong></span>
-                {/if}
-                {if config('photosSection')=='yes'}
-                    <span class="show">Photos Reported : <strong>{Flag::getAll(['count'=>true, 'element_type'=>'photo'])}</strong></span>
-                {/if}
-                <span class="show">Users Reported : <strong>{Flag::getAll(['count'=>true, 'element_type'=>'user'])}</strong></span>
-            </td>
+
+            {if config('videosSection')=='yes' || config('photosSection') == 'yes' || config('channelsSection')=='yes'}
+                <th>Flags</th>
+            {/if}
             {if config('videosSection')=='yes' && config('playlistsSection') == 'yes'}
-                <td>
-                    <span class="show">Video PlayList: <strong>{CBvideo::getInstance()->action->count_total_playlist()}</strong></span>
-                    <span class="show">Videos in Playlist: <strong>{CBvideo::getInstance()->action->count_total_playlist(true)}</strong></span>
-                </td>
+                <th>{lang code='playlists'}</th>
             {/if}
             {if config('videosSection')=='yes'}
-                <td>
-                    <span class="show">Favorite Videos: <strong>{Video::getInstance()->getAllFavorites(['count_only'=>true])}</strong></span>
-                </td>
+                <th>{lang code='favourites'}</th>
             {/if}
-        </tr>
-        </tbody>
-    </table>
-</div>
-
+            </thead>
+            <tbody class="reports">
+            <tr>
+                {if config('videosSection')=='yes' || config('photosSection') == 'yes'}
+                    <td>
+                        {if config('videosSection')=='yes'}
+                            <span class="show">Video Comments : <strong>{Comments::getAll(['count'=>true,'type'=>'v'])}</strong></span>
+                        {/if}
+                        {if config('photosSection')=='yes'}
+                            <span class="show">Photo Comments : <strong>{Comments::getAll(['count'=>true,'type'=>'p'])}</strong></span>
+                        {/if}
+                        {if config('videosSection')=='yes' || config('photosSection') == 'yes'}
+                            <span class="show">Collection Comments : <strong>{Comments::getAll(['count'=>true,'type'=>'cl'])}</strong></span>
+                        {/if}
+                    </td>
+                {/if}
+                <td>
+                    {if config('videosSection')=='yes'}
+                        <span class="show">Videos Reported : <strong>{Flag::getAll(['count'=>true, 'element_type'=>'video'])}</strong></span>
+                    {/if}
+                    {if config('photosSection')=='yes'}
+                        <span class="show">Photos Reported : <strong>{Flag::getAll(['count'=>true, 'element_type'=>'photo'])}</strong></span>
+                    {/if}
+                    {if config('channelsSection')=='yes'}
+                        <span class="show">Users Reported : <strong>{Flag::getAll(['count'=>true, 'element_type'=>'user'])}</strong></span>
+                    {/if}
+                </td>
+                {if config('videosSection')=='yes' && config('playlistsSection') == 'yes'}
+                    <td>
+                        <span class="show">Video PlayList: <strong>{CBvideo::getInstance()->action->count_total_playlist()}</strong></span>
+                        <span class="show">Videos in Playlist: <strong>{CBvideo::getInstance()->action->count_total_playlist(true)}</strong></span>
+                    </td>
+                {/if}
+                {if config('videosSection')=='yes'}
+                    <td>
+                        <span class="show">Favorite Videos: <strong>{Video::getInstance()->getAllFavorites(['count_only'=>true])}</strong></span>
+                    </td>
+                {/if}
+            </tr>
+            </tbody>
+        </table>
+    </div>
+{/if}
 <div class="table-responsive">
     <span><legend>Total files and Sizes</legend></span>
     <table class="table table-striped table-bordered">

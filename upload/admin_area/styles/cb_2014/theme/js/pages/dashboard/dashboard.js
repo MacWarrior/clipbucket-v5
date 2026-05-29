@@ -166,216 +166,257 @@ $(document).ready(function(){
             });
         });
     }
+    const piechart_dataProvider = [];
+    if (typeof piechart_users !== 'undefined') {
+        piechart_dataProvider.push({
+            "category": lang['users'],
+            "column-1": piechart_users
+        });
+    }
+    if (typeof piechart_photos !== 'undefined') {
+        piechart_dataProvider.push({
+            "category": lang['photos'],
+            "column-1": piechart_photos
+        });
+    }
+    if (typeof piechart_videos !== 'undefined') {
+        piechart_dataProvider.push({
+            "category": lang['videos'],
+            "column-1": piechart_videos
+        });
+    }
+    if (typeof piechart_collections !== 'undefined') {
+        piechart_dataProvider.push({
+            "category": lang['collections'],
+            "column-1": piechart_collections
+        })
+    }
 
-    AmCharts.makeChart("piechart", {
-        "type": "pie",
-        "adjustPrecision": true,
-        "angle": 12,
-        "balloonText": "[[title]]<br><span style='font-size:14px;'><b>[[value]]</b> ([[percents]]%)</span>",
-        "depth3D": 15,
-        "maxLabelWidth": 150,
-        "titleField": "category",
-        "valueField": "column-1",
-        "processTimeout": 5,
-        "theme": "light",
-        "allLabels": [],
-        "balloon": {},
-        "legend": {
-            "enabled": true,
-            "align": "left",
-            "markerType": "circle"
-        },
-        "titles": [
-            {
-                "bold": false,
-                "id": "Title-1",
-                "size": 15,
-                "text": lang['overall_statistics']
-            }
-        ],
-        "dataProvider": [
-            {
-                "category": lang['users'],
-                "column-1": piechart_users
+    if (piechart_dataProvider.length > 0) {
+        AmCharts.makeChart("piechart", {
+            "type": "pie",
+            "adjustPrecision": true,
+            "angle": 12,
+            "balloonText": "[[title]]<br><span style='font-size:14px;'><b>[[value]]</b> ([[percents]]%)</span>",
+            "depth3D": 15,
+            "maxLabelWidth": 150,
+            "titleField": "category",
+            "valueField": "column-1",
+            "processTimeout": 5,
+            "theme": "light",
+            "allLabels": [],
+            "balloon": {},
+            "legend": {
+                "enabled": true,
+                "align": "left",
+                "markerType": "circle"
             },
-            {
-                "category": lang['photos'],
-                "column-1": piechart_photos
-            },
-            {
-                "category": lang['videos'],
-                "column-1": piechart_videos
-            },
-            {
-                "category": lang['collections'],
-                "column-1": piechart_collections
-            },
+            "titles": [
+                {
+                    "bold": false,
+                    "id": "Title-1",
+                    "size": 15,
+                    "text": lang['overall_statistics']
+                }
+            ],
+            "dataProvider": piechart_dataProvider
+        });
+    }
 
-        ]
-    });
+    const donutchart_dataProvider = [];
+    if (typeof donutchart_users !== 'undefined') {
+        donutchart_dataProvider.push({
+            "category": lang['users'],
+            "column-1": donutchart_users
+        });
+    }
+    if (typeof donutchart_photos !== 'undefined') {
+        donutchart_dataProvider.push({
+            "category": lang['photos'],
+            "column-1": donutchart_photos
+        });
+    }
+    if (typeof donutchart_videos !== 'undefined') {
+        donutchart_dataProvider.push({
+            "category": lang['videos'],
+            "column-1": donutchart_videos
+        });
+    }
+    if (typeof donutchart_collections !== 'undefined') {
+        donutchart_dataProvider.push({
+            "category": lang['collections'],
+            "column-1": donutchart_collections
+        })
+    }
 
-    AmCharts.makeChart("donutchart", {
-        "type": "pie",
-        "angle": 12,
-        "balloonText": "[[title]]<br><span style='font-size:14px;'><b>[[value]]</b> ([[percents]]%)</span>",
-        "depth3D": 15,
-        "innerRadius": "30%",
-        "titleField": "category",
-        "valueField": "column-1",
-        "processTimeout": 5,
-        "theme": "light",
-        "allLabels": [],
-        "balloon": {},
-        "legend": {
-            "enabled": true,
-            "align": "center",
-            "markerType": "circle"
-        },
-        "titles": [
-            {
-                "bold": false,
-                "id": "Title-1",
-                "size": 15,
-                "text": lang['flagged_obj']
-            }
-        ],
-        "dataProvider": [
 
-            {
-                "category": lang['photos'],
-                "column-1": donutchart_photos
+    if (donutchart_dataProvider.length > 0) {
+        AmCharts.makeChart("donutchart", {
+            "type": "pie",
+            "angle": 12,
+            "balloonText": "[[title]]<br><span style='font-size:14px;'><b>[[value]]</b> ([[percents]]%)</span>",
+            "depth3D": 15,
+            "innerRadius": "30%",
+            "titleField": "category",
+            "valueField": "column-1",
+            "processTimeout": 5,
+            "theme": "light",
+            "allLabels": [],
+            "balloon": {},
+            "legend": {
+                "enabled": true,
+                "align": "center",
+                "markerType": "circle"
             },
-            {
-                "category": lang['videos'],
-                "column-1": donutchart_videos
-            },
-            {
-                "category": lang['users'],
-                "column-1": donutchart_users
-            },
-            {
-                "category": lang['collections'],
-                "column-1": donutchart_collections
-            }
-        ]
-    });
+            "titles": [
+                {
+                    "bold": false,
+                    "id": "Title-1",
+                    "size": 15,
+                    "text": lang['flagged_obj']
+                }
+            ],
+            "dataProvider": donutchart_dataProvider
+        });
+    }
 
-    AmCharts.makeChart("ubarchart", {
-        "type": "serial",
-        "pathToImages": "https://www.amcharts.com/lib/3/images/",
-        "categoryField": "category",
-        "startDuration": 1,
-        "mouseWheelZoomEnabled": true,
-        "startEffect": "easeOutSine",
-        "autoDisplay": true,
-        "theme": "light",
-        "categoryAxis": {
-            "gridPosition": "start"
-        },
-        "trendLines": [],
-        "graphs": [
-            {
-                "colorField": "color",
-                "fillAlphas": 1,
-                "id": "AmGraph-1",
-                "lineColorField": "color",
-                "title": "graph 1",
-                "type": "column",
-                "valueField": "column-1"
-            }
-        ],
-        "guides": [],
-        "valueAxes": [
-            {
-                "id": "ValueAxis-1",
-                "title": lang['users']
-            }
-        ],
-        "allLabels": [],
-        "balloon": {},
-        "titles": [
-            {
-                "bold": false,
-                "id": "Title-1",
-                "size": 15,
-                "text": lang['user_statistics']
-            }
-        ],
-        "dataProvider": [
-            {
-                "category": lang["total"],
-                "column-1": ubarchart_users
+    const ubarchart_dataProvider = [];
+    if (typeof ubarchart_users !== 'undefined') {
+        ubarchart_dataProvider.push({
+            "category": lang['total'],
+            "column-1": ubarchart_users
+        });
+    }
+    if (typeof ubarchart_users_active !== 'undefined') {
+        ubarchart_dataProvider.push({
+            "category": lang['active'],
+            "column-1": ubarchart_users_active
+        });
+    }
+    if (typeof ubarchart_users_inactive !== 'undefined') {
+        ubarchart_dataProvider.push({
+            "category": lang['inactive'],
+            "column-1": ubarchart_users_inactive
+        });
+    }
+
+    if (ubarchart_dataProvider.length > 0) {
+        AmCharts.makeChart("ubarchart", {
+            "type": "serial",
+            "pathToImages": "https://www.amcharts.com/lib/3/images/",
+            "categoryField": "category",
+            "startDuration": 1,
+            "mouseWheelZoomEnabled": true,
+            "startEffect": "easeOutSine",
+            "autoDisplay": true,
+            "theme": "light",
+            "categoryAxis": {
+                "gridPosition": "start"
             },
-            {
-                "category": lang["active"],
-                "column-1": ubarchart_users_active
+            "trendLines": [],
+            "graphs": [
+                {
+                    "colorField": "color",
+                    "fillAlphas": 1,
+                    "id": "AmGraph-1",
+                    "lineColorField": "color",
+                    "title": "graph 1",
+                    "type": "column",
+                    "valueField": "column-1"
+                }
+            ],
+            "guides": [],
+            "valueAxes": [
+                {
+                    "id": "ValueAxis-1",
+                    "title": lang['users']
+                }
+            ],
+            "allLabels": [],
+            "balloon": {},
+            "titles": [
+                {
+                    "bold": false,
+                    "id": "Title-1",
+                    "size": 15,
+                    "text": lang['user_statistics']
+                }
+            ],
+            "dataProvider": ubarchart_dataProvider
+        });
+    }
+
+    const vbarchart_dataProvider = [];
+    if (typeof vbarchart_total !== 'undefined') {
+        vbarchart_dataProvider.push({
+            "category": lang['total'],
+            "column-1": vbarchart_total
+        });
+    }
+    if (typeof vbarchart_active !== 'undefined') {
+        vbarchart_dataProvider.push({
+            "category": lang['active'],
+            "column-1": vbarchart_active
+        });
+    }
+    if (typeof vbarchart_deactive !== 'undefined') {
+        vbarchart_dataProvider.push({
+            "category": lang['inactive'],
+            "column-1": vbarchart_deactive
+        });
+    }
+    if (typeof vbarchart_reported !== 'undefined') {
+        vbarchart_dataProvider.push({
+            "category": lang['reported'],
+            "column-1": vbarchart_reported
+        });
+    }
+
+    if( vbarchart_dataProvider.length > 0 ) {
+        AmCharts.makeChart("vbarchart", {
+            "type": "serial",
+            "pathToImages": "https://www.amcharts.com/lib/3/images/",
+            "categoryField": "category",
+            "startDuration": 1,
+            "mouseWheelZoomEnabled": true,
+            "startEffect": "easeOutSine",
+            "autoDisplay": true,
+            "theme": "light",
+            "categoryAxis": {
+                "gridPosition": "start"
             },
-            {
-                "category": lang["inactive"],
-                "column-1": ubarchart_users_inactive
-            }
-        ]
-    }); 
-    AmCharts.makeChart("vbarchart", {
-        "type": "serial",
-        "pathToImages": "https://www.amcharts.com/lib/3/images/",
-        "categoryField": "category",
-        "startDuration": 1,
-        "mouseWheelZoomEnabled": true,
-        "startEffect": "easeOutSine",
-        "autoDisplay": true,
-        "theme": "light",
-        "categoryAxis": {
-            "gridPosition": "start"
-        },
-        "trendLines": [],
-        "graphs": [
-            {
-                "colorField": "color",
-                "fillAlphas": 1,
-                "id": "AmGraph-1",
-                "lineColorField": "color",
-                "title": "graph 1",
-                "type": "column",
-                "valueField": "column-1"
-            }
-        ],
-        "guides": [],
-        "valueAxes": [
-            {
-                "id": "ValueAxis-1",
-                "title": lang["videos"]
-            }
-        ],
-        "allLabels": [],
-        "balloon": {},
-        "titles": [
-            {
-                "bold": false,
-                "id": "Title-1",
-                "size": 15,
-                "text": lang['video_statistics']
-            }
-        ],
-        "dataProvider": [
-            {
-                "category": lang['total'],
-                "column-1": vbarchart_total
-            },
-            {
-                "category": lang['active'],
-                "column-1": vbarchart_active
-            },
-            {
-                "category": lang['inactive'],
-                "column-1": vbarchart_deactive
-            },
-            {
-                "category": lang['reported'],
-                "column-1": vbarchart_reported
-            }
-        ]
-    });
+            "trendLines": [],
+            "graphs": [
+                {
+                    "colorField": "color",
+                    "fillAlphas": 1,
+                    "id": "AmGraph-1",
+                    "lineColorField": "color",
+                    "title": "graph 1",
+                    "type": "column",
+                    "valueField": "column-1"
+                }
+            ],
+            "guides": [],
+            "valueAxes": [
+                {
+                    "id": "ValueAxis-1",
+                    "title": lang["videos"]
+                }
+            ],
+            "allLabels": [],
+            "balloon": {},
+            "titles": [
+                {
+                    "bold": false,
+                    "id": "Title-1",
+                    "size": 15,
+                    "text": lang['video_statistics']
+                }
+            ],
+            "dataProvider": vbarchart_dataProvider
+        });
+    }
 
     $('#update_dp_options').on('click', function () {
         var val = $(this).parent().find('input').val();
