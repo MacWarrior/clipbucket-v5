@@ -6,7 +6,7 @@
 
     </h4>
     <div class="sectionContent" style="display: none;">
-        <div class="row">
+        <div class="row" style="margin-left: 5px; margin-right: 5px;">
             <h5>{lang code="extracted_thumbs"}</h5>
             {foreach from=$vidthumbs item=vid_thumb}
                 {if $vid_thumb.thumb_id}
@@ -27,7 +27,7 @@
         </div>
         {if !empty($vidthumbs_custom)}
             <hr/>
-            <div class="row">
+            <div class="row" style="margin-left: 5px; margin-right: 5px;">
                 <h5>{lang code="custom_thumbs"}</h5>
                 {foreach from=$vidthumbs_custom item=vid_thumb}
                     {if $vid_thumb.thumb_id}
@@ -50,7 +50,7 @@
         <div style="clear: both;"></div>
         {if !$use_backdrop_default}
             {ANCHOR place="before_edit_video_form_thumbs_upload"}
-            <div class="row">
+            <div class="row" style="margin-left: 5px; margin-right: 5px;">
                 <h5>{lang code='upload_custom_thumbnail'}</h5>
                 <input name="vid_thumb[]" id="new_thumbs" type="file" />
                 <div class="form-group pull-right">

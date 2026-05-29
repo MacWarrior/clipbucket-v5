@@ -1,6 +1,6 @@
 {
   "version":"5.5.3",
-  "revision":"141",
+  "revision":"145",
   "status":"stable",
   "detail":[
     {
@@ -20,6 +20,7 @@
         ,"Implement TMDB data refresh tool"
         ,"Implement template compatibility check"
         ,"Implement movie rate & ratings"
+        ,"Implement many action logs"
         ,"Update advanced settings display"
         ,"Update video & photos thumbs regeneration tools"
         ,"Update video allowed extensions display"
@@ -100,6 +101,8 @@
         ,"Fix tags suggestion (<i>#839</i>)"
         ,"Fix possible video thumbs cache issue"
         ,"Fix possible unauthorized access to video subtitles edition (Thanks @Bnyt7 & @Mr-In4inci3le !)"
+        ,"Fix tag management display (<i>#860</i>)"
+        ,"Fix remote play form"
       ]
     },
     {
@@ -132,6 +135,7 @@
         ,"Fix changelog"
         ,"Fix possible memory overflow while in dev mode"
         ,"Fix pagination (<i>#855</i>)"
+        ,"Fix TMDB import SQL error"
       ]
     },
     {

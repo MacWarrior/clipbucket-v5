@@ -126,14 +126,17 @@ switch($step){
         $response['msg'] =getTemplateMsg();
 
 
-        sendClientResponseAndContinue(function () use($video_id, $response) {
+    sendClientResponseAndContinue(function () use($video_id, $response) {
             $video = Video::getInstance()->getOne(['video_id' => $video_id]);
+            $response['html'] = Upload::displayVideoThumbsForm($video);
+            assign('subtitle_list',get_video_subtitles($video) ?: []);
+            $response['percent'] = $video['convert_percent'] ?? 0;
             $response['videokey'] = $video['videokey'];
             $response['videoid'] = $video_id;
             echo json_encode($response);
         });
 
-        remote_play::process_file($video_url, $video_id);
+    remote_play::process_file($video_url, $video_id);
         die();
 
     case 'update':

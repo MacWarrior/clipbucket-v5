@@ -1,7 +1,24 @@
 <?php
 class CBLogs
 {
-    public static array $allowed_types = ['login', 'signup', 'upload_video'];
+    public static array $allowed_types = [
+        'upload_video',
+        'watch_a_video',
+        'upload_thumb',
+        'photo_upload',
+        'created_new_playlist',
+        'login',
+        'signup',
+        'profile_update',
+        'subscribe',
+        'add_friend',
+        'add_collection',
+        'v_comment',
+        'p_comment',
+        'cl_comment',
+        'channel_comment',
+        'import_tmdb'
+    ];
     /**
      * Function used to insert log
      * @param string $type , type of action

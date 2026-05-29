@@ -479,9 +479,13 @@ class Tmdb
         if (config('tmdb_get_crew') == 'yes' && config('enable_video_crew') == 'yes') {
             Tags::saveTags(implode(',', $crew_tags), 'crew', $videoid);
         }
-        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '101')) {
+        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '101') && !Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '138')) {
             Clipbucket_db::getInstance()->update(tbl('video'), ['id_tmdb', 'type_tmdb'], [$tmdb_id, $type], 'videoid = ' . $videoid);
         }
+        insert_log('import_tmdb', [
+            'success'       => 'yes',
+            'action_obj_id' => $videoid,
+        ]);
     }
 
     /**
@@ -507,12 +511,15 @@ class Tmdb
             'videoid' => $videoid
         ]);
         if (empty($video_info)) {
-            $video_info = Video::getInstance()->getOne([
-                'file_name' => $fileName
-            ]);
+            if (!empty($fileName)) {
+                $video_info = Video::getInstance()->getOne([
+                    'file_name' => $fileName
+                ]);
+            }
         }
         if (empty($video_info)) {
             e(lang('class_vdo_del_err'));
+            return [];
         }
         self::getInstance()->deleteOldCacheEntries();
         $title = !empty($params['video_title']) ? $params['video_title'] : $video_info['title'];
