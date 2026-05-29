@@ -1933,6 +1933,10 @@ function get_country($code)
     return false;
 }
 
+function get_country_flag($code){
+    return '<img src="' . DirPath::getUrl('root') . 'images/icons/country/' . strtolower($code) . '.png" alt="" border="0">&nbsp;';
+}
+
 /**
  * function used to get users
  * @param $param

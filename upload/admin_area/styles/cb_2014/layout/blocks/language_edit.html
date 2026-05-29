@@ -2,14 +2,23 @@
 <div class="form-group">
     <form id="form1" name="form1" method="post">
         <div class="row">
-            <div class="col-md-5">
+            <div class="col-md-4">
                 <label for="name">Language Name</label>
                 <div style="vertical-align: bottom;">
                     <input style="vertical-align: middle; width: calc(100% - 180px);" name="name" type="text" class="form-control" id="name" value="{$lang_details.language_name}"/>
                     <input name="language_id" type="hidden" class="form-control" id="language_id" value="{$lang_details.language_id}"/>
                 </div>
             </div>
-            <div class="col-md-5">
+            <div class="col-md-4">
+                <label for="name">Language FLag</label>
+                <div style="vertical-align: bottom;">
+                    <select name="flag" class="form-control" id="flag">
+
+                    </select>
+                    <input style="vertical-align: middle; width: calc(100% - 180px);" name="flag" type="text" class="form-control" id="flag" value="{$lang_details.language_flag}"/>
+                </div>
+            </div>
+            <div class="col-md-4">
                 <label for="codeAdd">Language Code</label>
                 <div style="vertical-align: bottom;">
                     <input style="display: inline-block; vertical-align: middle; width: calc(100% - 180px);" name="code" type="text" class="form-control" id="codeAdd" value="{$lang_details.language_code}"/>
