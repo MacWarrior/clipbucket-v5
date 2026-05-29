@@ -1975,8 +1975,8 @@ class AdminTool
             $offset = 0;
             do {
                 $videos = Video::getInstance()->getAll([
-                    'limit'                       => $offset . ', ' . $limit,
-                    'condition' => ' id_tmdb IS NOT NULL ',
+                    'limit'     => $offset . ', ' . $limit,
+                    'condition' => 'id_tmdb IS NOT NULL',
                 ]);
                 $offset += $limit;
                 foreach ($videos as $video) {
