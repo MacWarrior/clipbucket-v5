@@ -1643,10 +1643,11 @@ class userquery extends CBCategory
         //Error Logging
         if (!empty($msg)) {
             //Logging Action
-            $log_array['success'] = 'no';
-            $log_array['details'] = $msg['val'];
-            $log_array['username'] = $username;
-            insert_log('Login', $log_array);
+            insert_log('login', [
+                'success'  => 'no',
+                'details'  => $msg['val'],
+                'username' => $username
+            ]);
         }
         return false;
     }
@@ -1716,14 +1717,14 @@ class userquery extends CBCategory
         $this->init();
 
         //Logging Action
-        $log_array = [
+        insert_log('login', [
             'username'  => $udetails['username'],
             'userid'    => $udetails['userid'],
             'useremail' => $udetails['email'],
             'success'   => 'yes',
-            'level'     => $udetails['level']
-        ];
-        insert_log('Login', $log_array);
+            'level'     => $udetails['level'],
+            'action_obj_id' => $udetails['userid']
+        ]);
         return true;
     }
 
@@ -2090,14 +2091,13 @@ class userquery extends CBCategory
 
             EmailTemplate::sendMail('friend_confirmation', $receiver_id, $var);
 
-            $log_array = [
+            insert_log('add_friend', [
                 'success'       => 'yes',
                 'action_obj_id' => $friend['userid'],
                 'details'       => 'friend with ' . $friend['username']
-            ];
-            insert_log('add_friend', $log_array);
+            ]);
 
-            $log_array = [
+            insert_log('add_friend', [
                 'success'       => 'yes',
                 'username'      => $friend['username'],
                 'userid'        => $friend['userid'],
@@ -2105,8 +2105,7 @@ class userquery extends CBCategory
                 'useremail'     => $friend['email'],
                 'action_obj_id' => user_id(),
                 'details'       => 'friend with ' . user_id()
-            ];
-            insert_log('add_friend', $log_array);
+            ]);
         }
     }
 
@@ -2306,13 +2305,12 @@ class userquery extends CBCategory
             Clipbucket_db::getInstance()->update(tbl($this->dbtbl['users']), ['total_subscriptions'],
                 [$this->get_user_subscriptions($user, 'count')], " userid='$user' ");
             //Logging Comment
-            $log_array = [
+            insert_log('subscribe', [
                 'success'        => 'yes',
                 'details'        => 'subsribed to ' . $to_user['username'],
                 'action_obj_id'  => $to_user['userid'],
                 'action_done_id' => Clipbucket_db::getInstance()->insert_id()
-            ];
-            insert_log('subscribe', $log_array);
+            ]);
 
             e(lang('usr_sub_msg', $to_user['username']), 'm');
         }
@@ -3329,12 +3327,12 @@ class userquery extends CBCategory
 
         //updating user profile
         if (!error() && !empty($query_field)) {
-            $log_array = [
-                'success' => 'yes',
-                'details' => 'updated profile'
-            ];
             //Login Upload
-            insert_log('profile_update', $log_array);
+            insert_log('profile_update', [
+                'success'       => 'yes',
+                'details'       => 'updated profile',
+                'action_obj_id' => $array['userid']
+            ]);
 
             Clipbucket_db::getInstance()->update(tbl($this->dbtbl['user_profile']), $query_field, $query_val, " userid='" . mysql_clean($array['userid']) . "'");
 
@@ -3361,13 +3359,12 @@ class userquery extends CBCategory
             if ($file) {
                 $uquery_field = ['background'];
                 $uquery_val = [$file];
-                $log_array = [
-                    'success' => 'yes',
-                    'details' => 'updated background'
-                ];
-
                 //Login Upload
-                insert_log('profile_update', $log_array);
+                insert_log('background_upload', [
+                    'success'       => 'yes',
+                    'details'       => 'updated background',
+                    'action_obj_id' => User::getInstance()->getCurrentUserID()
+                ]);
                 Clipbucket_db::getInstance()->update(tbl($this->dbtbl['users']), $uquery_field, $uquery_val, ' userid=\'' . User::getInstance()->getCurrentUserID() . '\'');
                 e(lang('usr_background_update'), 'm');
             }
@@ -3407,13 +3404,12 @@ class userquery extends CBCategory
                 }
             }
 
-            $log_array = [
-                'success' => 'yes',
-                'details' => 'updated avatar'
-            ];
-
             //Login Upload
-            insert_log('profile_update', $log_array);
+            insert_log('avatar_upload', [
+                'success'       => 'yes',
+                'details'       => 'updated avatar',
+                'action_obj_id' => User::getInstance()->getCurrentUserID()
+            ]);
             Clipbucket_db::getInstance()->update(tbl($this->dbtbl['users']), $uquery_field, $uquery_val, ' userid=\'' . User::getInstance()->getCurrentUserID() . '\'');
             e(lang('usr_avatar_update'), 'm');
         }
@@ -4398,17 +4394,16 @@ class userquery extends CBCategory
                 $this->send_welcome_email($insert_id);
             }
 
-            $log_array = [
+
+            //Login Signup
+            insert_log('signup', [
                 'username'  => $array['username'],
                 'userid'    => $insert_id,
                 'userlevel' => $array['level'],
                 'useremail' => $array['email'],
                 'success'   => 'yes',
                 'details'   => sprintf('%s signed up', $array['username'])
-            ];
-
-            //Login Signup
-            insert_log('signup', $log_array);
+            ]);
 
             //Adding User has Signup Feed
             addFeed(['action' => 'signup', 'object_id' => $insert_id, 'object' => 'signup', 'uid' => $insert_id]);
@@ -4745,7 +4740,10 @@ class userquery extends CBCategory
                 //Logging Action
                 $log_array['success'] = 'no';
                 $log_array['details'] = $msg[0]['val'];
-                insert_log('login_as', $log_array);
+                insert_log('login_as', [
+                    'success'=>'no',
+                    'details'=> $msg[0]['val']
+                ]);
             }
         }
 

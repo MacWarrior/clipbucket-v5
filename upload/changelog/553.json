@@ -1,6 +1,6 @@
 {
   "version":"5.5.3",
-  "revision":"143",
+  "revision":"144",
   "status":"stable",
   "detail":[
     {
@@ -20,6 +20,7 @@
         ,"Implement TMDB data refresh tool"
         ,"Implement template compatibility check"
         ,"Implement movie rate & ratings"
+        ,"Implement many action logs"
         ,"Update advanced settings display"
         ,"Update video & photos thumbs regeneration tools"
         ,"Update video allowed extensions display"

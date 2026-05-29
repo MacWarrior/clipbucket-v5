@@ -1814,6 +1814,10 @@ class Collections extends CBCategory
             }
             Tags::saveTags($array['collection_tags'], 'collection', $insert_id);
 
+            insert_log('add_collection', [
+                'action_obj_id' => $insert_id,
+                'success'       => 'yes',
+            ]);
             e(lang('collect_added_msg'), 'm');
             return $insert_id;
         }
