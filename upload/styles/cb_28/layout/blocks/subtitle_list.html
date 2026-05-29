@@ -38,6 +38,8 @@
         {/section}
     </table>
 {/if}
-{if config('can_upload_subtitles') == 'yes' && (!empty($vstatus) && $vstatus == 'Successful')}
-    <button class="btn btn-primary" onclick="getModalUploadSubtitle({$videoid});return false;">{lang code='upload_subtitles'}</button>
+{if config('can_upload_subtitles') == 'yes'}
+    <button class="btn btn-primary" {if empty($vstatus) || $vstatus != 'Successful'} disabled="disabled" title="{lang('cant_upload_subtitle_until_video_is_converted')}"
+    {else} onclick="getModalUploadSubtitle({$videoid});return false;" {/if}
+    >{lang code='upload_subtitles'}</button>
 {/if}

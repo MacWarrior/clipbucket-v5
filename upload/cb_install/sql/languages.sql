@@ -1915,4 +1915,7 @@ VALUES ('ongoing_conversion'),
        ('cl_comment'),
        ('import_tmdb'),
        ('background_upload'),
-       ('avatar_upload');
+       ('avatar_upload'),
+       ('continue'),
+       ('cant_upload_subtitle_until_video_is_converted'),
+       ('video_isnt_saved_yet');

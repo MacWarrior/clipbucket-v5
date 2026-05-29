@@ -511,12 +511,15 @@ class Tmdb
             'videoid' => $videoid
         ]);
         if (empty($video_info)) {
-            $video_info = Video::getInstance()->getOne([
-                'file_name' => $fileName
-            ]);
+            if (!empty($fileName)) {
+                $video_info = Video::getInstance()->getOne([
+                    'file_name' => $fileName
+                ]);
+            }
         }
         if (empty($video_info)) {
             e(lang('class_vdo_del_err'));
+            return [];
         }
         self::getInstance()->deleteOldCacheEntries();
         $title = !empty($params['video_title']) ? $params['video_title'] : $video_info['title'];
