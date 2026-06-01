@@ -25,6 +25,8 @@ class Language
     public $lang_iso = 'en';
     public $lang_name = 'English';
 
+    public $lang_flag = 'us';
+
     public $arrayTranslation = [];
 
     private $uninstalled = false;
@@ -79,6 +81,7 @@ class Language
             $this->lang_name = $default['language_name'];
             $this->lang = $this->lang_iso = $default['language_code'];
             $this->lang_id = $default['language_id'];
+            $this->lang_flag = $default['language_flag'];
         }
 
         $this->loadTranslations($this->lang_id);
@@ -356,6 +359,8 @@ class Language
             e(lang('lang_name_empty'));
         } elseif (empty($array['code'])) {
             e(lang('lang_code_empty'));
+        } elseif (empty($array['flag'])) {
+            e(lang('lang_flag_empty'));
         } else {
             Clipbucket_db::getInstance()->update(tbl('languages'), ['language_name', 'language_code', 'language_flag'], [$array['name'], $array['code'], $array['flag']], ' language_id=\'' . $array['language_id'] . '\'');
             e(lang('lang_updated'), 'm');

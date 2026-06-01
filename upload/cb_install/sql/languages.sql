@@ -1905,4 +1905,8 @@ VALUES ('ongoing_conversion'),
        ('please_enter_val_bigger_than_min'),
        ('please_enter_val_smaller_than_max'),
        ('external_video_rate'),
-       ('external_video_ratings');
+       ('external_video_ratings'),
+       ('lang_name_empty'),
+       ('lang_code_empty'),
+       ('lang_flag_empty'),
+       ('option_display_language_flag');

@@ -1927,14 +1927,19 @@ function get_country($code)
     $result = Clipbucket_db::getInstance()->select(tbl('countries'), 'name_en,iso2', " iso2='$code' OR iso3='$code'");
     if (count($result) > 0) {
         $result = $result[0];
-        $flag = '<img src="' . DirPath::getUrl('root') . 'images/icons/country/' . strtolower($result['iso2']) . '.png" alt="" border="0">&nbsp;';
+        $flag = get_country_flag($result['iso2']);
         return $flag . $result['name_en'];
     }
     return false;
 }
 
 function get_country_flag($code){
-    return '<img src="' . DirPath::getUrl('root') . 'images/icons/country/' . strtolower($code) . '.png" alt="" border="0">&nbsp;';
+    return '<img src="' . get_country_flag_url($code) .'" alt="" border="0">&nbsp;';
+}
+
+function get_country_flag_url($code)
+{
+    return DirPath::getUrl('root') . 'images/icons/country/' . strtolower($code) . '.png';
 }
 
 /**

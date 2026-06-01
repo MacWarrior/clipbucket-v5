@@ -13,9 +13,10 @@
                 <label for="name">Language FLag</label>
                 <div style="vertical-align: bottom;">
                     <select name="flag" class="form-control" id="flag">
-
+                        {foreach from=ClipBucket::getInstance()->get_countries() key=iso2 item=country}
+                            <option value="{$iso2}" {if strtolower($iso2) == strtolower($lang_details.language_flag)}selected="selected"{/if} data-image="{get_country_flag_url($iso2)}">{$country}</option>
+                        {/foreach}
                     </select>
-                    <input style="vertical-align: middle; width: calc(100% - 180px);" name="flag" type="text" class="form-control" id="flag" value="{$lang_details.language_flag}"/>
                 </div>
             </div>
             <div class="col-md-4">

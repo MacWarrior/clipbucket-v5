@@ -1,5 +1,5 @@
-INSERT INTO `{tbl_prefix}languages` (`language_name`, `language_active`, `language_default`, `language_code`)
-VALUES ('Français', 'yes', 'no', 'fr');
+INSERT INTO `{tbl_prefix}languages` (`language_name`, `language_active`, `language_default`, `language_code`, `language_flag`)
+VALUES ('Français', 'yes', 'no', 'fr', 'fr');
 
 SET @language_id = (SELECT `language_id` FROM `{tbl_prefix}languages` WHERE language_code = 'fr');
 
@@ -3077,3 +3077,11 @@ INSERT INTO `{tbl_prefix}languages_translations` (`id_language_key`, `translatio
 VALUES ((SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE `language_key` = 'external_video_rate'), 'Note externe de la vidéo, de 0 à 10', @language_id);
 INSERT INTO `{tbl_prefix}languages_translations` (`id_language_key`, `translation`, `language_id`)
 VALUES ((SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE `language_key` = 'external_video_ratings'), 'Nombre de votes pour la note externe', @language_id);
+INSERT INTO `{tbl_prefix}languages_translations` (`id_language_key`, `translation`, `language_id`)
+VALUES ((SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE `language_key` = 'lang_name_empty'), 'Merci de renseigner le champs Nom de la langue', @language_id);
+INSERT INTO `{tbl_prefix}languages_translations` (`id_language_key`, `translation`, `language_id`)
+VALUES ((SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE `language_key` = 'lang_code_empty'), 'Merci de renseigner le champs Code de la langue', @language_id);
+INSERT INTO `{tbl_prefix}languages_translations` (`id_language_key`, `translation`, `language_id`)
+VALUES ((SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE `language_key` = 'lang_flag_empty'), 'Merci de renseigner le champs Drapeau de la langue', @language_id);
+INSERT INTO `{tbl_prefix}languages_translations` (`id_language_key`, `translation`, `language_id`)
+VALUES ((SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE `language_key` = 'option_display_language_flag'), 'Afficher le drapeau de la langue', @language_id);

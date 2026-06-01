@@ -178,7 +178,8 @@ CREATE TABLE `{tbl_prefix}languages` (
   `language_name` varchar(20) NOT NULL DEFAULT '0',
   `language_code` varchar(5) NOT NULL UNIQUE ,
   `language_active` enum('yes','no') NOT NULL DEFAULT 'yes',
-  `language_default` enum('yes','no') NOT NULL
+  `language_default` enum('yes','no') NOT NULL,
+  `language_flag` VARCHAR(4) NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_520_ci;
 
 CREATE TABLE `{tbl_prefix}mass_emails` (
