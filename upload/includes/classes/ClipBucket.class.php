@@ -452,10 +452,6 @@ class ClipBucket
                         'title' => 'Active Only'
                         , 'url' => DirPath::getUrl('admin_area') . 'members.php?search=yes&status=Ok'
                     ]
-                    , [
-                        'title' => lang('user_flagged')
-                        , 'url' => DirPath::getUrl('admin_area') . 'flagged_item.php?type=user'
-                    ]
                 ]
             ];
 
@@ -463,6 +459,12 @@ class ClipBucket
                 $menu_users['sub'][] = [
                     'title' => lang('manage_x', strtolower(lang('categories')))
                     , 'url' => DirPath::getUrl('admin_area') . 'category.php?type=user'
+                ];
+            }
+            if( config('channelsSection') == 'yes' ){
+                $menu_users['sub'][] =  [
+                    'title' => lang('user_flagged')
+                    , 'url' => DirPath::getUrl('admin_area') . 'flagged_item.php?type=user'
                 ];
             }
 
