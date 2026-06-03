@@ -94,35 +94,48 @@ if (isset($_POST['update_order'])) {
         e(lang('page_order_has_been_updated'), 'm');
     }
 }
-
-switch ($mode) {
-    case 'new':
-        assign('mode', 'new');
-        break;
-
-    case 'view':
-    default:
-        if ($_GET['msg']) {
-            e(mysql_clean($_GET['msg']), 'm');
-        }
-        assign('mode', 'manage');
-        assign('cbpages', cbpage::getInstance()->get_pages());
-        break;
-
-    case 'edit':
+if (empty($mode) || $mode == 'view') {
+    if ($_GET['msg']) {
+        e(mysql_clean($_GET['msg']), 'm');
+    }
+    assign('mode', 'manage');
+    assign('cbpages', cbpage::getInstance()->get_pages());
+} else {
+    assign('mode', $mode);
+    if ($mode == 'edit') {
         if (isset($_POST['update_page'])) {
             $_POST['page_id'] = $_GET['pid'];
             cbpage::getInstance()->edit_page($_POST);
         }
-
-        assign('mode', 'edit');
         $page = cbpage::getInstance()->get_page(mysql_clean($_GET['pid']));
-        assign('page', $page);
         if (!$page) {
             e('Page does not exist');
         }
-        break;
-
+    }
+    $languages = Language::getInstance()->get_langs(true);
+    $first_display = 0;
+    foreach ($languages as &$language) {
+        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '999')) {
+            $translations = cbpage::getInstance()->getPageTranslation($page['page_id'], $language['language_id']) ?: null;
+            $page['page_contents'][$language['language_id']] = $translations['page_content'] ?? '';
+            $page['page_titles'][$language['language_id']] = $translations['page_title'] ?? '';
+        } else {
+            $page['page_contents'][$language['language_id']] = $page['page_content'];
+            $page['page_titles'][$language['language_id']] = $page['page_title'];
+        }
+        $language['is_specified'] = (bool)$page['page_contents'][$language['language_id']];
+        if ($language['is_specified'] && !$first_display) {
+            $first_display = $language['language_id'];
+            $language['is_shown'] = true;
+        } else {
+            $language['is_shown'] = false;
+        }
+    }
+    if (!$first_display) {
+        $languages[0]['is_shown'] = true;
+    }
+    assign('page', $page);
+    assign('languages', $languages);
 }
 
 $min_suffixe = System::isInDev() ? '' : '.min';

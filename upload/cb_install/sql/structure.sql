@@ -1406,3 +1406,16 @@ CREATE TABLE IF NOT EXISTS `{tbl_prefix}video_tmdb` (
 
 ALTER TABLE `{tbl_prefix}video_tmdb`
     ADD CONSTRAINT `tmdb_video_ibfk_1` FOREIGN KEY (`video_id`) REFERENCES `{tbl_prefix}video` (`videoid`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+CREATE TABLE IF NOT EXISTS `{tbl_prefix}pages_translations`
+(
+    `page_id`      INT(11)      NOT NULL,
+    `language_id`  INT(9)       NOT NULL,
+    `page_title`   VARCHAR(225) NOT NULL,
+    `page_content` TEXT         NOT NULL,
+    PRIMARY KEY (`page_id`, `language_id`)
+) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE utf8mb4_unicode_520_ci;
+
+ALTER TABLE `{tbl_prefix}pages_translations`
+    ADD CONSTRAINT `pages_translations_ibfk_1` FOREIGN KEY (`page_id`) REFERENCES `{tbl_prefix}pages` (`page_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+    ADD CONSTRAINT `pages_translations_ibfk_2` FOREIGN KEY (`language_id`) REFERENCES `{tbl_prefix}languages` (`language_id`) ON DELETE NO ACTION ON UPDATE NO ACTION;

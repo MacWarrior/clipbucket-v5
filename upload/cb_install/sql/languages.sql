@@ -1909,4 +1909,9 @@ VALUES ('ongoing_conversion'),
        ('lang_name_empty'),
        ('lang_code_empty'),
        ('lang_flag_empty'),
-       ('option_display_language_flag');
+       ('option_display_language_flag'),
+       ('edit_page_translation'),
+       ('no_specified'),
+       ('specified'),
+       ('new_page'),
+       ('update_page');

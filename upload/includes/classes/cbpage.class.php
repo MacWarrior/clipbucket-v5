@@ -48,21 +48,21 @@ class cbpage
         }
 
         if (!error()) {
-
-            $translation_name = 'page_name_' . $name;
-            if(empty(Language::getInstance()->arrayTranslation[$translation_name]) && empty(Language::getInstance()->getTranslationByKey($translation_name, Language::$english_id)['translation'])) {
-                Migration::generateTranslation($translation_name, [
-                    Language::getInstance()->lang => $title
-                ]);
-                if (CacheRedis::getInstance()->isEnabled()) {
-                    CacheRedis::flushKeyStart(Language::getRedisKey());
-                }
-                Clipbucket_db::getInstance()->insert(tbl($this->page_tbl), ['page_name', 'page_title', 'page_content', 'userid', 'date_added', 'active', 'page_order'],
-                    [$name, $title, '|no_mc|' . $content, user_id(), now(), 'yes', $this->getMaxPageOrder()]);
-                return true;
-            } else {
-                e(lang('translation_already_exist_choose_other_name', $translation_name));
+            $fields = ['page_name', 'userid', 'date_added', 'active', 'page_order'];
+            $values = [$name, User::getInstance()->getCurrentUserID(), now(), 'yes', $this->getMaxPageOrder()];
+            if (!Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '999')) {
+                $fields[] = 'page_content';
+                $fields[] = 'page_title';
+                $values[] = '|no_mc|' . mysql_clean(trim($content[array_key_first($content)]?? ''))  ;
+                $values[] = mysql_clean(trim($title[array_key_first($title)]?? '')) ;
             }
+            $insert_id = Clipbucket_db::getInstance()->insert(tbl($this->page_tbl), $fields, $values);
+            if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '999')) {
+                foreach ($content as $lang_id => $content_trad) {
+                    $this->insertOrUpdatePageTranslation($insert_id, $lang_id, $title[$lang_id], $content_trad);
+                }
+            }
+            return true;
         }
         return false;
     }
@@ -89,7 +89,17 @@ class cbpage
      */
     function get_page($id)
     {
-        $result = Clipbucket_db::getInstance()->select(tbl($this->page_tbl), '*', ' page_id =' . (int)$id);
+        if (!Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '999')) {
+            $result = Clipbucket_db::getInstance()->select(tbl($this->page_tbl), '*', ' page_id = ' . (int)$id);
+        } else {
+            $result = Clipbucket_db::getInstance()->select(
+                cb_sql_table($this->page_tbl) . ' LEFT JOIN ' . cb_sql_table('pages_translations') . ' 
+                     ON ' . $this->page_tbl . '.page_id = pages_translations.page_id AND pages_translations.language_id = ' . Language::getInstance()->lang_id
+                , $this->page_tbl . '.*, CASE WHEN pages_translations.page_content != \'\' THEN pages_translations.page_content ELSE (SELECT page_content FROM '.tbl('pages_translations').' WHERE page_id = '.(int)$id.' AND page_content != \'\' limit 1) END as page_content
+            , CASE WHEN pages_translations.page_title != \'\' THEN pages_translations.page_title ELSE (SELECT page_title FROM '.tbl('pages_translations').' WHERE page_id = '.(int)$id.' AND page_title != \'\' limit 1) END as page_title, pages_translations.language_id'
+                , ' '.$this->page_tbl.'.page_id =' . (int)$id
+            );
+        }
         if (count($result) > 0) {
             return $result[0];
         }
@@ -97,7 +107,18 @@ class cbpage
     }
 
     /**
-     * Function used to get all pages from database
+     * @param $id
+     * @param $lang_id
+     * @return false|mixed
+     * @throws Exception
+     */
+    function getPageTranslation($id, $lang_id)
+    {
+        return Clipbucket_db::getInstance()->select(tbl('pages_translations'), 'page_content, page_title', 'page_id = ' . (int)$id . ' AND language_id = ' . (int)$lang_id)[0] ?? false;
+    }
+
+    /**
+     * Function used to get all pages from database&²
      *
      * @param $params
      *
@@ -125,17 +146,7 @@ class cbpage
             $conds[] = ' display=\'yes\' ';
         }
 
-        if ($conds) {
-            foreach ($conds as $c) {
-                if ($cond) {
-                    $cond .= ' AND ';
-                }
-
-                $cond .= $c;
-            }
-        }
-
-        $result = Clipbucket_db::getInstance()->select(tbl($this->page_tbl), '*', $cond, $limit, $order);
+        $result = Clipbucket_db::getInstance()->select(tbl($this->page_tbl), '*', empty($conds) ? '1' : implode(' AND ',$conds), $limit, $order);
         if (count($result) > 0) {
             return $result;
         }
@@ -156,7 +167,7 @@ class cbpage
         $id = $param['page_id'];
         $name = strtolower($param['page_name']);
         $title = $param['page_title'];
-        $content = mysql_clean($param['page_content']);
+        $content = $param['page_content'];
 
         $page = $this->get_page($id);
 
@@ -178,36 +189,32 @@ class cbpage
         }
 
         if (!error()) {
-            require_once DirPath::get('classes') . 'migration' . DIRECTORY_SEPARATOR . 'migration.class.php';
-
-            $translation_name = 'page_name_' . $name;
-            if (strtolower($page['page_name']) != $name) {
-                if (empty(Language::getInstance()->arrayTranslation[$translation_name]) && empty(Language::getInstance()->getTranslationByKey($translation_name, Language::$english_id)['translation'])) {
-                    Migration::deleteTranslation('page_name_' . $page['page_name']);
-                    Migration::generateTranslation($translation_name, [
-                        Language::getInstance()->lang => $title
-                    ]);
-                    if (CacheRedis::getInstance()->isEnabled()) {
-                        CacheRedis::flushKeyStart(Language::getRedisKey());
-                    }
-                } else {
-                    e(lang('translation_already_exist_choose_other_name', $translation_name));
-                    return false;
+            $fields = ['page_name'];
+            $values = [$name];
+            if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '999') && !empty($content)) {
+                foreach ($content as $lang_id => $content_trad) {
+                    $this->insertOrUpdatePageTranslation($id, $lang_id, $title[$lang_id], $content_trad);
                 }
+            } else {
+                $fields[] = 'page_content';
+                $fields[] = 'page_title';
+                $values[] = '|no_mc|' . mysql_clean(trim($content[array_key_first($content)] ?? ''));
+                $values[] = mysql_clean(trim($title[array_key_first($title)] ?? ''));
             }
-            if (strtolower($page['page_title']) != strtolower($title)) {
-                Migration::updateTranslation('page_name_' . $name, [
-                    Language::getInstance()->lang => $title
-                ]);
-                if (CacheRedis::getInstance()->isEnabled()) {
-                    CacheRedis::flushKeyStart(Language::getRedisKey());
-                }
-            }
-            Clipbucket_db::getInstance()->update(tbl($this->page_tbl), ['page_name', 'page_title', 'page_content'],
-                [$name, $title, '|no_mc|' . $content], ' page_id = ' . (int)$id);
+            Clipbucket_db::getInstance()->update(tbl($this->page_tbl), $fields,
+                $values, ' page_id = ' . (int)$id);
             e(lang('page_updated'), 'm');
             return true;
+        } else {
+            return false;
         }
+    }
+
+    function insertOrUpdatePageTranslation($page_id, $lang_id, $page_title, $page_content)
+    {
+        $sql = 'INSERT INTO ' . tbl('pages_translations') . ' (page_id, language_id, page_title ,page_content) VALUES ( ' . (int)$page_id . ', ' .(int)$lang_id . ', \''.mysql_clean(trim($page_title)).'\', \''.mysql_clean(trim($page_content)).'\')
+        ON DUPLICATE KEY UPDATE page_content = VALUES(page_content), page_title = VALUES(page_title)';
+       return \Clipbucket_db::getInstance()->execute($sql);
     }
 
     /**
