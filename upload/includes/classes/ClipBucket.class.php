@@ -761,7 +761,12 @@ class ClipBucket
 
         if ($pages) {
             foreach ($pages as $p) {
-                $this->foot_menu[] = ['name' => display_clean(cbpage::getInstance()->getPageTranslation($p['page_id'], get_other_language_if_empty: true)['page_title']??''), 'link' => cbpage::getInstance()->page_link($p), 'this' => 'home'];
+                if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '999')) {
+                    $name = cbpage::getInstance()->getPageTranslation($p['page_id'], get_other_language_if_empty: true)['page_title']??'';
+                } else {
+                    $name = lang('page_name_' . $p['page_name']);
+                }
+                $this->foot_menu[] = ['name' => display_clean($name), 'link' => cbpage::getInstance()->page_link($p), 'this' => 'home'];
             }
         }
 

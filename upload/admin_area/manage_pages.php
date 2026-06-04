@@ -78,6 +78,9 @@ if (isset($_POST['delete_selected']) && is_array($_POST['check_page'])) {
 $mode = $_GET['mode'];
 
 if (isset($_POST['add_page'])) {
+    if (!Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '999')) {
+        SessionMessageHandler::add_message('Sorry, you cannot perform this action until the application has been fully updated by an administrator', 'e', User::getInstance()->getDefaultHomepageFromUserLevel());
+    }
     if (cbpage::getInstance()->create_page($_POST)) {
         $mode = 'view';
     }
@@ -101,6 +104,9 @@ if (empty($mode) || $mode == 'view') {
     assign('mode', 'manage');
     assign('cbpages', cbpage::getInstance()->get_pages());
 } else {
+    if (!Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '999')) {
+        SessionMessageHandler::add_message('Sorry, you cannot perform this action until the application has been fully updated by an administrator', 'e', User::getInstance()->getDefaultHomepageFromUserLevel());
+    }
     assign('mode', $mode);
     if ($mode == 'edit') {
         if (isset($_POST['update_page'])) {

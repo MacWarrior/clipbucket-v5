@@ -30,6 +30,9 @@ class cbpage
      */
     function create_page(array $param): bool
     {
+        if (!Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '999')) {
+            return false;
+        }
         $name = strtolower($param['page_name']);
         $title = $param['page_title'];
         $content = $param['page_content'];
@@ -50,12 +53,6 @@ class cbpage
         if (!error()) {
             $fields = ['page_name', 'userid', 'date_added', 'active', 'page_order'];
             $values = [$name, User::getInstance()->getCurrentUserID(), now(), 'yes', $this->getMaxPageOrder()];
-            if (!Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '999')) {
-                $fields[] = 'page_content';
-                $fields[] = 'page_title';
-                $values[] = '|no_mc|' . mysql_clean(trim($content[array_key_first($content)]?? ''))  ;
-                $values[] = mysql_clean(trim($title[array_key_first($title)]?? '')) ;
-            }
             $insert_id = Clipbucket_db::getInstance()->insert(tbl($this->page_tbl), $fields, $values);
             if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '999')) {
                 foreach ($content as $lang_id => $content_trad) {
@@ -114,6 +111,9 @@ class cbpage
      */
     function getPageTranslation($id, $lang_id = null, $get_other_language_if_empty = false): mixed
     {
+        if (!Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '999')) {
+            return ['page_content' => ' ', 'page_title' => ''];
+        }
         if (empty($lang_id)) {
             $lang_id = Language::getInstance()->lang_id;
         }
@@ -175,6 +175,9 @@ class cbpage
      */
     function edit_page($param)
     {
+        if (!Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '999')) {
+            return false;
+        }
         $id = $param['page_id'];
         $name = strtolower($param['page_name']);
         $title = $param['page_title'];
@@ -202,15 +205,10 @@ class cbpage
         if (!error()) {
             $fields = ['page_name'];
             $values = [$name];
-            if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '999') && !empty($content)) {
+            if (!empty($content)) {
                 foreach ($content as $lang_id => $content_trad) {
                     $this->insertOrUpdatePageTranslation($id, $lang_id, $title[$lang_id], $content_trad);
                 }
-            } else {
-                $fields[] = 'page_content';
-                $fields[] = 'page_title';
-                $values[] = '|no_mc|' . mysql_clean(trim($content[array_key_first($content)] ?? ''));
-                $values[] = mysql_clean(trim($title[array_key_first($title)] ?? ''));
             }
             Clipbucket_db::getInstance()->update(tbl($this->page_tbl), $fields,
                 $values, ' page_id = ' . (int)$id);
