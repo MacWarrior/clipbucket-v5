@@ -166,7 +166,7 @@ $(document).ready(function(){
             });
         });
     }
-    const piechart_dataProvider = [];
+    let piechart_dataProvider = [];
     if (typeof piechart_users !== 'undefined') {
         piechart_dataProvider.push({
             "category": lang['users'],
@@ -223,7 +223,7 @@ $(document).ready(function(){
         });
     }
 
-    const donutchart_dataProvider = [];
+    let donutchart_dataProvider = [];
     if (typeof donutchart_users !== 'undefined') {
         donutchart_dataProvider.push({
             "category": lang['users'],
@@ -280,7 +280,7 @@ $(document).ready(function(){
         });
     }
 
-    const ubarchart_dataProvider = [];
+    let ubarchart_dataProvider = [];
     if (typeof ubarchart_users !== 'undefined') {
         ubarchart_dataProvider.push({
             "category": lang['total'],
@@ -346,7 +346,7 @@ $(document).ready(function(){
         });
     }
 
-    const vbarchart_dataProvider = [];
+    let vbarchart_dataProvider = [];
     if (typeof vbarchart_total !== 'undefined') {
         vbarchart_dataProvider.push({
             "category": lang['total'],
