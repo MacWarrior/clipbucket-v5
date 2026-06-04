@@ -217,8 +217,6 @@ CREATE TABLE `{tbl_prefix}pages` (
   `page_order` bigint(100) NOT NULL,
   `display` enum('yes','no') NOT NULL DEFAULT 'yes',
   `page_name` varchar(225) NOT NULL,
-  `page_title` varchar(225) NOT NULL,
-  `page_content` text NOT NULL,
   `userid` int(225) NOT NULL,
   `active` enum('yes','no') NOT NULL,
   `delete_able` enum('yes','no') NOT NULL DEFAULT 'yes',

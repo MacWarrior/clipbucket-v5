@@ -761,7 +761,7 @@ class ClipBucket
 
         if ($pages) {
             foreach ($pages as $p) {
-                $this->foot_menu[] = ['name' => display_clean(lang('page_name_' . $p['page_name'])), 'link' => cbpage::getInstance()->page_link($p), 'this' => 'home'];
+                $this->foot_menu[] = ['name' => display_clean(cbpage::getInstance()->getPageTranslation($p['page_id'], get_other_language_if_empty: true)['page_title']??''), 'link' => cbpage::getInstance()->page_link($p), 'this' => 'home'];
             }
         }
 

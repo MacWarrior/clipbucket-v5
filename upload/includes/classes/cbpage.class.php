@@ -112,13 +112,24 @@ class cbpage
      * @return false|mixed
      * @throws Exception
      */
-    function getPageTranslation($id, $lang_id)
+    function getPageTranslation($id, $lang_id = null, $get_other_language_if_empty = false): mixed
     {
-        return Clipbucket_db::getInstance()->select(tbl('pages_translations'), 'page_content, page_title', 'page_id = ' . (int)$id . ' AND language_id = ' . (int)$lang_id)[0] ?? false;
+        if (empty($lang_id)) {
+            $lang_id = Language::getInstance()->lang_id;
+        }
+        $page_content = 'page_content';
+        $page_title = 'page_title';
+        if ($get_other_language_if_empty) {
+            $page_content =' CASE WHEN pages_translations.page_content != \'\' THEN pages_translations.page_content ELSE (SELECT page_content FROM '.tbl('pages_translations').' WHERE page_id = '.(int)$id.' AND page_content != \'\' limit 1) END as page_content';
+            $page_title = 'CASE WHEN pages_translations.page_title != \'\' THEN pages_translations.page_title ELSE (SELECT page_title FROM '.tbl('pages_translations').' WHERE page_id = '.(int)$id.' AND page_title != \'\' limit 1) END as page_title, pages_translations.language_id';
+        }
+        return Clipbucket_db::getInstance()->select(cb_sql_table('pages_translations')
+            , $page_content . ', ' . $page_title
+            , 'page_id = ' . (int)$id . ' AND language_id = ' . (int)$lang_id)[0] ?? false;
     }
 
     /**
-     * Function used to get all pages from database&²
+     * Function used to get all pages from database
      *
      * @param $params
      *
