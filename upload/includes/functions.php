@@ -1486,13 +1486,12 @@ function increment_views($id, $type = null): bool
                 }
 
                 if ($userid) {
-                    $log_array = [
+                    insert_log('watch_a_video', [
                         'success'       => 'NULL',
                         'action_obj_id' => $video['videoid'],
                         'userid'        => $userid,
                         'details'       => $video['title']
-                    ];
-                    insert_log('watch_a_video', $log_array);
+                    ]);
                 }
                 $return = true;
             } else {

@@ -4,7 +4,7 @@
             {lang('default_x',lang('poster'))|ucfirst} {if Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3','14')}<i class="glyphicon glyphicon-chevron-down pull-right"></i>{/if}
         </h4>
         <div class="sectionContent" style="display: none;">
-            <div class="row">
+            <div class="row" style="margin-left: 5px; margin-right: 5px;">
                 {foreach from=$vidthumbs_poster item=vid_thumb}
                     <div class="col-md-3">
                         <div class="form-group text-center">
@@ -17,7 +17,7 @@
             </div>
             <div style="clear: both;"></div>
             {ANCHOR place="before_edit_video_form_thumbs_upload"}
-            <div class="row">
+            <div class="row" style="margin-left: 5px; margin-right: 5px;">
                 <h5>{lang code='upload_poster'}</h5>
                 <input name="vid_thumb_poster[]" id="new_thumbs_poster" type="file"/>
                 <label for="upload_thumbs_poster"></label>

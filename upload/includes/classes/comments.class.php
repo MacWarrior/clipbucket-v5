@@ -439,15 +439,14 @@ class Comments extends Objects
         $user_email = user_email() ?? $anonym_email;
         $type_label = self::getTypeLabel($type);
 
-        $log_array = [
-            'success'        => 'yes',
+        insert_log($type . '_comment', [
+            'success'        => $comment_id ? 'yes' : 'no',
             'action_obj_id'  => $comment_id,
             'action_done_id' => $type_id,
-            'details'        => 'commented a '.$type_label,
+            'details'        => 'commented a ' . $type_label,
             'username'       => $user_name,
             'useremail'      => $user_email
-        ];
-        insert_log($type . '_comment', $log_array);
+        ]);
 
         addFeed(['action' => 'comment_video', 'comment_id' => $comment_id, 'object_id' => $type_id, 'object' => 'video']);
 

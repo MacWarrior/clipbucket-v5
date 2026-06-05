@@ -226,13 +226,12 @@ class Upload
             }
 
             //logging Upload
-            $log_array = [
-                'success'       => 'yes',
+            insert_log('upload_video', [
+                'success'       => $insert_id ? 'yes' : 'no',
                 'action_obj_id' => $insert_id,
                 'userid'        => $userid,
                 'details'       => $array['title']
-            ];
-            insert_log('upload_video', $log_array);
+            ]);
 
             Clipbucket_db::getInstance()->update(tbl('users'), ['total_videos'], ['|f|total_videos+1'], ' userid=\'' . $userid . '\'');
 
@@ -891,6 +890,10 @@ class Upload
             $small_size = DirPath::get('avatars') . $uid . '-small.' . $ext;
             CBPhotos::getInstance()->createImage($file_path, $file_path, $ext, AVATAR_SIZE, AVATAR_SIZE);
             CBPhotos::getInstance()->createImage($file_path, $small_size, $ext, AVATAR_SMALL_SIZE, AVATAR_SMALL_SIZE);
+            insert_log($type . '_upload', [
+                'action_obj_id' => $uid,
+                'success'       => 'yes'
+            ]);
             return $file_name;
         }
         e(lang('class_error_occured'));

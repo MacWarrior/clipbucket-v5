@@ -534,6 +534,9 @@ function getInfoTmdb(videoid, type, video_title, page,sort, sort_order) {
 }
 
 function saveInfoTmdb(tmdb_video_id, type, videoid) {
+    if ($('#link_video_link').hasClass('active')) {
+        return saveInfoTmdbRemote(tmdb_video_id, type, videoid);
+    }
     showSpinner();
     $.ajax({
         url: baseurl+"actions/tmdb_import.php",
@@ -761,7 +764,7 @@ function deleteSubtitle(number, videoid) {
     }
 }
 
-function displayThumbSection(type, video_id, html) {
+function displayThumbSection(type, video_id, html, parent_div) {
     if (type != 'thumb' && type != 'poster' && type != 'backdrop') {
         return;
     }
@@ -785,9 +788,10 @@ function displayThumbSection(type, video_id, html) {
                 $(parent_div).find('.sectionContent').show();
             }
         }
-
-        listenerUploadThumbs($('input[id^="videoid_"][value="' + video_id + '"]').parents('[id^=tab]')[0], video_id)
-
+        if (typeof parent_div === 'undefined') {
+            parent_div = $('input[id^="videoid_"][value="' + video_id + '"]').parents('[id^=tab]')[0];
+        }
+        listenerUploadThumbs(parent_div, video_id)
     }
 }
 

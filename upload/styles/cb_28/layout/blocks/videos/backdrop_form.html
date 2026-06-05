@@ -9,7 +9,7 @@
                 {$formObj->createField($sharingOptions['fields']['use_backdrop_as_default_thumb'])}
                 <hr/>
             {/if}
-            <div class="row">
+            <div class="row" style="margin-left: 5px; margin-right: 5px;">
                 {foreach from=$vidthumbs_backdrop item=vid_thumb}
                     <div class="col-md-3">
                         <div class="form-group text-center">
@@ -22,7 +22,7 @@
             </div>
             <div style="clear: both;"></div>
             {ANCHOR place="before_edit_video_form_thumbs_upload"}
-            <div class="row">
+            <div class="row" style="margin-left: 5px; margin-right: 5px;">
                 <h5>{lang code='upload_backdrop'}</h5>
                 <input name="vid_thumb_backdrop[]" id="new_thumbs_backdrop" type="file"/>
                 <label for="upload_thumbs_backdrop"></label>
