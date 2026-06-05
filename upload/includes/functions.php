@@ -1128,6 +1128,11 @@ function lang($var, $params = [])
     }
 }
 
+function lang_js($var, $params = [])
+{
+   return addslashes(lang($var, $params));
+}
+
 /**
  * @return mixed
  * @throws Exception

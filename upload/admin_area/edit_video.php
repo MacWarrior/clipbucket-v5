@@ -41,8 +41,8 @@ $breadcrumb[2] = ['title' => 'Editing : ' . display_clean($data['title']), 'url'
 
 //Performing Video Actions
 if ($_GET['mode'] != '') {
-    $modedata = CBvideo::getInstance()->action($_GET['mode'], $video_id);
-    assign('modedata', $modedata);
+//    $modedata = CBvideo::getInstance()->action($_GET['mode'], $video_id);
+//    assign('modedata', $modedata);
 
     //add parameter to display message after redirect
     if ($_GET['mode'] === 'delete') {

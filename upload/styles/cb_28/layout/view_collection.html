@@ -129,7 +129,7 @@
                     {/if}
                     {if User::getInstance()->getCurrentUserID()}
                         {if config('enable_favorite_icon_collection') == 'yes' && User::getInstance()->isUserConnected()}
-                            <span class="{if Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '8')} manage_favorite {else} disabled {/if} watch-rating-icon pointer glyphicon glyphicon-heart{if !$is_favorite}-empty " title="{lang('add_to_my_favorites')}{/if}" title="{lang('remove_from_favorites')}" style="font-size: 20px;"></span>
+                            <span class="{if Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '8')} manage_favorite {else} disabled {/if} watch-rating-icon pointer glyphicon glyphicon-heart{if !$is_favorite}-empty " title="{lang('add_to_my_favorites')|escape:htmlall}{/if}" title="{lang('remove_from_favorites')|escape:htmlall}" style="font-size: 20px;"></span>
                         {else}
                             <a class="btn btn-ghost" id="addToFav" {if Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '8')} onclick="slide_up_watch_video('#video_action_result_cont');_cb.add_to_favNew('collection','{$c.collection_id}').catch((e)=>{
                                     });"
@@ -263,6 +263,6 @@
     let total_comments = "{$c.total_comments}";
     let object_type = "{$object_type}";
     let ids_to_check_progress = JSON.parse('{$ids_to_check_progress}');
-    lang['add_to_my_favorites'] = '{lang('add_to_my_favorites')}';
-    lang['remove_from_favorites'] = '{lang('remove_from_favorites')}';
+    lang['add_to_my_favorites'] = '{lang_js('add_to_my_favorites')}';
+    lang['remove_from_favorites'] = '{lang_js('remove_from_favorites')}';
 </script>

@@ -1,17 +1,17 @@
 <script type="text/javascript">
     var imageurl          = '{$imageurl}';
-    var lang_reply_to     = "{lang code='reply_to'}";
-    var lang_reply        = "{lang code='reply'}";
-    var lang_load_more    = "{lang code='load_more'}";
-    var lang_loading      = "{lang code='loading'}";
-    var lang_add_comment  = "{lang code='user_add_comment'}";
+    var lang_reply_to     = '{lang_js('reply_to')}';
+    var lang_reply        = '{lang_js('reply')}';
+    var lang_load_more    = '{lang_js('load_more')}';
+    var lang_loading      = '{lang_js('loading')}';
+    var lang_add_comment  = '{lang_js('user_add_comment')}';
 
     var uploadError = false;
     var lang = new Array();
-        lang['saveData']            = '{lang code='save_data'}';
-        lang['savingData']          = '{lang code='saving'}';
-        lang['upload_video_button'] = '{lang code="upload_video_button"}';
-        lang['cancel']              = '{lang code="cancel"}';
+        lang['saveData']            = '{lang_js('save_data')}';
+        lang['savingData']          = '{lang_js('saving')}';
+        lang['upload_video_button'] = '{lang_js('upload_video_button')}';
+        lang['cancel']              = '{lang_js('cancel')}';
     var uploadScriptPath = '{$uploaderDetails.uploadScriptPath}';
 
     function updateEmbed(width,height) {
@@ -79,10 +79,10 @@ function doUpdateVideo(formId,ID)
             collectionID = '{$cid}';
         {/if}
     {/if}
-    lang['browsePhrase'] = '{lang code="browse_photos"}';
-    lang['saveData'] = "{lang code='save_data'}";
-    lang['savingData'] = "{lang code='saving'}";
-    lang['upPhoto'] = "{lang code='update_photo'}";
+    lang['browsePhrase'] = '{lang_js('browse_photos')}';
+    lang['saveData'] = '{lang_js('save_data')}';
+    lang['savingData'] = '{lang_js('saving')}';
+    lang['upPhoto'] = '{lang_js('update_photo')}';
     var uploadScriptPath = '{$photoUploaderDetails.uploadScriptPath}';
 
     function photoMessage(message,ID,fade)

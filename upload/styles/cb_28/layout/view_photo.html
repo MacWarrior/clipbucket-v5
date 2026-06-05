@@ -97,7 +97,7 @@
                                         }
                                     {/if}
                                     {if config('enable_favorite_icon_photo') == 'yes' && User::getInstance()->isUserConnected()}
-                                        <span class="manage_favorite watch-rating-icon pointer glyphicon glyphicon-heart{if !$is_favorite}-empty " title="{lang('add_to_my_favorites')}{/if}" title="{lang('remove_from_favorites')}" style="font-size: 20px;"></span>
+                                        <span class="manage_favorite watch-rating-icon pointer glyphicon glyphicon-heart{if !$is_favorite}-empty " title="{lang('add_to_my_favorites')|escape:htmlall}{/if}" title="{lang('remove_from_favorites')|escape:htmlall}" style="font-size: 20px;"></span>
                                     {/if}
                                 </div>
                             </div>
@@ -315,9 +315,9 @@
                     init_readonly_tags('tags', '#list_tags');
                 }
             });
-            lang['add_to_my_favorites'] = '{lang('add_to_my_favorites')}';
-            lang['remove_from_favorites'] = '{lang('remove_from_favorites')}';
-            lang['photo'] = '{lang('photo')}';
+            lang['add_to_my_favorites'] = '{lang_js('add_to_my_favorites')}';
+            lang['remove_from_favorites'] = '{lang_js('remove_from_favorites')}';
+            lang['photo'] = '{lang_js('photo')}';
         </script>
 {/if}
     </div>

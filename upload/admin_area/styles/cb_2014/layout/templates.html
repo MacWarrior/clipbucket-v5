@@ -49,12 +49,12 @@
     const format_display = $.datepicker.regional[language].dateFormat.replace(/\W/g, ' ').replace('mm', 'M');
     const version_compatibility = '{Update::getInstance()->getCurrentCoreVersion()}';
     let lang=[];
-    lang['save'] = '{lang('save')}';
-    lang['error_occurred'] = '{lang('error_occurred')}';
-    lang['saved_success'] = '{lang('saved_success')}';
-    lang['saved_success'] = '{lang('saved_success')}';
-    lang['edit'] = '{lang('edit')}';
-    lang['end_edition'] = "{lang('end_edition')}";
+    lang['save'] = '{lang_js('save')}';
+    lang['error_occurred'] = '{lang_js('error_occurred')}';
+    lang['saved_success'] = '{lang_js('saved_success')}';
+    lang['saved_success'] = '{lang_js('saved_success')}';
+    lang['edit'] = '{lang_js('edit')}';
+    lang['end_edition'] = '{lang_js('end_edition')}';
     const html_icon_compatibility_ok = '<i class="glyphicon glyphicon-ok green" title="{lang('template_compatible')}"></i>';
     const html_icon_compatibility_ko = '<i class="glyphicon glyphicon-warning-sign orange" title="{lang('template_not_compatible')}"></i>';
 </script>
