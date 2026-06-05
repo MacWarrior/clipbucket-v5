@@ -239,6 +239,7 @@ class cbpage
             e(lang('page_doesnt_exist'));
         }
         if (!error()) {
+            Clipbucket_db::getInstance()->delete(tbl('pages_translations'), ['page_id'], [mysql_clean($id)]);
             Clipbucket_db::getInstance()->delete(tbl($this->page_tbl), ['page_id'], [mysql_clean($id)]);
             e(lang('page_deleted'), 'm');
         }
@@ -303,7 +304,7 @@ class cbpage
 
             case 'delete';
                 if ($page['delete_able'] == 'yes') {
-                    Clipbucket_db::getInstance()->delete(tbl($this->page_tbl), ['page_id'], [(int)$id]);
+                    cbpage::getInstance()->delete_page($id);
                     e(lang('page_deleted'), 'm');
                 } else {
                     e(lang('you_cant_delete_this_page'), 'w');
