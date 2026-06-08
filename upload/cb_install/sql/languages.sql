@@ -1919,3 +1919,6 @@ VALUES ('ongoing_conversion'),
        ('continue'),
        ('cant_upload_subtitle_until_video_is_converted'),
        ('video_isnt_saved_yet');
+INSERT INTO `{tbl_prefix}languages_keys` (`language_key`)
+VALUES ('noted_x'),
+    ('over_x_ratings');

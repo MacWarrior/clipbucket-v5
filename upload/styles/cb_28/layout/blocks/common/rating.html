@@ -1,5 +1,9 @@
 {$ratedBy = has_rated(user_id(),$id,$type)}
 <div class="clearfix rating">
+    {if config('enable_external_rate_field') == 'yes' && config('enable_external_rate_ratings_on_fo')=='yes' && !empty($external_rate)}
+        <div class="stars five" style="--rating: {$external_rate * 10}%;"
+             title="{lang('noted_x', $external_rate)}{if config('enable_external_ratings_field')=='yes'}&nbsp;{lang('over_x_ratings', $external_ratings)}{/if}"></div>
+    {/if}
     <div class="clearfix rating-holder">
         <div class="likes like-dislike{if $ratedBy == 'liked'} rated{/if}">
             <a {if !$disable} onclick="_cb.rateNew('{$id}','5','{$type}', this)" {else} class="disabled cursor_default"{/if} href="javascript:void(0);"><span class="icon-thumbup"></span></a>
