@@ -117,6 +117,9 @@ if (empty($mode) || $mode == 'view') {
         if (!$page) {
             e('Page does not exist');
         }
+        $breadcrumb[2] = ['title' => lang('editing_template', $page['page_title']), 'url' => DirPath::getUrl('admin_area') . 'manage_pages.php?mode=edit&pid=' . display_clean($page['page_id'])];
+    } else {
+        $breadcrumb[2] = ['title' => lang('add_new_page'), 'url' => DirPath::getUrl('admin_area') . 'manage_pages.php?mode=new'];
     }
     $languages = Language::getInstance()->get_langs(true);
     $first_display = 0;

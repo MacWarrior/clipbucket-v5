@@ -103,5 +103,17 @@ class MWIP extends \Migration
             'fr'=>'Mettre à jour la page',
             'en'=>'Update page'
         ]);
+        self::generateTranslation('add_new_page', [
+            'fr'=>'Ajouter une nouvelle page',
+            'en'=>'Add new page'
+        ]);
+        self::generateTranslation('edit_page', [
+            'fr'=>'Modifier la page',
+            'en'=>'Edit page'
+        ]);
+        self::generateTranslation('translations', [
+            'fr'=>'Traductions',
+            'en'=>'Translations'
+        ]);
     }
 }

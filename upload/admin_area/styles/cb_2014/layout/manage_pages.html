@@ -1,11 +1,17 @@
-<div class="heading">
-    <h2>{lang('manage_x', lang('pages')|lower)}</h2>
-</div>
-
 {if $mode =="edit" || $mode == 'new'}
     <form method="post">
-
-        <legend>Add New Page</legend>
+        <div class="row">
+            <div class="col-md-6">
+                <span style="font-size: 21px; ">{if $mode == 'new'}{lang('add_new_page')}{else}{lang('edit_page')}{/if}</span>
+            </div>
+            <div class="col-md-6" style="text-align: right;">
+                <span style="font-size: 16px;">{lang('translations')} : </span>
+                {foreach from=$languages item=language}
+                    <a href="javascript:void(0);" data-id="{$language.language_id}" class="flag_language" title="{lang('edit_page_translation', $language.language_name)} : {if $language.is_specified}{lang('specified')}{else}{lang('no_specified')}{/if}"><img style="height: 18px; " class="{if $language.is_shown}selected{/if}{if !$language.is_specified} grey_filter{/if}" src="{get_country_flag_url($language.language_flag)}"></a>
+                {/foreach}
+            </div>
+        </div>
+        <hr/>
         <div class="row">
             <div class="col-md-6">
                 <div class="form-group">
@@ -13,16 +19,6 @@
                     <input name="page_name" class="form-control" type="text" id="page_name" value="{display_clean($page.page_name)}"></td>
                 </div>
             </div>
-        </div>
-        <div class="row form-group col-md-12">
-            {foreach from=$languages item=language}
-                <a href="javascript:void(0);" data-id="{$language.language_id}" class="flag_language"
-                   title="{lang('edit_page_translation', $language.language_name)} : {if $language.is_specified}{lang('specified')}{else}{lang('no_specified')}{/if}"
-                >
-                    <img style="height: 18px; " class="{if $language.is_shown}selected{/if} {if !$language.is_specified}grey_filter{/if}"
-                         src="{get_country_flag_url($language.language_flag)}">
-                </a>
-            {/foreach}
         </div>
         <div class="row">
 
@@ -47,6 +43,9 @@
     </form>
 {/if}
 {if $mode=='manage'}
+    <div class="heading">
+        <h2>{lang('manage_x', lang('pages')|lower)}</h2>
+    </div>
     <form name="page_form" action="?" method="post">
         <div class="btn-group">
             <input class="btn btn-primary btn-xs btn" type="submit" name="activate_selected" value="{lang code='activate'}"/>
