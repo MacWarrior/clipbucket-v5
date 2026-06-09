@@ -189,7 +189,7 @@
         let donutchart_photos = '{Flag::getAll(['count'=>true, 'element_type'=>'photo'])}';
     {/if}
 
-    {if config('collectionsSection') == 'yes'}
+    {if config('collectionsSection') == 'yes' && (config('photosSection') == 'yes' || config('videosSection')=='yes' )}
         let piechart_collections = '{Collection::getInstance()->getAll(['count'=>'yes'])}';
         let donutchart_collections = '{Flag::getAll(['count'=>true, 'element_type'=>'collection'])}';
     {/if}
