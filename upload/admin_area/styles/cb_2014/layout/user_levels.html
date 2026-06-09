@@ -21,7 +21,7 @@
                     <span class="lbl"></span>
                 </td>
                 <td>
-                    <input name="user_level_is_default" data-id="{$levels[l].user_level_id}"{if $levels[l].user_level_active != 'yes'} disabled title="{lang('cannot_be_default_until_activated')|escape:'htmlall'}"{elseif $levels[l].user_level_is_default == 'yes'} checked disabled="disabled" title="{lang('cannot_remove_default_have_to_add_one')}"{elseif in_array($levels[l].user_level_id, [3,4])} disabled="disabled" title="{lang('userlevel_cannot_be_default')}"{/if} type="checkbox" class="ace ace-switch ace-switch-5 user_level_is_default"/>
+                    <input name="user_level_is_default" data-id="{$levels[l].user_level_id}"{if $levels[l].user_level_active != 'yes'} disabled title="{display_clean(lang('cannot_be_default_until_activated'))}"{elseif $levels[l].user_level_is_default == 'yes'} checked disabled="disabled" title="{lang('cannot_remove_default_have_to_add_one')}"{elseif in_array($levels[l].user_level_id, [3,4])} disabled="disabled" title="{lang('userlevel_cannot_be_default')}"{/if} type="checkbox" class="ace ace-switch ace-switch-5 user_level_is_default"/>
                     <span class="lbl"></span>
                 </td>
                 <td>{userquery::getInstance()->get_level_users($levels[l].user_level_id,true)}</td>

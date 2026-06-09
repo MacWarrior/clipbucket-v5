@@ -19,7 +19,7 @@
                             <li><a href="{DirPath::getUrl('admin_area')}edit_video.php?video={$data.videoid}&amp;mode=deactivate">{lang code='deactivate'}</a></li>
                         {/if}
 
-                        {if $modedata!='featured'}
+                        {if $data.featured !='yes'}
                             <li><a href="{DirPath::getUrl('admin_area')}edit_video.php?video={$data.videoid}&amp;mode=featured">{lang code='make_featured'}</a></li>
                         {else}
                             <li><a href="{DirPath::getUrl('admin_area')}edit_video.php?video={$data.videoid}&amp;mode=unfeature">{lang code='make_unfeatured'}</a></li>
@@ -77,7 +77,7 @@
 				</span>
 				<span class="btn btn-app btn-sm btn-grey no-hover">
 					<span class="line-height-1">
-					{if $modedata!='featured'}
+					{if $data.featured !='yes'}
 						<span class="glyphicon glyphicon-remove"></span>
 					{else}
 						<span class=" glyphicon glyphicon-ok smaller-90"></span>

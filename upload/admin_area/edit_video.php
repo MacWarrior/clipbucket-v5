@@ -31,6 +31,18 @@ if (isset($_POST['update'])) {
         }
     }
 }
+
+
+//Performing Video Actions
+if ($_GET['mode'] != '') {
+    CBvideo::getInstance()->action($_GET['mode'], $video_id);
+
+    //add parameter to display message after redirect
+    if ($_GET['mode'] === 'delete') {
+        sessionMessageHandler::add_message(lang('class_vdo_del_msg'), 'm',  DirPath::getUrl('admin_area') . 'video_manager.php');
+    }
+}
+
 $data = Video::getInstance()->getOne(['videoid'=>$video_id]);
 
 /* Generating breadcrumb */
@@ -38,17 +50,6 @@ global $breadcrumb;
 $breadcrumb[0] = ['title' => lang('videos'), 'url' => ''];
 $breadcrumb[1] = ['title' => lang('manage_x', strtolower(lang('videos'))), 'url' => DirPath::getUrl('admin_area') . 'video_manager.php'];
 $breadcrumb[2] = ['title' => 'Editing : ' . display_clean($data['title']), 'url' => DirPath::getUrl('admin_area') . 'edit_video.php?video=' . display_clean($video_id)];
-
-//Performing Video Actions
-if ($_GET['mode'] != '') {
-//    $modedata = CBvideo::getInstance()->action($_GET['mode'], $video_id);
-//    assign('modedata', $modedata);
-
-    //add parameter to display message after redirect
-    if ($_GET['mode'] === 'delete') {
-        sessionMessageHandler::add_message(lang('class_vdo_del_msg'), 'm',  DirPath::getUrl('admin_area') . 'video_manager.php');
-    }
-}
 
 //Check Video Exists or Not
 if (myquery::getInstance()->video_exists($video_id)) {
