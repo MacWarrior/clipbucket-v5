@@ -104,7 +104,7 @@
                                             {/if}
                                             {assign var=field value=$requiredFields.fields.external_ratings}
                                             {$field.class='form-control'}
-                                            {if config('enable_external_rate_field') == 'yes'}
+                                            {if config('enable_external_ratings_field') == 'yes'}
                                                 <div class="col-md-6" >
                                                     <label><strong>{$field.title|truncate:80}</strong> {if $field.hint_icon}<span class="fa fa-question-circle tips cursor_help" title="{$field.hint_icon}"></span> {/if}</label><br>
                                                     {if $field.hint_1}
