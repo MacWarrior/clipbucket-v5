@@ -57,7 +57,7 @@
                                                     <a class="btn btn-success btn-xs" onclick="_cb.throwHeadMsg('danger','{lang code=no_vid_in_playlist}', 5000, true);">{lang code='watch'}</a>
                                                 {/if}
 
-                                                <a class="btn btn-default btn-xs" href="javascript:void(0);" onmousedown="delete_video('delete_icon_a','{$playlists[plist].playlist_id}','{lang code="remove_playlist_confirm"}','?mode=manage_playlist&amp;delete_pl={$playlists[plist].playlist_id}')"
+                                                <a class="btn btn-default btn-xs" href="javascript:void(0);" onmousedown="delete_video('delete_icon_a','{$playlists[plist].playlist_id}',lang_remove_playlist_confirm,'?mode=manage_playlist&amp;delete_pl={$playlists[plist].playlist_id}')"
                                                    id="delete_icon_a-{$playlists[plist].playlist_id}">{lang code='delete'}</a>
                                             </span>
                                         </td>
@@ -129,4 +129,5 @@
 </div>
 <script>
     var available_tags = JSON.parse('{$available_tags|json_encode|escape:'javascript'}');
+    let lang_remove_playlist_confirm = '{lang_js('remove_playlist_confirm')}';
 </script>

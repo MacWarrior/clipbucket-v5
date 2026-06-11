@@ -394,6 +394,7 @@ class Video extends Objects
         $param_not_join_user_profile = $params['not_join_user_profile'] ?? false;
         $param_join_flag= $params['join_flag'];
         $param_get_detail = $params['get_detail'] ?? false;
+        $param_date_span = $params['date_span'] ?? false;
 
         $conditions = [];
         if( $param_videoid !== false ){
@@ -427,6 +428,9 @@ class Video extends Objects
         }
         if( $param_condition ){
             $conditions[] = '(' . $param_condition . ')';
+        }
+        if ($param_date_span) {
+            $conditions[] = Search::date_margin($this->getTableName() . '.date_added ', $param_date_span);
         }
 
         if( $param_search ){
