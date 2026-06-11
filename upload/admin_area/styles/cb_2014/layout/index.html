@@ -113,14 +113,14 @@
 <div class="row">
     <div class="col-md-6">
         <ul class="nav nav-tabs">
-            {if config('videosSection') =='yes' || config('photosSection') == 'yes' || config('collectionsSection') == 'yes' || config('channelsSection') == 'yes'}
+            {if config('videosSection') =='yes' || config('photosSection') == 'yes'  || config('channelsSection') == 'yes'}
                 <li class="active">
                     <a data-toggle="tab" href="#overall_statistics">
                         <h5>{lang('overall_statistics')}</h5>
                     </a>
                 </li>
             {/if}
-            {if config('videosSection') =='yes' || config('photosSection') == 'yes' || config('collectionsSection') == 'yes' || config('channelsSection')=='yes'}
+            {if config('videosSection') =='yes' || config('photosSection') == 'yes'  || config('channelsSection')=='yes'}
                 <li {if config('videosSection') !='yes' && config('photosSection') != 'yes' && config('collectionsSection') != 'yes' && config('channelsSection') != 'yes'} class="active" {/if}>
                     <a data-toggle="tab" href="#flagged_objects">
                         <h5>{lang code="flagged_obj"}</h5>
@@ -141,17 +141,17 @@
             {/if}
         </ul>
         <div class="tab-content">
-            {if config('videosSection') =='yes' || config('photosSection') == 'yes' || config('collectionsSection') == 'yes' || config('channelsSection') == 'yes'}
+            {if config('videosSection') =='yes' || config('photosSection') == 'yes' || config('channelsSection') == 'yes'}
                 <div id="overall_statistics" class="tab-pane active">
                     <div id="piechart" style="height:400px;"></div>
                 </div>
             {/if}
-            {if config('videosSection') =='yes' || config('photosSection') == 'yes' || config('collectionsSection') == 'yes' || config('channelsSection') == 'yes'}
-                <div id="flagged_objects" class="tab-pane {if config('videosSection') !='yes' && config('photosSection') != 'yes' && config('collectionsSection') != 'yes' && config('channelsSection') != 'yes'} active {/if}">
+            {if config('videosSection') =='yes' || config('photosSection') == 'yes' || config('channelsSection') == 'yes'}
+                <div id="flagged_objects" class="tab-pane ">
                     <div id="donutchart" style="height:400px;"></div>
                 </div>
             {/if}
-            <div id="users_statistics" class="tab-pane {if config('videosSection') !='yes' && config('photosSection') != 'yes' && config('collectionsSection') != 'yes' && config('channelsSection') != 'yes'} active {/if}">
+            <div id="users_statistics" class="tab-pane {if config('videosSection') !='yes' && config('photosSection') != 'yes' && config('channelsSection') != 'yes'} active {/if}">
                 <div id="ubarchart" style="height:400px;"></div>
             </div>
             {if config('videosSection')=='yes'}
