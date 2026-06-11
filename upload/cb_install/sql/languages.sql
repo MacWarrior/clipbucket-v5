@@ -1918,4 +1918,11 @@ VALUES ('ongoing_conversion'),
        ('avatar_upload'),
        ('continue'),
        ('cant_upload_subtitle_until_video_is_converted'),
-       ('video_isnt_saved_yet');
+       ('video_isnt_saved_yet'),
+       ('view_comment'),
+       ('view_all_comments'),
+       ('view_video_comments'),
+       ('view_collection_comments'),
+       ('view_photo_comments'),
+       ('confirm_delete_comment'),
+       ('comment_id');

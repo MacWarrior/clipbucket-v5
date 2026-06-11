@@ -1,6 +1,6 @@
 {
   "version":"5.5.3",
-  "revision":"145",
+  "revision":"146",
   "status":"stable",
   "detail":[
     {
@@ -26,6 +26,7 @@
         ,"Update video allowed extensions display"
         ,"Update TMDB search interface"
         ,"Update manage tags type filter"
+        ,"Update interfaces display when medias are disabled"
         ,"Add links to flagged tags"
         ,"Hide poster & backdrop tabs when empty on video edition page"
         ,"Only show template editor menu while in dev mode"
