@@ -141,6 +141,7 @@ class cbpage
         $order = null;
         $limit = null;
         $conds = [];
+        $join = '';
         $cond = false;
         if (isset($params['order'])) {
             $order = $params['order'];
@@ -156,8 +157,13 @@ class cbpage
         if (isset($params['display_only'])) {
             $conds[] = ' display=\'yes\' ';
         }
+        $select = $this->page_tbl. '.*';
+        if (isset($params['translated_code'])) {
+            $join = ' LEFT JOIN ' . cb_sql_table('pages_translations') . ' ON ' . $this->page_tbl . '.page_id = pages_translations.page_id AND pages_translations.language_id = ' . Language::getInstance()->lang_id;
+            $select .= ', IFNULL(pages_translations.page_title, ' . $this->page_tbl . '.page_name) as display_name ';
+        }
 
-        $result = Clipbucket_db::getInstance()->select(tbl($this->page_tbl), '*', empty($conds) ? '1' : implode(' AND ',$conds), $limit, $order);
+        $result = Clipbucket_db::getInstance()->select(cb_sql_table($this->page_tbl) . $join, $select, empty($conds) ? '1' : implode(' AND ', $conds), $limit, $order);
         if (count($result) > 0) {
             return $result;
         }

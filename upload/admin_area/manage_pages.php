@@ -102,7 +102,7 @@ if (empty($mode) || $mode == 'view') {
         e(mysql_clean($_GET['msg']), 'm');
     }
     assign('mode', 'manage');
-    assign('cbpages', cbpage::getInstance()->get_pages());
+    assign('cbpages', cbpage::getInstance()->get_pages(['translated_code'=>true]));
 } else {
     if (!Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '999')) {
         SessionMessageHandler::add_message('Sorry, you cannot perform this action until the application has been fully updated by an administrator', 'e', User::getInstance()->getDefaultHomepageFromUserLevel());

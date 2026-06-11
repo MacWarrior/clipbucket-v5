@@ -37,7 +37,7 @@ $(document).ready(function () {
         const id = $(this).data('id');
         $('.flag_language img').removeClass('selected');
         $('.flag_language[data-id="' + id + '"] img').addClass('selected');
-        const form = $(this).parent().parent();
+        const form = $(this).parents('form');
         const textareas = form.find('textarea');
         textareas.hide();
         form.find('input[name^="page_title"]').hide();

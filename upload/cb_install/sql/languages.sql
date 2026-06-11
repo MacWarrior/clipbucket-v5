@@ -1932,4 +1932,6 @@ VALUES ('ongoing_conversion'),
        ('no_specified'),
        ('specified'),
        ('new_page'),
-       ('update_page');
+       ('update_page'),
+       ('edit_page'),
+       ('translations');
