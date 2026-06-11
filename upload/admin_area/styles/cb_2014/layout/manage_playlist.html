@@ -55,7 +55,7 @@
                                 <td>{$playlists[plist].date_added|date_format}</td>
                                 <td>{CBvideo::getInstance()->action->count_playlist_items($playlists[plist].playlist_id)|number_format}</td>
                                 <td><a href="?mode=edit_playlist&amp;pid={$playlists[plist].playlist_id}">{lang code='view_edit_playlist'}</a></td>
-                                <td><a href="javascript:void(0);" onmousedown="delete_video('delete_icon_a','{$playlists[plist].playlist_id}','{lang code="remove_playlist_confirm"}','?mode=manage_playlist&amp;delete_pl={$playlists[plist].playlist_id}')" id="delete_icon_a-{$playlists[plist].playlist_id}">{lang code='delete'}</a></td>
+                                <td><a href="javascript:void(0);" onmousedown="delete_video('delete_icon_a','{$playlists[plist].playlist_id}',lang_remove_playlist_confirm,'?mode=manage_playlist&amp;delete_pl={$playlists[plist].playlist_id}')" id="delete_icon_a-{$playlists[plist].playlist_id}">{lang code='delete'}</a></td>
                             </tr>
                             {/section}
                         </table>
@@ -127,4 +127,5 @@
 <script>
     let available_tags = JSON.parse('{$available_tags|json_encode|escape:'javascript'}');
     let id_input = 'playlists_tags';
+    let lang_remove_playlist_confirm = '{lang_js('remove_playlist_confirm')}';
 </script>

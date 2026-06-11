@@ -114,25 +114,25 @@
 
 <script>
     let errors = {
-        "empty_name": "{lang code='usr_uname_err'}",
-        "name_length": "{lang code='user_name_invalid_len'}",
-        "name_invalid_chars": "{lang code='usr_uname_err3'}",
-        "pass_mismatch": "{lang code='usr_pass_err3'}",
-        "empty_pass": "{lang code='usr_pass_err2'}",
-        "empty_email": "{lang code='usr_email_err1'}",
-        "invalid_email": "{lang code='usr_email_err2'}",
-        "user_exists": "{lang code='usr_uname_err2'}",
-        "email_exists": "{lang code='usr_email_err3'}",
-        "email_unauthorized": "{lang code='signup_error_email_unauthorized'}",
-        "weak_pass": "{lang code='weak_pass'}",
-        "username_spaces": "{lang code='username_spaces'}"
+        "empty_name": '{lang_js('usr_uname_err')}',
+        "name_length": '{lang_js('user_name_invalid_len')}',
+        "name_invalid_chars": '{lang_js('usr_uname_err3')}',
+        "pass_mismatch": '{lang_js('usr_pass_err3')}',
+        "empty_pass": '{lang_js('usr_pass_err2')}',
+        "empty_email": '{lang_js('usr_email_err1')}',
+        "invalid_email": '{lang_js('usr_email_err2')}',
+        "user_exists": '{lang_js('usr_uname_err2')}',
+        "email_exists": '{lang_js('usr_email_err3')}',
+        "email_unauthorized": '{lang_js('signup_error_email_unauthorized')}',
+        "weak_pass": '{lang_js('weak_pass')}',
+        "username_spaces": '{lang_js('username_spaces')}'
     };
 
     let config_username_spaces = {if config('allow_username_spaces') == 'yes'}true{else}false{/if};
     let config_min_username = {config('min_username')};
     let config_max_username = {config('max_username')};
 
-    let lang_password = "{lang code='password'}";
+    let lang_password = '{lang_js('password')}';
 
     let format_date_js = '{get_date_js()}';
     let language = '{$lang_obj->getLang()}';
