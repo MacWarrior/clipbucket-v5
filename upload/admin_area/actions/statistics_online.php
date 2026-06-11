@@ -5,7 +5,9 @@ require_once dirname(__FILE__, 3) . '/includes/admin_config.php';
 
 User::getInstance()->hasPermissionAjax('admin_access');
 
-assign('ongoing_conversion', VideoConversionQueue::getAll(['count' => true, 'not_complete'=>true]));
+if (config('videosSection') == 'yes') {
+    assign('ongoing_conversion', VideoConversionQueue::getAll(['count' => true, 'not_complete' => true]));
+}
 assign('online_users', count(userquery::getInstance()->get_online_users()));
 $progress_tools = [];
 if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.0', '367')) {
