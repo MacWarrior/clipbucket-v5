@@ -1,8 +1,8 @@
 {$ratedBy = has_rated(user_id(),$id,$type)}
 <div class="clearfix rating">
-    {if config('enable_external_rate_field') == 'yes' && config('enable_external_rate_ratings_on_fo')=='yes' && !empty($external_rate)}
+    {if config('enable_external_rate_field') == 'yes' && config('enable_external_rate_ratings_on_fo')=='yes' && (!empty($external_rate) || !empty($external_ratings))}
         <div class="stars five" style="--rating: {$external_rate * 10}%;"
-             title="{lang('noted_x', $external_rate)}{if config('enable_external_ratings_field')=='yes'}&nbsp;{lang('over_x_ratings', $external_ratings)}{/if}"></div>
+             title="{lang('noted_x', $external_rate)}{if config('enable_external_ratings_field')=='yes' && $external_ratings > 0}&nbsp;{lang('over_x_ratings', $external_ratings)}{/if}"></div>
     {/if}
     <div class="clearfix rating-holder">
         <div class="likes like-dislike{if $ratedBy == 'liked'} rated{/if}">

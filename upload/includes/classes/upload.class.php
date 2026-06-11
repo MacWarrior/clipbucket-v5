@@ -450,7 +450,7 @@ class Upload
                     'max'               => 10,
                     'db_field'          => 'external_rate',
                     'hint_icon'         => lang('external_video_rate'),
-                    'validate_function' => 'intval'
+                    'validate_function' => 'floatval'
                 ];
             }
             if (config('enable_external_ratings_field') == 'yes') {
