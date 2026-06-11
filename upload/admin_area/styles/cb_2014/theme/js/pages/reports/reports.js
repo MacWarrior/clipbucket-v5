@@ -21,20 +21,21 @@ $(function () {
     var iteration = 0;
 
     function fetchData() {
-        // Daily Data //
-        function onDataReceveDaily(series_daily) {
 
-            data = series_daily;
-            $.plot("#daily_chart_id", data, options);
-            tooltip("#daily_chart_id", "#enableTooltipDaily");
+        function onDataReceived(series, type) {
+            const id = '#'+type+'_chart_id';
+            $.plot(id, series, options);
+            tooltip(id, "#enableTooltip" + capitalizeFirstLetter(type));
         }
-
+        // Daily Data //
         $.ajax({
-            url: admin_url + 'charts/reports/daily_activity_reports.php',
+            url: admin_url + 'charts/reports/activity_reports.php',
             type: "POST",
-            data: "videos=videos",
+            data: {span: 'today'},
             dataType: "json",
-            success: onDataReceveDaily,
+            success: function (series_daily) {
+                onDataReceived(series_daily, 'daily');
+            },
             error: function () {
             },
             complete: function () {
@@ -44,20 +45,14 @@ $(function () {
         // !Daily Data //
 
         // Week Data //
-        function onDataReceivedWeekly(series_weekly) {
-
-            data = series_weekly;
-
-            $.plot("#weekly_chart_id", data, options);
-            tooltip("#weekly_chart_id", "#enableTooltipWeekly");
-        }
-
         $.ajax({
-            url: admin_url + 'charts/reports/weekly_activity_reports.php',
+            url: admin_url + 'charts/reports/activity_reports.php',
             type: "POST",
-            data: "videos=videos",
+            data: {span: 'week'},
             dataType: "json",
-            success: onDataReceivedWeekly,
+            success: function (series_weekly) {
+                onDataReceived(series_weekly, 'weekly');
+            },
             error: function () {
             },
             complete: function () {
@@ -67,19 +62,15 @@ $(function () {
         // !Week Data //
 
         // Monthly Data //
-        function onDataReceveMonthly(series_monthly) {
-
-            data = series_monthly;
-            $.plot("#monthly_chart_id", data, options);
-            tooltip("#monthly_chart_id", "#enableTooltipMonthly");
-        }
 
         $.ajax({
-            url: admin_url + 'charts/reports/monthly_activity_reports.php',
+            url: admin_url + 'charts/reports/activity_reports.php',
             type: "POST",
-            data: "videos=videos",
+            data: {span: 'month'},
             dataType: "json",
-            success: onDataReceveMonthly,
+            success: function (series_monthly) {
+                onDataReceived(series_monthly, 'monthly');
+            },
             error: function () {
             },
             complete: function () {

@@ -1,8 +1,14 @@
 <?php
 class Search
 {
+    /**
+     * @throws Exception
+     */
     public static function date_margin($date_column = 'date_added', $date_margin = null): string
     {
+        if( !empty($date_margin) ){
+            $date_margin = mysql_clean($date_margin);
+        }
         switch ($date_margin) {
             case 'today':
                 return ' CURDATE() = DATE(' . $date_column . ') ';
