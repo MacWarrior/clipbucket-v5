@@ -13,8 +13,9 @@ class MWIP extends \Migration
     {
         $sql = 'CREATE TABLE IF NOT EXISTS `{tbl_prefix}video_audio_tracks` (
             `videoid` BIGINT(20) NOT NULL,
-            `track_number` VARCHAR(2) NULL,
+            `track_number` TINYINT NULL,
             `title` VARCHAR(64) NOT NULL,
+            `order` TINYINT NOT NULL,
             PRIMARY KEY (`videoid`, `track_number`)
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_520_ci;';
         self::query($sql);

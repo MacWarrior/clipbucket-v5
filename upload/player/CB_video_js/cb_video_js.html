@@ -188,14 +188,13 @@
         });
         {/literal}
     }
-
     //Initializing
     $(document).ready(function() {
-        var cb_player = new videojs('cb_video_js_' + video_id, cb_player_setup, cb_vjs_callback);
+        cb_player_obj = new videojs('cb_video_js_' + video_id, cb_player_setup, cb_vjs_callback);
         {if !empty($vdata['fov']) && config('enable_360_video') == 'yes'}
             let video_fov = '{$vdata['fov']}';
         {literal}
-            cb_player.vr({projection: video_fov});
+            cb_player_obj.vr({projection: video_fov});
         {/literal}
         {/if}
 
@@ -209,10 +208,10 @@
                 if( e.keyCode === 0 || e.keyCode === 32 )
                 {
                     e.preventDefault();
-                    if( cb_player.paused() ){
-                        cb_player.play();
+                    if( cb_player_obj.paused() ){
+                        cb_player_obj.play();
                     } else {
-                        cb_player.pause();
+                        cb_player_obj.pause();
                     }
                 }
             }
