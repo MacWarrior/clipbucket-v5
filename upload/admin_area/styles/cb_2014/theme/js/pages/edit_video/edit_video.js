@@ -172,6 +172,35 @@ function pageViewHistory(page) {
     getViewHistory(videoid, page);
 }
 
+function editAudioTrack(number) {
+    $('#buttons-' + number).css('display', 'inline');
+    $('#edit_sub_' + number).css('display', 'inline');
+    $('#span_sub_' + number).hide();
+}
+
+function cancelEditAudioTrack(number) {
+    $('#buttons-' + number).hide();
+    $('#edit_sub_' + number).hide();
+    $('#span_sub_' + number).show();
+}
+
+function saveAudioTrack(number) {
+
+    showSpinner();
+    $.ajax({
+        url: admin_url + 'actions/subtitle_edit.php',
+        type: "POST",
+        data: {title: $('#edit_sub_' + number).val(), videoid: videoid, number: number},
+        dataType: 'json',
+        success: function (result) {
+            $('#subtitles').html(result['template']);
+            hideSpinner();
+            $('.close').click();
+            $('.page-content').prepend(result['msg']);
+        }
+    });
+}
+
 $( document ).ready(function() {
     $("[id^=tags]").each(function(elem){
         init_tags(this.id, available_tags[this.id.replace('tags_', '')], '#list_'+this.id);
