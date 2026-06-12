@@ -16,7 +16,7 @@
                 <a class="btn btn-primary btn-sm" href="?mode=manage_items&amp;cid={$collection.collection_id}&amp;type={$collection.type}">
                     {lang("manage_items")}
                 </a>
-                <a class="btn btn-primary btn-sm" href="javascript:void(0);" onmousedown="delete_item('delete_coll','{$collection.collection_id}','{lang code="confirm_collection_delete"}','?mode={$mode}&amp;delete_collection={$collection.collection_id}');" id="delete_coll-{$collection.collection_id}">
+                <a class="btn btn-primary btn-sm" href="javascript:void(0);" onmousedown="delete_item('delete_coll','{$collection.collection_id}',lang_confirm_collection_delete,'?mode={$mode}&amp;delete_collection={$collection.collection_id}');" id="delete_coll-{$collection.collection_id}">
                     {lang("delete")}
                 </a>
             </div>
@@ -99,7 +99,7 @@
             {display_clean($collection.collection_name)}
             <div class="btn-group show">
                 <a class="btn btn-primary btn-sm" href="{Collections::getInstance()->collection_links($collection,'view')}">{lang code="view_collection"}</a>
-                <a class="btn btn-primary btn-sm" href="javascript:void(0);" onmousedown="delete_item('delete_coll','{$collection.collection_id}','{lang code="remove_fav_collection_confirm"}','?mode={$mode}&amp;remove_fav_collection={$collection.collection_id}');" id="delete_coll-{$collection.collection_id}">
+                <a class="btn btn-primary btn-sm" href="javascript:void(0);" onmousedown="delete_item('delete_coll','{$collection.collection_id}','{lang_js('remove_fav_collection_confirm')}','?mode={$mode}&amp;remove_fav_collection={$collection.collection_id}');" id="delete_coll-{$collection.collection_id}">
                     {lang code="remove"}
                 </a>
             </div>
@@ -108,3 +108,6 @@
         <td width="25%">{lang code="{$collection.type}"}</td>
     </tr>
 {/if}
+<script>
+    var lang_confirm_collection_delete = '{lang_js('confirm_collection_delete')}';
+</script>

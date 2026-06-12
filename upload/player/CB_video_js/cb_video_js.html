@@ -1,7 +1,7 @@
 <script type="text/javascript">
-    var lang_by = "{if $vdata.userid != $anonymous_id && config('enable_hide_uploader_name') != 'yes'}{lang code='by'}{/if}";
-    var lang_quality = "{lang code='quality'}";
-    var lang_player_replay = "{lang code='player_replay'}";
+    var lang_by = '{if $vdata.userid != $anonymous_id && config('enable_hide_uploader_name') != 'yes'}{lang_js('by')}{/if}';
+    var lang_quality = '{lang_js('quality')}';
+    var lang_player_replay = '{lang_js('player_replay')}';
     var video_id = "{$vdata.videoid}";
     var video_key = "{$vdata.videokey}";
     var autoplay = "{$player_params.autoplay}" === 'yes';

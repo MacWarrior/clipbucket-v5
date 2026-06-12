@@ -112,12 +112,12 @@
 				userid = "{user_id()}",
 				THIS_PAGE = "{$smarty.const.THIS_PAGE}";
 
-            var lang_subscribe = "{lang code='subscribe'}";
-            var lang_unsubscribe = "{lang code='unsubscribe'}";
-			let lang_search_too_short = "{lang code='search_too_short'}";
+            var lang_subscribe = '{lang_js('subscribe')}';
+            var lang_unsubscribe = '{lang_js('unsubscribe')}';
+			let lang_search_too_short = '{lang_js('search_too_short')}';
 			var fastQitems = "{$got_qlitems}";
 			var pageNow = "{$smarty.const.THIS_PAGE}";
-			var tag_too_short = "{lang code=tag_too_short}";
+			var tag_too_short = '{lang_js(tag_too_short)}';
 			var allow_tag_space = {(config('allow_tag_space') == 'yes') ? 'true' : 'false'};
 			var allow_username_spaces = {(config('allow_username_spaces') == 'yes') ? 'true' : 'false'};
 		</script>

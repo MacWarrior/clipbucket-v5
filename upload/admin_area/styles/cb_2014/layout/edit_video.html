@@ -19,7 +19,7 @@
                             <li><a href="{DirPath::getUrl('admin_area')}edit_video.php?video={$data.videoid}&amp;mode=deactivate">{lang code='deactivate'}</a></li>
                         {/if}
 
-                        {if $modedata!='featured'}
+                        {if $data.featured !='yes'}
                             <li><a href="{DirPath::getUrl('admin_area')}edit_video.php?video={$data.videoid}&amp;mode=featured">{lang code='make_featured'}</a></li>
                         {else}
                             <li><a href="{DirPath::getUrl('admin_area')}edit_video.php?video={$data.videoid}&amp;mode=unfeature">{lang code='make_unfeatured'}</a></li>
@@ -54,7 +54,7 @@
                         {if config('enable_tmdb') == 'yes' && config('tmdb_token') != ''}
                             <li role="presentation"><a role="menuitem" tabindex="-1" href="javascript:void(0);" data-id="{$data.videoid}" id="button_info_tmdb">{lang code='get_data_tmdb'}</a></li>
                         {/if}
-                        <li><a href="{DirPath::getUrl('admin_area')}edit_video.php?video={$data.videoid}&amp;mode=delete" onclick="return _cb.confirm_it('{lang code='confirm_delete_video'}')">{lang code='delete'}</a></li>
+                        <li><a href="{DirPath::getUrl('admin_area')}edit_video.php?video={$data.videoid}&amp;mode=delete" onclick="return _cb.confirm_it(lang_confirm_delete_video)">{lang code='delete'}</a></li>
                     </ul>
 				</div>
 			</h2>
@@ -77,7 +77,7 @@
 				</span>
 				<span class="btn btn-app btn-sm btn-grey no-hover">
 					<span class="line-height-1">
-					{if $modedata!='featured'}
+					{if $data.featured !='yes'}
 						<span class="glyphicon glyphicon-remove"></span>
 					{else}
 						<span class=" glyphicon glyphicon-ok smaller-90"></span>
@@ -668,18 +668,19 @@
 <div class="modal fade" id="myModal" role="dialog">
 </div>
 <script>
-    let text_confirm_vid_file = '{lang code = "confirm_delete_video_file"}';
-    let text_confirm_sub_file = '{lang code = "confirm_delete_subtitle_file"}';
+    let text_confirm_vid_file = '{lang_js('confirm_delete_video_file')}';
+    let text_confirm_sub_file = '{lang_js('confirm_delete_subtitle_file')}';
     var videoid = '{$data.videoid}';
     let available_tags = JSON.parse('{$available_tags|json_encode|escape:'javascript'}');
-    let text_confirm_comment = '{lang('text_confirm_comment')}';
-    let text_no_comment = '{lang('no_comments',strtolower(lang('video')))}';
+    let text_confirm_comment = '{lang_js('text_confirm_comment')}';
+    let text_no_comment = '{lang_js('no_comments',strtolower(lang_js('video')))}';
     let visual_editor_comments_enabled = "{config('enable_visual_editor_comments') == 'yes'}";
     let ids_to_check_progress = JSON.parse('{$ids_to_check_progress}');
     let format_date_js = '{get_date_js()}';
     let language = '{$lang_obj->getLang()}';
     let use_backdrop_default = '{$use_backdrop_default}';
-    lang['tag_too_short_dynamic_2'] = '{lang("tag_too_short_dynamic", 2)}';
-    lang['tag_too_short_dynamic_3'] = '{lang("tag_too_short_dynamic", 3)}';
+    lang['tag_too_short_dynamic_2'] = '{lang_js("tag_too_short_dynamic", 2)}';
+    lang['tag_too_short_dynamic_3'] = '{lang_js("tag_too_short_dynamic", 3)}';
+    var lang_confirm_delete_video = '{lang_js('confirm_delete_video')}';
 </script>
 {/if}

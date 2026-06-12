@@ -121,7 +121,7 @@
         $('#clean_all').on('click', async function (e) {
             e.preventDefault();
             if (await popinConfirm._confirm_it({
-                message: '{lang('confirm_clean_all_logs')}', title: '{lang('clean_all')}'
+                message: '{lang_js('confirm_clean_all_logs')}', title: '{lang_js('clean_all')}'
             })) {
                 location.href = e.target.href;
             }
