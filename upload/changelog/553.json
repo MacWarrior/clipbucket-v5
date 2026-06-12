@@ -1,6 +1,6 @@
 {
   "version":"5.5.3",
-  "revision":"149",
+  "revision":"150",
   "status":"stable",
   "detail":[
     {
@@ -70,6 +70,7 @@
         ,"Implement fullwidth photos page"
         ,"Implement backdrop as default thumb"
         ,"Implement random photo order"
+        ,"Implement video rating display"
         ,"Update media rating"
         ,"Update collection management"
         ,"Update TMDB search interface"
