@@ -11,7 +11,7 @@
             {/if}
             {if config('enable_external_rate_field') == 'yes' && config('enable_external_rate_ratings_on_fo')=='yes' && (!empty($video.external_rate) || !empty($video.external_ratings))}
                 <span class="stars alone" style="--rating: {$video.external_rate * 10}%;"
-                     title="{lang('noted_x', $video.external_rate)}{if config('enable_external_ratings_field')=='yes' && $video.external_ratings > 0}&nbsp;{lang('over_x_ratings', $video.external_ratings)}{/if}"></span>
+                     title="{lang('noted_x', $video.external_rate)}{if $video.external_ratings > 0}&nbsp;{lang('over_x_ratings', $video.external_ratings)}{/if}"></span>
             {/if}
             {if $video.duration>1}
                 <time class="time" title="Video duration : {$video.duration|SetTime}">{$video.duration|SetTime}</time>
