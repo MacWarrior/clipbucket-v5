@@ -19,7 +19,19 @@ class MWIP extends \Migration
             PRIMARY KEY (`videoid`, `track_number`)
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_520_ci;';
         self::query($sql);
-        self::query('ALTER TABLE `{tbl_prefix}video_audio_tracks` ADD CONSTRAINT `video_audio_tracks_ibfk_1` FOREIGN KEY (`videoid`) REFERENCES `{tbl_prefix}video` (`videoid`) ON DELETE RESTRICT ON UPDATE NO ACTION;');
+        self::alterTable('ALTER TABLE `{tbl_prefix}video_audio_tracks` ADD CONSTRAINT `video_audio_tracks_ibfk_1` FOREIGN KEY (`videoid`) REFERENCES `{tbl_prefix}video` (`videoid`) ON DELETE RESTRICT ON UPDATE NO ACTION;', [
+            'table'  => 'video_audio_tracks',
+        ], [
+            'constraint' => [
+                'type' => 'FOREIGN KEY',
+                'name' => 'video_audio_tracks_ibfk_1'
+            ]
+        ]);
 
+
+        self::generateTranslation('video_audio_track_list_management', [
+            'fr'=>'Pistes audios',
+            'en'=>'Audio tracks'
+        ]);
     }
 }

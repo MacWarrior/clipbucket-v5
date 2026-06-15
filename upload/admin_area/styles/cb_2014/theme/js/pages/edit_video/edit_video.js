@@ -173,27 +173,27 @@ function pageViewHistory(page) {
 }
 
 function editAudioTrack(number) {
-    $('#buttons-' + number).css('display', 'inline');
-    $('#edit_sub_' + number).css('display', 'inline');
-    $('#span_sub_' + number).hide();
+    $('#at_buttons-' + number).css('display', 'inline');
+    $('#edit_at_' + number).css('display', 'inline');
+    $('#span_at_' + number).hide();
 }
 
 function cancelEditAudioTrack(number) {
-    $('#buttons-' + number).hide();
-    $('#edit_sub_' + number).hide();
-    $('#span_sub_' + number).show();
+    $('#at_buttons-' + number).hide();
+    $('#edit_at_' + number).hide();
+    $('#span_at_' + number).show();
 }
 
 function saveAudioTrack(number) {
 
     showSpinner();
     $.ajax({
-        url: admin_url + 'actions/subtitle_edit.php',
+        url: admin_url + 'actions/audio_track_edit.php',
         type: "POST",
-        data: {title: $('#edit_sub_' + number).val(), videoid: videoid, number: number},
+        data: {title: $('#edit_at_' + number).val(), videoid: videoid, track_number: number},
         dataType: 'json',
         success: function (result) {
-            $('#subtitles').html(result['template']);
+            $('#audio_track_list').html(result['template']);
             hideSpinner();
             $('.close').click();
             $('.page-content').prepend(result['msg']);
@@ -308,5 +308,47 @@ $( document ).ready(function() {
         changeYear: true,
         yearRange: "-99y:+0",
         regional: language
+    });
+
+    $("#manageAudioTracks tbody").sortable({
+        items: "> tr",
+        axis: "y",
+        handle: ".drag-handle",
+        placeholder: "ligne-placeholder",
+        forcePlaceholderSize: true,
+        tolerance: "pointer",
+
+        helper: function(e, tr) {
+            var helper = tr.clone();
+            helper.children().each(function (index) {
+                $(this).width(tr.children().eq(index).width());
+            });
+            return helper;
+        },
+
+        update: function() {
+            var lignes = [];
+
+            $("#monTableau tbody tr").each(function(index) {
+                var ordre = index + 1;
+                var id = $(this).data("id");
+
+                $(this).find(".ordre").text(ordre);
+
+                lignes.push({
+                    id: id,
+                    ordre: ordre
+                });
+            });
+
+            $.ajax({
+                url: "/ajax/update-ordre.php",
+                type: "POST",
+                dataType: "json",
+                data: {
+                    lignes: lignes
+                }
+            });
+        }
     });
 });

@@ -596,6 +596,13 @@
                             </a>
                         </li>
                         {/if}
+                        {if (!empty($audio_track_list)) }
+                        <li>
+                            <a data-toggle="tab" href="#audio_track_list">
+                                <i class="glyphicon glyphicon-music"></i> {lang code='video_audio_track_list_management'}
+                            </a>
+                        </li>
+                        {/if}
                         {if config('enable_video_embed_players') == 'yes'}
                             <li>
                                 <a data-toggle="tab" href="#embed_player">
@@ -642,8 +649,8 @@
                                 {include file="$style_dir/blocks/subtitle_list.html" videoid=$data.videoid vstatus=$data.status}
                             </div>
                         {/if}
-                        {if $data.audio_tracks}
-                            <div id="subtitles" class="tab-pane fade">
+                        {if !empty($audio_track_list)}
+                            <div id="audio_track_list" class="tab-pane fade">
                                 {include file="$style_dir/blocks/audio_track_list.html" videoid=$data.videoid vstatus=$data.status}
                             </div>
                         {/if}

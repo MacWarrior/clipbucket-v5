@@ -1418,6 +1418,28 @@ class Video extends Objects
         return '?v=' . preg_replace('/\D/', '', $last_modified);
     }
 
+    /**
+     * @param int $videoid
+     * @return array
+     * @throws Exception
+     */
+    public function getAudioTracks(int $videoid): array
+    {
+        $sql = 'SELECT * FROM ' . tbl('video_audio_tracks') . ' WHERE videoid = ' . $videoid;
+        return Clipbucket_db::getInstance()->_select($sql);
+    }
+
+    /**
+     * @param $params
+     * @return bool
+     * @throws Exception
+     */
+    public function saveAudioTrack($params): bool
+    {
+        $sql = 'UPDATE ' . tbl('video_audio_tracks') . ' SET `title` = \'' . mysql_clean($params['title']) . '\' WHERE `videoid` = ' . (int)$params['videoid'] . ' AND `track_number` = ' . (int)$params['track_number'];
+        return (bool)Clipbucket_db::getInstance()->execute($sql);
+    }
+
 }
 
 class CBvideo extends CBCategory
