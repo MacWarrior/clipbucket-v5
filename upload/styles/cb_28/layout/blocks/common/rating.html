@@ -1,6 +1,6 @@
 {$ratedBy = has_rated(user_id(),$id,$type)}
 <div class="clearfix rating">
-    {if config('enable_external_rate_field') == 'yes' && config('enable_external_rate_ratings_on_fo')=='yes' && (!empty($external_rate) || !empty($external_ratings))}
+    {if config('enable_external_rate_field') == 'yes' && (!empty($external_rate) || !empty($external_ratings))}
         <div class="stars five" style="--rating: {$external_rate * 10}%;"
              title="{lang('noted_x', $external_rate)}{if $external_ratings > 0}&nbsp;{lang('over_x_ratings', $external_ratings)}{/if}"></div>
     {/if}
