@@ -1925,6 +1925,10 @@ VALUES ('ongoing_conversion'),
        ('view_collection_comments'),
        ('view_photo_comments'),
        ('confirm_delete_comment'),
+       ('comment_id');
+INSERT INTO `{tbl_prefix}languages_keys` (`language_key`)
+VALUES ('noted_x'),
+       ('over_x_ratings'),
        ('comment_id'),
        ('lang_flag_empty'),
        ('option_display_language_flag'),

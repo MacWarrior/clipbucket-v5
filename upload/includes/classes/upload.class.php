@@ -449,7 +449,8 @@ class Upload
                     'min'               => 0,
                     'max'               => 10,
                     'db_field'          => 'external_rate',
-                    'hint_icon'         => lang('external_video_rate')
+                    'hint_icon'         => lang('external_video_rate'),
+                    'validate_function' => 'floatval'
                 ];
             }
             if (config('enable_external_ratings_field') == 'yes') {
@@ -462,7 +463,8 @@ class Upload
                     'required'          => 'no',
                     'min'               => 0,
                     'db_field'          => 'external_ratings',
-                    'hint_icon'         => lang('external_video_ratings')
+                    'hint_icon'         => lang('external_video_ratings'),
+                    'validate_function' => 'intval'
                 ];
             }
         }

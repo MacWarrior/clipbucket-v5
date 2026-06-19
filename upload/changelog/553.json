@@ -1,6 +1,6 @@
 {
   "version":"5.5.3",
-  "revision":"147",
+  "revision":"150",
   "status":"stable",
   "detail":[
     {
@@ -70,6 +70,7 @@
         ,"Implement fullwidth photos page"
         ,"Implement backdrop as default thumb"
         ,"Implement random photo order"
+        ,"Implement video rating display"
         ,"Update media rating"
         ,"Update collection management"
         ,"Update TMDB search interface"
@@ -104,6 +105,7 @@
         ,"Fix possible unauthorized access to video subtitles edition (Thanks @Bnyt7 & @Mr-In4inci3le !)"
         ,"Fix tag management display (<i>#860</i>)"
         ,"Fix remote play form"
+        ,"Fix JS error on channel page"
       ]
     },
     {
