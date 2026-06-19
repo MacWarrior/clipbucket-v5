@@ -16,6 +16,10 @@
     {if config('enable_favorite_icon') == 'yes' && User::getInstance()->isUserConnected() && Video::isFavorite($video.videoid)}
         <span class="manage_favorite watch-rating-icon pointer glyphicon glyphicon-heart " title="{lang('remove_from_favorites')}" data-id="{$video.videoid}"></span>
     {/if}
+    {if config('enable_external_rate_field') == 'yes' && (!empty($video.external_rate) || !empty($video.external_ratings))}
+        <span class="stars alone" style="--rating: {$video.external_rate * 10}%; z-index: 4; left: 60px;"
+              title="{lang('noted_x', $video.external_rate)}{if $video.external_ratings > 0}&nbsp;{lang('over_x_ratings', $video.external_ratings)}{/if}"></span>
+    {/if}
     {if $video.duration>1}
         <span class="duration" title="Video duration : {$video.duration|SetTime}">{$video.duration|SetTime}</span>
     {/if}

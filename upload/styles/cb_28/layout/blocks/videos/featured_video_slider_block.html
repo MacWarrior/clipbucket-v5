@@ -12,6 +12,10 @@
         <div class="movie-title" title="{display_clean($video.title)}">{display_clean($video.title)}</div>
         <div class="movie-description" title="{display_clean($video.description)}">{display_clean($video.description)}</div>
         <div class="movie-rating">
+            {if config('enable_external_rate_field') == 'yes' && (!empty($video.external_rate) || !empty($video.external_ratings))}
+                <div class="stars five" style="--rating: {$video.external_rate * 10}%; font-size: 18px;bottom: -4px;"
+                     title="{lang('noted_x', $video.external_rate)}{if $video.external_ratings > 0}&nbsp;{lang('over_x_ratings', $video.external_ratings)}{/if}"></div>
+            {/if}
             <span class="icon-thumbup"></span> {$video.total_rate_up} <span class="icon-thumbdown"></span> {$video.total_rate_down}
             {if config('enable_favorite_icon') == 'yes' && User::getInstance()->isUserConnected() && Video::isFavorite($video.videoid)}
                 <span class="manage_favorite watch-rating-icon pointer glyphicon glyphicon-heart " title="{lang('remove_from_favorites')}" data-id="{$video.videoid}"></span>
