@@ -310,45 +310,33 @@ $( document ).ready(function() {
         regional: language
     });
 
-    $("#manageAudioTracks tbody").sortable({
-        items: "> tr",
+    var tbody = $("#manageAudioTracks tbody");
+    console.log("tbody trouvé :", tbody.length);
+    console.log("sortable dispo :", typeof tbody.sortable);
+
+    tbody.sortable({
+        items: "tr",
         axis: "y",
         handle: ".drag-handle",
         placeholder: "ligne-placeholder",
         forcePlaceholderSize: true,
         tolerance: "pointer",
+        cursor: "move",
 
-        helper: function(e, tr) {
-            var helper = tr.clone();
-            helper.children().each(function (index) {
-                $(this).width(tr.children().eq(index).width());
-            });
-            return helper;
-        },
 
         update: function() {
-            var lignes = [];
-
-            $("#monTableau tbody tr").each(function(index) {
-                var ordre = index + 1;
-                var id = $(this).data("id");
-
-                $(this).find(".ordre").text(ordre);
-
-                lignes.push({
-                    id: id,
-                    ordre: ordre
-                });
+            var order = $(this).sortable('toArray', {
+                attribute: 'data-id'
             });
-
             $.ajax({
-                url: "/ajax/update-ordre.php",
+                url: admin_url + "/actions/audio_track_update_order.php",
                 type: "POST",
                 dataType: "json",
                 data: {
-                    lignes: lignes
+                    lines: order,
+                    videoid: videoid
                 }
             });
         }
-    });
+    }).disableSelection();
 });

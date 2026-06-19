@@ -96,7 +96,7 @@ assign('resolution_list', $resolution_list);
 $subtitle_list = get_video_subtitles($data) ?: [];
 assign('subtitle_list', $subtitle_list);
 
-$audio_track_list = Video::getInstance()->getAudioTracks($data['videoid']);
+$audio_track_list = VideoAudioTrack::getAudioTracks($data['videoid']);
 assign('audio_track_list', $audio_track_list);
 $min_suffixe = System::isInDev() ? '' : '.min';
 
