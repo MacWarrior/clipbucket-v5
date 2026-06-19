@@ -9,15 +9,18 @@
         <img class="lazy img-responsive no_select{if Video::getInstance()->isToBlur($video['videoid'])} blur{/if}" alt="{display_clean($video.title)|title}" src="{VideoThumbs::getDefaultThumbFile($video.videoid, 416, 260)}" {Video::get_thumbs_preview($video, '416x260')}/>
     </a>
     {ANCHOR place='in_video_thumb' data=$video}
+    {assign var=left_value value=10}
     {if config('enable_quicklist') == 'yes' && !Video::getInstance()->isToBlur($video['videoid']) && $video.status|lower == 'successful' && Session::isCookieConsent('fast_qlist')}
-        <button data-quick="quick-{$video.videoid}" class="icon-plus2 cb_quickie cb-btn-quick-{$video.videoid} {if in_array($video.videoid, $qlist_vids)}icon-tick{/if}" vtitle="{display_clean($video.title)}" v-id="{$video.videoid}" vlink="{video_link($video)}" vthumb="{VideoThumbs::getDefaultThumbFile($video.videoid, 416, 260)}" vduration="{$video.duration|SetTime}" vauthor="{if config('enable_hide_uploader_name') != 'yes'}{lang code='by'} {display_clean($video.user_username)}{/if}" title="Add {display_clean($video.title)} to Quicklist">
+        <button style="left: {$left_value}px;" data-quick="quick-{$video.videoid}" class="icon-plus2 cb_quickie cb-btn-quick-{$video.videoid} {if in_array($video.videoid, $qlist_vids)}icon-tick{/if}" vtitle="{display_clean($video.title)}" v-id="{$video.videoid}" vlink="{video_link($video)}" vthumb="{VideoThumbs::getDefaultThumbFile($video.videoid, 416, 260)}" vduration="{$video.duration|SetTime}" vauthor="{if config('enable_hide_uploader_name') != 'yes'}{lang code='by'} {display_clean($video.user_username)}{/if}" title="Add {display_clean($video.title)} to Quicklist">
         </button>
+        {assign var=left_value value=$left_value + 26}
     {/if}
     {if config('enable_favorite_icon') == 'yes' && User::getInstance()->isUserConnected() && Video::isFavorite($video.videoid)}
-        <span class="manage_favorite watch-rating-icon pointer glyphicon glyphicon-heart " title="{lang('remove_from_favorites')}" data-id="{$video.videoid}"></span>
+        <span style="left: {$left_value}px;"  class="manage_favorite watch-rating-icon pointer glyphicon glyphicon-heart " title="{lang('remove_from_favorites')}" data-id="{$video.videoid}"></span>
+        {assign var=left_value value=$left_value + 23}
     {/if}
     {if config('enable_external_rate_field') == 'yes' && (!empty($video.external_rate) || !empty($video.external_ratings))}
-        <span class="stars alone" style="--rating: {$video.external_rate * 10}%; z-index: 4; left: 60px;"
+        <span class="stars alone" style="--rating: {$video.external_rate * 10}%; z-index: 4; left: {$left_value}px;"
               title="{lang('noted_x', $video.external_rate)}{if $video.external_ratings > 0}&nbsp;{lang('over_x_ratings', $video.external_ratings)}{/if}"></span>
     {/if}
     {if $video.duration>1}
