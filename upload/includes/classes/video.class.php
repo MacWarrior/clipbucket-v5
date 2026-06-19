@@ -1889,7 +1889,7 @@ class CBvideo extends CBCategory
                 $name = formObj::rmBrackets($field['name']);
                 $val = $array[$name];
                 //TODO dont check if db_field is empty
-                if (!empty($val) || !$field['use_if_value']) {
+                if (!empty($val) || (!$field['use_if_value'])) {
                     if (!empty($field['validate_function'])) {
                         if (isset($field['second_parameter_validate'])) {
                             $val = $field['validate_function']($val,$field['second_parameter_validate']);
@@ -1901,7 +1901,7 @@ class CBvideo extends CBCategory
                         }
                     }
 
-                    if (!empty($field['db_field'])) {
+                    if (!empty($field['db_field']) ) {
                         $query_field[] = $field['db_field'];
                     }
 

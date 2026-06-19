@@ -66,6 +66,8 @@
                                         likes=$vdo.total_rate_up
                                         dislikes=$vdo.total_rate_down
                                         disable=($video.userid == User::getInstance()->getCurrentUserID() && config('own_video_rating') != 'yes')
+                                        external_rate=$video.external_rate
+                                        external_ratings=$video.external_ratings
                                     }
                                 {/if}
                                 {if config('enable_favorite_icon') == 'yes' && User::getInstance()->isUserConnected()}
