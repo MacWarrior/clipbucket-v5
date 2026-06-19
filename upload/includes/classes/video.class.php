@@ -104,7 +104,7 @@ class Video extends Objects
             $this->fields[] = 'voter_ids';
         }
 
-        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '101')) {
+        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '101') && !Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '138')) {
             $this->fields[] = 'id_tmdb';
             $this->fields[] = 'type_tmdb';
         }
@@ -115,6 +115,11 @@ class Video extends Objects
 
         if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '128')) {
             $this->fields[] = 'last_modified';
+        }
+
+        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '138')) {
+            $this->fields[] = 'external_rate';
+            $this->fields[] = 'external_ratings';
         }
 
         $this->fields_categories = [
@@ -389,6 +394,7 @@ class Video extends Objects
         $param_not_join_user_profile = $params['not_join_user_profile'] ?? false;
         $param_join_flag= $params['join_flag'];
         $param_get_detail = $params['get_detail'] ?? false;
+        $param_date_span = $params['date_span'] ?? false;
 
         $conditions = [];
         if( $param_videoid !== false ){
@@ -422,6 +428,9 @@ class Video extends Objects
         }
         if( $param_condition ){
             $conditions[] = '(' . $param_condition . ')';
+        }
+        if ($param_date_span) {
+            $conditions[] = Search::date_margin($this->getTableName() . '.date_added ', $param_date_span);
         }
 
         if( $param_search ){
@@ -1652,7 +1661,7 @@ class CBvideo extends CBCategory
      * @return bool
      * @throws Exception
      *@deprecated
-     * @TODO remove action-> exist 
+     * @TODO remove action-> exist
      */
     function video_exists($videoid): bool
     {
@@ -1878,7 +1887,7 @@ class CBvideo extends CBCategory
                 $name = formObj::rmBrackets($field['name']);
                 $val = $array[$name];
                 //TODO dont check if db_field is empty
-                if (!empty($val) || !$field['use_if_value']) {
+                if (!empty($val) || (!$field['use_if_value'])) {
                     if (!empty($field['validate_function'])) {
                         if (isset($field['second_parameter_validate'])) {
                             $val = $field['validate_function']($val,$field['second_parameter_validate']);
@@ -1890,7 +1899,7 @@ class CBvideo extends CBCategory
                         }
                     }
 
-                    if (!empty($field['db_field'])) {
+                    if (!empty($field['db_field']) ) {
                         $query_field[] = $field['db_field'];
                     }
 
@@ -2009,8 +2018,12 @@ class CBvideo extends CBCategory
      */
     function update_subtitle($videoid, $number, $title): void
     {
+        if (!preg_match('/^\d{1,2}$/', $number)) {
+            e(lang('invalid_params'));
+            return;
+        }
         if (Video::getInstance()->getOne(['videoid'=>$videoid, 'count'=>true])) {
-            Clipbucket_db::getInstance()->update(tbl('video_subtitle'), ['title'], [$title], ' videoid = ' . (int)$videoid . ' AND number LIKE \'' . mysql_clean($number) . '\'');
+            Clipbucket_db::getInstance()->update(tbl('video_subtitle'), ['title'], [$title], ' videoid = ' . (int)$videoid . ' AND number = \'' . mysql_clean($number) . '\'');
         }
     }
 

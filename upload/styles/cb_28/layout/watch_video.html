@@ -66,10 +66,12 @@
                                         likes=$vdo.total_rate_up
                                         dislikes=$vdo.total_rate_down
                                         disable=($video.userid == User::getInstance()->getCurrentUserID() && config('own_video_rating') != 'yes')
+                                        external_rate=$video.external_rate
+                                        external_ratings=$video.external_ratings
                                     }
                                 {/if}
                                 {if config('enable_favorite_icon') == 'yes' && User::getInstance()->isUserConnected()}
-                                    <span class="manage_favorite watch-rating-icon pointer glyphicon glyphicon-heart{if !$is_favorite}-empty " title="{lang('add_to_my_favorites')}{/if}" title="{lang('remove_from_favorites')}" style="font-size: 20px;"></span>
+                                    <span class="manage_favorite watch-rating-icon pointer glyphicon glyphicon-heart{if !$is_favorite}-empty " title="{display_clean(lang('add_to_my_favorites'))}{/if}" title="{display_clean(lang('remove_from_favorites'))}" style="font-size: 20px;"></span>
                                 {/if}
                             </div>
                         </div>
@@ -243,7 +245,7 @@
                                     <div id="video_action_result_cont"></div>
                                     {if config('enable_favorite_icon') != 'yes'}
                                         <a id="addfav" class="btn btn-block btn-primary" href="javascript:void(0);" {if Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '8')} onclick="_cb.add_to_favNew('video','{$vdo.videoid}');"
-                                                {else} disabled="disabled" title="{lang('cant_perform_action_until_app_fully_updated')}" {/if}>
+                                                {else} disabled="disabled" title="{display_clean(lang('cant_perform_action_until_app_fully_updated'))}" {/if}>
                                             {lang code='add_to_my_favorites'}</a>
                                     {/if}
                                 </div>
@@ -389,7 +391,7 @@
     var object_type= '{$object_type}';
     var userid= '{$video.userid}';
     var ids_to_check_progress = JSON.parse('{$ids_to_check_progress}');
-    var please_select_playlist = '{lang('please_select_playlist')}';
-    lang['add_to_my_favorites'] = '{lang('add_to_my_favorites')}';
-    lang['remove_from_favorites'] = '{lang('remove_from_favorites')}';
+    var please_select_playlist = '{lang_js('please_select_playlist')}';
+    lang['add_to_my_favorites'] = '{lang_js('add_to_my_favorites')}';
+    lang['remove_from_favorites'] = '{lang_js('remove_from_favorites')}';
 </script>

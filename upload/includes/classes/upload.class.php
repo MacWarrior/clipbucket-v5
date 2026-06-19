@@ -226,13 +226,12 @@ class Upload
             }
 
             //logging Upload
-            $log_array = [
-                'success'       => 'yes',
+            insert_log('upload_video', [
+                'success'       => $insert_id ? 'yes' : 'no',
                 'action_obj_id' => $insert_id,
                 'userid'        => $userid,
                 'details'       => $array['title']
-            ];
-            insert_log('upload_video', $log_array);
+            ]);
 
             Clipbucket_db::getInstance()->update(tbl('users'), ['total_videos'], ['|f|total_videos+1'], ' userid=\'' . $userid . '\'');
 
@@ -434,6 +433,40 @@ class Upload
                 'required'          => 'no',
                 'validate_function' => 'genTags'
             ];
+        }
+
+        if (((FRONT_END && config('enable_external_rate_ratings_on_fo') == 'yes') || BACK_END)
+            && Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '138')
+        ) {
+            if (config('enable_external_rate_field') == 'yes') {
+                $uploadFormRequiredFieldsArray['external_rate'] = [
+                    'title'             => ucfirst(lang('external_rate')),
+                    'type'              => 'number',
+                    'name'              => 'external_rate',
+                    'id'                => 'external_rate',
+                    'value'             => $default['external_rate'],
+                    'required'          => 'no',
+                    'min'               => 0,
+                    'max'               => 10,
+                    'db_field'          => 'external_rate',
+                    'hint_icon'         => lang('external_video_rate'),
+                    'validate_function' => 'floatval'
+                ];
+            }
+            if (config('enable_external_ratings_field') == 'yes') {
+                $uploadFormRequiredFieldsArray['external_ratings'] = [
+                    'title'             => ucfirst(lang('external_ratings')),
+                    'type'              => 'number',
+                    'name'              => 'external_ratings',
+                    'id'                => 'external_ratings',
+                    'value'             => $default['external_ratings'],
+                    'required'          => 'no',
+                    'min'               => 0,
+                    'db_field'          => 'external_ratings',
+                    'hint_icon'         => lang('external_video_ratings'),
+                    'validate_function' => 'intval'
+                ];
+            }
         }
 
         $tracks = $default['tracks'];
@@ -859,6 +892,10 @@ class Upload
             $small_size = DirPath::get('avatars') . $uid . '-small.' . $ext;
             CBPhotos::getInstance()->createImage($file_path, $file_path, $ext, AVATAR_SIZE, AVATAR_SIZE);
             CBPhotos::getInstance()->createImage($file_path, $small_size, $ext, AVATAR_SMALL_SIZE, AVATAR_SMALL_SIZE);
+            insert_log($type . '_upload', [
+                'action_obj_id' => $uid,
+                'success'       => 'yes'
+            ]);
             return $file_name;
         }
         e(lang('class_error_occured'));

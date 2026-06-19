@@ -164,16 +164,6 @@ class cbactions
     }
 
     /**
-     * Function used to count total favorites only
-     * @throws Exception
-     */
-    function total_favorites()
-    {
-        return Clipbucket_db::getInstance()->count(tbl($this->fav_tbl), 'favorite_id', ' type=\'' . $this->type . '\'');
-    }
-
-
-    /**
      * @throws Exception
      */
     function load_basic_fields($array = null): array
@@ -278,6 +268,10 @@ class cbactions
         Clipbucket_db::getInstance()->insert(tbl($this->playlist_tbl), $fields, $values);
 
         $pid = Clipbucket_db::getInstance()->insert_id();
+        insert_log('created_new_playlist', [
+            'action_obj_id' => $pid,
+            'success'       => $pid ? 'yes' : 'no',
+        ]);
         e(lang('new_playlist_created'), 'm');
 
         return $pid;

@@ -408,7 +408,7 @@ class ClipBucket
                 , 'sub'   => []
             ];
 
-            if (config('enable_comments_video') == 'yes' || config('enable_comments_photo') == 'yes' || config('enable_comments_channel') == 'yes' || config('enable_comments_collection') == 'yes') {
+            if (Comments::isChannelCommentEnabled() || Comments::isCollectionCommentEnabled() || Comments::isPhotoCommentEnabled() || Comments::isVideoCommentEnabled()) {
                 $menu_general['sub'][] = [
                     'title' => lang('manage_x', strtolower(lang('comments')))
                     , 'url' => DirPath::getUrl('admin_area') . 'comments.php'
@@ -430,8 +430,9 @@ class ClipBucket
                     , 'url' => DirPath::getUrl('admin_area') . 'notifications.php'
                 ];
             }
-
-            $this->addMenuAdmin($menu_general, 10);
+            if (!empty($menu_general['sub'])) {
+                $this->addMenuAdmin($menu_general, 10);
+            }
         }
 
         if (User::getInstance()->hasPermission('member_moderation')) {
@@ -451,10 +452,6 @@ class ClipBucket
                         'title' => 'Active Only'
                         , 'url' => DirPath::getUrl('admin_area') . 'members.php?search=yes&status=Ok'
                     ]
-                    , [
-                        'title' => lang('user_flagged')
-                        , 'url' => DirPath::getUrl('admin_area') . 'flagged_item.php?type=user'
-                    ]
                 ]
             ];
 
@@ -462,6 +459,12 @@ class ClipBucket
                 $menu_users['sub'][] = [
                     'title' => lang('manage_x', strtolower(lang('categories')))
                     , 'url' => DirPath::getUrl('admin_area') . 'category.php?type=user'
+                ];
+            }
+            if( config('channelsSection') == 'yes' ){
+                $menu_users['sub'][] =  [
+                    'title' => lang('user_flagged')
+                    , 'url' => DirPath::getUrl('admin_area') . 'flagged_item.php?type=user'
                 ];
             }
 

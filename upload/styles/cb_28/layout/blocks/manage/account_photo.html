@@ -13,7 +13,7 @@
 				<a class="btn btn-primary btn-sm" href="{CBPhotos::getInstance()->photo_links($photo,'view_item')}">{lang code='watch'}</a>
 				<a class="btn btn-primary btn-sm" href="{$baseurl}edit_photo.php?photo={$photo.photo_id}">{lang code='edit'}</a>
 				<a class="btn btn-primary btn-sm" href="javascript:void(0);"
-				   {if Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '14')} onmousedown="delete_item('delete_icon_a','{$photo.photo_id}','{lang code="confirm_del_photo"}','?mode=uploaded&amp;delete_photo={$photo.photo_id}')"
+				   {if Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '14')} onmousedown="delete_item('delete_icon_a','{$photo.photo_id}',lang_confirm_del_photo,'?mode=uploaded&amp;delete_photo={$photo.photo_id}')"
 				   {else} disabled="disabled" title="Sorry, you cannot perform this action until the application has been fully updated by an administrator"{/if}
 				   id="delete_icon_a-{$photo.photo_id}">{lang code='delete'}</a>
 			</span>
@@ -37,7 +37,7 @@
 			{display_clean($photo.photo_title)|truncate:100}<br>
 			<span class="btn-group show">
 				{if $photo.collection_id}<a class="btn btn-primary btn-sm" href="{CBPhotos::getInstance()->photo_links($photo,'view_item')}">{lang code='views'}</a>{/if}
-				<a class="btn btn-primary btn-sm" href="javascript:void(0);" onmousedown="delete_video('delete_icon_a','{$photo.photo_id}','{lang code="remove_fav_photo_confirm"}','?mode={$mode}&amp;remove_fav_photo={$photo.photo_id}')" id="delete_icon_a-{$photo.photo_id}">{lang code='delete'}</a>
+				<a class="btn btn-primary btn-sm" href="javascript:void(0);" onmousedown="delete_video('delete_icon_a','{$photo.photo_id}',lang_remove_fav_photo_confirm,'?mode={$mode}&amp;remove_fav_photo={$photo.photo_id}')" id="delete_icon_a-{$photo.photo_id}">{lang code='delete'}</a>
 			</span>
 		</td>
 		<td>{$photo.date_added|date_format}</td>
@@ -61,7 +61,7 @@
 			<span class="btn-group show">
 				<a class="btn btn-primary btn-sm" href="{$baseurl}edit_photo.php?photo={$photo.photo_id}">{lang code='edit_ph'}</a>
 				<a class="btn btn-primary btn-sm" href="{PhotoThumbs::getThumbFile($photo.photo_id, 'original')}">Direct Link</a>
-				<a class="btn btn-primary btn-sm" href="javascript:void(0);" onmousedown="delete_video('delete_icon_a','{$photo.photo_id}','{lang code="confirm_del_photo"}','?mode={$mode}&amp;delete_orphan_photo={$photo.photo_id}')" id="delete_icon_a-{$photo.photo_id}">{lang code='delete'}</a>
+				<a class="btn btn-primary btn-sm" href="javascript:void(0);" onmousedown="delete_video('delete_icon_a','{$photo.photo_id}','{lang_js('confirm_del_photo')}','?mode={$mode}&amp;delete_orphan_photo={$photo.photo_id}')" id="delete_icon_a-{$photo.photo_id}">{lang code='delete'}</a>
 			</span>
 		</td>
 		<td>{$photo.date_added|date_format}</td>
@@ -70,3 +70,7 @@
 		<td>{$photo.total_favorites|number_format}</td>
 	</tr>
 {/if}
+<script>
+	var lang_remove_fav_photo_confirm = '{lang_js('remove_fav_photo_confirm')}';
+	let lang_confirm_del_photo = '{lang_js('confirm_del_photo')}'
+</script>

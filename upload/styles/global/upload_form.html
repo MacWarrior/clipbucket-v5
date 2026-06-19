@@ -63,7 +63,7 @@
                                 {$formObj->createField($field)}
                                 <ul id="list_{$field.id}"></ul>
                             </div>
-                        {elseif !$field.id|strstr:'tags'}
+                        {elseif !$field.id|strstr:'tags' && !in_array($field.id, ['external_rate','external_ratings'])}
                             <div class="form-group">
                                 <label for="{$field.id}">{$field.title}</label>
                                 {$formObj->createField($field)}
@@ -85,13 +85,44 @@
                             {$field.class='form-control'}
                             {$field.notShowSeprator='yes'}
                             {if $field.id|strstr:'tags' && $field.id != 'tags_video'}
-                        <div class="form-group">
-                            <label for="{$field.id}">{$field.title}</label>
-                            {$formObj->createField($field)}
-                            <ul id="list_{$field.id}"></ul>
-                        </div>
+                                <div class="form-group">
+                                    <label for="{$field.id}">{$field.title}</label>
+                                    {$formObj->createField($field)}
+                                    <ul id="list_{$field.id}"></ul>
+                                </div>
                             {/if}
                         {/foreach}
+                        {if Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '138')}
+                            {assign var=field value=$requiredFields.fields.external_rate}
+                            {$field.class='form-control'}
+                            <div class="row">
+                                {if config('enable_external_rate_field') == 'yes'}
+                                    <div class="col-md-6" >
+                                        <label><strong>{$field.title|truncate:80}</strong> {if $field.hint_icon}<span class="fa fa-question-circle tips cursor_help" title="{$field.hint_icon}"></span> {/if}</label><br>
+                                        {if $field.hint_1}
+                                            {$field.hint_1}
+                                            <br/>
+                                        {/if}
+                                        <div class="input-group" style="height: 42px;">
+                                            {$formObj->createField($field)}
+                                            <span class="input-group-addon">/10</span>
+                                        </div>
+                                    </div>
+                                {/if}
+                                {assign var=field value=$requiredFields.fields.external_ratings}
+                                {$field.class='form-control'}
+                                {if config('enable_external_ratings_field') == 'yes'}
+                                    <div class="col-md-6" >
+                                        <label><strong>{$field.title|truncate:80}</strong> {if $field.hint_icon}<span class="fa fa-question-circle tips cursor_help" title="{$field.hint_icon}"></span> {/if}</label><br>
+                                        {if $field.hint_1}
+                                            {$field.hint_1}
+                                            <br/>
+                                        {/if}
+                                        {$formObj->createField($field)}
+                                    </div>
+                                {/if}
+                            </div>
+                        {/if}
                     </div>
                 </div>
                 {ANCHOR place="after_upload_form_required_fields"}

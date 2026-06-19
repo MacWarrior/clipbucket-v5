@@ -16,7 +16,7 @@
         <ul class="dropdown-menu" role="menu">
             <li><a href="{DirPath::getUrl('admin_area')}action_logs.php">{lang('all')}</a></li>
             {foreach from=CBLogs::$allowed_types item=type}
-                <li><a href="{DirPath::getUrl('admin_area')}action_logs.php?type={$type}">{lang($type|cat:'_only')}</a></li>
+                <li><a href="{DirPath::getUrl('admin_area')}action_logs.php?type={$type}">{lang($type)}</a></li>
             {/foreach}
         </ul>
     </div>
@@ -65,7 +65,25 @@
                             <b>{lang('details')|ucfirst}</b>
                             : {$log.action_details}
                         {/if}
+
                     </label>
+                    {if isset($links[$log.action_type])
+                    && User::getInstance()->hasPermission($links[$log.action_type]['right'])
+                    && !empty($log.action_obj_id)}
+                        <label class="label label-primary">
+                            {if $log.action_type == 'upload_thumb'}
+                                {assign var=details value=json_decode($log.action_details, true)}
+                                <a style="color: #FFF" href="{sprintf($links[$log.action_type]['link']
+                                , $details.type
+                                , $log.action_obj_id)}">
+                                    {lang('see_element')}</a>
+                            {elseif str_contains($log.action_type, 'comment')}
+                                <a style="color: #FFF" href="{$links[$log.action_type]['link']}">{lang('see_element')}</a>
+                            {else}
+                                <a style="color: #FFF" href="{$links[$log.action_type]['link']}{$log.action_obj_id}">{lang('see_element')}</a>
+                            {/if}
+                        </label>
+                    {/if}
                 </td>
                 <td>
                     {if $log.date_added}
@@ -103,7 +121,7 @@
         $('#clean_all').on('click', async function (e) {
             e.preventDefault();
             if (await popinConfirm._confirm_it({
-                message: '{lang('confirm_clean_all_logs')}', title: '{lang('clean_all')}'
+                message: '{lang_js('confirm_clean_all_logs')}', title: '{lang_js('clean_all')}'
             })) {
                 location.href = e.target.href;
             }

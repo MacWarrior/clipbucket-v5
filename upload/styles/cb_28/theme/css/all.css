@@ -339,6 +339,42 @@
   }
 }
 
+.borderPulse {
+  position: relative;
+}
+
+.borderPulse::after {
+  content: "";
+  position: absolute;
+  top: -7px;
+  left: -7px;
+  right: -7px;
+  bottom: -7px;
+  border: 2px solid var(--color-main-01);
+  border-radius: 6px;
+  pointer-events: none;
+  animation: borderPulse 15s infinite;
+  opacity: 0;
+}
+
+@keyframes borderPulse {
+  0% {
+    opacity: 0;
+  }
+  8.33% {
+    opacity: 1;
+  }
+  16.66% {
+    opacity: 1;
+  }
+  25% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
 .alert-msg-holder {
   margin: 0 auto;
   text-align: center;
@@ -7207,4 +7243,46 @@ h4:has(i) {
   padding-right:0;
   width:auto;
   flex:0 0 auto;
+}
+
+.rating .rating-holder {
+  display: inline-block;
+}
+
+.stars {
+  position: relative;
+  display: inline-block;
+  font-family: FontAwesome;
+  margin-right: 8px;
+}
+
+.stars.alone {
+  position: absolute;
+  left: 67px;
+  opacity: 1;
+  font-size: 20px;
+  bottom: 11px;
+}
+
+.stars::before {
+  color: #bdc3c7;
+}
+
+.stars.alone::before,
+.stars.alone::after {
+  content: "\f005";
+}
+
+.stars.five::before,
+.stars.five::after {
+  content: "\f005\f005\f005\f005\f005";
+}
+.stars::after {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: var(--rating);
+  overflow-x: clip;
+  white-space: nowrap;
+  color: #e67e22;
 }

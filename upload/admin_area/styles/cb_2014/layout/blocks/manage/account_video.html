@@ -65,12 +65,12 @@
                 <p class="marginTop">{display_clean($video.title)|truncate:100}</p>
                 <div class="btn-group show">
                     <a class="btn btn-primary btn-sm" href="{videoLink vdetails=$video}">{lang code='watch'}</a>
-                    <a class="btn btn-primary btn-sm" href="javascript:void(0);" onmousedown="delete_video('delete_icon_a','{$video.playlist_item_id}','{lang code="remove_playlist_item_confirm"}','?mode=edit_playlist&pid={$pid}&amp;delete_item={$video.playlist_item_id}')" id="delete_icon_a-{$video.playlist_item_id}">
+                    <a class="btn btn-primary btn-sm" href="javascript:void(0);" onmousedown="delete_video('delete_icon_a','{$video.playlist_item_id}',lang_delete_playlist_item_confirm,'?mode=edit_playlist&pid={$pid}&amp;delete_item={$video.playlist_item_id}')" id="delete_icon_a-{$video.playlist_item_id}">
                         {lang('delete')}
                     </a>
                 </div>
             </div>
-            <a href="javascript:void(0);" onmousedown="delete_video('delete_icon','{$video.playlist_item_id}','{lang code="remove_playlist_item_confirm"}','?mode=edit_playlist&pid={$pid}&amp;delete_item={$video.playlist_item_id}')" id="delete_icon-{$video.playlist_item_id}"><img src="{$imageurl}/dot.gif" border="0" class="delete_icon" /></a>
+            <a href="javascript:void(0);" onmousedown="delete_video('delete_icon','{$video.playlist_item_id}',lang_delete_playlist_item_confirm,'?mode=edit_playlist&pid={$pid}&amp;delete_item={$video.playlist_item_id}')" id="delete_icon-{$video.playlist_item_id}"><img src="{$imageurl}/dot.gif" border="0" class="delete_icon" /></a>
         </td>
         <td width="100">
             {$video.date_added|date_format}
@@ -120,3 +120,6 @@
         </div>
     </div>
 {/if}
+<script>
+    var lang_delete_playlist_item_confirm = '{lang_js('remove_playlist_item_confirm')}';
+</script>

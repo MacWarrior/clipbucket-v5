@@ -333,10 +333,19 @@ class Tmdb
             }
             $update_video = true;
         }
+        if ( Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '138') ) {
+            if (config('enable_external_rate_from_tmdb') == 'yes' ) {
+                $video_info['external_rate'] = (float)$details['vote_average'] ?? 0;
+            }
+            if (config('enable_external_ratings_from_tmdb') == 'yes' ) {
+                $video_info['external_ratings'] = (int)$details['vote_count'] ?? 0;
+            }
+        }
         if ($update_video) {
             $category_list = json_decode($video_info['category_list'], true);
             $video_info['category'] = array_column($category_list, 'id');
             CBvideo::getInstance()->update_video($video_info);
+            $this->updateVideoTmdbInfo($videoid, $tmdb_id, $type);
         }
 
         if (config('tmdb_get_poster') == 'yes' && config('enable_video_poster') == 'yes' && Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '14')) {
@@ -470,9 +479,13 @@ class Tmdb
         if (config('tmdb_get_crew') == 'yes' && config('enable_video_crew') == 'yes') {
             Tags::saveTags(implode(',', $crew_tags), 'crew', $videoid);
         }
-        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '101')) {
+        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '101') && !Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '138')) {
             Clipbucket_db::getInstance()->update(tbl('video'), ['id_tmdb', 'type_tmdb'], [$tmdb_id, $type], 'videoid = ' . $videoid);
         }
+        insert_log('import_tmdb', [
+            'success'       => 'yes',
+            'action_obj_id' => $videoid,
+        ]);
     }
 
     /**
@@ -498,12 +511,15 @@ class Tmdb
             'videoid' => $videoid
         ]);
         if (empty($video_info)) {
-            $video_info = Video::getInstance()->getOne([
-                'file_name' => $fileName
-            ]);
+            if (!empty($fileName)) {
+                $video_info = Video::getInstance()->getOne([
+                    'file_name' => $fileName
+                ]);
+            }
         }
         if (empty($video_info)) {
             e(lang('class_vdo_del_err'));
+            return [];
         }
         self::getInstance()->deleteOldCacheEntries();
         $title = !empty($params['video_title']) ? $params['video_title'] : $video_info['title'];
@@ -576,5 +592,34 @@ class Tmdb
             'sort_order'    => $sort_order,
             'videoid'       => $video_info['videoid']
         ];
+    }
+
+    /**
+     * @param int $videoid
+     * @param int $id_tmdb
+     * @param string $type_tmdb
+     * @param $tmdb_rate
+     * @param $tmdb_ratings
+     * @return bool
+     * @throws Exception
+     */
+    public function updateVideoTmdbInfo(int $videoid, int $id_tmdb, string $type_tmdb): bool
+    {
+        if (!Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '138')) {
+            return false;
+        }
+        $fields = ['tmdb_id', 'tmdb_type'];
+        $values = [$id_tmdb, '\''.$type_tmdb.'\''];
+
+        $sql = 'INSERT INTO ' . tbl('video_tmdb') . ' (video_id, '. implode(', ', $fields).') 
+        VALUES ( ' . (int)$videoid . ', '.implode(', ', $values).' )
+        ON DUPLICATE KEY UPDATE ';
+        foreach ($fields as $key => $field) {
+            if ($key != 0) {
+                $sql .=', ';
+            }
+            $sql .= $field . ' = VALUES('.$field.') ';
+        }
+        return Clipbucket_db::getInstance()->execute($sql);
     }
 }

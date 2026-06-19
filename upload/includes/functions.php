@@ -1021,14 +1021,14 @@ function load_plugin()
  *
  * @return string
  */
-function create_query_limit($page, $result, $total_results = 0): string
+function create_query_limit($page, $result, $total_results = null): string
 {
     if (empty($page) || $page <= 0 || !is_numeric($page)) {
         $page = 1;
     }
     $from = $page - 1;
     $from = $from * $result;
-    if ($from >= $total_results) {
+    if ($from >= $total_results && $total_results !== null) {
         $from = $total_results - $result;
         if ($from < 0) {
             $from = 0;
@@ -1126,6 +1126,11 @@ function lang($var, $params = [])
     } catch (ValueError) {
         return $lang;
     }
+}
+
+function lang_js($var, $params = [])
+{
+   return addslashes(lang($var, $params));
 }
 
 /**
@@ -1486,13 +1491,12 @@ function increment_views($id, $type = null): bool
                 }
 
                 if ($userid) {
-                    $log_array = [
+                    insert_log('watch_a_video', [
                         'success'       => 'NULL',
                         'action_obj_id' => $video['videoid'],
                         'userid'        => $userid,
                         'details'       => $video['title']
-                    ];
-                    insert_log('watch_a_video', $log_array);
+                    ]);
                 }
                 $return = true;
             } else {
@@ -1766,6 +1770,17 @@ function validate_cb_form($input, $array): void
                         e(lang('please_enter_val_bw_min_max', [$title, $min_len, $field['max_length']]));
                     }
                 }
+                if ($field['type'] == 'number' && $val !== null && $val !== '') {
+                    if ((isset($field['min']) && isset($field['max']))
+                        && ($val < $field['min'] || $val > $field['max'] || !is_numeric($val))) {
+                        e(lang('please_enter_val_bw_min_max', [$title, $field['min'], $field['max']]));
+                    } elseif (isset($field['min']) && ($val < $field['min'] || !is_numeric($val))) {
+                        e(lang('please_enter_val_bigger_than_min', [$title, $field['min']]));
+                    } elseif (isset($field['max']) && ($val > $field['max'] || !is_numeric($val))) {
+                        e(lang('please_enter_val_smaller_than_max', [$title, $field['max']]));
+                    }
+                }
+
                 if (function_exists($field['db_value_check_func'])) {
                     $db_val_result = $field['db_value_check_func']($val);
                     if ($db_val_result != $field['db_value_exists']) {

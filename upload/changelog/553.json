@@ -1,6 +1,6 @@
 {
   "version":"5.5.3",
-  "revision":"136",
+  "revision":"150",
   "status":"stable",
   "detail":[
     {
@@ -10,6 +10,7 @@
         ,"Refactor and mutualize images uploads"
         ,"Refactor users deletion"
         ,"Refactor action logs"
+        ,"Refactor TMDB data storage"
         ,"Implement email alias allow option"
         ,"Implement templates edition"
         ,"Implement Regenerate videos thumbs tool"
@@ -18,11 +19,14 @@
         ,"Implement tasks cleanup tool"
         ,"Implement TMDB data refresh tool"
         ,"Implement template compatibility check"
+        ,"Implement movie rate & ratings"
+        ,"Implement many action logs"
         ,"Update advanced settings display"
         ,"Update video & photos thumbs regeneration tools"
         ,"Update video allowed extensions display"
         ,"Update TMDB search interface"
         ,"Update manage tags type filter"
+        ,"Update interfaces display when medias are disabled"
         ,"Add links to flagged tags"
         ,"Hide poster & backdrop tabs when empty on video edition page"
         ,"Only show template editor menu while in dev mode"
@@ -47,6 +51,7 @@
         ,"Fix SQL error on View online users page"
         ,"Fix tags type search on manage tags page (<i>#843</i>)"
         ,"Fix videos, photos, collections & playlists advanced search by tags (<i>#844</i>)"
+        ,"Fix possible pagination overflow on action logs page"
       ]
     },
     {
@@ -65,6 +70,7 @@
         ,"Implement fullwidth photos page"
         ,"Implement backdrop as default thumb"
         ,"Implement random photo order"
+        ,"Implement video rating display"
         ,"Update media rating"
         ,"Update collection management"
         ,"Update TMDB search interface"
@@ -96,7 +102,10 @@
         ,"Fix video block display"
         ,"Fix tags suggestion (<i>#839</i>)"
         ,"Fix possible video thumbs cache issue"
-        ,"Fix possible unauthorized access to video subtitles edition (Thanks @Bnyt7 !)"
+        ,"Fix possible unauthorized access to video subtitles edition (Thanks @Bnyt7 & @Mr-In4inci3le !)"
+        ,"Fix tag management display (<i>#860</i>)"
+        ,"Fix remote play form"
+        ,"Fix JS error on channel page"
       ]
     },
     {
@@ -123,11 +132,13 @@
         ,"Fix possible duplicate configs"
         ,"Fix SSRF vulnerability (Thanks @Takumi142857 !)"
         ,"Fix Readme"
-        ,"Fix docker image <i>(#781, #782)</i>"
+        ,"Fix docker image (<i>#781</i>, <i>#782</i>)"
         ,"Fix possible issue with failed redis connection"
         ,"Fix possible RCE (Thanks @Takumi142857 & @drkim-dev !)"
         ,"Fix changelog"
         ,"Fix possible memory overflow while in dev mode"
+        ,"Fix pagination (<i>#855</i>)"
+        ,"Fix TMDB import SQL error"
       ]
     },
     {
@@ -159,6 +170,7 @@
         ,"Fix conversion logs"
         ,"Fix PNG transparency"
         ,"Fix temp file deletion on conversion failure"
+        ,"Fix possible remote code execution (Thanks @Bnyt7 !)"
       ]
     },
     {
