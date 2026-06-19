@@ -117,15 +117,27 @@ class cbpage
         if (empty($lang_id)) {
             $lang_id = Language::getInstance()->lang_id;
         }
-        $page_content = 'page_content';
-        $page_title = 'page_title';
-        if ($get_other_language_if_empty) {
-            $page_content =' CASE WHEN pages_translations.page_content != \'\' THEN pages_translations.page_content ELSE (SELECT page_content FROM '.tbl('pages_translations').' WHERE page_id = '.(int)$id.' AND page_content != \'\' limit 1) END as page_content';
-            $page_title = 'CASE WHEN pages_translations.page_title != \'\' THEN pages_translations.page_title ELSE (SELECT page_title FROM '.tbl('pages_translations').' WHERE page_id = '.(int)$id.' AND page_title != \'\' limit 1) END as page_title, pages_translations.language_id';
+        //getting selected language
+        $sql = ' SELECT page_content, page_title FROM ' . cb_sql_table('pages_translations') . ' WHERE page_id = ' . (int)$id . ' AND language_id = ' . (int)$lang_id;
+        $results = Clipbucket_db::getInstance()->_select($sql, 3600, 'page_' . (int)$id . '_language_' . (int)$lang_id)[0];
+        if ($get_other_language_if_empty && empty($results)) {
+            //if empty results and param get other languages
+            //getting default language
+            $default_language_id = (int)Language::getDefaultLanguage()['language_id'];
+            $sql = ' SELECT page_content, page_title FROM ' . cb_sql_table('pages_translations') . ' WHERE page_id = ' . (int)$id . ' AND language_id = ' . $default_language_id;
+            $results = Clipbucket_db::getInstance()->_select($sql, 3600, 'page_' . (int)$id . '_language_' . $default_language_id)[0];
+            if (empty($results)) {
+                //if empty default language getting english translation or not empty language
+                $sql = 'SELECT CASE WHEN pages_translations.page_content != \'\' THEN pages_translations.page_content ELSE (SELECT page_content FROM ' . tbl('pages_translations') . ' WHERE page_id = ' . (int)$id . ' AND page_content != \'\' LIMIT 1) END AS page_content
+                     , CASE WHEN pages_translations.page_title != \'\' THEN pages_translations.page_title ELSE (SELECT page_title FROM ' . tbl('pages_translations') . ' WHERE page_id = ' . (int)$id . ' AND page_title != \'\' LIMIT 1) END         AS page_title, pages_translations.language_id
+                FROM ' . cb_sql_table($this->page_tbl) . '
+                         LEFT JOIN ' . cb_sql_table('pages_translations') . ' ON ' . $this->page_tbl . '.page_id = pages_translations.page_id AND pages_translations.language_id = ' . Language::$english_id . '
+                WHERE ' . $this->page_tbl . '.page_id = ' . (int)$id;
+                $results = Clipbucket_db::getInstance()->_select($sql, 3600, 'page_' . (int)$id . '_language_' . Language::$english_id . '_other')[0];
+            }
         }
-        return Clipbucket_db::getInstance()->select(cb_sql_table('pages_translations')
-            , $page_content . ', ' . $page_title
-            , 'page_id = ' . (int)$id . ' AND language_id = ' . (int)$lang_id)[0] ?? false;
+
+        return $results ?? false;
     }
 
     /**
