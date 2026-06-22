@@ -225,7 +225,9 @@ class cbpage
             $values = [$name];
             if (!empty($content)) {
                 foreach ($content as $lang_id => $content_trad) {
-                    $this->insertOrUpdatePageTranslation($id, $lang_id, $title[$lang_id], $content_trad);
+                    if (!empty($content_trad)) {
+                        $this->insertOrUpdatePageTranslation($id, $lang_id, $title[$lang_id], $content_trad);
+                    }
                 }
             }
             Clipbucket_db::getInstance()->update(tbl($this->page_tbl), $fields,
