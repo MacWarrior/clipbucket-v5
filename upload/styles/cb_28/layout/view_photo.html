@@ -94,6 +94,7 @@
                                             likes=$photo.total_rate_up
                                             dislikes=$photo.total_rate_down
                                             disable=($photo.userid == User::getInstance()->getCurrentUserID() && config('own_photo_rating') != 'yes')
+                                            display_thumbs=true
                                         }
                                     {/if}
                                     {if config('enable_favorite_icon_photo') == 'yes' && User::getInstance()->isUserConnected()}

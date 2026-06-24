@@ -18,6 +18,7 @@
                         likes=$p.total_rate_up
                         dislikes=$p.total_rate_down
                         disable=($p.userid == User::getInstance()->getCurrentUserID() && config('own_comment_rating') != 'yes')
+                        display_thumbs=true
                     }
                 </div>
             {/if}
