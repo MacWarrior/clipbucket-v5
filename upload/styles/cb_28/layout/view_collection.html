@@ -124,6 +124,7 @@
                                 likes=$c.total_rate_up
                                 dislikes=$c.total_rate_down
                                 disable=($c.userid == User::getInstance()->getCurrentUserID() && config('own_collection_rating') != 'yes')
+                                display_thumbs=true
                             }
                         </div>
                     {/if}
