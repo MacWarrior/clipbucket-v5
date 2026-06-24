@@ -11,11 +11,8 @@ if (@$_GET['msg']) {
 $video = mysql_clean($_GET['video']);
 
 //Check Video Exists or Not
-
-if (myquery::getInstance()->video_exists($video)) {
-
-    $data = Video::getInstance()->getOne(['videoid'=>$video]);
-
+$data = Video::getInstance()->getOne(['videoid'=>$video]);
+if ($data) {
     $is_file_to_upload= false;
     # Uploading Thumbs
     if (!empty($_FILES['vid_thumb'])) {

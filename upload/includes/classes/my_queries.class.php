@@ -161,13 +161,6 @@ class myquery
         return $results[0]['title'];
     }
 
-    /**
-     * @throws Exception
-     */
-    function video_exists($videoid)
-    {
-        return CBvideo::getInstance()->video_exists($videoid);
-    }
 
     /**
      * Function used to get video details

@@ -11,8 +11,9 @@ if (@$_GET['msg']) {
 
 $video = mysql_clean($_GET['video']);
 
+$data = Video::getInstance()->getOne(['videoid' => $video]);
 //Check Video Exists or Not
-if (myquery::getInstance()->video_exists($video)) {
+if ($data) {
     //Deleting Comment
     $cid = $_GET['delete_comment'];
     if (!empty($cid)) {
@@ -20,7 +21,6 @@ if (myquery::getInstance()->video_exists($video)) {
     }
 
     //Get Video Details
-    $data = get_video_details($video);
     Assign('udata', userquery::getInstance()->get_user_details($data['userid']));
     Assign('data', $data);
 } else {
