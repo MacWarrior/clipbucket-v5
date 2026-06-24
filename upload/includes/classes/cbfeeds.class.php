@@ -198,63 +198,41 @@ class cbfeeds
                 //Creating Links
                 switch ($action) {
                     case 'upload_photo':
-                        $photo = CBPhotos::getInstance()->get_photo($object_id);
-
+                        $photo = Photo::getInstance()->getOne(['photo_id' => $object_id, 'count' => true]);
                         //If photo does not exists, simply remove the feed
                         if (!$photo) {
                             $this->deleteFeed($uid, $feed['file']);
                             $remove_feed = true;
                         } else {
-                            $farr['thumb'] = PhotoThumbs::getThumbFile($photo['photo_id']);
-                            $farr['link'] = CBPhotos::getInstance()->photo_links($photo, 'view_item');
-
                             //Content Title
-                            $farr['title'] = $photo['photo_title'];
                             $farr['action_title'] = lang('user_has_uploaded_new_photo', $userlink);
-
-                            $farr['links'][] = ['link' => (CBPhotos::getInstance()->photo_links($photo, 'view_item')), 'text' => lang('view_photo')];
-
-                            $farr['icon'] = 'images.png';
                         }
                         break;
 
                     case 'upload_video':
                     case 'add_favorite':
-                        $video = CBvideo::getInstance()->get_video($object_id);
-                        //If photo does not exists, simply remove the feed
+                        $video = Video::getInstance()->getOne(['video_id' => $object_id, 'count' => true]);
+                        //If video does not exists, simply remove the feed
                         if (!$video) {
                             $this->deleteFeed($uid, $feed['file']);
                             $remove_feed = true;
-                        } elseif (!video_playable($video)) {
-                            $remove_feed = true;
                         } else {
                             //Content Title
-                            $farr['title'] = $video['title'];
                             if ($action == 'upload_video') {
                                 $farr['action_title'] = lang('user_has_uploaded_new_video', $userlink);
                             }
                             if ($action == 'add_favorite') {
                                 $farr['action_title'] = lang('user_has_favorited_video', $userlink);
                             }
-                            $farr['link'] = video_link($video);
-                            $farr['object_content'] = $video['description'];
-                            $farr['thumb'] = VideoThumbs::getDefaultThumbFile($video['videoid']);
-                            $farr['links'][] = ['link' => video_link($video), 'text' => lang('watch_video')];
-                            $farr['icon'] = 'video.png';
-
-                            if ($action == 'add_favorite') {
-                                $farr['icon'] = 'heart.png';
-                            }
                         }
                         break;
 
                     case 'signup':
                         $farr['action_title'] = lang('user_joined_us', [$userlink, TITLE, $userlink]);
-                        $farr['icon'] = 'user.png';
                         break;
 
                     case 'add_friend':
-                        $friend = userquery::getInstance()->get_user_details($object_id);
+                        $friend = User::getInstance()->getOne(['user_id' => $object_id, 'count' => true]);
 
                         if (!$friend) {
                             $this->deleteFeed($uid, $feed['file']);
@@ -262,24 +240,16 @@ class cbfeeds
                         } else {
                             $friendlink = '<a href="' . userquery::getInstance()->profile_link($friend) . '">' . display_clean($friend['username']) . '</a>';
                             $farr['action_title'] = lang('user_is_now_friend_with_other', [$userlink, $friendlink]);
-                            $farr['icon'] = 'user_add.png';
                         }
                         break;
 
                     case 'add_collection':
-                        $collection = Collections::getInstance()->get_collection($object_id);
+                        $collection = Collection::getInstance()->getone(['collection_id' => $object_id, 'count' => true]);
                         if (!$collection) {
                             $this->deleteFeed($uid, $feed['file']);
                             $remove_feed = true;
                         } else {
                             $farr['action_title'] = lang('user_has_created_new_collection', $userlink);
-                            $farr['thumb'] = Collections::getInstance()->get_thumb($collection, 'small');
-                            $farr['title'] = $collection['collection_name'];
-                            $collection_link = Collections::getInstance()->collection_links($collection, 'view');
-                            $farr['link'] = $collection_link;
-                            $farr['object_content'] = $collection['collection_description'] . '<br>' . $collection['total_objects'] . ' ' . $collection['type'];
-                            $farr['icon'] = 'photos.png';
-                            $farr['links'][] = ['link' => $collection_link, 'text' => lang('view_collection')];
                         }
                         break;
 
@@ -295,16 +265,7 @@ class cbfeeds
                             $remove_feed = true;
                         } else {
                             //Content Title
-                            $farr['title'] = $comment['title'];
                             $farr['action_title'] = $userlink . ' ' . lang('commented on a post');
-                            $farr['link'] = video_link($video);
-                            $farr['object_content'] = $video['description'];
-                            $farr['thumb'] = VideoThumbs::getDefaultThumbFile($video['videoid']);
-                            $farr['links'][] = ['link' => video_link($video), 'text' => lang('watch_video')];
-                            $farr['icon'] = 'video.png';
-                            if ($action == 'add_favorite') {
-                                $farr['icon'] = 'heart.png';
-                            }
                         }
                         break;
                 }

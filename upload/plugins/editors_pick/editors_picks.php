@@ -29,7 +29,7 @@ function editors_pick()
  */
 function add_to_editor_pick($vid): void
 {
-    if (CBvideo::getInstance()->video_exists($vid)) {
+    if (Video::getInstance()->getOne(['videoid' => $vid, 'count'=>true])) {
         if (!is_video_in_editors_pick($vid)) {
             $sort = get_highest_sort_number() + 1;
             Clipbucket_db::getInstance()->insert(tbl('editors_picks'), ['videoid', 'sort', 'date_added'], [(int)$vid, $sort, now()]);

@@ -12,7 +12,7 @@ define('CB_PM_MAX_INBOX', 500); // 0 - OFF , U - Unlimited
  */
 function attach_video($array)
 {
-    if (CBvideo::getInstance()->video_exists($array['attach_video'])) {
+    if (Video::getInstance()->getOne(['videoid' => $array['attach_video'], 'count'=>true])) {
         return '{v:' . $array['attach_video'] . '}';
     }
 }
