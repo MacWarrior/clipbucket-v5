@@ -52,7 +52,7 @@ $breadcrumb[1] = ['title' => lang('manage_x', strtolower(lang('videos'))), 'url'
 $breadcrumb[2] = ['title' => 'Editing : ' . display_clean($data['title']), 'url' => DirPath::getUrl('admin_area') . 'edit_video.php?video=' . display_clean($video_id)];
 
 //Check Video Exists or Not
-if (myquery::getInstance()->video_exists($video_id)) {
+if ($data) {
     assign('udata', userquery::getInstance()->get_user_details($data['userid']));
 
     $date_added = DateTime::createFRomFormat('Y-m-d', explode(' ', $data['date_added'])[0]);

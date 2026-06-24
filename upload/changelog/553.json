@@ -1,6 +1,6 @@
 {
   "version":"5.5.3",
-  "revision":"150",
+  "revision":"152",
   "status":"stable",
   "detail":[
     {
@@ -106,6 +106,7 @@
         ,"Fix tag management display (<i>#860</i>)"
         ,"Fix remote play form"
         ,"Fix JS error on channel page"
+        ,"Fix video rating display"
       ]
     },
     {

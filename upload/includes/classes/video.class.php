@@ -1657,17 +1657,15 @@ class CBvideo extends CBCategory
     /**
      * Function used to check weather video exists or not
      *
-     * @param int|string $vid
-     *
-     * @return bool|int
+     * @param int $videoid
+     * @return bool
      * @throws Exception
+     *@deprecated
+     * @TODO remove action-> exist
      */
-    function video_exists($vid)
+    function video_exists($videoid): bool
     {
-        if (is_numeric($vid)) {
-            return Clipbucket_db::getInstance()->count(tbl('video'), 'videoid', ' videoid = ' . (int)$vid);
-        }
-        return Clipbucket_db::getInstance()->count(tbl('video'), 'videoid', ' videokey=\'' . mysql_clean($vid) . '\' ');
+        return (bool)Video::getInstance()->getOne(['videoid' => $videoid, 'count' =>true]);
     }
 
     /**
@@ -1955,7 +1953,7 @@ class CBvideo extends CBCategory
                 e(lang('you_dont_have_permission_to_update_this_video'));
                 return;
             }
-            if (!$this->video_exists($vid)) {
+            if (!Video::getInstance()->getOne(['videoid' => $vid, 'count'=>true])) {
                 e(lang('class_vdo_del_err'));
                 return;
             }
@@ -2024,7 +2022,7 @@ class CBvideo extends CBCategory
             e(lang('invalid_params'));
             return;
         }
-        if ($this->video_exists($videoid)) {
+        if (Video::getInstance()->getOne(['videoid'=>$videoid, 'count'=>true])) {
             Clipbucket_db::getInstance()->update(tbl('video_subtitle'), ['title'], [$title], ' videoid = ' . (int)$videoid . ' AND number = \'' . mysql_clean($number) . '\'');
         }
     }
@@ -2037,9 +2035,8 @@ class CBvideo extends CBCategory
      */
     function delete_video($vid): void
     {
-        if ($this->video_exists($vid)) {
-            $vdetails = $this->get_video($vid);
-
+        $vdetails = Video::getInstance()->getOne(['videoid'=>$vid]);
+        if ($vdetails) {
             if ($this->is_video_owner($vid, User::getInstance()->getCurrentUserID()) || User::getInstance()->hasAdminAccess()) {
                 #THIS SHOULD NOT BE REMOVED :O
                 //list of functions to perform while deleting a video
@@ -2742,7 +2739,6 @@ class CBvideo extends CBCategory
         $this->action->type = 'v';
         $this->action->name = 'video';
         $this->action->obj_class = self::class;
-        $this->action->check_func = 'video_exists';
         $this->action->type_tbl = $this->dbtbl['video'];
         $this->action->type_id_field = 'videoid';
     }
