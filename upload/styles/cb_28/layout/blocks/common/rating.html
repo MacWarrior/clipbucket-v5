@@ -4,6 +4,7 @@
         <div class="stars five" style="--rating: {$external_rate * 10}%;"
              title="{lang('noted_x', $external_rate)}{if $external_ratings > 0}&nbsp;{lang('over_x_ratings', $external_ratings)}{/if}"></div>
     {/if}
+    {if $display_thumbs}
     <div class="clearfix rating-holder">
         <div class="likes like-dislike{if $ratedBy == 'liked'} rated{/if}">
             <a {if !$disable} onclick="_cb.rateNew('{$id}','5','{$type}', this)" {else} class="disabled cursor_default"{/if} href="javascript:void(0);"><span class="icon-thumbup"></span></a>
@@ -14,4 +15,5 @@
             <span>{prettyNum($dislikes)}</span>
         </div>
     </div>
+    {/if}
 </div>
