@@ -7,6 +7,7 @@
     var autoplay = "{$player_params.autoplay}" === 'yes';
     var video_uploader = "{if config('enable_hide_uploader_name') != 'yes'}{if $vdata.userid == $anonymous_id}{elseif !empty($vdata.user_username)}{display_clean($vdata.user_username)}{else}{display_clean($vdata.username)}{/if}{/if}";
     var video_title = "{display_clean($vdata.title)}";
+
 </script>
 
 {if !empty($embed_players)}
@@ -188,15 +189,101 @@
         });
         {/literal}
     }
+    var hasAudioTracksApi
     //Initializing
     $(document).ready(function() {
         cb_player_obj = new videojs('cb_video_js_' + video_id, cb_player_setup, cb_vjs_callback);
         {if !empty($vdata['fov']) && config('enable_360_video') == 'yes'}
             let video_fov = '{$vdata['fov']}';
-        {literal}
-            cb_player_obj.vr({projection: video_fov});
-        {/literal}
+            {literal}
+                cb_player_obj.vr({projection: video_fov});
+            {/literal}
         {/if}
+        const video = cb_player_obj;
+        hasAudioTracksApi = "audioTracks" in video;
+        cb_player_obj.ready(() => {
+            cb_player_obj.one('loadedmetadata', () => {
+                const audioTracks = cb_player_obj.audioTracks();
+
+                const existingTracks = Array.from({
+                        length: audioTracks.length
+                    }, (_, i) => audioTracks[i]
+                );
+
+                const menuTracks = existingTracks.map((track, index) => {
+                    const meta = video_audio_tracks.find(t =>
+                        t.track_number == index
+                    );
+                    return {
+                        nativeTrack: track,
+                        id: track.id,
+                        label: meta?.title || track.label,
+                        language: meta?.language || track.language,
+                        kind: track.kind || 'main',
+                        enabled: track.enabled,
+                        order: meta?.order ?? 999,
+                        originalIndex: index,
+                    };
+                });
+                menuTracks.sort((a, b) => a.order - b.order);
+                const audioButton = cb_player_obj.controlBar?.audioTrackButton;
+
+                if (!audioButton) {
+                    return;
+                }
+
+                const menu = audioButton.menu;
+                if (!menu || !menu.children_) {
+                    return;
+                }
+                // Retire les items natifs
+                menu.children().slice().forEach(child => {
+                    menu.removeChild(child);
+                });
+                // Ajoute items dans l'ordre BDD
+                menuTracks.forEach(item => {
+                    const MenuItem = videojs.getComponent('MenuItem');
+                    const menuItem = new MenuItem(cb_player_obj, {
+                        label: item.label,
+                        selectable: true,
+                        selected: item.nativeTrack.enabled
+                    });
+
+                    menuItem.handleClick = function () {
+                        selectTrack(menuTracks, item, menu);
+                    };
+
+                    console.log(menu.addChild(menuItem));
+                });
+                console.log(menu)
+                console.log( menu.children())
+                //default
+                setTimeout(() => {
+                    console.log('timeout')
+                console.log( menu.children())
+                    console.log(menu)
+                    selectTrack(menuTracks, menuTracks[0], menu)
+                }, 1000);
+            });
+        });
+
+        function selectTrack(menuTracks, item, menu){
+            menuTracks.forEach(t => {
+                t.nativeTrack.enabled = false;
+            });
+
+            item.nativeTrack.enabled = true;
+            // Rafraîchir état sélectionné
+            menuTracks.forEach((t, i) => {
+                const child = menu.children()[i];
+                if (child && typeof child.selected === 'function') {
+                    child.selected(t.nativeTrack.enabled);
+                }
+            });
+        }
+
+
+
 
         $('body').keydown(function(e)
         {

@@ -311,8 +311,6 @@ $( document ).ready(function() {
     });
 
     var tbody = $("#manageAudioTracks tbody");
-    console.log("tbody trouvé :", tbody.length);
-    console.log("sortable dispo :", typeof tbody.sortable);
 
     tbody.sortable({
         items: "tr",
@@ -325,15 +323,20 @@ $( document ).ready(function() {
 
 
         update: function() {
-            var order = $(this).sortable('toArray', {
-                attribute: 'data-id'
+            var lignes = [];
+            $("#manageAudioTracks tbody tr").each(function (index) {
+                var ordre = index ;
+                var id = $(this).data("id");
+
+                $(this).find(".order").text(ordre);
+                lignes.push(id);
             });
             $.ajax({
                 url: admin_url + "/actions/audio_track_update_order.php",
                 type: "POST",
                 dataType: "json",
                 data: {
-                    lines: order,
+                    lines: lignes,
                     videoid: videoid
                 }
             });

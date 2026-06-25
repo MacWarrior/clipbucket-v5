@@ -34,7 +34,7 @@ class VideoAudioTrack
     public static function updateAudioTrackOrder($videoid, $lines): bool
     {
         foreach ($lines as $order => $number) {
-            $sql = 'UPDATE ' . tbl(self::$tablename) . ' SET order =' . (int)$order . ' WHERE videoid = ' . (int)$videoid . ' AND `track_number` = ' . (int)$number;
+            $sql = 'UPDATE ' . tbl(self::$tablename) . ' SET `order` =' . (int)$order . ' WHERE `videoid` = ' . (int)$videoid . ' AND `track_number` = ' . (int)$number;
             Clipbucket_db::getInstance()->execute($sql);
         }
         return true;
