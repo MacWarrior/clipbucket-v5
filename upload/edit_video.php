@@ -77,7 +77,7 @@ $available_tags['executive_producer'] = Tags::fill_auto_complete_tags('executive
 $available_tags['producer'] = Tags::fill_auto_complete_tags('producer');
 $available_tags['genre'] = Tags::fill_auto_complete_tags('genre');
 assign('available_tags',$available_tags);
-$subtitle_list = get_video_subtitles($vdetails) ?: [];
+$subtitle_list = Subtitle::getVideoSubtitles($vdetails) ?: [];
 assign('subtitle_list', $subtitle_list);
 assign('use_backdrop_default', Video::getUseBackdropDefault($vdetails));
 subtitle(lang('vdo_edit_vdo'));

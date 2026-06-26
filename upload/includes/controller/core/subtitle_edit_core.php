@@ -13,7 +13,7 @@ if (empty($title)) {
 $video = $_POST['videoid'];
 $number = $_POST['number'];
 $data = Video::getInstance()->getOne(['videoid' => $video]);
-$subtitle_list = get_video_subtitles($data);
+$subtitle_list = Subtitle::getVideoSubtitles($data);
 foreach ($subtitle_list as $subtitle) {
     if ($subtitle['title'] == $title) {
         $can_update = false;
@@ -28,9 +28,9 @@ if ($data['userid'] != User::getInstance()->getCurrentUserID() && !User::getInst
     die();
 }
 if ($can_update) {
-    CBvideo::getInstance()->update_subtitle($video, $number, $title);
+    Subtitle::updateSubtitle($video, $number, $title);
 }
 assign('videoid', $data['videoid']);
 assign('vstatus', $data['status']);
-$subtitle_list_new = get_video_subtitles($data);
+$subtitle_list_new = Subtitle::getVideoSubtitles($data);
 display_subtitle_list($subtitle_list_new);

@@ -456,7 +456,7 @@ class FFMpeg
 
                 $count++;
                 $display_count = str_pad((string)$count, 2, '0', STR_PAD_LEFT);
-                $command = config('ffmpegpath') . ' -y -i ' . escapeshellarg($this->input_file) . ' -map 0:' . $map_id . ' -f ' . config('subtitle_format') . ' ' . $subtitle_dir . $this->file_name . '-' . $display_count . '.srt 2>&1';
+                $command = config('ffmpegpath') . ' -y -i ' . escapeshellarg($this->input_file) . ' -map 0:' . $map_id . ' -f ' . config('subtitle_format') . ' ' . $subtitle_dir . $this->file_name . '-' . $display_count . '.' . Subtitle::getExtension() . ' 2>&1';
                 if (System::isInDev()) {
                     $this->log->writeLine('<div class="showHide"><p class="title glyphicon-chevron-right">Command : </p><p class="content">'.$command.'</p></div>', false, true);
                 }
