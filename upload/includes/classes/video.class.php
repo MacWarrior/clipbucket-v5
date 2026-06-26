@@ -947,7 +947,7 @@ class Video extends Objects
         $total+= $this->getVideoFilesUsage($video['file_directory'], json_decode($video['video_files']), $video['file_type'], $video['file_name'], $video['video_version']);
         $total+= $this->getThumbsUsage($video['file_directory'], $video['file_name']);
         $total+= $this->getLogsUsage($video['file_name'], $video['file_directory']);
-        $total+= $this->getSubtitlesUsage($video_id, $video['file_directory'], $video['file_name']);
+        $total+= Subtitle::getSubtitlesUsage($video_id, $video['file_directory'], $video['file_name']);
         return $total;
     }
 
@@ -1027,30 +1027,6 @@ class Video extends Objects
         }
         return $total;
 
-    }
-
-    /**
-     * @param $video_id
-     * @param string $file_directory
-     * @param string $file_name
-     * @return int
-     * @throws Exception
-     */
-    public function getSubtitlesUsage($video_id, string $file_directory, string $file_name):int
-    {
-        $total = 0;
-        $directory = DirPath::get('subtitles') . $file_directory . DIRECTORY_SEPARATOR;
-        $query = 'SELECT * FROM ' . tbl('video_subtitle') . ' WHERE videoid = ' .$video_id;
-        $result = db_select($query);
-        if ($result) {
-            foreach ($result as $row) {
-                $filepath = $directory . $file_name . '-' . $row['number'] . '.srt';
-                if (file_exists($filepath)) {
-                    $total += filesize($filepath);
-                }
-            }
-        }
-        return $total;
     }
 
 
@@ -2014,20 +1990,6 @@ class CBvideo extends CBCategory
     }
 
     /**
-     * @throws Exception
-     */
-    function update_subtitle($videoid, $number, $title): void
-    {
-        if (!preg_match('/^\d{1,2}$/', $number)) {
-            e(lang('invalid_params'));
-            return;
-        }
-        if (Video::getInstance()->getOne(['videoid'=>$videoid, 'count'=>true])) {
-            Clipbucket_db::getInstance()->update(tbl('video_subtitle'), ['title'], [$title], ' videoid = ' . (int)$videoid . ' AND number = \'' . mysql_clean($number) . '\'');
-        }
-    }
-
-    /**
      * Function used to delete a video
      *
      * @param $vid
@@ -2124,39 +2086,6 @@ class CBvideo extends CBCategory
         }
         remove_empty_parent_directory(DirPath::get('logs') . $str, DirPath::get('logs'));
         e(lang('vid_log_delete_msg'), 'm');
-    }
-
-    /**
-     * @param $vdetails
-     * @param string|null $number
-     * @throws Exception
-     */
-    function remove_subtitles($vdetails, string $number = null)
-    {
-        $directory = DirPath::get('subtitles') . $vdetails['file_directory'] . DIRECTORY_SEPARATOR;
-        $query = 'SELECT * FROM ' . tbl('video_subtitle') . ' WHERE videoid = ' . (int)$vdetails['videoid'];
-        if ($number !== null) {
-            $query .= ' AND number = \'' . mysql_clean($number) . '\'';
-        }
-        $result = db_select($query);
-        if ($result) {
-            foreach ($result as $row) {
-                $filepath = $directory . $vdetails['file_name'] . '-' . $row['number'] . '.srt';
-                if (file_exists($filepath)) {
-                    unlink($filepath);
-                }
-            }
-            $query_delete = 'DELETE FROM ' . tbl('video_subtitle') . ' WHERE videoid = ' . (int)$vdetails['videoid'];
-            if ($number !== null) {
-                $query_delete .= ' AND number = \'' . mysql_clean($number) . '\'';
-            }
-            Clipbucket_db::getInstance()->execute($query_delete);
-        }
-        if ($number !== null) {
-            e(str_replace('%s', $number,lang('video_subtitles_deleted_num')), 'm');
-        } else {
-            e(lang('video_subtitles_deleted'), 'm');
-        }
     }
 
     /**

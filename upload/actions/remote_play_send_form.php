@@ -129,7 +129,7 @@ switch($step){
     sendClientResponseAndContinue(function () use($video_id, $response) {
             $video = Video::getInstance()->getOne(['video_id' => $video_id]);
             $response['html'] = Upload::displayVideoThumbsForm($video);
-            assign('subtitle_list',get_video_subtitles($video) ?: []);
+            assign('subtitle_list', Subtitle::getVideoSubtitles($video) ?: []);
             $response['percent'] = $video['convert_percent'] ?? 0;
             $response['videokey'] = $video['videokey'];
             $response['videoid'] = $video_id;
