@@ -355,7 +355,8 @@ INSERT INTO `{tbl_prefix}config` (`configid`, `name`, `value`) VALUES
     (NULL, 'enable_external_ratings_field', 'no'),
     (NULL, 'enable_external_rate_ratings_on_fo', 'no'),
     (NULL, 'enable_external_rate_from_tmdb', 'no'),
-    (NULL, 'enable_external_ratings_from_tmdb', 'no');
+    (NULL, 'enable_external_ratings_from_tmdb', 'no'),
+    (NULL, 'display_language_flag', 'yes');
 
 INSERT INTO `{tbl_prefix}video_resolution` (`title`, `ratio`, `enabled`, `width`, `height`, `video_bitrate`) VALUES
 	('240p', '16/9', 1, 426, 240, 240000),

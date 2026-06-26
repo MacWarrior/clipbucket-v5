@@ -2,14 +2,24 @@
 <div class="form-group">
     <form id="form1" name="form1" method="post">
         <div class="row">
-            <div class="col-md-5">
+            <div class="col-md-4">
                 <label for="name">Language Name</label>
                 <div style="vertical-align: bottom;">
                     <input style="vertical-align: middle; width: calc(100% - 180px);" name="name" type="text" class="form-control" id="name" value="{$lang_details.language_name}"/>
                     <input name="language_id" type="hidden" class="form-control" id="language_id" value="{$lang_details.language_id}"/>
                 </div>
             </div>
-            <div class="col-md-5">
+            <div class="col-md-4">
+                <label for="name">Language FLag</label>
+                <div style="vertical-align: bottom;">
+                    <select name="flag" class="form-control" id="flag">
+                        {foreach from=ClipBucket::getInstance()->get_countries() key=iso2 item=country}
+                            <option value="{$iso2}" {if strtolower($iso2) == strtolower($lang_details.language_flag)}selected="selected"{/if} data-image="{get_country_flag_url($iso2)}">{$country}</option>
+                        {/foreach}
+                    </select>
+                </div>
+            </div>
+            <div class="col-md-4">
                 <label for="codeAdd">Language Code</label>
                 <div style="vertical-align: bottom;">
                     <input style="display: inline-block; vertical-align: middle; width: calc(100% - 180px);" name="code" type="text" class="form-control" id="codeAdd" value="{$lang_details.language_code}"/>
