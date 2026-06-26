@@ -8,13 +8,13 @@ $(document).ready(function () {
         $(obj).next('span').remove();
     }
 
-    $('input#page_name,input#page_title').on('keyup', function () {
+    $('input#page_name').on('keyup', function () {
         let input = $(this);
         let input_val = input.val();
         if (input_val === '') {
             addErrClass(input, errors["empty_"+input.attr('id')], true, false);
             has_error = true;
-        } else if (input_val.indexOf(' ') >= 0 && input.attr('id') === 'page_name') {
+        } else if (input_val.indexOf(' ') >= 0) {
             addErrClass(input, errors["page_name_cant_have_space"], true, false);
             has_error = true;
         } else {
@@ -35,6 +35,7 @@ $(document).ready(function () {
 
     $('.flag_language').on('click', function () {
         const id = $(this).data('id');
+        $('#selected_lang').val(parseInt(id));
         $('.flag_language img').removeClass('selected');
         $('.flag_language[data-id="' + id + '"] img').addClass('selected');
         const form = $(this).parents('form');

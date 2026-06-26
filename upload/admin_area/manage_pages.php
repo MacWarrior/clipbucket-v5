@@ -102,7 +102,7 @@ if (empty($mode) || $mode == 'view') {
         e(mysql_clean($_GET['msg']), 'm');
     }
     assign('mode', 'manage');
-    assign('cbpages', cbpage::getInstance()->get_pages(['translated_code'=>true]));
+    assign('cbpages', cbpage::getInstance()->get_pages());
 } else {
     if (!Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '999')) {
         SessionMessageHandler::add_message('Sorry, you cannot perform this action until the application has been fully updated by an administrator', 'e', User::getInstance()->getDefaultHomepageFromUserLevel());
@@ -117,9 +117,9 @@ if (empty($mode) || $mode == 'view') {
         if (!$page) {
             e('Page does not exist');
         }
-        $breadcrumb[2] = ['title' => lang('editing_template', $page['page_title']), 'url' => DirPath::getUrl('admin_area') . 'manage_pages.php?mode=edit&pid=' . display_clean($page['page_id'])];
+        $breadcrumb[2] = ['title' => lang('edit_page')];
     } else {
-        $breadcrumb[2] = ['title' => lang('add_new_page'), 'url' => DirPath::getUrl('admin_area') . 'manage_pages.php?mode=new'];
+        $breadcrumb[2] = ['title' => lang('add_new_page')];
     }
     $languages = Language::getInstance()->get_langs(true);
     $first_display = 0;
@@ -133,7 +133,10 @@ if (empty($mode) || $mode == 'view') {
             $page['page_titles'][$language['language_id']] = $page['page_title'];
         }
         $language['is_specified'] = (bool)$page['page_contents'][$language['language_id']];
-        if ($language['is_specified'] && !$first_display) {
+        if (!empty($_POST['selected_lang']) && $language['is_specified'] && $_POST['selected_lang'] == $language['language_id']) {
+            $first_display = $language['language_id'];
+            $language['is_shown'] = true;
+        } elseif ($language['is_specified'] && !$first_display && empty($_POST['selected_lang'])) {
             $first_display = $language['language_id'];
             $language['is_shown'] = true;
         } else {
@@ -145,6 +148,7 @@ if (empty($mode) || $mode == 'view') {
     }
     assign('page', $page);
     assign('languages', $languages);
+    assign('selected_lang', (int)$_POST['selected_lang']);
 }
 
 $min_suffixe = System::isInDev() ? '' : '.min';

@@ -1,8 +1,9 @@
 {if $mode =="edit" || $mode == 'new'}
     <form method="post">
+        <input type="hidden" value="{$selected_lang}" name="selected_lang" id="selected_lang"/>
         <div class="row">
-            <div class="col-md-6">
-                <span style="font-size: 21px; ">{if $mode == 'new'}{lang('add_new_page')}{else}{lang('edit_page')}&nbsp;:{/if}</span>
+            <div class="col-md-6" style="padding-left: 0;">
+                <h2 class="pull-left paddingLeftLarge" >{if $mode == 'new'}{lang('add_new_page')}{else}{lang('editing_template', '')}<small>&gt; {display_clean(cbpage::getInstance()->getPageTranslation($page['page_id'], null, true, 'title'))}</small>{/if}</h2>
             </div>
             <div class="col-md-6" style="text-align: right;">
                 <span style="font-size: 16px;">{lang('translations')} : </span>
@@ -15,13 +16,12 @@
         <div class="row">
             <div class="col-md-6">
                 <div class="form-group">
-                    <label for="page_name">Page Name</label>
+                    <label for="page_name">Page Code</label>
                     <input name="page_name" class="form-control" type="text" id="page_name" value="{display_clean($page.page_name)}"></td>
                 </div>
             </div>
         </div>
         <div class="row">
-
             <div class="col-md-6">
                 <div class="form-group">
                     <label for="page_title">Page Title</label>
@@ -83,7 +83,7 @@
                                 <div class="row">
                                     <div class="col-md-3">
                                         <a href="{cbpage::getInstance()->page_link($cbpages[list])}" target="_blank" style="text-indent:10px">
-                                            {display_clean($cbpages[list].display_name)}</a>
+                                            {display_clean(cbpage::getInstance()->getPageTranslation($cbpages[list]['page_id'], null, true, 'title'))}</a>
                                     </div>
                                     <div class="col-md-9">
                                         <div class="labels">

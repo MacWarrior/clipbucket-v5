@@ -109,7 +109,7 @@ class cbpage
      * @return false|mixed
      * @throws Exception
      */
-    function getPageTranslation($id, $lang_id = null, $get_other_language_if_empty = false): mixed
+    function getPageTranslation($id, $lang_id = null, $get_other_language_if_empty = false, $result = 'all'): mixed
     {
         if (!Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '999')) {
             return ['page_content' => ' ', 'page_title' => ''];
@@ -136,8 +136,15 @@ class cbpage
                 $results = Clipbucket_db::getInstance()->_select($sql, 3600, 'page_' . (int)$id . '_language_' . Language::$english_id . '_other')[0];
             }
         }
-
-        return $results ?? false;
+        if ($result == 'all') {
+            return $results ?? false;
+        } elseif ($result == 'title') {
+            return $results['page_title'] ?? false;
+        } elseif ($result == 'content') {
+            return $results['page_content'] ?? false;
+        } else {
+            return false;
+        }
     }
 
     /**
@@ -170,10 +177,6 @@ class cbpage
             $conds[] = ' display=\'yes\' ';
         }
         $select = $this->page_tbl. '.*';
-        if (isset($params['translated_code'])) {
-            $join = ' LEFT JOIN ' . cb_sql_table('pages_translations') . ' ON ' . $this->page_tbl . '.page_id = pages_translations.page_id AND pages_translations.language_id = ' . Language::getInstance()->lang_id;
-            $select .= ', IFNULL(pages_translations.page_title, ' . $this->page_tbl . '.page_name) as display_name ';
-        }
 
         $result = Clipbucket_db::getInstance()->select(cb_sql_table($this->page_tbl) . $join, $select, empty($conds) ? '1' : implode(' AND ', $conds), $limit, $order);
         if (count($result) > 0) {
@@ -213,20 +216,16 @@ class cbpage
         if (empty($name)) {
             e(lang('page_name_empty'));
         }
-        if (empty($title)) {
-            e(lang('page_title_empty'));
-        }
-        if (empty($content)) {
-            e(lang('page_content_empty'));
-        }
 
         if (!error()) {
             $fields = ['page_name'];
             $values = [$name];
             if (!empty($content)) {
                 foreach ($content as $lang_id => $content_trad) {
-                    if (!empty($content_trad)) {
+                    if (!empty($content_trad) || !empty($title[$lang_id])) {
                         $this->insertOrUpdatePageTranslation($id, $lang_id, $title[$lang_id], $content_trad);
+                    } else {
+                        $this->deletePageTranslation($id, $lang_id);
                     }
                 }
             }
@@ -243,6 +242,11 @@ class cbpage
     {
         $sql = 'INSERT INTO ' . tbl('pages_translations') . ' (page_id, language_id, page_title ,page_content) VALUES ( ' . (int)$page_id . ', ' .(int)$lang_id . ', \''.mysql_clean(trim($page_title)).'\', \''.mysql_clean(trim($page_content)).'\')
         ON DUPLICATE KEY UPDATE page_content = VALUES(page_content), page_title = VALUES(page_title)';
+       return \Clipbucket_db::getInstance()->execute($sql);
+    }
+    function deletePageTranslation($page_id, $lang_id)
+    {
+        $sql = 'DELETE FROM ' . tbl('pages_translations') . '  WHERE page_id = ' . (int)$page_id . ' AND language_id = ' . (int)$lang_id;
        return \Clipbucket_db::getInstance()->execute($sql);
     }
 
