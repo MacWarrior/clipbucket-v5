@@ -48,7 +48,7 @@ $use_backdrop_default = Video::getUseBackdropDefault($data);
 assign('use_backdrop_default', $use_backdrop_default);
 
 //Check Video Exists or Not
-if (myquery::getInstance()->video_exists($video_id)) {
+if ($data) {
 
     # Uploading Thumbs
     if (isset($_POST['upload_thumbs']) && !($use_backdrop_default && $type == 'thumbnail')) {

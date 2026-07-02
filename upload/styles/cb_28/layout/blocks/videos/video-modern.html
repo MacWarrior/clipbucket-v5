@@ -3,14 +3,17 @@
         <div class="thumb-video video-link{if $popup_video && $video.status|lower == 'successful'} cd-popup-trigger{/if}" data-videoid="{$video.videoid}" data-href="{video_link($video)}" title="{display_clean($video.title)|title}">
             <img src="{VideoThumbs::getDefaultThumbFile($video.videoid, '416', '260')}" loading="lazy" class="{if Video::getInstance()->isToBlur($video['videoid'])}blur{/if}" {Video::get_thumbs_preview($video, '416x260')}/>
             <div class="status"></div>
+            {assign var=left_value value=10}
             {if config('enable_quicklist') == 'yes' && !Video::getInstance()->isToBlur($video['videoid']) && $video.status|lower == 'successful' && Session::isCookieConsent('fast_qlist')}
-                <div class="add-playlist cb_quickie cb-btn-quick-{$video.videoid} {if in_array($video.videoid, $qlist_vids)}icon-tick{/if}" data-quick="quick-{$video.videoid}" vtitle="{display_clean($video.title)}" v-id="{$video.videoid}" vlink="{video_link($video)}" vthumb="{VideoThumbs::getDefaultThumbFile($video.videoid, 416, 260)}" vduration="{$video.duration|SetTime}" vauthor="{if config('enable_hide_uploader_name') != 'yes'}{lang code='by'} {display_clean($video.user_username)}{/if}" title="Add {display_clean($video.title)} to Quicklist"></div>
+                <div style="left: {$left_value}px;" class="add-playlist cb_quickie cb-btn-quick-{$video.videoid} {if in_array($video.videoid, $qlist_vids)}icon-tick{/if}" data-quick="quick-{$video.videoid}" vtitle="{display_clean($video.title)}" v-id="{$video.videoid}" vlink="{video_link($video)}" vthumb="{VideoThumbs::getDefaultThumbFile($video.videoid, 416, 260)}" vduration="{$video.duration|SetTime}" vauthor="{if config('enable_hide_uploader_name') != 'yes'}{lang code='by'} {display_clean($video.user_username)}{/if}" title="Add {display_clean($video.title)} to Quicklist"></div>
+                {assign var=left_value value=$left_value + 26}
             {/if}
             {if config('enable_favorite_icon') == 'yes' && User::getInstance()->isUserConnected() && Video::isFavorite($video.videoid)}
-                <span class="manage_favorite watch-rating-icon pointer glyphicon glyphicon-heart " title="{lang('remove_from_favorites')}" data-id="{$video.videoid}"></span>
+                <span style="left: {$left_value}px;" class="manage_favorite watch-rating-icon pointer glyphicon glyphicon-heart " title="{lang('remove_from_favorites')}" data-id="{$video.videoid}"></span>
+                {assign var=left_value value=$left_value + 31}
             {/if}
             {if config('enable_external_rate_field') == 'yes' && (!empty($video.external_rate) || !empty($video.external_ratings))}
-                <span class="stars alone" style="--rating: {$video.external_rate * 10}%;"
+                <span class="stars alone" style="left: {$left_value}px;"
                      title="{lang('noted_x', $video.external_rate)}{if $video.external_ratings > 0}&nbsp;{lang('over_x_ratings', $video.external_ratings)}{/if}"></span>
             {/if}
             {if $video.duration>1}
