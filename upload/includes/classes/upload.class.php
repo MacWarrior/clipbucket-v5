@@ -197,11 +197,6 @@ class Upload
         $query_field[] = 'date_added';
         $query_val[] = dateNow();
 
-        foreach ($empty_fields as $field) {
-            $query_field[] = $field;
-            $query_val[] = '';
-        }
-
         $insert_id = file_name_exists($file_name);
         if (!$insert_id) {
             //Adding Video Key
@@ -221,7 +216,15 @@ class Upload
             $insert_id = Clipbucket_db::getInstance()->insert_id();
             Tags::saveTags($array['tags'] ?? '', 'video', $insert_id);
 
-            if( Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.0', '331') ){
+            if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '999') && !empty($array['tracks'])) {
+                $order = 0;
+                foreach ($array['tracks'] as $key => $track) {
+                    $sql = 'INSERT IGNORE INTO ' . tbl('video_audio_tracks') . '(`videoid`, `track_number`, `title`, `order`) VALUES (' . $insert_id . ', ' . $key . ', \'' . mysql_clean($track) . '\', ' . $order . ')';
+                    $order++;
+                    Clipbucket_db::getInstance()->execute($sql);
+                }
+            }
+            if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.0', '331')) {
                 Category::getInstance()->saveLinks('video', $insert_id, $array['category']);
             }
 

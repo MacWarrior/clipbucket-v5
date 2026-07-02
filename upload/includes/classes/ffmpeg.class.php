@@ -727,7 +727,7 @@ class FFMpeg
                 $video_track_id = self::get_media_stream_id('video', $this->input_file);
                 $cmd .= ' -map 0:' . $video_track_id;
                 $audio_output_index = 0;
-
+                //TODO insert into video_audio_tracks table
                 // Making selected audio track the primary one
                 if ($this->audio_track >= 0) {
                     $cmd .= ' -map 0:' . $this->audio_track;
@@ -786,6 +786,7 @@ class FFMpeg
 
                 $count = 0;
                 $audio_tracks = self::get_media_stream_id('audio', $this->input_file);
+                //TODO insert into video_audio_tracks table
                 foreach ($audio_tracks as $audio_track_id) {
                     $map .= ' -map 0:' . $audio_track_id;
                     $var_stream_map .= ' a:' . $count . ',name:audio_' . ($count + 1) . ',agroup:audios';
