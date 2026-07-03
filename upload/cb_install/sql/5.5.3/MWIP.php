@@ -28,7 +28,24 @@ class MWIP extends \Migration
             ]
         ]);
 
+        self::generateConfig('audio_api_notification', 'no');
 
+        self::generateTranslation('config_audio_api_notification', [
+            'fr'=>'Activer la notification de l’API Audio lorsque cela est pertinent.',
+            'en'=>'Enable Audio API notification when relevant.'
+        ]);
+        self::generateTranslation('config_audio_api_notification_hint', [
+            'fr'=>'Affiche un notification discrète si une vidéo MP4 dispose de plusieurs pistes audio mais que l’API navigateur n’est pas disponible',
+            'en'=>'Display a subtle notification when an MP4 video contains multiple audio tracks but the browser API is not available'
+        ]);
+        self::generateTranslation('audio_api_notification', [
+            'fr'=>'Cette vidéo dispose de plusieurs pistes audio, mais votre navigateur n\'est pas configuré pour pouvoir y accéder ; cliquez %s pour plus d\'informations.',
+            'en'=>'This video contains multiple audio tracks, but your browser is not configured to access them. Click %s for more information.'
+        ]);
+        self::generateTranslation('here', [
+            'fr'=>'ici',
+            'en'=>'here'
+        ]);
         self::generateTranslation('video_audio_track_list_management', [
             'fr'=>'Pistes audios',
             'en'=>'Audio tracks'
