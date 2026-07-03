@@ -2557,6 +2557,7 @@ function datecreated($in): string
  */
 function updateObjectStats($type, $object, $id, $op = '+'): void
 {
+    $id = (int)$id;
     switch ($type) {
         case "favorite":
         case "favourite":
