@@ -1,6 +1,6 @@
 {
   "version":"5.5.3",
-  "revision":"153",
+  "revision":"154",
   "status":"stable",
   "detail":[
     {
@@ -172,6 +172,7 @@
         ,"Fix PNG transparency"
         ,"Fix temp file deletion on conversion failure"
         ,"Fix possible remote code execution (Thanks @Bnyt7 !)"
+        ,"Fix possible issues with remove hard-coded letterboxing / pillarboxing option"
       ]
     },
     {
