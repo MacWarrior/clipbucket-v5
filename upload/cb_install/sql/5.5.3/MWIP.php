@@ -35,7 +35,7 @@ class MWIP extends \Migration
             'en'=>'Enable Audio API notification when relevant.'
         ]);
         self::generateTranslation('config_audio_api_notification_hint', [
-            'fr'=>'Affiche un notification discrète si une vidéo MP4 dispose de plusieurs pistes audio mais que l’API navigateur n’est pas disponible',
+            'fr'=>'Affiche une notification discrète si une vidéo MP4 dispose de plusieurs pistes audio mais que l’API navigateur n’est pas disponible',
             'en'=>'Display a subtle notification when an MP4 video contains multiple audio tracks but the browser API is not available'
         ]);
         self::generateTranslation('audio_api_notification', [
