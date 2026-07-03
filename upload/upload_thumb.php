@@ -13,6 +13,10 @@ $video = mysql_clean($_GET['video']);
 //Check Video Exists or Not
 $data = Video::getInstance()->getOne(['videoid'=>$video]);
 if ($data) {
+    if ($data['userid'] != User::getInstance()->getCurrentUserID() && !User::getInstance()->hasAdminAccess()) {
+        echo json_encode(['error'=>lang('no_edit_video')]);
+        die();
+    }
     $is_file_to_upload= false;
     # Uploading Thumbs
     if (!empty($_FILES['vid_thumb'])) {
