@@ -6,14 +6,8 @@ User::getInstance()->hasPermissionOrRedirect('member_moderation',true);
 
 $uid = (int)$_GET['uid'];
 
-$udetails = userquery::getInstance()->get_user_details(User::getInstance()->getCurrentUserID());
-$userLevel = $udetails['level'];
-
-$userToLoginAsDetails = userquery::getInstance()->get_user_details($uid);
-$userToLoginAsLevel = $userToLoginAsDetails['level'];
-
-if ($userLevel > 1 && $userToLoginAsLevel == 1) {
-    SessionMessageHandler::add_message('You do not have enough permissions to login as Admin user', 'w');
+if (!UserLevel::canLogAsUser(User::getInstance()->getCurrentUserID(), $uid)) {
+    SessionMessageHandler::add_message(lang('you_dont_hv_perms'), 'w');
     User::redirectAfterLogin();
 }
 
