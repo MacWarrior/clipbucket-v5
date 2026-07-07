@@ -249,13 +249,13 @@ function get_directory_size(string $path, array $excluded = []): array
             if ($file != '.' && $file != '..' && !is_link($nextpath)) {
                 if (is_dir($nextpath)) {
                     $dircount++;
-                    $result = get_directory_size($nextpath);
+                    $result = get_directory_size($nextpath . DIRECTORY_SEPARATOR);
                     $totalsize += $result['size'];
                     $totalcount += $result['count'];
                     $dircount += $result['dircount'];
                 } elseif (is_file($nextpath)
                     && !array_filter($excluded, function ($value) use ($nextpath) {
-                        return strpos($nextpath, $value) !== false;
+                        return str_contains($nextpath, $value);
                     })
                 ) {
                     $totalsize += filesize($nextpath);
