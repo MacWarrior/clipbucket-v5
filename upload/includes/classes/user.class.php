@@ -189,28 +189,16 @@ class User extends Objects
         $this->search_limit = (int)config('users_items_search_page');
 
         $this->default_homepage_list = [
-            'homepage'
-            ,'my_account'
+            ['title' => 'homepage', 'disabled' => false],
+            ['title' => 'my_account', 'disabled' => false],
+            ['title' => 'videos', 'disabled' => (config('videosSection') != 'yes')],
+            ['title' => 'photos', 'disabled' => (config('photosSection') != 'yes')],
+            ['title' => 'collections', 'disabled' => (config('collectionsSection') != 'yes')],
+            ['title' => 'channels', 'disabled' => (config('channelsSection') != 'yes')]
         ];
 
-        if( config('videosSection') == 'yes' ){
-            $this->default_homepage_list[] = 'videos';
-
-            if( config('enable_public_video_page') == 'yes'){
-                $this->default_homepage_list[] = 'public_videos';
-            }
-        }
-
-        if( config('photosSection') == 'yes' ){
-            $this->default_homepage_list[] = 'photos';
-        }
-
-        if( config('collectionsSection') == 'yes' ){
-            $this->default_homepage_list[] = 'collections';
-        }
-
-        if( config('channelsSection') == 'yes' ){
-            $this->default_homepage_list[] = 'channels';
+        if (config('videosSection') == 'yes' && config('enable_public_video_page') == 'yes') {
+            $this->default_homepage_list[] = ['title' => 'public_videos', 'disabled' => false];
         }
 
         if( $user_id ){
@@ -1044,10 +1032,42 @@ class User extends Objects
                 $link = '';
                 break;
             case 'public_videos':
-                $link = 'videos_public.php';
+                if (config('videosSection') != 'yes') {
+                    $link = '';
+                } else {
+                    $link = 'videos_public.php';
+                }
                 break;
             case 'my_account':
                 $link = 'myaccount.php';
+                break;
+            case 'videos':
+                if (config('videosSection') != 'yes') {
+                    $link = '';
+                } else {
+                    $link = 'videos.php';
+                }
+                break;
+            case 'photos':
+                if (config('photosSection') != 'yes') {
+                    $link = '';
+                } else {
+                    $link = 'photos.php';
+                }
+                break;
+            case 'collections':
+                if (config('collectionsSection') != 'yes') {
+                    $link = '';
+                } else {
+                    $link = 'collections.php';
+                }
+                break;
+            case 'channels':
+                if (config('channelsSection') != 'yes') {
+                    $link = '';
+                } else {
+                    $link = 'channels.php';
+                }
                 break;
             default:
                 $link = $default_hompepage . '.php';

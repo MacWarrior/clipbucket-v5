@@ -1928,4 +1928,6 @@ VALUES ('ongoing_conversion'),
        ('comment_id');
 INSERT INTO `{tbl_prefix}languages_keys` (`language_key`)
 VALUES ('noted_x'),
-       ('over_x_ratings');
+       ('over_x_ratings'),
+       ('empty_homepage'),
+       ('disabled_homepage');
