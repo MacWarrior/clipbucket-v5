@@ -104,11 +104,6 @@ class Video extends Objects
             $this->fields[] = 'voter_ids';
         }
 
-        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '101') && !Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '138')) {
-            $this->fields[] = 'id_tmdb';
-            $this->fields[] = 'type_tmdb';
-        }
-
         if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '107')) {
             $this->fields[] = 'use_backdrop_as_default_thumb';
         }
@@ -395,6 +390,8 @@ class Video extends Objects
         $param_join_flag= $params['join_flag'];
         $param_get_detail = $params['get_detail'] ?? false;
         $param_date_span = $params['date_span'] ?? false;
+        $param_get_tmdb = $params['get_tmdb'] ?? false;
+        $param_not_empty_tmdb = $params['not_empty_tmdb'] ?? false;
 
         $conditions = [];
         if( $param_videoid !== false ){
@@ -578,6 +575,31 @@ class Video extends Objects
             $flag_constraint = self::getFlagConstraint();
             $join[] = $flag_constraint['join'];
             $select[] = $flag_constraint['select'];
+        }
+
+        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '101')) {
+            $join_tmdb = false;
+            if ($param_get_tmdb) {
+                if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '138')) {
+                    $join_tmdb = true;
+                    $select[] = Tmdb::getTableName() . '.tmdb_id';
+                    $select[] = Tmdb::getTableName() . '.tmdb_type';
+                } else {
+                    $select[] = $this->getTableName() . '.id_tmdb AS tmdb_id';
+                    $select[] = $this->getTableName() . '.type_tmdb AS tmdb_type';
+                }
+            }
+            if ($param_not_empty_tmdb) {
+                if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '138')) {
+                    $join_tmdb = true;
+                    $conditions[] = Tmdb::getTableName() . '.tmdb_id IS NOT NULL';
+                } else {
+                    $conditions[] = $this->getTableName() . '.id_tmdb IS NOT NULL';
+                }
+            }
+            if ($join_tmdb) {
+                $join[] = ' LEFT JOIN ' . cb_sql_table(Tmdb::getTableName()) . ' ON ' . $this->getTableName() . '.videoid = ' . Tmdb::getTableName() . '.video_id';
+            }
         }
 
         if( $param_group ){

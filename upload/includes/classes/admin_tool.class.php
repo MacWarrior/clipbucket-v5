@@ -1975,12 +1975,13 @@ class AdminTool
             $offset = 0;
             do {
                 $videos = Video::getInstance()->getAll([
-                    'limit'     => $offset . ', ' . $limit,
-                    'condition' => 'id_tmdb IS NOT NULL',
+                    'limit'          => $offset . ', ' . $limit,
+                    'get_tmdb'       => true,
+                    'not_empty_tmdb' => true
                 ]);
                 $offset += $limit;
                 foreach ($videos as $video) {
-                    $this->insertTaskData([0=>['videoid'=>$video['videoid'], 'id_tmdb'=>$video['id_tmdb'], 'type_tmdb'=>$video['type_tmdb']]]);
+                    $this->insertTaskData([0=>['videoid'=>$video['videoid'], 'tmdb_id'=>$video['tmdb_id'], 'tmdb_type'=>$video['tmdb_type']]]);
                 }
             } while (!empty($videos));
         }
@@ -1994,10 +1995,10 @@ class AdminTool
      */
     public static function reimportTmdbInfo($info): bool
     {
-        if (empty($info['videoid']) || empty($info['id_tmdb']) || empty($info['type_tmdb']))  {
+        if (empty($info['videoid']) || empty($info['tmdb_id']) || empty($info['tmdb_type']))  {
             return false;
         }
-        Tmdb::getInstance()->importDataFromTmdb($info['videoid'], $info['id_tmdb'], $info['type_tmdb']);
+        Tmdb::getInstance()->importDataFromTmdb($info['videoid'], $info['tmdb_id'], $info['tmdb_type']);
         return true;
     }
 
