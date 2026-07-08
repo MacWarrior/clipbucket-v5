@@ -13,7 +13,7 @@
                 {assign var=left_value value=$left_value + 31}
             {/if}
             {if config('enable_external_rate_field') == 'yes' && (!empty($video.external_rate) || !empty($video.external_ratings))}
-                <span class="stars alone" style="left: {$left_value}px;"
+                <span class="stars alone" style="left: {$left_value}px; --rating: {$video.external_rate * 10}%;"
                      title="{lang('noted_x', $video.external_rate)}{if $video.external_ratings > 0}&nbsp;{lang('over_x_ratings', $video.external_ratings)}{/if}"></span>
             {/if}
             {if $video.duration>1}
