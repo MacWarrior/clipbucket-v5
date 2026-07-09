@@ -133,6 +133,5 @@ class Subtitle
     {
         return self::$extension;
     }
-
-
+    
 }
