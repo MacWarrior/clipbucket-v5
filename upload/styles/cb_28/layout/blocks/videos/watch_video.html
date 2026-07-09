@@ -6,8 +6,13 @@
 {if $video.status|lower == 'successful'}
     {if config('bits_color_warning') == '1' && $video.bits_color && $video.bits_color > 8}
         <span class="label label-warning" style="font-size:1em;">
-        {lang code="bits_color_compatibility"}
-    </span>
+            {lang code="bits_color_compatibility"}
+        </span>
+    {/if}
+    {if config('audio_api_notification') == 'yes' && $video.file_type == 'mp4' && count(VideoAudioTrack::getAudioTracks($video.videoid)) > 1}
+        <span class="label label-warning hidden warning_audio_api" style="font-size:1em;">
+            {lang('audio_api_notification', '<a href="'|cat:'">'|cat:lang('here')|cat:'</a>')}
+        </span>
     {/if}
     <div id="cb_player" class="cb_player no_select"{$aspect_ratio}>
         {show_player vdetails=$video}

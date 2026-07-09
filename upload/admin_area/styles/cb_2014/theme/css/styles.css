@@ -1377,3 +1377,21 @@ a:disabled {
 ul.tagit.ui-widget-content {
     background: #FFF;
 }
+
+.drag-handle {
+    cursor: grab;
+}
+
+.ligne-placeholder {
+    height: 45px;
+    background: #eee;
+    border: 2px dashed #999;
+}
+
+.ui-sortable-helper {
+    display: table;
+}
+
+#manageAudioTracks tbody tr {
+    position: relative;
+}

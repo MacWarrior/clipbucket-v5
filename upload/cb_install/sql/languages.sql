@@ -1928,4 +1928,9 @@ VALUES ('ongoing_conversion'),
        ('comment_id');
 INSERT INTO `{tbl_prefix}languages_keys` (`language_key`)
 VALUES ('noted_x'),
-       ('over_x_ratings');
+       ('over_x_ratings'),
+       ('config_audio_api_notification'),
+       ('config_audio_api_notification_hint'),
+       ('audio_api_notification'),
+       ('here'),
+       ('video_audio_track_list_management');

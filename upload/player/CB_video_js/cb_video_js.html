@@ -7,6 +7,7 @@
     var autoplay = "{$player_params.autoplay}" === 'yes';
     var video_uploader = "{if config('enable_hide_uploader_name') != 'yes'}{if $vdata.userid == $anonymous_id}{elseif !empty($vdata.user_username)}{display_clean($vdata.user_username)}{else}{display_clean($vdata.username)}{/if}{/if}";
     var video_title = "{display_clean($vdata.title)}";
+    var video_audio_tracks = JSON.parse('{json_encode($audio_tracks)}');
 </script>
 
 {if !empty($embed_players)}
@@ -188,16 +189,38 @@
         });
         {/literal}
     }
-
+    var hasAudioTracksApi;
     //Initializing
     $(document).ready(function() {
-        var cb_player = new videojs('cb_video_js_' + video_id, cb_player_setup, cb_vjs_callback);
+        registerCustomAudioTrackButton();
+        cb_player_obj = new videojs('cb_video_js_' + video_id, cb_player_setup, cb_vjs_callback);
         {if !empty($vdata['fov']) && config('enable_360_video') == 'yes'}
             let video_fov = '{$vdata['fov']}';
-        {literal}
-            cb_player.vr({projection: video_fov});
-        {/literal}
+            {literal}
+                cb_player_obj.vr({projection: video_fov});
+            {/literal}
         {/if}
+        const video = cb_player_obj;
+        hasAudioTracksApi = false;
+        // hasAudioTracksApi = "audioTracks" in video;
+        if ($('.warning_audio_api') && !hasAudioTracksApi) {
+            $('.warning_audio_api').removeClass('hidden');
+        }
+        cb_player_obj.ready(() => {
+            const controlBar = cb_player_obj.controlBar;
+
+            if (video_audio_tracks.length > 1 && hasAudioTracksApi) {
+                if (controlBar.audioTrackButton) {
+                    controlBar.removeChild(controlBar.audioTrackButton);
+                }
+
+                controlBar.addChild('CustomAudioTrackButton', {
+                    dbTracks: video_audio_tracks
+                }, 5);
+            }
+        });//fin ready
+
+
 
         $('body').keydown(function(e)
         {
@@ -209,15 +232,142 @@
                 if( e.keyCode === 0 || e.keyCode === 32 )
                 {
                     e.preventDefault();
-                    if( cb_player.paused() ){
-                        cb_player.play();
+                    if( cb_player_obj.paused() ){
+                        cb_player_obj.play();
                     } else {
-                        cb_player.pause();
+                        cb_player_obj.pause();
                     }
                 }
             }
         });
     });
+    {literal}
+
+    function registerCustomAudioTrackButton() {
+        const videojs = window.videojs;
+
+        const MenuButton = videojs.getComponent('MenuButton');
+        const MenuItem = videojs.getComponent('MenuItem');
+
+        class CustomAudioTrackMenuItem extends MenuItem {
+            constructor(player, options) {
+                super(player, {
+                    label: options.label,
+                    selectable: true,
+                    selected: options.track.enabled
+                });
+
+                this.track = options.track;
+                this.menuTracks = options.menuTracks;
+            }
+
+            handleClick() {
+                this.menuTracks.forEach(item => {
+                    item.nativeTrack.enabled = false;
+                });
+
+                this.track.enabled = true;
+
+                this.menuTracks.forEach(item => {
+                    if (item.menuItem) {
+                        item.menuItem.selected(item.nativeTrack.enabled);
+                    }
+                });
+            }
+        }
+        class CustomAudioTrackButton extends MenuButton {
+             constructor(player, options = {}) {
+                super(player, options);
+
+                this.controlText('Audio');
+                this.dbTracks = options.dbTracks || [];
+                player.on('loadedmetadata', () => {
+                    this.update();
+                    this.selectFirstDbTrack();
+                });
+
+                player.on('audiochange', () => {
+                    this.updateSelectedState();
+                });
+            }
+            createItems() {
+                const audioTracks = this.player_.audioTracks();
+
+                const nativeTracks = Array.from(
+                    { length: audioTracks.length },
+                    (_, i) => audioTracks[i]
+                );
+
+                this.menuTracks = nativeTracks.map((track, index) => {
+                    const meta = this.findDbTrack(track, index);
+                    return {
+                        nativeTrack: track,
+                        originalIndex: index,
+                        label: meta?.title || track.label || `Audio ${index + 1}`,
+                        language: meta?.language || track.language || '',
+                        order: meta?.order ?? 9999,
+                        dbTrack: meta || null,
+                        menuItem: null
+                    };
+                });
+                this.menuTracks.sort((a, b) => a.order - b.order);
+
+                return this.menuTracks.map(item => {
+                    const menuItem = new CustomAudioTrackMenuItem(this.player_, {
+                        label: item.label,
+                        track: item.nativeTrack,
+                        menuTracks: this.menuTracks
+                    });
+
+                    item.menuItem = menuItem;
+
+                    return menuItem;
+                });
+            }
+
+            findDbTrack(track, index) {
+                return this.dbTracks.find(db =>
+                    db.track_number == index
+                );
+            }
+
+            selectFirstDbTrack() {
+                if (!this.menuTracks || this.menuTracks.length === 0) {
+                    return;
+                }
+
+                this.menuTracks.forEach(item => {
+                    item.nativeTrack.enabled = false;
+                });
+
+                this.menuTracks[0].nativeTrack.enabled = true;
+
+                this.updateSelectedState();
+            }
+
+            updateSelectedState() {
+                if (!this.menuTracks) {
+                    return;
+                }
+
+                this.menuTracks.forEach(item => {
+                    if (item.menuItem) {
+                        item.menuItem.selected(item.nativeTrack.enabled);
+                    }
+                });
+            }
+
+            buildCSSClass() {
+                return `vjs-audio-button ${super.buildCSSClass()}`;
+            }
+        }
+
+        videojs.registerComponent(
+            'CustomAudioTrackButton',
+            CustomAudioTrackButton
+        );
+    }
+    {/literal}
 
 </script>
 

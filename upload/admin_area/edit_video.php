@@ -96,6 +96,8 @@ assign('resolution_list', $resolution_list);
 $subtitle_list = get_video_subtitles($data) ?: [];
 assign('subtitle_list', $subtitle_list);
 
+$audio_track_list = VideoAudioTrack::getAudioTracks($data['videoid']);
+assign('audio_track_list', $audio_track_list);
 $min_suffixe = System::isInDev() ? '' : '.min';
 
 if( config('enable_video_embed_players') == 'yes' ){
