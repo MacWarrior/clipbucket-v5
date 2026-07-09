@@ -549,41 +549,47 @@ class FFMpeg
             return '';
         }
 
-        $minX = PHP_INT_MAX;
-        $minY = PHP_INT_MAX;
-        $maxR = 0;
-        $maxB = 0;
-        $found = false;
+        $crops = [];
 
         foreach ($m as $c) {
-            $w = (int)$c[1]; $h = (int)$c[2]; $x = (int)$c[3]; $y = (int)$c[4];
+            $w = (int)$c[1];
+            $h = (int)$c[2];
+            $x = (int)$c[3];
+            $y = (int)$c[4];
 
-            if ($w === $srcW && $h === $srcH && $x === 0 && $y === 0) {
+            if ($w <= 0 || $h <= 0) {
                 continue;
             }
 
-            $found = true;
-            $minX = min($minX, $x);
-            $minY = min($minY, $y);
-            $maxR = max($maxR, $x + $w);
-            $maxB = max($maxB, $y + $h);
+            $key = $w . ':' . $h . ':' . $x . ':' . $y;
+
+            if (!isset($crops[$key])) {
+                $crops[$key] = 0;
+            }
+
+            $crops[$key]++;
         }
 
-        if (!$found) {
+        if (empty($crops)) {
             return '';
         }
 
-        $x = max(0, $minX);
-        $y = max(0, $minY);
-        $w = min($srcW, $maxR) - $x;
-        $h = min($srcH, $maxB) - $y;
+        arsort($crops);
+
+        $bestCrop = array_key_first($crops);
+        [$w, $h, $x, $y] = array_map('intval', explode(':', $bestCrop));
+
+        $w = min($srcW, $w);
+        $h = min($srcH, $h);
+        $x = max(0, $x);
+        $y = max(0, $y);
+
+        $w -= $w % 2;
+        $h -= $h % 2;
 
         if ($w <= 0 || $h <= 0) {
             return '';
         }
-
-        $w -= $w % 2;
-        $h -= $h % 2;
 
         if ($w === $srcW && $h === $srcH && $x === 0 && $y === 0) {
             return '';

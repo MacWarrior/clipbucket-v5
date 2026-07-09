@@ -132,8 +132,12 @@ class Video extends Objects
             ,'category_thumb'
             ,'isdefault'
         ];
-
-        $this->display_block = LAYOUT . '/blocks/videos/video.html';
+        if (config('videos_video_style') == 'modern') {
+            $template = "video-modern.html";
+        } else {
+            $template = 'video-classic.html';
+        }
+        $this->display_block = LAYOUT . '/blocks/videos/' . $template;
         $this->display_var_name = 'video';
         $this->search_limit = (int)config('videos_items_search_page');
 
