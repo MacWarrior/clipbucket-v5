@@ -1,6 +1,6 @@
 {
   "version":"5.5.3",
-  "revision":"157",
+  "revision":"158",
   "status":"stable",
   "detail":[
     {
@@ -53,6 +53,7 @@
         ,"Fix videos, photos, collections & playlists advanced search by tags (<i>#844</i>)"
         ,"Fix possible pagination overflow on action logs page"
         ,"Fix update button being disabled after a first interupted update"
+        ,"Fix subtitles deletion"
       ]
     },
     {
@@ -170,6 +171,7 @@
         ,"Detect corrupted video files"
         ,"Update video rotation detection (Thanks @McArrow <i>#695</i> !)"
         ,"Update video thumbs generation"
+        ,"Update subtitles default extension"
         ,"Fix conversion logs"
         ,"Fix PNG transparency"
         ,"Fix temp file deletion on conversion failure"

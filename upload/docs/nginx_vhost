@@ -1,6 +1,6 @@
-## Latest update : 2025-07-17
-## Latest version : 5.5.2
-## Latest revision : 107
+## Latest update : 2026-07-09
+## Latest version : 5.5.3
+## Latest revision : 158
 server {
     listen 80;
     server_name DOMAINNAME;

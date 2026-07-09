@@ -2,9 +2,8 @@
 
 class Subtitle
 {
-    private static string $table_name = "video_subtitle";
-
-    private static string $extension = "vtt";
+    private static string $table_name = 'video_subtitle';
+    private static string $extension = 'vtt';
     /**
      * @param $vdetails
      * @return array|false
@@ -58,6 +57,11 @@ class Subtitle
      */
     public static function removeSubtitles($vdetails, string $number = null): void
     {
+        if (!preg_match('/^\d{1,2}$/', $number)) {
+            e(lang('invalid_params'));
+            return;
+        }
+
         $directory = DirPath::get('subtitles') . $vdetails['file_directory'] . DIRECTORY_SEPARATOR;
         $query = 'SELECT * FROM ' . tbl(self::$table_name) . ' WHERE videoid = ' . (int)$vdetails['videoid'];
         if ($number !== null) {
