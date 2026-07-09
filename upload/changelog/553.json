@@ -1,6 +1,6 @@
 {
   "version":"5.5.3",
-  "revision":"159",
+  "revision":"160",
   "status":"stable",
   "detail":[
     {
@@ -27,6 +27,7 @@
         ,"Update TMDB search interface"
         ,"Update manage tags type filter"
         ,"Update interfaces display when medias are disabled"
+        ,"Update comments display on reports & stats"
         ,"Add links to flagged tags"
         ,"Hide poster & backdrop tabs when empty on video edition page"
         ,"Only show template editor menu while in dev mode"
