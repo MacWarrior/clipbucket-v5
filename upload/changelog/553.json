@@ -1,6 +1,6 @@
 {
   "version":"5.5.3",
-  "revision":"156",
+  "revision":"157",
   "status":"stable",
   "detail":[
     {
@@ -52,6 +52,7 @@
         ,"Fix tags type search on manage tags page (<i>#843</i>)"
         ,"Fix videos, photos, collections & playlists advanced search by tags (<i>#844</i>)"
         ,"Fix possible pagination overflow on action logs page"
+        ,"Fix update button being disabled after a first interupted update"
       ]
     },
     {
