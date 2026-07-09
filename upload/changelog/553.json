@@ -1,6 +1,6 @@
 {
   "version":"5.5.3",
-  "revision":"158",
+  "revision":"159",
   "status":"stable",
   "detail":[
     {
@@ -54,6 +54,7 @@
         ,"Fix possible pagination overflow on action logs page"
         ,"Fix update button being disabled after a first interupted update"
         ,"Fix subtitles deletion"
+        ,"Fix Update TMDB info tool"
       ]
     },
     {
@@ -110,6 +111,7 @@
         ,"Fix remote play form"
         ,"Fix JS error on channel page"
         ,"Fix video rating display"
+        ,"Fix popular videos thumb display"
       ]
     },
     {
