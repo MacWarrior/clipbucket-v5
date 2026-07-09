@@ -279,6 +279,7 @@
                                 <li><a data-toggle="tab" href="interfaces_collections">{lang('collections')|ucfirst}</a></li>
                                 <li><a data-toggle="tab" href="interfaces_collection">{lang('collection')|ucfirst}</a></li>
                                 <li><a data-toggle="tab" href="interfaces_channels">{lang('channels')|ucfirst}</a></li>
+                                <li><a data-toggle="tab" href="interfaces_main_menu">{lang('main_menu')|ucfirst}</a></li>
                             </ul>
                         </div>
                         <div class="col-md-10 tab-content">
@@ -969,6 +970,48 @@
                                             </div>
                                         </div>
                                         <hr/>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="tab-pane interfaces" id="interfaces_main_menu">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="row">
+                                            <div class="col-md-8">
+                                                <label class="nowrap" for="enable_video_categories_as_submenu" title="{lang('option_enable_video_categories_as_submenu')}">{lang('option_enable_video_categories_as_submenu')}</label>
+                                            </div>
+                                            <div class="col-md-2 row-size">
+                                                <input value="yes" name="enable_video_categories_as_submenu" id="enable_video_categories_as_submenu" {if $row.enable_video_categories_as_submenu=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+                                                <span class="lbl"></span>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-8">
+                                                <label class="nowrap" for="enable_photo_categories_as_submenu" title="{lang('option_enable_photo_categories_as_submenu')}">{lang('option_enable_photo_categories_as_submenu')}</label>
+                                            </div>
+                                            <div class="col-md-2 row-size">
+                                                <input value="yes" name="enable_photo_categories_as_submenu" id="enable_photo_categories_as_submenu" {if $row.enable_photo_categories_as_submenu=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+                                                <span class="lbl"></span>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-8">
+                                                <label class="nowrap" for="enable_collection_categories_as_submenu" title="{lang('option_enable_collection_categories_as_submenu')}">{lang('option_enable_collection_categories_as_submenu')}</label>
+                                            </div>
+                                            <div class="col-md-2 row-size">
+                                                <input value="yes" name="enable_collection_categories_as_submenu" id="enable_collection_categories_as_submenu" {if $row.enable_collection_categories_as_submenu=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+                                                <span class="lbl"></span>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-8">
+                                                <label class="nowrap" for="enable_channel_categories_as_submenu" title="{lang('option_enable_channel_categories_as_submenu')}">{lang('option_enable_channel_categories_as_submenu')}</label>
+                                            </div>
+                                            <div class="col-md-2 row-size">
+                                                <input value="yes" name="enable_channel_categories_as_submenu" id="enable_channel_categories_as_submenu" {if $row.enable_channel_categories_as_submenu=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+                                                <span class="lbl"></span>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
