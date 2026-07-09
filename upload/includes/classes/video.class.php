@@ -2096,7 +2096,7 @@ class CBvideo extends CBCategory
                 Clipbucket_db::getInstance()->delete(tbl('video_users'), ['videoid'], [$vdetails['videoid']]);
 
                 Clipbucket_db::getInstance()->delete(tbl(VideoConversionQueue::getTableName()), ['videoid'], [$vdetails['videoid']]);
-
+                Clipbucket_db::getInstance()->delete(tbl(Tmdb::getTableName()), ['video_id'], [$vdetails['videoid']]);
                 //Removing video Comments
                 $params = [];
                 $params['type'] = 'v';
