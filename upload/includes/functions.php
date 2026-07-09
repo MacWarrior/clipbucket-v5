@@ -3628,7 +3628,7 @@ function save_subtitle_ajax()
     }
 
     $video = Video::getInstance()->getOne(['videoid' => mysql_clean($_POST['videoid'])]);
-    $subtitle_list = get_video_subtitles($video);
+    $subtitle_list = Subtitle::getVideoSubtitles($video);
     foreach ($subtitle_list as $subtitle) {
         if ($subtitle['title'] == $_POST['title']) {
             e(lang('subtitle_already_exists'));
@@ -3643,11 +3643,11 @@ function save_subtitle_ajax()
     if (!is_dir($subtitle_dir)) {
         mkdir($subtitle_dir, 0755, true);
     }
-    $num = (int)get_video_subtitle_last_num($video['videoid']);
+    $num = (int)Subtitle::getVideoSubtitleLastNum($video['videoid']);
     $display_count = str_pad((string)($num + 1), 2, '0', STR_PAD_LEFT);
-    $temp_file_path = $subtitle_dir . $video['file_name'] . '-' . $display_count . '.srt';
+    $temp_file_path = $subtitle_dir . $video['file_name'] . '-' . $display_count . '.' . Subtitle::getExtension();
 
-    if (pathinfo($_FILES['subtitles']['name'])['extension']!= 'srt') {
+    if (pathinfo($_FILES['subtitles']['name'])['extension']!= Subtitle::getExtension()) {
         e(lang('invalid_subtitle_extension'));
         $success = false;
     } elseif (!FFMpeg::isValidWebVTTWithFFmpeg($_FILES['subtitles']['tmp_name'], $video['duration'])) {
@@ -3666,7 +3666,7 @@ function save_subtitle_ajax()
     $response['success'] = $success;
     $response['msg'] = getTemplateMsg();
     if (!empty($_POST['is_for_upload'])) {
-        $subtitle_list = get_video_subtitles($video);
+        $subtitle_list = Subtitle::getVideoSubtitles($video);
         assign('videoid', $video['videoid']);
         assign('vstatus', $video['status']);
         assign('subtitle_list', $subtitle_list);
