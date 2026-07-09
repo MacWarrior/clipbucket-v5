@@ -1,6 +1,6 @@
 {
   "version":"5.5.3",
-  "revision":"154",
+  "revision":"158",
   "status":"stable",
   "detail":[
     {
@@ -52,6 +52,8 @@
         ,"Fix tags type search on manage tags page (<i>#843</i>)"
         ,"Fix videos, photos, collections & playlists advanced search by tags (<i>#844</i>)"
         ,"Fix possible pagination overflow on action logs page"
+        ,"Fix update button being disabled after a first interupted update"
+        ,"Fix subtitles deletion"
       ]
     },
     {
@@ -76,6 +78,7 @@
         ,"Update TMDB search interface"
         ,"Update video upload form"
         ,"Add signup date of birth calendar icon"
+        ,"Add video rating display on search results page"
         ,"Fix possible JS error on register page"
         ,"Fix possible display issues on login & signup pages"
         ,"Fix possible error during photo upload"
@@ -168,6 +171,7 @@
         ,"Detect corrupted video files"
         ,"Update video rotation detection (Thanks @McArrow <i>#695</i> !)"
         ,"Update video thumbs generation"
+        ,"Update subtitles default extension"
         ,"Fix conversion logs"
         ,"Fix PNG transparency"
         ,"Fix temp file deletion on conversion failure"
