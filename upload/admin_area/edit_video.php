@@ -93,7 +93,7 @@ if ($data) {
 $resolution_list = getResolution_list($data);
 assign('resolution_list', $resolution_list);
 
-$subtitle_list = get_video_subtitles($data) ?: [];
+$subtitle_list = Subtitle::getVideoSubtitles($data) ?: [];
 assign('subtitle_list', $subtitle_list);
 
 $min_suffixe = System::isInDev() ? '' : '.min';
