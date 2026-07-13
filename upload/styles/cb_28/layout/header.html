@@ -81,7 +81,7 @@
                                                                 <li>
                                                                     <a href="{$menu.link}?cat={$submenu.category_id}">{ucfirst($submenu.category_name)}</a>
                                                                     {if !empty($submenu.children)}
-                                                                        <i class="icon-right-arrow " data-level="1"></i>
+                                                                        <i class="icon-right-arrow trigger" data-level="1"></i>
                                                                         <ul role="menu" class="dropdown-menu sub-menu" >
                                                                             {include file="$style_dir/blocks/sub_menu_list.html" children=$submenu.children link=$menu.link level=2}
                                                                         </ul>

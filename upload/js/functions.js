@@ -793,8 +793,24 @@ function getModalUploadSubtitle(video_id) {
 function capitalizeFirstLetter(val) {
     return String(val).charAt(0).toUpperCase() + String(val).slice(1);
 }
+
 function initListenerMenu() {
-    $('.dropdown-toggle-hover').parent('li').hover( function() {
-        $(this).find('ul.dropdown-menu').toggle();
+    $('.dropdown-toggle-hover').parent('li').off('mouseenter.cbMenu mouseleave.cbMenu').on({
+        'mouseenter.cbMenu': function () {
+            $(this).children('ul.dropdown-menu').stop(true, true).show();
+        },
+        'mouseleave.cbMenu': function () {
+            $(this).children('ul.dropdown-menu').stop(true, true).hide();
+            $(this).find('ul.sub-menu').hide();
+        }
+    });
+    $('#header .main-links .dropdown-menu li').has('ul.sub-menu').off('mouseenter.cbSubMenu mouseleave.cbSubMenu').on({
+        'mouseenter.cbSubMenu': function () {
+            $(this).siblings().find('ul.sub-menu').hide();
+            $(this).children('ul.sub-menu').stop(true, true).show();
+        },
+        'mouseleave.cbSubMenu': function () {
+            $(this).children('ul.sub-menu').stop(true, true).hide();
+        }
     });
 }

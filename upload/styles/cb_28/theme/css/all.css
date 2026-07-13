@@ -7288,3 +7288,32 @@ h4:has(i) {
   white-space: nowrap;
   color: #e67e22;
 }
+
+#header .main-links .dropdown-menu {
+  overflow: visible;
+}
+
+#header .main-links .dropdown-menu>li {
+  position: relative;
+}
+
+#header .main-links .dropdown-menu>li>i.trigger {
+  position: absolute;
+  top: 8px;
+  right:0 ;
+}
+
+#header .main-links .dropdown-menu .sub-menu {
+  left: 100%;
+  position: absolute;
+  top: 0;
+  display: none;
+  min-width: 180px;
+  padding-top: 0;
+  border-radius: 0 4px 4px 4px;
+  z-index: 1001;
+}
+
+#header .main-links .dropdown-menu>li:hover>.sub-menu {
+  display: block;
+}
