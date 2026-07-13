@@ -2559,34 +2559,34 @@ function updateObjectStats($type, $object, $id, $op = '+'): void
 {
     $id = (int)$id;
     switch ($type) {
-        case "favorite":
-        case "favourite":
-        case "favorites":
-        case "favourites":
-        case "fav":
+        case 'favorite':
+        case 'favourite':
+        case 'favorites':
+        case 'favourites':
+        case 'fav':
             switch ($object) {
-                case "video":
-                case "videos":
-                case "v":
-                    Clipbucket_db::getInstance()->update(tbl('video'), ['favourite_count'], ["|f|favourite_count" . $op . "1"], " videoid = '" . $id . "'");
+                case 'video':
+                case 'videos':
+                case 'v':
+                    Clipbucket_db::getInstance()->update(tbl('video'), ['favourite_count'], ['|f|favourite_count' . $op . '1'], ' videoid = ' . $id);
                     break;
 
-                case "photo":
-                case "photos":
-                case "p":
-                    Clipbucket_db::getInstance()->update(tbl('photos'), ['total_favorites'], ["|f|total_favorites" . $op . "1"], " photo_id = '" . $id . "'");
+                case 'photo':
+                case 'photos':
+                case 'p':
+                    Clipbucket_db::getInstance()->update(tbl('photos'), ['total_favorites'], ['|f|total_favorites' . $op . '1'], ' photo_id = ' . $id);
                     break;
             }
             break;
 
-        case "playlist":
-        case "playList":
-        case "plist":
+        case 'playlist':
+        case 'playList':
+        case 'plist':
             switch ($object) {
-                case "video":
-                case "videos":
-                case "v":
-                    Clipbucket_db::getInstance()->update(tbl('video'), ['playlist_count'], ["|f|playlist_count" . $op . "1"], " videoid = '" . $id . "'");
+                case 'video':
+                case 'videos':
+                case 'v':
+                    Clipbucket_db::getInstance()->update(tbl('video'), ['playlist_count'], ['|f|playlist_count' . $op . '1'], ' videoid = ' . $id);
                     break;
             }
             break;
