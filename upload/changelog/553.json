@@ -1,6 +1,6 @@
 {
   "version":"5.5.3",
-  "revision":"162",
+  "revision":"163",
   "status":"stable",
   "detail":[
     {
@@ -113,6 +113,7 @@
         ,"Fix JS error on channel page"
         ,"Fix video rating display"
         ,"Fix popular videos thumb display"
+        ,"Fix wrong max file size error message"
       ]
     },
     {
