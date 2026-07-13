@@ -124,52 +124,6 @@ function get_player_thumbs_json($data): void
 }
 
 /**
- * @param $vdetails
- * @return array|false
- * @throws Exception
- */
-function get_video_subtitles($vdetails)
-{
-    if (empty($vdetails)) {
-        return false;
-    }
-
-    $results = Clipbucket_db::getInstance()->select(tbl('video_subtitle'), 'videoid,number,title', ' videoid=' . $vdetails['videoid']);
-
-    if (count($results) == 0) {
-        return false;
-    }
-
-    $subtitles = [];
-    foreach ($results as $line) {
-        $subtitles[] = [
-            'url'      => DirPath::getUrl('subtitles') . $vdetails['file_directory'] . '/' . $vdetails['file_name'] . '-' . $line['number'] . '.srt'
-            , 'title'  => $line['title']
-            , 'number' => $line['number']
-        ];
-    }
-
-    return $subtitles;
-}
-
-/**
- * @param int $videoid
- * @return string|bool
- * @throws Exception
- */
-function get_video_subtitle_last_num(int $videoid): string|bool
-{
-    if (empty($videoid)) {
-        return false;
-    }
-    $results = Clipbucket_db::getInstance()->select(tbl('video_subtitle'), 'MAX(number) as number', 'videoid=' . $videoid);
-    if (empty($results)) {
-        return '00';
-    }
-    return $results[0]['number'] ?? '00';
-}
-
-/**
  * function used to get default thumb of ClipBucket
  */
 function default_thumb($return_type = 'url'): string
@@ -697,7 +651,7 @@ function remove_video_files($vdetails)
  */
 function remove_video_subtitles($vdetails): void
 {
-    CBvideo::getInstance()->remove_subtitles($vdetails);
+    Subtitle::removeSubtitles($vdetails);
 }
 
 /**

@@ -456,7 +456,7 @@ class FFMpeg
 
                 $count++;
                 $display_count = str_pad((string)$count, 2, '0', STR_PAD_LEFT);
-                $command = config('ffmpegpath') . ' -y -i ' . escapeshellarg($this->input_file) . ' -map 0:' . $map_id . ' -f ' . config('subtitle_format') . ' ' . $subtitle_dir . $this->file_name . '-' . $display_count . '.srt 2>&1';
+                $command = config('ffmpegpath') . ' -y -i ' . escapeshellarg($this->input_file) . ' -map 0:' . $map_id . ' -f ' . config('subtitle_format') . ' ' . $subtitle_dir . $this->file_name . '-' . $display_count . '.' . Subtitle::getExtension() . ' 2>&1';
                 if (System::isInDev()) {
                     $this->log->writeLine('<div class="showHide"><p class="title glyphicon-chevron-right">Command : </p><p class="content">'.$command.'</p></div>', false, true);
                 }
@@ -549,41 +549,47 @@ class FFMpeg
             return '';
         }
 
-        $minX = PHP_INT_MAX;
-        $minY = PHP_INT_MAX;
-        $maxR = 0;
-        $maxB = 0;
-        $found = false;
+        $crops = [];
 
         foreach ($m as $c) {
-            $w = (int)$c[1]; $h = (int)$c[2]; $x = (int)$c[3]; $y = (int)$c[4];
+            $w = (int)$c[1];
+            $h = (int)$c[2];
+            $x = (int)$c[3];
+            $y = (int)$c[4];
 
-            if ($w === $srcW && $h === $srcH && $x === 0 && $y === 0) {
+            if ($w <= 0 || $h <= 0) {
                 continue;
             }
 
-            $found = true;
-            $minX = min($minX, $x);
-            $minY = min($minY, $y);
-            $maxR = max($maxR, $x + $w);
-            $maxB = max($maxB, $y + $h);
+            $key = $w . ':' . $h . ':' . $x . ':' . $y;
+
+            if (!isset($crops[$key])) {
+                $crops[$key] = 0;
+            }
+
+            $crops[$key]++;
         }
 
-        if (!$found) {
+        if (empty($crops)) {
             return '';
         }
 
-        $x = max(0, $minX);
-        $y = max(0, $minY);
-        $w = min($srcW, $maxR) - $x;
-        $h = min($srcH, $maxB) - $y;
+        arsort($crops);
+
+        $bestCrop = array_key_first($crops);
+        [$w, $h, $x, $y] = array_map('intval', explode(':', $bestCrop));
+
+        $w = min($srcW, $w);
+        $h = min($srcH, $h);
+        $x = max(0, $x);
+        $y = max(0, $y);
+
+        $w -= $w % 2;
+        $h -= $h % 2;
 
         if ($w <= 0 || $h <= 0) {
             return '';
         }
-
-        $w -= $w % 2;
-        $h -= $h % 2;
 
         if ($w === $srcW && $h === $srcH && $x === 0 && $y === 0) {
             return '';
