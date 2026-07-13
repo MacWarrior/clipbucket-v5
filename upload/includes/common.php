@@ -198,6 +198,7 @@ require_once DirPath::get('classes') . 'gravatar.class.php';
 require_once DirPath::get('includes') . 'plugin.functions.php';
 require_once DirPath::get('includes') . 'plugins_functions.php';
 require_once DirPath::get('classes') . 'remote_play.class.php';
+require_once DirPath::get('classes') . 'subtitle.class.php';
 
 $adsObj = new AdsManager();
 $formObj = new formObj();

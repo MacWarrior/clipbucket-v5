@@ -14,6 +14,8 @@ class Tmdb
 
     private $language = '';
 
+    private static $tablename = 'video_tmdb';
+
     /**
      * @param \Classes\Curl $curl
      * @return void
@@ -276,7 +278,7 @@ class Tmdb
      * @return void
      * @throws Exception
      */
-    public function importDataFromTmdb(int $videoid, int $tmdb_id, $type = 'movie')
+    public function importDataFromTmdb(int $videoid, int $tmdb_id, string $type = 'movie'): void
     {
         if( empty($videoid) ){
             e(lang('class_vdo_del_err'));
@@ -598,8 +600,6 @@ class Tmdb
      * @param int $videoid
      * @param int $id_tmdb
      * @param string $type_tmdb
-     * @param $tmdb_rate
-     * @param $tmdb_ratings
      * @return bool
      * @throws Exception
      */
@@ -621,5 +621,10 @@ class Tmdb
             $sql .= $field . ' = VALUES('.$field.') ';
         }
         return Clipbucket_db::getInstance()->execute($sql);
+    }
+
+    public static function getTableName(): string
+    {
+        return self::$tablename;
     }
 }
