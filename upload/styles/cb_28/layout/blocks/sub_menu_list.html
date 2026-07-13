@@ -1,0 +1,11 @@
+{foreach $children as $child}
+    <li>
+        <a href="{$link}?cat={$child.category_id}">{ucfirst($child.category_name)}</a>
+        {if !empty($child.children)}
+            <i class="icon-right-arrow " data-level="{$level}"></i>
+            <ul class="dropdown-menu sub-menu" style="left: auto;">
+                {include file="$style_dir/blocks/sub_menu_list.html" children=$child.children link=$link level=$level+1}
+            </ul>
+        {/if}
+    </li>
+{/foreach}

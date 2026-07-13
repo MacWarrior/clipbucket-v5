@@ -247,7 +247,7 @@ a:hover{
 }
 #header .main-links>ul>li>a:hover:after,
 #header .main-links>ul>li>a:focus:after,
-#header .main-links>ul>li.active a:after{
+#header .main-links>ul>li.active>a:after{
     background-color: var(--color-main-01);
     color: var(--color-main-02);
 }

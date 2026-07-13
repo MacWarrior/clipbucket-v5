@@ -1013,6 +1013,24 @@
                                             </div>
                                         </div>
                                     </div>
+                                    <div class="col-md-6">
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                                <label class="nowrap" for="enable_channel_categories_as_submenu" title="{lang('option_main_menu_order')}">{lang('option_main_menu_order')}</label>
+                                            </div>
+                                            <div class="col-md-8">
+                                                <input type="hidden" name="main_menu_order" value="{$row.main_menu_order}" class="main-menu-order"/>
+                                                <ul class="list-unstyled main-menus-sortable">
+                                                    {foreach from=$sections item=$menu}
+                                                        <li class="main-menu-sortable " data-section-id="{$menu}">
+                                                            <span class="glyphicon glyphicon-move main-menu-sort-handle"></span>
+                                                            {ucfirst(lang($menu))}
+                                                        </li>
+                                                    {/foreach}
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>

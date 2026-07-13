@@ -494,6 +494,7 @@ if (isset($_POST['update'])) {
         , 'enable_photo_categories_as_submenu'
         , 'enable_collection_categories_as_submenu'
         , 'enable_channel_categories_as_submenu'
+        , 'main_menu_order'
     ];
 
     //Numeric Array
@@ -579,6 +580,7 @@ if (isset($_POST['update'])) {
             }
         }
 
+
         if (!isset(myquery::getInstance()->Get_Website_Details()[$field])) {
             if (!$has_missing_config) {
                 e(lang('error_missing_config_please_use_tool', DirPath::getUrl('admin_area') . 'admin_tool.php?code_tool=install_missing_config'), 'w', false);
@@ -591,7 +593,13 @@ if (isset($_POST['update'])) {
             }
             continue;
         }
-
+        if ($field == 'main_menu_order') {
+            $array_values = explode(',', $value);
+            //unknown section
+            if (array_diff($array_values, ['video', 'photo', 'collection', 'channel'])) {
+                continue;
+            }
+        }
         if (!is_null($value)) {
             myquery::getInstance()->Set_Website_Details($field, $value);
         } else {
@@ -629,7 +637,7 @@ if (isset($_POST['update'])) {
 
 $row = myquery::getInstance()->Get_Website_Details();
 Assign('row', $row);
-
+assign('sections', !empty($row['main_menu_order']) ? explode(',',$row['main_menu_order']) : ['video','photo','channel','collection']);
 subtitle(lang('basic_settings'));
 
 $filepath_custom_css = DirPath::get('files') . 'custom.css';

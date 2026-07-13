@@ -649,30 +649,94 @@ class ClipBucket
     /**
      * Function used to load head menu
      *
-     * @return array|void
+     * @return void
      * @throws Exception
      */
-    function head_menu()
+    function head_menu(): void
     {
-        $this->head_menu[] = ['name' => lang('menu_home'), 'icon' => '<i class="fa fa-home"></i>', 'link' => DirPath::getUrl('root'), 'this' => 'home', 'section' => 'home', 'extra_attr' => ''];
+        $order_menu = explode(',', config('main_menu_order'));
+        $this->head_menu[0] = [
+            'name'       => lang('menu_home'),
+            'icon'       => '<i class="fa fa-home"></i>',
+            'link'       => DirPath::getUrl('root'),
+            'this'       => 'home',
+            'section'    => 'home',
+            'extra_attr' => ''
+        ];
 
-        if( config('videosSection') == 'yes' ){
-            $this->head_menu[] = ['name' => lang('videos'), 'icon' => '<i class="fa fa-video-camera"></i>', 'link' => cblink(['name' => 'videos']), 'this' => 'videos', 'section' => 'home', 'permission'=>'view_videos'];
+
+        if (config('photosSection') == 'yes') {
+            $categories_photo = [];
+            if (config('enable_photo_categories_as_submenu') == 'yes') {
+                $categories_photo = getCategoryList(['type' => 'photo']);
+            }
+            $this->head_menu[array_search('photo', $order_menu)+1] = [
+                'name'       => lang('photos'),
+                'icon'       => '<i class="fa fa-camera"></i>',
+                'link'       => cblink(['name' => 'photos']),
+                'this'       => 'photos',
+                'permission' => 'view_photos',
+                'sub_menus'  => $categories_photo
+            ];
+        }
+        if (config('channelsSection') == 'yes') {
+            $categories_user = [];
+            if (config('enable_channel_categories_as_submenu') == 'yes') {
+                $categories_user = getCategoryList(['type' => 'user']);
+            }
+            $this->head_menu[array_search('channel', $order_menu)+1] = [
+                'name'       => lang('channels'),
+                'icon'       => '<i class="fa fa-desktop"></i>',
+                'link'       => cblink(['name' => 'channels']),
+                'this'       => 'channels',
+                'section'    => 'channels',
+                'permission' => 'view_channels',
+                'sub_menus'  => $categories_user
+            ];
+        }
+        if (config('collectionsSection') == 'yes' && (config('videosSection') == 'yes' || config('photosSection') == 'yes')) {
+            $categories_collection = [];
+            if (config('enable_collection_categories_as_submenu') == 'yes') {
+                $categories_collection = getCategoryList(['type' => 'collection']);
+            }
+            $this->head_menu[array_search('collection', $order_menu)+1] = [
+                'name'       => lang('collections'),
+                'icon'       => '<i class="fa fa-bars"></i>',
+                'link'       => cblink(['name' => 'collections']),
+                'this'       => 'collections',
+                'section'    => 'collections',
+                'permission' => 'view_collections',
+                'sub_menus'  => $categories_collection
+            ];
+        }
+        if (config('videosSection') == 'yes') {
+            $categories_video = [];
+            if (config('enable_video_categories_as_submenu') == 'yes') {
+                $categories_video = getCategoryList(['type' => 'video']);
+            }
+            $video_position =array_search('video', $order_menu)+1;
+            $this->head_menu[$video_position] = [
+                'name'       => lang('videos'),
+                'icon'       => '<i class="fa fa-video-camera"></i>',
+                'link'       => cblink(['name' => 'videos']),
+                'this'       => 'videos',
+                'section'    => 'home',
+                'permission' => 'view_videos',
+                'sub_menus'  => $categories_video
+            ];
             if (config('enable_public_video_page') == 'yes' && User::getInstance()->hasPermission('allow_public_video_page')) {
-                $this->head_menu[] = ['name' => lang('public_videos'), 'icon' => '<i class="fa fa-video-camera"></i>', 'link' => cblink(['name' => 'videos_public']), 'this' => 'videos_public', 'section' => 'videos_public', 'permission'=>'allow_public_video_page'];
+                array_splice($this->head_menu, $video_position+1, 0, [
+                    'name'       => lang('public_videos'),
+                    'icon'       => '<i class="fa fa-video-camera"></i>',
+                    'link'       => cblink(['name' => 'videos_public']),
+                    'this'       => 'videos_public',
+                    'section'    => 'videos_public',
+                    'permission' => 'allow_public_video_page',
+                    'sub_menus'  => $categories_video
+                ]);
             }
         }
-        if( config('photosSection') == 'yes' ) {
-            $this->head_menu[] = ['name' => lang('photos'), 'icon' => '<i class="fa fa-camera"></i>', 'link' => cblink(['name' => 'photos']), 'this' => 'photos', 'permission'=>'view_photos'];
-        }
-        if( config('channelsSection') == 'yes' ) {
-            $this->head_menu[] = ['name' => lang('channels'), 'icon' => '<i class="fa fa-desktop"></i>', 'link' => cblink(['name' => 'channels']), 'this' => 'channels', 'section' => 'channels', 'permission'=>'view_channels'];
-        }
-        if( config('collectionsSection') == 'yes' && (config('videosSection') == 'yes' || config('photosSection') == 'yes') ) {
-            $this->head_menu[] = ['name' => lang('collections'), 'icon' => '<i class="fa fa-bars"></i>', 'link' => cblink(['name' => 'collections']), 'this' => 'collections', 'section' => 'collections', 'permission'=>'view_collections'];
-        }
-
-        return $this->head_menu;
+        ksort($this->head_menu);
     }
 
     /**
@@ -682,32 +746,11 @@ class ClipBucket
     {
         $this->head_menu();
 
-        $params = [];
-        $params['class'] = '';
-
         $headMenu = $this->head_menu;
 
         $custom = (isset($this->custom_menu)) ? $this->custom_menu : false;
         if (is_array($custom)) {
             $headMenu = array_merge($headMenu, $custom);
-        }
-
-        /* Excluding tabs from menu */
-        if (isset($params['exclude'])) {
-            if (is_array($params['exclude'])) {
-                $exclude = $params['exclude'];
-            } else {
-                $exclude = explode(',', $params['exclude']);
-            }
-
-            foreach ($headMenu as $key => $hm) {
-                foreach ($exclude as $ex) {
-                    $ex = trim($ex);
-                    if (strtolower(trim($hm['name'])) == strtolower($ex)) {
-                        unset($headMenu[$key]);
-                    }
-                }
-            }
         }
 
         $main_menu = [];
@@ -719,35 +762,7 @@ class ClipBucket
 
             $main_menu[] = $menu;
         }
-        if (!isset($params['echo'])) {
-            return $main_menu;
-        }
-        $output = '';
-        foreach ($main_menu as $menu) {
-            $selected = getArrayValue($menu, 'active');
-            $output .= '<li ';
-            $output .= "id = 'cb" . $menu['name'] . "Tab'";
-
-            $output .= " class = '";
-            if ($params['class']) {
-                $output .= $params['class'];
-            }
-            if ($selected) {
-                $output .= ' selected';
-            }
-            $output .= "'";
-
-            if (isset($params['extra_params'])) {
-                $output .= ($params['extra_params']);
-            }
-            $output .= '>';
-            $output .= "<a href='" . $menu['link'] . "'>";
-            $output .= $menu['name'] . "</a>";
-            $output .= '</li>';
-        }
-
-        echo $output;
-        return true;
+        return $main_menu;
     }
 
     /**

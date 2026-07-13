@@ -292,4 +292,20 @@ $(document).ready(function () {
         }
     });
 
+    updateMainMenuOrder();
+
+    $('#interfaces_main_menu .main-menus-sortable').sortable({
+        handle: '.main-menu-sort-handle',
+        items: '.main-menu-sortable',
+        update: function () {
+            updateMainMenuOrder();
+        }
+    });
 });
+function updateMainMenuOrder() {
+    var section = $('#interfaces_main_menu .main-menu-order').parent()
+    var sectionIds = section.find('.main-menu-sortable').map(function () {
+        return $(this).data('section-id');
+    }).get();
+    section.find('.main-menu-order').val(sectionIds.join(','));
+}

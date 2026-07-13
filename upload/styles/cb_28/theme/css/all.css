@@ -4369,7 +4369,8 @@ textarea#comment_box {
 }
 
 #header .right-menu .dropdown-menu,
-#header .search-drop .dropdown-menu {
+#header .search-drop .dropdown-menu,
+#header .main-links .dropdown-menu{
   padding: 13px 0 0;
 }
 

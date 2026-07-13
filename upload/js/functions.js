@@ -793,3 +793,8 @@ function getModalUploadSubtitle(video_id) {
 function capitalizeFirstLetter(val) {
     return String(val).charAt(0).toUpperCase() + String(val).slice(1);
 }
+function initListenerMenu() {
+    $('.dropdown-toggle-hover').parent('li').hover( function() {
+        $(this).find('ul.dropdown-menu').toggle();
+    });
+}

@@ -15,6 +15,7 @@ class MWIP extends \Migration
         self::generateConfig('enable_photo_categories_as_submenu', 'no');
         self::generateConfig('enable_collection_categories_as_submenu', 'no');
         self::generateConfig('enable_channel_categories_as_submenu', 'no');
+        self::generateConfig('main_menu_order', 'video,photo,channel,collection');
         self::generateTranslation('main_menu', [
             'fr'=>'Menu principal',
             'en'=>'Main menu'
@@ -34,6 +35,10 @@ class MWIP extends \Migration
         self::generateTranslation('option_enable_channel_categories_as_submenu', [
             'fr' => 'Activer les catégories de channels comme sous-menu',
             'en' => 'Enable channels categories as submenus'
+        ]);
+        self::generateTranslation('option_main_menu_order', [
+            'fr'=>'Ordre d\'affichage des sections',
+            'en'=>'Order of sections'
         ]);
     }
 }
