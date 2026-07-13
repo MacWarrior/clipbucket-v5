@@ -1,45 +1,51 @@
 <div id="main" class="clearfix container">
-	<div class="clearfix">
-		<section class="clearfix {$type}">
-			{if config("enable_advertisement") == "yes"}
-			<div class="clearfix leaderboard-ad ad">
-				{AD place='ad_728x90'}
-			</div>
-			{/if}
-			<div class="clearfix well" style="overflow:overlay;padding-bottom:0;">
-			<h1>{$search_type_title}</h1>
-			</div>
-			{if $results}
-			<div class="clearfix row">
-				{foreach item=result from=$results}
-					{assign var=$template_var value =$result}
-					{include file="$display_template"}
-				{/foreach}
-			</div>
-			{else}
-			<div class="clearfix well">
-				{lang code='no_results_found'}
-			</div>
-			{/if}
-			{include file="$style_dir/blocks/pagination.html"}
-		</section>
-	</div>
+    <div class="clearfix">
+        <section class="clearfix {$type}">
+            {if config("enable_advertisement") == "yes"}
+                <div class="clearfix leaderboard-ad ad">
+                    {AD place='ad_728x90'}
+                </div>
+            {/if}
+            <div class="clearfix well" style="overflow:overlay;padding-bottom:0;">
+                <h1>{$search_type_title}</h1>
+            </div>
+            {if $results}
+                <div class="clearfix row">
+                    {foreach item=result from=$results}
+                        {assign var=$template_var value =$result}
+                        {if $type == 'videos'}
+                            <div class="item-video col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                        {/if}
+                        {include file="$display_template"}
+                        {if $type == 'videos'}
+                            </div>
+                        {/if}
+                    {/foreach}
+                </div>
+            {else}
+                <div class="clearfix well">
+                    {lang code='no_results_found'}
+                </div>
+            {/if}
+            {include file="$style_dir/blocks/pagination.html"}
+        </section>
+    </div>
 </div>
 <script>
-	$(document).ready(function(){
-		$("#cbsearchtype a").on({
-			click: function(e){
-				e.preventDefault();
-				var searchtype = $("#SearchType").val();
-				var buttonText = $(this).text().toLowerCase();
-				if($("#SearchType option[value='"+ buttonText +"']").length > 0)
-				{
-					$("#SearchType option:selected").removeAttr("selected");
-					$("#SearchType option[value='"+ buttonText +"']").attr("selected" , "selected");
-					$(this).parents("ul").find(".active").removeClass("active");
-					$(this).parent().addClass("active");
-				}
-			}
-		});
-	});
+    $(document).ready(function(){
+        $("#cbsearchtype a").on({
+            click: function(e){
+                e.preventDefault();
+                var searchtype = $("#SearchType").val();
+                var buttonText = $(this).text().toLowerCase();
+                if($("#SearchType option[value='"+ buttonText +"']").length > 0)
+                {
+                    $("#SearchType option:selected").removeAttr("selected");
+                    $("#SearchType option[value='"+ buttonText +"']").attr("selected" , "selected");
+                    $(this).parents("ul").find(".active").removeClass("active");
+                    $(this).parent().addClass("active");
+                }
+            }
+        });
+    });
 </script>

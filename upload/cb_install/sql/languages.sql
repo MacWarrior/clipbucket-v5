@@ -1928,4 +1928,19 @@ VALUES ('ongoing_conversion'),
        ('comment_id');
 INSERT INTO `{tbl_prefix}languages_keys` (`language_key`)
 VALUES ('noted_x'),
-       ('over_x_ratings');
+       ('over_x_ratings'),
+       ('report_and_stats'),
+       ('other_reports'),
+       ('video_reports'),
+       ('user_reports'),
+       ('todays_videos'),
+       ('todays_users'),
+       ('videos_in_playlist'),
+       ('total_files_and_sizes'),
+       ('folder_size'),
+       ('total_thumbs'),
+       ('database_size'),
+       ('user_avatars'),
+       ('user_backgrounds'),
+       ('category_thumbs'),
+       ('original_video_files');

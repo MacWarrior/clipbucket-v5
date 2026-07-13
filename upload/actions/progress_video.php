@@ -106,7 +106,7 @@ foreach ($videos as $video) {
         //TODO check config
         assign('videoid', $video['videoid']);
         assign('vstatus', $video['status'] );
-        assign('subtitle_list',get_video_subtitles($video) ?: []);
+        assign('subtitle_list', Subtitle::getVideoSubtitles($video) ?: []);
         $data['subtitles'] = '<div class="formSection clear">
                                     <h4>'.lang('video_subtitle_management').'<i class="glyphicon glyphicon-chevron-down pull-right"></i></h4>
                                     <div class="sectionContent" style="display: none;" id="subtitles_'.$video['videoid'].'">
