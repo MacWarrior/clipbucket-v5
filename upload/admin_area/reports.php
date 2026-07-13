@@ -6,14 +6,14 @@ require_once dirname(__FILE__, 2) . '/includes/admin_config.php';
 /* Generating breadcrumb */
 global $breadcrumb;
 $breadcrumb[0] = ['title' => lang('tool_box'), 'url' => ''];
-$breadcrumb[1] = ['title' => 'Reports &amp; Stats', 'url' => DirPath::getUrl('admin_area') . 'reports.php'];
+$breadcrumb[1] = ['title' => lang('report_and_stats'), 'url' => DirPath::getUrl('admin_area') . 'reports.php'];
 
-$vid_dir = get_directory_size(DirPath::get('videos'));
+$vid_dir = get_directory_size(DirPath::get('videos'), ['.gitignore', 'processing.jpg']);
 $thumb_dir = get_directory_size(DirPath::get('thumbs'), ['.gitignore', 'processing.jpg']);
-$orig_dir = get_directory_size(DirPath::get('original'));
-$user_thumbs = get_directory_size(DirPath::get('avatars'));
-$user_bg = get_directory_size(DirPath::get('backgrounds'));
-$cat_thumbs = get_directory_size(DirPath::get('category_thumbs'));
+$orig_dir = get_directory_size(DirPath::get('original'), ['.gitignore', 'processing.jpg']);
+$user_thumbs = get_directory_size(DirPath::get('avatars'), ['.gitignore', 'processing.jpg']);
+$user_bg = get_directory_size(DirPath::get('backgrounds'), ['.gitignore', 'processing.jpg']);
+$cat_thumbs = get_directory_size(DirPath::get('category_thumbs'), ['.gitignore', 'processing.jpg']);
 
 assign('vid_dir', $vid_dir);
 assign('thumb_dir', $thumb_dir);
