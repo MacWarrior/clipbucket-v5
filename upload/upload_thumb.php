@@ -8,10 +8,9 @@ if (@$_GET['msg']) {
     $msg[] = display_clean($_GET['msg']);
 }
 
-$video = mysql_clean($_GET['video']);
 
 //Check Video Exists or Not
-$data = Video::getInstance()->getOne(['videoid'=>$video]);
+$data = Video::getInstance()->getOne(['videoid'=>$_GET['video']]);
 if ($data) {
     if ($data['userid'] != User::getInstance()->getCurrentUserID() && !User::getInstance()->hasAdminAccess()) {
         echo json_encode(['error'=>lang('no_edit_video')]);
@@ -47,7 +46,7 @@ if ($data) {
 }
 if (!empty($_POST['return_type']) && $_POST['return_type'] == 'html') {
     //refresh
-    $data = Video::getInstance()->getOne(['videoid'=>$video]);
+    $data = Video::getInstance()->getOne(['videoid'=>$_GET['video']]);
     echo json_encode(Upload::displayVideoThumbsForm($data));
 } else {
     echo json_encode(['redirect'=>DirPath::getUrl('root') . 'edit_video.php?vid=' . $data['videoid']]);
