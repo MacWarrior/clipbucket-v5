@@ -1,6 +1,6 @@
 {
   "version":"5.5.3",
-  "revision":"160",
+  "revision":"163",
   "status":"stable",
   "detail":[
     {
@@ -113,6 +113,7 @@
         ,"Fix JS error on channel page"
         ,"Fix video rating display"
         ,"Fix popular videos thumb display"
+        ,"Fix wrong max file size error message"
       ]
     },
     {
@@ -135,7 +136,7 @@
         ,"Fix tools error handling"
         ,"Fix possible SQL error on video upload"
         ,"Fix thumbs deletion"
-        ,"Fix possible SQL injection (Thanks @drkim-dev, @FutureBuildingEN & @Bnyt7 !)"
+        ,"Fix possible SQL injection (Thanks @drkim-dev, @FutureBuildingEN, @Bnyt7 & @de3erve-hunter !)"
         ,"Fix possible duplicate configs"
         ,"Fix SSRF vulnerability (Thanks @Takumi142857 !)"
         ,"Fix Readme"
