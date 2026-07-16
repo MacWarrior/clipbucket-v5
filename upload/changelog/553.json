@@ -1,6 +1,6 @@
 {
   "version":"5.5.3",
-  "revision":"163",
+  "revision":"164",
   "status":"stable",
   "detail":[
     {
@@ -147,6 +147,7 @@
         ,"Fix possible memory overflow while in dev mode"
         ,"Fix pagination (<i>#855</i>)"
         ,"Fix TMDB import SQL error"
+        ,"Fix video deletion"
       ]
     },
     {
