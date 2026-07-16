@@ -1,6 +1,6 @@
 {
   "version":"5.5.3",
-  "revision":"159",
+  "revision":"163",
   "status":"stable",
   "detail":[
     {
@@ -27,6 +27,7 @@
         ,"Update TMDB search interface"
         ,"Update manage tags type filter"
         ,"Update interfaces display when medias are disabled"
+        ,"Update comments display on reports & stats"
         ,"Add links to flagged tags"
         ,"Hide poster & backdrop tabs when empty on video edition page"
         ,"Only show template editor menu while in dev mode"
@@ -112,6 +113,7 @@
         ,"Fix JS error on channel page"
         ,"Fix video rating display"
         ,"Fix popular videos thumb display"
+        ,"Fix wrong max file size error message"
       ]
     },
     {
@@ -134,7 +136,7 @@
         ,"Fix tools error handling"
         ,"Fix possible SQL error on video upload"
         ,"Fix thumbs deletion"
-        ,"Fix possible SQL injection (Thanks @drkim-dev, @FutureBuildingEN & @Bnyt7 !)"
+        ,"Fix possible SQL injection (Thanks @drkim-dev, @FutureBuildingEN, @Bnyt7 & @de3erve-hunter !)"
         ,"Fix possible duplicate configs"
         ,"Fix SSRF vulnerability (Thanks @Takumi142857 !)"
         ,"Fix Readme"

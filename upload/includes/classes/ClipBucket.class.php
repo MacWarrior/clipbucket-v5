@@ -538,7 +538,7 @@ class ClipBucket
             }
 
             $menu_tool['sub'][] = [
-                'title' => 'Reports &amp; Stats'
+                'title' => lang('report_and_stats')
                 , 'url' => DirPath::getUrl('admin_area') . 'reports.php'
             ];
 
