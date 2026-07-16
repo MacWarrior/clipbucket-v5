@@ -116,11 +116,12 @@ if( !Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.0', '323') ){
     }
 
     $cats = Category::getInstance()->getAll([
-        'category_type' => Category::getInstance()->getIdsCategoriesType($type)
+        'category_type' => Category::getInstance()->getIdsCategoriesType($type),
+        'parent_only'=>true
     ]);
 
     //Assign Category Values
-    assign('category', $cats);
+    assign('categories', $cats);
     assign('total', Category::getInstance()->getAll([
         'category_type' => Category::getInstance()->getIdsCategoriesType($type),
         'count'

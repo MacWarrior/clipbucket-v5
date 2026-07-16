@@ -40,5 +40,10 @@ class MWIP extends \Migration
             'fr'=>'Ordre d\'affichage des sections',
             'en'=>'Order of sections'
         ]);
+        self::generateTranslation('category_name' , [
+            'fr'=>'Nom de la catégorie',
+            'en'=>'Category name'
+        ]);
+
     }
 }

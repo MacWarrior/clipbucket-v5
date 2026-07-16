@@ -1382,16 +1382,19 @@ ul.tagit.ui-widget-content {
     margin-bottom: 10px;
 }
 
-#interfaces_main_menu .main-menus-sortable {
+#interfaces_main_menu .main-menus-sortable,
+.categories_drag_n_drop {
     border: 1px solid #ddd;
     border-radius: 4px;
     max-height: 240px;
-    overflow-y: auto;
+    overflow-y: visible;
     padding: 8px;
     background: #fafafa;
 }
 
-#interfaces_main_menu .main-menu-sortable {
+#interfaces_main_menu .main-menu-sortable,
+.category_drag_n_drop
+{
     background: #fff;
     border: 1px solid #ddd;
     border-radius: 3px;

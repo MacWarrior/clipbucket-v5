@@ -1,0 +1,44 @@
+<div class="category_drag_n_drop row">
+    <div class="col-md-3">
+        {$category.category_name}
+        <a id="thumbs_{$category.category_id}" class="label label-danger arrowed popoverButton" data-html="true" data-placement="top" data-toggle="popover" data-content="<img src='{CBvideo::getInstance()->get_category_thumb($category, $type)}' height='90' width='90'/>"
+           href="javascript:void(0);">View Thumb</a>
+    </div>
+    <div class="col-md-6">
+        {$category.category_desc}
+    </div>
+    <div class="col-md-1">
+        <input value="{$category.category_id}" {if $category.is_default == $valid_default}checked disabled{/if} name="make_default" type="checkbox" class="ace ace-switch ace-switch-5"/>
+        <span class="lbl"></span>
+    </div>
+    <div class="col-md-2">
+        <div class="lead dropdown">
+            <button id="dropdownMenu1" class="btn btn-primary btn-xs dropdown-toggle" data-toggle="dropdown">
+                Options <i class="caret"></i>
+            </button>
+            <ul class="dropdown-menu" aria-labelledby="dropdownMenu1" role="menu">
+                <li role="presentation">
+                    <a role="menuitem" tabindex="-1" href="" onclick="addOrEdit('{$category.category_id}'); return false;">{lang code='edit'}</a>
+                </li>
+                {if $category.is_default != $valid_default }
+                    <li role="presentation">
+                        <a role="menuitem" tabindex="-1" href="?type={$type}&delete_category={$category.category_id}">{lang code="delete"}</a>
+                    </li>
+                {/if}
+            </ul>
+        </div>
+    </div>
+    {assign var=children value=Category::getInstance()->getChildren($category.category_id)}
+    {if !empty($children) && config('use_subs')==1 }
+        <div class="categories_drag_n_drop">
+            <div class="col-md-1"></div>
+            <div class="col-md-11">
+                {assign var=order value=[]}
+                {foreach from=$children item=child}
+                    {include file="$style_dir/blocks/category_item.html" category=$child}
+                {/foreach}
+                <input type="hidden" name="order[{$category.category_id}]" value="{implode(',',$order)}"/>
+            </div>
+        </div>
+    {/if}
+</div>
