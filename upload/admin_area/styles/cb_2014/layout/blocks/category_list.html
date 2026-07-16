@@ -4,18 +4,17 @@
     {assign var="valid_default" value='yes'}
 {/if}
 {assign var=order value=[]}
-<div  class="categories_drag_n_drop row">
-    <div class="col-md-12">
-        <div class="row">
-            <div class="col-md-3">{lang('category_name')}</div>
-            <div class="col-md-6">{lang('description')}</div>
-            <div class="col-md-1">{lang('default')}</div>
-            <div class="col-md-2">{lang('action')}</div>
-        </div>
+<div class="categories_drag_n_drop category-tree">
+    <div class="category-list-header">
+        <span class="category-name">{lang('category_name')}</span>
+        <span class="category-description">{lang('description')}</span>
+        <span class="category-default">{lang('default')}</span>
+        <span class="category-actions">{lang('action')}</span>
+    </div>
+    <ul id="category_flat_list" class="category-flat-list">
         {foreach from=$categories item=category}
             {$order[]= $category.category_id}
             {include file="$style_dir/blocks/category_item.html" category=$category}
         {/foreach}
-    </div>
-    <input type="hidden" name="order[0]" value="{implode(',',$order)}"/>
+    </ul>
 </div>

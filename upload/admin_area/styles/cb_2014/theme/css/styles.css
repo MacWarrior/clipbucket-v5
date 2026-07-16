@@ -1393,8 +1393,7 @@ ul.tagit.ui-widget-content {
 }
 
 #interfaces_main_menu .main-menu-sortable,
-.category_drag_n_drop
-{
+.category-item {
     background: #fff;
     border: 1px solid #ddd;
     border-radius: 3px;
@@ -1406,4 +1405,60 @@ ul.tagit.ui-widget-content {
 #interfaces_main_menu .main-menu-sort-handle {
     color: #999;
     margin-right: 8px;
+}
+
+.category-tree {
+    max-height: none;
+    overflow: visible;
+}
+
+.category-tree ul,
+.category-flat-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.category-list-header,
+.category-row {
+    align-items: flex-start;
+    display: flex;
+    gap: 10px;
+}
+
+.category-list-header {
+    font-weight: bold;
+    padding: 0 10px 8px;
+}
+
+.category-name {
+    box-sizing: border-box;
+    flex: 0 0 25%;
+    min-width: 0;
+    overflow-wrap: anywhere;
+    padding-left: calc(var(--category-level, 0) * 35px);
+    white-space: normal;
+}
+
+.category-description {
+    flex: 1 1 auto;
+    min-width: 0;
+    overflow-wrap: anywhere;
+    white-space: normal;
+}
+
+.category-default {
+    flex: 0 0 8%;
+}
+
+.category-actions {
+    flex: 0 0 16%;
+}
+
+.category-drag-placeholder {
+    border: 1px dashed #337ab7;
+    border-radius: 3px;
+    min-height: 38px;
+    margin-bottom: 6px;
+    background: #f5fbff;
 }
