@@ -1,6 +1,6 @@
 {
   "version":"5.5.3",
-  "revision":"164",
+  "revision":"165",
   "status":"stable",
   "detail":[
     {
@@ -148,6 +148,7 @@
         ,"Fix pagination (<i>#855</i>)"
         ,"Fix TMDB import SQL error"
         ,"Fix video deletion"
+        ,"Fix possible unauthorized video thumbs overight (Thanks @de3erve-hunter !)"
       ]
     },
     {
