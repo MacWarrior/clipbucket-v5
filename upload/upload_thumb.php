@@ -8,7 +8,6 @@ if (@$_GET['msg']) {
     $msg[] = display_clean($_GET['msg']);
 }
 
-
 //Check Video Exists or Not
 $data = Video::getInstance()->getOne(['videoid'=>$_GET['video']]);
 if ($data) {
