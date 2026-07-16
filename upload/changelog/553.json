@@ -148,7 +148,7 @@
         ,"Fix pagination (<i>#855</i>)"
         ,"Fix TMDB import SQL error"
         ,"Fix video deletion"
-        ,"Fix possible unauthorized thumb overright (Thanks @de3erve-hunter !)"
+        ,"Fix possible unauthorized video thumbs overight (Thanks @de3erve-hunter !)"
       ]
     },
     {
