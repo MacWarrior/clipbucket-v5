@@ -57,7 +57,7 @@
 
                 <div class="collapse navbar-collapse" id="bs-collapse">
                     <div class="menu-holder">
-                        <div class="col">
+                        <div class="col dropdown">
                             <nav class="main-links">
                                 {$head_menu=cb_menu()}
                                 <ul>
@@ -69,7 +69,28 @@
                                                 {continue}
                                             {/if}
                                             {if User::getInstance()->hasPermission($menu.permission)}
-                                                <li {if $menu.name|lower == $currentPage || $menu.name|lower == $pageType}class="active"{/if}><a href="{$menu.link}">{$menu.name}</a></li>
+                                                <li {if $menu.name|lower == $currentPage || $menu.name|lower == $pageType}class="active"{/if}>
+                                                    <a {if !empty($menu.sub_menus)} class="dropdown-toggle-hover dropdown-toggle" style="display: inline-block;" href="javascript:void(0);"
+                                                            {else} href="{$menu.link}" {/if}>
+                                                        {$menu.name} {if !empty($menu.sub_menus)}<b class="icon-down-arrow " data-toggle="dropdown" style="vertical-align: middle; cursor:pointer;"></b>{/if}
+                                                    </a>
+                                                    {if !empty($menu.sub_menus)}
+                                                        <ul role="menu" class="dropdown-menu" style="left: auto;">
+                                                            <li><a href="{$menu.link}">{lang('all')}</a></li>
+                                                            {foreach $menu.sub_menus as $submenu}
+                                                                <li>
+                                                                    <a href="{$menu.link}?cat={$submenu.category_id}">{ucfirst($submenu.category_name)}</a>
+                                                                    {if !empty($submenu.children)}
+                                                                        <i class="icon-right-arrow trigger" data-level="1"></i>
+                                                                        <ul role="menu" class="dropdown-menu sub-menu" >
+                                                                            {include file="$style_dir/blocks/sub_menu_list.html" children=$submenu.children link=$menu.link level=2}
+                                                                        </ul>
+                                                                    {/if}
+                                                                </li>
+                                                            {/foreach}
+                                                        </ul>
+                                                    {/if}
+                                                </li>
                                             {/if}
                                         {/if}
                                     {/foreach}
@@ -112,7 +133,7 @@
                                 </div>
                             {/if}
                             <ul class="nav navbar-nav navbar-right right-menu">
-                                {if user_id()}
+                                {if User::getInstance()->isUserConnected()}
                                     {if (isSectionEnabled('videos') && !empty(Upload::getInstance()->get_upload_options()) && User::getInstance()->hasPermission('allow_video_upload')) || (isSectionEnabled('photos') && config('enable_photo_file_upload') == 'yes' && User::getInstance()->hasPermission('allow_photo_upload'))}
                                         <li class="dropdown upload_link">
                                             <a class="dropdown-toggle btn-upload btn btn-default"
@@ -214,4 +235,9 @@
         </div>
     </nav>
 </header>
+<script>
+    window.addEventListener('load', (event) => {
+        initListenerMenu();
+    });
+</script>
 {include file="$style_dir/blocks/spinner.html"}
