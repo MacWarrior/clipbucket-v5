@@ -104,11 +104,6 @@ class Video extends Objects
             $this->fields[] = 'voter_ids';
         }
 
-        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '101') && !Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '138')) {
-            $this->fields[] = 'id_tmdb';
-            $this->fields[] = 'type_tmdb';
-        }
-
         if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '107')) {
             $this->fields[] = 'use_backdrop_as_default_thumb';
         }
@@ -132,8 +127,12 @@ class Video extends Objects
             ,'category_thumb'
             ,'isdefault'
         ];
-
-        $this->display_block = LAYOUT . '/blocks/videos/video.html';
+        if (config('videos_video_style') == 'modern') {
+            $template = "video-modern.html";
+        } else {
+            $template = 'video-classic.html';
+        }
+        $this->display_block = LAYOUT . '/blocks/videos/' . $template;
         $this->display_var_name = 'video';
         $this->search_limit = (int)config('videos_items_search_page');
 
@@ -395,6 +394,8 @@ class Video extends Objects
         $param_join_flag= $params['join_flag'];
         $param_get_detail = $params['get_detail'] ?? false;
         $param_date_span = $params['date_span'] ?? false;
+        $param_get_tmdb = $params['get_tmdb'] ?? false;
+        $param_not_empty_tmdb = $params['not_empty_tmdb'] ?? false;
 
         $conditions = [];
         if( $param_videoid !== false ){
@@ -578,6 +579,31 @@ class Video extends Objects
             $flag_constraint = self::getFlagConstraint();
             $join[] = $flag_constraint['join'];
             $select[] = $flag_constraint['select'];
+        }
+
+        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '101')) {
+            $join_tmdb = false;
+            if ($param_get_tmdb) {
+                if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '138')) {
+                    $join_tmdb = true;
+                    $select[] = Tmdb::getTableName() . '.tmdb_id';
+                    $select[] = Tmdb::getTableName() . '.tmdb_type';
+                } else {
+                    $select[] = $this->getTableName() . '.id_tmdb AS tmdb_id';
+                    $select[] = $this->getTableName() . '.type_tmdb AS tmdb_type';
+                }
+            }
+            if ($param_not_empty_tmdb) {
+                if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '138')) {
+                    $join_tmdb = true;
+                    $conditions[] = Tmdb::getTableName() . '.tmdb_id IS NOT NULL';
+                } else {
+                    $conditions[] = $this->getTableName() . '.id_tmdb IS NOT NULL';
+                }
+            }
+            if ($join_tmdb) {
+                $join[] = ' LEFT JOIN ' . cb_sql_table(Tmdb::getTableName()) . ' ON ' . $this->getTableName() . '.videoid = ' . Tmdb::getTableName() . '.video_id';
+            }
         }
 
         if( $param_group ){
@@ -947,7 +973,7 @@ class Video extends Objects
         $total+= $this->getVideoFilesUsage($video['file_directory'], json_decode($video['video_files']), $video['file_type'], $video['file_name'], $video['video_version']);
         $total+= $this->getThumbsUsage($video['file_directory'], $video['file_name']);
         $total+= $this->getLogsUsage($video['file_name'], $video['file_directory']);
-        $total+= $this->getSubtitlesUsage($video_id, $video['file_directory'], $video['file_name']);
+        $total+= Subtitle::getSubtitlesUsage($video_id, $video['file_directory'], $video['file_name']);
         return $total;
     }
 
@@ -1027,30 +1053,6 @@ class Video extends Objects
         }
         return $total;
 
-    }
-
-    /**
-     * @param $video_id
-     * @param string $file_directory
-     * @param string $file_name
-     * @return int
-     * @throws Exception
-     */
-    public function getSubtitlesUsage($video_id, string $file_directory, string $file_name):int
-    {
-        $total = 0;
-        $directory = DirPath::get('subtitles') . $file_directory . DIRECTORY_SEPARATOR;
-        $query = 'SELECT * FROM ' . tbl('video_subtitle') . ' WHERE videoid = ' .$video_id;
-        $result = db_select($query);
-        if ($result) {
-            foreach ($result as $row) {
-                $filepath = $directory . $file_name . '-' . $row['number'] . '.srt';
-                if (file_exists($filepath)) {
-                    $total += filesize($filepath);
-                }
-            }
-        }
-        return $total;
     }
 
 
@@ -2014,20 +2016,6 @@ class CBvideo extends CBCategory
     }
 
     /**
-     * @throws Exception
-     */
-    function update_subtitle($videoid, $number, $title): void
-    {
-        if (!preg_match('/^\d{1,2}$/', $number)) {
-            e(lang('invalid_params'));
-            return;
-        }
-        if (Video::getInstance()->getOne(['videoid'=>$videoid, 'count'=>true])) {
-            Clipbucket_db::getInstance()->update(tbl('video_subtitle'), ['title'], [$title], ' videoid = ' . (int)$videoid . ' AND number = \'' . mysql_clean($number) . '\'');
-        }
-    }
-
-    /**
      * Function used to delete a video
      *
      * @param $vid
@@ -2070,7 +2058,7 @@ class CBvideo extends CBCategory
                 Clipbucket_db::getInstance()->delete(tbl('video_users'), ['videoid'], [$vdetails['videoid']]);
 
                 Clipbucket_db::getInstance()->delete(tbl(VideoConversionQueue::getTableName()), ['videoid'], [$vdetails['videoid']]);
-
+                Clipbucket_db::getInstance()->delete(tbl(Tmdb::getTableName()), ['video_id'], [$vdetails['videoid']]);
                 //Removing video Comments
                 $params = [];
                 $params['type'] = 'v';
@@ -2124,39 +2112,6 @@ class CBvideo extends CBCategory
         }
         remove_empty_parent_directory(DirPath::get('logs') . $str, DirPath::get('logs'));
         e(lang('vid_log_delete_msg'), 'm');
-    }
-
-    /**
-     * @param $vdetails
-     * @param string|null $number
-     * @throws Exception
-     */
-    function remove_subtitles($vdetails, string $number = null)
-    {
-        $directory = DirPath::get('subtitles') . $vdetails['file_directory'] . DIRECTORY_SEPARATOR;
-        $query = 'SELECT * FROM ' . tbl('video_subtitle') . ' WHERE videoid = ' . (int)$vdetails['videoid'];
-        if ($number !== null) {
-            $query .= ' AND number = \'' . mysql_clean($number) . '\'';
-        }
-        $result = db_select($query);
-        if ($result) {
-            foreach ($result as $row) {
-                $filepath = $directory . $vdetails['file_name'] . '-' . $row['number'] . '.srt';
-                if (file_exists($filepath)) {
-                    unlink($filepath);
-                }
-            }
-            $query_delete = 'DELETE FROM ' . tbl('video_subtitle') . ' WHERE videoid = ' . (int)$vdetails['videoid'];
-            if ($number !== null) {
-                $query_delete .= ' AND number = \'' . mysql_clean($number) . '\'';
-            }
-            Clipbucket_db::getInstance()->execute($query_delete);
-        }
-        if ($number !== null) {
-            e(str_replace('%s', $number,lang('video_subtitles_deleted_num')), 'm');
-        } else {
-            e(lang('video_subtitles_deleted'), 'm');
-        }
     }
 
     /**

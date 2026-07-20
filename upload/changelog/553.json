@@ -1,6 +1,6 @@
 {
   "version":"5.5.3",
-  "revision":"154",
+  "revision":"167",
   "status":"stable",
   "detail":[
     {
@@ -27,6 +27,7 @@
         ,"Update TMDB search interface"
         ,"Update manage tags type filter"
         ,"Update interfaces display when medias are disabled"
+        ,"Update comments display on reports & stats"
         ,"Add links to flagged tags"
         ,"Hide poster & backdrop tabs when empty on video edition page"
         ,"Only show template editor menu while in dev mode"
@@ -52,6 +53,9 @@
         ,"Fix tags type search on manage tags page (<i>#843</i>)"
         ,"Fix videos, photos, collections & playlists advanced search by tags (<i>#844</i>)"
         ,"Fix possible pagination overflow on action logs page"
+        ,"Fix update button being disabled after a first interupted update"
+        ,"Fix subtitles deletion"
+        ,"Fix Update TMDB info tool"
       ]
     },
     {
@@ -76,6 +80,7 @@
         ,"Update TMDB search interface"
         ,"Update video upload form"
         ,"Add signup date of birth calendar icon"
+        ,"Add video rating display on search results page"
         ,"Fix possible JS error on register page"
         ,"Fix possible display issues on login & signup pages"
         ,"Fix possible error during photo upload"
@@ -107,6 +112,9 @@
         ,"Fix remote play form"
         ,"Fix JS error on channel page"
         ,"Fix video rating display"
+        ,"Fix popular videos thumb display"
+        ,"Fix wrong max file size error message"
+        ,"Fix age restriction display on mobile"
       ]
     },
     {
@@ -129,7 +137,7 @@
         ,"Fix tools error handling"
         ,"Fix possible SQL error on video upload"
         ,"Fix thumbs deletion"
-        ,"Fix possible SQL injection (Thanks @drkim-dev, @FutureBuildingEN & @Bnyt7 !)"
+        ,"Fix possible SQL injection (Thanks @drkim-dev, @FutureBuildingEN, @Bnyt7 & @de3erve-hunter !)"
         ,"Fix possible duplicate configs"
         ,"Fix SSRF vulnerability (Thanks @Takumi142857 !)"
         ,"Fix Readme"
@@ -140,6 +148,8 @@
         ,"Fix possible memory overflow while in dev mode"
         ,"Fix pagination (<i>#855</i>)"
         ,"Fix TMDB import SQL error"
+        ,"Fix video deletion"
+        ,"Fix possible unauthorized video thumbs overight (Thanks @de3erve-hunter !)"
       ]
     },
     {
@@ -168,6 +178,7 @@
         ,"Detect corrupted video files"
         ,"Update video rotation detection (Thanks @McArrow <i>#695</i> !)"
         ,"Update video thumbs generation"
+        ,"Update subtitles default extension"
         ,"Fix conversion logs"
         ,"Fix PNG transparency"
         ,"Fix temp file deletion on conversion failure"

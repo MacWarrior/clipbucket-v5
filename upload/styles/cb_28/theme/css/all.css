@@ -579,6 +579,9 @@ h1 {
   width: 112px;
   margin: 0 10px 0 0;
 }
+.featured-video .video_thumb img {
+  aspect-ratio: var(--crop_ratio);
+}
 
 .featured-video .video_thumb a {
   display: block;
@@ -6072,7 +6075,7 @@ textarea#comment_box {
   position: absolute;
   top: 10px;
   right: 10px;
-  z-index: 5;
+  z-index: 4;
   cursor: help;
   background-color: #000;
   opacity: 0.9;
@@ -6665,7 +6668,7 @@ textarea#comment_box {
 
 .slider-video-container .thumb-video-padding .thumb-video .restricted {
   color:white;
-  z-index: 5;
+  z-index: 4;
   pointer-events: none;
 }
 
