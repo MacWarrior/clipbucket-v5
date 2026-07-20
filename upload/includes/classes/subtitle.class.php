@@ -57,7 +57,7 @@ class Subtitle
      */
     public static function removeSubtitles($vdetails, string $number = null): void
     {
-        if (!preg_match('/^\d{1,2}$/', $number)) {
+        if (isset($number) && !preg_match('/^\d{1,2}$/', $number)) {
             e(lang('invalid_params'));
             return;
         }
