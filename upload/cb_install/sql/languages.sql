@@ -1943,4 +1943,5 @@ VALUES ('noted_x'),
        ('user_avatars'),
        ('user_backgrounds'),
        ('category_thumbs'),
-       ('original_video_files');
+       ('original_video_files'),
+       ('invalid_params');
