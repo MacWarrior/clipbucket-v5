@@ -55,7 +55,7 @@
                     {if $total_langs >= 2}
                         <div class="langdrop dropup">
                         <button title="Change website language" class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">
-                            <span>{$lang_obj->lang_name}</span>
+                            <span>{$lang_obj->lang_name}{if config('display_language_flag')=='yes'}&nbsp;<img src="{get_country_flag_url($lang_obj->lang_flag)}" style="display: inline-block">{/if}</span>
                             <i class="icon-down-arrow"></i>
                         </button>
                         <ul class="dropdown-menu">
@@ -65,7 +65,9 @@
                                 {else}
                                     {$selected = "" }
                                 {/if}
-                                <li data-lang="{$lang.language_id}" class="pick-lang {$selected}"><a href="javascript:void(0);">{display_clean($lang.language_name)}</a></li>
+                                <li data-lang="{$lang.language_id}" class="pick-lang {$selected}">
+                                    <a href="javascript:void(0);">{display_clean($lang.language_name)} {if config('display_language_flag')=='yes'}&nbsp;<img src="{get_country_flag_url($lang.language_flag)}" style="display: inline-block">{/if}</a>
+                                </li>
                             {/foreach}
                         </ul>
                     </div>

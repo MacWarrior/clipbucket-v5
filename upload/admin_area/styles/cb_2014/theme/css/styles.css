@@ -1377,3 +1377,19 @@ a:disabled {
 ul.tagit.ui-widget-content {
     background: #FFF;
 }
+
+img.grey_filter {
+    filter: grayscale(100%);
+}
+img.grey_filter:hover {
+    filter: grayscale(0%);
+}
+a:has(img.selected) {
+    display: inline-block;
+    padding: 4px;           /* épaisseur de la bordure */
+    background: #0080b4;    /* couleur de la bordure */
+    border-radius: 8px;
+    line-height: 0;
+    outline: none;
+    /*box-shadow: 0 0 0 5px #0080b4;*/
+}

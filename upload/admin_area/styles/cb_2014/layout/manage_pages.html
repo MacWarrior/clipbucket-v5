@@ -1,59 +1,51 @@
-<div class="heading">
-    <h2>{lang('manage_x', lang('pages')|lower)}</h2>
-</div>
-{if $mode =="new"}
+{if $mode =="edit" || $mode == 'new'}
     <form method="post">
-        <fieldset class="fieldset cbform">
-            <legend>Add New Page</legend>
-            <div class="row">
-                <div class="col-md-6">
-                    <label for="page_name">Page Name</label>
-                    <input name="page_name" class="form-control" type="text" id="page_name" value="{display_clean('page_name'|post)}">
-                </div>
-                <div class="col-md-6">
-                    <label for="page_title">Page Title</label>
-                    <input type="text" class="form-control" name="page_title" id="page_title" value="{display_clean('page_title'|post)}"/>
-                </div>
-                <div class="form-group col-md-12">
-                    <label for="page_content">Page Content</label>
-                    <textarea name="page_content" id="page_content" class="form-control" style="width:100%; min-height:250px">{display_clean('page_content'|post)}</textarea>
-                </div>
-                <div class="form-group">
-                    <input type="submit" name="add_page" id="add_page" value="Create new page +" class="btn btn-primary btn-sm"/>
-                </div>
+        <input type="hidden" value="{$selected_lang}" name="selected_lang" id="selected_lang"/>
+        <div class="row">
+            <div class="col-md-6" style="padding-left: 0;">
+                <h2 class="pull-left paddingLeftLarge" >{if $mode == 'new'}{lang('add_new_page')}{else}{lang('editing_template', '')}<small>&gt; {display_clean(cbpage::getInstance()->getPageTranslation($page['page_id'], null, true, 'title'))}</small>{/if}</h2>
             </div>
-        </fieldset>
-    </form>
-{/if}
-
-{if $mode =="edit" && $page.page_name!=''}
-    <form method="post">
-
-        <legend>Add New Page</legend>
+            <div class="col-md-6" style="text-align: right;">
+                <span style="font-size: 16px;">{lang('translations')} : </span>
+                {foreach from=$languages item=language}
+                    <a href="javascript:void(0);" data-id="{$language.language_id}" class="flag_language" title="{lang('edit_page_translation', $language.language_name)} : {if $language.is_specified}{lang('specified')}{else}{lang('no_specified')}{/if}"><img style="height: 18px; " class="{if $language.is_shown}selected{/if}{if !$language.is_specified} grey_filter{/if}" src="{get_country_flag_url($language.language_flag)}"></a>
+                {/foreach}
+            </div>
+        </div>
+        <hr/>
         <div class="row">
             <div class="col-md-6">
                 <div class="form-group">
-                    <label for="page_name">Page Name</label>
+                    <label for="page_name">Page Code</label>
                     <input name="page_name" class="form-control" type="text" id="page_name" value="{display_clean($page.page_name)}"></td>
                 </div>
             </div>
+        </div>
+        <div class="row">
             <div class="col-md-6">
                 <div class="form-group">
                     <label for="page_title">Page Title</label>
-                    <input type="text" class="form-control" name="page_title" id="page_title" value="{display_clean($page.page_title)}"/>
+                    {foreach from=$languages item=language}
+                        <input type="text" style="display: {if $language.is_shown}block{else}none{/if}" name="page_title[{$language.language_id}]" id="page_title{$language.language_id}" class="form-control" value="{$page.page_titles[$language.language_id]}">
+                    {/foreach}
                 </div>
             </div>
-            <div class="form-group col-md-12">
-                <label for="page_content">Page Content</label>
-                <textarea name="page_content" id="page_content" cols="8" rows="8" class="form-control">{display_clean($page.page_content)}</textarea>
-            </div>
-            <div class="form-group">
-                <input type="submit" name="update_page" id="update_page" value="Update page" class="btn btn-primary"/>
-            </div>
+        </div>
+        <div class="form-group col-md-12">
+            <label for="page_content">Page Content</label>
+            {foreach from=$languages item=language}
+                <textarea style="display: {if $language.is_shown}block{else}none{/if}" name="page_content[{$language.language_id}]" id="page_content{$language.language_id}" cols="8" rows="8" class="form-control">{$page.page_contents[$language.language_id]}</textarea>
+            {/foreach}
+        </div>
+        <div class="form-group">
+            <input type="submit" name="{if $mode=='new'}add_page{else}update_page{/if}" value="{if $mode=='new'}{lang('new_page')}{else}{lang('update_page')}{/if}" class="btn btn-primary"/>
         </div>
     </form>
 {/if}
 {if $mode=='manage'}
+    <div class="heading">
+        <h2>{lang('manage_x', lang('pages')|lower)}</h2>
+    </div>
     <form name="page_form" action="?" method="post">
         <div class="btn-group">
             <input class="btn btn-primary btn-xs btn" type="submit" name="activate_selected" value="{lang code='activate'}"/>
@@ -91,7 +83,7 @@
                                 <div class="row">
                                     <div class="col-md-3">
                                         <a href="{cbpage::getInstance()->page_link($cbpages[list])}" target="_blank" style="text-indent:10px">
-                                            {display_clean($cbpages[list].page_name)}</a>
+                                            {display_clean(cbpage::getInstance()->getPageTranslation($cbpages[list]['page_id'], null, true, 'title'))}</a>
                                     </div>
                                     <div class="col-md-9">
                                         <div class="labels">
