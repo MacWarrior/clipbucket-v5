@@ -1184,7 +1184,7 @@ a[role='menuitem'] {
     position: absolute;
     top: 10px;
     right: 10px;
-    z-index: 5;
+    z-index: 4;
     cursor: help;
     background-color: #000;
     opacity: 0.9;
