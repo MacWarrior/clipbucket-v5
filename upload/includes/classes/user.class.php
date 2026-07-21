@@ -399,6 +399,7 @@ class User extends Objects
 
         $param_category = $params['category'] ?? false;
         $param_join_flag = $params['join_flag'] ?? false;
+        $param_can_be_modified_by_current_user = $params['can_be_modified_by_current_user'] ?? false;
 
         $conditions = [];
         if( $param_userid ){
@@ -527,6 +528,19 @@ class User extends Objects
                 $join[] = '  INNER JOIN ' . cb_sql_table(UserLevel::getTableNameLevelPermissionValue()) . ' ON ' . UserLevel::getTableNameLevelPermissionValue() . '.user_level_id = ' . $this->getTableNameLevel() . '.user_level_id ';
                 $join[] = '  INNER JOIN ' . cb_sql_table(UserLevel::getTableNameLevelPermission()) . ' ON ' . UserLevel::getTableNameLevelPermissionValue() . '.id_user_levels_permission = ' . UserLevel::getTableNameLevelPermission() . '.id_user_levels_permission  
                 AND ' . UserLevel::getTableNameLevelPermission() . '.permission_name = \'enable_channel_page\' ';
+
+                if ($param_can_be_modified_by_current_user) {
+                    $select[] = 'has_right_to_edit.nb_diff';
+                    $join[] /** @lang MySQL */ = 'LEFT JOIN ( SELECT COUNT(USER_LEVELS_PERMISSIONS_VALUES_LOG_USER.permission_value) as nb_diff, ' . UserLevel::getTableNameLevelPermissionValue() . '.user_level_id
+                    FROM ' . cb_sql_table(UserLevel::getTableNameLevelPermissionValue()) . ' 
+                    LEFT JOIN cb_user_levels_permissions_values as USER_LEVELS_PERMISSIONS_VALUES_LOG_USER
+                    ON ' . UserLevel::getTableNameLevelPermissionValue() . '.id_user_levels_permission = USER_LEVELS_PERMISSIONS_VALUES_LOG_USER.id_user_levels_permission
+                                AND USER_LEVELS_PERMISSIONS_VALUES_LOG_USER.user_level_id = ' . User::getInstance()->getCurrentUserLevelID() . '
+                                AND USER_LEVELS_PERMISSIONS_VALUES_LOG_USER.permission_value != ' . UserLevel::getTableNameLevelPermissionValue() . '.permission_value AND ' . UserLevel::getTableNameLevelPermissionValue() . '.permission_value = \'yes\'
+                    GROUP BY  ' . UserLevel::getTableNameLevelPermissionValue() . '.user_level_id
+                    ) AS has_right_to_edit ON has_right_to_edit.user_level_id = ' . $this->getTableName() . '.level ';
+
+                }
             } else {
                 $is_channel_enable = '(' .   UserLevel::getTableNameLevelPermission() . '.enable_channel_page = \'yes\' AND ' . $this->getTableNameProfile() . '.disabled_channel != \'yes\')';
             }
