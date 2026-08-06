@@ -2068,6 +2068,10 @@ function sort_link($data, $mode, $type): string
             break;
     }
 
+    $time = htmlspecialchars($time);
+    $sort = htmlspecialchars($sort);
+    $cat = htmlspecialchars($cat);
+    $page = htmlspecialchars($page);
     //prepare url
     if (SEO == 'yes') {
         $sort = '/' . $sort;
