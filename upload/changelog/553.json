@@ -1,6 +1,6 @@
 {
   "version":"5.5.3",
-  "revision":"167",
+  "revision":"168",
   "status":"stable",
   "detail":[
     {
@@ -184,6 +184,7 @@
         ,"Fix temp file deletion on conversion failure"
         ,"Fix possible remote code execution (Thanks @Bnyt7 !)"
         ,"Fix possible issues with remove hard-coded letterboxing / pillarboxing option"
+        ,"Fix compatibility with HDR original files"
       ]
     },
     {
