@@ -1,6 +1,6 @@
 {
   "version":"5.5.3",
-  "revision":"168",
+  "revision":"169",
   "status":"stable",
   "detail":[
     {
@@ -71,7 +71,7 @@
         ,"Implement featured collection hierarchy display"
         ,"Implement add new collection button from owned collection"
         ,"Implement comment rating"
-        ,"Implement fullwidth photos page"
+        ,"Implement fullwidth photos & video pages"
         ,"Implement backdrop as default thumb"
         ,"Implement random photo order"
         ,"Implement video rating display"
