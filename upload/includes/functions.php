@@ -2033,16 +2033,11 @@ function sort_link($data, $mode, $type): string
     }
 
     //default value
-    $time = $_GET['time'] ?? 'all_time';
-    $page = $_GET['page'] ?? '1';
-    if (isset($_GET['sort'])) {
-        $sort = $_GET['sort'];
-    } else {
-        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '299')) {
-            $sort = SortType::getDefaultByType($type)['id'];
-        } else {
-            $sort = 0;
-        }
+    $time = $_GET['time'] ?? null;
+    $page = (int)$_GET['page'] ?? '1';
+    $sort = 0;
+    if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '299')) {
+        $sort = SortType::getDefaultByType($type)['id'];
     }
     if (config($config_enable_category) != 'yes') {
         $cat ='';
@@ -2068,33 +2063,45 @@ function sort_link($data, $mode, $type): string
             break;
     }
 
-    $time = htmlspecialchars($time);
-    $sort = htmlspecialchars($sort);
-    $cat = htmlspecialchars($cat);
-    $page = htmlspecialchars($page);
+    if (!in_array($time, array_keys(time_links())) || empty($time)){
+        $time = 'all_time';
+    }
+    if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '299')) {
+        $allowed_sort = SortType::getSortTypes($type);
+        if (in_array($_GET['sort'], array_keys($allowed_sort))) {
+            $sort = $_GET['sort'];
+        }
+    } elseif(isset($_GET['sort'])) {
+        $sort = htmlspecialchars($_GET['sort']);
+    }
+    if (!is_numeric($cat) && $cat != 'all') {
+        $cat = 'all';
+    }
+
+    $page = (int)$page;
     //prepare url
     if (SEO == 'yes') {
-        $sort = '/' . $sort;
-        $time = '/' . $time;
-        $page = '/' . (empty($page)?1:$page);
+        $sort_url = '/' . $sort;
+        $time_url = '/' . $time;
+        $page_url = '/' . (empty($page)?1:$page);
         if ($cat) {
-            $cat = '/' . $cat;
+            $cat_url = '/' . $cat;
         }
     } else {
-        $time = '&time=' . $time;
+        $time_url = '&time=' . $time;
         if ($page) {
-            $page = '&page=' . $page;
+            $page_url = '&page=' . $page;
         }
         if ($cat) {
-            $cat = '?cat=' . $cat;
-            $sort = '&sort=' . $sort;
+            $cat_url = '?cat=' . $cat;
+            $sort_url = '&sort=' . $sort;
         } else {
-            $sort = '?sort=' . $sort;
+            $sort_url = '?sort=' . $sort;
         }
     }
 
     //return url
-    return Dirpath::getUrl('root') . $type . ((SEO != 'yes') ? '.php' : '') . $cat . $sort . $time . $page;
+    return Dirpath::getUrl('root') . $type . ((SEO != 'yes') ? '.php' : '') . ($cat_url??'') . $sort_url . $time_url .( $page_url ??'');
 }
 
 /**
