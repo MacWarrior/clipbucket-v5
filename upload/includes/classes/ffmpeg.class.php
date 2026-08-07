@@ -91,6 +91,12 @@ class FFMpeg
         $info['video_height'] = (int)$video['height'];
         $info['bits_per_raw_sample'] = (int)$video['bits_per_raw_sample'];
 
+        $info['video_is_hdr'] = in_array(
+            $video['color_transfer'] ?? null,
+            ['smpte2084', 'arib-std-b67'],
+            true
+        );
+
         if ($video['height']) {
             $info['video_wh_ratio'] = (int)$video['width'] / (int)$video['height'];
         }
@@ -537,7 +543,7 @@ class FFMpeg
 
         $cmd = config('ffmpegpath')
             . ' -hide_banner -nostats -i ' . escapeshellarg($this->input_file)
-            . ' -vf fps=1,cropdetect=limit=24:round=2:reset=0'
+            . ' -vf fps=2,cropdetect=limit=24:round=2:reset=0'
             . ' -an -f null - 2>&1';
 
         $out = System::shell_output($cmd);
@@ -628,7 +634,7 @@ class FFMpeg
 
                 // Fix for browsers compatibility : yuv420p10le seems to be working only on Chrome like browsers
                 if (config('force_8bits')) {
-                    $cmd .= ' -pix_fmt yuv420p';
+                    $cmd .= ' -pix_fmt yuv420p -color_range tv -colorspace bt709 -color_primaries bt709 -color_trc bt709';
                 }
                 // Fix rare video conversion fail
                 $cmd .= ' -max_muxing_queue_size 1024';
@@ -656,7 +662,19 @@ class FFMpeg
                     $filter .= ',';
                 }
 
+                if (config('force_8bits') && $this->input_details['video_is_hdr']) {
+                    $filter .= 'zscale=t=linear:npl=100,'
+                        . 'format=gbrpf32le,'
+                        . 'zscale=p=bt709,'
+                        . 'tonemap=mobius:param=0.3:desat=0,'
+                        . 'zscale=t=bt709:m=bt709:r=tv,';
+                }
+
                 $filter .= 'scale=' . $scale;
+
+                if( config('force_8bits') ){
+                    $filter .= ',format=yuv420p';
+                }
 
                 $cmd .= ' -vf "' . $filter . '"';
                 break;
@@ -695,7 +713,20 @@ class FFMpeg
                     if( !empty($filter) ){
                         $filter .= ',';
                     }
+
+                    if (config('force_8bits') && $this->input_details['video_is_hdr']) {
+                        $filter .= 'zscale=t=linear:npl=100,'
+                            . 'format=gbrpf32le,'
+                            . 'zscale=p=bt709,'
+                            . 'tonemap=mobius:param=0.3:desat=0,'
+                            . 'zscale=t=bt709:m=bt709:r=tv,';
+                    }
+
                     $filter .= 'scale=' . $scale;
+
+                    if( config('force_8bits') ){
+                        $filter .= ',format=yuv420p';
+                    }
 
                     $filter_complex .= '[0:v]' . $filter . '[v' . $count . ']';
 
