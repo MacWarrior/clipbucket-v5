@@ -20,7 +20,7 @@ $breadcrumb[1] = [
 if (!User::getInstance()->hasPermission('allow_manage_user_level') && userquery::getInstance()->udetails['level'] != 1) {
     ClipBucket::getInstance()->show_page = false;
     SessionMessageHandler::add_message('You are not allowed to manage user levels', 'w');
-    User::redirectAfterLogin();
+    redirect_to(DirPath::getUrl('admin_area'));
 }
 
 $mode = $_GET['mode'];
