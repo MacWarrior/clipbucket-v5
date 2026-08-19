@@ -761,26 +761,41 @@
                                 </div>
                             </div>
                             <div class="tab-pane interfaces" id="interfaces_video">
-                                <div class="row">
-                                    <div class="col-md-10">
-                                        <div class="row">
-                                            <div class="col-md-4">
-                                                <label class="nowrap" for="enable_access_view_video_history" title="{lang code='enable_access_view_video_history'}">{lang code='enable_access_view_video_history'}</label>
-                                            </div>
-                                            <div class="col-md-2 row-size no_padding">
-                                                <input value="yes" name="enable_access_view_video_history" id="enable_access_view_video_history" {if $row.enable_access_view_video_history=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
-                                                <span class="lbl"></span>
-                                            </div>
-                                            <div class="col-md-4">
-                                                <label class="nowrap" for="enable_favorite_icon" title="{lang code='option_enable_favorite_icon'}"><span class="fa fa-question-circle tips" title="{lang code='option_enable_favorite_icon_hint'}"></span>{lang code='option_enable_favorite_icon'}</label>
-                                            </div>
-                                            <div class="col-md-2 row-size">
-                                                <input value="yes" name="enable_favorite_icon" id="enable_favorite_icon" {if $row.enable_favorite_icon=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
-                                                <span class="lbl"></span>
-                                            </div>
+                                <div class="col-md-4">
+                                    <div class="row">
+                                        <div class="col-md-10">
+                                            <label class="nowrap" for="enable_access_view_video_history" title="{lang code='enable_access_view_video_history'}">{lang code='enable_access_view_video_history'}</label>
                                         </div>
-                                        <hr/>
+                                        <div class="col-md-2 row-size no_padding">
+                                            <input value="yes" name="enable_access_view_video_history" id="enable_access_view_video_history" {if $row.enable_access_view_video_history=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+                                            <span class="lbl"></span>
+                                        </div>
                                     </div>
+                                    <hr/>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="row">
+                                        <div class="col-md-10">
+                                            <label class="nowrap" for="enable_favorite_icon" title="{lang code='option_enable_favorite_icon'}"><span class="fa fa-question-circle tips" title="{lang code='option_enable_favorite_icon_hint'}"></span>{lang code='option_enable_favorite_icon'}</label>
+                                        </div>
+                                        <div class="col-md-2 row-size">
+                                            <input value="yes" name="enable_favorite_icon" id="enable_favorite_icon" {if $row.enable_favorite_icon=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+                                            <span class="lbl"></span>
+                                        </div>
+                                    </div>
+                                    <hr/>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="row">
+                                        <div class="col-md-10">
+                                            <label class="nowrap" for="video_enable_fullwidth" title="{lang code='option_enable_fullwidth'}">{lang code='option_enable_fullwidth'}</label>
+                                        </div>
+                                        <div class="col-md-2 no_padding">
+                                            <input value="yes" name="video_enable_fullwidth" id="video_enable_fullwidth" {if $row.video_enable_fullwidth=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+                                            <span class="lbl"></span>
+                                        </div>
+                                    </div>
+                                    <hr/>
                                 </div>
                             </div>
                             <div class="tab-pane interfaces" id="interfaces_photos">

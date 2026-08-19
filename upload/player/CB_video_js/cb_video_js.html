@@ -42,7 +42,7 @@
         {/if}
     {/foreach}
     {if config('player_subtitles')}
-        {$subtitles = get_video_subtitles($vdata)}
+        {$subtitles = Subtitle::getVideoSubtitles($vdata)}
         {if $subtitles}
             {foreach $subtitles as $file}
                 <track kind="captions" src="{$file['url']}" label="{display_clean($file['title'])}" />

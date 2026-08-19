@@ -91,6 +91,12 @@ class FFMpeg
         $info['video_height'] = (int)$video['height'];
         $info['bits_per_raw_sample'] = (int)$video['bits_per_raw_sample'];
 
+        $info['video_is_hdr'] = in_array(
+            $video['color_transfer'] ?? null,
+            ['smpte2084', 'arib-std-b67'],
+            true
+        );
+
         if ($video['height']) {
             $info['video_wh_ratio'] = (int)$video['width'] / (int)$video['height'];
         }
@@ -456,7 +462,7 @@ class FFMpeg
 
                 $count++;
                 $display_count = str_pad((string)$count, 2, '0', STR_PAD_LEFT);
-                $command = config('ffmpegpath') . ' -y -i ' . escapeshellarg($this->input_file) . ' -map 0:' . $map_id . ' -f ' . config('subtitle_format') . ' ' . $subtitle_dir . $this->file_name . '-' . $display_count . '.srt 2>&1';
+                $command = config('ffmpegpath') . ' -y -i ' . escapeshellarg($this->input_file) . ' -map 0:' . $map_id . ' -f ' . config('subtitle_format') . ' ' . $subtitle_dir . $this->file_name . '-' . $display_count . '.' . Subtitle::getExtension() . ' 2>&1';
                 if (System::isInDev()) {
                     $this->log->writeLine('<div class="showHide"><p class="title glyphicon-chevron-right">Command : </p><p class="content">'.$command.'</p></div>', false, true);
                 }
@@ -537,7 +543,7 @@ class FFMpeg
 
         $cmd = config('ffmpegpath')
             . ' -hide_banner -nostats -i ' . escapeshellarg($this->input_file)
-            . ' -vf fps=1,cropdetect=limit=24:round=2:reset=0'
+            . ' -vf fps=2,cropdetect=limit=24:round=2:reset=0'
             . ' -an -f null - 2>&1';
 
         $out = System::shell_output($cmd);
@@ -549,41 +555,47 @@ class FFMpeg
             return '';
         }
 
-        $minX = PHP_INT_MAX;
-        $minY = PHP_INT_MAX;
-        $maxR = 0;
-        $maxB = 0;
-        $found = false;
+        $crops = [];
 
         foreach ($m as $c) {
-            $w = (int)$c[1]; $h = (int)$c[2]; $x = (int)$c[3]; $y = (int)$c[4];
+            $w = (int)$c[1];
+            $h = (int)$c[2];
+            $x = (int)$c[3];
+            $y = (int)$c[4];
 
-            if ($w === $srcW && $h === $srcH && $x === 0 && $y === 0) {
+            if ($w <= 0 || $h <= 0) {
                 continue;
             }
 
-            $found = true;
-            $minX = min($minX, $x);
-            $minY = min($minY, $y);
-            $maxR = max($maxR, $x + $w);
-            $maxB = max($maxB, $y + $h);
+            $key = $w . ':' . $h . ':' . $x . ':' . $y;
+
+            if (!isset($crops[$key])) {
+                $crops[$key] = 0;
+            }
+
+            $crops[$key]++;
         }
 
-        if (!$found) {
+        if (empty($crops)) {
             return '';
         }
 
-        $x = max(0, $minX);
-        $y = max(0, $minY);
-        $w = min($srcW, $maxR) - $x;
-        $h = min($srcH, $maxB) - $y;
+        arsort($crops);
+
+        $bestCrop = array_key_first($crops);
+        [$w, $h, $x, $y] = array_map('intval', explode(':', $bestCrop));
+
+        $w = min($srcW, $w);
+        $h = min($srcH, $h);
+        $x = max(0, $x);
+        $y = max(0, $y);
+
+        $w -= $w % 2;
+        $h -= $h % 2;
 
         if ($w <= 0 || $h <= 0) {
             return '';
         }
-
-        $w -= $w % 2;
-        $h -= $h % 2;
 
         if ($w === $srcW && $h === $srcH && $x === 0 && $y === 0) {
             return '';
@@ -622,7 +634,7 @@ class FFMpeg
 
                 // Fix for browsers compatibility : yuv420p10le seems to be working only on Chrome like browsers
                 if (config('force_8bits')) {
-                    $cmd .= ' -pix_fmt yuv420p';
+                    $cmd .= ' -pix_fmt yuv420p -color_range tv -colorspace bt709 -color_primaries bt709 -color_trc bt709';
                 }
                 // Fix rare video conversion fail
                 $cmd .= ' -max_muxing_queue_size 1024';
@@ -650,7 +662,19 @@ class FFMpeg
                     $filter .= ',';
                 }
 
+                if (config('force_8bits') && $this->input_details['video_is_hdr']) {
+                    $filter .= 'zscale=t=linear:npl=100,'
+                        . 'format=gbrpf32le,'
+                        . 'zscale=p=bt709,'
+                        . 'tonemap=mobius:param=0.3:desat=0,'
+                        . 'zscale=t=bt709:m=bt709:r=tv,';
+                }
+
                 $filter .= 'scale=' . $scale;
+
+                if( config('force_8bits') ){
+                    $filter .= ',format=yuv420p';
+                }
 
                 $cmd .= ' -vf "' . $filter . '"';
                 break;
@@ -689,7 +713,20 @@ class FFMpeg
                     if( !empty($filter) ){
                         $filter .= ',';
                     }
+
+                    if (config('force_8bits') && $this->input_details['video_is_hdr']) {
+                        $filter .= 'zscale=t=linear:npl=100,'
+                            . 'format=gbrpf32le,'
+                            . 'zscale=p=bt709,'
+                            . 'tonemap=mobius:param=0.3:desat=0,'
+                            . 'zscale=t=bt709:m=bt709:r=tv,';
+                    }
+
                     $filter .= 'scale=' . $scale;
+
+                    if( config('force_8bits') ){
+                        $filter .= ',format=yuv420p';
+                    }
 
                     $filter_complex .= '[0:v]' . $filter . '[v' . $count . ']';
 
