@@ -1,6 +1,6 @@
 {
   "version":"5.5.3",
-  "revision":"171",
+  "revision":"170",
   "status":"stable",
   "detail":[
     {
@@ -56,7 +56,6 @@
         ,"Fix update button being disabled after a first interupted update"
         ,"Fix subtitles deletion"
         ,"Fix Update TMDB info tool"
-        ,"Fix possible privilege escalation through user levels management (Thanks @iys8 !)"
       ]
     },
     {
