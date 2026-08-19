@@ -115,6 +115,7 @@
         ,"Fix popular videos thumb display"
         ,"Fix wrong max file size error message"
         ,"Fix age restriction display on mobile"
+        ,"Fix possible XSS injection"
       ]
     },
     {
