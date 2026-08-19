@@ -1,6 +1,6 @@
 {
   "version":"5.5.3",
-  "revision":"167",
+  "revision":"170",
   "status":"stable",
   "detail":[
     {
@@ -71,7 +71,7 @@
         ,"Implement featured collection hierarchy display"
         ,"Implement add new collection button from owned collection"
         ,"Implement comment rating"
-        ,"Implement fullwidth photos page"
+        ,"Implement fullwidth photos & video pages"
         ,"Implement backdrop as default thumb"
         ,"Implement random photo order"
         ,"Implement video rating display"
@@ -115,6 +115,7 @@
         ,"Fix popular videos thumb display"
         ,"Fix wrong max file size error message"
         ,"Fix age restriction display on mobile"
+        ,"Fix possible XSS injection"
       ]
     },
     {
@@ -184,6 +185,7 @@
         ,"Fix temp file deletion on conversion failure"
         ,"Fix possible remote code execution (Thanks @Bnyt7 !)"
         ,"Fix possible issues with remove hard-coded letterboxing / pillarboxing option"
+        ,"Fix compatibility with HDR original files"
       ]
     },
     {
