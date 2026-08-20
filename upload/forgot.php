@@ -35,7 +35,7 @@ switch ($mode) {
         break;
 
     case 'reset_pass':
-        if (!empty($_REQUEST['email']) && !empty($_REQUEST['avcode'])) {
+        if (!empty($_REQUEST['email']) && !empty($_REQUEST['avcode']) && empty($_POST['change_password'])) {
             $user = User::getInstance()->getOne(['email_strict' => $_REQUEST['email']]);
             if (empty($user)) {
                 e(lang('recap_verify_failed'));
