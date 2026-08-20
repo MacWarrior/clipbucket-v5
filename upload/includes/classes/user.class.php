@@ -1034,6 +1034,7 @@ class User extends Objects
             case 'homepage':
                 $link = '';
                 break;
+
             case 'public_videos':
                 if (config('videosSection') != 'yes') {
                     $link = '';
@@ -1041,9 +1042,11 @@ class User extends Objects
                     $link = 'videos_public.php';
                 }
                 break;
+
             case 'my_account':
                 $link = 'myaccount.php';
                 break;
+
             case 'videos':
                 if (config('videosSection') != 'yes') {
                     $link = '';
@@ -1051,6 +1054,7 @@ class User extends Objects
                     $link = 'videos.php';
                 }
                 break;
+
             case 'photos':
                 if (config('photosSection') != 'yes') {
                     $link = '';
@@ -1058,6 +1062,7 @@ class User extends Objects
                     $link = 'photos.php';
                 }
                 break;
+
             case 'collections':
                 if (config('collectionsSection') != 'yes') {
                     $link = '';
@@ -1065,6 +1070,7 @@ class User extends Objects
                     $link = 'collections.php';
                 }
                 break;
+
             case 'channels':
                 if (config('channelsSection') != 'yes') {
                     $link = '';
@@ -1072,13 +1078,14 @@ class User extends Objects
                     $link = 'channels.php';
                 }
                 break;
+
             default:
                 $link = $default_hompepage . '.php';
         }
         return Network::get_server_url() . $link;
     }
 
-    public function getDefaultHomepageList()
+    public function getDefaultHomepageList(): array
     {
         return $this->default_homepage_list;
     }
@@ -1119,11 +1126,12 @@ class User extends Objects
         }
 
         $uid = $this->get('userid');
+        $anonymous_id = userquery::getInstance()->get_anonymous_user();
 
         // Delete reports on deleted user
         Flag::unFlagByElementId($uid, 'user');
         // reattribute reports by deleted user
-        Clipbucket_db::getInstance()->execute('UPDATE ' . tbl('flags') . ' SET userid=' . (int)$anonymous_id . ' WHERE userid=' . (int)$user_id);
+        Clipbucket_db::getInstance()->execute('UPDATE ' . tbl('flags') . ' SET userid=' . (int)$anonymous_id . ' WHERE userid=' . (int)$uid);
         // Delete categories
         Category::getInstance()->unlinkAll('user', $uid);
         // Delete tags
