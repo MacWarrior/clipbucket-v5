@@ -2041,15 +2041,19 @@
                                     <label class="nowrap" for="enable_external_rate_from_tmdb" title="{lang code='option_enable_external_rate_from_tmdb'}">{lang code='option_enable_external_rate_from_tmdb'}</label>
                                 </div>
                                 <div class="col-md-2 row-size">
-                                    <input value="yes" name="enable_external_rate_from_tmdb" id="enable_external_rate_from_tmdb" {if $row.enable_external_rate_from_tmdb=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+                                    <input value="yes" name="enable_external_rate_from_tmdb" id="enable_external_rate_from_tmdb" {if $row.enable_external_rate_from_tmdb=='yes'}checked{/if} type="checkbox"
+                                           class="ace ace-switch ace-switch-5" {if $row.enable_external_rate_field!='yes'}disabled title="{lang('option_require_x_enabled',lang('option_enable_external_rate_field'))}"{/if}/>
                                     <span class="lbl"></span>
+                                    <input value="{$row.enable_external_rate_from_tmdb}" name="enable_external_rate_from_tmdb" id="enable_external_rate_from_tmdb_hidden" type="hidden" {if $row.enable_external_rate_field=='yes'}disabled{/if}/>
                                 </div>
                                 <div class="col-md-4">
                                     <label class="nowrap" for="enable_external_ratings_from_tmdb" title="{lang code='option_enable_external_ratings_from_tmdb'}">{lang code='option_enable_external_ratings_from_tmdb'}</label>
                                 </div>
                                 <div class="col-md-2 row-size">
-                                    <input value="yes" name="enable_external_ratings_from_tmdb" id="enable_external_ratings_from_tmdb" {if $row.enable_external_ratings_from_tmdb=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+                                    <input value="yes" name="enable_external_ratings_from_tmdb" id="enable_external_ratings_from_tmdb" {if $row.enable_external_ratings_from_tmdb=='yes'}checked{/if} type="checkbox"
+                                           class="ace ace-switch ace-switch-5" {if $row.enable_external_ratings_field!='yes'}disabled title="{lang('option_require_x_enabled',lang('option_enable_external_ratings_field'))}"{/if}/>
                                     <span class="lbl"></span>
+                                    <input value="{$row.enable_external_ratings_from_tmdb}" name="enable_external_ratings_from_tmdb" id="enable_external_ratings_from_tmdb_hidden" type="hidden" {if $row.enable_external_ratings_field=='yes'}disabled{/if}/>
                                 </div>
                             </div>
                             <hr/>
