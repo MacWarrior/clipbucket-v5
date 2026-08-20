@@ -1367,7 +1367,7 @@ class User extends Objects
      * @return void
      * @throws Exception
      */
-    public function deleteUserRatings($user_id)
+    public function deleteUserRatings($user_id): void
     {
         if (!Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '117')) {
             throw new Exception(lang('cant_perform_action_until_app_fully_updated'));
