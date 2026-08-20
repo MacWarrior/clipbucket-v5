@@ -21,6 +21,7 @@ class FFMpeg
     private $convert_percent_done = 0;
 
     private $frame_rate;
+    private $equivalent_bitrate;
 
     public function __construct(SLog $log)
     {
@@ -532,6 +533,17 @@ class FFMpeg
         return $final_vrate;
     }
 
+    private function getEquivalentH264Bitrate(int $bitrate, string $codec): int
+    {
+        $factor = match ($codec) {
+            'hevc', 'h265', 'vp9' => 1.5,
+            'av1' => 1.7,
+            default => 1.0,
+        };
+
+        return (int) round($bitrate * $factor);
+    }
+
     public function getCropFilter(): string
     {
         if (empty($this->input_file) || empty($this->input_details['video_width']) || empty($this->input_details['video_height'])) {
@@ -625,9 +637,25 @@ class FFMpeg
                 // Video Rate
                 if( empty($this->frame_rate)){
                     $original_video_framerate = $this->input_details['video_rate'];
-                    $framerate = self::get_video_rate_param($this->input_details['video_rate']);
-                    $this->log->writeLine(date('Y-m-d H:i:s').' - Original rate : ' . $original_video_framerate . ', final rate : ' . $framerate);
-                    $this->frame_rate = $framerate;
+                    $target_framerate = self::get_video_rate_param($original_video_framerate);
+                    $this->log->writeLine(date('Y-m-d H:i:s').' - Original rate : ' . $original_video_framerate . ', final rate : ' . $target_framerate);
+                    $this->frame_rate = $target_framerate;
+                }
+
+                if( empty($this->equivalent_bitrate) ){
+                    $equivalent_bitrate = $this->getEquivalentH264Bitrate(
+                        $this->input_details['video_bitrate'],
+                        $this->input_details['video_codec']
+                    );
+                    $original_video_framerate = $this->input_details['video_rate'];
+                    $target_framerate = self::get_video_rate_param($original_video_framerate);
+                    $framerate_ratio = $target_framerate / $original_video_framerate;
+
+                    $this->equivalent_bitrate = $equivalent_bitrate*$framerate_ratio;
+
+                    if( System::isInDev() ){
+                        $this->log->writeLine(date('Y-m-d H:i:s').' - Original bitrate : ' . $this->input_details['video_bitrate']/1000 . 'kbps, equivalent bitrate : ' . $equivalent_bitrate*$framerate_ratio/1000 . 'kbps');
+                    }
                 }
 
                 $cmd .= ' -r ' . $this->frame_rate;
@@ -642,7 +670,8 @@ class FFMpeg
                 break;
 
             case 'video_mp4':
-                $final_video_bitrate = min($this->input_details['video_bitrate'], myquery::getInstance()->getVideoResolutionBitrateFromHeight($resolution['height']));
+                $target_resolution_bitrate = myquery::getInstance()->getVideoResolutionBitrateFromHeight($resolution['height']);
+                $final_video_bitrate = min($this->equivalent_bitrate, $target_resolution_bitrate);
 
                 // Video Bitrate
                 $cmd .= ' -vb ' . $final_video_bitrate;
@@ -683,7 +712,8 @@ class FFMpeg
                 $count = 0;
                 $bitrates = '';
                 $resolutions = ' -filter_complex "';
-                $log_res = '';
+                $log_res = [];
+                $log_bitrates = [];
                 $filter_complex = '';
 
                 $crop = '';
@@ -692,13 +722,16 @@ class FFMpeg
                 }
 
                 foreach ($resolution as $res) {
-                    $video_bitrate = myquery::getInstance()->getVideoResolutionBitrateFromHeight($res['height']);
-                    $this->video_files[] = $res['height'];
-                    if( !empty($log_res) ){
-                        $log_res .= ' & ';
+                    $target_resolution_bitrate = myquery::getInstance()->getVideoResolutionBitrateFromHeight($res['height']);
+                    $final_video_bitrate = min($this->equivalent_bitrate, $target_resolution_bitrate);
+
+                    if( System::isInDev() ){
+                        $log_bitrates[] = ' - Maximum bitrate for resolution ' . $res['height'] . ' : ' . $target_resolution_bitrate/1000 . 'kbps, final bitrate : ' . $final_video_bitrate/1000 . 'kbps';
                     }
-                    $log_res .= $res['height'];
-                    $bitrates .= ' -b:v:' . $count . ' ' . $video_bitrate;
+
+                    $this->video_files[] = $res['height'];
+                    $log_res[] = $res['height'];
+                    $bitrates .= ' -b:v:' . $count . ' ' . $final_video_bitrate;
 
                     if( $this->input_details['video_wh_ratio'] >= 1 ){
                         $scale = '-2:' . $res['video_height'];
@@ -734,7 +767,11 @@ class FFMpeg
                 }
                 $resolutions .= $filter_complex . '"';
 
-                $this->log->writeLine(date('Y-m-d H:i:s').' - Converting into '.$log_res.'...');
+                $this->log->writeLine(date('Y-m-d H:i:s') . ' - Converting into ' . implode(' & ', $log_res) . '...');
+                foreach($log_bitrates as $log_bitrate){
+                    $this->log->writeLine(date('Y-m-d H:i:s') . $log_bitrate);
+                }
+
                 $cmd .= $bitrates . $resolutions;
                 break;
 
@@ -901,7 +938,15 @@ class FFMpeg
 
         $this->output_file = $this->output_dir . $this->file_name . '-' . $resolution['height'] . '.' . $this->conversion_type;
 
-        $this->log->writeLine(date('Y-m-d H:i:s').' - Converting into '.$resolution['height'].'...');
+        $this->log->writeLine(date('Y-m-d H:i:s') . ' - Converting into ' . $resolution['height'] . '...');
+
+        if( System::isInDev() ){
+            $target_resolution_bitrate = myquery::getInstance()->getVideoResolutionBitrateFromHeight($resolution['height']);
+            $final_video_bitrate = min($this->equivalent_bitrate, $target_resolution_bitrate);
+
+            $this->log->writeLine(date('Y-m-d H:i:s').' - Maximum bitrate for resolution : ' . $target_resolution_bitrate/1000 . 'kbps, final bitrate : ' . $final_video_bitrate/1000 . 'kbps');
+        }
+
         $command = config('ffmpegpath') . $opt_av . ' ' . $this->output_file . ' 2>&1';
 
         if (System::isInDev()) {
