@@ -4,7 +4,7 @@ ClipBucket::getInstance()->addCSS([
     'bootstrap.min.css'                                 => 'admin',
     'bootstrap.clipbucket' . $min_suffixe . '.css'      => 'admin',
     'fortawesome/font-awesome/css/font-awesome.min.css' => 'vendor',
-    'icon-font.css'                                     => 'admin',
+    'icon-font' . $min_suffixe . '.css'                 => 'admin',
     'all' . $min_suffixe . '.css'                       => 'admin',
     'clipbucket' . $min_suffixe . '.css'                => 'admin',
     'jquery_ui/jquery_ui' . $min_suffixe . '.css'       => 'libs',
