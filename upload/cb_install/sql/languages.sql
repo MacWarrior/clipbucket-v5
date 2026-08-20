@@ -1946,4 +1946,5 @@ VALUES ('noted_x'),
        ('original_video_files'),
        ('invalid_params'),
        ('empty_homepage'),
-       ('disabled_homepage');
+       ('disabled_homepage'),
+       ('here');

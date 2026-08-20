@@ -19,5 +19,9 @@ class MWIP extends \Migration
            'fr'=>'Certains niveaux d’utilisateurs sont configurés avec une page d’accueil par défaut désactivée, cliquez %s pour mettre à jour les niveaux d’utilisateurs',
            'en'=>'Some user levels are configured with a disabled page as homepage, click %s to update user levels'
        ]);
+       self::generateTranslation('here', [
+           'fr'=>'ici',
+           'en'=>'here'
+       ]);
     }
 }

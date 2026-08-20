@@ -3157,3 +3157,5 @@ INSERT INTO `{tbl_prefix}languages_translations` (`id_language_key`, `translatio
 VALUES ((SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE `language_key` = 'empty_homepage'), 'Certains niveaux d’utilisateurs sont configurés avec une page d’accueil par défaut vide, cliquez %s pour mettre à jour les niveaux d’utilisateurs.', @language_id);
 INSERT INTO `{tbl_prefix}languages_translations` (`id_language_key`, `translation`, `language_id`)
 VALUES ((SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE `language_key` = 'disabled_homepage'), 'Certains niveaux d’utilisateurs sont configurés avec une page d’accueil par défaut désactivée, cliquez %s pour mettre à jour les niveaux d’utilisateurs.', @language_id);
+INSERT INTO `{tbl_prefix}languages_translations` (`id_language_key`, `translation`, `language_id`)
+VALUES ((SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE `language_key` = 'here'), 'ici', @language_id);
