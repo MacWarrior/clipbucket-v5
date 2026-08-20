@@ -449,7 +449,9 @@ class System{
         if( empty($php_path) ) {
             $php_path = self::get_binaries('php', false);
         }
-
+        if (!file_exists($php_path)) {
+            return ['err' => 'Unable to find PHP CLI'];
+        }
         if( !self::check_php_function('exec', 'web', false) ){
             return [];
         }
