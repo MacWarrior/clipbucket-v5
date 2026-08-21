@@ -70,7 +70,7 @@
                     {if $perm.id_user_levels_permission !="" && $types[t].user_permission_type_id == $perm.id_user_permission_types }
                         <div class="col-md-4">
                             <div class="row">
-                                <div class="col-md-10 col-md-offset-1 myWell">
+                                <div class="col-md-12 col-md-offset-1 myWell">
                                     <div class="col-md-8 paddingTop">
                                         <strong>{lang($perm.permission_name)}</strong><br/>
                                         <small><em>{lang($perm.permission_description)}</em></small>
@@ -79,7 +79,7 @@
                                         <div class="col-md-4 paddingTop">
                                             <select name="permission_value[{$perm.id_user_levels_permission}]" >
                                                 {foreach from=User::getInstance()->getDefaultHomepageList() item=page}
-                                                    <option value="{$page}" {if $page== $perm.permission_value}selected="selected"{/if}>{lang($page)}</option>
+                                                    <option value="{$page}" {if $page== $perm.permission_value}selected="selected"{/if} {if $page.disabled}disabled="disabled"{/if}>{lang($page.title)} {if $page.disabled}({lang('disabled')}){/if}</option>
                                                 {/foreach}
                                             </select>
                                         </div>
