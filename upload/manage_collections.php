@@ -82,6 +82,9 @@ switch ($mode) {
         if (!empty($_POST)) {
             Collections::getInstance()->create_collection($_POST);
             if (!error()) {
+                if (!empty($_GET['parent_id']) && is_numeric($_GET['parent_id'])) {
+                    SessionMessageHandler::add_message(lang('collect_added_msg'), url: DirPath::getUrl('root') . 'view_collection.php?cid=' . (int)$_GET['parent_id']);
+                }
                 SessionMessageHandler::add_message(lang('collect_added_msg'), url: DirPath::getUrl('root') . 'manage_collections.php');
             }
         }
