@@ -117,6 +117,9 @@ class UserLevel
 
         $conditions = [];
         $join = [];
+        if (!$param_no_values) {
+            $join[] = ' INNER JOIN ' . cb_sql_table(self::$tableNamePermissionValue) . ' ON ' . self::$tableNamePermission . '.id_user_levels_permission = ' . self::$tableNamePermissionValue . '.id_user_levels_permission';
+        }
         if ($param_userid !== false) {
             $conditions[] = ' users.userid = ' . (int)$param_userid;
             $join[] = ' LEFT JOIN ' . cb_sql_table('users') . ' ON users.level = ' . self::$tableNamePermissionValue . '.user_level_id';
@@ -127,9 +130,6 @@ class UserLevel
             $conditions[] = ' ' . self::$tableNamePermissionValue . '.user_level_id = ' . (int)$param_user_level_id;
         }
 
-        if (!$param_no_values) {
-            $join[] = ' INNER JOIN ' . cb_sql_table(self::$tableNamePermissionValue) . ' ON ' . self::$tableNamePermission . '.id_user_levels_permission = ' . self::$tableNamePermissionValue . '.id_user_levels_permission';
-        }
 
         $sql = 'SELECT ' . implode(', ', $select) . '
                 FROM ' . cb_sql_table(self::$tableNamePermission)
@@ -403,4 +403,31 @@ class UserLevel
         return true;
     }
 
+    /**
+     * @param int $user_id_from
+     * @param int $user_id_to
+     * @return bool
+     * @throws Exception
+     */
+    public static function canLogAsUser(int $user_id_from, int $user_id_to): bool
+    {
+        $from_permissions = self::getAllPermissions(['userid' => $user_id_from]);
+        if (empty($from_permissions)) {
+            return false;
+        }
+        $from_permissions_with_key = array_combine(array_column($from_permissions, 'id_user_levels_permission'), $from_permissions);
+        $to_permissions = self::getAllPermissions(['userid' => $user_id_to]);
+        //prevent to log in as an admin if current user is not one
+        if ($from_permissions[0]['user_level_id'] > 1 && $to_permissions[0]['user_level_id'] == 1) {
+            return false;
+        }
+        //compare permission one by one and if current user have less permission than
+        $to_permissions_with_key = array_combine(array_column($to_permissions, 'id_user_levels_permission'), $to_permissions);
+        foreach ($to_permissions_with_key as $permission_id => $permission) {
+            if ($permission['permission_value'] == 'yes' && $from_permissions_with_key[$permission_id]['permission_value'] != 'yes') {
+                return false;
+            }
+        }
+        return true;
+    }
 }
