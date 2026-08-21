@@ -2,26 +2,27 @@
 <div class="clearfix"></div>
 <form name="video_manage marginBottomLarge" method="post">
 <div class="heading clearfix">
-    <h2 class="pull-left" style="position:relative; bottom: 15px;">{lang('manage_x', lang(videos)|lower)}</h2>
-    <div class="btn-group" style="float: right;">
-        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-            Actions <span class="caret caret_margin"></span>
-        </button>
-        <ul class="dropdown-menu pull-left" role="menu">
-            <li><button  type="submit" name="activate_selected"> {lang code='activate'}</button></li>
-            {if $smarty.get.active!='no'}
-                <li><button  type="submit" name="deactivate_selected"> {lang code='deactivate'}</button></li>
-            {/if}
-            <li><button  type="submit" name="make_featured_selected" >{lang code='make_featured'}</button></li>
-            <li><button  type="submit" name="make_unfeatured_selected" >{lang code='make_unfeatured'}</button></li>
-            <li><button  type="submit" name="reconvert_selected" >Reconvert</button></li>
-            {if config('chromecast')=='yes'}
-                <li><button  type="submit" name="check_castable_selected" >{lang code='castable_status_check'}</button></li>
-            {/if}
-            <li><button  type="submit" name="update_bits_color_selected" >{lang code='update_bits_color'}</button></li>
-            <li><button  type="submit" name="delete_selected" onclick="return _cb.confirm_it('Are you sure you want to delete selected video(s)')">{lang code='delete'}</button></li>
-        </ul>
-    </div>
+    <h2 class="pull-left">{lang('manage_x', lang(videos)|lower)}
+        <div class="btn-group" >
+            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                Actions <span class="caret caret_margin"></span>
+            </button>
+            <ul class="dropdown-menu pull-right" role="menu">
+                <li><input type="submit" name="activate_selected" value="{lang code='activate'}"></li>
+                {if $smarty.get.active!='no'}
+                    <li><input type="submit" name="deactivate_selected" value="{lang code='deactivate'}"></li>
+                {/if}
+                <li><input type="submit" name="make_featured_selected"  value="{lang code='make_featured'}"></li>
+                <li><input type="submit" name="make_unfeatured_selected"  value="{lang code='make_unfeatured'}"></li>
+                <li><input type="submit" name="reconvert_selected" value="Reconvert"></li>
+                {if config('chromecast')=='yes'}
+                    <li><input type="submit" name="check_castable_selected"  value="{lang code='castable_status_check'}"></li>
+                {/if}
+                <li><input type="submit" name="update_bits_color_selected"  value="{lang code='update_bits_color'}"></li>
+                <li><input type="submit" name="delete_selected" onclick="return _cb.confirm_it('Are you sure you want to delete selected video(s)')" value="{lang code='delete'}"></li>
+            </ul>
+        </div>
+    </h2>
 
 </div>
 
