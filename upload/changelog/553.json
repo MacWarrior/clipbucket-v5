@@ -1,6 +1,6 @@
 {
   "version":"5.5.3",
-  "revision":"175",
+  "revision":"176",
   "status":"stable",
   "detail":[
     {
@@ -169,6 +169,7 @@
         ,"Fix syntax error"
         ,"Fix SQL duplicate key error"
         ,"Fix possible thumbs migration issues"
+        ,"Fix possible RCE (Thanks @QwesiRED !)"
       ]
     },
     {
