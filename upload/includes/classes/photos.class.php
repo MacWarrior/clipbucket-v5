@@ -1175,7 +1175,7 @@ class CBPhotos
         if (is_numeric($id)) {
             $result = Clipbucket_db::getInstance()->select(tbl($this->p_tbl), 'photo_id', ' photo_id = ' . (int)$id);
         } else {
-            $result = Clipbucket_db::getInstance()->select(tbl($this->p_tbl), 'photo_id', ' photo_key = \'' . $id . '\'');
+            $result = Clipbucket_db::getInstance()->select(tbl($this->p_tbl), 'photo_id', ' photo_key = \'' . mysql_clean($id) . '\'');
         }
 
         if ($result) {
