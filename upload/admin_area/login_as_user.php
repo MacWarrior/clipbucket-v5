@@ -13,7 +13,8 @@ $userToLoginAsDetails = userquery::getInstance()->get_user_details($uid);
 $userToLoginAsLevel = $userToLoginAsDetails['level'];
 
 if ($userLevel > 1 && $userToLoginAsLevel == 1) {
-    e('You do not have enough permissions to login as Admin user');
+    SessionMessageHandler::add_message('You do not have enough permissions to login as Admin user','e', User::redirectAfterLogin('url'));
+    exit;
 }
 
 if (userquery::getInstance()->login_as_user($uid)) {

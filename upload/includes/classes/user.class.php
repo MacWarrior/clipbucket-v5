@@ -1019,15 +1019,21 @@ class User extends Objects
     }
 
     /**
-     * @return void
+     * @param $return
+     * @return string|void
      * @throws Exception
      */
-    public static function redirectAfterLogin(): void
+    public static function redirectAfterLogin($return = 'redirect')
     {
         if ($_COOKIE['pageredir']) {
-            redirect_to($_COOKIE['pageredir']);
+            $url =$_COOKIE['pageredir'];
         } else {
-            redirect_to(User::getInstance()->getDefaultHomepageFromUserLevel());
+            $url = User::getInstance()->getDefaultHomepageFromUserLevel();
+        }
+        if ($return == 'redirect') {
+            redirect_to($url);
+        } elseif ($return == 'url') {
+            return $url;
         }
     }
 
