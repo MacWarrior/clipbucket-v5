@@ -277,8 +277,9 @@ class cb_pm
      */
     function get_inbox_message($mid, $uid = null)
     {
+        $mid = (int)$mid;
         if (!$uid) {
-            $uid = user_id();
+            $uid = User::getInstance()->getCurrentUserID();
         }
         $result = Clipbucket_db::getInstance()->select(tbl($this->tbl . ',users'), tbl($this->tbl . '.*,users.userid,users.username'), " message_id='$mid' AND message_to LIKE '%#$uid#%' AND userid=" . tbl($this->tbl) . '.message_from', null, ' date_added DESC ');
 
