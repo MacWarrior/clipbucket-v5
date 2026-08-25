@@ -1,8 +1,11 @@
-<div class="heading">
-    <h2>User Levels</h2>
-</div>
 {if $view=='view'}
-    <a class="btn btn-primary btn-sm pull-right" href="?mode=add">Add New Level <b>+</b></a>
+    <div class="heading">
+        <h2>{lang('manage_x', strtolower(lang('user_levels')))}
+            {if $view=='view'}
+                <a class="btn btn-primary btn-sm pull-right" href="?mode=add">{lang('add_user_level')} <b>+</b></a>
+            {/if}
+        </h2>
+    </div>
     <br>
     <br>
     <table class="table table-bordered table-striped">
@@ -46,6 +49,14 @@
         {/section}
     </table>
 {elseif ($view=='edit' || $view=='add')}
+    <div class="heading">
+        {if $view == 'add'}
+            <h2>{lang('add_user_level')}</h2>
+        {else}
+            <h2>{lang('manage_x', strtolower(lang('user_levels')))}</h2>
+        {/if}
+
+    </div>
     <form method="post">
         <h3>User Level Details</h3>
         <div class="form-group">
@@ -77,9 +88,10 @@
                                     </div>
                                     {if $perm.permission_name == 'default_homepage'}
                                         <div class="col-md-4 paddingTop">
-                                            <select name="permission_value[{$perm.id_user_levels_permission}]" >
+                                            <select name="permission_value[{$perm.id_user_levels_permission}]" required="required">
+                                                <option value=""></option>
                                                 {foreach from=User::getInstance()->getDefaultHomepageList() item=page}
-                                                    <option value="{$page}" {if $page== $perm.permission_value}selected="selected"{/if} {if $page.disabled}disabled="disabled"{/if}>{lang($page.title)} {if $page.disabled}({lang('disabled')}){/if}</option>
+                                                    <option value="{$page.title}" {if $page.title == $perm.permission_value}selected="selected"{/if} {if $page.disabled}disabled="disabled"{/if}>{lang($page.title)} {if $page.disabled}({lang('disabled')}){/if}</option>
                                                 {/foreach}
                                             </select>
                                         </div>

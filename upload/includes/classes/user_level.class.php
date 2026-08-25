@@ -114,6 +114,8 @@ class UserLevel
         $param_userid = $params['userid'] ?? false;
         $param_user_level_id = $params['user_level_id'] ?? false;
         $param_no_values = $params['no_values'] ?? false;
+        $param_first_only = $params['first_only'] ?? false;
+        $param_name = $params['name'] ?? false;
 
         $conditions = [];
         $join = [];
@@ -131,6 +133,10 @@ class UserLevel
             $join[] = ' INNER JOIN ' . cb_sql_table(self::$tableNamePermissionValue) . ' ON ' . self::$tableNamePermission . '.id_user_levels_permission = ' . self::$tableNamePermissionValue . '.id_user_levels_permission';
         }
 
+        if ($param_name) {
+            $conditions[] = ' ' . self::$tableNamePermission . '.permission_name LIKE "%' . display_clean($param_name) . '%"';
+        }
+
         $sql = 'SELECT ' . implode(', ', $select) . '
                 FROM ' . cb_sql_table(self::$tableNamePermission)
 
@@ -138,6 +144,9 @@ class UserLevel
             . (empty($conditions) ? '' : ' WHERE ' . implode(' AND ', $conditions));
 
         $result = Clipbucket_db::getInstance()->_select($sql);
+        if ($param_first_only) {
+            return $result[0];
+        }
         return empty($result) ? [] : $result;
     }
 
@@ -431,6 +440,14 @@ class UserLevel
             }
         }
         return 1;
+    }
+
+    public static function getHomepagePermissionId()
+    {
+        return self::getAllPermissions([
+            'first_only'=>true,
+            'name' => 'homepage'
+        ])['id_user_levels_permission'] ?? null;
     }
 
 }

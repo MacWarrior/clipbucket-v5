@@ -23,5 +23,13 @@ class MWIP extends \Migration
            'fr'=>'ici',
            'en'=>'here'
        ]);
+       self::generateTranslation('default_homepage_cannot_be_empty', [
+           'fr'=>'La page d\'accueil par défaut ne peut pas etre vide',
+           'en'=>'Default homepage cannot be empty'
+       ]);
+       self::generateTranslation('add_user_level', [
+           'fr'=>'Ajouter un niveau d\'utilisateur',
+           'en'=>'Add user level'
+       ]);
     }
 }

@@ -1947,4 +1947,6 @@ VALUES ('noted_x'),
        ('invalid_params'),
        ('empty_homepage'),
        ('disabled_homepage'),
-       ('here');
+       ('here'),
+       ('default_homepage_cannot_be_empty'),
+       ('add_user_level');
