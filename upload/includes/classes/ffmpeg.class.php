@@ -21,6 +21,7 @@ class FFMpeg
     private $convert_percent_done = 0;
 
     private $frame_rate;
+    private $equivalent_bitrate;
 
     public function __construct(SLog $log)
     {
@@ -90,6 +91,12 @@ class FFMpeg
         $info['video_width'] = (int)$video['width'];
         $info['video_height'] = (int)$video['height'];
         $info['bits_per_raw_sample'] = (int)$video['bits_per_raw_sample'];
+
+        $info['video_is_hdr'] = in_array(
+            $video['color_transfer'] ?? null,
+            ['smpte2084', 'arib-std-b67'],
+            true
+        );
 
         if ($video['height']) {
             $info['video_wh_ratio'] = (int)$video['width'] / (int)$video['height'];
@@ -526,6 +533,17 @@ class FFMpeg
         return $final_vrate;
     }
 
+    private function getEquivalentH264Bitrate(int $bitrate, string $codec): int
+    {
+        $factor = match ($codec) {
+            'hevc', 'h265', 'vp9' => 1.5,
+            'av1' => 1.7,
+            default => 1.0,
+        };
+
+        return (int) round($bitrate * $factor);
+    }
+
     public function getCropFilter(): string
     {
         if (empty($this->input_file) || empty($this->input_details['video_width']) || empty($this->input_details['video_height'])) {
@@ -537,7 +555,7 @@ class FFMpeg
 
         $cmd = config('ffmpegpath')
             . ' -hide_banner -nostats -i ' . escapeshellarg($this->input_file)
-            . ' -vf fps=1,cropdetect=limit=24:round=2:reset=0'
+            . ' -vf fps=2,cropdetect=limit=24:round=2:reset=0'
             . ' -an -f null - 2>&1';
 
         $out = System::shell_output($cmd);
@@ -619,16 +637,32 @@ class FFMpeg
                 // Video Rate
                 if( empty($this->frame_rate)){
                     $original_video_framerate = $this->input_details['video_rate'];
-                    $framerate = self::get_video_rate_param($this->input_details['video_rate']);
-                    $this->log->writeLine(date('Y-m-d H:i:s').' - Original rate : ' . $original_video_framerate . ', final rate : ' . $framerate);
-                    $this->frame_rate = $framerate;
+                    $target_framerate = self::get_video_rate_param($original_video_framerate);
+                    $this->log->writeLine(date('Y-m-d H:i:s').' - Original rate : ' . $original_video_framerate . ', final rate : ' . $target_framerate);
+                    $this->frame_rate = $target_framerate;
+                }
+
+                if( empty($this->equivalent_bitrate) ){
+                    $equivalent_bitrate = $this->getEquivalentH264Bitrate(
+                        $this->input_details['video_bitrate'],
+                        $this->input_details['video_codec']
+                    );
+                    $original_video_framerate = $this->input_details['video_rate'];
+                    $target_framerate = self::get_video_rate_param($original_video_framerate);
+                    $framerate_ratio = $target_framerate / $original_video_framerate;
+
+                    $this->equivalent_bitrate = $equivalent_bitrate*$framerate_ratio;
+
+                    if( System::isInDev() ){
+                        $this->log->writeLine(date('Y-m-d H:i:s').' - Original bitrate : ' . $this->input_details['video_bitrate']/1000 . 'kbps, equivalent bitrate : ' . $equivalent_bitrate*$framerate_ratio/1000 . 'kbps');
+                    }
                 }
 
                 $cmd .= ' -r ' . $this->frame_rate;
 
                 // Fix for browsers compatibility : yuv420p10le seems to be working only on Chrome like browsers
                 if (config('force_8bits')) {
-                    $cmd .= ' -pix_fmt yuv420p';
+                    $cmd .= ' -pix_fmt yuv420p -color_range tv -colorspace bt709 -color_primaries bt709 -color_trc bt709';
                 }
                 // Fix rare video conversion fail
                 $cmd .= ' -max_muxing_queue_size 1024';
@@ -636,7 +670,8 @@ class FFMpeg
                 break;
 
             case 'video_mp4':
-                $final_video_bitrate = min($this->input_details['video_bitrate'], myquery::getInstance()->getVideoResolutionBitrateFromHeight($resolution['height']));
+                $target_resolution_bitrate = myquery::getInstance()->getVideoResolutionBitrateFromHeight($resolution['height']);
+                $final_video_bitrate = min($this->equivalent_bitrate, $target_resolution_bitrate);
 
                 // Video Bitrate
                 $cmd .= ' -vb ' . $final_video_bitrate;
@@ -656,7 +691,19 @@ class FFMpeg
                     $filter .= ',';
                 }
 
+                if (config('force_8bits') && $this->input_details['video_is_hdr']) {
+                    $filter .= 'zscale=t=linear:npl=100,'
+                        . 'format=gbrpf32le,'
+                        . 'zscale=p=bt709,'
+                        . 'tonemap=mobius:param=0.3:desat=0,'
+                        . 'zscale=t=bt709:m=bt709:r=tv,';
+                }
+
                 $filter .= 'scale=' . $scale;
+
+                if( config('force_8bits') ){
+                    $filter .= ',format=yuv420p';
+                }
 
                 $cmd .= ' -vf "' . $filter . '"';
                 break;
@@ -665,7 +712,8 @@ class FFMpeg
                 $count = 0;
                 $bitrates = '';
                 $resolutions = ' -filter_complex "';
-                $log_res = '';
+                $log_res = [];
+                $log_bitrates = [];
                 $filter_complex = '';
 
                 $crop = '';
@@ -674,13 +722,16 @@ class FFMpeg
                 }
 
                 foreach ($resolution as $res) {
-                    $video_bitrate = myquery::getInstance()->getVideoResolutionBitrateFromHeight($res['height']);
-                    $this->video_files[] = $res['height'];
-                    if( !empty($log_res) ){
-                        $log_res .= ' & ';
+                    $target_resolution_bitrate = myquery::getInstance()->getVideoResolutionBitrateFromHeight($res['height']);
+                    $final_video_bitrate = min($this->equivalent_bitrate, $target_resolution_bitrate);
+
+                    if( System::isInDev() ){
+                        $log_bitrates[] = ' - Maximum bitrate for resolution ' . $res['height'] . ' : ' . $target_resolution_bitrate/1000 . 'kbps, final bitrate : ' . $final_video_bitrate/1000 . 'kbps';
                     }
-                    $log_res .= $res['height'];
-                    $bitrates .= ' -b:v:' . $count . ' ' . $video_bitrate;
+
+                    $this->video_files[] = $res['height'];
+                    $log_res[] = $res['height'];
+                    $bitrates .= ' -b:v:' . $count . ' ' . $final_video_bitrate;
 
                     if( $this->input_details['video_wh_ratio'] >= 1 ){
                         $scale = '-2:' . $res['video_height'];
@@ -695,7 +746,20 @@ class FFMpeg
                     if( !empty($filter) ){
                         $filter .= ',';
                     }
+
+                    if (config('force_8bits') && $this->input_details['video_is_hdr']) {
+                        $filter .= 'zscale=t=linear:npl=100,'
+                            . 'format=gbrpf32le,'
+                            . 'zscale=p=bt709,'
+                            . 'tonemap=mobius:param=0.3:desat=0,'
+                            . 'zscale=t=bt709:m=bt709:r=tv,';
+                    }
+
                     $filter .= 'scale=' . $scale;
+
+                    if( config('force_8bits') ){
+                        $filter .= ',format=yuv420p';
+                    }
 
                     $filter_complex .= '[0:v]' . $filter . '[v' . $count . ']';
 
@@ -703,7 +767,11 @@ class FFMpeg
                 }
                 $resolutions .= $filter_complex . '"';
 
-                $this->log->writeLine(date('Y-m-d H:i:s').' - Converting into '.$log_res.'...');
+                $this->log->writeLine(date('Y-m-d H:i:s') . ' - Converting into ' . implode(' & ', $log_res) . '...');
+                foreach($log_bitrates as $log_bitrate){
+                    $this->log->writeLine(date('Y-m-d H:i:s') . $log_bitrate);
+                }
+
                 $cmd .= $bitrates . $resolutions;
                 break;
 
@@ -870,7 +938,15 @@ class FFMpeg
 
         $this->output_file = $this->output_dir . $this->file_name . '-' . $resolution['height'] . '.' . $this->conversion_type;
 
-        $this->log->writeLine(date('Y-m-d H:i:s').' - Converting into '.$resolution['height'].'...');
+        $this->log->writeLine(date('Y-m-d H:i:s') . ' - Converting into ' . $resolution['height'] . '...');
+
+        if( System::isInDev() ){
+            $target_resolution_bitrate = myquery::getInstance()->getVideoResolutionBitrateFromHeight($resolution['height']);
+            $final_video_bitrate = min($this->equivalent_bitrate, $target_resolution_bitrate);
+
+            $this->log->writeLine(date('Y-m-d H:i:s').' - Maximum bitrate for resolution : ' . $target_resolution_bitrate/1000 . 'kbps, final bitrate : ' . $final_video_bitrate/1000 . 'kbps');
+        }
+
         $command = config('ffmpegpath') . $opt_av . ' ' . $this->output_file . ' 2>&1';
 
         if (System::isInDev()) {

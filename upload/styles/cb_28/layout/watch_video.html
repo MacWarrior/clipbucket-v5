@@ -1,7 +1,7 @@
 {$video=$vdo}
 {$type='video'}
 {$channel = userquery::getInstance()->get_user_details($video.userid)}
-<div id="main" class="clearfix container">
+<div id="main" class="clearfix container{if config('video_enable_fullwidth') == 'yes'} fullwidth{/if}">
     <div class="clearfix">
         <section id="content" class="clearfix videos">
             <div class="clearfix player-holder">
