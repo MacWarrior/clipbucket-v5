@@ -8,7 +8,15 @@
             <div class="col-md-6" style="text-align: right;">
                 <span style="font-size: 16px;">{lang('translations')} : </span>
                 {foreach from=$languages item=language}
-                    <a href="javascript:void(0);" data-id="{$language.language_id}" class="flag_language" title="{lang('edit_page_translation', $language.language_name)} : {if $language.is_specified}{lang('specified')}{else}{lang('no_specified')}{/if}"><img style="height: 18px; " class="{if $language.is_shown}selected{/if}{if !$language.is_specified} grey_filter{/if}" src="{get_country_flag_url($language.language_flag)}"></a>
+                    <a href="javascript:void(0);"
+                       data-id="{$language.language_id}"
+                       class="flag_language"
+                       title="{lang('edit_page_translation', $language.language_name)} : {if $language.is_specified == 2}{lang('specified')}{elseif $language.is_specified == 1}{lang('partially_specified')}{lang}{else}{lang('no_specified')}{/if}">
+                        <img style="height: 18px; "
+                             class="{if $language.is_shown}selected{/if}{if !$language.is_specified} grey_filter{/if}"
+                             src="{get_country_flag_url($language.language_flag)}"
+                        >
+                    </a>
                 {/foreach}
             </div>
         </div>

@@ -132,7 +132,7 @@ if (empty($mode) || $mode == 'view') {
             $page['page_contents'][$language['language_id']] = $page['page_content'];
             $page['page_titles'][$language['language_id']] = $page['page_title'];
         }
-        $language['is_specified'] = (bool)$page['page_contents'][$language['language_id']];
+        $language['is_specified'] = (int)(bool)$page['page_contents'][$language['language_id']] + (int)(bool)$page['page_titles'][$language['language_id']];
         if (!empty($_POST['selected_lang']) && $language['is_specified'] && $_POST['selected_lang'] == $language['language_id']) {
             $first_display = $language['language_id'];
             $language['is_shown'] = true;

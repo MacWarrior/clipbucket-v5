@@ -115,5 +115,9 @@ class MWIP extends \Migration
             'fr'=>'Traductions',
             'en'=>'Translations'
         ]);
+        self::generateTranslation('partially_specified', [
+            'fr'=>'Partiellement renseigné',
+            'en'=>'Partially specified'
+        ]);
     }
 }

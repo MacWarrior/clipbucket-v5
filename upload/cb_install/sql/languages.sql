@@ -1954,4 +1954,5 @@ VALUES ('noted_x'),
        ('new_page'),
        ('update_page'),
        ('edit_page'),
-       ('translations');
+       ('translations'),
+       ('partially_specified');
