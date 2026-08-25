@@ -642,6 +642,9 @@ class User extends Objects
         return UserLevel::hasPermissionOrRedirect($permission, $this->getCurrentUserLevelID(), $must_be_logged);
     }
 
+    /**
+     * @throws Exception
+     */
     public function isUserConnectedOrRedirect(): void
     {
         if (!$this->isUserConnected()) {
