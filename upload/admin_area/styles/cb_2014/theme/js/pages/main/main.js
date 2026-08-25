@@ -147,6 +147,8 @@ $(document).ready(function () {
         , 'control_bar_logo' : ['player_logo_url','upload_player-logo']
         , 'keep_ratio_photo': 'ratio_photo'
         , 'enable_profiling' : ['profiling_db_host','profiling_db_name','profiling_db_user','profiling_db_password','profiling_db_port']
+        , 'enable_external_rate_field' : 'enable_external_rate_from_tmdb'
+        , 'enable_external_ratings_field' : 'enable_external_ratings_from_tmdb'
 
     }, function (index, value) {
 

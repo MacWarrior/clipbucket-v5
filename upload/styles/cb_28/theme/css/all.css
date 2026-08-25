@@ -408,7 +408,7 @@ body {
   font: 14px/16px "source_sans_proregular", sans-serif;
   -webkit-text-size-adjust: 100%;
   -ms-text-size-adjust: none;
-  width: 100vw;
+  width: 100%;
   overflow-x: hidden;
 }
 
@@ -6076,7 +6076,7 @@ textarea#comment_box {
   position: absolute;
   top: 10px;
   right: 10px;
-  z-index: 5;
+  z-index: 4;
   cursor: help;
   background-color: #000;
   opacity: 0.9;
@@ -6669,7 +6669,7 @@ textarea#comment_box {
 
 .slider-video-container .thumb-video-padding .thumb-video .restricted {
   color:white;
-  z-index: 5;
+  z-index: 4;
   pointer-events: none;
 }
 
