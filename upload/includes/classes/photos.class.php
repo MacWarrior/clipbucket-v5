@@ -1195,9 +1195,9 @@ class CBPhotos
     function get_photo($pid)
     {
         if (is_numeric($pid)) {
-            $field = 'photo_id';
+            $where = 'photo_id = ' . (int)$pid;
         } else {
-            $field = 'photo_key';
+            $where = 'photo_key = \'' . mysql_clean($pid) . '\'';
         }
 
         $select_tag = '';
@@ -1211,9 +1211,9 @@ class CBPhotos
 
         $query = 'SELECT P.* '. $select_tag.'  
                     FROM ' . tbl($this->p_tbl) . ' AS P 
-                   '.$join_tag.'
-                    WHERE P.' . $field . ' = \'' . mysql_clean($pid) . '\'
-                    GROUP BY P.photo_id';
+                    ' . $join_tag . '
+                    WHERE P.' . $where .
+                    'GROUP BY P.photo_id';
 
         $result = Clipbucket_db::getInstance()->_select($query);
         if (count($result) > 0) {
@@ -1346,7 +1346,7 @@ class CBPhotos
             $cond .= $p['extra_cond'];
         }
 
-        if ($p['get_orphans'] || User::getInstance()->hasAdminAccess() || user_id() == ($p['user'] ?? 0)) {
+        if ($p['get_orphans'] || User::getInstance()->hasAdminAccess() || User::getInstance()->getCurrentUserID() == ($p['user'] ?? 0)) {
             $p['collection'] = '0';
         }
 
