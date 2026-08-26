@@ -4744,12 +4744,12 @@ class userquery extends CBCategory
     /**
      * Function will let admin to login as user
      *
-     * @param      $id
+     * @param int $id
      *
      * @return bool
      * @throws Exception
      */
-    function login_as_user($id): bool
+    function login_as_user(int $id): bool
     {
         $udetails = $this->get_user_details($id);
         if ($udetails) {
@@ -4765,13 +4765,9 @@ class userquery extends CBCategory
 
             //Error Logging
             if (!empty($msg)) {
-                //Logging Action
                 $log_array['success'] = 'no';
                 $log_array['details'] = $msg[0]['val'];
-                insert_log('login_as', [
-                    'success'=>'no',
-                    'details'=> $msg[0]['val']
-                ]);
+                insert_log('login_as', $log_array);
             }
         }
 
@@ -4786,14 +4782,14 @@ class userquery extends CBCategory
     function get_anonymous_user(): int
     {
         /*Added to resolve bug 222*/
-        $result = Clipbucket_db::getInstance()->select(tbl('users'), 'userid', " username='anonymous' AND email='anonymous@website'", '1');
+        $result = Clipbucket_db::getInstance()->select(tbl('users'), 'userid', ' username = \'anonymous\' AND email = \'anonymous@website\'', '1');
         if (isset($result[0]['userid'])) {
             return (int)$result[0]['userid'];
         }
 
         execute_sql_file(\DirPath::get('cb_install') . 'sql' .DIRECTORY_SEPARATOR . 'add_anonymous_user.sql');
 
-        $result = Clipbucket_db::getInstance()->select(tbl('users'), 'userid', " username='anonymous' AND email='anonymous@website'", '1');
+        $result = Clipbucket_db::getInstance()->select(tbl('users'), 'userid', ' username = \'anonymous\' AND email = \'anonymous@website\'', '1');
         return (int)$result[0]['userid'];
     }
 
