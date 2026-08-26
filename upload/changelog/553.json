@@ -1,6 +1,6 @@
 {
   "version":"5.5.3",
-  "revision":"176",
+  "revision":"177",
   "status":"stable",
   "detail":[
     {
@@ -119,6 +119,7 @@
         ,"Fix age restriction display on mobile"
         ,"Fix possible XSS injection"
         ,"Fix missing CSS file"
+        ,"Fix password reset form (<i>#895</i>)"
       ]
     },
     {
