@@ -108,7 +108,7 @@ if (!empty($items)) {
 }
 
 $collections = Collection::getInstance()->getAllIndent([
-    'type'       => 'photos',
+    'type'       => $type,
     'can_upload' => true,
     'not_collection_id'=>$c['collection_id'],
 ], display_group: true);
