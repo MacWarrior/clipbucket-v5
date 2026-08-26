@@ -14,6 +14,9 @@ if ($uid != userquery::getInstance()->get_anonymous_user()) {
 if (empty($udetails)) {
     redirect_to(DirPath::getUrl('admin_area') . 'members.php?user_not_found=1');
 }
+if (!UserLevel::canUserEditUserLevel($udetails['level'])) {
+    SessionMessageHandler::add_message(lang('cannot_access_page'), 'w', DirPath::getUrl('admin_area') . 'members.php');
+}
 /* Generating breadcrumb */
 global $breadcrumb;
 $breadcrumb[0] = ['title' => lang('users'), 'url' => ''];
@@ -168,7 +171,7 @@ $params['type_id'] = $uid;
 $params['order'] = ' comment_id DESC';
 $comments = Comments::getAll($params);
 assign('comments', $comments);
-
+assign('levels', UserLevel::getAll(['can_be_modified_by_current_user'=>true, 'no_anonymous'=>true]));
 assign('show_categ', Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.0', '323'));
 subtitle('View User');
 template_files('view_user.html');

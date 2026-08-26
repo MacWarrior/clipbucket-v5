@@ -53,7 +53,11 @@
                         <img src="{userquery::getInstance()->getUserThumb($u)}" class="img-thumbnail oneUserImage" style="height:80px;width:80px;" alt="channel_thumb"/>
                     </div>
                     <div class="col-md-9">
-                        <a href="{DirPath::getUrl('admin_area')}view_user.php?uid={$u.userid}" class="oneUserName">{display_clean($u.username)}</a>
+                        {if $u.nb_diff == 0}
+                            <a href="{DirPath::getUrl('admin_area')}view_user.php?uid={$u.userid}" class="oneUserName">{display_clean($u.username)}</a>
+                        {else}
+                            <span class="oneUserName">{display_clean($u.username)}</span>
+                        {/if}
                         <span>{$u.email}</span>
                         {if config('enable_channel_slogan') == 'yes' && !empty(User::getInstance($u.userid)->get('profile_slogan'))}
                         <br/>
@@ -74,7 +78,7 @@
     </td>
 
     <td>
-        {if $u.userid != $anonymous_id}
+        {if $u.userid != $anonymous_id && $u.nb_diff == 0}
             <div id="usr_opt-{$u.userid}" class="dropdown pull-right">
                 <button id="dropdownMenu1" class="btn btn-primary btn-xs dropdown-toggle" data-toggle="dropdown">
                     Actions<i class="glyphicon glyphicon-chevron-down icon-on-right"></i>

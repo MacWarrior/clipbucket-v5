@@ -117,6 +117,9 @@ class UserLevel
 
         $conditions = [];
         $join = [];
+        if (!$param_no_values) {
+            $join[] = ' INNER JOIN ' . cb_sql_table(self::$tableNamePermissionValue) . ' ON ' . self::$tableNamePermission . '.id_user_levels_permission = ' . self::$tableNamePermissionValue . '.id_user_levels_permission';
+        }
         if ($param_userid !== false) {
             $conditions[] = ' users.userid = ' . (int)$param_userid;
             $join[] = ' LEFT JOIN ' . cb_sql_table('users') . ' ON users.level = ' . self::$tableNamePermissionValue . '.user_level_id';
@@ -127,13 +130,8 @@ class UserLevel
             $conditions[] = ' ' . self::$tableNamePermissionValue . '.user_level_id = ' . (int)$param_user_level_id;
         }
 
-        if (!$param_no_values) {
-            $join[] = ' INNER JOIN ' . cb_sql_table(self::$tableNamePermissionValue) . ' ON ' . self::$tableNamePermission . '.id_user_levels_permission = ' . self::$tableNamePermissionValue . '.id_user_levels_permission';
-        }
-
         $sql = 'SELECT ' . implode(', ', $select) . '
                 FROM ' . cb_sql_table(self::$tableNamePermission)
-
             . implode(' ', $join)
             . (empty($conditions) ? '' : ' WHERE ' . implode(' AND ', $conditions));
 
@@ -215,6 +213,7 @@ class UserLevel
         $param_is_origin = $params['is_origine'] ?? false;
         $param_count = $params['count'] ?? false;
         $param_no_anonymous = $params['no_anonymous'] ?? false;
+        $param_can_be_modified_by_current_user = $params['can_be_modified_by_current_user'] ?? false;
 
         $conditions = [];
         $join = [];
@@ -237,6 +236,18 @@ class UserLevel
             $select = ['COUNT(DISTINCT ' . self::$tableName . '.user_level_id) AS count'];
         } else {
             $select = self::getAllFields();
+        }
+        if ($param_can_be_modified_by_current_user) {
+            $select[] = 'has_right_to_edit.nb_diff';
+            $join[] /** @lang MySQL */ = ' LEFT JOIN ( SELECT COUNT(USER_LEVELS_PERMISSIONS_VALUES_LOG_USER.permission_value) as nb_diff, ' . self::getTableNameLevelPermissionValue() . '.user_level_id
+                    FROM ' . cb_sql_table(self::getTableNameLevelPermissionValue()) . ' 
+                    LEFT JOIN cb_user_levels_permissions_values as USER_LEVELS_PERMISSIONS_VALUES_LOG_USER
+                        ON ' . self::getTableNameLevelPermissionValue() . '.id_user_levels_permission = USER_LEVELS_PERMISSIONS_VALUES_LOG_USER.id_user_levels_permission
+                                AND USER_LEVELS_PERMISSIONS_VALUES_LOG_USER.user_level_id = ' . User::getInstance()->getCurrentUserLevelID() . '
+                                AND USER_LEVELS_PERMISSIONS_VALUES_LOG_USER.permission_value != ' . self::getTableNameLevelPermissionValue() . '.permission_value AND ' . self::getTableNameLevelPermissionValue() . '.permission_value = \'yes\'
+                    GROUP BY  ' . self::getTableNameLevelPermissionValue() . '.user_level_id
+                    ) AS has_right_to_edit ON has_right_to_edit.user_level_id = ' . self::$tableName . '.user_level_id ';
+
         }
         $sql = 'SELECT ' . implode(', ', $select) . '
                 FROM ' . cb_sql_table(self::$tableName)
@@ -403,4 +414,56 @@ class UserLevel
         return true;
     }
 
+    /**
+     * @param int $user_id_from
+     * @param int $user_id_to
+     * @return bool
+     * @throws Exception
+     */
+    public static function canLogAsUser(int $user_id_from, int $user_id_to): bool
+    {
+        $from_permissions = self::getAllPermissions(['userid' => $user_id_from]);
+        if (empty($from_permissions)) {
+            return false;
+        }
+        $from_permissions_with_key = array_combine(array_column($from_permissions, 'id_user_levels_permission'), $from_permissions);
+        $to_permissions = self::getAllPermissions(['userid' => $user_id_to]);
+        //prevent to log in as an admin if current user is not one
+        if ($from_permissions[0]['user_level_id'] > 1 && $to_permissions[0]['user_level_id'] == 1) {
+            return false;
+        }
+        //compare permission one by one and if current user have less permission than
+        $to_permissions_with_key = array_combine(array_column($to_permissions, 'id_user_levels_permission'), $to_permissions);
+        foreach ($to_permissions_with_key as $permission_id => $permission) {
+            if ($permission['permission_value'] == 'yes' && $from_permissions_with_key[$permission_id]['permission_value'] != 'yes') {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
+     * @param $id_user_level_target
+     * @param null $id_user_level_user
+     * @return bool
+     * @throws Exception
+     */
+    public static function canUserEditUserLevel($id_user_level_target, $id_user_level_user = null): bool
+    {
+        if (empty($id_user_level_user) || !is_numeric($id_user_level_user)) {
+            $id_user_level_user = User::getInstance()->getCurrentUserLevelID();
+        }
+        $sql = /** @lang MySQL */
+            'SELECT COUNT(USER_LEVELS_PERMISSIONS_VALUES_LOG_USER.permission_value) as nb_diff, ' . UserLevel::getTableNameLevelPermissionValue() . '.user_level_id
+                    FROM ' . cb_sql_table(UserLevel::getTableNameLevelPermissionValue()) . ' 
+                    LEFT JOIN ' . tbl(UserLevel::getTableNameLevelPermissionValue()) . ' as USER_LEVELS_PERMISSIONS_VALUES_LOG_USER
+                    ON ' . UserLevel::getTableNameLevelPermissionValue() . '.id_user_levels_permission = USER_LEVELS_PERMISSIONS_VALUES_LOG_USER.id_user_levels_permission
+                                AND USER_LEVELS_PERMISSIONS_VALUES_LOG_USER.user_level_id = ' . $id_user_level_user . '
+                                AND USER_LEVELS_PERMISSIONS_VALUES_LOG_USER.permission_value != ' . UserLevel::getTableNameLevelPermissionValue() . '.permission_value AND ' . UserLevel::getTableNameLevelPermissionValue() . '.permission_value = \'yes\'
+                    WHERE ' . UserLevel::getTableNameLevelPermissionValue() . '.user_level_id = ' . (int)$id_user_level_target . '
+                    GROUP BY  ' . UserLevel::getTableNameLevelPermissionValue() . '.user_level_id
+                    ';
+        $res = Clipbucket_db::getInstance()->_select($sql);
+        return empty($res[0]['nb_diff'] ?? null);
+    }
 }
