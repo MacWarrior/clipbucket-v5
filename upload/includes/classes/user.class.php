@@ -1026,7 +1026,7 @@ class User extends Objects
     public static function redirectAfterLogin($return = 'redirect')
     {
         if ($_COOKIE['pageredir']) {
-            $url =$_COOKIE['pageredir'];
+            $url = $_COOKIE['pageredir'];
         } else {
             $url = User::getInstance()->getDefaultHomepageFromUserLevel();
         }
