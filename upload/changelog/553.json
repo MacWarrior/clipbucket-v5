@@ -1,6 +1,6 @@
 {
   "version":"5.5.3",
-  "revision":"176",
+  "revision":"182",
   "status":"stable",
   "detail":[
     {
@@ -58,6 +58,8 @@
         ,"Fix Update TMDB info tool"
         ,"Fix possible privilege escalation through user levels management (Thanks @iys8 !)"
         ,"Fix possible configuration loss on configuration changes"
+        ,"Fix collecton items management"
+        ,"Fix possible privilege escalation through user impersonation (Thanks @QwesiRED !)"
       ]
     },
     {
@@ -119,6 +121,7 @@
         ,"Fix age restriction display on mobile"
         ,"Fix possible XSS injection"
         ,"Fix missing CSS file"
+        ,"Fix password reset form (<i>#895</i>)"
       ]
     },
     {
@@ -141,19 +144,21 @@
         ,"Fix tools error handling"
         ,"Fix possible SQL error on video upload"
         ,"Fix thumbs deletion"
-        ,"Fix possible SQL injection (Thanks @drkim-dev, @FutureBuildingEN, @Bnyt7 & @de3erve-hunter !)"
+        ,"Fix possible SQL injection (Thanks @drkim-dev, @FutureBuildingEN, @Bnyt7 & @de3erve-hunter & @QwesiRED !)"
         ,"Fix possible duplicate configs"
         ,"Fix SSRF vulnerability (Thanks @Takumi142857 !)"
         ,"Fix Readme"
         ,"Fix docker image (<i>#781</i>, <i>#782</i>)"
         ,"Fix possible issue with failed redis connection"
-        ,"Fix possible RCE (Thanks @Takumi142857 & @drkim-dev !)"
+        ,"Fix possible RCE (Thanks @Takumi142857 & @drkim-dev & @QwesiRED !)"
         ,"Fix changelog"
         ,"Fix possible memory overflow while in dev mode"
         ,"Fix pagination (<i>#855</i>)"
         ,"Fix TMDB import SQL error"
         ,"Fix video deletion"
         ,"Fix possible unauthorized video thumbs overight (Thanks @de3erve-hunter !)"
+        ,"Fix nginx vhost rules"
+        ,"Fix .htaccess rules"
       ]
     },
     {
