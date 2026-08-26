@@ -1,6 +1,6 @@
 {
   "version":"5.5.3",
-  "revision":"177",
+  "revision":"178",
   "status":"stable",
   "detail":[
     {
@@ -58,6 +58,7 @@
         ,"Fix Update TMDB info tool"
         ,"Fix possible privilege escalation through user levels management (Thanks @iys8 !)"
         ,"Fix possible configuration loss on configuration changes"
+        ,"Fix collecton items management"
       ]
     },
     {
