@@ -130,10 +130,8 @@ class UserLevel
             $conditions[] = ' ' . self::$tableNamePermissionValue . '.user_level_id = ' . (int)$param_user_level_id;
         }
 
-
         $sql = 'SELECT ' . implode(', ', $select) . '
                 FROM ' . cb_sql_table(self::$tableNamePermission)
-
             . implode(' ', $join)
             . (empty($conditions) ? '' : ' WHERE ' . implode(' AND ', $conditions));
 
