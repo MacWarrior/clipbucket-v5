@@ -160,7 +160,7 @@ class cb_pm
     function check_users($input, $sender)
     {
         if (empty($input)) {
-            e(lang("unknown_reciever"));
+            e(lang('unknown_reciever'));
         } else {
             //check if usernames are separated by colon ';'
             $input = preg_replace('/;/', ',', $input);
@@ -192,7 +192,7 @@ class cb_pm
             if (count($valid_users) > 0) {
                 $vusers = '';
                 foreach ($valid_users as $vu) {
-                    $vusers .= '#' . $vu . '#';
+                    $vusers .= '#' . (int)$vu . '#';
                 }
                 return $vusers;
             }
@@ -202,6 +202,7 @@ class cb_pm
 
     /**
      * Function used to get user
+     * @throws Exception
      */
     function get_the_user($user)
     {
@@ -241,7 +242,7 @@ class cb_pm
      */
     function is_reply($id, $uid): bool
     {
-        $results = Clipbucket_db::getInstance()->select(tbl($this->tbl), 'message_to', ' message_id = ' . (int)$id . ' AND message_to LIKE \'%#' . mysql_clean($uid) . '#%\'');
+        $results = Clipbucket_db::getInstance()->select(tbl($this->tbl), 'message_to', ' message_id = ' . (int)$id . ' AND message_to LIKE \'%#' . (int)$uid . '#%\'');
         if (count($results) > 0) {
             return true;
         }
@@ -259,7 +260,7 @@ class cb_pm
      */
     function get_message($id)
     {
-        $result = Clipbucket_db::getInstance()->select(tbl($this->tbl), '*', " message_id='$id'");
+        $result = Clipbucket_db::getInstance()->select(tbl($this->tbl), '*', ' message_id=' . (int)$id);
         if (count($result) > 0) {
             return $result[0];
         }
@@ -277,11 +278,10 @@ class cb_pm
      */
     function get_inbox_message($mid, $uid = null)
     {
-        $mid = (int)$mid;
         if (!$uid) {
             $uid = User::getInstance()->getCurrentUserID();
         }
-        $result = Clipbucket_db::getInstance()->select(tbl($this->tbl . ',users'), tbl($this->tbl . '.*,users.userid,users.username'), " message_id='$mid' AND message_to LIKE '%#$uid#%' AND userid=" . tbl($this->tbl) . '.message_from', null, ' date_added DESC ');
+        $result = Clipbucket_db::getInstance()->select(tbl($this->tbl . ',users'), tbl($this->tbl . '.*,users.userid,users.username'), ' message_id = ' . (int)$mid . ' AND message_to LIKE \'%#' . (int)$uid . '#%\' AND userid = ' . tbl($this->tbl) . '.message_from', null, ' date_added DESC ');
 
         if (count($result) > 0) {
             return $result[0];
@@ -301,9 +301,9 @@ class cb_pm
     function get_outbox_message($mid, $uid = null)
     {
         if (!$uid) {
-            $uid = user_id();
+            $uid = User::getInstance()->getCurrentUserID();
         }
-        $result = Clipbucket_db::getInstance()->select(tbl($this->tbl . ',users'), tbl($this->tbl . '.*,users.userid,users.username'), " message_id='$mid' AND message_from='$uid' AND userid=" . tbl($this->tbl . ".message_from"));
+        $result = Clipbucket_db::getInstance()->select(tbl($this->tbl . ',users'), tbl($this->tbl . '.*,users.userid,users.username'), ' message_id = ' . (int)$mid . ' AND message_from = ' . (int)$uid . ' AND userid = ' . tbl($this->tbl . '.message_from'));
 
         if( !empty($result) ) {
             return $result[0];
@@ -319,41 +319,40 @@ class cb_pm
     function get_user_messages($uid, $box = 'all', $count_only = false)
     {
         if (!$uid) {
-            $uid = user_id();
+            $uid = User::getInstance()->getCurrentUserID();
         }
 
         switch ($box) {
             case 'all':
                 if ($count_only) {
-                    $result = Clipbucket_db::getInstance()->count(tbl($this->tbl), 'message_id', " message_to LIKE '%#$uid#%' AND message_type='pm' ");
+                    $result = Clipbucket_db::getInstance()->count(tbl($this->tbl), 'message_id', ' message_to LIKE \'%#' . (int)$uid . '#%\' AND message_type = \'pm\'');
                 } else {
                     $result = Clipbucket_db::getInstance()->select(tbl($this->tbl . ',users'), tbl($this->tbl . '.*,users.username AS message_from_user '),
-                        tbl($this->tbl) . ".message_to LIKE '%#$uid#%' AND " . tbl("users") . ".userid = " . tbl($this->tbl) . ".message_from 
-										   AND message_type='pm'", null, " date_added DESC");
+                        tbl($this->tbl) . '.message_to LIKE \'%#' . (int)$uid . '#%\' AND ' . tbl('users') . '.userid = ' . tbl($this->tbl) . '.message_from 
+										   AND message_type = \'pm\'', null, ' date_added DESC');
                 }
                 break;
 
             case 'in':
                 if ($count_only) {
-                    $result = Clipbucket_db::getInstance()->count(tbl($this->tbl), 'message_id', " message_to LIKE '%#$uid#%' AND message_box ='in' AND message_type='pm' ");
+                    $result = Clipbucket_db::getInstance()->count(tbl($this->tbl), 'message_id', ' message_to LIKE \'%#' . (int)$uid . '#%\' AND message_type = \'pm\'');
                 } else {
                     $result = Clipbucket_db::getInstance()->select(tbl($this->tbl . ',users'), tbl($this->tbl . '.*,users.username AS message_from_user '),
-                        tbl($this->tbl) . ".message_to LIKE '%#$uid#%' AND " . tbl("users") . ".userid = " . tbl($this->tbl) . ".message_from 
-										  AND " . tbl($this->tbl) . ".message_box ='in' AND message_type='pm'", null, " date_added DESC");
+                        tbl($this->tbl) . '.message_to LIKE \'%#' . (int)$uid . '#%\' AND ' . tbl('users') . '.userid = ' . tbl($this->tbl) . '.message_from 
+										  AND ' . tbl($this->tbl) . '.message_box = \'in\' AND message_type = \'pm\'', null, ' date_added DESC');
                 }
                 break;
 
             case 'out':
                 if ($count_only) {
-                    $result = Clipbucket_db::getInstance()->count(tbl($this->tbl), 'message_id', " message_from = '$uid' AND message_box ='out' ");
+                    $result = Clipbucket_db::getInstance()->count(tbl($this->tbl), 'message_id', ' message_from = ' . (int)$uid . ' AND message_box = \'out\'');
                 } else {
                     $result = Clipbucket_db::getInstance()->select(tbl($this->tbl . ',users'), tbl($this->tbl . '.*,users.username AS message_from_user '),
-                        tbl($this->tbl) . ".message_from = '$uid' AND " . tbl("users") . ".userid = " . tbl($this->tbl) . ".message_from 
-										  AND " . tbl($this->tbl) . ".message_box ='out'", null, " date_added DESC");
+                        tbl($this->tbl) . '.message_from = ' . (int)$uid . ' AND ' . tbl('users') . '.userid = ' . tbl($this->tbl) . '.message_from 
+										  AND ' . tbl($this->tbl) . '.message_box = \'out\'', null, ' date_added DESC');
                     //One More Query Need To be executed to get username of recievers
                     $count = 0;
 
-                    $cond = "";
                     if (is_array($result)) {
                         foreach ($result as $re) {
                             $cond = '';
@@ -363,9 +362,9 @@ class cb_pm
 
                                 if (!empty($to_user)) {
                                     if (!empty($cond)) {
-                                        $cond .= " OR ";
+                                        $cond .= ' OR ';
                                     }
-                                    $cond .= " userid = '$to_user' ";
+                                    $cond .= ' userid = ' . (int)$to_user;
                                 }
                             }
 
@@ -391,11 +390,11 @@ class cb_pm
 
             case 'notification':
                 if ($count_only) {
-                    $result = Clipbucket_db::getInstance()->count(tbl($this->tbl), 'message_id', " message_to LIKE '%#$uid#%' AND message_box ='in' AND message_type='pm' ");
+                    $result = Clipbucket_db::getInstance()->count(tbl($this->tbl), 'message_id', ' message_to LIKE \'%#' . (int)$uid . '#%\' AND message_box = \'in\' AND message_type = \'pm\'');
                 } else {
                     $result = Clipbucket_db::getInstance()->select(tbl($this->tbl . ',users'), tbl($this->tbl . '.*,users.username AS message_from_user '),
-                        tbl($this->tbl) . ".message_to LIKE '%#$uid#' AND " . tbl("users.userid") . " = " . tbl($this->tbl) . ".message_from 
-										  AND " . tbl($this->tbl) . ".message_box ='in' AND message_type='notification'", null, " date_added DESC");
+                        tbl($this->tbl) . '.message_to LIKE \'%#' . (int)$uid . '#\' AND ' . tbl('users.userid') . ' = ' . tbl($this->tbl) . '.message_from 
+										  AND ' . tbl($this->tbl) . ".message_box = \'in\' AND message_type = \'notification\'", null, ' date_added DESC');
                 }
         }
 
@@ -496,7 +495,7 @@ class cb_pm
     /**
      * Function used to add custom pm field
      */
-    function add_custom_field($array)
+    function add_custom_field($array): void
     {
         $this->pm_custom_field = array_merge($array, $this->pm_custom_field);
     }
@@ -506,7 +505,7 @@ class cb_pm
      * Function used to send PM EMAIL
      * @throws Exception
      */
-    function send_pm_email($array)
+    function send_pm_email($array): void
     {
         $sender = userquery::getInstance()->get_user_field_only($array['from'], 'username');
         $content = mysql_clean($array['content']);
@@ -519,7 +518,7 @@ class cb_pm
             'sender_username'  => $sender,
             'user_message' => $content,
             'subject' => $subject,
-            'message_link'  => DirPath::getUrl('root') . 'private_message.php?mode=inbox&mid='.$msgid
+            'message_link'  => DirPath::getUrl('root') . 'private_message.php?mode=inbox&mid=' . (int)$msgid
         ];
 
         EmailTemplate::sendMail($this->email_template, $emails, $vars);
@@ -539,9 +538,9 @@ class cb_pm
         foreach ($usernames as $user) {
             if (!empty($user)) {
                 if (!empty($cond)) {
-                    $cond .= " OR ";
+                    $cond .= ' OR ';
                 }
-                $cond .= " username ='" . $user . "' ";
+                $cond .= ' username = \'' . $user . '\' ';
             }
         }
 
@@ -558,10 +557,10 @@ class cb_pm
      * Function used to set private message status as read
      * @throws Exception
      */
-    function set_message_status($mid, $status = 'read')
+    function set_message_status($mid, $status = 'read'): void
     {
         if ($mid) {
-            Clipbucket_db::getInstance()->update(tbl($this->tbl), ['message_status'], [$status], " message_id='$mid'");
+            Clipbucket_db::getInstance()->update(tbl($this->tbl), ['message_status'], [$status], ' message_id = ' . (int)$mid);
         }
     }
 
@@ -569,53 +568,26 @@ class cb_pm
      * Function used to delete message from user messages box
      * @throws Exception
      */
-    function delete_msg($mid, $uid, $box = 'in')
+    function delete_msg($mid, $uid, $box = 'in'): void
     {
         if ($box == 'in') {
             $inbox = $this->get_inbox_message($mid, $uid);
             if ($inbox) {
                 $inbox_user = $inbox['message_to'];
-                $inbox_user = preg_replace('/#' . $uid . '#/Ui', '', $inbox_user);
+                $inbox_user = preg_replace('/#' . (int)$uid . '#/Ui', '', $inbox_user);
                 if (empty($inbox_user)) {
-                    Clipbucket_db::getInstance()->delete(tbl($this->tbl), ['message_id'], [$mid]);
+                    Clipbucket_db::getInstance()->delete(tbl($this->tbl), ['message_id'], [(int)$mid]);
                 } else {
-                    Clipbucket_db::getInstance()->update(tbl($this->tbl), ['message_to'], [$inbox_user], ' message_id=\'' . $inbox['message_id'] . '\' ');
+                    Clipbucket_db::getInstance()->update(tbl($this->tbl), ['message_to'], [$inbox_user], ' message_id = ' . (int)$inbox['message_id']);
                 }
                 e(lang('msg_delete_inbox'), 'm');
             }
         } else {
             $outbox = $this->get_outbox_message($mid, $uid);
             if ($outbox) {
-                Clipbucket_db::getInstance()->delete(tbl($this->tbl), ['message_id'], [$mid]);
+                Clipbucket_db::getInstance()->delete(tbl($this->tbl), ['message_id'], [(int)$mid]);
                 e(lang('msg_delete_outbox'), 'm');
             }
         }
-    }
-    
-    /**
-     * Function used to get new messages
-     * @throws Exception
-     */
-    function get_new_messages($uid = null, $type = 'pm')
-    {
-        if (!$uid) {
-            $uid = user_id();
-        }
-
-        switch ($type) {
-            case 'pm':
-            default:
-                $count = Clipbucket_db::getInstance()->count(tbl($this->tbl), 'message_id', " message_to LIKE '%#$uid#%' AND message_box='in' AND message_type='pm' AND message_status='unread'");
-                break;
-
-            case 'notification':
-                $count = Clipbucket_db::getInstance()->count(tbl($this->tbl), 'message_id', " message_to LIKE '%#$uid#%' AND message_box='in' AND message_type='notification' AND message_status='unread'");
-                break;
-        }
-
-        if ($count > 0) {
-            return $count;
-        }
-        return '0';
     }
 }
