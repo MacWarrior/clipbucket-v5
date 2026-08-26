@@ -1,6 +1,6 @@
 {
   "version":"5.5.3",
-  "revision":"176",
+  "revision":"181",
   "status":"stable",
   "detail":[
     {
@@ -58,6 +58,8 @@
         ,"Fix Update TMDB info tool"
         ,"Fix possible privilege escalation through user levels management (Thanks @iys8 !)"
         ,"Fix possible configuration loss on configuration changes"
+        ,"Fix collecton items management"
+        ,"Fix possible privilege escalation through user impersonation (Thanks @QwesiRED !)"
       ]
     },
     {
@@ -119,6 +121,7 @@
         ,"Fix age restriction display on mobile"
         ,"Fix possible XSS injection"
         ,"Fix missing CSS file"
+        ,"Fix password reset form (<i>#895</i>)"
       ]
     },
     {
@@ -141,7 +144,7 @@
         ,"Fix tools error handling"
         ,"Fix possible SQL error on video upload"
         ,"Fix thumbs deletion"
-        ,"Fix possible SQL injection (Thanks @drkim-dev, @FutureBuildingEN, @Bnyt7 & @de3erve-hunter !)"
+        ,"Fix possible SQL injection (Thanks @drkim-dev, @FutureBuildingEN, @Bnyt7 & @de3erve-hunter & @QwesiRED !)"
         ,"Fix possible duplicate configs"
         ,"Fix SSRF vulnerability (Thanks @Takumi142857 !)"
         ,"Fix Readme"

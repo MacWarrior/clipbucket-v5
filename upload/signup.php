@@ -64,7 +64,7 @@ if (isset($_POST['login'])) {
     }
 
     if (userquery::getInstance()->login_user($username, $password, $remember)) {
-       User::redirectAfterLogin();
+       User::redirectAfterLoginOrError();
     }
 }
 
