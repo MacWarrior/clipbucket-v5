@@ -1023,12 +1023,16 @@ class User extends Objects
      * @return string|void
      * @throws Exception
      */
-    public static function redirectAfterLogin($return = 'redirect')
+    public static function redirectAfterLoginOrError($return = 'redirect')
     {
         if ($_COOKIE['pageredir']) {
             $url = $_COOKIE['pageredir'];
         } else {
-            $url = User::getInstance()->getDefaultHomepageFromUserLevel();
+            if( BACK_END ){
+                $url = DirPath::getUrl('admin_area');
+            } else {
+                $url = User::getInstance()->getDefaultHomepageFromUserLevel();
+            }
         }
         if ($return == 'redirect') {
             redirect_to($url);
