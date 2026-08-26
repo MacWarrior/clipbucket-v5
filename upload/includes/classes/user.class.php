@@ -656,6 +656,9 @@ class User extends Objects
         return UserLevel::hasPermissionOrRedirect($permission, $this->getCurrentUserLevelID(), $must_be_logged);
     }
 
+    /**
+     * @throws Exception
+     */
     public function isUserConnectedOrRedirect(): void
     {
         if (!$this->isUserConnected()) {
@@ -1030,15 +1033,26 @@ class User extends Objects
     }
 
     /**
-     * @return void
+     * @param $return
+     * @return string|void
      * @throws Exception
      */
-    public static function redirectAfterLogin(): void
+    public static function redirectAfterLoginOrError($return = 'redirect')
     {
         if ($_COOKIE['pageredir']) {
-            redirect_to($_COOKIE['pageredir']);
+            $url = $_COOKIE['pageredir'];
         } else {
-            redirect_to(User::getInstance()->getDefaultHomepageFromUserLevel());
+            if( BACK_END ){
+                $url = DirPath::getUrl('admin_area');
+            } else {
+                $url = User::getInstance()->getDefaultHomepageFromUserLevel();
+            }
+        }
+        if ($return == 'redirect') {
+            redirect_to($url);
+        }
+        if ($return == 'url') {
+            return $url;
         }
     }
 

@@ -1,6 +1,6 @@
 {
   "version":"5.5.3",
-  "revision":"165",
+  "revision":"182",
   "status":"stable",
   "detail":[
     {
@@ -56,6 +56,10 @@
         ,"Fix update button being disabled after a first interupted update"
         ,"Fix subtitles deletion"
         ,"Fix Update TMDB info tool"
+        ,"Fix possible privilege escalation through user levels management (Thanks @iys8 !)"
+        ,"Fix possible configuration loss on configuration changes"
+        ,"Fix collecton items management"
+        ,"Fix possible privilege escalation through user impersonation (Thanks @QwesiRED !)"
       ]
     },
     {
@@ -71,7 +75,7 @@
         ,"Implement featured collection hierarchy display"
         ,"Implement add new collection button from owned collection"
         ,"Implement comment rating"
-        ,"Implement fullwidth photos page"
+        ,"Implement fullwidth photos & video pages"
         ,"Implement backdrop as default thumb"
         ,"Implement random photo order"
         ,"Implement video rating display"
@@ -84,7 +88,7 @@
         ,"Fix possible JS error on register page"
         ,"Fix possible display issues on login & signup pages"
         ,"Fix possible error during photo upload"
-        ,"Fix minified CSS file"
+        ,"Fix minified CSS file (<i>#681</i>)"
         ,"Fix video collection default thumb display"
         ,"Fix video saving on upload form"
         ,"Fix possible SQL error on video upload form with malfomated video file name"
@@ -114,6 +118,10 @@
         ,"Fix video rating display"
         ,"Fix popular videos thumb display"
         ,"Fix wrong max file size error message"
+        ,"Fix age restriction display on mobile"
+        ,"Fix possible XSS injection"
+        ,"Fix missing CSS file"
+        ,"Fix password reset form (<i>#895</i>)"
       ]
     },
     {
@@ -136,19 +144,21 @@
         ,"Fix tools error handling"
         ,"Fix possible SQL error on video upload"
         ,"Fix thumbs deletion"
-        ,"Fix possible SQL injection (Thanks @drkim-dev, @FutureBuildingEN, @Bnyt7 & @de3erve-hunter !)"
+        ,"Fix possible SQL injection (Thanks @drkim-dev, @FutureBuildingEN, @Bnyt7 & @de3erve-hunter & @QwesiRED !)"
         ,"Fix possible duplicate configs"
         ,"Fix SSRF vulnerability (Thanks @Takumi142857 !)"
         ,"Fix Readme"
         ,"Fix docker image (<i>#781</i>, <i>#782</i>)"
         ,"Fix possible issue with failed redis connection"
-        ,"Fix possible RCE (Thanks @Takumi142857 & @drkim-dev !)"
+        ,"Fix possible RCE (Thanks @Takumi142857 & @drkim-dev & @QwesiRED !)"
         ,"Fix changelog"
         ,"Fix possible memory overflow while in dev mode"
         ,"Fix pagination (<i>#855</i>)"
         ,"Fix TMDB import SQL error"
         ,"Fix video deletion"
         ,"Fix possible unauthorized video thumbs overight (Thanks @de3erve-hunter !)"
+        ,"Fix nginx vhost rules"
+        ,"Fix .htaccess rules"
       ]
     },
     {
@@ -164,6 +174,7 @@
         ,"Fix syntax error"
         ,"Fix SQL duplicate key error"
         ,"Fix possible thumbs migration issues"
+        ,"Fix possible RCE (Thanks @QwesiRED !)"
       ]
     },
     {
@@ -173,6 +184,7 @@
         ,"Implement Gif image thumbs"
         ,"Implement Remove hard-coded letterboxing / pillarboxing option"
         ,"Implement Webp photo thumbs"
+        ,"Implement video bitrate handling based on source codec"
         ,"Prevent photo thumbs generation when not needed"
         ,"Detect corrupted video files"
         ,"Update video rotation detection (Thanks @McArrow <i>#695</i> !)"
@@ -183,6 +195,7 @@
         ,"Fix temp file deletion on conversion failure"
         ,"Fix possible remote code execution (Thanks @Bnyt7 !)"
         ,"Fix possible issues with remove hard-coded letterboxing / pillarboxing option"
+        ,"Fix compatibility with HDR original files"
       ]
     },
     {
