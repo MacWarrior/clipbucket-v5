@@ -12,6 +12,7 @@ RewriteRule ^(.*/)?404$                             $1404.php [L]
 RewriteRule ^(.*/)\.(git|github|idea|gitignore|htaccess)$ $1/403 [NC,R=302,L]
 RewriteRule ^(.*/)?(includes|changelog)/.*$ $1/403 [NC,R=302,L]
 RewriteRule ^(.*/)?files/temp/.*$ $1/403 [NC,R=302,L]
+RewriteRule ^(.*/)?files/.*\.php(?:/|$) $1/403 [NC,R=302,L]
 
 # Direct acces to files
 RewriteCond %{REQUEST_URI} ^(.*/)?/files/ [NC]
@@ -27,8 +28,8 @@ RewriteCond %{REQUEST_FILENAME} !-f
 RewriteRule ^ %1/404 [R=302,L]
 
 # External use
-RewriteRule ^(.*/)?sitemap.xml$                     $1sitemap.php?%{QUERY_STRING [L]
-RewriteRule ^(.*/)?rss$                             $1rss.php?%{QUERY_STRING [L]
+RewriteRule ^(.*/)?sitemap.xml$                     $1sitemap.php?%{QUERY_STRING} [L]
+RewriteRule ^(.*/)?rss/?$                           $1rss.php?%{QUERY_STRING} [L]
 RewriteRule ^(.*/)rss/([a-zA-Z0-9].+)$              $1rss.php?mode=$2&%{QUERY_STRING} [L]
 
 # Collections
@@ -49,6 +50,7 @@ RewriteRule ^(.*/)?(.*)\_v([0-9]+)                  $1watch_video.php?v=$3&%{QUE
 
 #Public video
 RewriteRule ^(.*/)?videos_public/(.*)/(.*)/(.*)/(.*)       $1videos_public.php?cat=$2&sort=$3&time=$4&page=$5&%{QUERY_STRING} [L]
+RewriteRule ^(.*/)?videos_public/(.*)/(.*)/(.*)            $1videos_public.php?sort=$2&time=$3&page=$4&%{QUERY_STRING} [L]
 RewriteRule ^(.*/)?videos_public/([0-9]+)                  $1videos_public.php?page=$2&%{QUERY_STRING} [L]
 RewriteRule ^(.*/)?videos_public/?$                        $1videos_public.php?%{QUERY_STRING} [L]
 RewriteRule ^(.*/)?video_public/(.*)/(.*)                  $1watch_video_public.php?v=$2&%{QUERY_STRING} [L]
@@ -72,12 +74,13 @@ RewriteRule ^(.*/)?user/(.*)                        $1view_channel.php?user=$2&%
 # Uploads
 RewriteRule ^(.*/)?photo_upload/(.*)                $1photo_upload.php?collection=$2&%{QUERY_STRING} [L]
 RewriteRule ^(.*/)?photo_upload/?$                  $1photo_upload.php?%{QUERY_STRING} [L]
-RewriteRule ^(.*/)?upload?$                         $1upload.php?%{QUERY_STRING} [L]
+RewriteRule ^(.*/)?upload/(.*)                      $1upload.php?collection=$2&%{QUERY_STRING} [L]
+RewriteRule ^(.*/)?upload/?$                        $1upload.php?%{QUERY_STRING} [L]
 
 # Account
-RewriteRule ^(.*/)?my_account?$                     $1myaccount.php?%{QUERY_STRING} [L]
-RewriteRule ^(.*/)?signup?$                         $1signup.php?%{QUERY_STRING} [L]
-RewriteRule ^(.*/)?signin?$                         $1signup.php?mode=login&%{QUERY_STRING} [L]
+RewriteRule ^(.*/)?my_account/?$                     $1myaccount.php?%{QUERY_STRING} [L]
+RewriteRule ^(.*/)?signup/?$                         $1signup.php?%{QUERY_STRING} [L]
+RewriteRule ^(.*/)?signin/?$                         $1signup.php?mode=login&%{QUERY_STRING} [L]
 
 # Custom pages
 RewriteRule ^(.*/)?page/([0-9]+)/(.*)               $1view_page.php?pid=$2&%{QUERY_STRING} [L]
