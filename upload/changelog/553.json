@@ -1,6 +1,6 @@
 {
   "version":"5.5.3",
-  "revision":"179",
+  "revision":"180",
   "status":"stable",
   "detail":[
     {
@@ -59,6 +59,7 @@
         ,"Fix possible privilege escalation through user levels management (Thanks @iys8 !)"
         ,"Fix possible configuration loss on configuration changes"
         ,"Fix collecton items management"
+        ,"Fix possible privilege escalation through user impersonation (Thanks @QwesiRED !)"
       ]
     },
     {
