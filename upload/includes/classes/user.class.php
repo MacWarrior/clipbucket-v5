@@ -1032,7 +1032,8 @@ class User extends Objects
         }
         if ($return == 'redirect') {
             redirect_to($url);
-        } elseif ($return == 'url') {
+        }
+        if ($return == 'url') {
             return $url;
         }
     }
