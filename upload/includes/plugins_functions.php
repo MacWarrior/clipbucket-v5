@@ -74,6 +74,7 @@ function private_message($array)
  * @param string $class
  *
  * @return string
+ * @throws Exception
  */
 function tags($input, $type, $sep = ', ', $class = ''): string
 {
