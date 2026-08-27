@@ -16,6 +16,10 @@ class MWIP extends \Migration
         self::generateConfig('enable_collection_categories_as_submenu', 'no');
         self::generateConfig('enable_channel_categories_as_submenu', 'no');
         self::generateConfig('main_menu_order', 'video,photo,channel,collection');
+        self::generateConfig('enable_all_categ_for_video', 'yes');
+        self::generateConfig('enable_all_categ_for_photo', 'yes');
+        self::generateConfig('enable_all_categ_for_collection', 'yes');
+        self::generateConfig('enable_all_categ_for_channel', 'yes');
         self::generateTranslation('main_menu', [
             'fr'=>'Menu principal',
             'en'=>'Main menu'
@@ -38,12 +42,19 @@ class MWIP extends \Migration
         ]);
         self::generateTranslation('option_main_menu_order', [
             'fr'=>'Ordre d\'affichage des sections',
-            'en'=>'Order of sections'
+            'en'=>'Sections order'
         ]);
         self::generateTranslation('category_name' , [
             'fr'=>'Nom de la catégorie',
             'en'=>'Category name'
         ]);
-
+        self::generateTranslation('enable_categ_as_submenu', [
+            'fr'=>'Activer les catégories comme sous-menu pour :',
+            'en' => 'Enable categories as submenus for :'
+        ]);
+        self::generateTranslation('enable_all_categ_for', [
+            'fr'=>'Activer toutes les catégories pour :',
+            'en' => 'Enable all categories for :'
+        ]);
     }
 }

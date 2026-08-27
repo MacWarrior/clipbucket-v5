@@ -202,6 +202,10 @@ if (isset($_POST['update'])) {
         , 'enable_photo_categories_as_submenu'
         , 'enable_collection_categories_as_submenu'
         , 'enable_channel_categories_as_submenu'
+        , 'enable_all_categ_for_video'
+        , 'enable_all_categ_for_photo'
+        , 'enable_all_categ_for_collection'
+        , 'enable_all_categ_for_channel'
     ];
 
     $config_booleans_to_refactor = [
@@ -497,6 +501,10 @@ if (isset($_POST['update'])) {
         , 'enable_collection_categories_as_submenu'
         , 'enable_channel_categories_as_submenu'
         , 'main_menu_order'
+        , 'enable_all_categ_for_video'
+        , 'enable_all_categ_for_photo'
+        , 'enable_all_categ_for_collection'
+        , 'enable_all_categ_for_channel'
     ];
 
     //Numeric Array

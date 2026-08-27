@@ -76,7 +76,6 @@
                                                     </a>
                                                     {if !empty($menu.sub_menus)}
                                                         <ul role="menu" class="dropdown-menu" style="left: auto;">
-                                                            <li><a href="{$menu.link}">{lang('all')}</a></li>
                                                             {foreach $menu.sub_menus as $submenu}
                                                                 <li>
                                                                     <a href="{$menu.link}?cat={$submenu.category_id}">{ucfirst($submenu.category_name)}</a>

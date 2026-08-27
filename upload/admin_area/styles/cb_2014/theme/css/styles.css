@@ -1407,6 +1407,9 @@ ul.tagit.ui-widget-content {
     margin-right: 8px;
 }
 
+.main-menu-sortable {
+    user-select: none;
+}
 .category-tree {
     max-height: none;
     overflow: visible;

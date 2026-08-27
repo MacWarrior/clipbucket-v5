@@ -673,7 +673,7 @@ class ClipBucket
             $this->head_menu[array_search('photo', $order_menu)+1] = [
                 'name'       => lang('photos'),
                 'icon'       => '<i class="fa fa-camera"></i>',
-                'link'       => cblink(['name' => 'photos']),
+                'link'       => cblink(['name' => 'photos', 'with_all'=>true]),
                 'this'       => 'photos',
                 'permission' => 'view_photos',
                 'sub_menus'  => $categories_photo
@@ -682,7 +682,7 @@ class ClipBucket
         if (config('channelsSection') == 'yes') {
             $categories_user = [];
             if (config('enable_channel_categories_as_submenu') == 'yes') {
-                $categories_user = getCategoryList(['type' => 'user']);
+                $categories_user = getCategoryList(['type' => 'user', 'with_all'=>true]);
             }
             $this->head_menu[array_search('channel', $order_menu)+1] = [
                 'name'       => lang('channels'),
@@ -697,7 +697,7 @@ class ClipBucket
         if (config('collectionsSection') == 'yes' && (config('videosSection') == 'yes' || config('photosSection') == 'yes')) {
             $categories_collection = [];
             if (config('enable_collection_categories_as_submenu') == 'yes') {
-                $categories_collection = getCategoryList(['type' => 'collection']);
+                $categories_collection = getCategoryList(['type' => 'collection', 'with_all'=>true]);
             }
             $this->head_menu[array_search('collection', $order_menu)+1] = [
                 'name'       => lang('collections'),
@@ -712,7 +712,7 @@ class ClipBucket
         if (config('videosSection') == 'yes') {
             $categories_video = [];
             if (config('enable_video_categories_as_submenu') == 'yes') {
-                $categories_video = getCategoryList(['type' => 'video']);
+                $categories_video = getCategoryList(['type' => 'video', 'with_all'=>true]);
             }
             $video_position =array_search('video', $order_menu)+1;
             $this->head_menu[$video_position] = [

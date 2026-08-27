@@ -271,6 +271,7 @@
                         <div class="col-md-2">
                             <ul class="nav nav-pills nav-stacked interfaces" style="margin:0;">
                                 <li class="active"><a data-toggle="tab" href="interfaces_global">{lang code='global'}</a></li>
+                                <li><a data-toggle="tab" href="interfaces_main_menu">{lang('main_menu')|ucfirst}</a></li>
                                 <li><a data-toggle="tab" href="interfaces_home">{lang code='menu_home'}</a></li>
                                 <li><a data-toggle="tab" href="interfaces_videos">{lang('videos')|ucfirst}</a></li>
                                 <li><a data-toggle="tab" href="interfaces_video">{lang('video')|ucfirst}</a></li>
@@ -279,7 +280,6 @@
                                 <li><a data-toggle="tab" href="interfaces_collections">{lang('collections')|ucfirst}</a></li>
                                 <li><a data-toggle="tab" href="interfaces_collection">{lang('collection')|ucfirst}</a></li>
                                 <li><a data-toggle="tab" href="interfaces_channels">{lang('channels')|ucfirst}</a></li>
-                                <li><a data-toggle="tab" href="interfaces_main_menu">{lang('main_menu')|ucfirst}</a></li>
                             </ul>
                         </div>
                         <div class="col-md-10 tab-content">
@@ -992,12 +992,16 @@
                                 <div class="row">
                                     <div class="col-md-6">
                                         <div class="row">
+                                            <h4>{lang('enable_categ_as_submenu')}</h4>
+                                        </div>
+                                        <div class="row">
                                             <div class="col-md-8">
                                                 <label class="nowrap" for="enable_video_categories_as_submenu" title="{lang('option_enable_video_categories_as_submenu')}">{lang('option_enable_video_categories_as_submenu')}</label>
                                             </div>
                                             <div class="col-md-2 row-size">
-                                                <input value="yes" name="enable_video_categories_as_submenu" id="enable_video_categories_as_submenu" {if $row.enable_video_categories_as_submenu=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+                                                <input value="yes" name="enable_video_categories_as_submenu" id="enable_video_categories_as_submenu" {if $row.enable_video_categories_as_submenu=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5" {if config('videosSection')!='yes'}disabled="disabled"{/if}/>
                                                 <span class="lbl"></span>
+                                                <input type="hidden" name="enable_video_categories_as_submenu" id="enable_video_categories_as_submenu_hidden" value="{$row.enable_video_categories_as_submenu}" {if config('videosSection')=='yes'}disabled="disabled"{/if}/>
                                             </div>
                                         </div>
                                         <div class="row">
@@ -1005,8 +1009,9 @@
                                                 <label class="nowrap" for="enable_photo_categories_as_submenu" title="{lang('option_enable_photo_categories_as_submenu')}">{lang('option_enable_photo_categories_as_submenu')}</label>
                                             </div>
                                             <div class="col-md-2 row-size">
-                                                <input value="yes" name="enable_photo_categories_as_submenu" id="enable_photo_categories_as_submenu" {if $row.enable_photo_categories_as_submenu=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+                                                <input value="yes" name="enable_photo_categories_as_submenu" id="enable_photo_categories_as_submenu" {if $row.enable_photo_categories_as_submenu=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5" {if config('photosSection')!='yes'}disabled="disabled"{/if}/>
                                                 <span class="lbl"></span>
+                                                <input type="hidden" name="enable_photo_categories_as_submenu" id="enable_photo_categories_as_submenu_hidden" value="{$row.enable_photo_categories_as_submenu}" {if config('photosSection')=='yes'}disabled="disabled"{/if}/>
                                             </div>
                                         </div>
                                         <div class="row">
@@ -1014,8 +1019,9 @@
                                                 <label class="nowrap" for="enable_collection_categories_as_submenu" title="{lang('option_enable_collection_categories_as_submenu')}">{lang('option_enable_collection_categories_as_submenu')}</label>
                                             </div>
                                             <div class="col-md-2 row-size">
-                                                <input value="yes" name="enable_collection_categories_as_submenu" id="enable_collection_categories_as_submenu" {if $row.enable_collection_categories_as_submenu=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+                                                <input value="yes" name="enable_collection_categories_as_submenu" id="enable_collection_categories_as_submenu" {if $row.enable_collection_categories_as_submenu=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5" {if config('collectionsSection')!='yes'}disabled="disabled"{/if}/>
                                                 <span class="lbl"></span>
+                                                <input type="hidden" name="enable_collection_categories_as_submenu" id="enable_collection_categories_as_submenu_hidden" value="{$row.enable_collection_categories_as_submenu}" {if config('collectionsSection')=='yes'}disabled="disabled"{/if}/>
                                             </div>
                                         </div>
                                         <div class="row">
@@ -1023,26 +1029,73 @@
                                                 <label class="nowrap" for="enable_channel_categories_as_submenu" title="{lang('option_enable_channel_categories_as_submenu')}">{lang('option_enable_channel_categories_as_submenu')}</label>
                                             </div>
                                             <div class="col-md-2 row-size">
-                                                <input value="yes" name="enable_channel_categories_as_submenu" id="enable_channel_categories_as_submenu" {if $row.enable_channel_categories_as_submenu=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+                                                <input value="yes" name="enable_channel_categories_as_submenu" id="enable_channel_categories_as_submenu" {if $row.enable_channel_categories_as_submenu=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5" {if config('channelsSection')!='yes'}disabled="disabled"{/if}/>
                                                 <span class="lbl"></span>
+                                                <input type="hidden" name="enable_channel_categories_as_submenu" id="enable_channel_categories_as_submenu_hidden" value="{$row.enable_channel_categories_as_submenu}" {if config('channelsSection')=='yes'}disabled="disabled"{/if}/>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="col-md-6">
                                         <div class="row">
-                                            <div class="col-md-4">
-                                                <label class="nowrap" for="enable_channel_categories_as_submenu" title="{lang('option_main_menu_order')}">{lang('option_main_menu_order')}</label>
-                                            </div>
-                                            <div class="col-md-8">
+                                            <div class="col-md-12">
+                                                <h4 class="nowrap" for="enable_channel_categories_as_submenu" title="{lang('option_main_menu_order')}">{lang('option_main_menu_order')}</h4>
                                                 <input type="hidden" name="main_menu_order" value="{$row.main_menu_order}" class="main-menu-order"/>
                                                 <ul class="list-unstyled main-menus-sortable">
                                                     {foreach from=$sections item=$menu}
-                                                        <li class="main-menu-sortable " data-section-id="{$menu}">
+                                                        <li class="main-menu-sortable " data-section-id="{$menu}" {if config($menu|cat:'sSection') != 'yes'} style="display: none;"{/if}>
                                                             <span class="glyphicon glyphicon-move main-menu-sort-handle"></span>
-                                                            {ucfirst(lang($menu))}
+                                                            {ucfirst(lang($menu|cat:'s'))}
                                                         </li>
                                                     {/foreach}
                                                 </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <hr/>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="row">
+                                            <h4>{lang('enable_all_categ_for')}</h4>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-8">
+                                                <label class="nowrap" for="enable_all_categ_for_video" title="{lang('videos')}">{lang('videos')}</label>
+                                            </div>
+                                            <div class="col-md-2 row-size">
+                                                <input value="yes" name="enable_all_categ_for_video" id="enable_all_categ_for_video" {if $row.enable_all_categ_for_video=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5" {if config('videosSection')!='yes' || config('enable_video_categories_as_submenu') != 'yes'}disabled="disabled"{/if}/>
+                                                <span class="lbl"></span>
+                                                <input type="hidden" name="enable_all_categ_for_video" id="enable_all_categ_for_video_hidden" value="{$row.enable_all_categ_for_video}" {if config('videosSection')=='yes' && config('enable_photo_categories_as_submenu') !='yes'}disabled="disabled"{/if}/>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-8">
+                                                <label class="nowrap" for="enable_all_categ_for_photo" title="{lang('photos')}">{lang('photos')}</label>
+                                            </div>
+                                            <div class="col-md-2 row-size">
+                                                <input value="yes" name="enable_all_categ_for_photo" id="enable_all_categ_for_photo" {if $row.enable_all_categ_for_photo=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5" {if config('photosSection')!='yes' || config('enable_photo_categories_as_submenu') !='yes'}disabled="disabled"{/if}/>
+                                                <span class="lbl"></span>
+                                                <input type="hidden" name="enable_all_categ_for_photo" id="enable_all_categ_for_photo" value="{$row.enable_all_categ_for_photo}" {if config('photosSection')=='yes' && config('enable_photo_categories_as_submenu') !='yes'}disabled="disabled"{/if}/>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-8">
+                                                <label class="nowrap" for="enable_all_categ_for_collection" title="{lang('collections')}">{lang('collections')}</label>
+                                            </div>
+                                            <div class="col-md-2 row-size">
+                                                <input value="yes" name="enable_all_categ_for_collection" id="enable_all_categ_for_collection" {if $row.enable_all_categ_for_collection=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5" {if config('collectionsSection')!='yes' || config('enable_collection_categories_as_submenu') != 'yes'}disabled="disabled"{/if}/>
+                                                <span class="lbl"></span>
+                                                <input type="hidden" name="enable_all_categ_for_collection" id="enable_all_categ_for_collection" value="{$row.enable_all_categ_for_collection}" {if config('collectionsSection')=='yes' && config('enable_photo_categories_as_submenu') !='yes'}disabled="disabled"{/if}/>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-8">
+                                                <label class="nowrap" for="enable_all_categ_for_channel" title="{lang('channels')}">{lang('channels')}</label>
+                                            </div>
+                                            <div class="col-md-2 row-size">
+                                                <input value="yes" name="enable_all_categ_for_channel" id="enable_all_categ_for_channel" {if $row.enable_all_categ_for_channel=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5" {if config('channelsSection')!='yes' || config('enable_channel_categories_as_submenu') != 'yes'}disabled="disabled"{/if}/>
+                                                <span class="lbl"></span>
+                                                <input type="hidden" name="enable_all_categ_for_channel" id="enable_all_categ_for_channel" value="{$row.enable_all_categ_for_channel}" {if config('channelsSection')=='yes' && config('enable_photo_categories_as_submenu') !='yes'}disabled="disabled"{/if}/>
                                             </div>
                                         </div>
                                     </div>
