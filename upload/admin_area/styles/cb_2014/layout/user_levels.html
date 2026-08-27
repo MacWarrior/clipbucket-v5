@@ -89,7 +89,7 @@
                                     {if $perm.permission_name == 'default_homepage'}
                                         <div class="col-md-4 paddingTop">
                                             <select name="permission_value[{$perm.id_user_levels_permission}]" required="required">
-                                                <option value=""></option>
+                                                {if empty($perm.permission_value)}<option value=""></option>{/if}
                                                 {foreach from=User::getInstance()->getDefaultHomepageList() item=page}
                                                     <option value="{$page.title}" {if $page.title == $perm.permission_value}selected="selected"{/if} {if $page.disabled}disabled="disabled"{/if}>{lang($page.title)} {if $page.disabled}({lang('disabled')}){/if}</option>
                                                 {/foreach}
