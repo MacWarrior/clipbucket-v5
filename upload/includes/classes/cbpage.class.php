@@ -375,4 +375,39 @@ class cbpage
             Clipbucket_db::getInstance()->update(tbl($this->page_tbl), ['page_order'], [$_POST['page_ord_' . $page['page_id']]], ' page_id = ' . (int)$page['page_id']);
         }
     }
+
+    /**
+     * @param array $page
+     * @return array
+     * @throws Exception
+     */
+    public static function getPageTranslationFlags(array &$page): array
+    {
+        $languages = Language::getInstance()->get_langs(true);
+        $first_display = 0;
+        foreach ($languages as &$language) {
+            if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '999')) {
+                $translations = cbpage::getInstance()->getPageTranslation($page['page_id'], $language['language_id']) ?: null;
+                $page['page_contents'][$language['language_id']] = $translations['page_content'] ?? '';
+                $page['page_titles'][$language['language_id']] = $translations['page_title'] ?? '';
+            } else {
+                $page['page_contents'][$language['language_id']] = $page['page_content'];
+                $page['page_titles'][$language['language_id']] = $page['page_title'];
+            }
+            $language['is_specified'] = (int)(bool)$page['page_contents'][$language['language_id']] + (int)(bool)$page['page_titles'][$language['language_id']];
+            if (!empty($_POST['selected_lang']) && $language['is_specified'] && $_POST['selected_lang'] == $language['language_id']) {
+                $first_display = $language['language_id'];
+                $language['is_shown'] = true;
+            } elseif ($language['is_specified'] && !$first_display && empty($_POST['selected_lang'])) {
+                $first_display = $language['language_id'];
+                $language['is_shown'] = true;
+            } else {
+                $language['is_shown'] = false;
+            }
+        }
+        if (!$first_display) {
+            $languages[0]['is_shown'] = true;
+        }
+        return $languages;
+    }
 }
