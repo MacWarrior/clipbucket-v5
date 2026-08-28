@@ -1,6 +1,7 @@
 {foreach $children as $child}
     <li>
-        <a href="{$link}?cat={$child.category_id}">{ucfirst($child.category_name)}</a>
+        <a href="{cblink(['name'=>'category','data'=>$child,'type'=>$type])}">{ucfirst($child.category_name)}</a>
+{*        <a href="{$link}?cat={$child.category_id}">{ucfirst($child.category_name)}</a>*}
         {if !empty($child.children)}
             <i class="icon-right-arrow trigger" data-level="{$level}"></i>
             <ul class="dropdown-menu sub-menu" >

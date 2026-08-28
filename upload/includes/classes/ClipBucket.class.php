@@ -668,12 +668,12 @@ class ClipBucket
         if (config('photosSection') == 'yes') {
             $categories_photo = [];
             if (config('enable_photo_categories_as_submenu') == 'yes') {
-                $categories_photo = getCategoryList(['type' => 'photo']);
+                $categories_photo = getCategoryList(['type' => 'photo', 'with_all'=>true]);
             }
             $this->head_menu[array_search('photo', $order_menu)+1] = [
                 'name'       => lang('photos'),
                 'icon'       => '<i class="fa fa-camera"></i>',
-                'link'       => cblink(['name' => 'photos', 'with_all'=>true]),
+                'link'       => cblink(['name' => 'photos']),
                 'this'       => 'photos',
                 'permission' => 'view_photos',
                 'sub_menus'  => $categories_photo

@@ -78,11 +78,11 @@
                                                         <ul role="menu" class="dropdown-menu" style="left: auto;">
                                                             {foreach $menu.sub_menus as $submenu}
                                                                 <li>
-                                                                    <a href="{$menu.link}?cat={$submenu.category_id}">{ucfirst($submenu.category_name)}</a>
+                                                                    <a href="{cblink(['name'=>'category','data'=>$submenu,'type'=>$menu.this])}">{ucfirst($submenu.category_name)}</a>
                                                                     {if !empty($submenu.children)}
                                                                         <i class="icon-right-arrow trigger" data-level="1"></i>
                                                                         <ul role="menu" class="dropdown-menu sub-menu" >
-                                                                            {include file="$style_dir/blocks/sub_menu_list.html" children=$submenu.children link=$menu.link level=2}
+                                                                            {include file="$style_dir/blocks/sub_menu_list.html" children=$submenu.children level=2 type=$menu.this}
                                                                         </ul>
                                                                     {/if}
                                                                 </li>
