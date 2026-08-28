@@ -149,6 +149,10 @@ $(document).ready(function () {
         , 'enable_profiling' : ['profiling_db_host','profiling_db_name','profiling_db_user','profiling_db_password','profiling_db_port']
         , 'enable_external_rate_field' : 'enable_external_rate_from_tmdb'
         , 'enable_external_ratings_field' : 'enable_external_ratings_from_tmdb'
+        , 'enable_video_categories_as_submenu' : 'enable_all_categ_for_video'
+        , 'enable_photo_categories_as_submenu' : 'enable_all_categ_for_photo'
+        , 'enable_collection_categories_as_submenu' : 'enable_all_categ_for_collection'
+        , 'enable_channel_categories_as_submenu' : 'enable_all_categ_for_channel'
 
     }, function (index, value) {
 
@@ -294,4 +298,58 @@ $(document).ready(function () {
         }
     });
 
+    updateMainMenuOrder();
+
+    $('#interfaces_main_menu .main-menus-sortable').sortable({
+        handle: '.main-menu-sort-handle',
+        items: '.main-menu-sortable',
+        update: function () {
+            updateMainMenuOrder();
+        }
+    });
+    updateDisplayWhenSectionToggle();
 });
+function updateMainMenuOrder() {
+    var section = $('#interfaces_main_menu .main-menu-order').parent()
+    var sectionIds = section.find('.main-menu-sortable').map(function () {
+        return $(this).data('section-id');
+    }).get();
+    section.find('.main-menu-order').val(sectionIds.join(','));
+}
+
+function updateDisplayWhenSectionToggle() {
+    $.each([
+        'videosSection'
+        , 'collectionsSection'
+        , 'photosSection'
+        , 'channelsSection'
+
+    ], function (index, value) {
+
+        $('#' + value).on('change', function () {
+            const type = value.match(/(\w+)sSection/)[1];
+            const input_to_disable = [
+                'enable_' + type + '_categories_as_submenu',
+                'enable_all_categ_for_' + type
+            ];
+            const initial_input = $(this)
+            $(input_to_disable).each(function (index, elem) {
+                if (initial_input.prop('checked')) {
+                    $('#' + elem).prop('disabled', false).attr('title', '');
+                    $('#' + elem + '_hidden').prop('disabled', true);
+                } else {
+                    $('#' + elem).prop('disabled', true);
+                    $('#' + elem + '_hidden').prop('disabled', false);
+                }
+            });
+            if (!$('#videosSection').prop('checked') && !$('#photosSection').prop('checked') && $('#collectionsSection').prop('checked')) {
+                $('#collectionsSection').prop('checked', false).trigger('change');
+            }
+            //drag menu lines to hide
+            $('.main-menus-sortable li[data-section-id="' + type + '"]').toggle();
+            if ($('.main-menus-sortable li:not([style*="display: none"])').length === 0) {
+                $('.main-menus-sortable').parents('.row').first().hide();
+            }
+        });
+    });
+}

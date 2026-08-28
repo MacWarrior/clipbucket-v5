@@ -1377,3 +1377,91 @@ a:disabled {
 ul.tagit.ui-widget-content {
     background: #FFF;
 }
+
+#interfaces_main_menu .main-menu-submenu-option {
+    margin-bottom: 10px;
+}
+
+#interfaces_main_menu .main-menus-sortable,
+.categories_drag_n_drop {
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    max-height: 240px;
+    overflow-y: visible;
+    padding: 8px;
+    background: #fafafa;
+}
+
+#interfaces_main_menu .main-menu-sortable,
+.category-item {
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 3px;
+    cursor: move;
+    margin-bottom: 6px;
+    padding: 7px 10px;
+}
+
+#interfaces_main_menu .main-menu-sort-handle {
+    color: #999;
+    margin-right: 8px;
+}
+
+.main-menu-sortable {
+    user-select: none;
+}
+.category-tree {
+    max-height: none;
+    overflow: visible;
+}
+
+.category-tree ul,
+.category-flat-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.category-list-header,
+.category-row {
+    align-items: flex-start;
+    display: flex;
+    gap: 10px;
+}
+
+.category-list-header {
+    font-weight: bold;
+    padding: 0 10px 8px;
+}
+
+.category-name {
+    box-sizing: border-box;
+    flex: 0 0 25%;
+    min-width: 0;
+    overflow-wrap: anywhere;
+    padding-left: calc(var(--category-level, 0) * 35px);
+    white-space: normal;
+}
+
+.category-description {
+    flex: 1 1 auto;
+    min-width: 0;
+    overflow-wrap: anywhere;
+    white-space: normal;
+}
+
+.category-default {
+    flex: 0 0 8%;
+}
+
+.category-actions {
+    flex: 0 0 16%;
+}
+
+.category-drag-placeholder {
+    border: 1px dashed #337ab7;
+    border-radius: 3px;
+    min-height: 38px;
+    margin-bottom: 6px;
+    background: #f5fbff;
+}
