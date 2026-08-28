@@ -83,12 +83,11 @@ switch ($mode) {
             $new_collection_id = Collections::getInstance()->create_collection($_POST);
             if (!error()) {
                 $url = 'manage_collections.php';
-                if (!empty($_GET['parent_id']) && is_numeric($_GET['parent_id'])) {
-                    $url = 'view_collection.php?cid=' . (int)$_GET['parent_id'];
-                } elseif($_GET['from'] == 'collections') {
+                if ((!empty($_GET['parent_id']) && is_numeric($_GET['parent_id'])) || $_GET['from'] == 'collections') {
                     $url = 'view_collection.php?cid=' . (int)$new_collection_id;
+                    redirect_to(DirPath::getUrl('root') . $url);
                 }
-                SessionMessageHandler::add_message(lang('collect_added_msg'), url: DirPath::getUrl('root') . $url);
+                e(lang('collect_added_msg'), 'm');
             }
         }
         break;
