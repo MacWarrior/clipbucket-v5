@@ -15,8 +15,7 @@
                         <img style="height: 18px; "
                              class="{if $language.is_shown}selected{/if}{if !$language.is_specified} grey_filter{/if}"
                              src="{get_country_flag_url($language.language_flag)}"
-                        >
-                    </a>
+                        ></a>
                 {/foreach}
             </div>
         </div>
@@ -100,6 +99,13 @@
                                             {if $u.usr.featured=='yes'}<span class="label label-primary">{lang code='featured'}</span>{/if}
                                             <span class="label {if $cbpages[list].delete_able=='yes'}label-success{else}label-warning{/if}">{if $cbpages[list].delete_able =='no'}Undeletable{else}Deletable{/if}</span>
                                             <span class="label {if $cbpages[list].display=='yes'}label-success{else}label-warning{/if}">{if $cbpages[list].display =='yes'}Visible{else}Hidden{/if}</span>
+                                            {foreach from=cbpage::getPageTranslationFlags($cbpages[list]) item=language}
+                                                {if $language.is_specified != 0}
+                                                    <span class="flag_language"
+                                                          title="{lang('edit_page_translation', $language.language_name)} : {if $language.is_specified == 2}{lang('specified')}{elseif $language.is_specified == 1}{lang('partially_specified')}{lang}{/if}">
+                                                    <img style="height: 18px; " src="{get_country_flag_url($language.language_flag)}"></span>
+                                                {/if}
+                                            {/foreach}
                                         </div>
                                     </div>
                                 </div>
