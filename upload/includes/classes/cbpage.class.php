@@ -316,17 +316,17 @@ class cbpage
         }
 
         switch ($type) {
-            case 'activate';
+            case 'activate':
                 Clipbucket_db::getInstance()->update(tbl($this->page_tbl), ['active'], ['yes'], ' page_id = ' . (int)$id);
                 e(lang('page_activated'), 'm');
                 break;
 
-            case 'deactivate';
+            case 'deactivate':
                 Clipbucket_db::getInstance()->update(tbl($this->page_tbl), ['active'], ['no'], ' page_id = ' . (int)$id);
                 e(lang('page_deactivated'), 'm');
                 break;
 
-            case 'delete';
+            case 'delete':
                 if ($page['delete_able'] == 'yes') {
                     cbpage::getInstance()->delete_page($id);
                     e(lang('page_deleted'), 'm');
