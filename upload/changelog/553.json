@@ -1,6 +1,6 @@
 {
   "version":"5.5.3",
-  "revision":"182",
+  "revision":"186",
   "status":"stable",
   "detail":[
     {
@@ -21,6 +21,8 @@
         ,"Implement template compatibility check"
         ,"Implement movie rate & ratings"
         ,"Implement many action logs"
+        ,"Implement pages translation"
+        ,"Implement languages flags selection"
         ,"Update advanced settings display"
         ,"Update video & photos thumbs regeneration tools"
         ,"Update video allowed extensions display"
@@ -60,6 +62,7 @@
         ,"Fix possible configuration loss on configuration changes"
         ,"Fix collecton items management"
         ,"Fix possible privilege escalation through user impersonation (Thanks @QwesiRED !)"
+        ,"Fix default homepage check"
       ]
     },
     {
@@ -159,6 +162,7 @@
         ,"Fix possible unauthorized video thumbs overight (Thanks @de3erve-hunter !)"
         ,"Fix nginx vhost rules"
         ,"Fix .htaccess rules"
+        ,"Fix PHP 8.5 compatibility (<i>#905</i>)"
       ]
     },
     {
