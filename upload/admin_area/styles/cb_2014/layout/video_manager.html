@@ -1,13 +1,10 @@
-{include file="$layout_dir/blocks/advanced_search.html"}
-<div class="clearfix"></div>
-<form name="video_manage marginBottomLarge" method="post">
 <div class="heading clearfix">
     <h2 class="pull-left">{lang('manage_x', lang(videos)|lower)}
         <div class="btn-group" >
             <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
                 Actions <span class="caret caret_margin"></span>
             </button>
-            <ul class="dropdown-menu pull-right" role="menu">
+            <ul class="dropdown-menu pull-right inputs" role="menu">
                 <li><input type="submit" name="activate_selected" value="{lang code='activate'}"></li>
                 {if $smarty.get.active!='no'}
                     <li><input type="submit" name="deactivate_selected" value="{lang code='deactivate'}"></li>
@@ -23,11 +20,10 @@
             </ul>
         </div>
     </h2>
-
+        {include file="$layout_dir/blocks/advanced_search.html"}
 </div>
-
+<form name="video_manage" method="post">
     {if $videos}
-
         <table class="table table-bordered table-striped manageUsersTable marginTop">
             <tr>
                 <td style="width:50px;">
