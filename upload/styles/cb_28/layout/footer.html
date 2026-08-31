@@ -66,7 +66,7 @@
                                     {$selected = "" }
                                 {/if}
                                 <li data-lang="{$lang.language_id}" class="pick-lang {$selected}">
-                                    <a href="javascript:void(0);">{display_clean($lang.language_name)} {if config('display_language_flag')=='yes'}&nbsp;<img src="{get_country_flag_url($lang.language_flag)}" style="display: inline-block">{/if}</a>
+                                    <a href="javascript:void(0);">{display_clean($lang.language_name)}{if config('display_language_flag')=='yes'}&nbsp;<img alt="{$lang.language_flag}" src="{get_country_flag_url($lang.language_flag)}" style="display: inline-block"/>{/if}</a>
                                 </li>
                             {/foreach}
                         </ul>
