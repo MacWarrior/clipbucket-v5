@@ -30,7 +30,7 @@ class cbpage
      */
     function create_page(array $param): bool
     {
-        if (!Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '999')) {
+        if (!Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '184')) {
             return false;
         }
         $name = strtolower($param['page_name']);
@@ -54,7 +54,7 @@ class cbpage
             $fields = ['page_name', 'userid', 'date_added', 'active', 'page_order'];
             $values = [$name, User::getInstance()->getCurrentUserID(), now(), 'yes', $this->getMaxPageOrder()];
             $insert_id = Clipbucket_db::getInstance()->insert(tbl($this->page_tbl), $fields, $values);
-            if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '999')) {
+            if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '184')) {
                 foreach ($content as $lang_id => $content_trad) {
                     $this->insertOrUpdatePageTranslation($insert_id, $lang_id, $title[$lang_id], $content_trad);
                 }
@@ -86,7 +86,7 @@ class cbpage
      */
     function get_page($id)
     {
-        if (!Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '999')) {
+        if (!Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '184')) {
             $result = Clipbucket_db::getInstance()->select(tbl($this->page_tbl), '*', ' page_id = ' . (int)$id);
         } else {
             $result = Clipbucket_db::getInstance()->select(
@@ -111,7 +111,7 @@ class cbpage
      */
     function getPageTranslation($id, $lang_id = null, $get_other_language_if_empty = false, $result = 'all'): mixed
     {
-        if (!Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '999')) {
+        if (!Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '184')) {
             return ['page_content' => ' ', 'page_title' => ''];
         }
         if (empty($lang_id)) {
@@ -196,7 +196,7 @@ class cbpage
      */
     function edit_page($param)
     {
-        if (!Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '999')) {
+        if (!Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '184')) {
             return false;
         }
         $id = $param['page_id'];
@@ -386,7 +386,7 @@ class cbpage
         $languages = Language::getInstance()->get_langs(true);
         $first_display = 0;
         foreach ($languages as &$language) {
-            if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '999')) {
+            if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '184')) {
                 $translations = cbpage::getInstance()->getPageTranslation($page['page_id'], $language['language_id']) ?: null;
                 $page['page_contents'][$language['language_id']] = $translations['page_content'] ?? '';
                 $page['page_titles'][$language['language_id']] = $translations['page_title'] ?? '';

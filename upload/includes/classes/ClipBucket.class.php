@@ -764,7 +764,7 @@ class ClipBucket
 
         if ($pages) {
             foreach ($pages as $p) {
-                if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '999')) {
+                if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '184')) {
                     $name = cbpage::getInstance()->getPageTranslation($p['page_id'], get_other_language_if_empty: true)['page_title']?? lang('page_name_' . $p['page_name']);
                 } else {
                     $name = lang('page_name_' . $p['page_name']);
