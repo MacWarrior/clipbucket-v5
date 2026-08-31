@@ -1,6 +1,6 @@
 {
   "version":"5.5.3",
-  "revision":"182",
+  "revision":"183",
   "status":"stable",
   "detail":[
     {
@@ -159,6 +159,7 @@
         ,"Fix possible unauthorized video thumbs overight (Thanks @de3erve-hunter !)"
         ,"Fix nginx vhost rules"
         ,"Fix .htaccess rules"
+        ,"Fix PHP 8.5 compatibility (<i>#905</i>)"
       ]
     },
     {
