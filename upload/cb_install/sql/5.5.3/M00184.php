@@ -67,6 +67,8 @@ class M00184 extends \Migration
         self::query($sql);
         $sql = 'UPDATE `{tbl_prefix}languages` SET `language_flag` = \'es\' WHERE `language_id` = (SELECT language_id FROM `{tbl_prefix}languages` WHERE `language_code` LIKE \'esp\' LIMIT 1) ;';
         self::query($sql);
+        $sql = 'UPDATE `{tbl_prefix}languages` SET `language_flag` = \'fr\' WHERE `language_id` = (SELECT language_id FROM `{tbl_prefix}languages` WHERE `language_code` LIKE \'fr\' LIMIT 1) ;';
+        self::query($sql);
 
         self::generateConfig('display_language_flag', 'no');
         self::generateTranslation('lang_name_empty', [
