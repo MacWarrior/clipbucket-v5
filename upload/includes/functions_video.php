@@ -26,11 +26,12 @@ function video_playable($id): bool
     } else {
         $vdo = $id;
     }
-    $uid = user_id();
+    $uid = User::getInstance()->getCurrentUserID();
     if (!$vdo) {
-        e(lang('class_vdo_del_err'));
+        e(lang('video_not_exist_or_cant_access'));
         return false;
     }
+
     if ($vdo['status'] != 'Successful') {
         if (!User::getInstance()->hasAdminAccess()) {
             return false;
@@ -38,23 +39,22 @@ function video_playable($id): bool
         return true;
     }
     if ($vdo['broadcast'] == 'private'
-        && !userquery::getInstance()->is_confirmed_friend($vdo['userid'], user_id())
+        && !userquery::getInstance()->is_confirmed_friend($vdo['userid'], $uid)
         && !is_video_user($vdo)
         && !User::getInstance()->hasPermission('video_moderation')
         && $vdo['userid'] != $uid) {
-        e(lang('private_video_error'));
+        e(lang('video_not_exist_or_cant_access'));
         return false;
     }
 
     if ($vdo['broadcast'] == 'logged'
-        && !user_id()
+        && !$uid
         && !User::getInstance()->hasPermission('video_moderation')
         && $vdo['userid'] != $uid) {
-        e(lang('not_logged_video_error'));
+        e(lang('video_not_exist_or_cant_access'));
         return false;
     }
-    if ($vdo['active'] == 'no' && $vdo['userid'] != user_id()) {
-        e(lang('vdo_iac_msg'));
+    if ($vdo['active'] == 'no' && $vdo['userid'] != $uid) {
         if (!User::getInstance()->hasAdminAccess()) {
             return false;
         }
@@ -66,11 +66,7 @@ function video_playable($id): bool
         && $vdo['video_password'] != $video_password
         && !User::getInstance()->hasPermission('video_moderation')
         && $vdo['userid'] != $uid) {
-        if (!$video_password) {
-            e(lang("video_pass_protected"));
-        } else {
-            e(lang("invalid_video_password"));
-        }
+        e(lang("video_not_exist_or_cant_access"));
         template_files("blocks/watch_video/video_password.html", false, false);
     } else {
         $funcs = cb_get_functions('watch_video');

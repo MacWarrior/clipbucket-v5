@@ -3712,6 +3712,32 @@ function upload_error($error)
     echo json_encode(['error' => $error]);
 }
 
+/**
+ * @param string $type
+ * @param string $url
+ * @return bool
+ */
+function addErrorHandlerMessagesToSessionMessageHandler(string $type = 'all', string $url = ''): bool
+{
+    $messages = [];
+    if ($type == 'all' || $type == 'e') {
+        foreach (errorhandler::getInstance()->get_error() as $message) {
+            $messages[] = ['type' => 'e', 'message' => $message['secure'] ? display_clean($message['val']) : $message['val']];
+        }
+    }
+    if ($type == 'all' || $type == 'm') {
+        foreach (errorhandler::getInstance()->get_message() as $message) {
+            $messages[] = ['type' => 'm', 'message' => $message['secure'] ? display_clean($message['val']) : $message['val']];
+        }
+    }
+    if ($type == 'all' || $type == 'w') {
+        foreach (errorhandler::getInstance()->get_warning() as $message) {
+            $messages[] = ['type' => 'w', 'message' => $message['secure'] ? display_clean($message['val']) : $message['val']];
+        }
+    }
+    return SessionMessageHandler::add_messages($messages, $url);
+}
+
 include('functions_db.php');
 include('functions_filter.php');
 include('functions_player.php');

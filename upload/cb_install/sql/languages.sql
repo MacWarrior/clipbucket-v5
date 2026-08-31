@@ -1944,4 +1944,5 @@ VALUES ('noted_x'),
        ('user_backgrounds'),
        ('category_thumbs'),
        ('original_video_files'),
-       ('invalid_params');
+       ('invalid_params'),
+       ('video_not_exist_or_cant_access');
