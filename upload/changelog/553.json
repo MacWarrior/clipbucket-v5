@@ -1,6 +1,6 @@
 {
   "version":"5.5.3",
-  "revision":"183",
+  "revision":"185",
   "status":"stable",
   "detail":[
     {
@@ -21,6 +21,8 @@
         ,"Implement template compatibility check"
         ,"Implement movie rate & ratings"
         ,"Implement many action logs"
+        ,"Implement pages translation"
+        ,"Implement languages flags selection"
         ,"Update advanced settings display"
         ,"Update video & photos thumbs regeneration tools"
         ,"Update video allowed extensions display"
