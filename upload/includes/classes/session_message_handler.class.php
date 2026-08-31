@@ -35,7 +35,6 @@ class SessionMessageHandler
      */
     public static function add_messages(array $messages, string $url = ''): bool
     {
-
         if (empty($_SESSION['messages'])) {
             $_SESSION['messages'] = [];
         }
