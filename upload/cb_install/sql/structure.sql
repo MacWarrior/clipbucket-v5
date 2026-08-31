@@ -178,7 +178,8 @@ CREATE TABLE `{tbl_prefix}languages` (
   `language_name` varchar(20) NOT NULL DEFAULT '0',
   `language_code` varchar(5) NOT NULL UNIQUE ,
   `language_active` enum('yes','no') NOT NULL DEFAULT 'yes',
-  `language_default` enum('yes','no') NOT NULL
+  `language_default` enum('yes','no') NOT NULL,
+  `language_flag` VARCHAR(4) NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_520_ci;
 
 CREATE TABLE `{tbl_prefix}mass_emails` (
@@ -216,8 +217,6 @@ CREATE TABLE `{tbl_prefix}pages` (
   `page_order` bigint(100) NOT NULL,
   `display` enum('yes','no') NOT NULL DEFAULT 'yes',
   `page_name` varchar(225) NOT NULL,
-  `page_title` varchar(225) NOT NULL,
-  `page_content` text NOT NULL,
   `userid` int(225) NOT NULL,
   `active` enum('yes','no') NOT NULL,
   `delete_able` enum('yes','no') NOT NULL DEFAULT 'yes',
@@ -1405,3 +1404,16 @@ CREATE TABLE IF NOT EXISTS `{tbl_prefix}video_tmdb` (
 
 ALTER TABLE `{tbl_prefix}video_tmdb`
     ADD CONSTRAINT `tmdb_video_ibfk_1` FOREIGN KEY (`video_id`) REFERENCES `{tbl_prefix}video` (`videoid`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+CREATE TABLE IF NOT EXISTS `{tbl_prefix}pages_translations`
+(
+    `page_id`      INT(11)      NOT NULL,
+    `language_id`  INT(9)       NOT NULL,
+    `page_title`   VARCHAR(225) NOT NULL,
+    `page_content` TEXT         NOT NULL,
+    PRIMARY KEY (`page_id`, `language_id`)
+) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE utf8mb4_unicode_520_ci;
+
+ALTER TABLE `{tbl_prefix}pages_translations`
+    ADD CONSTRAINT `pages_translations_ibfk_1` FOREIGN KEY (`page_id`) REFERENCES `{tbl_prefix}pages` (`page_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+    ADD CONSTRAINT `pages_translations_ibfk_2` FOREIGN KEY (`language_id`) REFERENCES `{tbl_prefix}languages` (`language_id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
