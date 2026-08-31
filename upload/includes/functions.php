@@ -1943,7 +1943,7 @@ function get_country_flag($code){
 
 function get_country_flag_url($code)
 {
-    return DirPath::getUrl('root') . 'images/icons/country/' . strtolower($code) . '.png';
+    return DirPath::getUrl('images') . 'icons/country/' . strtolower($code) . '.webp';
 }
 
 /**
