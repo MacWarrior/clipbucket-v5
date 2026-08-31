@@ -46,7 +46,17 @@ switch ($mode) {
             if (empty($_POST['permission_value'][$id_permission_homepage])) {
                 e(lang('default_homepage_cannot_be_empty'));
             } else {
-                UserLevel::updateUserLevel($user_level_id, $_POST['level_name'], $_POST['permission_value'], $_POST['user_level_is_default']);
+                $can_save = false;
+                foreach (User::getInstance()->getDefaultHomepageList() as $homepage) {
+                    if ($_POST['permission_value'][$id_permission_homepage] == $homepage['title'] && !$homepage['disabled']) {
+                        $can_save = true;
+                    }
+                }
+                if ($can_save) {
+                    UserLevel::updateUserLevel($user_level_id, $_POST['level_name'], $_POST['permission_value'], $_POST['user_level_is_default']);
+                } else {
+                    e(lang('default_homepage_cannot_be_empty'));
+                }
             }
         }
 
