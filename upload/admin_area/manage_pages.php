@@ -127,7 +127,6 @@ if (empty($mode) || $mode == 'view') {
     assign('selected_lang', (int)$_POST['selected_lang']);
 }
 
-
 $min_suffixe = System::isInDev() ? '' : '.min';
 ClipBucket::getInstance()->addAdminJS([
     'summernote/summernote' . $min_suffixe . '.js' => 'libs',
