@@ -56,7 +56,7 @@ $(document).ready(function(){
             link.href = '#tab'+index;
             link.setAttribute('data-toggle', 'tab');
             if(up.files.length < 8){
-                link.innerHTML = '(' + index + ') ' + file.name.substring(0, 10);
+                link.innerHTML = '(' + index + ') ' + encodeHTMLEntities(file.name.substring(0, 10));
             } else {
                 link.innerHTML = '(' + index + ') ';
             }
@@ -244,7 +244,7 @@ $(document).ready(function(){
             var currentTitle = fileNow.name,
                 plFileId = fileNow.data.unique_id;
 
-            let html = '<h5 class="realProgTitle_'+plFileId+'">'+currentTitle+'</h5>' +
+            let html = '<h5 class="realProgTitle_'+plFileId+'">'+encodeHTMLEntities(currentTitle)+'</h5>' +
                 '<button class="clearfix cancel_button btn btn-danger" to_cancel="'+plFileId+'" style="float:right; margin-top: -8px; margin-left:10px;">' +
                     cancel_uploading +
                 '</button>' +
@@ -874,4 +874,23 @@ function listenerUploadThumbs(parent, videoid) {
             }
         )
     });
+}
+
+// Source - https://stackoverflow.com/a/65592593
+// Posted by Harsh Patel, modified by community. See post 'Timeline' for change history
+// Retrieved 2026-08-31, License - CC BY-SA 4.0
+
+function decodeHTMLEntities(text) {
+    var textArea = document.createElement('textarea');
+    textArea.innerHTML = text;
+    return textArea.value;
+}
+// Source - https://stackoverflow.com/a/65592593
+// Posted by Harsh Patel, modified by community. See post 'Timeline' for change history
+// Retrieved 2026-08-31, License - CC BY-SA 4.0
+
+function encodeHTMLEntities(text) {
+    var textArea = document.createElement('textarea');
+    textArea.innerText = text;
+    return textArea.innerHTML;
 }
