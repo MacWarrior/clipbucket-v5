@@ -50,7 +50,7 @@
                             <h1>{if $mode == "edit_collection"}{lang code='update_collection'}{else}{lang code='add_new_collection'}{/if}</h1>
                             <div class="clearfix"></div>
                             {if $c.collection_id}  <div class="pull-left" ><a class="btn btn-primary" href="?mode=manage_items&amp;cid={$c.collection_id}&amp;type={$c.type}"> {lang("manage_items")} </a></div>{/if}
-                            <div class="pull-right" ><a class="btn btn-primary" href="{$baseurl}manage_collections.php">{lang code="back_to_collection"}</a></div>
+                            <div class="pull-right" ><a class="btn btn-primary" href="{$baseurl}{if !empty($back_url)}{$back_url}{else}manage_collections.php{/if}">{lang code="back_to_collection"}</a></div>
                         </div>
                         <div class="clearfix"></div>
                         {if User::getInstance()->hasPermission('allow_create_collection')}
