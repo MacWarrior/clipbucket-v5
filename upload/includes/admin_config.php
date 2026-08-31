@@ -53,10 +53,11 @@ if (!defined('IS_AJAX') && !defined('IS_SSE') && php_sapi_name() != 'cli') {
     if (THIS_PAGE != 'user_levels') {
         $check_homepage = UserLevel::checkUserLevelHomepages();
         if ($check_homepage !== 1 && User::getInstance()->isUserConnected()) {
+            $msg = '<a href="' . DirPath::getUrl('admin_area') . 'user_levels.php">' . lang('here') . '</a>';
             if ($check_homepage === -1) {
-                e(lang('empty_homepage', '<a href="' . DirPath::getUrl('admin_area') . 'user_levels.php">' . lang('here') . '</a>'), 'w', false);
+                e(lang('empty_homepage', $msg), 'w', false);
             } else {
-                e(lang('disabled_homepage', '<a href="' . DirPath::getUrl('admin_area') . 'user_levels.php">' . lang('here') . '</a>'), 'w', false);
+                e(lang('disabled_homepage', $msg), 'w', false);
             }
         }
     }
