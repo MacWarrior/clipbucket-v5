@@ -50,6 +50,7 @@ switch ($mode) {
                 foreach (User::getInstance()->getDefaultHomepageList() as $homepage) {
                     if ($_POST['permission_value'][$id_permission_homepage] == $homepage['title'] && !$homepage['disabled']) {
                         $can_save = true;
+                        break;
                     }
                 }
                 if ($can_save) {
