@@ -442,6 +442,9 @@ class UserLevel
         return 1;
     }
 
+    /**
+     * @throws Exception
+     */
     public static function getHomepagePermissionId()
     {
         return self::getAllPermissions([
