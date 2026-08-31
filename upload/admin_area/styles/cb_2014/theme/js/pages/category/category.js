@@ -116,6 +116,9 @@ function moveCategoryHorizontally(item, left_delta) {
 function initCategoryDragAndDrop() {
     var list = $('#category_flat_list');
 
+    if (categories_length <= 1) {
+        return;
+    }
     if (list.data('ui-sortable')) {
         list.sortable('destroy');
     }

@@ -1,4 +1,4 @@
-<li class="category-item" data-category-id="{$category.category_id}" data-level="{$level}">
+<li class="category-item {if count($categories)<= 1}no_cursor{/if}" data-category-id="{$category.category_id}" data-level="{$level}">
     <div class="category-row" style="--category-level: {$level};">
         <span class="category-name">
             {$category.category_name}
@@ -34,7 +34,9 @@
     <input type="hidden" class="category-parent-input" name="category_parent[{$category.category_id}]" value="{if empty($category.parent_id)}0{else}{$category.parent_id}{/if}"/>
 </li>
 {if config('use_subs')==1 }
-    {assign var=children value=Category::getInstance()->getChildren($category.category_id)}
+    {if !empty($category.category_id)}
+        {assign var=children value=Category::getInstance()->getChildren($category.category_id)}
+    {/if}
     {if !empty($children)}
         {assign var=child_level value=$level+1}
         {foreach from=$children item=child}

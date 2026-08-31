@@ -1402,6 +1402,10 @@ ul.tagit.ui-widget-content {
     padding: 7px 10px;
 }
 
+.no_cursor{
+    cursor: default;
+}
+
 #interfaces_main_menu .main-menu-sort-handle {
     color: #999;
     margin-right: 8px;
