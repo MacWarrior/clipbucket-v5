@@ -1954,4 +1954,9 @@ VALUES ('noted_x'),
        ('update_page'),
        ('edit_page'),
        ('translations'),
-       ('partially_specified');
+       ('partially_specified'),
+       ('empty_homepage'),
+       ('disabled_homepage'),
+       ('here'),
+       ('default_homepage_cannot_be_empty'),
+       ('add_user_level');

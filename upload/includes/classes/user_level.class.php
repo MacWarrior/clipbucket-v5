@@ -114,6 +114,8 @@ class UserLevel
         $param_userid = $params['userid'] ?? false;
         $param_user_level_id = $params['user_level_id'] ?? false;
         $param_no_values = $params['no_values'] ?? false;
+        $param_first_only = $params['first_only'] ?? false;
+        $param_name = $params['name'] ?? false;
 
         $conditions = [];
         $join = [];
@@ -131,6 +133,10 @@ class UserLevel
             $join[] = ' INNER JOIN ' . cb_sql_table(self::$tableNamePermissionValue) . ' ON ' . self::$tableNamePermission . '.id_user_levels_permission = ' . self::$tableNamePermissionValue . '.id_user_levels_permission';
         }
 
+        if ($param_name) {
+            $conditions[] = ' ' . self::$tableNamePermission . '.permission_name LIKE "%' . display_clean($param_name) . '%"';
+        }
+
         $sql = 'SELECT ' . implode(', ', $select) . '
                 FROM ' . cb_sql_table(self::$tableNamePermission)
 
@@ -138,6 +144,9 @@ class UserLevel
             . (empty($conditions) ? '' : ' WHERE ' . implode(' AND ', $conditions));
 
         $result = Clipbucket_db::getInstance()->_select($sql);
+        if ($param_first_only) {
+            return $result[0];
+        }
         return empty($result) ? [] : $result;
     }
 
@@ -207,7 +216,7 @@ class UserLevel
      * @return array|mixed
      * @throws Exception
      */
-    public static function getAll(array $params)
+    public static function getAll(array $params=[])
     {
         $param_user_level_id = $params['user_level_id'] ?? false;
         $param_first_only = $params['first_only'] ?? false;
@@ -401,6 +410,47 @@ class UserLevel
         Clipbucket_db::getInstance()->update(tbl(self::$tableName), ['user_level_is_default'], ['yes'], ' user_level_id =' . (int)$user_level_id);
         Clipbucket_db::getInstance()->update(tbl(self::$tableName), ['user_level_is_default'], ['no'], ' user_level_id !=' . (int)$user_level_id);
         return true;
+    }
+
+    /**
+     * @return int
+     * @throws Exception
+     */
+    public static function checkUserLevelHomepages()
+    {
+        $user_levels = self::getAll();
+        foreach ($user_levels as $user_level) {
+            $homepage_permission = self::getPermission('default_homepage', $user_level['user_level_id']);
+            if (config('videosSection') != 'yes') {
+                if ($homepage_permission == 'homepage') {
+                    return -1;
+                }
+                if ($homepage_permission == 'videos' || $homepage_permission == 'public_videos') {
+                    return 0;
+                }
+            }
+            if (config('photosSection') != 'yes' && $homepage_permission == 'photos') {
+                return 0;
+            }
+            if (config('collectionsSection') != 'yes' && $homepage_permission == 'collections') {
+                return 0;
+            }
+            if (config('channelsSection') != 'yes' && $homepage_permission == 'channels') {
+                return 0;
+            }
+        }
+        return 1;
+    }
+
+    /**
+     * @throws Exception
+     */
+    public static function getHomepagePermissionId()
+    {
+        return self::getAllPermissions([
+            'first_only'=>true,
+            'name' => 'homepage'
+        ])['id_user_levels_permission'] ?? null;
     }
 
 }
