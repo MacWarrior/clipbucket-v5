@@ -23,4 +23,8 @@ $(function () {
         }, 30000);
     }
     init_tags('tags', available_tags, '#list_tags');
+
+    $('.inputs input[type="submit"]').on('click', function () {
+        $('[name="video_manage"]').append('<input type="hidden" name="'+$(this).attr('name')+'" value="'+$(this).val()+'">').submit();
+    });
 });
