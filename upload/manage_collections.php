@@ -80,9 +80,14 @@ switch ($mode) {
         assign('other_fields', $otherFields);
 
         if (!empty($_POST)) {
-            Collections::getInstance()->create_collection($_POST);
+            $new_collection_id = Collections::getInstance()->create_collection($_POST);
             if (!error()) {
-                SessionMessageHandler::add_message(lang('collect_added_msg'), url: DirPath::getUrl('root') . 'manage_collections.php');
+                $url = 'manage_collections.php';
+                if ((!empty($_GET['parent_id']) && is_numeric($_GET['parent_id'])) || $_GET['from'] == 'collections') {
+                    $url = 'view_collection.php?cid=' . (int)$new_collection_id;
+                    redirect_to(DirPath::getUrl('root') . $url);
+                }
+                e(lang('collect_added_msg'), 'm');
             }
         }
         break;
