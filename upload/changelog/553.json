@@ -1,6 +1,6 @@
 {
   "version":"5.5.3",
-  "revision":"186",
+  "revision":"187",
   "status":"stable",
   "detail":[
     {
@@ -30,6 +30,7 @@
         ,"Update manage tags type filter"
         ,"Update interfaces display when medias are disabled"
         ,"Update comments display on reports & stats"
+        ,"Update Manage videos actions display"
         ,"Add links to flagged tags"
         ,"Hide poster & backdrop tabs when empty on video edition page"
         ,"Only show template editor menu while in dev mode"
