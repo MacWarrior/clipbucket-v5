@@ -1,6 +1,6 @@
 {
   "version":"5.5.3",
-  "revision":"182",
+  "revision":"188",
   "status":"stable",
   "detail":[
     {
@@ -21,6 +21,8 @@
         ,"Implement template compatibility check"
         ,"Implement movie rate & ratings"
         ,"Implement many action logs"
+        ,"Implement pages translation"
+        ,"Implement languages flags selection"
         ,"Update advanced settings display"
         ,"Update video & photos thumbs regeneration tools"
         ,"Update video allowed extensions display"
@@ -28,6 +30,7 @@
         ,"Update manage tags type filter"
         ,"Update interfaces display when medias are disabled"
         ,"Update comments display on reports & stats"
+        ,"Update Manage videos actions display"
         ,"Add links to flagged tags"
         ,"Hide poster & backdrop tabs when empty on video edition page"
         ,"Only show template editor menu while in dev mode"
@@ -60,6 +63,7 @@
         ,"Fix possible configuration loss on configuration changes"
         ,"Fix collecton items management"
         ,"Fix possible privilege escalation through user impersonation (Thanks @QwesiRED !)"
+        ,"Fix default homepage check"
       ]
     },
     {
@@ -85,6 +89,7 @@
         ,"Update video upload form"
         ,"Add signup date of birth calendar icon"
         ,"Add video rating display on search results page"
+        ,"Add redirect to new collections after creation"
         ,"Fix possible JS error on register page"
         ,"Fix possible display issues on login & signup pages"
         ,"Fix possible error during photo upload"
@@ -159,6 +164,7 @@
         ,"Fix possible unauthorized video thumbs overight (Thanks @de3erve-hunter !)"
         ,"Fix nginx vhost rules"
         ,"Fix .htaccess rules"
+        ,"Fix PHP 8.5 compatibility (<i>#905</i>)"
       ]
     },
     {

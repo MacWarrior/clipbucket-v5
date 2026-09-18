@@ -297,7 +297,7 @@ if (!empty($mode)) {
             echo json_encode($ajax);
             break;
 
-        case 'add_comment';
+        case 'add_comment':
             //params checked in the function
             $type = $_POST['type'];
             $comment = $_POST['comment'];
@@ -335,7 +335,7 @@ if (!empty($mode)) {
             echo json_encode($ajax);
             break;
 
-        case 'get_comment';
+        case 'get_comment':
             if (empty($_POST['cid']) || empty($_POST['type_id']) ) {
                 e(lang('missing_params'));
                 echo json_encode(['msg'=>getTemplateMsg()]);
@@ -376,7 +376,7 @@ if (!empty($mode)) {
         /**
          * Function used to add item in playlist
          */
-        case 'add_playlist';
+        case 'add_playlist':
             //params checked in the function
             $id = mysql_clean($_POST['id']);
             $pid = mysql_clean($_POST['pid']);
@@ -411,7 +411,7 @@ if (!empty($mode)) {
             }
             break;
 
-        case 'add_new_playlist';
+        case 'add_new_playlist':
             //params checked in the function
             if (post('objtype') == 'video') {
                 $vid = mysql_clean($_POST['id']);

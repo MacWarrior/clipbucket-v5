@@ -1,5 +1,5 @@
-INSERT INTO `{tbl_prefix}languages` (`language_name`, `language_active`, `language_default`, `language_code`)
-VALUES ('Español', 'yes', 'no', 'esp');
+INSERT INTO `{tbl_prefix}languages` (`language_name`, `language_active`, `language_default`, `language_code`, `language_flag`)
+VALUES ('Español', 'yes', 'no', 'esp', 'es');
 
 SET @language_id = (SELECT `language_id` FROM `{tbl_prefix}languages` WHERE language_code = 'esp');
 

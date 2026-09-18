@@ -198,6 +198,7 @@ if (isset($_POST['update'])) {
         , 'enable_external_rate_ratings_on_fo'
         , 'enable_external_rate_from_tmdb'
         , 'enable_external_ratings_from_tmdb'
+        , 'display_language_flag'
         , 'enable_video_categories_as_submenu'
         , 'enable_photo_categories_as_submenu'
         , 'enable_collection_categories_as_submenu'
@@ -496,6 +497,7 @@ if (isset($_POST['update'])) {
         , 'enable_external_rate_ratings_on_fo'
         , 'enable_external_rate_from_tmdb'
         , 'enable_external_ratings_from_tmdb'
+        , 'display_language_flag'
         , 'enable_video_categories_as_submenu'
         , 'enable_photo_categories_as_submenu'
         , 'enable_collection_categories_as_submenu'
@@ -589,7 +591,6 @@ if (isset($_POST['update'])) {
                 $value = '0';
             }
         }
-
 
         if (!isset(myquery::getInstance()->Get_Website_Details()[$field])) {
             if (!$has_missing_config) {
