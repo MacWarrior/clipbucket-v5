@@ -3649,6 +3649,11 @@ function save_subtitle_ajax()
     }
 
     $video = Video::getInstance()->getOne(['videoid' => mysql_clean($_POST['videoid'])]);
+    if ($video['userid'] != User::getInstance()->getCurrentUserID() && !User::getInstance()->hasAdminAccess()) {
+        e(lang('insufficient_privileges'));
+        echo json_encode(['success' => false, 'msg'=>getTemplateMsg()]);
+        die();
+    }
     $subtitle_list = Subtitle::getVideoSubtitles($video);
     foreach ($subtitle_list as $subtitle) {
         if ($subtitle['title'] == $_POST['title']) {
