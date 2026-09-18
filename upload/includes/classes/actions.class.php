@@ -304,15 +304,17 @@ class cbactions
      */
     function add_playlist_item($pid, $id)
     {
+        if (!User::getInstance()->getCurrentUserID()) {
+            e(lang('you_not_logged_in'));
+            return false;
+        }
         if (!empty($pid) && !empty($id)) {
-            $playlist = Playlist::getInstance()->getOne($pid);
+            $playlist = Playlist::getInstance()->getOne(['playlist_id'=>$pid, 'can_edit'=>true]);
         }
         if (!$this->exists($id)) {
             e(lang('obj_not_exists', $this->name));
         } elseif (empty($playlist)) {
             e(lang('playlist_not_exist'));
-        } elseif (!user_id()) {
-            e(lang('you_not_logged_in'));
         } elseif ($this->playlist_item_with_obj($id, $pid)) {
             e(lang('this_already_exist_in_pl', $this->name));
         } else {
@@ -495,14 +497,15 @@ class cbactions
         if (is_null($array)) {
             $array = $_POST;
         }
-
-        $pdetails = Playlist::getInstance()->getOne($array['playlist_id']);
+        if (!User::getInstance()->getCurrentUserID()) {
+            e(lang('you_not_logged_in'));
+            return;
+        }
+        $pdetails = Playlist::getInstance()->getOne(['playlist_id'=>$array['playlist_id'], 'can_edit'=>true]);
 
         if (!$pdetails) {
             e(lang('playlist_not_exist'));
-        } elseif (!user_id()) {
-            e(lang('you_not_logged_in'));
-        } elseif ($this->playlist_exists($array['playlist_name'], user_id(), $this->type, $array['playlist_id'])) {
+        } elseif ($this->playlist_exists($array['playlist_name'], User::getInstance()->getCurrentUserID(), $this->type, $array['playlist_id'])) {
             e(lang('play_list_with_this_name_arlready_exists', display_clean($array['playlist_name'])));
         } else {
             $upload_fields = $this->load_playlist_fields($array);
@@ -568,7 +571,7 @@ class cbactions
      */
     function delete_playlist($id): void
     {
-        $playlist = Playlist::getInstance()->getOne($id);
+        $playlist = Playlist::getInstance()->getOneById($id);
         if (!$playlist) {
             e(lang('playlist_not_exist'));
         } elseif ($playlist['userid'] != user_id() && !User::getInstance()->hasAdminAccess()) {

@@ -387,7 +387,7 @@ if (!empty($mode)) {
                 CBvideo::getInstance()->action->add_playlist_item($pid, $id);
                 updateObjectStats('plist', 'video', $id);
 
-                $playlist = Playlist::getInstance()->getOne($pid);
+                $playlist = Playlist::getInstance()->getOneById($pid);
                 $error = errorhandler::getInstance()->get_error();
                 $warning = errorhandler::getInstance()->get_warning();
                 $message = errorhandler::getInstance()->get_message();
