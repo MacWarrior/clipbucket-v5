@@ -1,0 +1,12 @@
+{foreach $children as $child}
+    <li>
+        <a href="{cblink(['name'=>'category','data'=>$child,'type'=>$type])}">{ucfirst($child.category_name)}</a>
+{*        <a href="{$link}?cat={$child.category_id}">{ucfirst($child.category_name)}</a>*}
+        {if !empty($child.children)}
+            <i class="icon-right-arrow trigger" data-level="{$level}"></i>
+            <ul class="dropdown-menu sub-menu" >
+                {include file="$style_dir/blocks/sub_menu_list.html" children=$child.children link=$link level=$level+1}
+            </ul>
+        {/if}
+    </li>
+{/foreach}
