@@ -1460,8 +1460,11 @@ a:has(img.selected) {
     flex: 0 0 25%;
     min-width: 0;
     overflow-wrap: anywhere;
-    padding-left: calc(var(--category-level, 0) * 35px);
     white-space: normal;
+}
+
+li:has(.category-name){
+    margin-left: calc(var(--category-level, 0) * 35px);
 }
 
 .category-description {

@@ -1,5 +1,5 @@
-<li class="category-item {if count($categories)<= 1}no_cursor{/if}" data-category-id="{$category.category_id}" data-level="{$level}">
-    <div class="category-row" style="--category-level: {$level};">
+<li class="category-item {if count($categories)<= 1}no_cursor{/if}" data-category-id="{$category.category_id}" data-level="{$level}" style="--category-level: {$level};">
+    <div class="category-row" >
         <span class="category-name">
             {$category.category_name}
             <a id="thumbs_{$category.category_id}" class="label label-danger arrowed popoverButton" data-html="true" data-placement="top" data-toggle="popover" data-content="<img src='{CBvideo::getInstance()->get_category_thumb($category, $type)}' height='90' width='90'/>"
