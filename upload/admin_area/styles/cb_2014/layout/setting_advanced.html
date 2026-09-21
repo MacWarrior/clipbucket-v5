@@ -90,7 +90,7 @@
                                 </div>
                                 <div class="col-md-6">
                                     <div class="input-group">
-                                        <input class="form-control" name="max_video_duration" id="max_video_duration" value="{$row.max_video_duration}" size="45"/>
+                                        <input class="form-control" type="number" name="max_video_duration" id="max_video_duration" value="{display_clean($row.max_video_duration)}" size="45"/>
                                         <span class="input-group-addon" title="{lang('in_x',lang('minutes'))}">{lang code='minutes'}</span>
                                     </div>
                                 </div>
@@ -107,7 +107,7 @@
                                 </div>
                                 <div class="col-md-6">
                                     <div class="input-group">
-                                        <input value="{$row.maximum_allowed_subtitle_size}" name="maximum_allowed_subtitle_size" id="maximum_allowed_subtitle_size" class="form-control" size="45"/>
+                                        <input value="{display_clean($row.maximum_allowed_subtitle_size)}" name="maximum_allowed_subtitle_size" id="maximum_allowed_subtitle_size" class="form-control" size="45" type="number"/>
                                         <span class="input-group-addon" title="{lang('in_x',lang('mb'))}">{lang code='mb'}</span>
                                     </div>
                                 </div>
@@ -194,7 +194,7 @@
                                 </div>
                                 <div class="col-md-6">
                                     <div class="input-group">
-                                        <input class="form-control" name="max_photo_size" id="max_photo_size" value="{$row.max_photo_size}" size="45"/>
+                                        <input class="form-control" name="max_photo_size" id="max_photo_size" value="{display_clean($row.max_photo_size)}" size="45" type="number"/>
                                         <span class="input-group-addon" title="{lang('in_x',lang('mb'))}">{lang code='mb'}</span>
                                     </div>
                                 </div>
@@ -270,7 +270,7 @@
                                 </div>
                                 <div class="col-md-6">
                                     <div class="input-group">
-                                        <input class="form-control" name="max_upload_size" id="max_upload_size" required value="{$row.max_upload_size}" size="45"/>
+                                        <input class="form-control" name="max_upload_size" id="max_upload_size" required value="{display_clean($row.max_upload_size)}" size="45" type="number"/>
                                         <span class="input-group-addon" title="{lang('in_x',lang('mb'))}">{lang code='mb'}</span>
                                     </div>
                                 </div>
@@ -294,7 +294,7 @@
                                 </div>
                                 <div class="col-md-3">
                                     <div class="input-group">
-                                        <input class="form-control" name="chunk_upload_size" id="chunk_upload_size" required value="{$row.chunk_upload_size}" size="45"/>
+                                        <input class="form-control" name="chunk_upload_size" id="chunk_upload_size" required value="{display_clean($row.chunk_upload_size)}" size="45" type="number"/>
                                         <span class="input-group-addon" title="{lang('in_x',lang('mb'))}">{lang code='mb'}</span>
                                     </div>
                                 </div>
@@ -312,7 +312,7 @@
                                     <label class="nowrap" for="num_thumbs" title="Number of video thumbs">Number of video thumbs</label>
                                 </div>
                                 <div class="col-md-6">
-                                    <input class="form-control" name="num_thumbs" id="num_thumbs" value="{$row.num_thumbs}"/>
+                                    <input class="form-control" name="num_thumbs" id="num_thumbs" value="{display_clean($row.num_thumbs)}" type="number"/>
                                 </div>
                             </div>
                             <hr/>
@@ -350,7 +350,7 @@
                                 </div>
                                 <div class="col-md-6">
                                     <div class="input-group">
-                                        <input class="form-control" name="srate" id="srate" value="{$row.srate}" size="45"/>
+                                        <input class="form-control" name="srate" id="srate" value="{display_clean($row.srate)}" size="45" type="number"/>
                                         <span class="input-group-addon" title="{lang('in_x',lang('hz'))}">{lang code='hz'}</span>
                                     </div>
                                 </div>
@@ -362,7 +362,7 @@
                                 </div>
                                 <div class="col-md-6">
                                     <div class="input-group">
-                                        <input class="form-control" name="sbrate" id="sbrate" value="{$row.sbrate}" size="45"/>
+                                        <input class="form-control" name="sbrate" id="sbrate" value="{display_clean($row.sbrate)}" size="45" type="number"/>
                                         <span class="input-group-addon" title="{lang('in_x',lang('bps'))}">{lang code='bps'}</span>
                                     </div>
                                 </div>
@@ -374,7 +374,7 @@
                                 </div>
                                 <div class="col-md-6">
                                     <div class="input-group">
-                                        <input class="form-control" name="vrate" id="vrate" value="{$row.vrate}" size="45"/>
+                                        <input class="form-control" name="vrate" id="vrate" value="{display_clean($row.vrate)}" size="45" type="number"/>
                                         <span class="input-group-addon" title="{lang('in_x',lang('fps'))}">{lang code='fps'}</span>
                                     </div>
                                 </div>
@@ -385,13 +385,13 @@
                                     <label class="nowrap" for="video_codec" title="Video Codec">Video Codec</label>
                                 </div>
                                 <div class="col-md-3">
-                                    <input class="form-control" name="video_codec" id="video_codec" value="{$row.video_codec}"/>
+                                    <input class="form-control" name="video_codec" id="video_codec" value="{display_clean($row.video_codec)}"/>
                                 </div>
                                 <div class="col-md-3">
                                     <label class="nowrap" for="audio_codec" title="Audio Codec">Audio Codec</label>
                                 </div>
                                 <div class="col-md-3">
-                                    <input class="form-control" name="audio_codec" id="audio_codec" value="{$row.audio_codec}"/>
+                                    <input class="form-control" name="audio_codec" id="audio_codec" value="{display_clean($row.audio_codec)}"/>
                                 </div>
                             </div>
                             <hr/>
@@ -400,7 +400,7 @@
                                     <label class="nowrap" for="subtitle_format" title="Subtitle Format">Subtitle Format</label>
                                 </div>
                                 <div class="col-md-3">
-                                    <input class="form-control" name="subtitle_format" id="subtitle_format" value="{$row.subtitle_format}"/>
+                                    <input class="form-control" name="subtitle_format" id="subtitle_format" value="{display_clean($row.subtitle_format)}"/>
                                 </div>
                             </div>
                             <hr/>
@@ -594,7 +594,7 @@
                                                 </div>
                                                 <div class="col-md-4">
                                                     <div class="input-group">
-                                                        <input class="form-control" name="vbrate_{$resolution.title}" id="vbrate_{$resolution.title}" value="{$resolution.video_bitrate}" size="45"/>
+                                                        <input class="form-control" name="vbrate_{$resolution.title}" id="vbrate_{$resolution.title}" value="{display_clean($resolution.video_bitrate)}" size="45" type="number"/>
                                                         <span class="input-group-addon" title="{lang('in_x',lang('bps'))}">{lang code='bps'}</span>
                                                     </div>
                                                 </div>
@@ -647,7 +647,7 @@
                                 <label class="nowrap" for="email_sender_address" title="{lang('email_sender_address')}">{lang('email_sender_address')}</label>
                             </div>
                             <div class="col-md-6">
-                                <input class="form-control" name="email_sender_address" id="email_sender_address" value="{$row.email_sender_address}"/>
+                                <input class="form-control" name="email_sender_address" id="email_sender_address" value="{display_clean($row.email_sender_address)}"/>
                             </div>
                         </div>
                         <hr/>
@@ -656,7 +656,7 @@
                                 <label class="nowrap" for="email_sender_name" title="{lang('email_sender_name')}">{lang('email_sender_name')}</label>
                             </div>
                             <div class="col-md-6">
-                                <input class="form-control" name="email_sender_name" id="email_sender_name" value="{$row.email_sender_name}"/>
+                                <input class="form-control" name="email_sender_name" id="email_sender_name" value="{display_clean($row.email_sender_name)}"/>
                             </div>
                         </div>
                         <hr/>
@@ -712,7 +712,7 @@
                                 <label class="nowrap" for="smtp_host" title="SMTP Host">SMTP Host</label>
                             </div>
                             <div class="col-md-6 row-size">
-                                <input class="form-control" name="smtp_host" id="smtp_host" value="{$row.smtp_host}"/>
+                                <input class="form-control" name="smtp_host" id="smtp_host" value="{display_clean($row.smtp_host)}"/>
                             </div>
                         </div>
                         <hr class="config_smtp" {if $row.mail_type=='mail'}style="display:none;"{/if}/>
@@ -721,7 +721,7 @@
                                 <label class="nowrap" for="smtp_port" title="SMTP Port">SMTP Port</label>
                             </div>
                             <div class="col-md-6 row-size">
-                                <input class="form-control" name="smtp_port" id="smtp_port" value="{$row.smtp_port}"/>
+                                <input class="form-control" name="smtp_port" id="smtp_port" value="{display_clean($row.smtp_port)}"/>
                             </div>
                         </div>
                         <hr class="config_smtp" {if $row.mail_type=='mail'}style="display:none;"{/if}/>
@@ -740,7 +740,7 @@
                                 <label class="nowrap" for="smtp_user" title="SMTP Username">SMTP Username</label>
                             </div>
                             <div class="col-md-6 row-size">
-                                <input class="form-control" name="smtp_user" id="smtp_user" value="{$row.smtp_user}"/>
+                                <input class="form-control" name="smtp_user" id="smtp_user" value="{display_clean($row.smtp_user)}"/>
                             </div>
                         </div>
                         <hr class="config_smtp config_smtp_auth" {if $row.mail_type=='mail'||$row.smtp_auth!='yes'}style="display:none;"{/if}/>
@@ -749,7 +749,7 @@
                                 <label class="nowrap" for="smtp_pass" title="SMTP Password">SMTP Password</label>
                             </div>
                             <div class="col-md-6 row-size">
-                                <input class="form-control" name="smtp_pass" id="smtp_pass" value="{$row.smtp_pass}"/>
+                                <input class="form-control" name="smtp_pass" id="smtp_pass" value="{display_clean($row.smtp_pass)}"/>
                             </div>
                         </div>
                         <hr class="config_smtp config_smtp_auth" {if $row.mail_type=='mail'||$row.smtp_auth!='yes'}style="display:none;"{/if}/>
@@ -790,7 +790,7 @@
                                 <label class="nowrap" for="proxy_url" title="URL">URL</label>
                             </div>
                             <div class="col-md-8 row-size">
-                                <input class="form-control" name="proxy_url" id="proxy_url" value="{$row.proxy_url}"/>
+                                <input class="form-control" name="proxy_url" id="proxy_url" value="{display_clean($row.proxy_url)}"/>
                             </div>
                         </div>
                         <hr/>
@@ -799,7 +799,7 @@
                                 <label class="nowrap" for="proxy_username" title="Username">Username</label>
                             </div>
                             <div class="col-md-8 row-size">
-                                <input class="form-control" name="proxy_username" id="proxy_username" value="{$row.proxy_username}"/>
+                                <input class="form-control" name="proxy_username" id="proxy_username" value="{display_clean($row.proxy_username)}"/>
                             </div>
                         </div>
                         <hr/>
@@ -811,7 +811,7 @@
                                 <label class="nowrap" for="proxy_port" title="Port">Port</label>
                             </div>
                             <div class="col-md-8 row-size">
-                                <input class="form-control" name="proxy_port" id="proxy_port" value="{$row.proxy_port}"/>
+                                <input class="form-control" name="proxy_port" id="proxy_port" value="{display_clean($row.proxy_port)}"/>
                             </div>
                         </div>
                         <hr/>
@@ -820,7 +820,7 @@
                                 <label class="nowrap" for="proxy_password" title="Password">Password</label>
                             </div>
                             <div class="col-md-8 row-size">
-                                <input class="form-control" name="proxy_password" id="proxy_password" value="{$row.proxy_password}"/>
+                                <input class="form-control" name="proxy_password" id="proxy_password" value="{display_clean($row.proxy_password)}"/>
                             </div>
                         </div>
                         <hr/>
@@ -863,7 +863,7 @@
                                 <label class="nowrap" for="cache_host" title="{lang code='host'}">{lang code='host'}</label>
                             </div>
                             <div class="col-md-8 row-size">
-                                <input class="form-control" name="cache_host" id="cache_host" value="{$row.cache_host}"/>
+                                <input class="form-control" name="cache_host" id="cache_host" value="{display_clean($row.cache_host)}"/>
                             </div>
                         </div>
                         <hr/>
@@ -874,7 +874,7 @@
                                 <label class="nowrap" for="cache_port" title="{lang code='port'}">{lang code='port'}</label>
                             </div>
                             <div class="col-md-8 row-size">
-                                <input class="form-control" name="cache_port" id="cache_port" value="{$row.cache_port}"/>
+                                <input class="form-control" name="cache_port" id="cache_port" value="{display_clean($row.cache_port)}"/>
                             </div>
                         </div>
                         <hr/>
@@ -883,7 +883,7 @@
                                 <label class="nowrap" for="cache_password" title="{lang code='password'}">{lang code='password'}</label>
                             </div>
                             <div class="col-md-8 row-size">
-                                <input class="form-control" name="cache_password" id="cache_password" value="{$row.cache_password}"/>
+                                <input class="form-control" name="cache_password" id="cache_password" value="{display_clean($row.cache_password)}"/>
                             </div>
                         </div>
                         <hr/>
@@ -920,7 +920,7 @@
                                 <label class="nowrap" for="discord_webhook_url" title="{lang code='discord_webhook_url'}">{lang code='discord_webhook_url'}</label>
                             </div>
                             <div class="col-md-8 row-size">
-                                <input class="form-control" name="discord_webhook_url" id="discord_webhook_url" value="{$discord_webhook_url}" {if !$discord_error_log}disabled="disabled"{/if}/>
+                                <input class="form-control" name="discord_webhook_url" id="discord_webhook_url" value="{display_clean($discord_webhook_url)}" {if !$discord_error_log}disabled="disabled"{/if}/>
                             </div>
                         </div>
                         <hr/>
@@ -999,7 +999,7 @@
                                 <label class="nowrap" for="php_path" title="PHP Path"><span class="fa fa-question-circle tips" title="PHP Binary Path"></span> PHP Path</label>
                             </div>
                             <div class="col-md-6">
-                                <input class="form-control" name="php_path" id="php_path" value="{$row.php_path}"/>
+                                <input class="form-control" name="php_path" id="php_path" value="{display_clean($row.php_path)}"/>
                             </div>
                         </div>
                         <hr/>
@@ -1008,7 +1008,7 @@
                                 <label class="nowrap" for="media_info" title="Mediainfo Path"><span class="fa fa-question-circle tips" title="Mediainfo Binary Path"></span> Mediainfo Path</label>
                             </div>
                             <div class="col-md-6">
-                                <input class="form-control" name="media_info" id="media_info" value="{$row.media_info}"/>
+                                <input class="form-control" name="media_info" id="media_info" value="{display_clean($row.media_info)}"/>
                             </div>
                         </div>
                         <hr/>
@@ -1017,7 +1017,7 @@
                                 <label class="nowrap" for="ffmpegpath" title="FFmpeg Path"><span class="fa fa-question-circle tips" title="FFmpeg Binary Path"></span> FFmpeg Path</label>
                             </div>
                             <div class="col-md-6">
-                                <input class="form-control" name="ffmpegpath" id="ffmpegpath" value="{$row.ffmpegpath}"/>
+                                <input class="form-control" name="ffmpegpath" id="ffmpegpath" value="{display_clean($row.ffmpegpath)}"/>
                             </div>
                         </div>
                         <hr/>
@@ -1026,7 +1026,7 @@
                                 <label class="nowrap" for="ffprobe_path" title="FFprobe Path"><span class="fa fa-question-circle tips" title="FFprobe Binary Path"></span> FFprobe Path</label>
                             </div>
                             <div class="col-md-6">
-                                <input class="form-control" name="ffprobe_path" id="ffprobe_path" value="{$row.ffprobe_path}"/>
+                                <input class="form-control" name="ffprobe_path" id="ffprobe_path" value="{display_clean($row.ffprobe_path)}"/>
                             </div>
                         </div>
                         <hr/>
@@ -1038,7 +1038,7 @@
                                 </label>
                             </div>
                             <div class="col-md-6">
-                                <input class="form-control" name="max_conversion" id="max_conversion" value="{$row.max_conversion}"/>
+                                <input class="form-control" name="max_conversion" id="max_conversion" value="{display_clean($row.max_conversion)}" type="number"/>
                             </div>
                         </div>
                         <hr/>
@@ -1050,7 +1050,7 @@
                                 </label>
                             </div>
                             <div class="col-md-6">
-                                <input class="form-control" name="base_url" id="base_url" required value="{$row.base_url}"/>
+                                <input class="form-control" name="base_url" id="base_url" required value="{display_clean($row.base_url)}"/>
                             </div>
                         </div>
                         <hr/>
@@ -1061,7 +1061,7 @@
                                 <label class="nowrap" for="git_path" title="{lang code='option_git_path'}">{lang code='option_git_path'}</label>
                             </div>
                             <div class="col-md-6">
-                                <input class="form-control" name="git_path" id="git_path" value="{$row.git_path}"/>
+                                <input class="form-control" name="git_path" id="git_path" value="{display_clean($row.git_path)}"/>
                             </div>
                         </div>
                         <hr/>
@@ -1071,7 +1071,7 @@
                                     <label class="nowrap" for="nginx_path" title="{lang code='option_nginx_path'}">{lang code='option_nginx_path'}</label>
                                 </div>
                                 <div class="col-md-6">
-                                    <input class="form-control" name="nginx_path" id="nginx_path" value="{$row.nginx_path}"/>
+                                    <input class="form-control" name="nginx_path" id="nginx_path" value="{display_clean($row.nginx_path)}"/>
                                 </div>
                             </div>
                             <hr/>
@@ -1086,7 +1086,7 @@
                             </div>
                             <div class="col-md-6">
                                 <div class="input-group">
-                                    <input class="form-control" name="cloudflare_upload_limit" id="cloudflare_upload_limit" value="{$row.cloudflare_upload_limit}" size="45"/>
+                                    <input class="form-control" name="cloudflare_upload_limit" id="cloudflare_upload_limit" value="{display_clean($row.cloudflare_upload_limit)}" size="45" type="number"/>
                                     <span class="input-group-addon" title="{lang('in_x',lang('mb'))}">{lang code='mb'}</span>
                                 </div>
                             </div>
@@ -1187,7 +1187,7 @@
                                 <label class="nowrap" for="photo_lar_width" title="{lang('option_large_photo_width')}">{lang('option_large_photo_width')}</label>
                             </div>
                             <div class="col-md-2 row-size">
-                                <input class="form-control" type="text" maxlength="3" name="photo_lar_width" id="photo_lar_width" value="{$row.photo_lar_width}"/>
+                                <input class="form-control" type="number" maxlength="3" name="photo_lar_width" id="photo_lar_width" value="{display_clean($row.photo_lar_width)}" />
                             </div>
                             <div class="col-md-4">
                                 <label class="nowrap" for="photo_crop" title="{lang('option_crop_image')}">{lang('option_crop_image')}</label>
@@ -1209,13 +1209,13 @@
                                 <label class="nowrap" for="photo_thumb_width" title="{lang('width')}">{lang('width')}</label>
                             </div>
                             <div class="col-md-2">
-                                <input class="form-control" name="photo_thumb_width" id="photo_thumb_width" value="{$row.photo_thumb_width}"/>
+                                <input class="form-control" name="photo_thumb_width" id="photo_thumb_width" value="{display_clean($row.photo_thumb_width)}" type="number"/>
                             </div>
                             <div class="col-md-2">
                                 <label class="nowrap" for="photo_thumb_height" title="{lang('height')}">{lang('height')}</label>
                             </div>
                             <div class="col-md-2">
-                                <input class="form-control" name="photo_thumb_height" id="photo_thumb_height" value="{$row.photo_thumb_height}"/>
+                                <input class="form-control" name="photo_thumb_height" id="photo_thumb_height" value="{display_clean($row.photo_thumb_height)}" type="number"/>
                             </div>
                         </div>
                         <hr/>
@@ -1227,13 +1227,13 @@
                                 <label class="nowrap" for="photo_med_width" title="{lang('width')}">{lang('width')}</label>
                             </div>
                             <div class="col-md-2">
-                                <input class="form-control" name="photo_med_width" id="photo_med_width" value="{$row.photo_med_width}"/>
+                                <input class="form-control" name="photo_med_width" id="photo_med_width" value="{display_clean($row.photo_med_width)}" type="number"/>
                             </div>
                             <div class="col-md-2">
                                 <label class="nowrap" for="photo_med_height" title="{lang('height')}">{lang('height')}</label>
                             </div>
                             <div class="col-md-2">
-                                <input class="form-control" name="photo_med_height" id="photo_med_height" value="{$row.photo_med_height}"/>
+                                <input class="form-control" name="photo_med_height" id="photo_med_height" value="{display_clean($row.photo_med_height)}" type="number"/>
                             </div>
                         </div>
                         <hr/>
