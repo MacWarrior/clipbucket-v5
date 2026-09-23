@@ -116,9 +116,9 @@ sort($files);
 Assign('files', $files);
 
 //Getting Data from File
-if (isset($_POST['file'])) {
-    $file = $dir . $_POST['file'];
-    $_file = $_POST['file'];
+if (isset($_REQUEST['file'])) {
+    $file = $dir . $_REQUEST['file'];
+    $_file = $_REQUEST['file'];
 } else {
     $file = $dir . $files[0];
     $_file = $files[0];
