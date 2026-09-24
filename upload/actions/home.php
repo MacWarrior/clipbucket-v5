@@ -19,18 +19,18 @@ if (isset($_POST['load_type'])) {
     }
 
     if (isset($_POST['current_displayed'])) {
-        $start = $_POST['current_displayed'];
+        $start = (int)$_POST['current_displayed'];
     } else {
-        $start = '0';
+        $start = 0;
     }
 
     if (isset($_POST['wanted'])) {
-        $end = $_POST['wanted'];
+        $end = (int)$_POST['wanted'];
     } else {
-        $end = '6';
+        $end = 6;
     }
 
-    $params['limit'] = "$start,$end";
+    $params['limit'] = $start . ', ' . $end;
     $params['get_detail'] = true;
 
     if (isset($_POST['first_launch']) && $_POST['first_launch'] = 'true') {
