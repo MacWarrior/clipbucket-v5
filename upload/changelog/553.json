@@ -1,6 +1,6 @@
 {
   "version":"5.5.3",
-  "revision":"195",
+  "revision":"196",
   "status":"stable",
   "detail":[
     {
@@ -61,6 +61,7 @@
         ,"Fix possible configuration loss on configuration changes"
         ,"Fix collecton items management"
         ,"Fix default homepage check"
+        ,"Fix template edition file selection (Thanks @leediay153 !)"
       ]
     },
     {
