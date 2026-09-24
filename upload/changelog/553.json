@@ -1,6 +1,6 @@
 {
   "version":"5.5.3",
-  "revision":"189",
+  "revision":"190",
   "status":"stable",
   "detail":[
     {
@@ -162,6 +162,7 @@
         ,"Fix TMDB import SQL error"
         ,"Fix video deletion"
         ,"Fix possible unauthorized video thumbs overight (Thanks @de3erve-hunter !)"
+        ,"Fix possible unauthorized video subtitle overight"
         ,"Fix nginx vhost rules"
         ,"Fix .htaccess rules"
         ,"Fix PHP 8.5 compatibility (<i>#905</i>)"
