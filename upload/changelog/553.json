@@ -1,6 +1,6 @@
 {
   "version":"5.5.3",
-  "revision":"188",
+  "revision":"189",
   "status":"stable",
   "detail":[
     {
@@ -149,7 +149,7 @@
         ,"Fix tools error handling"
         ,"Fix possible SQL error on video upload"
         ,"Fix thumbs deletion"
-        ,"Fix possible SQL injection (Thanks @drkim-dev, @FutureBuildingEN, @Bnyt7 & @de3erve-hunter & @QwesiRED !)"
+        ,"Fix possible SQL injection (Thanks @drkim-dev, @FutureBuildingEN, @Bnyt7, @de3erve-hunter, @QwesiRED & @manus-use !)"
         ,"Fix possible duplicate configs"
         ,"Fix SSRF vulnerability (Thanks @Takumi142857 !)"
         ,"Fix Readme"
