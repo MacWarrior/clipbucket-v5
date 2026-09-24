@@ -11,9 +11,9 @@ class errorhandler
         return self::$instance;
     }
 
-    public array $error_list = [];
-    public array $message_list = [];
-    public array $warning_list = [];
+    private array $error_list = [];
+    private array $message_list = [];
+    private array $warning_list = [];
 
     /**
      * @param null $message
