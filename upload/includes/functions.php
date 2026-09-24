@@ -384,6 +384,7 @@ function getCategoryList($params = [])
         case 'videos':
         case 'v':
             $type = 'video';
+            $type_option = 'enable_all_categ_for_video';
             break;
 
         case 'users':
@@ -391,17 +392,23 @@ function getCategoryList($params = [])
         case 'u':
         case 'channels':
             $type = 'user';
+            $type_option = 'enable_all_categ_for_collection';
             break;
         case 'collection':
         case 'collections':
         case 'cl':
             $type = 'collection';
+            $type_option = 'enable_all_categ_for_collection';
             break;
         case 'photo':
             $type = 'photo';
+            $type_option = 'enable_all_categ_for_photo';
             break;
     }
     $cats = [];
+    if (!empty($params['with_all']) && config($type_option) == 'yes') {
+        $cats[] = ['category_id' => 'all', 'category_name' => lang('cat_all')];
+    }
     if( Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.0', '331') ){
         $params['category_type'] = Category::getInstance()->getIdsCategoriesType($type);
         $params['parent_only'] = true;
@@ -409,9 +416,6 @@ function getCategoryList($params = [])
         foreach ($cats as &$cat) {
             $cat['children'] = Category::getInstance()->getChildren($cat['category_id']);
         }
-    }
-    if (!empty($params['with_all'])) {
-        $cats[] = ['category_id' => 'all', 'category_name' => lang('cat_all')];
     }
     if (!empty($params['echo'])) {
         echo CBvideo::getInstance()->displayDropdownCategory($cats, $params);
