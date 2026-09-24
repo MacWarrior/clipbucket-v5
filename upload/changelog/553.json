@@ -1,6 +1,6 @@
 {
   "version":"5.5.3",
-  "revision":"194",
+  "revision":"195",
   "status":"stable",
   "detail":[
     {
@@ -121,6 +121,7 @@
         ,"Fix possible XSS injection"
         ,"Fix missing CSS file"
         ,"Fix password reset form (<i>#895</i>)"
+        ,"Fix error message on unauthorized video access(<i>#904</i>)"
       ]
     },
     {
