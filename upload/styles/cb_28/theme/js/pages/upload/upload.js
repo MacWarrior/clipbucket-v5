@@ -876,18 +876,11 @@ function listenerUploadThumbs(parent, videoid) {
     });
 }
 
-// Source - https://stackoverflow.com/a/65592593
-// Posted by Harsh Patel, modified by community. See post 'Timeline' for change history
-// Retrieved 2026-08-31, License - CC BY-SA 4.0
-
 function decodeHTMLEntities(text) {
     var textArea = document.createElement('textarea');
     textArea.innerHTML = text;
     return textArea.value;
 }
-// Source - https://stackoverflow.com/a/65592593
-// Posted by Harsh Patel, modified by community. See post 'Timeline' for change history
-// Retrieved 2026-08-31, License - CC BY-SA 4.0
 
 function encodeHTMLEntities(text) {
     var textArea = document.createElement('textarea');
