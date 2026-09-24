@@ -66,8 +66,8 @@ function video_playable($id): bool
         && $vdo['video_password'] != $video_password
         && !User::getInstance()->hasPermission('video_moderation')
         && $vdo['userid'] != $uid) {
-        e(lang("video_not_exist_or_cant_access"));
-        template_files("blocks/watch_video/video_password.html", false, false);
+        e(lang('video_not_exist_or_cant_access'));
+        template_files('blocks/watch_video/video_password.html', false, false);
     } else {
         $funcs = cb_get_functions('watch_video');
 
@@ -275,7 +275,7 @@ function videoSmartyLink($params)
  */
 function vkey_exists($key): bool
 {
-    $results = Clipbucket_db::getInstance()->select(tbl('video'), 'videokey', " videokey='$key'");
+    $results = Clipbucket_db::getInstance()->select(tbl('video'), 'videokey', ' videokey = \'' . mysql_clean($key) . '\'');
     if (count($results) > 0) {
         return true;
     }
@@ -293,7 +293,7 @@ function vkey_exists($key): bool
  */
 function file_name_exists($name)
 {
-    $results = Clipbucket_db::getInstance()->select(tbl('video'), 'videoid,file_name', " file_name='$name'");
+    $results = Clipbucket_db::getInstance()->select(tbl('video'), 'videoid,file_name', ' file_name = \'' . mysql_clean($name) . '\'');
 
     if (count($results) > 0) {
         return $results[0]['videoid'];
@@ -315,11 +315,11 @@ function get_video_being_processed($queueName = null)
     if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.2', '148')) {
         $results = Clipbucket_db::getInstance()->_select(
             'SELECT * FROM ' . tbl('video_conversion_queue') .' VCQ INNER JOIN ' . tbl('video') . ' V ON VCQ.videoid = V.videoid
-            WHERE is_completed = FALSE AND file_name = \''.mysql_clean($queueName).'\''
+            WHERE is_completed = FALSE AND file_name = \'' . mysql_clean($queueName) . '\''
         ) ;
     } else {
         $query = 'SELECT * FROM ' . tbl('conversion_queue');
-        $query .= " WHERE cqueue_conversion='p' AND cqueue_name = '" . $queueName . "'";
+        $query .= ' WHERE cqueue_conversion=\'p\' AND cqueue_name = \'' . mysql_clean($queueName) . '\'';
 
         $results = db_select($query);
     }
@@ -476,9 +476,9 @@ function update_processed_video($file_array, string $status = 'Successful')
 {
     $file_name = $file_array['cqueue_name'];
 
-    $result = db_select('SELECT * FROM ' . tbl('video') . " WHERE file_name = '$file_name'");
+    $result = db_select('SELECT * FROM ' . tbl('video') . ' WHERE file_name = \'' . mysql_clean($file_name) . '\'');
     if ($result) {
-        Clipbucket_db::getInstance()->update(tbl('video'), ['status'], [$status], " file_name='" . display_clean($file_name) . "'");
+        Clipbucket_db::getInstance()->update(tbl('video'), ['status'], [$status], ' file_name = \'' . mysql_clean($file_name) . '\'');
     }
 }
 
@@ -495,7 +495,7 @@ function update_video_status($file_name, $status = 'Successful')
  */
 function update_video_by_filename($file_name, $fields, $values)
 {
-    Clipbucket_db::getInstance()->update(tbl('video'), $fields, $values, " file_name='" . display_clean($file_name) . "'");
+    Clipbucket_db::getInstance()->update(tbl('video'), $fields, $values, ' file_name = \'' . mysql_clean($file_name) . '\'');
 }
 
 /**
@@ -511,7 +511,7 @@ function get_file_details($file_name, $get_jsoned = false)
 {
     $file_name = mysql_clean($file_name);
     //Reading Log File
-    $result = db_select('SELECT * FROM ' . tbl('video') . " WHERE file_name = '" . display_clean($file_name) . "'");
+    $result = db_select('SELECT * FROM ' . tbl('video') . ' WHERE file_name = \'' . mysql_clean($file_name) . '\'');
 
     if ($result) {
         $video = $result[0];
@@ -725,10 +725,10 @@ function call_download_video_function($vdo)
     }
 
     //Updating Video Downloads
-    Clipbucket_db::getInstance()->update(tbl('video'), ['downloads'], ['|f|downloads+1'], "videoid = '" . $vdo['videoid'] . "'");
+    Clipbucket_db::getInstance()->update(tbl('video'), ['downloads'], ['|f|downloads+1'], 'videoid = ' . (int)$vdo['videoid']);
     //Updating User Download
-    if (user_id()) {
-        Clipbucket_db::getInstance()->update(tbl('users'), ['total_downloads'], ['|f|total_downloads+1'], "userid = '" . user_id() . "'");
+    if (User::getInstance()->getCurrentUserID()) {
+        Clipbucket_db::getInstance()->update(tbl('users'), ['total_downloads'], ['|f|total_downloads+1'], 'userid = ' . (int)User::getInstance()->getCurrentUserID());
     }
 }
 
