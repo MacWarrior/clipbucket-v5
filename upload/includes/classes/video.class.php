@@ -1869,7 +1869,7 @@ class CBvideo extends CBCategory
             }
 
             if (isset($array['videoid'])) {
-                $vid = $array['videoid'];
+                $vid = (int)$array['videoid'];
             } else {
                 if (isset($array['file_name'])) {
                     $params = [
@@ -1969,7 +1969,7 @@ class CBvideo extends CBCategory
                 $query_val[] = now();
             }
 
-            Clipbucket_db::getInstance()->update(tbl('video'), $query_field, $query_val, ' videoid=\'' . $vid . '\'');
+            Clipbucket_db::getInstance()->update(tbl('video'), $query_field, $query_val, ' videoid=\'' . (int)$vid . '\'');
 
             foreach ($array as $key => $item) {
                 $matches = [];
