@@ -362,7 +362,7 @@ class Language
         } elseif (empty($array['flag'])) {
             e(lang('lang_flag_empty'));
         } else {
-            Clipbucket_db::getInstance()->update(tbl('languages'), ['language_name', 'language_code', 'language_flag'], [$array['name'], $array['code'], $array['flag']], ' language_id=\'' . $array['language_id'] . '\'');
+            Clipbucket_db::getInstance()->update(tbl('languages'), ['language_name', 'language_code', 'language_flag'], [$array['name'], $array['code'], $array['flag']], ' language_id=\'' . $lang['language_id'] . '\'');
             e(lang('lang_updated'), 'm');
             CacheRedis::flushAll();
         }
