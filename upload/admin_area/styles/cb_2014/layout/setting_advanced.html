@@ -90,7 +90,7 @@
                                 </div>
                                 <div class="col-md-6">
                                     <div class="input-group">
-                                        <input class="form-control" type="number" name="max_video_duration" id="max_video_duration" value="{display_clean($row.max_video_duration)}" size="45"/>
+                                        <input class="form-control" type="number" name="max_video_duration" id="max_video_duration" value="{(int)$row.max_video_duration}" size="45"/>
                                         <span class="input-group-addon" title="{lang('in_x',lang('minutes'))}">{lang code='minutes'}</span>
                                     </div>
                                 </div>
@@ -107,7 +107,7 @@
                                 </div>
                                 <div class="col-md-6">
                                     <div class="input-group">
-                                        <input value="{display_clean($row.maximum_allowed_subtitle_size)}" name="maximum_allowed_subtitle_size" id="maximum_allowed_subtitle_size" class="form-control" size="45" type="number"/>
+                                        <input value="{(int)$row.maximum_allowed_subtitle_size}" name="maximum_allowed_subtitle_size" id="maximum_allowed_subtitle_size" class="form-control" size="45" type="number"/>
                                         <span class="input-group-addon" title="{lang('in_x',lang('mb'))}">{lang code='mb'}</span>
                                     </div>
                                 </div>
@@ -194,7 +194,7 @@
                                 </div>
                                 <div class="col-md-6">
                                     <div class="input-group">
-                                        <input class="form-control" name="max_photo_size" id="max_photo_size" value="{display_clean($row.max_photo_size)}" size="45" type="number"/>
+                                        <input class="form-control" name="max_photo_size" id="max_photo_size" value="{(int)$row.max_photo_size}" size="45" type="number"/>
                                         <span class="input-group-addon" title="{lang('in_x',lang('mb'))}">{lang code='mb'}</span>
                                     </div>
                                 </div>
@@ -270,7 +270,7 @@
                                 </div>
                                 <div class="col-md-6">
                                     <div class="input-group">
-                                        <input class="form-control" name="max_upload_size" id="max_upload_size" required value="{display_clean($row.max_upload_size)}" size="45" type="number"/>
+                                        <input class="form-control" name="max_upload_size" id="max_upload_size" required value="{(int)$row.max_upload_size}" size="45" type="number"/>
                                         <span class="input-group-addon" title="{lang('in_x',lang('mb'))}">{lang code='mb'}</span>
                                     </div>
                                 </div>
@@ -294,7 +294,7 @@
                                 </div>
                                 <div class="col-md-3">
                                     <div class="input-group">
-                                        <input class="form-control" name="chunk_upload_size" id="chunk_upload_size" required value="{display_clean($row.chunk_upload_size)}" size="45" type="number"/>
+                                        <input class="form-control" name="chunk_upload_size" id="chunk_upload_size" required value="{(int)$row.chunk_upload_size}" size="45" type="number"/>
                                         <span class="input-group-addon" title="{lang('in_x',lang('mb'))}">{lang code='mb'}</span>
                                     </div>
                                 </div>
@@ -312,7 +312,7 @@
                                     <label class="nowrap" for="num_thumbs" title="Number of video thumbs">Number of video thumbs</label>
                                 </div>
                                 <div class="col-md-6">
-                                    <input class="form-control" name="num_thumbs" id="num_thumbs" value="{display_clean($row.num_thumbs)}" type="number"/>
+                                    <input class="form-control" name="num_thumbs" id="num_thumbs" value="{(int)$row.num_thumbs}" type="number"/>
                                 </div>
                             </div>
                             <hr/>
@@ -350,7 +350,7 @@
                                 </div>
                                 <div class="col-md-6">
                                     <div class="input-group">
-                                        <input class="form-control" name="srate" id="srate" value="{display_clean($row.srate)}" size="45" type="number"/>
+                                        <input class="form-control" name="srate" id="srate" value="{(int)$row.srate}" size="45" type="number"/>
                                         <span class="input-group-addon" title="{lang('in_x',lang('hz'))}">{lang code='hz'}</span>
                                     </div>
                                 </div>
@@ -362,7 +362,7 @@
                                 </div>
                                 <div class="col-md-6">
                                     <div class="input-group">
-                                        <input class="form-control" name="sbrate" id="sbrate" value="{display_clean($row.sbrate)}" size="45" type="number"/>
+                                        <input class="form-control" name="sbrate" id="sbrate" value="{(int)$row.sbrate}" size="45" type="number"/>
                                         <span class="input-group-addon" title="{lang('in_x',lang('bps'))}">{lang code='bps'}</span>
                                     </div>
                                 </div>
@@ -374,7 +374,7 @@
                                 </div>
                                 <div class="col-md-6">
                                     <div class="input-group">
-                                        <input class="form-control" name="vrate" id="vrate" value="{display_clean($row.vrate)}" size="45" type="number"/>
+                                        <input class="form-control" name="vrate" id="vrate" value="{(int)$row.vrate}" size="45" type="number"/>
                                         <span class="input-group-addon" title="{lang('in_x',lang('fps'))}">{lang code='fps'}</span>
                                     </div>
                                 </div>
@@ -594,7 +594,7 @@
                                                 </div>
                                                 <div class="col-md-4">
                                                     <div class="input-group">
-                                                        <input class="form-control" name="vbrate_{$resolution.title}" id="vbrate_{$resolution.title}" value="{display_clean($resolution.video_bitrate)}" size="45" type="number"/>
+                                                        <input class="form-control" name="vbrate_{$resolution.title}" id="vbrate_{$resolution.title}" value="{(int)$resolution.video_bitrate}" size="45" type="number"/>
                                                         <span class="input-group-addon" title="{lang('in_x',lang('bps'))}">{lang code='bps'}</span>
                                                     </div>
                                                 </div>
@@ -1038,7 +1038,7 @@
                                 </label>
                             </div>
                             <div class="col-md-6">
-                                <input class="form-control" name="max_conversion" id="max_conversion" value="{display_clean($row.max_conversion)}" type="number"/>
+                                <input class="form-control" name="max_conversion" id="max_conversion" value="{(int)$row.max_conversion}" type="number"/>
                             </div>
                         </div>
                         <hr/>
@@ -1086,7 +1086,7 @@
                             </div>
                             <div class="col-md-6">
                                 <div class="input-group">
-                                    <input class="form-control" name="cloudflare_upload_limit" id="cloudflare_upload_limit" value="{display_clean($row.cloudflare_upload_limit)}" size="45" type="number"/>
+                                    <input class="form-control" name="cloudflare_upload_limit" id="cloudflare_upload_limit" value="{(int)$row.cloudflare_upload_limit}" size="45" type="number"/>
                                     <span class="input-group-addon" title="{lang('in_x',lang('mb'))}">{lang code='mb'}</span>
                                 </div>
                             </div>
@@ -1187,7 +1187,7 @@
                                 <label class="nowrap" for="photo_lar_width" title="{lang('option_large_photo_width')}">{lang('option_large_photo_width')}</label>
                             </div>
                             <div class="col-md-2 row-size">
-                                <input class="form-control" type="number" maxlength="3" name="photo_lar_width" id="photo_lar_width" value="{display_clean($row.photo_lar_width)}" />
+                                <input class="form-control" type="number" maxlength="3" name="photo_lar_width" id="photo_lar_width" value="{(int)$row.photo_lar_width}" />
                             </div>
                             <div class="col-md-4">
                                 <label class="nowrap" for="photo_crop" title="{lang('option_crop_image')}">{lang('option_crop_image')}</label>
@@ -1209,13 +1209,13 @@
                                 <label class="nowrap" for="photo_thumb_width" title="{lang('width')}">{lang('width')}</label>
                             </div>
                             <div class="col-md-2">
-                                <input class="form-control" name="photo_thumb_width" id="photo_thumb_width" value="{display_clean($row.photo_thumb_width)}" type="number"/>
+                                <input class="form-control" name="photo_thumb_width" id="photo_thumb_width" value="{(int)$row.photo_thumb_width}" type="number"/>
                             </div>
                             <div class="col-md-2">
                                 <label class="nowrap" for="photo_thumb_height" title="{lang('height')}">{lang('height')}</label>
                             </div>
                             <div class="col-md-2">
-                                <input class="form-control" name="photo_thumb_height" id="photo_thumb_height" value="{display_clean($row.photo_thumb_height)}" type="number"/>
+                                <input class="form-control" name="photo_thumb_height" id="photo_thumb_height" value="{(int)$row.photo_thumb_height}" type="number"/>
                             </div>
                         </div>
                         <hr/>
@@ -1227,13 +1227,13 @@
                                 <label class="nowrap" for="photo_med_width" title="{lang('width')}">{lang('width')}</label>
                             </div>
                             <div class="col-md-2">
-                                <input class="form-control" name="photo_med_width" id="photo_med_width" value="{display_clean($row.photo_med_width)}" type="number"/>
+                                <input class="form-control" name="photo_med_width" id="photo_med_width" value="{(int)$row.photo_med_width}" type="number"/>
                             </div>
                             <div class="col-md-2">
                                 <label class="nowrap" for="photo_med_height" title="{lang('height')}">{lang('height')}</label>
                             </div>
                             <div class="col-md-2">
-                                <input class="form-control" name="photo_med_height" id="photo_med_height" value="{display_clean($row.photo_med_height)}" type="number"/>
+                                <input class="form-control" name="photo_med_height" id="photo_med_height" value="{(int)$row.photo_med_height}" type="number"/>
                             </div>
                         </div>
                         <hr/>
