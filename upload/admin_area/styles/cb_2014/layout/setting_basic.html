@@ -1052,8 +1052,8 @@
                                                 <input type="hidden" name="main_menu_order" value="{$row.main_menu_order}" class="main-menu-order"/>
                                                 <ul class="list-unstyled main-menus-sortable">
                                                     {foreach from=$sections item=$menu}
-                                                        <li class="main-menu-sortable " data-section-id="{$menu}" {if config($menu|cat:'sSection') != 'yes'} style="display: none;"{/if}>
-                                                            <span class="glyphicon glyphicon-move main-menu-sort-handle"></span>
+                                                        <li class="main-menu-sortable main-menu-sort-handle" data-section-id="{$menu}" {if config($menu|cat:'sSection') != 'yes'} style="display: none;"{/if}>
+                                                            <span class="glyphicon glyphicon-move "></span>
                                                             {ucfirst(lang($menu|cat:'s'))}
                                                         </li>
                                                     {/foreach}

@@ -52,9 +52,12 @@ class MWIP extends \Migration
             'fr'=>'Activer les catégories comme sous-menu pour :',
             'en' => 'Enable categories as submenus for :'
         ]);
+        self::generateTranslation('cat_all', [
+            'fr'=>'Toutes'
+        ]);
         self::generateTranslation('enable_all_categ_for', [
-            'fr'=>'Activer toutes les catégories pour :',
-            'en' => 'Enable all categories for :'
+            'fr'=>'Activer "Toutes" les catégories pour :',
+            'en' => 'Enable "All" categories for :'
         ]);
     }
 }

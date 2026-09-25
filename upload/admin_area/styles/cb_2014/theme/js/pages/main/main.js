@@ -301,7 +301,6 @@ $(document).ready(function () {
     updateMainMenuOrder();
 
     $('#interfaces_main_menu .main-menus-sortable').sortable({
-        handle: '.main-menu-sort-handle',
         items: '.main-menu-sortable',
         update: function () {
             updateMainMenuOrder();

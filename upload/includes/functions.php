@@ -412,10 +412,11 @@ function getCategoryList($params = [])
     if( Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.0', '331') ){
         $params['category_type'] = Category::getInstance()->getIdsCategoriesType($type);
         $params['parent_only'] = true;
-        $cats = Category::getInstance()->getAll($params);
-        foreach ($cats as &$cat) {
+        $cats_type = Category::getInstance()->getAll($params);
+        foreach ($cats_type as &$cat) {
             $cat['children'] = Category::getInstance()->getChildren($cat['category_id']);
         }
+        $cats = array_merge($cats, $cats_type);
     }
     if (!empty($params['echo'])) {
         echo CBvideo::getInstance()->displayDropdownCategory($cats, $params);

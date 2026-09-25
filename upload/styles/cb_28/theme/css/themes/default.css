@@ -241,13 +241,21 @@ a:hover{
     background-color: var(--color-main-01);
     color: var(--color-main-02);
 }
-#header .main-links>ul>li>a:focus,
-#header .main-links>ul>li>a:hover {
+#header .main-links > ul > li > a:focus,
+#header .main-links > ul > li > a:hover,
+#header .main-links > ul > li:hover > a,
+#header .main-links > ul > li:has(:focus) > a {
     color: var(--color-main-01);
 }
-#header .main-links>ul>li>a:hover:after,
-#header .main-links>ul>li>a:focus:after,
-#header .main-links>ul>li.active>a:after{
+
+#header .main-links > ul > li.active > a::after {
+    color: var(--color-main-01);
+}
+#header .main-links > ul > li > a:hover::after,
+#header .main-links > ul > li > a:focus::after,
+#header .main-links > ul > li:hover > a::after,
+#header .main-links > ul > li:focus-within > a::after,
+#header .main-links > ul > li.active > a::after {
     background-color: var(--color-main-01);
     color: var(--color-main-02);
 }
