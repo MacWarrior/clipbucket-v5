@@ -11,9 +11,14 @@ class MWIP extends \Migration
      */
     public function start()
     {
-       self::generateTranslation('add_user', [
-           'fr'=>'Ajouter un utilisateur',
-           'en'=>'Add user'
-       ]);
+        self::deleteTranslation('add_member');
+        self::generateTranslation('add_user', [
+            'fr'=>'Ajouter un utilisateur',
+            'en'=>'Add user'
+        ]);
+        self::generateTranslation('add_new_user', [
+            'fr'=>'Ajouter un nouvel utilisateur',
+            'en'=>'Add a new user'
+        ]);
     }
 }
