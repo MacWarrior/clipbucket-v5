@@ -43,7 +43,7 @@ if (!CBTemplate::getInstance()->is_template($sel_dir)) {
 
     //Reading File
     if (!empty($_GET['file'])) {
-        preg_match('/.*\.(.*)$/', $_GET['file'], $preg_matches);
+        preg_match('/.*\.(html|css)$/', $_GET['file'], $preg_matches);
         if (empty($preg_matches)) {
             e(lang('remote_play_invalid_extension'));
         } else {
@@ -61,7 +61,13 @@ if (!CBTemplate::getInstance()->is_template($sel_dir)) {
                 $folder .= DIRECTORY_SEPARATOR . $_GET['folder'];
             }
             $file = DirPath::get('styles') . $sel_dir . DIRECTORY_SEPARATOR . $folder . DIRECTORY_SEPARATOR . $_GET['file'];
-            if (realpath($file) && str_starts_with(realpath($file), realpath(DirPath::get('styles') . $sel_dir . DIRECTORY_SEPARATOR))) {
+            if ((realpath($file) && str_starts_with(realpath($file), realpath(DirPath::get('styles') . $sel_dir . DIRECTORY_SEPARATOR)) )
+                && (
+                    in_array($_GET['file'], $files)
+                    || ($_GET['folder'] == 'blocks' && in_array($_GET['file'], $files['blocks']))
+                    || (in_array($_GET['file'], $css_files))
+                )
+            ) {
                 if (isset($_POST['update_file'])) {
                     if (is_writable($file)) {
                         $data = $_POST['thecontent'];
@@ -110,9 +116,9 @@ sort($files);
 Assign('files', $files);
 
 //Getting Data from File
-if (isset($_POST['file'])) {
-    $file = $dir . $_POST['file'];
-    $_file = $_POST['file'];
+if (isset($_REQUEST['file'])) {
+    $file = $dir . $_REQUEST['file'];
+    $_file = $_REQUEST['file'];
 } else {
     $file = $dir . $files[0];
     $_file = $files[0];
