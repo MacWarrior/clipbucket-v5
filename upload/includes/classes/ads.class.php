@@ -96,7 +96,7 @@ class AdsManager
 
     /**
      * Function used to delete advertisements
-     * @param integer Id
+     * @param int $id
      * @throws Exception
      */
     function DeleteAd($id)
@@ -104,7 +104,7 @@ class AdsManager
         if (!$this->ad_exists($id)) {
             e(lang('ad_exists_error1'));
         } else {
-            Clipbucket_db::getInstance()->execute('DELETE FROM ' . tbl('ads_data') . ' WHERE ad_id=\'' . $id . '\'');
+            Clipbucket_db::getInstance()->execute('DELETE FROM ' . tbl('ads_data') . ' WHERE ad_id=\'' . (int)$id . '\'');
             $msg = e(lang('ad_del_msg'), 'm');
         }
     }
@@ -273,7 +273,7 @@ class AdsManager
      */
     function get_ad_details($id)
     {
-        $result = Clipbucket_db::getInstance()->select(tbl("ads_data"), "*", " 	ad_placement='$id' OR ad_id='$id'");
+        $result = Clipbucket_db::getInstance()->select(tbl("ads_data"), "*", ' 	ad_placement=' . mysql_clean($id) . ' OR ad_id=\'' . (int)$id . '\'');
         if (count($result) > 0) {
             $result = $result[0];
             $result['ad_code'] = stripslashes($result['ad_code']);
@@ -292,7 +292,7 @@ class AdsManager
      */
     function ad_exists($id): bool
     {
-        $count = Clipbucket_db::getInstance()->count(tbl("ads_data"), "ad_id", " ad_id='$id' ");
+        $count = Clipbucket_db::getInstance()->count(tbl("ads_data"), "ad_id", ' ad_id='.(int)$id.' ');
         if ($count > 0) {
             return true;
         }
