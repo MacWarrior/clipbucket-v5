@@ -1,6 +1,6 @@
 {
   "version":"5.5.3",
-  "revision":"197",
+  "revision":"200",
   "status":"stable",
   "detail":[
     {
@@ -81,6 +81,7 @@
         ,"Implement backdrop as default thumb"
         ,"Implement random photo order"
         ,"Implement video rating display"
+        ,"Implement categories as submenus"
         ,"Update media rating"
         ,"Update collection management"
         ,"Update TMDB search interface"
@@ -232,7 +233,7 @@
       "title": "Security",
       "description": [
         "Fix possible RCE (Thanks @Takumi142857, @drkim-dev, @QwesiRED, @m0x41nos & @Bnyt7 !)"
-        ,"Fix possible SQL injection (Thanks @drkim-dev, @FutureBuildingEN, @Bnyt7, @de3erve-hunter, @QwesiRED & @manus-use !)"
+        ,"Fix possible SQL injection (Thanks @drkim-dev, @FutureBuildingEN, @Bnyt7, @de3erve-hunter, @QwesiRED, @manus-use & @leediay153 !)"
         ,"Fix possible XSS injection (Thanks @sy460129 !)"
         ,"Fix possible SSRF (Thanks @Takumi142857 !)"
         ,"Fix possible IDOR (Thanks @iys8, @de3erve-hunter, @Bnyt7, @Mr-In4inci3le, @sy460129 & @QwesiRED !)"
