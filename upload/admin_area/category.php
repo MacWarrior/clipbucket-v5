@@ -108,19 +108,22 @@ if( !Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.0', '323') ){
     //Updating Category Order
     if (isset($_POST['update_order'])) {
         foreach ($_POST['category_order'] as $key => $item) {
+            $parent_id = $_POST['category_parent'][$key] ?? 0;
             Category::getInstance()->update([
-                'category_id' => $key,
-                'category_order' => $item
+                'category_id'     => $key,
+                'parent_id'       => $parent_id,
+                'category_order'  => $item
             ]);
         }
     }
 
     $cats = Category::getInstance()->getAll([
-        'category_type' => Category::getInstance()->getIdsCategoriesType($type)
+        'category_type' => Category::getInstance()->getIdsCategoriesType($type),
+        'parent_only'=>true
     ]);
 
     //Assign Category Values
-    assign('category', $cats);
+    assign('categories', $cats);
     assign('total', Category::getInstance()->getAll([
         'category_type' => Category::getInstance()->getIdsCategoriesType($type),
         'count'
