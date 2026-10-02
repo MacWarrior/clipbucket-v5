@@ -159,11 +159,20 @@ if (isset($_POST['update'])) {
 
     //Numeric Array
     $num_array = [
+        'max_video_duration',
         'max_upload_size',
         'max_photo_size',
         'chunk_upload_size',
         'cloudflare_upload_limit',
-        'option_maximum_allowed_subtitle_size'
+        'maximum_allowed_subtitle_size',
+        'num_thumbs',
+        'srate',
+        'sbrate',
+        'vrate',
+        'max_conversion',
+        'photo_lar_width',
+        'photo_thumb_width',
+        'photo_thumb_height',
     ];
 
     $has_missing_config = false;
