@@ -141,7 +141,7 @@ class cb_pm
         }
 
         //Sending Email
-        //$this->send_pm_email($array);
+        $this->send_pm_email($array);
         e(lang('pm_sent_success'), 'm');
         return true;
     }
@@ -508,8 +508,8 @@ class cb_pm
     function send_pm_email($array): void
     {
         $sender = userquery::getInstance()->get_user_field_only($array['from'], 'username');
-        $content = mysql_clean($array['content']);
-        $subject = mysql_clean($array['subj']);
+        $content = $array['content'];
+        $subject = $array['subj'];
         $msgid = $array['msg_id'];
         //Get To(Emails)
         $emails = $this->get_users_emails($array['to']);
