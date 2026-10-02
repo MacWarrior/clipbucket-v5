@@ -198,6 +198,7 @@ if (isset($_POST['update'])) {
         , 'enable_external_rate_ratings_on_fo'
         , 'enable_external_rate_from_tmdb'
         , 'enable_external_ratings_from_tmdb'
+        , 'display_language_flag'
     ];
 
     $config_booleans_to_refactor = [
@@ -488,6 +489,7 @@ if (isset($_POST['update'])) {
         , 'enable_external_rate_ratings_on_fo'
         , 'enable_external_rate_from_tmdb'
         , 'enable_external_ratings_from_tmdb'
+        , 'display_language_flag'
     ];
 
     //Numeric Array

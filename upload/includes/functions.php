@@ -1931,10 +1931,19 @@ function get_country($code)
     $result = Clipbucket_db::getInstance()->select(tbl('countries'), 'name_en,iso2', " iso2='$code' OR iso3='$code'");
     if (count($result) > 0) {
         $result = $result[0];
-        $flag = '<img src="' . DirPath::getUrl('root') . 'images/icons/country/' . strtolower($result['iso2']) . '.png" alt="" border="0">&nbsp;';
+        $flag = get_country_flag($result['iso2']);
         return $flag . $result['name_en'];
     }
     return false;
+}
+
+function get_country_flag($code){
+    return '<img src="' . get_country_flag_url($code) .'" alt="" border="0">&nbsp;';
+}
+
+function get_country_flag_url($code)
+{
+    return DirPath::getUrl('images') . 'icons/country/' . strtolower($code) . '.webp';
 }
 
 /**
@@ -3640,6 +3649,11 @@ function save_subtitle_ajax()
     }
 
     $video = Video::getInstance()->getOne(['videoid' => mysql_clean($_POST['videoid'])]);
+    if ($video['userid'] != User::getInstance()->getCurrentUserID() && !User::getInstance()->hasAdminAccess()) {
+        e(lang('insufficient_privileges'));
+        echo json_encode(['success' => false, 'msg'=>getTemplateMsg()]);
+        die();
+    }
     $subtitle_list = Subtitle::getVideoSubtitles($video);
     foreach ($subtitle_list as $subtitle) {
         if ($subtitle['title'] == $_POST['title']) {
@@ -3710,6 +3724,32 @@ function getSQLRequestsFromFile($file)
 function upload_error($error)
 {
     echo json_encode(['error' => $error]);
+}
+
+/**
+ * @param string $type
+ * @param string $url
+ * @return bool
+ */
+function addErrorHandlerMessagesToSessionMessageHandler(string $type = 'all', string $url = ''): bool
+{
+    $messages = [];
+    if ($type == 'all' || $type == 'e') {
+        foreach (errorhandler::getInstance()->get_error() as $message) {
+            $messages[] = ['type' => 'e', 'message' => $message['secure'] ? display_clean($message['val']) : $message['val']];
+        }
+    }
+    if ($type == 'all' || $type == 'm') {
+        foreach (errorhandler::getInstance()->get_message() as $message) {
+            $messages[] = ['type' => 'm', 'message' => $message['secure'] ? display_clean($message['val']) : $message['val']];
+        }
+    }
+    if ($type == 'all' || $type == 'w') {
+        foreach (errorhandler::getInstance()->get_warning() as $message) {
+            $messages[] = ['type' => 'w', 'message' => $message['secure'] ? display_clean($message['val']) : $message['val']];
+        }
+    }
+    return SessionMessageHandler::add_messages($messages, $url);
 }
 
 include('functions_db.php');
