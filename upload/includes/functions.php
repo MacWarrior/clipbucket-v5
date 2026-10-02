@@ -384,6 +384,7 @@ function getCategoryList($params = [])
         case 'videos':
         case 'v':
             $type = 'video';
+            $type_option = 'enable_all_categ_for_video';
             break;
 
         case 'users':
@@ -391,27 +392,31 @@ function getCategoryList($params = [])
         case 'u':
         case 'channels':
             $type = 'user';
+            $type_option = 'enable_all_categ_for_collection';
             break;
         case 'collection':
         case 'collections':
         case 'cl':
             $type = 'collection';
+            $type_option = 'enable_all_categ_for_collection';
             break;
         case 'photo':
             $type = 'photo';
+            $type_option = 'enable_all_categ_for_photo';
             break;
     }
     $cats = [];
+    if (!empty($params['with_all']) && config($type_option) == 'yes') {
+        $cats[] = ['category_id' => 'all', 'category_name' => lang('cat_all')];
+    }
     if( Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.0', '331') ){
         $params['category_type'] = Category::getInstance()->getIdsCategoriesType($type);
         $params['parent_only'] = true;
-        $cats = Category::getInstance()->getAll($params);
-        foreach ($cats as &$cat) {
+        $cats_type = Category::getInstance()->getAll($params);
+        foreach ($cats_type as &$cat) {
             $cat['children'] = Category::getInstance()->getChildren($cat['category_id']);
         }
-    }
-    if (!empty($params['with_all'])) {
-        $cats[] = ['category_id' => 'all', 'category_name' => lang('cat_all')];
+        $cats = array_merge($cats, $cats_type);
     }
     if (!empty($params['echo'])) {
         echo CBvideo::getInstance()->displayDropdownCategory($cats, $params);
@@ -3724,6 +3729,32 @@ function getSQLRequestsFromFile($file)
 function upload_error($error)
 {
     echo json_encode(['error' => $error]);
+}
+
+/**
+ * @param string $type
+ * @param string $url
+ * @return bool
+ */
+function addErrorHandlerMessagesToSessionMessageHandler(string $type = 'all', string $url = ''): bool
+{
+    $messages = [];
+    if ($type == 'all' || $type == 'e') {
+        foreach (errorhandler::getInstance()->get_error() as $message) {
+            $messages[] = ['type' => 'e', 'message' => $message['secure'] ? display_clean($message['val']) : $message['val']];
+        }
+    }
+    if ($type == 'all' || $type == 'm') {
+        foreach (errorhandler::getInstance()->get_message() as $message) {
+            $messages[] = ['type' => 'm', 'message' => $message['secure'] ? display_clean($message['val']) : $message['val']];
+        }
+    }
+    if ($type == 'all' || $type == 'w') {
+        foreach (errorhandler::getInstance()->get_warning() as $message) {
+            $messages[] = ['type' => 'w', 'message' => $message['secure'] ? display_clean($message['val']) : $message['val']];
+        }
+    }
+    return SessionMessageHandler::add_messages($messages, $url);
 }
 
 include('functions_db.php');
