@@ -133,7 +133,7 @@ class UserLevel
         }
 
         if ($param_name) {
-            $conditions[] = ' ' . self::$tableNamePermission . '.permission_name LIKE "%' . display_clean($param_name) . '%"';
+            $conditions[] = ' ' . self::$tableNamePermission . '.permission_name LIKE \'%' . mysql_clean($param_name) . '%\'';
         }
 
         $sql = 'SELECT ' . implode(', ', $select) . '
