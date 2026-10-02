@@ -1,7 +1,7 @@
 {assign var='required_fields' value=userquery::getInstance()->load_signup_fields()}
 {assign var='custom_field' value=userquery::getInstance()->custom_signup_fields}
 <div class="heading">
-    <h2>Add New User</h2>
+    <h2>{ucfirst(lang('add_new_user'))}</h2>
 </div>
 
 <p class="alert alert-info">Required Member Details</p>
