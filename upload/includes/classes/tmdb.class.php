@@ -525,12 +525,14 @@ class Tmdb
         }
         self::getInstance()->deleteOldCacheEntries();
         $title = !empty($params['video_title']) ? $params['video_title'] : $video_info['title'];
+        if (!in_array($params['sort'], ['title', 'release_date'])) {
+            unset($params['sort']);
+        }
         $sort = empty($params['sort']) ? 'release_date' : $params['sort'];
         $sort_order = empty($params['sort_order']) ? 'DESC' : $params['sort_order'];
-        if( in_array($sort_order, ['ASC', 'DESC']) ){
+        if( !in_array($sort_order, ['ASC', 'DESC']) ){
             $sort_order = 'DESC';
         }
-
         $cache_results = $this->getSearchInfo($title, $type);
         if (!empty($cache_results)) {
             $years = json_decode($cache_results[0]['list_years'], true);
@@ -552,8 +554,8 @@ class Tmdb
                         $results=['results'=>[]];
                         break;
                 }
-                $total_rows = $results['total_results'];
-                $tmdb_results = array_merge($tmdb_results, $results['results']);
+                $total_rows = $results['total_results'] ?? 0;
+                $tmdb_results = array_merge($tmdb_results, $results['results'] ?? []);
 
                 foreach ($results['results'] as $result) {
                     $year = substr($result[$date_field], 0, 4);

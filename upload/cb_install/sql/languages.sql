@@ -1959,4 +1959,5 @@ VALUES ('noted_x'),
        ('disabled_homepage'),
        ('here'),
        ('default_homepage_cannot_be_empty'),
-       ('add_user_level');
+       ('add_user_level'),
+       ('video_not_exist_or_cant_access');
