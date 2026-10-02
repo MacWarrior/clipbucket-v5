@@ -4,7 +4,7 @@ namespace V5_5_3;
 
 require_once \DirPath::get('classes') . DIRECTORY_SEPARATOR . 'migration' . DIRECTORY_SEPARATOR . 'migration.class.php';
 
-class MWIP extends \Migration
+class M00198 extends \Migration
 {
     /**
      * @throws \Exception
@@ -20,44 +20,45 @@ class MWIP extends \Migration
         self::generateConfig('enable_all_categ_for_photo', 'yes');
         self::generateConfig('enable_all_categ_for_collection', 'yes');
         self::generateConfig('enable_all_categ_for_channel', 'yes');
+
         self::generateTranslation('main_menu', [
             'fr'=>'Menu principal',
             'en'=>'Main menu'
         ]);
         self::generateTranslation('option_enable_video_categories_as_submenu', [
-            'fr' => 'Activer les catégories de vidéos comme sous-menu',
-            'en' => 'Enable videos categories as submenus'
+            'fr'=>'Activer les catégories de vidéos comme sous-menu',
+            'en'=>'Enable videos categories as submenus'
         ]);
         self::generateTranslation('option_enable_photo_categories_as_submenu', [
-            'fr' => 'Activer les catégories de photos comme sous-menu',
-            'en' => 'Enable photos categories as submenus'
+            'fr'=>'Activer les catégories de photos comme sous-menu',
+            'en'=>'Enable photos categories as submenus'
         ]);
         self::generateTranslation('option_enable_collection_categories_as_submenu', [
-            'fr' => 'Activer les catégories de collections comme sous-menu',
-            'en' => 'Enable collections categories as submenus'
+            'fr'=>'Activer les catégories de collections comme sous-menu',
+            'en'=>'Enable collections categories as submenus'
         ]);
         self::generateTranslation('option_enable_channel_categories_as_submenu', [
-            'fr' => 'Activer les catégories de channels comme sous-menu',
-            'en' => 'Enable channels categories as submenus'
+            'fr'=>'Activer les catégories de channels comme sous-menu',
+            'en'=>'Enable channels categories as submenus'
         ]);
         self::generateTranslation('option_main_menu_order', [
             'fr'=>'Ordre d\'affichage des sections',
-            'en'=>'Sections order'
+            'en'=>'Sections display order'
         ]);
         self::generateTranslation('category_name' , [
             'fr'=>'Nom de la catégorie',
             'en'=>'Category name'
         ]);
         self::generateTranslation('enable_categ_as_submenu', [
-            'fr'=>'Activer les catégories comme sous-menu pour :',
-            'en' => 'Enable categories as submenus for :'
+            'fr'=>'Activer les catégories comme sous-menu pour',
+            'en'=>'Enable categories as submenus for'
         ]);
         self::generateTranslation('cat_all', [
             'fr'=>'Toutes'
         ]);
         self::generateTranslation('enable_all_categ_for', [
-            'fr'=>'Activer "Toutes" les catégories pour :',
-            'en' => 'Enable "All" categories for :'
+            'fr'=>'Activer la catégorie "Toutes" pour',
+            'en'=>'Enable "All" category for'
         ]);
     }
 }
