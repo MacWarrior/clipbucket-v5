@@ -1960,4 +1960,5 @@ VALUES ('noted_x'),
        ('here'),
        ('default_homepage_cannot_be_empty'),
        ('add_user_level'),
-       ('video_not_exist_or_cant_access');
+       ('video_not_exist_or_cant_access'),
+       ('extracted_thumb_not_available_yet');

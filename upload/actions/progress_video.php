@@ -100,7 +100,7 @@ foreach ($videos as $video) {
         $return['player']['id'] = $video['videoid'];
     }
     if (!empty($_POST['display_thumbs'])) {
-        $data['thumbs'] = Upload::displayVideoThumbsForm($video);
+        $data['thumbs'] = Upload::displayVideoThumbsForm($video, (bool)$_POST['is_from_upload']);
     }
     if (!empty($_POST['display_subtitles'])) {
         //TODO check config
