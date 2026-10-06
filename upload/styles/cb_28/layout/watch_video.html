@@ -131,9 +131,20 @@
                                     </ul>
                                 </div>
                             {/if}
+                            {if !empty($funscript)}
+                                <div class="dropdown">
+                                    <button class="btn btn-success dropdown-toggle" type="button" id="funscript-connect" data-toggle="modal" data-target="#funscript-modal">
+                                        <span class="fa fa-bluetooth-b" aria-hidden="true"></span> <span id="funscript-connect-label">Connect</span>
+                                        <span class="caret"></span>
+                                    </button>
+                                </div>
+                            {/if}
                         </div>
                     </div>
                 </header>
+                {if !empty($funscript)}
+                    {include file="$style_dir/blocks/watch_video/funscript_connect.html"}
+                {/if}
                 <div id="messageFav" class="alert alert-info marginTop" style="display:none;"></div>
                 <div class="view-tabs clearfix">
                     <ul class="clearfix nav nav-tabs">

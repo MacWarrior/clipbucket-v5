@@ -1,0 +1,17 @@
+#funscript-connect.funscript-connected {
+    background-color: #28a745;
+    border-color: #23923d;
+    color: #fff;
+}
+
+#funscript-connect.funscript-connected:hover,
+#funscript-connect.funscript-connected:focus,
+#funscript-connect.funscript-connected:active {
+    background-color: #218838;
+    border-color: #1e7e34;
+    color: #fff;
+}
+
+#funscript-settings input[type="range"] {
+    width: 100%;
+}

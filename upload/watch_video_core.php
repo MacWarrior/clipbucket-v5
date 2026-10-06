@@ -28,6 +28,17 @@ if (in_array($vdo['status'], ['Processing', 'Waiting'])) {
 assign('ids_to_check_progress', json_encode($ids_to_check_progress));
 $assign_arry['vdo'] = $vdo;
 
+require_once DirPath::get('classes') . 'funscript.class.php';
+$funscript = $vdo['status'] == 'Successful' ? Funscript::getVideoScript($vdo) : null;
+assign('funscript', $funscript);
+if ( $funscript !== null ) {
+    ClipBucket::getInstance()->addJS([
+        'pages/watch_video/funscript.js'          => 'admin'
+        ,'pages/watch_video/funscript_connect.js' => 'admin'
+    ]);
+    ClipBucket::getInstance()->addCSS(['funscript.css' => 'admin']);
+}
+
 $is_playlist = false;
 if( config('playlistsSection') == 'yes' ){
     $playlist_id = (int)$_GET['play_list'];
