@@ -107,7 +107,7 @@
                                 </div>
                                 <div class="col-md-6">
                                     <div class="input-group">
-                                        <input value="{(int)$row.maximum_allowed_subtitle_size}" name="maximum_allowed_subtitle_size" id="maximum_allowed_subtitle_size" class="form-control" size="45" type="number"/>
+                                        <input value="{(float)$row.maximum_allowed_subtitle_size}" name="maximum_allowed_subtitle_size" id="maximum_allowed_subtitle_size" class="form-control" size="45" type="number"/>
                                         <span class="input-group-addon" title="{lang('in_x',lang('mb'))}">{lang code='mb'}</span>
                                     </div>
                                 </div>
@@ -194,7 +194,7 @@
                                 </div>
                                 <div class="col-md-6">
                                     <div class="input-group">
-                                        <input class="form-control" name="max_photo_size" id="max_photo_size" value="{(int)$row.max_photo_size}" size="45" type="number"/>
+                                        <input class="form-control" name="max_photo_size" id="max_photo_size" value="{(float)$row.max_photo_size}" size="45" type="number"/>
                                         <span class="input-group-addon" title="{lang('in_x',lang('mb'))}">{lang code='mb'}</span>
                                     </div>
                                 </div>
@@ -270,7 +270,7 @@
                                 </div>
                                 <div class="col-md-6">
                                     <div class="input-group">
-                                        <input class="form-control" name="max_upload_size" id="max_upload_size" required value="{(int)$row.max_upload_size}" size="45" type="number"/>
+                                        <input class="form-control" name="max_upload_size" id="max_upload_size" required value="{(float)$row.max_upload_size}" size="45" type="number"/>
                                         <span class="input-group-addon" title="{lang('in_x',lang('mb'))}">{lang code='mb'}</span>
                                     </div>
                                 </div>
@@ -294,7 +294,7 @@
                                 </div>
                                 <div class="col-md-3">
                                     <div class="input-group">
-                                        <input class="form-control" name="chunk_upload_size" id="chunk_upload_size" required value="{(int)$row.chunk_upload_size}" size="45" type="number"/>
+                                        <input class="form-control" name="chunk_upload_size" id="chunk_upload_size" required value="{(float)$row.chunk_upload_size}" size="45" type="number"/>
                                         <span class="input-group-addon" title="{lang('in_x',lang('mb'))}">{lang code='mb'}</span>
                                     </div>
                                 </div>
@@ -721,7 +721,7 @@
                                 <label class="nowrap" for="smtp_port" title="SMTP Port">SMTP Port</label>
                             </div>
                             <div class="col-md-6 row-size">
-                                <input class="form-control" name="smtp_port" id="smtp_port" value="{display_clean($row.smtp_port)}"/>
+                                <input class="form-control" name="smtp_port" id="smtp_port" value="{(int)$row.smtp_port)}"/>
                             </div>
                         </div>
                         <hr class="config_smtp" {if $row.mail_type=='mail'}style="display:none;"{/if}/>
@@ -811,7 +811,7 @@
                                 <label class="nowrap" for="proxy_port" title="Port">Port</label>
                             </div>
                             <div class="col-md-8 row-size">
-                                <input class="form-control" name="proxy_port" id="proxy_port" value="{display_clean($row.proxy_port)}"/>
+                                <input class="form-control" type="number" name="proxy_port" id="proxy_port" value="{(int)$row.proxy_port}"/>
                             </div>
                         </div>
                         <hr/>
@@ -874,7 +874,7 @@
                                 <label class="nowrap" for="cache_port" title="{lang code='port'}">{lang code='port'}</label>
                             </div>
                             <div class="col-md-8 row-size">
-                                <input class="form-control" name="cache_port" id="cache_port" value="{display_clean($row.cache_port)}"/>
+                                <input class="form-control" name="cache_port" id="cache_port" value="{(int)$row.cache_port}"/>
                             </div>
                         </div>
                         <hr/>
@@ -1086,7 +1086,7 @@
                             </div>
                             <div class="col-md-6">
                                 <div class="input-group">
-                                    <input class="form-control" name="cloudflare_upload_limit" id="cloudflare_upload_limit" value="{(int)$row.cloudflare_upload_limit}" size="45" type="number"/>
+                                    <input class="form-control" name="cloudflare_upload_limit" id="cloudflare_upload_limit" value="{(float)$row.cloudflare_upload_limit}" size="45" type="number"/>
                                     <span class="input-group-addon" title="{lang('in_x',lang('mb'))}">{lang code='mb'}</span>
                                 </div>
                             </div>

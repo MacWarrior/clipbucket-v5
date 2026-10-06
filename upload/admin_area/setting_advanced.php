@@ -173,6 +173,9 @@ if (isset($_POST['update'])) {
         'photo_lar_width',
         'photo_thumb_width',
         'photo_thumb_height',
+        'proxy_port',
+        'smtp_port',
+        'cache_port',
     ];
 
     $has_missing_config = false;
