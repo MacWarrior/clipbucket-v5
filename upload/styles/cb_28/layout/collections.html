@@ -9,7 +9,7 @@
             <div class="filter-dropdowns clearfix">
             {if (User::getInstance()->hasPermission('allow_create_collection') || config('enable_collection_categories') == 'yes')}
                 <div class="cat-col col-lg-6 col-md-6 col-sm-6 col-xs-12 clearfix">
-                    {if config('enable_collection_categories') == 'yes' }
+                    {if config('enable_collection_categories') == 'yes'  && config('enable_collection_categories_as_submenu')!='yes'}
                         {$categories = getCategoryList(['type'=>'collection']) }
                         {include file="$style_dir/blocks/category_list.html" type='collections'}
                     {/if}

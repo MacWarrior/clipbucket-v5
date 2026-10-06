@@ -73,9 +73,7 @@
             <div class="form-group">
                 {if $content}
                     <label for="file_content"><h3>{lang('editing_template', [$editing_file])}</h3></label>
-                    <textarea rows="30" class="form-control" name="thecontent" class="file_content" id="file_content" style="height: 250px;width: 100%;">
-                        {$content}
-                    </textarea>
+                    <textarea rows="30" class="form-control" name="thecontent" class="file_content" id="file_content" style="height: 250px;width: 100%;">{$content}</textarea>
                 {else}
                     <label for="file_content"><h3>{lang('edit_template')}</h3></label>
                     <br/>
