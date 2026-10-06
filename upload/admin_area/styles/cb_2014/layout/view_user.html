@@ -9,7 +9,7 @@
                             {if isSectionEnabled('channels') && $u.is_channel_enable}
                                 <li><a role="menuitem" tabindex="-1" href="{userquery::getInstance()->profile_link($u)}">View {display_clean($u.username)} channel</a></li>
                             {/if}
-                            {if $u.userid != user_id()}
+                            {if $u.userid != user_id() && $can_edit}
                                 <li><a role="menuitem" tabindex="-1" href="{DirPath::getUrl('admin_area')}login_as_user.php?uid={$u.userid}">Login as user</a></li>
                                 {if $u.usr_status=="Ok"}
                                     <li><a role="menuitem" tabindex="-1" href="?uid={$u.userid}&amp;deactivate=yes">{lang code='deactivate'}</a></li>
@@ -24,10 +24,12 @@
                                 {/if}
                                 <li><a role="menuitem" tabindex="-1" href="?uid={$u.userid}&amp;delete=yes">{lang code='delete'}</a></li>
                             {/if}
-                            <li><a role="menuitem" tabindex="-1" href="?uid={$u.userid}&amp;delete_vids=yes">Delete Videos</a></li>
-                            <li><a role="menuitem" tabindex="-1" href="?uid={$u.userid}&amp;delete_contacts=yes">Delete Contacts</a></li>
-                            <li><a role="menuitem" tabindex="-1" href="?uid={$u.userid}&amp;delete_pm=yes">Delete Private Messages</a></li>
-                            <li><a role="menuitem" id="confirm_reset_password" tabindex="-1" href="?uid={$u.userid}&amp;reset_password=yes">{lang('reset_password')}</a></li>
+                            {if $can_edit}
+                                <li><a role="menuitem" tabindex="-1" href="?uid={$u.userid}&amp;delete_vids=yes">Delete Videos</a></li>
+                                <li><a role="menuitem" tabindex="-1" href="?uid={$u.userid}&amp;delete_contacts=yes">Delete Contacts</a></li>
+                                <li><a role="menuitem" tabindex="-1" href="?uid={$u.userid}&amp;delete_pm=yes">Delete Private Messages</a></li>
+                                <li><a role="menuitem" id="confirm_reset_password" tabindex="-1" href="?uid={$u.userid}&amp;reset_password=yes">{lang('reset_password')}</a></li>
+                            {/if}
                         </ul>
                     {/if}
                 </div>
@@ -554,4 +556,5 @@
     let lang_storage_use = '{lang_js('storage_use')}';
     let storage_history = {json_encode($storage_history)};
     let lang_confirm_reset_password = '{lang_js('confirm_reset_password')}';
+    let can_edit = '{$can_edit}';
 </script>

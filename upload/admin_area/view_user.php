@@ -14,9 +14,8 @@ if ($uid != userquery::getInstance()->get_anonymous_user()) {
 if (empty($udetails)) {
     redirect_to(DirPath::getUrl('admin_area') . 'members.php?user_not_found=1');
 }
-if (!UserLevel::canUserEditUserLevel($udetails['level'])) {
-    SessionMessageHandler::add_message(lang('cannot_access_page'), 'w', DirPath::getUrl('admin_area') . 'members.php');
-}
+$can_edit = UserLevel::canUserEditUserLevel($udetails['level']);
+assign('can_edit', $can_edit);
 /* Generating breadcrumb */
 global $breadcrumb;
 $breadcrumb[0] = ['title' => lang('users'), 'url' => ''];
@@ -25,57 +24,57 @@ $breadcrumb[2] = ['title' => 'Editing : ' . display_clean($udetails['username'])
 
 if ($udetails) {
     //Deactivating User
-    if (isset($_GET['deactivate'])) {
+    if (isset($_GET['deactivate']) && $can_edit) {
         userquery::getInstance()->action('deactivate', $uid);
         $udetails = User::getInstance()->getOne(['userid'=>$uid]);
     }
 
     //Activating User
-    if (isset($_GET['activate'])) {
+    if (isset($_GET['activate']) && $can_edit) {
         userquery::getInstance()->action('activate', $uid);
         $udetails = User::getInstance()->getOne(['userid'=>$uid]);
     }
 
     //Banning User
-    if (isset($_GET['ban'])) {
+    if (isset($_GET['ban']) && $can_edit) {
         userquery::getInstance()->action('ban', $uid);
         $udetails = User::getInstance()->getOne(['userid'=>$uid]);
     }
 
     //Unbanning User
-    if (isset($_GET['unban'])) {
+    if (isset($_GET['unban']) && $can_edit) {
         userquery::getInstance()->action('unban', $uid);
         $udetails = User::getInstance()->getOne(['userid'=>$uid]);
     }
 
     //Deleting User
-    if (isset($_GET['delete'])) {
+    if (isset($_GET['delete']) && $can_edit) {
         User::getInstance((int)$uid)->delete();
     }
 
     //Deleting User Videos
-    if (isset($_GET['delete_vids'])) {
+    if (isset($_GET['delete_vids']) && $can_edit) {
         userquery::getInstance()->delete_user_vids($uid);
     }
 
     //Deleting User Contacts
-    if (isset($_GET['delete_contacts'])) {
+    if (isset($_GET['delete_contacts']) && $can_edit) {
         userquery::getInstance()->remove_contacts($uid);
     }
 
     //Deleting User Pms
-    if (isset($_GET['delete_pms'])) {
+    if (isset($_GET['delete_pms']) && $can_edit) {
         userquery::getInstance()->remove_user_pms($uid);
     }
 
-    if (isset($_POST['update_user'])) {
+    if (isset($_POST['update_user']) && $can_edit) {
         userquery::getInstance()->update_user($_POST);
         if (!error()) {
             $udetails = User::getInstance()->getOne(['userid'=>$uid]);
         }
     }
 
-    if (isset($_GET['reset_password'])) {
+    if (isset($_GET['reset_password']) && $can_edit) {
         if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.2', '136')) {
             e(lang('cant_reset_database_not_up_to_date'));
         } else {

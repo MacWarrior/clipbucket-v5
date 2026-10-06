@@ -1969,4 +1969,5 @@ VALUES ('noted_x'),
        ('option_main_menu_order'),
        ('category_name'),
        ('enable_categ_as_submenu'),
-       ('enable_all_categ_for');
+       ('enable_all_categ_for'),
+       ('confirm_delete_users');
