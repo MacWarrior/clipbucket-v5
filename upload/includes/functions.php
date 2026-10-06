@@ -384,6 +384,7 @@ function getCategoryList($params = [])
         case 'videos':
         case 'v':
             $type = 'video';
+            $type_option = 'enable_all_categ_for_video';
             break;
 
         case 'users':
@@ -391,27 +392,31 @@ function getCategoryList($params = [])
         case 'u':
         case 'channels':
             $type = 'user';
+            $type_option = 'enable_all_categ_for_collection';
             break;
         case 'collection':
         case 'collections':
         case 'cl':
             $type = 'collection';
+            $type_option = 'enable_all_categ_for_collection';
             break;
         case 'photo':
             $type = 'photo';
+            $type_option = 'enable_all_categ_for_photo';
             break;
     }
     $cats = [];
+    if (!empty($params['with_all']) && config($type_option) == 'yes') {
+        $cats[] = ['category_id' => 'all', 'category_name' => lang('cat_all')];
+    }
     if( Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.0', '331') ){
         $params['category_type'] = Category::getInstance()->getIdsCategoriesType($type);
         $params['parent_only'] = true;
-        $cats = Category::getInstance()->getAll($params);
-        foreach ($cats as &$cat) {
+        $cats_type = Category::getInstance()->getAll($params);
+        foreach ($cats_type as &$cat) {
             $cat['children'] = Category::getInstance()->getChildren($cat['category_id']);
         }
-    }
-    if (!empty($params['with_all'])) {
-        $cats[] = ['category_id' => 'all', 'category_name' => lang('cat_all')];
+        $cats = array_merge($cats, $cats_type);
     }
     if (!empty($params['echo'])) {
         echo CBvideo::getInstance()->displayDropdownCategory($cats, $params);
@@ -1931,10 +1936,19 @@ function get_country($code)
     $result = Clipbucket_db::getInstance()->select(tbl('countries'), 'name_en,iso2', " iso2='$code' OR iso3='$code'");
     if (count($result) > 0) {
         $result = $result[0];
-        $flag = '<img src="' . DirPath::getUrl('root') . 'images/icons/country/' . strtolower($result['iso2']) . '.png" alt="" border="0">&nbsp;';
+        $flag = get_country_flag($result['iso2']);
         return $flag . $result['name_en'];
     }
     return false;
+}
+
+function get_country_flag($code){
+    return '<img src="' . get_country_flag_url($code) .'" alt="" border="0">&nbsp;';
+}
+
+function get_country_flag_url($code)
+{
+    return DirPath::getUrl('images') . 'icons/country/' . strtolower($code) . '.webp';
 }
 
 /**
@@ -2033,16 +2047,11 @@ function sort_link($data, $mode, $type): string
     }
 
     //default value
-    $time = $_GET['time'] ?? 'all_time';
-    $page = $_GET['page'] ?? '1';
-    if (isset($_GET['sort'])) {
-        $sort = $_GET['sort'];
-    } else {
-        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '299')) {
-            $sort = SortType::getDefaultByType($type)['id'];
-        } else {
-            $sort = 0;
-        }
+    $time = $_GET['time'] ?? null;
+    $page = (int)$_GET['page'] ?? '1';
+    $sort = 0;
+    if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '299')) {
+        $sort = SortType::getDefaultByType($type)['id'];
     }
     if (config($config_enable_category) != 'yes') {
         $cat ='';
@@ -2068,29 +2077,45 @@ function sort_link($data, $mode, $type): string
             break;
     }
 
+    if (!in_array($time, array_keys(time_links())) || empty($time)){
+        $time = 'all_time';
+    }
+    if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '299')) {
+        $allowed_sort = SortType::getSortTypes($type);
+        if (in_array($_GET['sort'], array_keys($allowed_sort))) {
+            $sort = $_GET['sort'];
+        }
+    } elseif(isset($_GET['sort'])) {
+        $sort = htmlspecialchars($_GET['sort']);
+    }
+    if (!is_numeric($cat) && $cat != 'all') {
+        $cat = 'all';
+    }
+
+    $page = (int)$page;
     //prepare url
     if (SEO == 'yes') {
-        $sort = '/' . $sort;
-        $time = '/' . $time;
-        $page = '/' . (empty($page)?1:$page);
+        $sort_url = '/' . $sort;
+        $time_url = '/' . $time;
+        $page_url = '/' . (empty($page)?1:$page);
         if ($cat) {
-            $cat = '/' . $cat;
+            $cat_url = '/' . $cat;
         }
     } else {
-        $time = '&time=' . $time;
+        $time_url = '&time=' . $time;
         if ($page) {
-            $page = '&page=' . $page;
+            $page_url = '&page=' . $page;
         }
         if ($cat) {
-            $cat = '?cat=' . $cat;
-            $sort = '&sort=' . $sort;
+            $cat_url = '?cat=' . $cat;
+            $sort_url = '&sort=' . $sort;
         } else {
-            $sort = '?sort=' . $sort;
+            $sort_url = '?sort=' . $sort;
         }
     }
 
     //return url
-    return Dirpath::getUrl('root') . $type . ((SEO != 'yes') ? '.php' : '') . $cat . $sort . $time . $page;
+    return Dirpath::getUrl('root') . $type . ((SEO != 'yes') ? '.php' : '') . ($cat_url??'') . $sort_url . $time_url .( $page_url ??'');
 }
 
 /**
@@ -3629,6 +3654,11 @@ function save_subtitle_ajax()
     }
 
     $video = Video::getInstance()->getOne(['videoid' => mysql_clean($_POST['videoid'])]);
+    if ($video['userid'] != User::getInstance()->getCurrentUserID() && !User::getInstance()->hasAdminAccess()) {
+        e(lang('insufficient_privileges'));
+        echo json_encode(['success' => false, 'msg'=>getTemplateMsg()]);
+        die();
+    }
     $subtitle_list = Subtitle::getVideoSubtitles($video);
     foreach ($subtitle_list as $subtitle) {
         if ($subtitle['title'] == $_POST['title']) {
@@ -3699,6 +3729,32 @@ function getSQLRequestsFromFile($file)
 function upload_error($error)
 {
     echo json_encode(['error' => $error]);
+}
+
+/**
+ * @param string $type
+ * @param string $url
+ * @return bool
+ */
+function addErrorHandlerMessagesToSessionMessageHandler(string $type = 'all', string $url = ''): bool
+{
+    $messages = [];
+    if ($type == 'all' || $type == 'e') {
+        foreach (errorhandler::getInstance()->get_error() as $message) {
+            $messages[] = ['type' => 'e', 'message' => $message['secure'] ? display_clean($message['val']) : $message['val']];
+        }
+    }
+    if ($type == 'all' || $type == 'm') {
+        foreach (errorhandler::getInstance()->get_message() as $message) {
+            $messages[] = ['type' => 'm', 'message' => $message['secure'] ? display_clean($message['val']) : $message['val']];
+        }
+    }
+    if ($type == 'all' || $type == 'w') {
+        foreach (errorhandler::getInstance()->get_warning() as $message) {
+            $messages[] = ['type' => 'w', 'message' => $message['secure'] ? display_clean($message['val']) : $message['val']];
+        }
+    }
+    return SessionMessageHandler::add_messages($messages, $url);
 }
 
 include('functions_db.php');

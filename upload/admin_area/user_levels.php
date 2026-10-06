@@ -19,7 +19,8 @@ $breadcrumb[1] = [
 
 if (!User::getInstance()->hasPermission('allow_manage_user_level') && userquery::getInstance()->udetails['level'] != 1) {
     ClipBucket::getInstance()->show_page = false;
-    e('You are not allowed to manage user levels');
+    SessionMessageHandler::add_message('You are not allowed to manage user levels', 'w');
+    redirect_to(DirPath::getUrl('admin_area'));
 }
 
 $mode = $_GET['mode'];
@@ -41,7 +42,23 @@ switch ($mode) {
     case 'edit':
         //Updating Level permissions
         if (!empty($_POST)) {
-            UserLevel::updateUserLevel($user_level_id, $_POST['level_name'], $_POST['permission_value'], $_POST['user_level_is_default']);
+            $id_permission_homepage = UserLevel::getHomepagePermissionId();
+            if (empty($_POST['permission_value'][$id_permission_homepage])) {
+                e(lang('default_homepage_cannot_be_empty'));
+            } else {
+                $can_save = false;
+                foreach (User::getInstance()->getDefaultHomepageList() as $homepage) {
+                    if ($_POST['permission_value'][$id_permission_homepage] == $homepage['title'] && !$homepage['disabled']) {
+                        $can_save = true;
+                        break;
+                    }
+                }
+                if ($can_save) {
+                    UserLevel::updateUserLevel($user_level_id, $_POST['level_name'], $_POST['permission_value'], $_POST['user_level_is_default']);
+                } else {
+                    e(lang('default_homepage_cannot_be_empty'));
+                }
+            }
         }
 
         //Getting Details of $level
@@ -56,7 +73,7 @@ switch ($mode) {
         $level_perms = UserLevel::getAllPermissions(['user_level_id' => $user_level_id]);
 
         $breadcrumb[] = [
-            'title' => 'Editing : ' . display_clean(display_clean($levelDetails['user_level_name'])),
+            'title' => lang('editing_template', display_clean(display_clean($levelDetails['user_level_name']))),
             'url'   => DirPath::getUrl('admin_area') . 'user_levels.php?mode=edit&lid=' . display_clean($user_level_id)
         ];
 
@@ -69,13 +86,20 @@ switch ($mode) {
 
         if (!empty($_POST)) {
             $level_name = mysql_clean($_POST['level_name']);
+            $id_permission_homepage = UserLevel::getHomepagePermissionId();
             if (empty($level_name)) {
                 e(lang('please_enter_level_name'));
+            } elseif(empty($_POST['permission_value'][$id_permission_homepage])) {
+                e(lang('default_homepage_cannot_be_empty'));
             } else {
                 UserLevel::addUserLevel($level_name, $_POST['permission_value'], $_POST['user_level_is_default']);
                 redirect_to('user_levels.php?added=true');
             }
         }
+        $breadcrumb[] = [
+            'title' => lang('add_user_level'),
+            'url'   => DirPath::getUrl('admin_area') . 'user_levels.php?mode=add'
+        ];
         Assign('level_perms', $level_perms);
         Assign('view', 'add');
         break;

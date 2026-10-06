@@ -408,7 +408,7 @@ body {
   font: 14px/16px "source_sans_proregular", sans-serif;
   -webkit-text-size-adjust: 100%;
   -ms-text-size-adjust: none;
-  width: 100vw;
+  width: 100%;
   overflow-x: hidden;
 }
 
@@ -4207,18 +4207,22 @@ textarea#comment_box {
 }
 
 #header .main-links>ul>li>a {
-  display: block;
+  display: inline-block;
   padding: 12px 15px;
+  position: relative;
 }
 
 #header .main-links>ul>li>a:focus,
 #header .main-links>ul>li>a:hover {
   text-decoration: none;
-  position: relative;
+
 }
 
-#header .main-links>ul>li>a:focus:after,
-#header .main-links>ul>li>a:hover:after {
+#header .main-links > ul > li > a:hover::after,
+#header .main-links > ul > li > a:focus::after,
+#header .main-links > ul > li:hover > a::after,
+#header .main-links > ul > li:focus-within > a::after,
+#header .main-links > ul > li.active > a::after  {
   content: "";
   position: absolute;
   bottom: 0;
@@ -4346,7 +4350,7 @@ textarea#comment_box {
   padding: 0;
   box-shadow: none;
   border: none;
-  border-radius: 0 0 4px 4px;
+  border-radius:  0 0 4px 4px;
   overflow: hidden;
 }
 
@@ -4361,7 +4365,50 @@ textarea#comment_box {
 }
 
 #header .dropdown-menu>li:first-child>a {
-  border: none;
+  border-top-style: outset;
+}
+
+#header .dropdown-menu > li > a {
+  border-radius: 0;
+}
+
+#header .dropdown-menu:not(.sub-menu) > li:last-child,
+#header .dropdown-menu:not(.sub-menu) > li:last-child > a {
+  border-bottom-left-radius: 4px;
+  border-bottom-right-radius: 4px;
+}
+
+#header .dropdown-menu:not(.sub-menu) > li:hover:has(> .sub-menu),
+#header .dropdown-menu:not(.sub-menu) > li:hover:has(> .sub-menu) > a {
+  border-bottom-right-radius: 0;
+}
+
+#header .dropdown-menu.sub-menu > li:first-child,
+#header .dropdown-menu.sub-menu > li:first-child > a {
+  border-top-right-radius: 4px;
+}
+
+#header .dropdown-menu.sub-menu > li:last-child,
+#header .dropdown-menu.sub-menu > li:last-child > a {
+  border-bottom-right-radius: 4px;
+}
+
+#header .dropdown-menu.sub-menu > li:hover:has(> .sub-menu),
+#header .dropdown-menu.sub-menu > li:hover:has(> .sub-menu) > a {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+#header .dropdown-menu.sub-menu:not(:has(> li > .sub-menu)):has(> li + li) {
+  border-bottom-left-radius: 4px;
+  border-bottom-right-radius: 4px;
+  overflow: hidden;
+}
+
+#header .dropdown-menu.sub-menu:not(:has(> li > .sub-menu)):has(> li + li) > li:last-child,
+#header .dropdown-menu.sub-menu:not(:has(> li > .sub-menu)):has(> li + li) > li:last-child > a {
+  border-bottom-left-radius: 4px;
+  border-bottom-right-radius: 4px;
 }
 
 #header .dropdown-menu .divider {
@@ -4369,7 +4416,8 @@ textarea#comment_box {
 }
 
 #header .right-menu .dropdown-menu,
-#header .search-drop .dropdown-menu {
+#header .search-drop .dropdown-menu,
+#header .main-links .dropdown-menu{
   padding: 13px 0 0;
 }
 
@@ -5118,12 +5166,6 @@ textarea#comment_box {
     border-radius: 0;
     width: 100%;
     min-width: 320px;
-  }
-
-  #header .dropdown-menu>li>a {
-    border: none;
-    border-radius: 0;
-    padding: 3px 5px;
   }
 
   #header .myaccount-dd .dropdown-menu {
@@ -6075,7 +6117,7 @@ textarea#comment_box {
   position: absolute;
   top: 10px;
   right: 10px;
-  z-index: 5;
+  z-index: 4;
   cursor: help;
   background-color: #000;
   opacity: 0.9;
@@ -6668,7 +6710,7 @@ textarea#comment_box {
 
 .slider-video-container .thumb-video-padding .thumb-video .restricted {
   color:white;
-  z-index: 5;
+  z-index: 4;
   pointer-events: none;
 }
 
@@ -7286,4 +7328,33 @@ h4:has(i) {
   overflow-x: clip;
   white-space: nowrap;
   color: #e67e22;
+}
+
+#header .main-links .dropdown-menu {
+  overflow: visible;
+}
+
+#header .main-links .dropdown-menu>li {
+  position: relative;
+}
+
+#header .main-links .dropdown-menu>li>i.trigger {
+  position: absolute;
+  top: 8px;
+  right:0 ;
+}
+
+#header .main-links .dropdown-menu .sub-menu {
+  left: 100%;
+  position: absolute;
+  top: 0;
+  display: none;
+  min-width: 180px;
+  padding-top: 0;
+  border-radius: 0 0 4px 0;
+  z-index: 1001;
+}
+
+#header .main-links .dropdown-menu>li:hover>.sub-menu {
+  display: block;
 }

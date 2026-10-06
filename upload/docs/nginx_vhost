@@ -1,6 +1,6 @@
 ## Latest update : 2026-07-09
 ## Latest version : 5.5.3
-## Latest revision : 158
+## Latest revision : 182
 server {
     listen 80;
     server_name DOMAINNAME;
@@ -22,6 +22,11 @@ server {
     proxy_buffer_size 128k;
     proxy_buffers 4 256k;
     proxy_busy_buffers_size 256k;
+
+    # Never execute PHP under /files/
+    location ~* ^(.*/)?files/.*\.php(?:/|$) {
+        return 302 $1403;
+    }
 
     location ~* \.php$ {
         fastcgi_pass unix:/var/run/php/phpPHPVERSION-fpm.sock;
@@ -99,12 +104,15 @@ server {
         rewrite ^(.*/)?video/(.*)/(.*) $1watch_video.php?v=$2&$query_string last;
         rewrite ^(.*/)?video/([0-9]+)_(.*) $1watch_video.php?v=$2&$query_string last;
     }
+    location ~* ^(/.*/)?(.+)_v([0-9]+)$ {
+        rewrite ^(.*/)?(.*)_v([0-9]+) $1watch_video.php?v=$3&$query_string last;
+    }
     location ~* ^(.*/)?video_public(/(.*))?$ {
         rewrite ^(.*/)?video_public/(.*)/(.*) $1watch_video_public.php?v=$2&$query_string last;
         rewrite ^(.*/)?video_public/([0-9]+)_(.*) $1watch_video_public.php?v=$2&$query_string last;
     }
-    location ~* ^(/.*/)?(.+)_v([0-9]+)$ {
-        rewrite ^(.*/)?(.*)_v([0-9]+) $1watch_video.php?v=$3&$query_string last;
+    location ~* ^(.*/)?video_public-(.*)_v([0-9]+)$ {
+        rewrite ^(.*/)?video_public-(.*)_v([0-9]+)$ $1watch_video_public.php?v=$3&$query_string last;
     }
 
     # Photos
@@ -140,8 +148,8 @@ server {
     }
 
     # Account
-    location ~* ^(.*/)?my_account$ {
-        rewrite ^(.*/)?my_account$ $1myaccount.php?$query_string last;
+    location ~* ^(.*/)?my_account/?$ {
+        rewrite ^(.*/)?my_account/?$ $1myaccount.php?$query_string last;
     }
     location ~* ^(.*/)?signup/?$ {
         rewrite ^(.*/)?signup/?$ $1signup.php?$query_string last;

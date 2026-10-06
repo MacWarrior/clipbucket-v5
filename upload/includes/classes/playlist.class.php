@@ -74,8 +74,9 @@ class Playlist
 
         $cond = '((playlists.privacy = \'public\' AND playlists.total_items > 0) ';
 
-        $current_user_id = user_id();
+        $current_user_id = User::getInstance()->getCurrentUserID();
         if ($current_user_id) {
+
             $cond .= ' OR (playlists.userid = ' . (int)$current_user_id . ')';
         }
         $cond .= ')';
@@ -105,6 +106,7 @@ class Playlist
         $param_count = $params['count'] ?? false;
         $param_first_only = $params['first_only'] ?? false;
         $param_exist = $params['exist'] ?? false;
+        $param_can_edit = $params['can_edit'] ?? false;
 
         $conditions = [];
         if ($param_playlist_id) {
@@ -145,6 +147,9 @@ class Playlist
 
         if( !User::getInstance()->hasAdminAccess() && !$param_exist ){
             $conditions[] = $this->getGenericConstraints();
+        }
+        if( !User::getInstance()->hasAdminAccess() && $param_can_edit){
+            $conditions[] = $this->getTablename() . '.userid = ' . (int)User::getInstance()->getCurrentUserID();
         }
 
         if( $param_count ){
@@ -240,9 +245,14 @@ class Playlist
         return $result;
     }
 
-    public function getOne(int $playlist_id):array
+    public function getOneById(int $playlist_id):array
     {
         return $this->getAll(['playlist_id'=>$playlist_id, 'first_only'=>true]);
+    }
+    public function getOne($params):array
+    {
+        $params = array_merge($params, ['first_only'=>true]);
+        return $this->getAll($params);
     }
 
 }

@@ -355,7 +355,18 @@ INSERT INTO `{tbl_prefix}config` (`configid`, `name`, `value`) VALUES
     (NULL, 'enable_external_ratings_field', 'no'),
     (NULL, 'enable_external_rate_ratings_on_fo', 'no'),
     (NULL, 'enable_external_rate_from_tmdb', 'no'),
-    (NULL, 'enable_external_ratings_from_tmdb', 'no');
+    (NULL, 'enable_external_ratings_from_tmdb', 'no'),
+    (NULL, 'video_enable_fullwidth', 'yes'),
+    (NULL, 'display_language_flag', 'yes'),
+    (NULL, 'enable_video_categories_as_submenu', 'no'),
+    (NULL, 'enable_photo_categories_as_submenu', 'no'),
+    (NULL, 'enable_collection_categories_as_submenu', 'no'),
+    (NULL, 'enable_channel_categories_as_submenu', 'no'),
+    (NULL, 'main_menu_order', 'video,photo,channel,collection'),
+    (NULL, 'enable_all_categ_for_video', 'yes'),
+    (NULL, 'enable_all_categ_for_photo', 'yes'),
+    (NULL, 'enable_all_categ_for_collection', 'yes'),
+    (NULL, 'enable_all_categ_for_channel', 'yes');
 
 INSERT INTO `{tbl_prefix}video_resolution` (`title`, `ratio`, `enabled`, `width`, `height`, `video_bitrate`) VALUES
 	('240p', '16/9', 1, 426, 240, 240000),

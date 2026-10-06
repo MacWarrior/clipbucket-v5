@@ -741,6 +741,9 @@ class EmailTemplate
         return (bool) Clipbucket_db::getInstance()->insert(tbl(self::$tableNameEmailHisto), $fields, $values);
     }
 
+    /**
+     * @throws Exception
+     */
     private static function getGlobalVariablesArray(): array
     {
         return [

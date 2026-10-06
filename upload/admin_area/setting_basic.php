@@ -134,6 +134,7 @@ if (isset($_POST['update'])) {
         , 'enable_social_networks_links_home_sidebar'
         , 'enable_video_view_history'
         , 'home_enable_fullwidth'
+        , 'video_enable_fullwidth'
         , 'home_disable_sidebar'
         , 'home_display_featured_collections'
         , 'home_display_recent_videos'
@@ -197,6 +198,15 @@ if (isset($_POST['update'])) {
         , 'enable_external_rate_ratings_on_fo'
         , 'enable_external_rate_from_tmdb'
         , 'enable_external_ratings_from_tmdb'
+        , 'display_language_flag'
+        , 'enable_video_categories_as_submenu'
+        , 'enable_photo_categories_as_submenu'
+        , 'enable_collection_categories_as_submenu'
+        , 'enable_channel_categories_as_submenu'
+        , 'enable_all_categ_for_video'
+        , 'enable_all_categ_for_photo'
+        , 'enable_all_categ_for_collection'
+        , 'enable_all_categ_for_channel'
     ];
 
     $config_booleans_to_refactor = [
@@ -400,6 +410,7 @@ if (isset($_POST['update'])) {
         ,'list_recent_videos'
         ,'list_featured_videos'
         ,'home_enable_fullwidth'
+        ,'video_enable_fullwidth'
         ,'home_disable_sidebar'
         ,'home_display_featured_collections'
         ,'homepage_collection_video_style'
@@ -486,6 +497,16 @@ if (isset($_POST['update'])) {
         , 'enable_external_rate_ratings_on_fo'
         , 'enable_external_rate_from_tmdb'
         , 'enable_external_ratings_from_tmdb'
+        , 'display_language_flag'
+        , 'enable_video_categories_as_submenu'
+        , 'enable_photo_categories_as_submenu'
+        , 'enable_collection_categories_as_submenu'
+        , 'enable_channel_categories_as_submenu'
+        , 'main_menu_order'
+        , 'enable_all_categ_for_video'
+        , 'enable_all_categ_for_photo'
+        , 'enable_all_categ_for_collection'
+        , 'enable_all_categ_for_channel'
     ];
 
     //Numeric Array
@@ -583,7 +604,13 @@ if (isset($_POST['update'])) {
             }
             continue;
         }
-
+        if ($field == 'main_menu_order') {
+            $array_values = explode(',', $value);
+            //unknown section
+            if (array_diff($array_values, ['video', 'photo', 'collection', 'channel'])) {
+                continue;
+            }
+        }
         if (!is_null($value)) {
             myquery::getInstance()->Set_Website_Details($field, $value);
         } else {
@@ -621,7 +648,7 @@ if (isset($_POST['update'])) {
 
 $row = myquery::getInstance()->Get_Website_Details();
 Assign('row', $row);
-
+assign('sections', !empty($row['main_menu_order']) ? explode(',',$row['main_menu_order']) : ['video','photo','channel','collection']);
 subtitle(lang('basic_settings'));
 
 $filepath_custom_css = DirPath::get('files') . 'custom.css';

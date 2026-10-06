@@ -450,6 +450,10 @@ class System{
             $php_path = self::get_binaries('php', false);
         }
 
+        $php_path = realpath($php_path);
+        if (!$php_path || !is_file($php_path) || !is_executable($php_path)) {
+            return ['err' => 'Unable to find PHP CLI'];
+        }
         if( !self::check_php_function('exec', 'web', false) ){
             return [];
         }
@@ -461,7 +465,7 @@ class System{
         if( THIS_PAGE == 'cb_install' ){
             $complement = ' install';
         }
-        $cmd = $php_path . ' ' . DirPath::get('admin_actions') . 'phpinfo.php' . $complement;
+        $cmd = escapeshellarg($php_path) . ' ' . DirPath::get('admin_actions') . 'phpinfo.php' . $complement;
 
         exec($cmd, $php_cli_info);
 

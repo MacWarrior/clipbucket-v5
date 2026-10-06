@@ -72,6 +72,9 @@ assign('type', $type);
 assign('results', $results);
 assign('search_type_title', lang('searching_keyword_in_obj', [display_clean($_GET['query']), strtolower(lang($type))]));
 
+$min_suffixe = System::isInDev() ? '' : '.min';
+ClipBucket::getInstance()->addJS(['pages/search/search' . $min_suffixe . '.js' => 'admin']);
+
 if (get('query')) {
     $squery = get('query');
     if ($squery == 'clipbucket') {
