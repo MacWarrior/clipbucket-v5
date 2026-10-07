@@ -284,6 +284,11 @@ $cat_array = [
 ];
 assign('cat_array', $cat_array);
 
+$min_suffixe = System::isInDev() ? '' : '.min';
+ClipBucket::getInstance()->addAdminJS([
+    'pages/members/members' . $min_suffixe . '.js' => 'admin',
+]);
+
 subtitle(lang('manage_x', strtolower(lang('users'))));
 template_files('members.html');
 display_it();
