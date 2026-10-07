@@ -4,9 +4,10 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title" id="funscript-title">Connect</h4>
+                <h4 class="modal-title" id="funscript-title">Connect a device</h4>
             </div>
             <div class="modal-body">
+                <p>This video provides synchronized controls for compatible devices. Choose how to connect your device.</p>
                 <div id="funscript-menu" class="list-group">
                     <button type="button" class="list-group-item" data-funscript-page="bluetooth"><span class="fa fa-bluetooth-b" aria-hidden="true"></span> Bluetooth <span class="glyphicon glyphicon-chevron-right pull-right"></span></button>
                     <button type="button" class="list-group-item" data-funscript-page="intiface">Intiface — Bluetooth / USB <span class="glyphicon glyphicon-chevron-right pull-right"></span></button>
@@ -15,7 +16,6 @@
                     <button type="button" class="btn btn-default" data-funscript-page="menu"><span class="glyphicon glyphicon-chevron-left"></span> Back</button>
                     <h4>Bluetooth</h4>
                     <p>Switch on your device and close other applications connected to it. Select it in the browser Bluetooth dialog.</p>
-                    <p>Intiface supports a wide range of devices, from vibrators to strokers (<a href="https://iostindex.com/?filter0Availability=Available,DIY&amp;filter1ButtplugSupport=4" target="_blank" rel="noopener noreferrer">supported devices</a>). Availability through direct Bluetooth depends on the device.</p>
                     <p>If your device does not appear or you have trouble connecting, install <a href="https://intiface.com/" target="_blank" rel="noopener noreferrer">Intiface Central</a> on your desktop and use the Intiface connection.</p>
                     <p id="funscript-bluetooth-help">Bluetooth requires HTTPS and a browser with Web Bluetooth, such as Chrome or Edge. Otherwise use Intiface.</p>
                     <button type="button" class="btn btn-primary" id="funscript-bluetooth-connect">Connect device</button>
@@ -32,6 +32,11 @@
                     <button type="button" class="btn btn-default" id="funscript-scan" disabled>Scan</button>
                     <ul id="funscript-devices" class="list-group" style="margin-top:15px;"></ul>
                 </div>
+                <details>
+                    <summary>Device compatibility</summary>
+                    <p>Direct Bluetooth is available for a limited selection of devices. For broader Bluetooth and USB support, use <a href="https://intiface.com/" target="_blank" rel="noopener noreferrer">Intiface Central</a>.</p>
+                    <p>Check the <a href="https://iostindex.com/?filter0Availability=Available,DIY&amp;filter1ButtplugSupport=4" target="_blank" rel="noopener noreferrer">external device compatibility catalogue</a> for Intiface support.</p>
+                </details>
                 <div id="funscript-settings" style="display:none; margin-top:15px;">
                     <div class="form-group">
                         <strong>Stroke <span id="funscript-stroke-value">0–100%</span></strong>
@@ -46,13 +51,13 @@
                                 <input id="funscript-stroke-max" type="range" min="0" max="100" step="1" value="100">
                             </div>
                         </div>
-                        <p class="help-block">Adjust the stroke range to change the intensity of the script.</p>
+                        <p class="help-block">Adjust the range of movement sent to your device.</p>
                     </div>
                     <div class="form-group">
                         <label for="funscript-speed-limit">Speed limit <span id="funscript-speed-value">100%</span></label>
                         <button type="button" class="btn btn-default btn-xs pull-right" id="funscript-speed-reset">Reset</button>
                         <input id="funscript-speed-limit" type="range" min="0" max="100" step="1" value="100">
-                        <p class="help-block">Caps the output level before inversion: target position for strokers, intensity for vibrators and rotating devices. Video speed stays unchanged.</p>
+                        <p class="help-block">Caps the output level before inversion: position, vibration intensity or rotation speed, depending on the device. Video speed stays unchanged.</p>
                     </div>
                     <div class="checkbox"><label><input type="checkbox" id="funscript-invert"> Invert</label></div>
                     <div class="form-group">

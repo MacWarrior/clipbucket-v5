@@ -34,7 +34,7 @@ $(function () {
     }
 
     function refresh() {
-        $('#funscript-connect-label').text(synchronizer ? 'Connected' : 'Connect');
+        $('#funscript-connect-label').text(synchronizer ? 'Device connected' : 'Devices');
         $('#funscript-connect').toggleClass('funscript-connected', !!synchronizer);
         $('#funscript-settings').toggle(!!connection);
         $('#funscript-bluetooth-connect, #funscript-intiface-connect').prop('disabled', !!connection || connecting);
