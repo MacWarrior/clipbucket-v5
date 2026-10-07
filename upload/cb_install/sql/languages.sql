@@ -1970,4 +1970,5 @@ VALUES ('noted_x'),
        ('category_name'),
        ('enable_categ_as_submenu'),
        ('enable_all_categ_for'),
+       ('extracted_thumb_not_available_yet'),
        ('confirm_delete_users');
