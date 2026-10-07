@@ -9,7 +9,7 @@
                     <select name="id_email" class="select_email" id="select_email">
                         <option disabled selected></option>
                         {foreach from=$emails item=email}
-                            <option value="{$email.id_email}">{$email.code} - {$email.title}</option>
+                            <option value="{$email.id_email}">{display_clean($email.code)} - {display_clean($email.title)}</option>
                         {/foreach}
                     </select>
                 </div>
