@@ -12,10 +12,15 @@ $breadcrumb[0] = ['title' => lang('users'), 'url' => ''];
 $breadcrumb[1] = ['title' => 'Add Member', 'url' => DirPath::getUrl('admin_area') . 'add_member.php'];
 
 if (isset($_POST['add_member'])) {
-    if (userquery::getInstance()->signup_user($_POST)) {
-        sessionMessageHandler::add_message(lang('new_mem_added'), 'm',  DirPath::getUrl('admin_area') . 'members.php');
+    if (UserLevel::canUserEditUserLevel($_POST['level'])) {
+        if (userquery::getInstance()->signup_user($_POST)) {
+            sessionMessageHandler::add_message(lang('new_mem_added'), 'm', DirPath::getUrl('admin_area') . 'members.php');
+        }
+    } else {
+        e(lang('cannot_access_page'), 'w');
     }
 }
+assign('levels', UserLevel::getAll(['can_be_modified_by_current_user'=>true, 'no_anonymous'=>true]));
 
 $min_suffixe = System::isInDev() ? '' : '.min';
 ClipBucket::getInstance()->addAdminJS(['pages/add_member/add_member'.$min_suffixe.'.js' => 'admin']);

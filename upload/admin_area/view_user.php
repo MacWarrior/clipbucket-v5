@@ -14,6 +14,8 @@ if ($uid != userquery::getInstance()->get_anonymous_user()) {
 if (empty($udetails)) {
     redirect_to(DirPath::getUrl('admin_area') . 'members.php?user_not_found=1');
 }
+$can_edit = UserLevel::canUserEditUserLevel($udetails['level']);
+assign('can_edit', $can_edit);
 /* Generating breadcrumb */
 global $breadcrumb;
 $breadcrumb[0] = ['title' => lang('users'), 'url' => ''];
@@ -21,62 +23,64 @@ $breadcrumb[1] = ['title' => lang('manage_x', strtolower(lang('users'))), 'url' 
 $breadcrumb[2] = ['title' => 'Editing : ' . display_clean($udetails['username']), 'url' => DirPath::getUrl('admin_area') . 'view_user.php?uid=' . display_clean($uid)];
 
 if ($udetails) {
-    //Deactivating User
-    if (isset($_GET['deactivate'])) {
-        userquery::getInstance()->action('deactivate', $uid);
-        $udetails = User::getInstance()->getOne(['userid'=>$uid]);
-    }
-
-    //Activating User
-    if (isset($_GET['activate'])) {
-        userquery::getInstance()->action('activate', $uid);
-        $udetails = User::getInstance()->getOne(['userid'=>$uid]);
-    }
-
-    //Banning User
-    if (isset($_GET['ban'])) {
-        userquery::getInstance()->action('ban', $uid);
-        $udetails = User::getInstance()->getOne(['userid'=>$uid]);
-    }
-
-    //Unbanning User
-    if (isset($_GET['unban'])) {
-        userquery::getInstance()->action('unban', $uid);
-        $udetails = User::getInstance()->getOne(['userid'=>$uid]);
-    }
-
-    //Deleting User
-    if (isset($_GET['delete'])) {
-        User::getInstance((int)$uid)->delete();
-    }
-
-    //Deleting User Videos
-    if (isset($_GET['delete_vids'])) {
-        userquery::getInstance()->delete_user_vids($uid);
-    }
-
-    //Deleting User Contacts
-    if (isset($_GET['delete_contacts'])) {
-        userquery::getInstance()->remove_contacts($uid);
-    }
-
-    //Deleting User Pms
-    if (isset($_GET['delete_pms'])) {
-        userquery::getInstance()->remove_user_pms($uid);
-    }
-
-    if (isset($_POST['update_user'])) {
-        userquery::getInstance()->update_user($_POST);
-        if (!error()) {
-            $udetails = User::getInstance()->getOne(['userid'=>$uid]);
+    if ($can_edit) {
+        //Deactivating User
+        if (isset($_GET['deactivate'])) {
+            userquery::getInstance()->action('deactivate', $uid);
+            $udetails = User::getInstance()->getOne(['userid' => $uid]);
         }
-    }
 
-    if (isset($_GET['reset_password'])) {
-        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.2', '136')) {
-            e(lang('cant_reset_database_not_up_to_date'));
-        } else {
-            userquery::getInstance()->reset_password($uid, false);
+        //Activating User
+        if (isset($_GET['activate'])) {
+            userquery::getInstance()->action('activate', $uid);
+            $udetails = User::getInstance()->getOne(['userid' => $uid]);
+        }
+
+        //Banning User
+        if (isset($_GET['ban'])) {
+            userquery::getInstance()->action('ban', $uid);
+            $udetails = User::getInstance()->getOne(['userid' => $uid]);
+        }
+
+        //Unbanning User
+        if (isset($_GET['unban'])) {
+            userquery::getInstance()->action('unban', $uid);
+            $udetails = User::getInstance()->getOne(['userid' => $uid]);
+        }
+
+        //Deleting User
+        if (isset($_GET['delete'])) {
+            User::getInstance((int)$uid)->delete();
+        }
+
+        //Deleting User Videos
+        if (isset($_GET['delete_vids'])) {
+            userquery::getInstance()->delete_user_vids($uid);
+        }
+
+        //Deleting User Contacts
+        if (isset($_GET['delete_contacts'])) {
+            userquery::getInstance()->remove_contacts($uid);
+        }
+
+        //Deleting User Pms
+        if (isset($_GET['delete_pms'])) {
+            userquery::getInstance()->remove_user_pms($uid);
+        }
+
+        if (isset($_POST['update_user'])) {
+            userquery::getInstance()->update_user($_POST);
+            if (!error()) {
+                $udetails = User::getInstance()->getOne(['userid' => $uid]);
+            }
+        }
+
+        if (isset($_GET['reset_password'])) {
+            if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.2', '136')) {
+                e(lang('cant_reset_database_not_up_to_date'));
+            } else {
+                userquery::getInstance()->reset_password($uid, false);
+            }
         }
     }
 
@@ -168,7 +172,7 @@ $params['type_id'] = $uid;
 $params['order'] = ' comment_id DESC';
 $comments = Comments::getAll($params);
 assign('comments', $comments);
-
+assign('levels', UserLevel::getAll(['can_be_modified_by_current_user'=>true, 'no_anonymous'=>true]));
 assign('show_categ', Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.0', '323'));
 subtitle('View User');
 template_files('view_user.html');
