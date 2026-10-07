@@ -1,6 +1,6 @@
 {
   "version":"5.5.3",
-  "revision":"205",
+  "revision":"206",
   "status":"stable",
   "detail":[
     {
@@ -83,6 +83,7 @@
         ,"Implement random photo order"
         ,"Implement video rating display"
         ,"Implement categories as submenus"
+        ,"Implement custom thumbnails upload before the end of video conversion"
         ,"Update media rating"
         ,"Update collection management"
         ,"Update TMDB search interface"
