@@ -384,6 +384,7 @@ function getCategoryList($params = [])
         case 'videos':
         case 'v':
             $type = 'video';
+            $type_option = 'enable_all_categ_for_video';
             break;
 
         case 'users':
@@ -391,27 +392,31 @@ function getCategoryList($params = [])
         case 'u':
         case 'channels':
             $type = 'user';
+            $type_option = 'enable_all_categ_for_collection';
             break;
         case 'collection':
         case 'collections':
         case 'cl':
             $type = 'collection';
+            $type_option = 'enable_all_categ_for_collection';
             break;
         case 'photo':
             $type = 'photo';
+            $type_option = 'enable_all_categ_for_photo';
             break;
     }
     $cats = [];
+    if (!empty($params['with_all']) && config($type_option) == 'yes') {
+        $cats[] = ['category_id' => 'all', 'category_name' => lang('cat_all')];
+    }
     if( Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.0', '331') ){
         $params['category_type'] = Category::getInstance()->getIdsCategoriesType($type);
         $params['parent_only'] = true;
-        $cats = Category::getInstance()->getAll($params);
-        foreach ($cats as &$cat) {
+        $cats_type = Category::getInstance()->getAll($params);
+        foreach ($cats_type as &$cat) {
             $cat['children'] = Category::getInstance()->getChildren($cat['category_id']);
         }
-    }
-    if (!empty($params['with_all'])) {
-        $cats[] = ['category_id' => 'all', 'category_name' => lang('cat_all')];
+        $cats = array_merge($cats, $cats_type);
     }
     if (!empty($params['echo'])) {
         echo CBvideo::getInstance()->displayDropdownCategory($cats, $params);
@@ -2053,6 +2058,17 @@ function sort_link($data, $mode, $type): string
     } else {
         $cat = $_GET['cat'] ?? 'all';
     }
+    if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '299')) {
+        $allowed_sort = SortType::getSortTypes($type);
+        if (in_array($_GET['sort'], array_keys($allowed_sort))) {
+            $sort = $_GET['sort'];
+        }
+    } elseif(isset($_GET['sort'])) {
+        $sort = htmlspecialchars($_GET['sort']);
+    }
+    if (!is_numeric($cat) && $cat != 'all') {
+        $cat = 'all';
+    }
 
     //applying filters
     switch ($mode) {
@@ -2075,17 +2091,7 @@ function sort_link($data, $mode, $type): string
     if (!in_array($time, array_keys(time_links())) || empty($time)){
         $time = 'all_time';
     }
-    if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '299')) {
-        $allowed_sort = SortType::getSortTypes($type);
-        if (in_array($_GET['sort'], array_keys($allowed_sort))) {
-            $sort = $_GET['sort'];
-        }
-    } elseif(isset($_GET['sort'])) {
-        $sort = htmlspecialchars($_GET['sort']);
-    }
-    if (!is_numeric($cat) && $cat != 'all') {
-        $cat = 'all';
-    }
+
 
     $page = (int)$page;
     //prepare url
