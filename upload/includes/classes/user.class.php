@@ -371,6 +371,7 @@ class User extends Objects
         $param_email = $params['email'] ?? false;
         $param_email_strict = $params['email_strict'] ?? false;
         $param_username = $params['username'] ?? false;
+        $param_username_in = $params['username_in'] ?? false;
         $param_username_strict = $params['username_strict'] ?? false;
         $param_status = $params['status'] ?? false;
         $param_ban_status = $params['ban_status'] ?? false;
@@ -415,6 +416,12 @@ class User extends Objects
         }
         if( $param_username_strict ){
             $conditions[] = 'users.username LIKE \'' . mysql_clean( $param_username_strict) . '\'';
+        }
+        if ($param_username_in && is_array($param_username_in)) {
+            foreach ($param_username_in as &$item) {
+                $item = mysql_clean($item);
+            }
+            $conditions[] = 'users.username IN (\'' . implode('\', \'',$param_username_in) . '\')';
         }
         if( $param_status ){
             $conditions[] = 'users.usr_status = \'' . mysql_clean($param_status) . '\'';
