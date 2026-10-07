@@ -3,14 +3,21 @@
         {if $smarty.get.private=='private'}
             Private Channels
         {else}
-            {lang code='grp_manage_members_title'}
+            {lang('manage_x', strtolower(lang('users')))}
         {/if}
         <div class="btn-group">
             <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
                 Actions <span class="caret caret_margin"></span>
             </button>
-            <ul class="dropdown-menu pull-right" role="menu">
-                <li><a href="{DirPath::getUrl('admin_area')|cat:'add_member.php'}">{lang code='add_member'}</a></li>
+            <ul class="dropdown-menu pull-right inputs" role="menu">
+                <li><a href="{DirPath::getUrl('admin_area')|cat:'add_member.php'}">{lang('add_user')}</a></li>
+                <li><input type="submit" name="activate_selected" value="{lang code='activate'}"/></li>
+                <li><input type="submit" name="deactivate_selected" value="{lang code='deactivate'}"/></li>
+                <li><input type="submit" name="make_featured_selected" value="{lang code='make_featured'}"/></li>
+                <li><input type="submit" name="make_unfeatured_selected" value="{lang code='make_unfeatured'}" id="ban_selected2"/></li>
+                <li><input type="submit" name="ban_selected" value="Ban Selected" id="ban_selected"/></li>
+                <li><input type="submit" name="unban_selected" value="Unban Selected" id="unban_selected"/></li>
+                <li><input type="submit" name="delete_selected" value="{lang code='delete'}" onclick="return confirm_it('Are you sure you want to delete selected User(s)')"/></li>
             </ul>
         </div>
     </h2>
@@ -21,20 +28,10 @@
 {if $users}
 <!-- Displaying Members -->
 <form name="user_manage" method="post">
-  <div class="btn-group marginBottomSmall">
-    <input class="btn btn-primary btn-xs" type="submit" name="activate_selected" value="{lang code='activate'}"/>
-    <input class="btn btn-primary btn-xs" type="submit" name="deactivate_selected" value="{lang code='deactivate'}"/>
-    <input class="btn btn-primary btn-xs" type="submit" name="make_featured_selected" value="{lang code='make_featured'}"/>
-    <input class="btn btn-primary btn-xs" type="submit" name="make_unfeatured_selected" value="{lang code='make_unfeatured'}" id="ban_selected2"/>
-    <input class="btn btn-primary btn-xs" type="submit" name="ban_selected" value="Ban Selected" id="ban_selected"/>
-    <input class="btn btn-primary btn-xs" type="submit" name="unban_selected" value="Unban Selected" id="unban_selected"/>
-    <input class="btn btn-primary btn-xs" type="submit" name="delete_selected" value="{lang code='delete'}" onclick="return confirm_it('Are you sure you want to delete selected User(s)')"/>
-  </div>
 <table class="table table-bordered table-striped manageUsersTable">
 <tr>
     <td width="40" align="center" valign="middle" class="left_head">
     <input type="checkbox" name="checkall" onclick="checkUncheckAll(this);"/></td>
-    <td width="50" class="head">UID</td>
     <td class="head">User Details</td>
     <td>&nbsp;</td>
   </tr>
@@ -44,9 +41,6 @@
       <input name="check_user[]" type="checkbox" id="check_user" value="{$u.userid}" {if $u.userid == $anonymous_id}disabled="disabled"{/if}/>
     </td>
     <td>
-      {$u.userid}
-    </td>
-    <td>
         <div class="row">
             <div class="col-md-10">
                 <div class="row">
@@ -54,7 +48,7 @@
                         <img src="{userquery::getInstance()->getUserThumb($u)}" class="img-thumbnail oneUserImage" style="height:80px;width:80px;" alt="channel_thumb"/>
                     </div>
                     <div class="col-md-9">
-                        <a href="{DirPath::getUrl('admin_area')}view_user.php?uid={$u.userid}" class="oneUserName">{display_clean($u.username)}</a>
+                        <a href="{DirPath::getUrl('admin_area')}view_user.php?uid={$u.userid}" class="oneUserName" style="padding-left: 10px;">{display_clean($u.username)}</a>
                         <span>{$u.email}</span>
                         {if config('enable_channel_slogan') == 'yes' && !empty(User::getInstance($u.userid)->get('profile_slogan'))}
                         <br/>
@@ -118,16 +112,6 @@
   </tr>
 {/foreach}
 </table>
-
-<div class="btn-group">
-    <input class="btn btn-primary btn-xs" type="submit" name="activate_selected" value="{lang code='activate'}"/>
-    <input class="btn btn-primary btn-xs" type="submit" name="deactivate_selected" value="{lang code='deactivate'}"/>
-    <input class="btn btn-primary btn-xs" type="submit" name="make_featured_selected" value="{lang code='make_featured'}"/>
-    <input class="btn btn-primary btn-xs" type="submit" name="ban_selected2" value="{lang code='make_unfeatured'}" id="ban_selected2"/>
-    <input class="btn btn-primary btn-xs" type="submit" name="ban_selected" value="Ban Selected" id="ban_selected"/>
-    <input class="btn btn-primary btn-xs" type="submit" name="unban_selected" value="Unban Selected" id="unban_selected"/>
-    <input class="btn btn-primary btn-xs" type="submit" name="delete_selected" value="{lang code='delete'}" onclick="return confirm_it('Are you sure you want to delete selected video(s)')"/>
-  </div>
 </form>
 {else}
 	<div align="center"><strong><em>NO USER FOUND</em></strong></div>
