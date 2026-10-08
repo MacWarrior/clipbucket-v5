@@ -768,7 +768,7 @@ class EmailTemplate
     public static function getRenderedEmail(int $id_email_template, $content): string
     {
         $template_content = self::getOneTemplate(['id_email_template' => $id_email_template])['content'];
-        $email_content = self::getRenderedContent($content);
+        $email_content =self::getRenderedContent($content);
 
         return self::getRenderedContent($template_content, ['email_content'=> $email_content]);
     }
@@ -864,5 +864,112 @@ class EmailTemplate
     public static function getDefaultId(): int
     {
         return self::getDefault()['id_email_template'] ?? 0;
+    }
+
+    private static function getHTMLPurifierConfig()
+    {
+        $config = HTMLPurifier_Config::createDefault();
+        // Encodage
+        $config->set('Core.Encoding', 'UTF-8');
+        $config->set('HTML.Doctype', 'HTML 4.01 Transitional');
+        $config->set('CSS.Proprietary', true);
+        $config->set('HTML.DefinitionID', 'email_templates');
+        $config->set('HTML.DefinitionRev', 2);
+        $config->set('HTML.AllowedElements', [
+            'div', 'span', 'p', 'br', 'hr',
+            'b', 'strong', 'i', 'em', 'u',
+            'h1', 'h2', 'h3',
+            'ul', 'ol', 'li',
+            'table', 'tbody', 'thead', 'tfoot',
+            'tr', 'td', 'th',
+            'a', 'img',
+        ]);
+
+        $config->set('HTML.AllowedAttributes', [
+            '*.style',
+            '*.class',
+            '*.align',
+            '*.width',
+            '*.height',
+            'table.cellpadding',
+            'table.cellspacing',
+            'table.border',
+            'table.bgcolor',
+            'tr.bgcolor',
+            'td.bgcolor',
+            'td.colspan',
+            'td.rowspan',
+            'td.valign',
+            'th.bgcolor',
+            'th.colspan',
+            'th.rowspan',
+            'th.valign',
+            'a.href',
+            'a.title',
+            'a.target',
+            'img.src',
+            'img.alt',
+            'img.title',
+        ]);
+
+        // CSS nécessaire aux emails HTML
+        $config->set('CSS.AllowedProperties', [
+            'color',
+            'background',
+            'background-color',
+            'font-family',
+            'font-size',
+            'font-weight',
+            'font-style',
+            'line-height',
+            'text-align',
+            'text-decoration',
+            'vertical-align',
+            'width',
+            'height',
+            'min-width',
+            'max-width',
+            'min-height',
+            'max-height',
+            'margin',
+            'margin-top',
+            'margin-right',
+            'margin-bottom',
+            'margin-left',
+            'padding',
+            'padding-top',
+            'padding-right',
+            'padding-bottom',
+            'padding-left',
+            'border',
+            'border-width',
+            'border-style',
+            'border-color',
+            'border-collapse',
+            'border-radius',
+        ]);
+
+        // Autoriser les URL HTTP(S), ainsi que mailto pour les liens
+        $config->set('URI.AllowedSchemes', [
+            'http'   => true,
+            'https'  => true,
+            'mailto' => true,
+        ]);
+
+        // Autoriser les images HTTP
+        $config->set('URI.DisableExternalResources', false);
+        $config->set('URI.DisableResources', false);
+
+        return new HTMLPurifier($config);
+    }
+
+    /**
+     * @param $content
+     * @return string
+     */
+    public static function purify($content): string
+    {
+        $purify = self::getHTMLPurifierConfig();
+        return $purify->purify($content);
     }
 }

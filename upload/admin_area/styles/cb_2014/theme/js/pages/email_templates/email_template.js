@@ -202,7 +202,7 @@ function initListenerEmailEdit() {
 
     $('.back_to_email_list').off('click').on('click', () => {
         listEmail();
-    })
+    });
 }
 
 function refreshRenderEmail()
@@ -286,4 +286,3 @@ function updateSelect(select_id, options, type) {
         }));
     })
 }
-

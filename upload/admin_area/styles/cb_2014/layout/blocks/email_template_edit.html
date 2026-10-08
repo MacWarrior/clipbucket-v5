@@ -21,7 +21,7 @@
         </div>
         <div class="col-md-6">
             <label for="render"><b>{lang('rendered')}</b></label>
-            <div id="render" class="tab-content" style="width:100%;min-height:200px;padding:0;">{EmailTemplate::getRenderedContent($template.content)}</div>
+            <div id="render" class="tab-content" style="width:100%;min-height:200px;padding:0;">{EmailTemplate::purify(EmailTemplate::getRenderedContent($template.content))}</div>
         </div>
     </div>
     <div class="row text-center paddingTop">
