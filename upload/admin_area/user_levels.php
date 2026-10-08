@@ -24,7 +24,7 @@ if (!User::getInstance()->hasPermission('allow_manage_user_level') && userquery:
 }
 
 $mode = $_GET['mode'];
-$user_level_id = mysql_clean($_GET['lid']);
+$user_level_id = (int)$_GET['lid'];
 $action = mysql_clean($_GET['action']);
 
 //Deleting Level
