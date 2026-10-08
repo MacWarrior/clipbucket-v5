@@ -767,13 +767,10 @@ class EmailTemplate
      */
     public static function getRenderedEmail(int $id_email_template, $content): string
     {
-        require_once DirPath::get('libs') . 'htmlpurifier' . DIRECTORY_SEPARATOR . 'library' . DIRECTORY_SEPARATOR . 'HTMLPurifier.auto.php';
-        $purifier = self::getHTMLPurifierConfig();
-
         $template_content = self::getOneTemplate(['id_email_template' => $id_email_template])['content'];
         $email_content =self::getRenderedContent($content);
 
-        return $purifier->purify(self::getRenderedContent($template_content, ['email_content'=> $email_content]));
+        return self::getRenderedContent($template_content, ['email_content'=> $email_content]);
     }
 
     /**
@@ -869,7 +866,7 @@ class EmailTemplate
         return self::getDefault()['id_email_template'] ?? 0;
     }
 
-    public static function getHTMLPurifierConfig()
+    private static function getHTMLPurifierConfig()
     {
         $config = HTMLPurifier_Config::createDefault();
         // Encodage
@@ -964,5 +961,15 @@ class EmailTemplate
         $config->set('URI.DisableResources', false);
 
         return new HTMLPurifier($config);
+    }
+
+    /**
+     * @param $content
+     * @return string
+     */
+    public static function purify($content): string
+    {
+        $purify = self::getHTMLPurifierConfig();
+        return $purify->purify($content);
     }
 }

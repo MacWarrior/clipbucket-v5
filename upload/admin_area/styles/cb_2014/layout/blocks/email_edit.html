@@ -47,7 +47,7 @@
             {else}
                 {assign var=id_email_template value=$email.id_email_template}
             {/if}
-            <div id="render_email" class="tab-content" style="width:100%;min-height:200px;padding:0;">{EmailTemplate::getRenderedEmail($id_email_template, $email.content)}</div>
+            <div id="render_email" class="tab-content" style="width:100%;min-height:200px;padding:0;">{EmailTemplate::purify(EmailTemplate::getRenderedEmail($id_email_template, $email.content))}</div>
             {*<iframe id="render_email" sandbox="allow-same-origin" class="tab-content" style="width:100%;min-height:200px;padding:0;overflow: hidden;" srcdoc="{EmailTemplate::getRenderedEmail($id_email_template, $email.content)|escape:'html'}"></iframe>*}
         </div>
     </div>
