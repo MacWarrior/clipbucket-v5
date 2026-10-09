@@ -20,7 +20,7 @@ if ($_POST['update_watermark']) {
 
     foreach ($rows as $field) {
         $value = $_POST[$field];
-        if (in_array($filed, $numeric)) {
+        if (in_array($field, $numeric)) {
             if ($value < 0 || !is_numeric($value)) {
                 $value = 1;
             }
