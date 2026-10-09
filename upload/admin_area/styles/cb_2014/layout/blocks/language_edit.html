@@ -5,7 +5,7 @@
             <div class="col-md-4">
                 <label for="name">Language Name</label>
                 <div style="vertical-align: bottom;">
-                    <input style="vertical-align: middle; width: calc(100% - 180px);" name="name" type="text" class="form-control" id="name" value="{$lang_details.language_name}"/>
+                    <input style="vertical-align: middle; width: calc(100% - 180px);" name="name" type="text" class="form-control" id="name" value="{display_clean($lang_details.language_name)}"/>
                     <input name="language_id" type="hidden" class="form-control" id="language_id" value="{$lang_details.language_id}"/>
                 </div>
             </div>
@@ -22,7 +22,7 @@
             <div class="col-md-4">
                 <label for="codeAdd">Language Code</label>
                 <div style="vertical-align: bottom;">
-                    <input style="display: inline-block; vertical-align: middle; width: calc(100% - 180px);" name="code" type="text" class="form-control" id="codeAdd" value="{$lang_details.language_code}"/>
+                    <input style="display: inline-block; vertical-align: middle; width: calc(100% - 180px);" name="code" type="text" class="form-control" id="codeAdd" value="{display_clean($lang_details.language_code)}"/>
                     <input style="display: inline-block; width: 120px; margin-left: 10px;" type="submit" name="update_language" class="btn btn-primary" value="{lang code='update'}" id="update_language"/>
                 </div>
             </div>
