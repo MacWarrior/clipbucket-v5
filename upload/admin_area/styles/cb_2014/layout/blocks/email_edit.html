@@ -31,7 +31,7 @@
             <label for="email_title">{lang('title')}</label>
         </div>
         <div class="col-md-10">
-            <input name="title" id="email_title" value="{$email.title}" type="text" style="width:100%;"/>
+            <input name="title" id="email_title" value="{display_clean($email.title)}" type="text" style="width:100%;"/>
         </div>
     </div>
     <hr>
