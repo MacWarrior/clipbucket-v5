@@ -6,7 +6,7 @@
                 <label for="name">Language Name</label>
                 <div style="vertical-align: bottom;">
                     <input style="vertical-align: middle; width: calc(100% - 180px);" name="name" type="text" class="form-control" id="name" value="{$lang_details.language_name}"/>
-                    <input name="language_id" type="hidden" class="form-control" id="language_id" value="{$lang_details.language_id}"/>
+                    <input name="language_id" type="hidden" class="form-control" id="language_id" value="{(int)$lang_details.language_id}"/>
                 </div>
             </div>
             <div class="col-md-4">
@@ -37,7 +37,7 @@
                 <label for="search">{lang code="search"}</label>
                 <div style="vertical-align: bottom;">
                     <input style="display: inline-block; width: calc(100% - 150px); vertical-align: middle;" name="search" class="form-control" type="text" id="search" value="{display_clean($smarty.get.search)}"/>
-                    <input name="edit_language" type="hidden" value="{$smarty.get.edit_language}"/>
+                    <input name="edit_language" type="hidden" value="{(int)$smarty.get.edit_language}"/>
                     <input style="display: inline-block; width: 120px; margin-left: 10px;" type="submit" name="search_phrase" class="btn btn-primary" value='{lang code="search"}'
                            id="search_phrase"/>
                 </div>
