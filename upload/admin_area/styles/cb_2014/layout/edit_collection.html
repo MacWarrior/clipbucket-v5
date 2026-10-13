@@ -14,6 +14,7 @@
                 {else}
                     <li><a href="{DirPath::getUrl('admin_area')}edit_collection.php?collection={$data.collection_id}&amp;mode=make_feature">{lang('make_featured')}</a></li>
                 {/if}
+                <li><a href="{DirPath::getUrl('root')}view_collection.php?cid={$data.collection_id}">{lang('view_collection')}</a></li>
                 <li>
                     <a href="javascript:void(0);" onClick="if (confirm('{lang('confirm_collection_delete')}')) document.location = 'collection_manager.php?delete_collection={$data.collection_id}'">{lang code='delete'}</a>
                 </li>
