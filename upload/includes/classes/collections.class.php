@@ -57,6 +57,11 @@ class Collection extends Objects
             $this->fields[] = 'hierarchy_featured';
         }
 
+        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '999')) {
+            $this->fields[] = 'sub_item_featured';
+            $this->fields[] = 'sub_collection_featured';
+        }
+
         if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '117')) {
             $this->fields[] = 'total_rate_up';
             $this->fields[] = 'total_rate_down';
@@ -269,6 +274,7 @@ class Collection extends Objects
         $param_with_sub_items = $params['with_sub_items'] ?? false;
         $param_count_items_only = $params['count_items_only'] ?? false;
         $param_limit_item = $params['limit_item'] ?? false;
+        $param_check_for_featured_restriction = $params['check_for_featured_restriction'] ?? false;
 
         $conditions = [];
         if( $param_collection_id !== false ){
@@ -552,8 +558,12 @@ class Collection extends Objects
                         FROM descendants
                         WHERE depth > 0;';
                     $collection_child_list = Clipbucket_db::getInstance()->_select($sql_childs, 60, 'collection_childrens_'. $collection['collection_id']);
-                    $params_item['collection_id'] = array_map(fn($item) => $item['collection_id'], $collection_child_list);
-                    $params_item['collection_id'][] = $collection['collection_id'];
+                    if (($param_check_for_featured_restriction && $collection['sub_item_featured'] == 'yes') || !$param_check_for_featured_restriction) {
+                        $params_item['collection_id'] = array_map(fn($item) => $item['collection_id'], $collection_child_list);
+                        $params_item['collection_id'][] = $collection['collection_id'];
+                    } else {
+                        $params_item['collection_id'] = $collection['collection_id'];
+                    }
                 } else {
                     $params_item['collection_id'] = $collection['collection_id'];
                 }
@@ -582,6 +592,10 @@ class Collection extends Objects
                         $params_item['order'] = $this->getTableNameItems() . '.date_added ASC';
                     }
                     $collection['items'] = Photo::getInstance()->getAll($params_item);
+                }
+
+                if ($collection['sub_collection_featured'] == 'yes' && !empty($collection_child_list)) {
+                    $collection['items_collections'] = $this->getAll(['condition' => ' ' . $this->getTableName() . '.collection_id IN (' . implode(', ',array_column($collection_child_list, 'collection_id')) . ')' , 'allow_children'=>true]);
                 }
 
                 if( $param_count_items_only ){
@@ -1691,6 +1705,37 @@ class Collections extends CBCategory
                 'checked'           => $default['hierarchy_featured'] ?? 'no',
                 'hint_icon'         => lang('display_collection_hierarchy_featured_hint'),
                 'db_field'          => 'hierarchy_featured',
+                'required'          => 'no',
+                'validate_function' => 'yes_or_no',
+                'default_value'     => 'yes'
+            ];
+        }
+
+        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '999')) {
+            $return['sub_item_featured'] = [
+                'title'             => lang('sub_item_featured'),
+                'class'             => 'form-control',
+                'type'              => 'checkboxv2',
+                'id'                => 'sub_item_featured',
+                'name'              => 'sub_item_featured',
+                'value'             => 'yes',
+                'checked'           => $default['sub_item_featured'] ?? 'no',
+                'hint_icon'         => lang('display_collection_sub_item_featured_hint'),
+                'db_field'          => 'sub_item_featured',
+                'required'          => 'no',
+                'validate_function' => 'yes_or_no',
+                'default_value'     => 'yes'
+            ];
+            $return['sub_collection_featured'] = [
+                'title'             => lang('sub_collection_featured'),
+                'class'             => 'form-control',
+                'type'              => 'checkboxv2',
+                'id'                => 'sub_collection_featured',
+                'name'              => 'sub_collection_featured',
+                'value'             => 'yes',
+                'checked'           => $default['sub_collection_featured'] ?? 'no',
+                'hint_icon'         => lang('display_collection_sub_collection_featured_hint'),
+                'db_field'          => 'sub_collection_featured',
                 'required'          => 'no',
                 'validate_function' => 'yes_or_no',
                 'default_value'     => 'yes'

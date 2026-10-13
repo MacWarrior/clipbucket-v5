@@ -79,12 +79,13 @@ Assign('ids_to_check_progress_recent', json_encode($ids_to_check_progress));
 $ids_to_check_progress = [];
 if (config('home_display_featured_collections') == 'yes') {
     $params = [
-        'featured'              => 'yes',
-        'type'                  => 'videos',
-        'hide_empty_collection' => true,
-        'with_items'            => true,
-        'with_sub_items'        => true,
-        'allow_children'        => true
+        'featured'                       => 'yes',
+        'type'                           => 'videos',
+        'hide_empty_collection'          => true,
+        'with_items'                     => true,
+        'with_sub_items'                 => true,
+        'allow_children'                 => true,
+        'check_for_featured_restriction' => true
     ];
 
     $featured_collections = Collection::getInstance()->getAll($params);

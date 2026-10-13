@@ -25,7 +25,13 @@
                         {break}
                     {/if}
                 {/foreach}
-
+                {if !empty($collection_children)}
+                    {foreach $collection_children as $collection_child}
+                        <div class="clearfix collection-item colcb-xs-1 colcb-768-2 colcb-992-3">
+                            {include file="$style_dir/blocks/collection-item.html" collection=$collection_child}
+                        </div>
+                    {/foreach}
+                {/if}
                 {if $view_more}
                 <div class="slider-video-container">
                     <div class="thumb-video-padding">
@@ -37,28 +43,32 @@
                 {/if}
 
             {elseif in_array($video_style, [false, 'classic'])}
-            <div class="videos">
-                {$count = 0}
-                {foreach $video_list as $video}
-                <div class="item-video" data-id="{$video.videoid}">
-                    {include file="$style_dir/blocks/videos/video-classic.html"}
-                </div>
-                    {$count = $count + 1}
-                    {if $limit && $count >= $limit}
-                        {break}
+                <div class="videos">
+                    {$count = 0}
+                    {foreach $video_list as $video}
+                        <div class="item-video" data-id="{$video.videoid}">
+                            {include file="$style_dir/blocks/videos/video-classic.html"}
+                        </div>
+                            {$count = $count + 1}
+                            {if $limit && $count >= $limit}
+                                {break}
+                            {/if}
+                    {/foreach}
+                    {if !empty($collection_children)}
+                        {foreach $collection_children as $collection_child}
+                            {include file="$style_dir/blocks/collection-item.html" collection=$collection_child}
+                        {/foreach}
                     {/if}
-                {/foreach}
-
-                {if $view_more}
-                <div class="slider-video-container">
-                    <div class="thumb-video-padding">
-                        <a class="thumb-video" href="{$main_link}" title="{lang code='view_more'}">
-                            <span>{lang code='view_more'}</span>
-                        </a>
+                    {if $view_more}
+                    <div class="slider-video-container">
+                        <div class="thumb-video-padding">
+                            <a class="thumb-video" href="{$main_link}" title="{lang code='view_more'}">
+                                <span>{lang code='view_more'}</span>
+                            </a>
+                        </div>
                     </div>
+                    {/if}
                 </div>
-                {/if}
-            </div>
             {/if}
         </div>
     </div>
