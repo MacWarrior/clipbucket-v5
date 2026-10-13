@@ -369,6 +369,7 @@ $(document).ready(function(){
                     });
                     $('#tab'+index+' .saveVideoDetails').removeAttr('disabled');
                     $('#tab'+index+' #button_info_tmdb').removeAttr('disabled');
+                    $('#tab'+index+' #upload_thumbs').removeAttr('disabled');
                     getUpdate();
                 }
             }
@@ -604,70 +605,75 @@ function saveInfoTmdb(tmdb_video_id, type, videoid) {
 
 function getUpdate() {
     clearInterval(intervalId);
+    getUpdateRequest();
     if (ids_to_check_progress.length > 0) {
         intervalId = setInterval(function () {
-            $.post({
-                url: baseurl+'actions/progress_video.php',
-                dataType: 'json',
-                data: {
-                    ids: ids_to_check_progress,
-                    output: 'watch_video',
-                    display_thumbs: true,
-                    display_subtitles: true
-                },
-                success: function (response) {
-                    var data = response.data;
-
-                    data.videos.forEach(function (video) {
-                        if ( video.percent > 0 || typeof video.percent === "undefined" && video.status.toLowerCase() !== 'waiting') {
-                            displayThumbSection('thumb', video.videoid, video.thumbs.thumbs);
-                            displayThumbSection('poster', video.videoid, video.thumbs.posters);
-                            displayThumbSection('backdrop', video.videoid, video.thumbs.backdrops);
-                            if (typeof video.subtitles !== 'undefined' && video.subtitles.length > 0) {
-                                if (video.status.toLowerCase() == 'successful' && $('input[id^="videoid_"][value="' + video.videoid + '"]').parent().find('#subtitles_'+video.videoid).length === 0) {
-                                    const subtitles = $(video.subtitles).hide();
-                                    subtitles.insertBefore($('input[id^="videoid_"][value="' + video.videoid + '"]').parent().find('.pad-bottom-sm.text-right'));
-                                    subtitles.slideDown('slow');
-                                } else {
-                                    const parent_div = $('input[id^="videoid_"][value="' + video.videoid + '"]').parent().find('#subtitles_'+video.videoid).parents('.formSection.clear')[0];
-                                    $(parent_div).replaceWith(video.subtitles);
-                                }
-                            }
-                            slideFormSection();
-                        }
-                        const parent = $('input[id^="videoid_"][value="'+video.videoid+'"]').parents('.tab-pane.uploadFormContainer');
-                        if (video.status.toLowerCase() === 'processing') {
-                            //update %
-                            var process_div = $('.processing[data-id="' + video.videoid + '"]');
-                            //if process don't exist : get thumb + process div
-                            if (process_div.length === 0) {
-                                players[video.videoid] = video.html;
-                                if (parent.hasClass('active')) {
-                                    parent.find('.player-holder').html(video.html);
-                                }
-                            } else {
-                                process_div.find('span').html(video.percent + '%');
-                            }
-                        } else {
-                            players[video.videoid] = video.html;
-                            //reset html only if tab is active and player not already initialized
-                            if (parent.hasClass('active') && parent.find('.player-holder video').length <= 0) {
-                                parent.find('.player-holder').html(video.html);
-                            }
-                            let images = document.querySelectorAll("img[data-thumbs]")
-                            listenerPreviewThumbs(images);
-                        }
-                    });
-
-                    if (response.all_complete) {
-                        clearInterval(intervalId);
-                    }
-                }
-            })
+            getUpdateRequest();
         }, 30000);
     }
 }
 
+function getUpdateRequest() {
+    $.post({
+        url: baseurl + 'actions/progress_video.php',
+        dataType: 'json',
+        data: {
+            ids: ids_to_check_progress,
+            output: 'watch_video',
+            display_thumbs: true,
+            display_subtitles: true,
+            is_from_upload: true
+        },
+        success: function (response) {
+            var data = response.data;
+
+            data.videos.forEach(function (video) {
+                displayThumbSection('thumb', video.videoid, video.thumbs.thumbs);
+                if (video.percent > 0 || typeof video.percent === "undefined" && video.status.toLowerCase() !== 'waiting') {
+                    displayThumbSection('poster', video.videoid, video.thumbs.posters);
+                    displayThumbSection('backdrop', video.videoid, video.thumbs.backdrops);
+                    if (typeof video.subtitles !== 'undefined' && video.subtitles.length > 0) {
+                        if (video.status.toLowerCase() == 'successful' && $('input[id^="videoid_"][value="' + video.videoid + '"]').parent().find('#subtitles_' + video.videoid).length === 0) {
+                            const subtitles = $(video.subtitles).hide();
+                            subtitles.insertBefore($('input[id^="videoid_"][value="' + video.videoid + '"]').parent().find('.pad-bottom-sm.text-right'));
+                            subtitles.slideDown('slow');
+                        } else {
+                            const parent_div = $('input[id^="videoid_"][value="' + video.videoid + '"]').parent().find('#subtitles_' + video.videoid).parents('.formSection.clear')[0];
+                            $(parent_div).replaceWith(video.subtitles);
+                        }
+                    }
+                }
+                slideFormSection();
+                const parent = $('input[id^="videoid_"][value="' + video.videoid + '"]').parents('.tab-pane.uploadFormContainer');
+                if (video.status.toLowerCase() === 'processing') {
+                    //update %
+                    var process_div = $('.processing[data-id="' + video.videoid + '"]');
+                    //if process don't exist : get thumb + process div
+                    if (process_div.length === 0) {
+                        players[video.videoid] = video.html;
+                        if (parent.hasClass('active')) {
+                            parent.find('.player-holder').html(video.html);
+                        }
+                    } else {
+                        process_div.find('span').html(video.percent + '%');
+                    }
+                } else {
+                    players[video.videoid] = video.html;
+                    //reset html only if tab is active and player not already initialized
+                    if (parent.hasClass('active') && parent.find('.player-holder video').length <= 0) {
+                        parent.find('.player-holder').html(video.html);
+                    }
+                    let images = document.querySelectorAll("img[data-thumbs]")
+                    listenerPreviewThumbs(images);
+                }
+            });
+
+            if (response.all_complete) {
+                clearInterval(intervalId);
+            }
+        }
+    });
+}
 
 function pageInfoTmdb(page, videoid) {
     let sort_type;
@@ -768,7 +774,7 @@ function displayThumbSection(type, video_id, html, parent_div) {
     if (type != 'thumb' && type != 'poster' && type != 'backdrop') {
         return;
     }
-    let check_if_exists = '[name="default_thumb"]';
+    let check_if_exists = '.extracted_thumbs';
     if (type == 'poster' || type == 'backdrop') {
         check_if_exists = '#new_thumbs_' + type;
     }
@@ -799,6 +805,7 @@ function listenerUploadThumbs(parent, videoid) {
 //manage upload thumb/poster/ backdrops
     $(parent).find('#upload_thumbs').off('click').on('click', function (e) {
         e.preventDefault();
+        clearInterval(intervalId);
         var fd = new FormData();
 
         $.each($('#new_thumbs')[0].files, function (i, file) {
@@ -817,7 +824,9 @@ function listenerUploadThumbs(parent, videoid) {
                 dataType: 'json'
                 , success: function (data) {
                     hideSpinner();
-                    displayThumbSection('thumb', videoid, data.thumbs)
+                },
+                complete: function (data) {
+                    getUpdate();
                 }
             }
         )
