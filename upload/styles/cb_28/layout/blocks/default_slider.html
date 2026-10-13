@@ -27,7 +27,7 @@
                 {/foreach}
                 {if !empty($collection_children)}
                     {foreach $collection_children as $collection_child}
-                        <div class="clearfix collection-item colcb-xs-1 colcb-768-2 colcb-992-3">
+                        <div class="slider-video-container slider-collection-container collection-item">
                             {include file="$style_dir/blocks/collection-item.html" collection=$collection_child}
                         </div>
                     {/foreach}
@@ -56,7 +56,9 @@
                     {/foreach}
                     {if !empty($collection_children)}
                         {foreach $collection_children as $collection_child}
-                            {include file="$style_dir/blocks/collection-item.html" collection=$collection_child}
+                            <div class="item-video slider-collection-container collection-item">
+                                {include file="$style_dir/blocks/collection-item.html" collection=$collection_child}
+                            </div>
                         {/foreach}
                     {/if}
                     {if $view_more}
