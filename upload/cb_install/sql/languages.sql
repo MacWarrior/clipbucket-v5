@@ -1970,4 +1970,8 @@ VALUES ('noted_x'),
        ('category_name'),
        ('enable_categ_as_submenu'),
        ('enable_all_categ_for'),
-       ('extracted_thumb_not_available_yet');
+       ('extracted_thumb_not_available_yet'),
+       ('sub_item_featured'),
+       ('display_collection_sub_item_featured_hint'),
+       ('sub_collection_featured'),
+       ('display_collection_sub_collection_featured_hint');
