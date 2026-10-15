@@ -398,7 +398,7 @@ class UserLevel
             return false;
         }
 
-        $levelDetails = userquery::getInstance()->get_level_details($user_level_id);
+        $levelDetails = userquery::getInstance()->get_level_details((int)$user_level_id);
         if( empty($levelDetails) ){
             return false;
         }
