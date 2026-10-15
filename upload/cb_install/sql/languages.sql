@@ -1970,4 +1970,8 @@ VALUES ('noted_x'),
        ('category_name'),
        ('enable_categ_as_submenu'),
        ('enable_all_categ_for'),
-       ('extracted_thumb_not_available_yet');
+       ('extracted_thumb_not_available_yet'),
+       ('display_in_footer'),
+       ('hide_from_footer'),
+       ('selected_page_hidden'),
+       ('selected_page_displayed');
