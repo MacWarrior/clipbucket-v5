@@ -69,7 +69,7 @@ class mass_upload extends Upload
                             $video_file['tracks'] = $tracks;
                         }
                         $video_file = array_merge($video_file, FFMpeg::get_video_basic_infos($filepath));
-                        CacheRedis::getInstance()->set($cache_key . $filepath, $video_file, 900);
+                        CacheRedis::getInstance()->set($cache_key . $filepath, $video_file, 3600);
                     }
 
                     $FILE_LIST[] = $video_file;
