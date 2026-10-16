@@ -2,7 +2,6 @@ var modal;
 var results;
 var add;
 var page = 1;
-var pages = 0;
 var query = '';
 var request = null;
 var busy = false;
@@ -48,18 +47,19 @@ function eventListeners() {
             window.location.href = window.location.href;
         }
     });
-    modal.find('.collection-items-search').on('submit', function (event) {
+    modal.on('submit', '.collection-items-search', function (event) {
         event.preventDefault();
         query = modal.find('#collection-items-query').val();
         search(1);
     });
-    modal.find('.collection-items-previous').on('click', function () {
-        search(page - 1);
+    modal.on('click', '.pagination a', function (event) {
+        event.preventDefault();
+        const targetPage = Number($(this).data('page'));
+        if (!busy && Number.isInteger(targetPage) && targetPage > 0) {
+            search(targetPage);
+        }
     });
-    modal.find('.collection-items-next').on('click', function () {
-        search(page + 1);
-    });
-    results.on('change', '.collection-items-check', function () {
+    modal.on('change', '.collection-items-check', function () {
         if (this.checked) {
             selected.add(this.value);
         } else {
@@ -67,13 +67,14 @@ function eventListeners() {
         }
         updateSelection();
     });
-    modal.find('.collection-items-all').on('change', function () {
+    modal.on('change', '.collection-items-all', function () {
         results.find('input:enabled').prop('checked', this.checked).trigger('change');
     });
     add.on('click', async function () {
         if (busy || !selected.size) {
             return;
         }
+        showSpinner();
         busy = true;
         controls();
         try {
@@ -97,8 +98,6 @@ function eventListeners() {
                 }
             }
             window.location.href = window.location.href;
-        } catch (xhr) {
-            showError(xhr);
         } finally {
             if (!request) {
                 busy = false;
@@ -110,8 +109,7 @@ function eventListeners() {
 
 function controls() {
     modal.find('.collection-items-search :input').prop('disabled', busy);
-    modal.find('.collection-items-previous').prop('disabled', busy || page <= 1);
-    modal.find('.collection-items-next').prop('disabled', busy || page >= pages);
+    modal.find('.pagination a').attr('aria-disabled', busy ? 'true' : 'false');
     results.find('input').prop('disabled', function () {
         return busy || $(this).data('exists');
     });
@@ -123,6 +121,7 @@ function search(targetPage) {
         request.abort();
     }
     busy = true;
+    showSpinner();
     controls();
     results.attr('aria-busy', 'true');
     modal.find('.collection-items-message').empty();
@@ -133,8 +132,9 @@ function search(targetPage) {
         data: {collection_id: modal.data('collection-id'), query: query, page: targetPage},
         success: function (data) {
             page = data.page;
-            pages = data.pages;
-            $('.modal-body').html(data.html);
+            modal.find('.modal-body').html(data.html);
+            results = modal.find('.collection-items-results');
+            modal.find('#collection-items-query').val(query);
             results.find('.collection-items-check').each(function () {
                 if ($(this).data('exists')) {
                     selected.delete(this.value);
@@ -142,8 +142,6 @@ function search(targetPage) {
                     $(this).prop('checked', selected.has(this.value));
                 }
             });
-            modal.find('.collection-items-page').text(page + ' / ' + Math.max(1, pages));
-
         },
         error: function (xhr, status) {
             if (status !== 'abort') {
@@ -155,6 +153,7 @@ function search(targetPage) {
             request = null;
             results.attr('aria-busy', 'false');
             controls();
+            hideSpinner();
         }
     });
 }

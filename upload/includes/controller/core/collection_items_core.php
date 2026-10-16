@@ -22,6 +22,7 @@ if ($response['success']) {
     $id_field = $type == 'videos' ? 'videoid' : 'photo_id';
     $action = $_POST['action'] ?? 'search';
     if ($action == 'add') {
+        $added = [];
         foreach (array_unique($_POST['ids']) as $id) {
             $id = (int)$id;
             if (!$object->getOne([$id_field => $id])) {
@@ -33,7 +34,6 @@ if ($response['success']) {
                 $added[] = $id;
             }
         }
-        $added = [];
     } elseif ($action == 'search') {
         $page = max(1, (int)($_POST['page'] ?? 1));
         $limit = max(1, $object->getSearchLimit());
@@ -43,6 +43,8 @@ if ($response['success']) {
         unset($params['limit']);
         $params['count'] = true;
         $total = $object->getAll($params);
+        $total_pages = (int)count_pages($total, $limit);
+        pages::getInstance()->paginate($total_pages, $page, 'javascript:void(0);', 'data-page="#page#"');
         $existing = array_column(Collection::getInstance()->getItems(['collection_id' => $collection_id]) ?: [], $id_field);
         $items = [];
         foreach ($results as $result) {
@@ -64,9 +66,10 @@ if ($response['success']) {
 }
 echo json_encode([
     'success' => $response['success'],
-    'html'    => $response['template'],
+    'html'    => $response['template'] ?? '',
+    'added'   => $added ?? [],
     'msg'     => getTemplateMsg(),
     'page'    => $page ?? 0,
-    'pages'   => (int)count_pages($total, $limit)
+    'pages'   => $total_pages ?? 0
 ]);
 exit();
