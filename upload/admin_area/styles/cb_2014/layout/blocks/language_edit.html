@@ -5,7 +5,7 @@
             <div class="col-md-4">
                 <label for="name">Language Name</label>
                 <div style="vertical-align: bottom;">
-                    <input style="vertical-align: middle; width: calc(100% - 180px);" name="name" type="text" class="form-control" id="name" value="{display_clean($lang_details.language_name)}"/>
+                    <input style="vertical-align: middle; width: calc(100% - 180px);" name="name" type="text" class="form-control" id="name" maxlength="20" value="{display_clean($lang_details.language_name)}"/>
                     <input name="language_id" type="hidden" class="form-control" id="language_id" value="{$lang_details.language_id}"/>
                 </div>
             </div>
