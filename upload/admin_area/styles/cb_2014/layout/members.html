@@ -10,7 +10,7 @@
                 Actions <span class="caret caret_margin"></span>
             </button>
             <ul class="dropdown-menu pull-right inputs" role="menu">
-                <li><a href="{DirPath::getUrl('admin_area')|cat:'add_member.php'}">{lang('add_user')}</a></li>
+                <li><a href="{DirPath::getUrl('admin_area')|cat:'add_member.php'}" style="padding-left: 10px;">{lang('add_user')}</a></li>
                 <li><input type="submit" name="activate_selected" value="{lang code='activate'}"/></li>
                 <li><input type="submit" name="deactivate_selected" value="{lang code='deactivate'}"/></li>
                 <li><input type="submit" name="make_featured_selected" value="{lang code='make_featured'}"/></li>
@@ -48,7 +48,7 @@
                         <img src="{userquery::getInstance()->getUserThumb($u)}" class="img-thumbnail oneUserImage" style="height:80px;width:80px;" alt="channel_thumb"/>
                     </div>
                     <div class="col-md-9">
-                        <a href="{DirPath::getUrl('admin_area')}view_user.php?uid={$u.userid}" class="oneUserName" style="padding-left: 10px;">{display_clean($u.username)}</a>
+                        <a href="{DirPath::getUrl('admin_area')}view_user.php?uid={$u.userid}" class="oneUserName" >{display_clean($u.username)}</a>
                         <span>{$u.email}</span>
                         {if config('enable_channel_slogan') == 'yes' && !empty(User::getInstance($u.userid)->get('profile_slogan'))}
                         <br/>
