@@ -1,0 +1,40 @@
+<div class="modal fade" id="collection-items-modal" tabindex="-1" role="dialog" aria-labelledby="collection-items-title"
+     data-collection-id="{$collection_items_id|escape:'html'}" data-token="{$collection_items_token|escape:'html'}"
+     data-url="{DirPath::getUrl('root')}actions/collection_items.php" data-error="{lang('error_occured')|escape:'html'}"
+     data-empty="{lang('no_results_found')|escape:'html'}" data-exists="{lang('object_exists_collection', '%s')|escape:'html'}">
+    <div class="modal-dialog" role="document" style="width:80%;max-width:1200px;margin:30px auto;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="{lang('cancel')}">&times;</button>
+                <h4 class="modal-title" id="collection-items-title">{lang('add_to_collection')}</h4>
+            </div>
+            <div class="modal-body">
+                <div class="collection-items-message" role="status" aria-live="polite"></div>
+                <form class="collection-items-search">
+                    <div class="input-group">
+                        <input type="search" class="form-control" id="collection-items-query" autocomplete="off">
+                        <span class="input-group-btn"><button type="submit" class="btn btn-primary">{lang('search')}</button></span>
+                    </div>
+                </form>
+                <div class="table-responsive" style="max-height:55vh;overflow:auto;margin-top:15px;">
+                    <table class="table table-bordered table-striped">
+                        <thead><tr>
+                            <th style="width:40px;"><input type="checkbox" class="collection-items-all" aria-label="{lang('all')}"></th>
+                            <th>{lang('title')}</th><th>{lang('date_added')}</th><th>{lang('description')}</th><th>{lang('thumbs')}</th>
+                        </tr></thead>
+                        <tbody class="collection-items-results"></tbody>
+                    </table>
+                </div>
+                <nav class="collection-items-pagination text-center" aria-label="{lang('search')}">
+                    <button type="button" class="btn btn-default collection-items-previous">{lang('previous')}</button>
+                    <span class="collection-items-page"></span>
+                    <button type="button" class="btn btn-default collection-items-next">{lang('next')}</button>
+                </nav>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">{lang('cancel')}</button>
+                <button type="button" class="btn btn-primary collection-items-add" disabled>{lang('add_to_collection')} (<span>0</span>)</button>
+            </div>
+        </div>
+    </div>
+</div>
