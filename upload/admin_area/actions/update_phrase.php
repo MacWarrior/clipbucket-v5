@@ -9,4 +9,4 @@ $language_id = $_POST['language_id'];
 
 Language::getInstance()->update_phrase($id_language_key, $translation, $language_id);
 
-echo $translation;
+echo display_clean($translation);
