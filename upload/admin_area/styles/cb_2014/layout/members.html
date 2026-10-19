@@ -28,7 +28,7 @@
     <input class="btn btn-primary btn-xs" type="submit" name="make_unfeatured_selected" value="{lang code='make_unfeatured'}" id="ban_selected2"/>
     <input class="btn btn-primary btn-xs" type="submit" name="ban_selected" value="Ban Selected" id="ban_selected"/>
     <input class="btn btn-primary btn-xs" type="submit" name="unban_selected" value="Unban Selected" id="unban_selected"/>
-    <input class="btn btn-primary btn-xs" type="submit" name="delete_selected" value="{lang code='delete'}" onclick="return confirm_it('Are you sure you want to delete selected User(s)')"/>
+    <input class="btn btn-primary btn-xs" type="submit" name="delete_selected" value="{lang code='delete'}" onclick="return confirm_it('{lang_js('confirm_delete_users')}')"/>
   </div>
 <table class="table table-bordered table-striped manageUsersTable">
 <tr>
@@ -88,16 +88,16 @@
                     {/if}
                     <li><a role="menuitem" tabindex="-1" href="{DirPath::getUrl('admin_area')}manage_playlist.php?userid={$u.userid}&search=Search">View Playlists</a></li>
 
-                    {if $u.usr_status == Ok && $u.userid != user_id()}
+                    {if $u.usr_status == Ok && $u.userid != user_id()  && $u.nb_diff == 0}
                         <li><a role="menuitem" tabindex="-1" href="?deactivate={$u.userid}">{lang code='deactivate'}</a></li>
-                    {elseif $u.usr_status == ToActivate && $u.userid != user_id()}
+                    {elseif $u.usr_status == ToActivate && $u.userid != user_id()  && $u.nb_diff == 0}
                         <li><a role="menuitem" tabindex="-1" href="?resend_verif={$u.userid}">Resend Verification</a></li>
                         <li><a role="menuitem" tabindex="-1" href="?activate={$u.userid}">{lang code='activate'}</a></li>
                     {/if}
-                    {if $u.ban_status == yes && $u.userid != user_id() }
+                    {if $u.ban_status == yes && $u.userid != user_id()   && $u.nb_diff == 0}
                         <li><a role="menuitem" tabindex="-1" href="?unban={$u.userid}">Unban Member</a></li>
                     {/if}
-                    {if $u.ban_status == no && $u.userid != user_id()}
+                    {if $u.ban_status == no && $u.userid != user_id()  && $u.nb_diff == 0}
                         <li><a role="menuitem" tabindex="-1" href="?ban={$u.userid}">Ban Member</a></li>
                     {/if}
                     {if $u.featured == no && $u.is_channel_enable }
@@ -106,7 +106,7 @@
                     {if $u.featured == yes}
                         <li><a role="menuitem" tabindex="-1" href="?unfeatured={$u.userid}">Unfeature Member</a></li>
                     {/if}
-                    {if $u.userid != user_id()}
+                    {if $u.userid != user_id()  && $u.nb_diff == 0}
                         <li><a role="menuitem" tabindex="-1" href="{DirPath::getUrl('admin_area')}login_as_user.php?uid={$u.userid}">Login as user</a></li>
                         <li class="divider"></li>
                         <li><a role="menuitem" tabindex="-1" href="?deleteuser={$u.userid}">{lang code='delete'}</a></li>
@@ -126,7 +126,7 @@
     <input class="btn btn-primary btn-xs" type="submit" name="ban_selected2" value="{lang code='make_unfeatured'}" id="ban_selected2"/>
     <input class="btn btn-primary btn-xs" type="submit" name="ban_selected" value="Ban Selected" id="ban_selected"/>
     <input class="btn btn-primary btn-xs" type="submit" name="unban_selected" value="Unban Selected" id="unban_selected"/>
-    <input class="btn btn-primary btn-xs" type="submit" name="delete_selected" value="{lang code='delete'}" onclick="return confirm_it('Are you sure you want to delete selected video(s)')"/>
+    <input class="btn btn-primary btn-xs" type="submit" name="delete_selected" value="{lang code='delete'}" onclick="return confirm_it('{lang_js('confirm_delete_users')}')"/>
   </div>
 </form>
 {else}

@@ -75,9 +75,14 @@ $(document).ready(function(){
         "dataProvider": storage_history
     });
 
-    document.getElementById('confirm_reset_password').addEventListener('click', function (e) {
-        if (!confirm(lang_confirm_reset_password)) {
-            e.preventDefault();
-        }
-    }, false);
+
+    if (!can_edit) {
+        $('#form1 input,#form1 select').prop('disabled', 'true');
+    } else {
+        document.getElementById('confirm_reset_password').addEventListener('click', function (e) {
+            if (!confirm(lang_confirm_reset_password)) {
+                e.preventDefault();
+            }
+        }, false);
+    }
 });
