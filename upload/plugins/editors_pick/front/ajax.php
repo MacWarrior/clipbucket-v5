@@ -5,7 +5,7 @@ require_once dirname(__DIR__, 3) . '/includes/config.inc.php';
 if (isset($_POST['vid'])) {
     $vid = mysql_clean($_POST['vid']);
     $vdetails = get_video_details($vid);
-    if ($vdetails) {
+    if ($vdetails && video_playable($vdetails)) {
         assign('video', $vdetails);
         $data = Fetch('blocks/videos/video_block.html');
         echo json_encode(['data' => $data]);
