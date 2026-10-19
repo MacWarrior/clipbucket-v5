@@ -62,7 +62,7 @@
                         {/if}
                         <div class="labels">
                             <span class="label {if $u.usr_status == Ok}label-success{else}label-warning{/if}"><span>{if $u.usr_status=='Ok'}{lang code='active'}{else}{lang code='inactive'}{/if}</span></span>
-                            <span class="label label-info"><span>{lang('user_levels')}: {lang($u.user_level_name|strtolower|replace:' ':'_')}</span></span>
+                            <span class="label label-info"><span>{lang('user_levels')}: {display_clean(lang($u.user_level_name|strtolower|replace:' ':'_'))}</span></span>
                             <span class="label"><span>Active</span> : <span>{$u.last_active|nicetime}</span></span>
                             {if $u.featured=='yes'}<span class="label label-primary">{lang code='featured'}</span>{/if}
                             {if $u.ban_status == "yes"}<span class="label label-danger"><span>Banned</span></span>{/if}
