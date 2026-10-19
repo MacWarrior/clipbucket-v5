@@ -33,7 +33,6 @@
                     <td>
                         <input type="checkbox" name="checkall" onclick="checkUncheckAll(this);"/>
                     </td>
-                    <td>Object Id</td>
                     <td>{lang code='details'}</td>
                 </tr>
                 {section name=list loop=$obj}
@@ -44,7 +43,6 @@
                                     <input name="check_obj[]" type="checkbox" id="check_obj-{$collection.videoid}" value="{$obj[list].photo_id}" style="display:inline;"/>
                                 </div>
                             </td>
-                            <td>{$obj[list].photo_id}</td>
                             <td>
                                 <div class="row">
                                     <div class="col-md-10">
@@ -81,7 +79,6 @@
                                     <input name="check_obj[]" type="checkbox" id="check_obj-{$collection.videoid}" value="{$obj[list].videoid}" style="display:inline;"/>
                                 </div>
                             </td>
-                            <td>{$obj[list].videoid}</td>
                             <td>
                                 <div class="row">
                                     <div class="col-md-10">
