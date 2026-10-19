@@ -3,7 +3,7 @@
         <input type="hidden" value="{$selected_lang}" name="selected_lang" id="selected_lang"/>
         <div class="row">
             <div class="col-md-6" style="padding-left: 0;">
-                <h2 class="pull-left paddingLeftLarge" >{if $mode == 'new'}{lang('add_new_page')}{else}{lang('editing_template', '')}<small>&gt; {display_clean(cbpage::getInstance()->getPageTranslation($page['page_id'], null, true, 'title'))}</small>{/if}</h2>
+                <h2 class="pull-left paddingLeftLarge" >{if $mode == 'new'}{lang('new_page')}{else}{lang('editing_template', '')}<small>&gt; {display_clean(cbpage::getInstance()->getPageTranslation($page['page_id'], null, true, 'title'))}</small>{/if}</h2>
             </div>
             <div class="col-md-6" style="text-align: right;">
                 <span style="font-size: 16px;">{lang('translations')} : </span>
@@ -50,18 +50,24 @@
     </form>
 {/if}
 {if $mode=='manage'}
-    <div class="heading">
-        <h2>{lang('manage_x', lang('pages')|lower)}</h2>
-    </div>
     <form name="page_form" action="?" method="post">
-        <div class="btn-group">
-            <input class="btn btn-primary btn-xs btn" type="submit" name="activate_selected" value="{lang code='activate'}"/>
-            <input class="btn btn-primary btn-xs btn" type="submit" name="deactivate_selected" value="{lang code='deactivate'}"/>
-            <input class="btn btn-primary btn-xs btn" type="submit" name="update_order" value="Update order"/>
-            <input class="btn btn-primary btn-xs btn" type="submit" name="delete_selected" value="{lang code='delete'}" onclick="return confirm_it('Are you sure you want to delete selected page(s)')"/>
-        </div>
-        <div class="form-group">
-            <input type="button" value="Create New Page +" class="btn btn-primary btn-sm pull-right" onClick="window.location='?mode=new'"/>
+        <div class="heading clearfix">
+            <h2 class="pull-left">{lang('manage_x', lang('pages')|lower)}
+                <div class="btn-group">
+                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                        Actions <span class="caret caret_margin"></span>
+                    </button>
+                    <ul class="dropdown-menu pull-right inputs" role="menu">
+                        <li><a href="{DirPath::getUrl('admin_area')}manage_pages.php?mode=new" >{lang('new_page')}</a></li>
+                        <li><input  type="submit" name="activate_selected" value="{lang code='activate'}"/></li>
+                        <li><input  type="submit" name="deactivate_selected" value="{lang code='deactivate'}"/></li>
+                        <li><input  type="submit" name="update_order" value="Update order"/></li>
+                        <li><input  type="submit" name="delete_selected" value="{lang code='delete'}" onclick="return confirm_it('Are you sure you want to delete selected page(s)')"/></li>
+                        <li><input  type="submit" name="hide_selected" value="{lang('hide_from_footer')}"/></li>
+                        <li><input  type="submit" name="display_selected" value="{lang('display_in_footer')}"/></li>
+                    </ul>
+                </div>
+            </h2>
         </div>
         <br><br>
         <table class="table table-bordered">
@@ -130,9 +136,9 @@
                                     <li role="presentation"><a class="disabled" role="menuitem" tabindex="-1" href="#">{lang code='delete'}</a></li>
                                 {/if}
                                 {if $cbpages[list].display!='yes'}
-                                    <li role="presentation"><a role="menuitem" tabindex="-1" href="?display={$cbpages[list].page_id}">Display in footer</a></li>
+                                    <li role="presentation"><a role="menuitem" tabindex="-1" href="?display={$cbpages[list].page_id}">{lang('display_in_footer')}</a></li>
                                 {else}
-                                    <li role="presentation"><a role="menuitem" tabindex="-1" href="?hide={$cbpages[list].page_id}">Hide from footer</a></li>
+                                    <li role="presentation"><a role="menuitem" tabindex="-1" href="?hide={$cbpages[list].page_id}">{lang('hide_from_footer')}</a></li>
                                 {/if}
                             </ul>
                         </div>
@@ -146,13 +152,6 @@
 
             {/section}
         </table>
-
-        <div class="btn-group">
-            <input class="btn btn-primary btn-xs btn" type="submit" name="activate_selected" value="{lang code='activate'}"/>
-            <input class="btn btn-primary btn-xs btn" type="submit" name="deactivate_selected" value="{lang code='deactivate'}"/>
-            <input class="btn btn-primary btn-xs btn" type="submit" name="update_order" value="Update order"/>
-            <input class="btn btn-primary btn-xs btn" type="submit" name="delete_selected" value="{lang code='delete'}" onclick="return confirm_it('Are you sure you want to delete selected page(s)')"/>
-        </div>
 
     </form>
 {/if}

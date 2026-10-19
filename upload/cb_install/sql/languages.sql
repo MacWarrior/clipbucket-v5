@@ -1972,4 +1972,8 @@ VALUES ('noted_x'),
        ('enable_all_categ_for'),
        ('extracted_thumb_not_available_yet'),
        ('lang_name_too_long'),
-       ('confirm_delete_users');
+       ('confirm_delete_users'),
+       ('display_in_footer'),
+       ('hide_from_footer'),
+       ('selected_page_hidden'),
+       ('selected_page_displayed');
