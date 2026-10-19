@@ -1,6 +1,6 @@
 {
   "version":"5.5.3",
-  "revision":"220",
+  "revision":"221",
   "status":"stable",
   "detail":[
     {
@@ -11,6 +11,7 @@
         ,"Refactor users deletion"
         ,"Refactor action logs"
         ,"Refactor TMDB data storage"
+        ,"Refactor manage users actions display"
         ,"Implement email alias allow option"
         ,"Implement templates edition"
         ,"Implement Regenerate videos thumbs tool"
