@@ -246,13 +246,13 @@ $min_suffixe = System::isInDev() ? '' : '.min';
 ClipBucket::getInstance()->addJS([
     'tag-it' . $min_suffixe . '.js'                                      => 'admin',
     'pages/manage_collections/manage_collections' . $min_suffixe . '.js' => 'admin',
-    'init_default_tag/init_default_tag' . $min_suffixe . '.js'           => 'admin'
+    'init_default_tag/init_default_tag' . $min_suffixe . '.js'           => 'admin',
+    'collection_items' . $min_suffixe . '.js'                            => 'global'
 ]);
 ClipBucket::getInstance()->addCSS([
     'jquery.tagit' . $min_suffixe . '.css'     => 'admin',
     'tagit.ui-zendesk' . $min_suffixe . '.css' => 'admin'
 ]);
-
 $available_tags = Tags::fill_auto_complete_tags('collection');
 assign('available_tags', $available_tags);
 

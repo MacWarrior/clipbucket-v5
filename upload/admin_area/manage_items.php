@@ -3,6 +3,7 @@ const THIS_PAGE = 'manage_items';
 require_once dirname(__FILE__, 2) . '/includes/admin_config.php';
 
 User::getInstance()->hasPermissionOrRedirect('video_moderation',true);
+User::getInstance()->hasPermissionOrRedirect('collection_moderation',true);
 pages::getInstance()->page_redir();
 
 $collection_id = mysql_clean($_GET['collection']);
@@ -117,7 +118,8 @@ assign('collections', $collections);
 assign('obj', $items);
 assign('type', $type);
 assign('collection', $c);
-
+$min_suffixe = System::isInDev() ? '' : '.min';
+ClipBucket::getInstance()->addAdminJS(['collection_items' . $min_suffixe . '.js' => 'global']);
 subtitle(lang('manage_items'));
 template_files('manage_items.html');
 display_it();

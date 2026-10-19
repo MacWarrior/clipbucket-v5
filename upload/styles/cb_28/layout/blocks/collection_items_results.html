@@ -1,0 +1,47 @@
+<div class="collection-items-message" role="status" aria-live="polite"></div>
+<form class="collection-items-search">
+    <div style="display:flex;gap:10px;align-items:stretch;">
+        <input type="search" class="form-control" id="collection-items-query" autocomplete="off" style="height:40px;min-width:0;flex:1;border-radius:var(--border-radius, 4px);">
+        <button type="submit" class="btn btn-primary" style="height:42px;flex-shrink:0;border-radius:var(--border-radius, 4px);">{lang('search')}</button>
+    </div>
+</form>
+<div class="table-responsive" style="max-height:55vh;overflow:auto;margin-top:15px;">
+    <table class="table table-bordered table-striped">
+        <thead>
+        <tr>
+            <th style="width:40px;"><input type="checkbox" class="collection-items-all" aria-label="{lang('all')}"></th>
+            <th>{lang('title')}</th>
+            <th>{lang('date_added')}</th>
+            <th>{lang('description')}</th>
+            <th>{lang('thumbs')}</th>
+        </tr>
+        </thead>
+        <tbody class="collection-items-results">
+        {foreach from=$items item=item}
+            <tr>
+                <td>
+                    <input type="checkbox" class="collection-items-check" value="{(int)$item.id}"
+                           data-exists="{if $item.exists}true{else}false{/if}" aria-label="{display_clean($item.title)}"
+                           {if $item.exists}checked disabled{/if}>
+                </td>
+                <td>
+                    {display_clean($item.title)}
+                    {if $item.exists}
+                        <small class="help-block">{lang('object_exists_collection', $item.title)|escape:'html'}</small>
+                    {/if}
+                </td>
+                <td>{display_clean($item.date)}</td>
+                <td>{display_clean($item.description)}</td>
+                <td>
+                    <img alt="" src="{display_clean($item.thumb)}" style="max-width:100px;max-height:100px;"{if $item.blur} class="blur"{/if}>
+                </td>
+            </tr>
+            {foreachelse}
+            <tr>
+                <td colspan="5">{lang('no_results_found')}</td>
+            </tr>
+        {/foreach}
+        </tbody>
+    </table>
+</div>
+{include file="$style_dir/blocks/pagination.html"}

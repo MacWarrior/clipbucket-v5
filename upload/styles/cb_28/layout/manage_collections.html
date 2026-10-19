@@ -19,6 +19,7 @@
                                 <li><a href="{cblink(['name' => 'manage_collections', 'extra_params' => 'mode=add_new'])}">{lang('add_new_collection')}</a></li>
                             </ul>
                         </div>
+                        <div class="clearfix"></div>
                         <br>
                         <div class="marginTop">
                             <table class="table table-bordered table-striped" style="margin-bottom:0;">
@@ -124,16 +125,20 @@
                         {/if}
                     {/if}
 
-                    {if $mode == "manage_items" || $mode == "collection_items"}
+                    {if $mode == "manage_items" || $mode == "collection_items"  || $mode == "items"}
                         <h2>{lang code='manage_items'} - <a href="{$baseurl}manage_collections.php?mode=edit_collection&cid={$c.collection_id}">{display_clean($c.collection_name)}</a></h2>
                         <div class="clearfix"></div>
                         <div class="pull-left">
+                            {if $c.type == 'videos'}
+                                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#collection-items-modal">{lang('add_to_collection')}</button>
+                            {/if}
                             <input type="submit" class="btn btn-danger small_button" name="delete_selected" id="delete_selected" {if empty($objs['items'])} disabled="disabled" {/if}value="{lang code='remove'}" />
                         </div>
                         <div class="pull-right">
                             <a class="btn btn-primary" href="{$baseurl}manage_collections.php">{lang code="back_to_collection"}</a>
                         </div>
                         <div class="clearfix"></div>
+                        <br/>
                         <div>
                             {if empty($objs['items'])}
                                 <div align="center" style="font:bold 11px Tahoma; margin-top:5px;">{lang code="no_items_found_in_collect"}</div>
@@ -189,6 +194,9 @@
     </div>
 </div>
 <div style="height:20px;"></div>
+{if $mode == "manage_items" || $mode == "collection_items" || $mode == "items"}
+    {include file="$style_dir/blocks/collection_items_search.html" collection_items_id=$c.collection_id}
+{/if}
 <script>
     var available_tags = JSON.parse('{$available_tags|json_encode|escape:'javascript'}');
 </script>

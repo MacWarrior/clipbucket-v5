@@ -1,4 +1,9 @@
 <h2>{lang code='manage_items'} - <a href="{DirPath::getUrl('admin_area')}edit_collection.php?collection={$smarty.get.collection}">{display_clean($collection.collection_name)}</a></h2>
+
+{if $type == 'videos'}
+    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#collection-items-modal">{lang('add_to_collection')}</button>
+{/if}
+{include file="$style_dir/blocks/collection_items_search.html" collection_items_id=$collection.collection_id}
 <form method="post">
     <table width="100%" border="0" align="center" cellpadding="0" cellspacing="0">
         <tr>
@@ -28,7 +33,6 @@
                     <td>
                         <input type="checkbox" name="checkall" onclick="checkUncheckAll(this);"/>
                     </td>
-                    <td>Object Id</td>
                     <td>{lang code='details'}</td>
                 </tr>
                 {section name=list loop=$obj}
@@ -39,7 +43,6 @@
                                     <input name="check_obj[]" type="checkbox" id="check_obj-{$collection.videoid}" value="{$obj[list].photo_id}" style="display:inline;"/>
                                 </div>
                             </td>
-                            <td>{$obj[list].photo_id}</td>
                             <td>
                                 <div class="row">
                                     <div class="col-md-10">
@@ -76,7 +79,6 @@
                                     <input name="check_obj[]" type="checkbox" id="check_obj-{$collection.videoid}" value="{$obj[list].videoid}" style="display:inline;"/>
                                 </div>
                             </td>
-                            <td>{$obj[list].videoid}</td>
                             <td>
                                 <div class="row">
                                     <div class="col-md-10">
