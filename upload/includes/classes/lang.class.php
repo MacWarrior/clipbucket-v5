@@ -357,6 +357,8 @@ class Language
             e(lang('language_does_not_exist'));
         } elseif (empty($array['name'])) {
             e(lang('lang_name_empty'));
+        } elseif (strlen($array['name']) > 20) {
+            e(lang('lang_name_too_long'));
         } elseif (empty($array['code'])) {
             e(lang('lang_code_empty'));
         } elseif (empty($array['flag'])) {
