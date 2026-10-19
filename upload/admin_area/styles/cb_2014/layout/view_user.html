@@ -134,7 +134,7 @@
                                                     <select class="form-control" name="level" id="level" {if $u.userid == user_id()} disabled="disabled" {/if}>
                                                         {foreach from=$levels item=level}
                                                         <option value="{$level.user_level_id}" {if $u.level==$level.user_level_id && $level.nb_diff==0} selected{/if}
-                                                            {if $level.nb_diff != 0}disabled="disabled"{/if}>{$level.user_level_name}</option>
+                                                            {if $level.nb_diff != 0}disabled="disabled"{/if}>{display_clean($level.user_level_name)}</option>
                                                         {/foreach}
                                                     </select>
                                                 </div>

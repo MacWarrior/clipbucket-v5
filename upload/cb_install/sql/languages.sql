@@ -1971,4 +1971,5 @@ VALUES ('noted_x'),
        ('enable_categ_as_submenu'),
        ('enable_all_categ_for'),
        ('extracted_thumb_not_available_yet'),
+       ('lang_name_too_long'),
        ('confirm_delete_users');
