@@ -8,7 +8,7 @@
     <div class="row">
   <div class="col-md-6">
     <label for="name">Advertisement name</label>
-    <input class="form-control" name="name" type="text" id="name" value="{$ad_data.ad_name}" />
+    <input class="form-control" name="name" type="text" id="name" value="{display_clean($ad_data.ad_name)}" />
     e.g Home Banner
   </div>
 
@@ -106,7 +106,7 @@
   {foreach item=ad from=$ads}
   <tr>
     <td>{$ad.ad_id}</td>
-    <td>{$ad.ad_name}</td>
+    <td>{display_clean($ad.ad_name)}</td>
     <td>
       {$ad.ad_codes}<a href="{DirPath::getUrl('admin_area')}ads_manager.php?ad_id={$ad.ad_id}">View Advertisment</a>
     </td>
