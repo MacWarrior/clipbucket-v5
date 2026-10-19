@@ -94,7 +94,7 @@
 								{foreach from=$levels item=level}
 									{if $level.user_level_id !='4'}
 										<label class="checkbox-inline">
-											<input type='checkbox' name="level[]" value="{$level.user_level_id}" checked />{$level.user_level_name}
+											<input type='checkbox' name="level[]" value="{$level.user_level_id}" checked />{display_clean($level.user_level_name)}
 										</label>
 									{/if}
 								{/foreach}

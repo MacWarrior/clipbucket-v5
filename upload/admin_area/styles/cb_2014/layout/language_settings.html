@@ -13,7 +13,7 @@
                 <div class="col-md-5">
                     <label for="nameAdd">{lang code='language_name'}</label>
                     <div style="vertical-align: bottom;">
-                        <input style="display: inline-block; width: calc(100% - 150px); vertical-align: middle;" name="name" type="text" class="form-control" id="nameAdd" value="{$lang_details.language_name}"/>
+                        <input style="display: inline-block; width: calc(100% - 150px); vertical-align: middle;" name="name" type="text" class="form-control" id="nameAdd" maxlength="20" value="{$lang_details.language_name}"/>
                     </div>
                 </div>
                 <div class="col-md-5">
@@ -44,7 +44,7 @@
         </tr>
         {section name=p_list loop=$lang_phrases}
         <tr>
-            <td class="col-md-2">{$lang_phrases[p_list].language_key}</td>
+            <td class="col-md-2">{display_clean($lang_phrases[p_list].language_key)}</td>
             <td class="col-md-9">
                 <span class="xedit" id="{$lang_phrases[p_list].id_language_key}">{display_clean($lang_phrases[p_list].translation)}</span>
                 <input type="text" class="form-control" id="input-{$lang_phrases[p_list].id_language_key}" name="pk" value="{display_clean($lang_phrases[p_list].translation)}" style="display:none;">
