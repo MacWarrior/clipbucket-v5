@@ -33,7 +33,7 @@
                 <div class="form-group">
                     <label for="page_title">Page Title</label>
                     {foreach from=$languages item=language}
-                        <input type="text" style="display: {if $language.is_shown}block{else}none{/if}" name="page_title[{$language.language_id}]" id="page_title{$language.language_id}" class="form-control" value="{$page.page_titles[$language.language_id]}">
+                        <input type="text" style="display: {if $language.is_shown}block{else}none{/if}" name="page_title[{$language.language_id}]" id="page_title{$language.language_id}" class="form-control" value="{display_clean($page.page_titles[$language.language_id])}">
                     {/foreach}
                 </div>
             </div>
