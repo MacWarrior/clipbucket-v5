@@ -12,14 +12,14 @@ if (!$collection) {
     $response['success'] = false;
 }
 $type = $collection['type'];
-if (!Collection::getInstance()->isValidType($type)) {
+if ($type != 'videos') {
     e(lang('unknown_type'));
     $response['success'] = false;
 }
 if ($response['success']) {
     User::getInstance()->hasPermissionAjax('view_' . $type);
-    $object = $type == 'videos' ? Video::getInstance() : Photo::getInstance();
-    $id_field = $type == 'videos' ? 'videoid' : 'photo_id';
+    $object = Video::getInstance() ;
+    $id_field = 'videoid';
     $action = $_POST['action'] ?? 'search';
     if ($action == 'add') {
         $added = [];

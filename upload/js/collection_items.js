@@ -83,8 +83,7 @@ function eventListeners() {
                 const data = await $.ajax({
                     url: modal.data('url'), method: 'POST', dataType: 'json',
                     data: {
-                        action: 'add', collection_id: modal.data('collection-id'),
-                        token: modal.data('token'), ids: Array.from(selected).slice(0, 100)
+                        action: 'add', collection_id: modal.data('collection-id'), ids: Array.from(selected).slice(0, 100)
                     }
                 });
                 (data.added || []).forEach(function (id) {
