@@ -18,7 +18,7 @@ switch ($mode) {
         $value = $_POST['val'];
         if (!empty($value)) {
             myquery::getInstance()->insert_todo($value);
-            $response['todo'] = nl2br($value);
+            $response['todo'] = display_clean($value);
             $response['id'] = Clipbucket_db::getInstance()->insert_id();
             echo json_encode($response);
         }
