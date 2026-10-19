@@ -1,6 +1,6 @@
 {
   "version":"5.5.3",
-  "revision":"219",
+  "revision":"220",
   "status":"stable",
   "detail":[
     {
@@ -31,6 +31,7 @@
         ,"Update interfaces display when medias are disabled"
         ,"Update comments display on reports & stats"
         ,"Update Manage videos actions display"
+        ,"Update mass upload cache usage"
         ,"Add links to flagged tags"
         ,"Hide poster & backdrop tabs when empty on video edition page"
         ,"Only show template editor menu while in dev mode"
