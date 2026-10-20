@@ -95,7 +95,18 @@ function video_manager_ep_link($vid): string
  */
 function get_ep_videos(): array
 {
-    return Clipbucket_db::getInstance()->select(tbl('editors_picks,video,users'), tbl('editors_picks.*,video.*,users.userid,users.username as user_username'), ' ' . tbl('editors_picks') . '.videoid = ' . tbl('video') . '.videoid AND ' . tbl('video.active') . ' = \'yes\' AND ' . tbl('video.broadcast') . ' = \'public\' AND ' . tbl('video.userid') . ' = ' . tbl('users.userid') . ' ORDER BY ' . tbl('editors_picks') . '.sort ASC');
+    $sql = 'SELECT videoid, sort FROM ' . tbl('editors_picks');
+    //get videos ids and sort in editors pick
+    $editors = Clipbucket_db::getInstance()->_select($sql);
+    $editors = array_combine(array_column($editors, 'videoid'), $editors);
+    //get videos with getAll which apply genericConstraint
+    $videos = Video::getInstance()->getAll(['videoids'=>array_keys($editors)]);
+    $videos = array_combine(array_column($videos, 'videoid'), $videos);
+    foreach ($videos as $video) {
+        $video['sort'] = $editors[$video['videoid']]['sort'];
+    }
+    usort($videos, function ($a, $b){return $a < $b;});
+    return $videos;
 }
 
 /**
@@ -129,7 +140,8 @@ function admin_area_tab($vid): string
  */
 function display_editors_pick(): void
 {
-    assign('editor_picks', get_ep_videos());
+    $videos = get_ep_videos();
+    assign('editor_picks', $videos);
     echo Fetch(DirPath::get('plugins') . 'editors_pick/templates/front/editorspicks.html', true);
 }
 
