@@ -1,4 +1,4 @@
-{$first_elem = Collection::getInstance()->getFirstItem(['collection_id' => $collection.collection_id])}
+{$first_elem = Collection::getInstance()->getFirstItemViewable(['collection_id' => $collection.collection_id])}
 {if $collection.type == 'videos'}
     {$blur = Video::getInstance()->isToBlur($first_elem.videoid)}
 {else}
