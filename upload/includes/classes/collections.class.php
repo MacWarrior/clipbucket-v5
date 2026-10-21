@@ -677,6 +677,30 @@ class Collection extends Objects
         }
         return $items[0];
     }
+    /**
+     * @throws Exception
+     */
+    public function getFirstItemViewable(array $params = [])
+    {
+        $items = $this->getItems($params);
+        if( empty($items) ){
+            return false;
+        }
+        foreach ($items as $item) {
+            if (!empty($item['videoid'])) {
+                $first_item = Video::getInstance()->getOne(['videoid'=>$item['videoid']]);
+                if (!empty($first_item)) {
+                    return $first_item;
+                }
+            } elseif (!empty($item['photo_id'])) {
+                $first_item = Video::getInstance()->getOne(['photo_id'=>$item['photo_id']]);
+                if (!empty($first_item)) {
+                    return $first_item;
+                }
+            }
+        }
+        return false;
+    }
 
     /**
      * @param array $params
@@ -2493,7 +2517,9 @@ class Collections extends CBCategory
                     $height = '260';
                 }
             }
-
+            if (empty(Video::getInstance()->getOne(['videoid'=>$object_id]))) {
+                $object_id = Collection::getInstance()->getFirstItemViewable(['collection_id'=>$col_data['collection_id']])['videoid'] ?? false;
+            }
             return VideoThumbs::getDefaultThumbFile($object_id, $width, $height);
         }
 
@@ -2503,6 +2529,9 @@ class Collections extends CBCategory
             $size = '900';
         } elseif ($size == 'm') {
             $size = '550';
+        }
+        if (empty(Photo::getInstance()->getOne(['photo_id'=>$object_id]))) {
+            $object_id = Collection::getInstance()->getFirstItemViewable(['collection_id'=>$col_data['collection_id']])['photo_id'] ?? false;
         }
         return PhotoThumbs::getThumbFile($object_id, $size);
     }
