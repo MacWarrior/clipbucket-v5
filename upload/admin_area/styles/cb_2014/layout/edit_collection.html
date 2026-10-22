@@ -166,7 +166,20 @@
                                         </label>
                                     </li>
                                 {/foreach}
+                                {if !empty($custom_thumb)}
+                                    <li style="background-image:url({$custom_thumb});" {if ((int)$data.thumb_objectid == -1)}class="selected"{/if} title="{lang('select_as_default_x',lang('thumbnail'))}">
+                                        <label for="thumb_custom">
+                                            <span class="content_bottom">
+                                              <input type="radio" id="thumb_custom" value="-1" name="default_thumb" {if ((int)$data.thumb_objectid == -1)}checked{/if}/>
+                                            </span>
+                                        </label>
+                                    </li>
+                                {/if}
                             </ul>
+                            <div class="col-md-10">
+                                <label>{lang('upload_custom_thumbnail')}</label>
+                                <input type="file" name="collection_thumb" id="collection_thumb"/>
+                            </div>
                         </div>
                     </div>
                     <br>
