@@ -109,6 +109,21 @@
                                                         </div>
                                                     </div>
                                                 {/foreach}
+                                                {if !empty($custom_thumb)}
+                                                    <div class="col-md-3">
+                                                        <div class="form-group text-center">
+                                                            <label for="thumb_custom"><img class="edit-img-thumbnail {if config('keep_ratio_photo')=='yes'} crop_image {/if}" src="{{$custom_thumb}}" width="100" height="100"/>
+                                                                <input class="show" style="margin:5px auto;" type="radio" value="-1" id="thumb_custom" name="default_thumb" {if (int)$c.thumb_objectid == -1}checked{/if}/>{lang code='default'}
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                {/if}
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-md-10">
+                                                    <label>{lang('upload_custom_thumbnail')}</label>
+                                                    <input type="file" name="collection_thumb" id="collection_thumb"/>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>

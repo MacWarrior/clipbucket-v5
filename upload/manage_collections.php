@@ -130,7 +130,7 @@ switch ($mode) {
         assign('fields', $reqFields);
         assign('other_fields', $otherFields);
         assign('c', $collection);
-
+        assign('custom_thumb', CollectionThumbs::getThumbFile($collection['collection_id']));
         subtitle(lang('edit_collection'));
         break;
 

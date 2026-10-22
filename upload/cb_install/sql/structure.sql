@@ -1417,3 +1417,16 @@ CREATE TABLE IF NOT EXISTS `{tbl_prefix}pages_translations`
 ALTER TABLE `{tbl_prefix}pages_translations`
     ADD CONSTRAINT `pages_translations_ibfk_1` FOREIGN KEY (`page_id`) REFERENCES `{tbl_prefix}pages` (`page_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
     ADD CONSTRAINT `pages_translations_ibfk_2` FOREIGN KEY (`language_id`) REFERENCES `{tbl_prefix}languages` (`language_id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+CREATE TABLE IF NOT EXISTS `{tbl_prefix}collection_thumb`
+(
+    `id_collection_thumb` INT                NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `collection_id`       BIGINT(25)         NOT NULL,
+    `width`               INT                NOT NULL,
+    `extension`           VARCHAR(4)         NOT NULL,
+    `version`             VARCHAR(16)        NOT NULL,
+    `is_original_size`    BOOL DEFAULT FALSE NOT NULL,
+    UNIQUE KEY (`collection_id`, `width`)
+);
+ALTER TABLE `{tbl_prefix}collection_thumb`
+    ADD CONSTRAINT `collection_thumb_ibfk_1` FOREIGN KEY (collection_id) REFERENCES `{tbl_prefix}collections` (collection_id) ON DELETE NO ACTION ON UPDATE NO ACTION;

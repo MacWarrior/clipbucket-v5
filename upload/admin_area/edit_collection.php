@@ -13,11 +13,6 @@ if (isset($_POST['update_collection'])) {
     }
 }
 
-if (isset($_POST['delete_preview'])) {
-    $id = mysql_clean($_POST['delete_preview']);
-    Collections::getInstance()->delete_thumbs($id);
-}
-
 //Performing Actionsf
 if ($_GET['mode'] != '') {
     Collections::getInstance()->collection_actions($_GET['mode'], $id);
@@ -59,6 +54,7 @@ if ($collection['type'] == 'videos') {
 }
 assign('items', $items);
 assign('data', $collection);
+assign('custom_thumb', CollectionThumbs::getThumbFile($collection['collection_id']));
 assign('link_user', DirPath::getUrl('admin_area') . 'view_user.php?uid=' . $collection['userid']);
 
 $params = [];
@@ -80,7 +76,7 @@ ClipBucket::getInstance()->addAdminCSS([
     'tagit.ui-zendesk' . $min_suffixe . '.css' => 'admin'
 ]);
 
-if( config('enable_visual_editor_comments') == 'yes' ){
+if (config('enable_visual_editor_comments') == 'yes') {
     ClipBucket::getInstance()->addAdminJS(['toastui/toastui-editor-all' . $min_suffixe . '.js' => 'libs']);
     ClipBucket::getInstance()->addAdminCSS(['/toastui/toastui-editor' . $min_suffixe . '.css' => 'libs']);
 }

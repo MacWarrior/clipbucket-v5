@@ -333,7 +333,7 @@ class Flag
                 return [
                     'fo'    => Collections::getInstance()->collection_links($flag['id_element']),
                     'bo'    => DirPath::getUrl('admin_area') . 'edit_collection.php?collection=' . $flag['id_element'],
-                    'thumb' => Collections::getInstance()->get_thumb($flag['id_element'])
+                    'thumb' => Collections::getInstance()->coll_first_thumb(Collection::getInstance()->getOne(['collection_id'=>$flag['id_element']]))
                 ];
 
             case 'playlist':
