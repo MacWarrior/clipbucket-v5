@@ -9,8 +9,8 @@ class Tmdb
     private $curl;
     private static $instance;
 
-    private static $fields_title = ['movie'=>'title','series'=>'name'];
-    private static $fields_date = ['movie'=>'release_date','series'=>'first_air_date'];
+    private static $fields_title = ['movie'=>'title','series'=>'name','season'=>'name','episode'=>'name'];
+    private static $fields_date = ['movie'=>'release_date','series'=>'first_air_date','season'=>'air_date','episode'=>'air_date'];
 
     private $language = '';
 
@@ -24,11 +24,7 @@ class Tmdb
     public function init(\Classes\Curl $curl)
     {
         $this->curl = $curl;
-        $return = $this->curl->exec('authentication');
-        $response = $return['response'];
-        if (!empty($return['error']) || $response['success']===false) {
-            throw new \Exception($response['status_message']);
-        }
+        $this->requestAPI('authentication');
     }
 
     /**
@@ -79,6 +75,97 @@ class Tmdb
     public function seriesCredits($serie_id)
     {
         return $this->requestAPI('tv/' . $serie_id . '/credits');
+    }
+
+    public function seasonDetail(int $series_id, int $season)
+    {
+        return $this->requestAPI('tv/' . $series_id . '/season/' . $season);
+    }
+
+    public function episodeDetail(int $series_id, int $season, int $episode)
+    {
+        return $this->requestAPI('tv/' . $series_id . '/season/' . $season . '/episode/' . $episode);
+    }
+
+    public function televisionResource(int $series_id, int $season, ?int $episode, string $resource)
+    {
+        $path = 'tv/' . $series_id . '/season/' . $season;
+        if ($episode !== null) {
+            $path .= '/episode/' . $episode;
+        }
+        $params = $resource === 'images' ? ['language' => ''] : [];
+        if ($resource === 'images' && $episode !== null) {
+            $params['include_image_language'] = $this->language . ',null';
+        }
+        return $this->requestAPI($path . '/' . $resource, $params);
+    }
+
+    public static function requestContext(array $request): array
+    {
+        $target = $request['target'] ?? 'video';
+        if (!in_array($target, ['video', 'collection'], true)) {
+            throw new Exception(lang('technical_error'));
+        }
+        $values = [];
+        foreach (['videoid', 'tmdb_video_id', 'season', 'episode'] as $key) {
+            $value = $request[$key] ?? null;
+            if ($value !== null && (is_array($value) || !preg_match('/^[0-9]+$/D', (string)$value))) {
+                throw new Exception(lang('technical_error'));
+            }
+            $values[$key] = $value === null ? null : (int)$value;
+        }
+        $values['target'] = $target;
+        return $values;
+    }
+
+    public function getTarget(int $id, string $target): array
+    {
+        if ($id <= 0 || !in_array($target, ['video', 'collection'], true)) {
+            throw new Exception(lang('technical_error'));
+        }
+        $object = $target === 'collection'
+            ? Collection::getInstance()->getOne(['collection_id' => $id, 'hide_empty_collection'=>false])
+            : Video::getInstance()->getOne(['videoid' => $id, 'get_detail' => true]);
+        if (empty($object) || ($target === 'collection' && $object['type'] !== 'videos')) {
+            throw new Exception(lang($target === 'collection' ? 'collection_not_exist' : 'class_vdo_del_err'));
+        }
+        return $object;
+    }
+
+    public function getNavigation(int $id, string $target, int $series_id, ?int $season = null): array
+    {
+        $this->getTarget($id, $target);
+        if ($series_id <= 0 || ($season !== null && ($season < 0 || $target !== 'video'))) {
+            throw new Exception(lang('technical_error'));
+        }
+        $this->deleteOldCacheEntries();
+        $type = $season === null ? 'season' : 'episode';
+        $query = 'tv/' . $series_id . ($season === null ? '' : '/season/' . $season);
+        $search = $this->getSearchInfo($query, $type);
+        if (!$search) {
+            $series = $this->seriesDetail($series_id)['response'];
+            $details = $season === null ? $series : $this->seasonDetail($series_id, $season)['response'];
+            $results = $details[$season === null ? 'seasons' : 'episodes'] ?? [];
+            $title = ($series['name'] ?? '') . ($season === null ? '' : ' — ' . lang('tmdb_season') . ' ' . $season);
+            $this->setQueryInCache($query, $type, $results, count($results), [], $title);
+        } else {
+            $title = $search[0]['navigation_title'];
+        }
+        $results = $this->getCacheFromQuery($query, $type, 'id_tmdb_search_result', 'ASC', 0);
+        foreach ($results as &$result) {
+            $result['id'] = $result['id_tmdb_movie'];
+            $result['name'] = $result['title'];
+            $result['air_date'] = $result['release_date'];
+            if ($type === 'episode') {
+                $result['still_path'] = $result['poster_path'];
+            }
+        }
+        unset($result);
+        return [
+            'success' => true,
+            'title' => $title,
+            'results' => $results
+        ];
     }
 
     public function movieCurrentLanguageAgeRestriction($movie_id)
@@ -135,7 +222,14 @@ class Tmdb
             $param['language'] = $this->language;
         }
         $param['include_adult'] = config('enable_tmdb_mature_content') == 'yes' ? 'true' : 'false';
-        return $this->curl->exec($url, $param);
+        $result = $this->curl->exec($url, $param);
+        if (!empty($result['error']) || empty($result['response']) || ($result['response']['success'] ?? true) === false) {
+            if (System::isInDev()) {
+                DiscordLog::sendDump('Une erreur est survenue lors d’une requête à TMDB (' . $url . ') : ' . print_r($result, true));
+            }
+            throw new Exception(lang('technical_error'));
+        }
+        return $result;
     }
 
     /**
@@ -172,7 +266,7 @@ class Tmdb
 
         if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '194')) {
             $sql_type = 'AND type = \'' . mysql_clean($type) . '\' 
-            AND language = \'' . $this->language. '\'';
+            AND language = \'' . mysql_clean($this->language). '\'';
         }
         $sql = 'SELECT TSR.* 
                 FROM ' . tbl('tmdb_search') . ' TS
@@ -203,7 +297,7 @@ class Tmdb
 
         if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '194')) {
             $sql .= ' AND type = \''.mysql_clean($type).'\'
-                AND language = \'' . $this->language. '\'';
+                AND language = \'' . mysql_clean($this->language). '\'';
         }
         return Clipbucket_db::getInstance()->_select($sql);
     }
@@ -228,8 +322,12 @@ class Tmdb
      * @return bool|mysqli_result
      * @throws Exception
      */
-    public function setQueryInCache(string $query, string $type, array $results, int $total_results, array $years)
+    public function setQueryInCache(string $query, string $type, array $results, int $total_results, array $years = [], ?string $title = null)
     {
+        if (!isset(self::$fields_title[$type])) {
+            throw new Exception(lang('technical_error'));
+        }
+        $years = $years ?: $this->getSearchYears($results, $type);
         $fields = [
             'search_key',
             'total_results'
@@ -249,22 +347,33 @@ class Tmdb
             $fields[] = 'language';
             $values[] = $this->language;
         }
+        $is_navigation = in_array($type, ['season', 'episode'], true);
+        if ($is_navigation) {
+            $fields[] = 'navigation_title';
+            $values[] = $title;
+        }
         Clipbucket_db::getInstance()->insert(tbl('tmdb_search'), $fields, $values);
         $id_tmdb_search = Clipbucket_db::getInstance()->insert_id();
+
+        if (!$results) {
+            return true;
+        }
 
         $can_is_adult = false;
         if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '20')) {
             $can_is_adult = true;
         }
 
-        $sql_insert = 'INSERT INTO ' . tbl('tmdb_search_result') . ' (id_tmdb_search, title, overview,release_date, poster_path, id_tmdb_movie ' . ($can_is_adult ? ', is_adult' : '') . ') VALUES ';
+        $sql_insert = 'INSERT INTO ' . tbl('tmdb_search_result') . ' (id_tmdb_search, title, overview,release_date, poster_path, id_tmdb_movie ' . ($can_is_adult ? ', is_adult' : '') . ($is_navigation ? ', season_number, episode_number' : '') . ') VALUES ';
         $insert_line = [];
         foreach ($results as $result) {
-            $insert_line[] = ' (' . $id_tmdb_search . ', \'' . mysql_clean($result[self::$fields_title[$type]]) . '\'
-            , \'' . mysql_clean($result['overview']) . '\'
+            $insert_line[] = ' (' . $id_tmdb_search . ', \'' . mysql_clean($result[self::$fields_title[$type]] ?? '') . '\'
+            , \'' . mysql_clean($result['overview'] ?? '') . '\'
             , ' . (empty($result[self::$fields_date[$type]]) ? 'null' : '\'' . mysql_clean($result[self::$fields_date[$type]]) . '\'') . '
-            , \'' . mysql_clean($result['poster_path']) . '\', ' . mysql_clean($result['id'])
-                . ($can_is_adult ? ', ' . ($result['adult'] ? 'true' : 'false') : '')
+            , \'' . mysql_clean($result[$type === 'episode' ? 'still_path' : 'poster_path'] ?? '') . '\', ' . (int)$result['id']
+                . ($can_is_adult ? ', ' . (!empty($result['adult']) ? 'true' : 'false') : '')
+                . ($is_navigation ? ', ' . (isset($result['season_number']) ? (int)$result['season_number'] : 'null')
+                    . ', ' . (isset($result['episode_number']) ? (int)$result['episode_number'] : 'null') : '')
                 . ') ';
         }
         $sql_insert .= implode(', ', $insert_line);
@@ -278,36 +387,86 @@ class Tmdb
      * @return void
      * @throws Exception
      */
-    public function importDataFromTmdb(int $videoid, int $tmdb_id, string $type = 'movie'): void
+    public function importDataFromTmdb(int $videoid, int $tmdb_id, string $type = 'movie', string $target = 'video', ?int $season = null, ?int $episode = null): void
     {
-        if( empty($videoid) ){
-            e(lang('class_vdo_del_err'));
+        if ($tmdb_id <= 0 || !in_array($target, ['video', 'collection'], true)
+            || !in_array($type, $target === 'video' ? ['movie', 'episode'] : ['series', 'season'], true)
+            || (in_array($type, ['season', 'episode'], true) && ($season === null || $season < 0))
+            || ($type === 'episode' && ($episode === null || $episode < 0))) {
+            e(lang('technical_error'));
             return;
         }
-
-        $video_info = Video::getInstance()->getOne([
-            'videoid' => $videoid,
-            'get_detail'=> true
-        ]);
-        if (empty($video_info)) {
-            e(lang('class_vdo_del_err'));
-            return;
-        }
-
+        $video_info = $this->getTarget($videoid, $target);
+        $images = [];
         switch ($type) {
-            default:
-                $type = 'movie';
             case 'movie':
                 $credits = $this->movieCredits($tmdb_id)['response'];
                 $details = $this->movieDetail($tmdb_id)['response'];
                 break;
             case 'series':
-                $credits = $this->seriesCredits($tmdb_id)['response'];
                 $details = $this->seriesDetail($tmdb_id)['response'];
+                $images = $this->seriesPosterBackdrops($tmdb_id)['response'];
+                break;
+            case 'season':
+            case 'episode':
+                $series = $this->seriesDetail($tmdb_id)['response'];
+                $details = ($type === 'season'
+                    ? $this->seasonDetail($tmdb_id, $season)
+                    : $this->episodeDetail($tmdb_id, $season, $episode))['response'];
+                $images = $this->televisionResource($tmdb_id, $season, $type === 'episode' ? $episode : null, 'images')['response'];
+                if ($type === 'episode') {
+                    $credits = $this->televisionResource($tmdb_id, $season, $episode, 'credits')['response'];
+                    $prefix = ($series['name'] ?? '') . ' — ' . lang('tmdb_season') . ' ' . $season
+                        . ' — ' . lang('tmdb_episode') . ' ' . $episode;
+                    $details['overview'] = $prefix . (!empty($details['overview']) ? "\n\n" . $details['overview'] : '');
+                } elseif (in_array(trim($details['name'] ?? ''), ['Saison ' . $season, lang('tmdb_season') . ' ' . $season], true)) {
+                    $details['name'] = ($series['name'] ?? '') . ' - ' . $details['name'];
+                }
                 break;
         }
+        if ($target === 'collection') {
+            // Collections have no dedicated genre, credit or certification fields.
+            $posters = $images['posters'] ?? [];
+            $preferred = array_filter($posters, function ($image) {
+                return ($image['iso_639_1'] ?? null) == $this->language || ($image['iso_639_1'] ?? null) == 'null';
+            });
+            $posters = $preferred ?: $posters;
+            if ($posters && !is_callable(['CollectionThumb', 'uploadThumbs'])) {
+                e(lang('tmdb_collection_thumb_unavailable'));
+                return;
+            }
+            if (config('tmdb_get_title') === 'yes' && !empty($details['name'])) {
+                $video_info['collection_name'] = $details['name'];
+            }
+            if (config('tmdb_get_description') === 'yes' && !empty($details['overview'])) {
+                $video_info['collection_description'] = $details['overview'];
+            }
+            $video_info['collection_tags'] = $video_info['tags'] ?? '';
+            $video_info['category'] = array_column(json_decode($video_info['category_list'] ?? '[]', true) ?: [], 'id');
+            $video_info['collection_id_parent'] = $video_info['collection_id_parent'] ?? 'null';
+            Collections::getInstance()->update_collection($video_info);
+            if (errorhandler::getInstance()->get_error()) {
+                return;
+            }
+            $this->updateExternalRatings($videoid, $details, 'collection');
+            if (!$posters) {
+                Collection::assignDefaultThumb($videoid);
+            } else {
+                $files = ['tmp_name' => [], 'name' => []];
+                foreach ($posters as $poster) {
+                    $name = str_replace('/', '', $poster['file_path']);
+                    $path = DirPath::get('temp') . $name;
+                    file_put_contents($path, file_get_contents(self::IMAGE_URL . $poster['file_path']));
+                    $files['tmp_name'][] = $path;
+                    $files['name'][] = $name;
+                }
+                // Contract supplied by the caller: same arguments as VideoThumbs::uploadThumbs.
+                CollectionThumb::uploadThumbs($videoid, $files, 'thumbnail', true);
+            }
+            return;
+        }
 
-        $update_video = false;
+        $update_video = $type === 'episode';
 
         $video_info['datecreated'] = $details[self::$fields_date[$type]];
         if (config('tmdb_get_title') == 'yes' && !empty($details[self::$fields_title[$type]])) {
@@ -318,7 +477,7 @@ class Tmdb
             $video_info['description'] = $details['overview'];
             $update_video = true;
         }
-        if (config('tmdb_get_age_restriction') == 'yes') {
+        if ($type === 'movie' && config('tmdb_get_age_restriction') == 'yes') {
             switch ($type) {
                 case 'movie':
                 default:
@@ -337,20 +496,41 @@ class Tmdb
         }
         if ( Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '138') ) {
             if (config('enable_external_rate_from_tmdb') == 'yes' ) {
-                $video_info['external_rate'] = (float)$details['vote_average'] ?? 0;
+                $video_info['external_rate'] = (float)($details['vote_average'] ?? 0);
+                $update_video = $update_video || $type === 'episode';
             }
             if (config('enable_external_ratings_from_tmdb') == 'yes' ) {
-                $video_info['external_ratings'] = (int)$details['vote_count'] ?? 0;
+                $video_info['external_ratings'] = (int)($details['vote_count'] ?? 0);
+                $update_video = $update_video || $type === 'episode';
             }
         }
         if ($update_video) {
             $category_list = json_decode($video_info['category_list'], true);
             $video_info['category'] = array_column($category_list, 'id');
             CBvideo::getInstance()->update_video($video_info);
-            $this->updateVideoTmdbInfo($videoid, $tmdb_id, $type);
+            if ($type === 'episode' && errorhandler::getInstance()->get_error()) {
+                return;
+            }
+            if ($type === 'movie') {
+                $this->updateVideoTmdbInfo($videoid, $tmdb_id, $type);
+            }
         }
 
-        if (config('tmdb_get_poster') == 'yes' && config('enable_video_poster') == 'yes' && Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '14')) {
+        if ($type === 'episode') {
+            $this->updateVideoTmdbInfo($videoid, (int)$details['id'], 'episode');
+            $this->updateExternalRatings($videoid, $details, 'video');
+            foreach ($images['stills'] ?? [] as $image) {
+                $name = str_replace('/', '', $image['file_path']);
+                $path = DirPath::get('temp') . $name;
+                file_put_contents($path, file_get_contents(self::IMAGE_URL . $image['file_path']));
+                VideoThumbs::uploadThumbs($videoid, [
+                    'tmp_name' => [$path],
+                    'name' => [$name]
+                ], 'thumbnail', false);
+            }
+        }
+
+        if ($type !== 'episode' && config('tmdb_get_poster') == 'yes' && config('enable_video_poster') == 'yes' && Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '14')) {
             Video::getInstance()->dropPictures($video_info, 'poster', true);
 
             switch ($type) {
@@ -364,7 +544,7 @@ class Tmdb
             }
 
             $language_posters = array_filter($posters, function ($elem) {
-                return $elem['iso_639_1'] == $this->language || $elem['iso_639_1'] == 'null';
+                return ($elem['iso_639_1'] ?? null) == $this->language || ($elem['iso_639_1'] ?? null) == 'null';
             });
             if (count($language_posters) > 0) {
                 $poster_iterate = $language_posters;
@@ -394,6 +574,9 @@ class Tmdb
             Video::getInstance()->dropPictures($video_info, 'backdrop',true);
 
             switch ($type) {
+                case 'episode':
+                    $backdrops = $images['stills'] ?? [];
+                    break;
                 case 'movie':
                 default:
                     $backdrops = $this->moviePosterBackdrops($tmdb_id)['response']['backdrops'];
@@ -404,7 +587,7 @@ class Tmdb
             }
 
             $language_backdrops = array_filter($backdrops, function ($elem) {
-                return $elem['iso_639_1'] == $this->language || $elem['iso_639_1'] == 'null';
+                return ($elem['iso_639_1'] ?? null) == $this->language || ($elem['iso_639_1'] ?? null) == 'null';
             });
             if (count($language_backdrops) > 0) {
                 $backdrop_iterate = $language_backdrops;
@@ -428,7 +611,7 @@ class Tmdb
             }
         }
 
-        if (config('tmdb_get_genre') == 'yes' && config('enable_video_genre') == 'yes') {
+        if ($type !== 'episode' && config('tmdb_get_genre') == 'yes' && config('enable_video_genre') == 'yes') {
             $genre_tags = [];
             foreach ($details['genres'] as $genre) {
                 $genre_tags[] = trim($genre['name']);
@@ -438,7 +621,7 @@ class Tmdb
 
         if (config('tmdb_get_actors') == 'yes' && config('enable_video_actor') == 'yes') {
             $actors_tags = [];
-            foreach ($credits['cast'] as $actor) {
+            foreach ($credits['cast'] ?? [] as $actor) {
                 $actors_tags[] = str_replace(',','.',trim($actor['name']));
             }
             Tags::saveTags(implode(',', $actors_tags), 'actors', $videoid);
@@ -448,7 +631,7 @@ class Tmdb
         $executive_producer_tags = [];
         $director_tags = [];
         $crew_tags = [];
-        foreach ($credits['crew'] as $crew) {
+        foreach ($credits['crew'] ?? [] as $crew) {
             switch (strtolower($crew['job'])) {
                 case 'producer':
                     $producer_tags[] = str_replace(',','.',trim($crew['name']));
@@ -481,7 +664,7 @@ class Tmdb
         if (config('tmdb_get_crew') == 'yes' && config('enable_video_crew') == 'yes') {
             Tags::saveTags(implode(',', $crew_tags), 'crew', $videoid);
         }
-        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '101') && !Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '138')) {
+        if ($type === 'movie' && Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '101') && !Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '138')) {
             Clipbucket_db::getInstance()->update(tbl('video'), ['id_tmdb', 'type_tmdb'], [$tmdb_id, $type], 'videoid = ' . $videoid);
         }
         insert_log('import_tmdb', [
@@ -493,7 +676,7 @@ class Tmdb
     /**
      * @throws Exception
      */
-    public function getInfoTmdb(int $videoid, string $type, $params, string $fileName = ''): array
+    public function getInfoTmdb(int $videoid, string $type, $params, string $fileName = '', string $target = 'video'): array
     {
         switch ($type) {
             case 'movie':
@@ -509,21 +692,19 @@ class Tmdb
                 break;
         }
 
-        $video_info = Video::getInstance()->getOne([
-            'videoid' => $videoid
-        ]);
-        if (empty($video_info)) {
-            if (!empty($fileName)) {
-                $video_info = Video::getInstance()->getOne([
-                    'file_name' => $fileName
-                ]);
+        if ($target === 'collection') {
+            $video_info = $this->getTarget($videoid, $target);
+            $type = 'series';
+            $video_info['title'] = $video_info['collection_name'];
+            $video_info['videoid'] = $videoid;
+        } else {
+            if (!$videoid && $fileName !== '') {
+                $video = Video::getInstance()->getOne(['file_name' => $fileName]);
+                $videoid = (int)($video['videoid'] ?? 0);
             }
+            $video_info = $this->getTarget($videoid, $target);
         }
-        if (empty($video_info)) {
-            e(lang('class_vdo_del_err'));
-            return [];
-        }
-        self::getInstance()->deleteOldCacheEntries();
+        $this->deleteOldCacheEntries();
         $title = !empty($params['video_title']) ? $params['video_title'] : $video_info['title'];
         if (!in_array($params['sort'], ['title', 'release_date'])) {
             unset($params['sort']);
@@ -544,11 +725,9 @@ class Tmdb
                 switch ($type) {
                     case 'movie':
                         $results = $this->searchMovie($title, $page_tmdb)['response'];
-                        $date_field = 'release_date';
                         break;
                     case 'series':
                         $results = $this->searchSeries($title, $page_tmdb)['response'];
-                        $date_field = 'first_air_date';
                         break;
                     default:
                         $results=['results'=>[]];
@@ -557,25 +736,14 @@ class Tmdb
                 $total_rows = $results['total_results'] ?? 0;
                 $tmdb_results = array_merge($tmdb_results, $results['results'] ?? []);
 
-                foreach ($results['results'] as $result) {
-                    $year = substr($result[$date_field], 0, 4);
-                    if (!empty($year)) {
-                        if (!array_key_exists($year, $years) ) {
-                            $years[$year]['year'] = $year;
-                            $years[$year]['count'] = 1;
-                        } else {
-                            $years[$year]['count']++;
-                        }
-                    }
-                }
                 $page_tmdb++;
                 if (!empty($results['error'])) {
                     e(lang($results['error']));
                     break;
                 }
             } while (!empty($results['results']));
-            if (!empty($tmdb_results)) {
-                rsort($years);
+            $years = $this->getSearchYears($tmdb_results, $type);
+            if (empty($results['error'])) {
                 try {
                     $this->setQueryInCache($title, $type,$tmdb_results, $total_rows, $years);
                 } catch (Exception $e) {
@@ -594,6 +762,7 @@ class Tmdb
             'title'         => $title,
             'years'         => $years,
             'sort_order'    => $sort_order,
+            'sort'          => $sort,
             'videoid'       => $video_info['videoid']
         ];
     }
@@ -623,6 +792,38 @@ class Tmdb
             $sql .= $field . ' = VALUES('.$field.') ';
         }
         return Clipbucket_db::getInstance()->execute($sql);
+    }
+
+    private function getSearchYears(array $results, string $type): array
+    {
+        $years = [];
+        foreach ($results as $result) {
+            $year = substr($result[self::$fields_date[$type]] ?? '', 0, 4);
+            if ($year !== '') {
+                $years[$year] = ['year' => $year, 'count' => ($years[$year]['count'] ?? 0) + 1];
+            }
+        }
+        rsort($years);
+        return $years;
+    }
+
+    private function updateExternalRatings(int $id, array $details, string $target): void
+    {
+        $fields = [];
+        $values = [];
+        if (config('enable_external_rate_from_tmdb') === 'yes' && isset($details['vote_average'])) {
+            $fields[] = 'external_rate';
+            $values[] = (float)$details['vote_average'];
+        }
+        if (config('enable_external_ratings_from_tmdb') === 'yes' && isset($details['vote_count'])) {
+            $fields[] = 'external_ratings';
+            $values[] = (int)$details['vote_count'];
+        }
+        if ($fields) {
+            $table = $target === 'collection' ? 'collections' : 'video';
+            $id_field = $target === 'collection' ? 'collection_id' : 'videoid';
+            Clipbucket_db::getInstance()->update(tbl($table), $fields, $values, $id_field . ' = ' . $id);
+        }
     }
 
     public static function getTableName(): string

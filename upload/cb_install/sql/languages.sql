@@ -1974,3 +1974,10 @@ VALUES ('noted_x'),
        ('confirm_delete_users'),
        ('add_user'),
        ('add_new_user');
+INSERT INTO `{tbl_prefix}languages_keys` (`language_key`)
+VALUES ('tmdb_choose'),
+       ('tmdb_back'),
+       ('tmdb_season'),
+       ('tmdb_episode'),
+       ('tmdb_new_search_confirm'),
+       ('tmdb_dont_ask_again');

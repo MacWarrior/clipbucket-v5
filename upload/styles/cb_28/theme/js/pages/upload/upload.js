@@ -534,15 +534,15 @@ function getInfoTmdb(videoid, type, video_title, page,sort, sort_order) {
     });
 }
 
-function saveInfoTmdb(tmdb_video_id, type, videoid) {
+function saveInfoTmdb(tmdb_video_id, type, videoid, context) {
     if ($('#link_video_link').hasClass('active')) {
-        return saveInfoTmdbRemote(tmdb_video_id, type, videoid);
+        return saveInfoTmdbRemote(tmdb_video_id, type, videoid, context);
     }
     showSpinner();
-    $.ajax({
+    return $.ajax({
         url: baseurl+"actions/tmdb_import.php",
         type: "POST",
-        data: {tmdb_video_id: tmdb_video_id, videoid: videoid, type: type, from: 'upload'},
+        data: $.extend({tmdb_video_id: tmdb_video_id, videoid: videoid, type: type, from: 'upload'}, context || {}),
         dataType: 'json',
         success: function (result) {
             $('.close').click();

@@ -4,20 +4,25 @@
             <button type="button" class="close" data-dismiss="modal">&times;</button>
             <h4 class="modal-title">{lang code='tmdb_search'}</h4>
         </div>
-        <div class="modal-body tmdb">
+        <div class="modal-body tmdb" data-target="{$tmdb_target|escape:'html'}" data-url="{$tmdb_action_url|escape:'html'}">
+            <div class="alert alert-danger tmdb-error" style="display:none">{lang('technical_error')|escape:'html'}</div>
             <div class="input-group">
                 <div style="display: table-cell; max-width: 60px;">
-                    <label class="form-control" style="border-bottom-right-radius: 0; border-top-right-radius: 0" for="type_tmdb">{lang('type')}</label>
+                    {if $tmdb_target != 'collection'}
+                        <label class="form-control" style="border-bottom-right-radius: 0; border-top-right-radius: 0" for="type_tmdb">{lang('type')}</label>
+                    {/if}
                     <label class="form-control" style="border-bottom-right-radius: 0; border-top-right-radius: 0" for="search_title">{lang('search')}</label>
                     <label class="form-control" style="border-bottom-right-radius: 0; border-top-right-radius: 0" for="selected_year">{lang('year')|ucfirst}</label>
                 </div>
-                <select name="type" class="form-control" id="type_tmdb">
+                {if $tmdb_target != 'collection'}<select name="type" class="form-control" id="type_tmdb">
                     <option value="movie" {if $type=='movie'}selected="selected"{/if}>{lang('movie')}</option>
                     <option value="series" {if $type=='series'}selected="selected"{/if}>{lang('series')}</option>
-                </select>
-                <input name="title" type="text" class="form-control " id="search_title" value="{$search}" style="font-size: 15px; line-height: 28px; height: 42px;"/>
+                    </select>{else}
+                    <input type="hidden" id="type_tmdb" value="series">
+                {/if}
+                <input name="title" type="text" class="form-control " id="search_title" value="{$search|escape:'html'}" style="font-size: 15px; line-height: 28px; height: 42px;"/>
                 {if $can_search_year}
-                    <select name="selected_year"  class="form-control" id="selected_year">
+                    <select name="selected_year" class="form-control" id="selected_year">
                         <option></option>
                         {section name=year loop=$years}
                             <option value="{$years[year]['year']}"
@@ -32,42 +37,56 @@
                 <span class="btn btn-primary input-group-addon pointer " id="search" title="{lang code='search'}">{lang code="search"}</span>
             </div>
 
-            <table class="table table-bordered table-striped">
-                <tr>
-                    <th class="col-md-1" style="cursor:pointer;" title="{lang('sort_by',lang('title'))}">{lang code='title'} <span class="icon-sort{if $sort=='title'}{if $sort_order == 'ASC'}-up{elseif $sort_order=='DESC'}-down{/if}{/if}" style="text-align: right;" data-type="title"></span></th>
-                    <th class="col-md-2" style="cursor:pointer;" title="{lang('sort_by',lang('release_date'))}">{lang code='release_date'}<span class="icon-sort{if $sort=='release_date'}{if $sort_order == 'ASC'}-up{elseif $sort_order=='DESC'}-down{/if}{/if}" style="text-align: right;" data-type="release_date"></span></th>
-                    <th class="col-md-6">{lang code='description'}</th>
-                    <th class="col-md-2">{lang('poster')|ucfirst}</th>
-                    <th class="col-md-1"></th>
-                </tr>
-                {section name=sub loop=$results}
-                <tr>
-                    <td>
-                        <span>{display_clean($results[sub].title)}</span>
-                    </td>
-                    <td>
-                        <span>{display_clean($results[sub].release_date)}</span>
-                    </td>
-                    <td>
-                        <span>{display_clean($results[sub].overview)}</span>
-                    </td>
-                    <td>
-                        {if $results[sub].poster_path}
-                        <div class="no_overflow" style="width: max-content;">
-                            <img
-                                class="tmdb_poster {if $results[sub].is_adult == true && config('tmdb_mature_content_age') > $user_age}blur{/if}"
-                                src="{Tmdb::IMAGE_URL}{$results[sub].poster_path}"
-                            />
-                        </div>
-                        {/if}
-                    </td>
-                    <td>
-                        <button class="btn-primary btn" onclick="saveInfoTmdb({display_clean($results[sub].id_tmdb_movie)}, '{display_clean($type)}', {$videoid})">{lang code='import'}</button>
-                    </td>
-                </tr>
-                {/section}
-            </table>
-            {include file="$style_dir/blocks/pagination.html"}
+            <div class="alert alert-warning tmdb-confirm" style="display:none">
+                <p>{lang('tmdb_new_search_confirm')|escape:'html'}</p>
+                <label><input type="checkbox" class="tmdb-dont-ask"> {lang('tmdb_dont_ask_again')|escape:'html'}</label>
+                <button type="button" class="btn btn-primary tmdb-confirm-yes">{lang('confirm')|escape:'html'}</button>
+                <button type="button" class="btn btn-default tmdb-confirm-no">{lang('cancel')|escape:'html'}</button>
+            </div>
+            <div class="tmdb-level" data-level="search">
+                <table class="table table-bordered table-striped">
+                    <tr>
+                        <th class="col-md-1" style="cursor:pointer;" title="{lang('sort_by',lang('title'))}">{lang code='title'} <span class="icon-sort{if $sort=='title'}{if $sort_order == 'ASC'}-up{elseif $sort_order=='DESC'}-down{/if}{/if}" style="text-align: right;" data-type="title"></span></th>
+                        <th class="col-md-2" style="cursor:pointer;" title="{lang('sort_by',lang('release_date'))}">{lang code='release_date'}<span class="icon-sort{if $sort=='release_date'}{if $sort_order == 'ASC'}-up{elseif $sort_order=='DESC'}-down{/if}{/if}" style="text-align: right;"
+                                                                                                                                                    data-type="release_date"></span></th>
+                        <th class="col-md-6">{lang code='description'}</th>
+                        <th class="col-md-2">{lang('poster')|ucfirst}</th>
+                        <th class="col-md-1"></th>
+                    </tr>
+                    {section name=sub loop=$results}
+                        <tr>
+                            <td>
+                                <span>{display_clean($results[sub].title)}</span>
+                            </td>
+                            <td>
+                                <span>{display_clean($results[sub].release_date)}</span>
+                            </td>
+                            <td>
+                                <span>{display_clean($results[sub].overview)}</span>
+                            </td>
+                            <td>
+                                {if $results[sub].poster_path}
+                                    <div class="no_overflow" style="width: max-content;">
+                                        <img
+                                                class="tmdb_poster {if $results[sub].is_adult == true && config('tmdb_mature_content_age') > $user_age}blur{/if}"
+                                                src="{Tmdb::IMAGE_URL}{$results[sub].poster_path|escape:'html'}"
+                                        />
+                                    </div>
+                                {/if}
+                            </td>
+                            <td>
+                                {if $type == 'series'}
+                                    <button type="button" class="btn btn-primary tmdb-choose" data-series="{$results[sub].id_tmdb_movie|intval}">{lang('tmdb_choose')|escape:'html'}</button>
+                                {/if}
+                                {if $type == 'movie' || $tmdb_target == 'collection'}
+                                    <button type="button" class="btn btn-primary tmdb-import" data-series="{$results[sub].id_tmdb_movie|intval}" data-type="{$type|escape:'html'}">{lang('import')|escape:'html'}</button>
+                                {/if}
+                            </td>
+                        </tr>
+                    {/section}
+                </table>
+                {include file="$style_dir/blocks/pagination.html"}
+            </div>
         </div>
         <div class="modal-footer">
             <button type="button" class="btn btn-default" data-dismiss="modal">{lang code='cancel'}</button>
@@ -75,44 +94,3 @@
         </div>
     </div>
 </div>
-<script>
-    var tmdb_selected_year;
-    var tmdb_videoid;
-    var tmdb_video_title;
-    var tmdb_type;
-    $(function () {
-        tmdb_videoid = $('#modal_videoid').val();
-        tmdb_selected_year = $('#selected_year').val();
-        tmdb_video_title = $('#search_title').val();
-        tmdb_type = $('#type_tmdb').val();
-        $('#search').on('click', function () {
-            tmdb_video_title = $('#search_title').val();
-            tmdb_selected_year = $('#selected_year').val();
-            tmdb_type = $('#type_tmdb').val();
-            getInfoTmdb(tmdb_videoid, tmdb_type, tmdb_video_title, 1, 'release_date','ASC',tmdb_selected_year);
-        });
-        $('.icon-sort').parent().on('click', function () {
-            tmdb_video_title = $('#search_title').val();
-            $(this).children().first().removeClass('icon-sort');
-            $(this).children().first().addClass('icon-sort-up');
-            getInfoTmdb(tmdb_videoid, tmdb_type, tmdb_video_title, 1, $(this).children().first().data('type'), 'ASC', tmdb_selected_year);
-        });
-        $('.icon-sort-up').parent().on('click', function () {
-            tmdb_video_title = $('#search_title').val();
-            $(this).children().first().removeClass('icon-sort-up');
-            $(this).children().first().addClass('icon-sort-down');
-            getInfoTmdb(tmdb_videoid, tmdb_type, tmdb_video_title, 1, $(this).children().first().data('type'), 'DESC',tmdb_selected_year);
-        });
-        $('.icon-sort-down').parent().on('click', function () {
-            tmdb_video_title = $('#search_title').val();
-            $(this).children().first().removeClass('icon-sort-down');
-            $(this).children().first().addClass('icon-sort-up');
-            getInfoTmdb(tmdb_videoid, tmdb_type, tmdb_video_title, 1, $(this).children().first().data('type'), 'ASC',tmdb_selected_year);
-        });
-        $('#search_title').keypress(function(event){
-            if(event.keyCode == 13){
-                $('#search').click();
-            }
-        });
-    });
-</script>

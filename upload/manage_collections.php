@@ -244,6 +244,7 @@ switch ($mode) {
 
 $min_suffixe = System::isInDev() ? '' : '.min';
 ClipBucket::getInstance()->addJS([
+    'tmdb' . $min_suffixe . '.js'                                        => 'global',
     'tag-it' . $min_suffixe . '.js'                                      => 'admin',
     'pages/manage_collections/manage_collections' . $min_suffixe . '.js' => 'admin',
     'init_default_tag/init_default_tag' . $min_suffixe . '.js'           => 'admin'

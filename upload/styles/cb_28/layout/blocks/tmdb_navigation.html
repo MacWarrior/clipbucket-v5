@@ -1,0 +1,39 @@
+<div class="tmdb-level" data-level="{$tmdb_operation|escape:'html'}" data-series="{$tmdb_series_id|intval}"{if $tmdb_operation == 'episodes'} data-season="{$tmdb_season|intval}"{/if}>
+    <button type="button" class="btn btn-default tmdb-back" title="{lang('tmdb_back')|escape:'html'}" aria-label="{lang('tmdb_back')|escape:'html'}">
+        <i class="fa fa-arrow-left"></i>
+    </button>
+    <h4>{$tmdb_title|escape:'html'}</h4>
+    <table class="table table-bordered table-striped">
+        <tr>
+            <th class="col-md-1">{lang('title')|escape:'html'}</th>
+            <th class="col-md-2">{lang('release_date')|escape:'html'}</th>
+            <th class="col-md-6">{lang('description')|escape:'html'}</th>
+            <th class="col-md-2">{lang('poster')|escape:'html'}</th>
+            <th class="col-md-1"></th>
+        </tr>
+        {foreach from=$results item=item}
+            <tr>
+                <td>{display_clean($item.name)}</td>
+                <td>{display_clean($item.air_date)}</td>
+                <td>{display_clean($item.overview)}</td>
+                <td>
+                    {if !empty($item.poster_path)}
+                        <img class="tmdb_poster" src="{Tmdb::IMAGE_URL}{$item.poster_path|escape:'html'}"/>
+                    {elseif !empty($item.still_path)}
+                        <img class="tmdb_poster" src="{Tmdb::IMAGE_URL}{$item.still_path|escape:'html'}"/>
+                    {/if}
+                </td>
+                <td>
+                    {if $tmdb_operation == 'seasons' && $tmdb_target == 'video'}
+                        <button type="button" class="btn btn-primary tmdb-choose" data-series="{$tmdb_series_id|intval}" data-season="{$item.season_number|intval}">{lang('tmdb_choose')|escape:'html'}</button>
+                    {elseif $tmdb_operation == 'seasons'}
+                        <button type="button" class="btn btn-primary tmdb-import" data-series="{$tmdb_series_id|intval}" data-season="{$item.season_number|intval}" data-type="season">{lang('import')|escape:'html'}</button>
+                    {else}
+                        <button type="button" class="btn btn-primary tmdb-import" data-series="{$tmdb_series_id|intval}" data-season="{$tmdb_season|intval}" data-episode="{$item.episode_number|intval}" data-type="episode">{lang('import')|escape:'html'}</button>
+                    {/if}
+                </td>
+            </tr>
+        {/foreach}
+    </table>
+    {include file="$style_dir/blocks/pagination.html"}
+</div>

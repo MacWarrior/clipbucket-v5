@@ -42,6 +42,7 @@ subtitle(lang('upload'));
 
 $min_suffixe = System::isInDev() ? '' : '.min';
 ClipBucket::getInstance()->addJS([
+    'tmdb' . $min_suffixe . '.js'                             => 'global',
     'tag-it' . $min_suffixe . '.js'                            => 'admin',
     'pages/upload/upload' . $min_suffixe . '.js'               => 'admin',
     'init_default_tag/init_default_tag' . $min_suffixe . '.js' => 'admin',

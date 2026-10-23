@@ -130,6 +130,7 @@ $comments = Comments::getAll($params);
 assign('comments', $comments);
 
 ClipBucket::getInstance()->addAdminJS([
+    'tmdb' . $min_suffixe . '.js'                              => 'global',
     'tag-it' . $min_suffixe . '.js'                            => 'admin',
     'pages/edit_video/edit_video' . $min_suffixe . '.js'       => 'admin',
     'init_default_tag/init_default_tag' . $min_suffixe . '.js' => 'admin'

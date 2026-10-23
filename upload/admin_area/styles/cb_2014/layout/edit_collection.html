@@ -1,3 +1,6 @@
+{if $data.collection_id && $data.type == 'videos' && config('enable_tmdb') == 'yes' && config('tmdb_token') != ''}
+    <button type="button" class="btn btn-primary" onclick="openCollectionTmdb(this)" data-id="{$data.collection_id|intval}" data-url="{DirPath::getUrl('admin_area')}actions/">{lang('tmdb_search')|escape:'html'}</button>
+{/if}
 {assign var=requiredFields value=Collections::getInstance()->load_required_fields($data)}
 {assign var=otherFields value=Collections::getInstance()->load_other_fields($data)}
 

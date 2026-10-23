@@ -1067,7 +1067,8 @@ CREATE TABLE IF NOT EXISTS `{tbl_prefix}tmdb_search`
     `datetime_search` DATETIME                 NOT NULL DEFAULT CURRENT_TIMESTAMP,
     `total_results`   INT                      NOT NULL,
     `list_years`      TEXT                     NULL,
-    `type`            ENUM ('movie', 'series') NOT NULL DEFAULT 'movie',
+    `type`            ENUM ('movie', 'series', 'season', 'episode') NOT NULL DEFAULT 'movie',
+    `navigation_title` VARCHAR(512)            NULL,
     `language`        VARCHAR(20)              NOT NULL DEFAULT 'en'
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4
@@ -1083,6 +1084,8 @@ CREATE TABLE IF NOT EXISTS `{tbl_prefix}tmdb_search_result`
     `poster_path`           VARCHAR(128) NOT NULL,
     `release_date`          DATE         NULL,
     `id_tmdb_movie`         INT          NOT NULL,
+    `season_number`         INT          NULL,
+    `episode_number`        INT          NULL,
     `is_adult`              BOOLEAN      NULL
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4
