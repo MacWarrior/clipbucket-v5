@@ -13,83 +13,245 @@ class CollectionThumbs
         'medium'   => ['width' => 550, 'height' => 344, 'should_watermark' => false]
     ];
 
+    private static string $tableName = 'collection_image';
+
+    private static array $image_resolution_setting = [
+        'poster' => [
+            'original' => [],
+            ['width' => 90, 'height' => 140],
+            ['width' => 200, 'height' => 300]
+        ],
+        'backdrop' => [
+            'original' => [],
+            ['width' => 168, 'height' => 105],
+            ['width' => 416, 'height' => 260],
+            ['width' => 512, 'height' => 320],
+            ['width' => 768, 'height' => 480],
+            ['width' => 896, 'height' => 560]
+        ]
+    ];
+
+    private static array $fields = [
+        'id_collection_image',
+        'collection_id',
+        'type',
+        'num',
+        'is_auto'
+    ];
+
     private static array $fieldsThumb = [
         'id_collection_thumb',
-        'collection_id',
+        'id_collection_image',
         'width',
+        'height',
         'extension',
         'version',
         'is_original_size'
     ];
 
     /**
+     * Check whether the image type is enabled for the collection.
+     *
+     * @param array $collection
+     * @param string $type
+     * @return bool
+     */
+    public static function isTypeAllowed(array $collection, string $type): bool
+    {
+        if (empty($collection['collection_id'])) {
+            return false;
+        }
+        if ($type == 'thumbnail') {
+            return true;
+        }
+        if (!in_array($type, ['poster', 'backdrop'], true)) {
+            return false;
+        }
+        if ($collection['type'] != 'videos') {
+            return false;
+        }
+        return config('enable_collection_' . $type) == 'yes';
+    }
+
+    /**
+     * Return the source image table name.
+     *
+     * @return string
+     */
+    public static function getTableName(): string
+    {
+        return self::$tableName;
+    }
+
+    /**
+     * Return the thumbnail rendition table name.
+     *
+     * @return string
+     */
+    public static function getTableNameThumb(): string
+    {
+        return self::$tableNameThumb;
+    }
+
+    /**
+     * Get source images matching the supplied filters.
+     *
+     * @param array $params
+     * @return array
+     * @throws Exception
+     */
+    public static function getAll(array $params): array
+    {
+        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '999')) {
+            $param_first_only = $params['first_only'] ?? false;
+            $param_collection_id = $params['collection_id'] ?? false;
+            $param_id_collection_image = $params['id_collection_image'] ?? false;
+            $param_type = $params['type'] ?? false;
+            $param_num = $params['num'] ?? false;
+            $param_is_auto = $params['is_auto'] ?? null;
+
+            $conditions = [];
+
+            $select = self::getAllFields();
+
+            if ($param_collection_id !== false) {
+                $conditions[] = self::$tableName . '.collection_id = ' . (int)$param_collection_id;
+            }
+            if ($param_id_collection_image !== false) {
+                $conditions[] = self::$tableName . '.id_collection_image = ' . (int)$param_id_collection_image;
+            }
+            if ($param_type !== false) {
+                $conditions[] = self::$tableName . '.type = \'' . mysql_clean($param_type) . '\'';
+            }
+            if ($param_num !== false) {
+                $conditions[] = self::$tableName . '.num = ' . (int)$param_num;
+            }
+            if ($param_is_auto !== null) {
+                $conditions[] = self::$tableName . '.is_auto = ' . (int)$param_is_auto;
+            }
+
+            $order = ' ORDER BY ' . self::$tableName . '.num, ' . self::$tableName . '.id_collection_image';
+
+            $sql = 'SELECT ' . implode(', ', $select) . '
+                        FROM ' . cb_sql_table(self::$tableName)
+                . (empty($conditions) ? '' : ' WHERE ' . implode(' AND ', $conditions))
+                . $order;
+
+            $result = Clipbucket_db::getInstance()->_select($sql);
+            if ($param_first_only) {
+                return $result[0] ?? [];
+            }
+            return empty($result) ? [] : $result;
+        } else {
+            return [];
+        }
+    }
+
+    /**
+     * Get the first source image matching the supplied filters.
+     *
+     * @param array $params
+     * @return array
+     * @throws Exception
+     */
+    public static function getOne(array $params): array
+    {
+        $params['first_only'] = true;
+        return self::getAll($params);
+    }
+
+    /**
+     * Get thumbnail renditions or their count using the supplied filters.
+     *
+     * @param array $params
+     * @return array|int|string
      * @throws Exception
      */
     public static function getAllThumbs(array $params)
     {
-        $param_first_only = $params['first_only'] ?? false;
-        $param_limit = $params['limit'] ?? false;
-        $param_count = $params['count'] ?? false;
-        $param_collection_id = $params['collection_id'] ?? false;
-        $param_width = $params['width'] ?? false;
-        $param_height = $params['height'] ?? false;
-        $param_get_collection_info = $params['get_collection_info'] ?? false;
+        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '999')) {
+            $param_first_only = $params['first_only'] ?? false;
+            $param_limit = $params['limit'] ?? false;
+            $param_count = $params['count'] ?? false;
+            $param_collection_id = $params['collection_id'] ?? false;
+            $param_id_collection_image = $params['id_collection_image'] ?? false;
+            $param_type = $params['type'] ?? false;
+            $param_width = $params['width'] ?? false;
+            $param_height = $params['height'] ?? false;
 
-        $conditions = [];
-        $join = [];
-        $group = [];
+            $conditions = [];
+            $join = [];
 
-        if (!$param_count) {
-            $select = self::getAllFieldsThumbs();
-            if ($param_get_collection_info) {
-                $select[] = Collection::getInstance()->getTableName() . '.collection_id ';
-                $select[] = Collection::getInstance()->getTableName() . '.collection_name ';
-                $select[] = self::$tableNameThumb . '.extension AS ext ';
+            //SELECTS
+            if (!$param_count) {
+                $select = self::getAllFieldsThumbs();
+                $select[] = self::$tableName . '.collection_id';
+                $select[] = self::$tableName . '.type';
+                $select[] = self::$tableName . '.num';
+                $select[] = self::$tableName . '.is_auto';
+                $select[] = self::$tableNameThumb . '.extension AS ext';
+            } else {
+                $select[] = 'COUNT(DISTINCT ' . self::$tableNameThumb . '.id_collection_thumb) AS count';
             }
+
+            //CONDITIONS
+            if ($param_collection_id !== false) {
+                $conditions[] = self::$tableName . '.collection_id = ' . (int)$param_collection_id;
+            }
+            if ($param_id_collection_image !== false) {
+                $conditions[] = self::$tableNameThumb . '.id_collection_image = ' . (int)$param_id_collection_image;
+            }
+            if ($param_type !== false) {
+                $conditions[] = self::$tableName . '.type = \'' . mysql_clean($param_type) . '\'';
+            }
+
+            if ($param_width === 'original' || $param_height === 'original') {
+                $conditions[] = self::$tableNameThumb . '.is_original_size = 1';
+            } else {
+                if ($param_width) {
+                    $conditions[] = self::$tableNameThumb . '.width = ' . (int)$param_width;
+                }
+                if ($param_height) {
+                    $conditions[] = self::$tableNameThumb . '.height = ' . (int)$param_height;
+                }
+                if (!empty($param_width) || !empty($param_height)) {
+                    $conditions[] = self::$tableNameThumb . '.is_original_size = 0';
+                }
+            }
+
+            //JOINS
+            $join[] = ' INNER JOIN ' . cb_sql_table(self::$tableName) . ' ON ' . self::$tableNameThumb . '.id_collection_image = ' . self::$tableName . '.id_collection_image';
+
+            $limit = '';
+            if ($param_limit) {
+                $limit = ' LIMIT ' . (int)$param_limit;
+            }
+
+            $sql = 'SELECT ' . implode(', ', $select) . '
+                        FROM ' . cb_sql_table(self::$tableNameThumb)
+                . implode(' ', $join)
+                . (empty($conditions) ? '' : ' WHERE ' . implode(' AND ', $conditions))
+                . $limit;
+
+            $result = Clipbucket_db::getInstance()->_select($sql);
+            if ($param_count) {
+                return $result[0]['count'] ?? 0;
+            }
+            if ($param_first_only) {
+                return $result[0] ?? [];
+            }
+            return empty($result) ? [] : $result;
         } else {
-            $select[] = 'COUNT(DISTINCT ' . self::$tableNameThumb . '.id_collection_thumb) AS count';
-        }
-
-        if ($param_collection_id !== false) {
-            $conditions[] = self::$tableNameThumb . '.collection_id = ' . (int)$param_collection_id;
-        }
-
-        if ($param_width == 'original' || $param_height == 'original') {
-            $conditions[] = self::$tableNameThumb . '.is_original_size = ' . ($param_width ? 1 : 0);
-        } else {
-            if ($param_width) {
-                $conditions[] = self::$tableNameThumb . '.width = ' . (int)$param_width;
+            if (!empty($params['count'])) {
+                return 0;
             }
-            if ($param_height) {
-                $conditions[] = self::$tableNameThumb . '.height = ' . (int)$param_height;
-            }
+            return [];
         }
-
-        $join[] = ' LEFT JOIN ' . cb_sql_table(Collection::getInstance()->getTableName()) . ' ON ' . Collection::getInstance()->getTableName() . '.collection_id = ' . self::$tableNameThumb . '.collection_id';
-
-        $limit = '';
-        if ($param_limit) {
-            $limit = ' LIMIT ' . $param_limit;
-        }
-
-        $sql = 'SELECT ' . implode(', ', $select) . '
-                    FROM ' . cb_sql_table(self::$tableNameThumb)
-            . implode(' ', $join)
-            . (empty($conditions) ? '' : ' WHERE ' . implode(' AND ', $conditions))
-            . (empty($group) ? '' : ' GROUP BY ' . implode(', ', $group))
-            . $limit;
-
-        $result = Clipbucket_db::getInstance()->_select($sql);
-        if ($param_first_only) {
-            return $result[0] ?? [];
-        }
-        if ($param_count) {
-            return $result[0]['count'];
-        }
-        return empty($result) ? [] : $result;
     }
 
     /**
+     * Get the first thumbnail rendition matching the supplied filters.
+     *
      * @param array $params
      * @return array
      * @throws Exception
@@ -101,6 +263,20 @@ class CollectionThumbs
     }
 
     /**
+     * Get the qualified source image fields.
+     *
+     * @return array
+     */
+    private static function getAllFields(): array
+    {
+        return array_map(function ($field) {
+            return self::$tableName . '.' . $field;
+        }, self::$fields);
+    }
+
+    /**
+     * Get the qualified thumbnail rendition fields.
+     *
      * @return array
      */
     private static function getAllFieldsThumbs(): array
@@ -110,12 +286,27 @@ class CollectionThumbs
         }, self::$fieldsThumb);
     }
 
-    public static function getTableNameThumb(): string
+    /**
+     * Get the custom thumbnail image reference for a collection.
+     *
+     * @param int $collection_id
+     * @return int
+     * @throws Exception
+     */
+    public static function getDefaultImageId(int $collection_id): int
     {
-        return self::$tableNameThumb;
+        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '999')) {
+            $result = Clipbucket_db::getInstance()->_select('SELECT default_thumbnail FROM ' . tbl('collections')
+                . ' WHERE collection_id = ' . $collection_id);
+            return (int)($result[0]['default_thumbnail'] ?? 0);
+        } else {
+            return 0;
+        }
     }
 
     /**
+     * Get the referenced custom thumbnail URL or filesystem path.
+     *
      * @param int $collection_id
      * @param int|string $width
      * @param string $return_type
@@ -124,67 +315,83 @@ class CollectionThumbs
      */
     public static function getThumbFile(int $collection_id, int|string $width = 150, string $return_type = 'url'): array|string
     {
-        $thumb_collection_directory_path = DirPath::get('thumbs') . 'collection' . DIRECTORY_SEPARATOR;
-        switch ($return_type) {
-            default:
-            case 'url':
-                $thumb_collection_directory = DirPath::getUrl('thumbs') . 'collection' . DIRECTORY_SEPARATOR;
-                break;
-
-            case 'filepath':
-                $thumb_collection_directory = $thumb_collection_directory_path;
-                break;
+        $image = self::getOne([
+            'collection_id' => $collection_id,
+            'id_collection_image' => self::getDefaultImageId($collection_id),
+            'type' => 'thumbnail'
+        ]);
+        if (empty($image)) {
+            return '';
         }
-
-        $params = [
-            'collection_id'       => $collection_id,
-            'width'               => $width,
-            'get_collection_info' => true
-        ];
-        $thumb = self::getOneThumb($params);
-        if (!empty($thumb['is_original_size'])) {
-            $thumb['width'] = 'original';
-        }
-        if (empty($thumb)) {
-            $params_for_collection = $params;
-            unset($params_for_collection['width']);
-            $collection_thumb = self::getOneThumb($params_for_collection);
-            if (empty($collection_thumb)) {
-                return false;
-            }
-            $resolutions = self::getNearestResolutionThumb($collection_thumb['collection_id'], $width);
-            if (empty($resolutions)) {
-                return false;
-            }
-            $thumbs_files = self::getThumbFile($collection_id, $resolutions['width'], $return_type);
-            if (!empty($thumbs_files)) {
-                return $thumbs_files;
-            }
-        }
-        $thumb_path = self::getThumbPath($thumb['collection_id'], $thumb['width'], $thumb['ext']);
-        $filepath = $thumb_collection_directory . $thumb_path;
-        if (!file_exists($thumb_collection_directory_path . $thumb_path)) {
-            $filepath = false;
-        }
-        return $filepath;
+        return self::getImageFile($image, $width, $return_type);
     }
 
     /**
-     * @param $collection_collection_id
-     * @param $thumb_width
-     * @param $thumb_extension
+     * Get an image rendition, falling back to its nearest resolution.
+     *
+     * @param array $image
+     * @param int|string $width
+     * @param string $return_type
+     * @return string
+     * @throws Exception
+     */
+    public static function getImageFile(array $image, int|string $width = 150, string $return_type = 'url'): string
+    {
+        $params = [
+            'id_collection_image' => $image['id_collection_image'],
+            'width'               => $width
+        ];
+        $thumb = self::getOneThumb($params);
+        if (empty($thumb)) {
+            $resolution = self::getNearestImageResolution($image['id_collection_image'], $width);
+            $params['width'] = $resolution['width'];
+            $thumb = self::getOneThumb($params);
+        }
+        if (empty($thumb)) {
+            return '';
+        }
+        $path = self::getImagePath($thumb);
+        if (!file_exists(DirPath::get('thumbs') . 'collection' . DIRECTORY_SEPARATOR . $path)) {
+            return '';
+        }
+        if ($return_type == 'filepath') {
+            return DirPath::get('thumbs') . 'collection' . DIRECTORY_SEPARATOR . $path;
+        }
+        return DirPath::getUrl('thumbs') . 'collection/' . str_replace(DIRECTORY_SEPARATOR, '/', $path);
+    }
+
+    /**
+     * Build a rendition path relative to the collection thumbnail directory.
+     *
+     * @param array $thumb
+     * @return string
+     */
+    private static function getImagePath(array $thumb): string
+    {
+        return $thumb['collection_id'] . DIRECTORY_SEPARATOR . $thumb['type'] . DIRECTORY_SEPARATOR
+            . $thumb['id_collection_image'] . DIRECTORY_SEPARATOR
+            . self::getThumbName($thumb['id_collection_image'], $thumb['is_original_size'] ? 'original' : $thumb['width'], $thumb['extension']);
+    }
+
+    /**
+     * Build a legacy collection thumbnail path.
+     *
+     * @param int|string $collection_collection_id
+     * @param int|string $thumb_width
+     * @param string $thumb_extension
      * @return string
      */
     public static function getThumbPath($collection_collection_id, $thumb_width, $thumb_extension): string
     {
-        $filepath = $collection_collection_id . DIRECTORY_SEPARATOR;
-        return $filepath . self::getThumbName($collection_collection_id, $thumb_width, $thumb_extension);
+        return $collection_collection_id . DIRECTORY_SEPARATOR . self::getThumbName($collection_collection_id, $thumb_width, $thumb_extension);
     }
 
     /**
-     * @param $collection_file_name
-     * @param $thumb_width
-     * @param $thumb_extension
+     * Build a thumbnail filename for the requested rendition.
+     *
+     * @param int|string $collection_file_name
+     * @param int|string $thumb_width
+     * @param string $thumb_extension
      * @return string
      */
     public static function getThumbName($collection_file_name, $thumb_width, $thumb_extension): string
@@ -196,77 +403,214 @@ class CollectionThumbs
     }
 
     /**
+     * Select a custom thumbnail belonging to the collection.
+     *
+     * @param int $collection_id
+     * @param int $id_collection_image
+     * @return void
+     * @throws Exception
+     */
+    public static function setDefaultImage(int $collection_id, int $id_collection_image): void
+    {
+        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '999')) {
+            $image = self::getOne([
+                'collection_id'       => $collection_id,
+                'id_collection_image' => $id_collection_image,
+                'type'                => 'thumbnail'
+            ]);
+            if (empty($image) || self::getImageFile($image) == '') {
+                throw new Exception(lang('technical_error'));
+            }
+            Clipbucket_db::getInstance()->update(tbl('collections'), ['default_thumbnail', 'thumb_objectid'],
+                [$id_collection_image, -1], 'collection_id = ' . $collection_id);
+        } else {
+            return;
+        }
+    }
+
+    /**
+     * Import a custom thumbnail and select it as the default.
+     *
      * @param array $collection
-     * @param $file
-     * @param $ignore
+     * @param array $file
+     * @param bool|int $ignore Retained for compatibility with existing callers.
      * @return void
      * @throws Exception
      */
     public static function uploadThumb(array $collection, $file, $ignore = false): void
     {
-        if (empty($collection['collection_id'])) {
-            return;
-        }
-
-        $temp_directory = DirPath::get('temp');
-        $thumb_collection_directory = DirPath::get('thumbs') . 'collection' . DIRECTORY_SEPARATOR;
-        if (!file_exists($thumb_collection_directory . $collection['collection_id'] . DIRECTORY_SEPARATOR)) {
-            mkdir($thumb_collection_directory . $collection['collection_id'] . DIRECTORY_SEPARATOR, 0755, true);
-        }
-        if (!empty($file['name'])) {
-            $ext_original = getExt($file['name']);
-            $ext_destination = strtolower((string)config('video_thumbs_format'));
-            $temp_file_path = $temp_directory . $collection['collection_id'] . '.' . $ext_destination;
-            foreach (self::$resolution_setting as $resolution_key => $res) {
-                if (is_uploaded_file($file['tmp_name'])) {
-                    move_uploaded_file($file['tmp_name'], $temp_file_path);
-                } else {
-                    rename($file['tmp_name'], $temp_file_path);
-                }
-                $imageDetails = getimagesize($temp_file_path);
-                if ($resolution_key == 'original') {
-                    $size_tag = 'original';
-                    $res['width'] = $imageDetails[0] ?? '';
-                    $res['height'] = $imageDetails[1] ?? '';
-                } else {
-                    $size_tag = $res['width'];
-                }
-                $new_thumb_path = $thumb_collection_directory . self::getThumbPath($collection['collection_id'], $size_tag, $ext_destination);
-                if (!file_exists(dirname($new_thumb_path))) {
-                    //needed if upload on old version
-                    mkdir(dirname($new_thumb_path), 0755, true);
-                }
-                CollectionThumbs::CreateThumb($temp_file_path, $new_thumb_path, $size_tag, $ext_original, $imageDetails);
-                if (file_exists($new_thumb_path)) {
-                    //watermark
-
-                    if ($res['should_watermark'] && config('watermark_collection')) {
-                        self::watermark_image($new_thumb_path, $new_thumb_path);
-                    }
-                    Clipbucket_db::getInstance()->insert(tbl(self::$tableNameThumb), [
-                        'collection_id',
-                        'width',
-                        'extension',
-                        'version',
-                        'is_original_size'
-                    ], [
-                        $collection['collection_id'],
-                        $res['width'] ?? 0,
-                        $ext_destination,
-                        Update::getInstance()->getCurrentCoreVersion(),
-                        (int)($resolution_key == 'original')
-                    ], ignore: $ignore);
-                } else {
-                    e(lang('error_uploading_thumb'));
-                    return;
-                }
-            }
+        $id_collection_image = self::importImage($collection, $file);
+        if ($id_collection_image) {
+            self::setDefaultImage($collection['collection_id'], $id_collection_image);
         }
     }
 
     /**
-     * @param $filename
-     * @return false|float
+     * Import a custom image and its renditions, cleaning up failed imports.
+     *
+     * @param array $collection
+     * @param array $file
+     * @param string $type
+     * @return int Image identifier, or zero if the import failed.
+     * @throws Exception
+     */
+    public static function importImage(array $collection, array $file, string $type = 'thumbnail'): int
+    {
+        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '999')) {
+            if (!self::isTypeAllowed($collection, $type)) {
+                e(lang('technical_error'));
+                return 0;
+            }
+            if (($file['error'] ?? UPLOAD_ERR_OK) != UPLOAD_ERR_OK || empty($file['tmp_name'])
+                || !is_file($file['tmp_name']) || !Photo::ValidateImage($file['tmp_name'])) {
+                e(lang('error_uploading_thumb'));
+                return 0;
+            }
+            $temp_file_path = tempnam(DirPath::get('temp'), 'collection_');
+            $id_collection_image = 0;
+            $paths = [];
+            try {
+                if (!$temp_file_path || !copy($file['tmp_name'], $temp_file_path)) {
+                    throw new Exception(lang('error_uploading_thumb'));
+                }
+                $imageDetails = getimagesize($temp_file_path);
+                $ext_original = strtolower(image_type_to_extension($imageDetails[2], false));
+                $ext_destination = strtolower((string)config('video_thumbs_format'));
+                if (!in_array($ext_destination, ['jpg', 'jpeg', 'png', 'webp'], true)) {
+                    throw new Exception(lang('error_uploading_thumb'));
+                }
+                if ($type != 'thumbnail' && $ext_original == 'webp') {
+                    self::convertImage($temp_file_path, 'png');
+                    $ext_original = 'png';
+                }
+                $last = Clipbucket_db::getInstance()->_select('SELECT MAX(num) AS num FROM ' . tbl(self::$tableName)
+                    . ' WHERE collection_id = ' . (int)$collection['collection_id'] . " AND type = '" . mysql_clean($type) . "' AND is_auto = 0");
+                $id_collection_image = (int)Clipbucket_db::getInstance()->insert(tbl(self::$tableName), [
+                    'collection_id',
+                    'type',
+                    'num',
+                    'is_auto'
+                ], [
+                    $collection['collection_id'],
+                    $type,
+                    (int)($last[0]['num'] ?? 0) + 1,
+                    0
+                ]);
+                if (!$id_collection_image) {
+                    throw new Exception(lang('error_uploading_thumb'));
+                }
+                $settings = $type == 'thumbnail' ? self::$resolution_setting : self::$image_resolution_setting[$type];
+                foreach ($settings as $key => $res) {
+                    $original = $key === 'original';
+                    $thumb = [
+                        'collection_id' => $collection['collection_id'],
+                        'id_collection_image' => $id_collection_image,
+                        'type' => $type,
+                        'width' => $original ? $imageDetails[0] : $res['width'],
+                        'height' => $original ? $imageDetails[1] : $res['height'],
+                        'extension' => $ext_destination,
+                        'is_original_size' => (int)$original
+                    ];
+                    $path = DirPath::get('thumbs') . 'collection' . DIRECTORY_SEPARATOR . self::getImagePath($thumb);
+                    $paths[] = $path;
+                    if (!is_dir(dirname($path)) && !mkdir(dirname($path), 0755, true)) {
+                        throw new Exception(lang('error_uploading_thumb'));
+                    }
+                    if ($type == 'thumbnail') {
+                        self::CreateThumb($temp_file_path, $path, $original ? 'original' : $res['width'], $ext_destination, $imageDetails);
+                    } else {
+                        VideoThumbs::CreateThumb($temp_file_path, $path, $thumb['width'], $ext_original, $thumb['height'], false);
+                    }
+                    if (!is_file($path) || !getimagesize($path)) {
+                        throw new Exception(lang('error_uploading_thumb'));
+                    }
+                    self::convertImage($path, $ext_destination);
+                    if (!empty($res['should_watermark']) && config('watermark_collection')) {
+                        self::watermark_image($path, $path);
+                    }
+                    // Width/height identify the configured rendition, including for small sources.
+                    $id_thumb = Clipbucket_db::getInstance()->insert(tbl(self::$tableNameThumb), [
+                        'id_collection_image',
+                        'width',
+                        'height',
+                        'extension',
+                        'version',
+                        'is_original_size'
+                    ], [
+                        $id_collection_image,
+                        $thumb['width'],
+                        $thumb['height'],
+                        $ext_destination,
+                        Update::getInstance()->getCurrentCoreVersion(),
+                        (int)$original
+                    ]);
+                    if (!$id_thumb) {
+                        throw new Exception(lang('error_uploading_thumb'));
+                    }
+                }
+                return $id_collection_image;
+            } catch (Throwable $exception) {
+                foreach ($paths as $path) {
+                    if (is_file($path)) {
+                        unlink($path);
+                    }
+                }
+                if ($id_collection_image) {
+                    self::deleteCollectionImage(['id_collection_image' => $id_collection_image, 'collection_id' => $collection['collection_id']]);
+                }
+                e(lang('error_uploading_thumb'));
+                return 0;
+            } finally {
+                if ($temp_file_path && is_file($temp_file_path)) {
+                    unlink($temp_file_path);
+                }
+            }
+        } else {
+            return 0;
+        }
+    }
+
+    /**
+     * Convert an image in place to the requested output format.
+     *
+     * @param string $path
+     * @param string $extension
+     * @return void
+     * @throws Exception
+     */
+    private static function convertImage(string $path, string $extension): void
+    {
+        $info = getimagesize($path);
+        $current_extension = image_type_to_extension($info[2], false);
+        if ($current_extension == $extension || ($current_extension == 'jpeg' && $extension == 'jpg')) {
+            return;
+        }
+        $image = imagecreatefromstring(file_get_contents($path));
+        if (!$image) {
+            throw new Exception(lang('error_uploading_thumb'));
+        }
+        try {
+            imagepalettetotruecolor($image);
+            imagesavealpha($image, true);
+            $saved = match ($extension) {
+                'jpg', 'jpeg' => imagejpeg($image, $path, 90),
+                'png' => imagepng($image, $path, 9),
+                'webp' => imagewebp($image, $path, 90),
+                default => false
+            };
+            if (!$saved) {
+                throw new Exception(lang('error_uploading_thumb'));
+            }
+        } finally {
+            imagedestroy($image);
+        }
+    }
+
+    /**
+     * Estimate the memory required to process an image.
+     *
+     * @param string $filename
+     * @return float|false
      */
     public static function getMemoryNeededForImage($filename): float|bool
     {
@@ -277,13 +621,15 @@ class CollectionThumbs
         $imageInfo = getimagesize($filename);
         $current_memory_usage = memory_get_usage();
         return round(($imageInfo[0] * $imageInfo[1]
-                * $imageInfo['bits']
-                * ($imageInfo['channels'] / 8)
+                * ($imageInfo['bits'] ?? 8)
+                * (($imageInfo['channels'] ?? 4) / 8)
             ) * 1.5 + $current_memory_usage
         );
     }
 
     /**
+     * Create a thumbnail while preserving the source aspect ratio.
+     *
      * @param string $original_file_path
      * @param string $destination_path
      * @param int|string $destination_width
@@ -308,7 +654,7 @@ class CollectionThumbs
             // On Windows hosts, imagecreatefromX functions consumes lots of RAM
             $memory_needed = CollectionThumbs::getMemoryNeededForImage($original_file_path);
             $memory_limit = ini_get('memory_limit');
-            if ($memory_needed > getBytesFromFileSize($memory_limit)) {
+            if ($memory_limit != '-1' && $memory_needed > getBytesFromFileSize($memory_limit)) {
                 $msg = 'Collection generation would requiere ~' . System::get_readable_filesize($memory_needed, 0) . ' of memory, but it\'s currently limited to ' . $memory_limit;
                 if (System::isInDev()) {
                     e($msg);
@@ -394,6 +740,8 @@ class CollectionThumbs
     }
 
     /**
+     * Delete all custom images and renditions belonging to a collection.
+     *
      * @param int $collection_id
      * @param bool $msg
      * @return void
@@ -401,9 +749,8 @@ class CollectionThumbs
      */
     public static function deleteThumbs(int $collection_id, bool $msg = true): void
     {
-        $thumbs = self::getAllThumbs(['collection_id' => $collection_id, 'get_collection_info' => true]);
-        foreach ($thumbs as $thumb) {
-            self::deleteCollectionThumb($thumb);
+        foreach (self::getAll(['collection_id' => $collection_id]) as $image) {
+            self::deleteCollectionImage($image);
         }
         if ($msg) {
             e(lang('collection_delete_successfully'), 'm');
@@ -411,21 +758,60 @@ class CollectionThumbs
     }
 
     /**
+     * Delete an image and its renditions, resetting its active default reference.
+     *
+     * @param array $image
+     * @return void
+     * @throws Exception
+     */
+    public static function deleteCollectionImage(array $image): void
+    {
+        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '999')) {
+            $image = self::getOne([
+                'id_collection_image' => $image['id_collection_image'],
+                'collection_id'       => $image['collection_id']
+            ]);
+            if (empty($image)) {
+                return;
+            }
+            Clipbucket_db::getInstance()->update(tbl('collections'), ['default_thumbnail', 'thumb_objectid'],
+                ['|f|NULL', '|f|NULL'], 'collection_id = ' . (int)$image['collection_id']
+                . ' AND default_thumbnail = ' . (int)$image['id_collection_image'] . ' AND thumb_objectid = -1');
+            foreach (self::getAllThumbs(['id_collection_image' => $image['id_collection_image']]) as $thumb) {
+                self::deleteCollectionThumb($thumb);
+            }
+            Clipbucket_db::getInstance()->delete(tbl(self::$tableName), ['id_collection_image'], [$image['id_collection_image']]);
+        } else {
+            return;
+        }
+    }
+
+    /**
+     * Delete a thumbnail rendition and its file.
+     *
+     * @param array $thumb
+     * @return void
      * @throws Exception
      */
     public static function deleteCollectionThumb(array $thumb): void
     {
-        $thumb_path = DirPath::get('thumbs') . 'collection' . DIRECTORY_SEPARATOR . self::getThumbPath($thumb['collection_id'], ($thumb['is_original_size'] ? 'original' : $thumb['width']), $thumb['extension']);
-        if (file_exists($thumb_path)) {
-            unlink($thumb_path);
+        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '999')) {
+            $path = DirPath::get('thumbs') . 'collection' . DIRECTORY_SEPARATOR . self::getImagePath($thumb);
+            if (is_file($path) && !unlink($path)) {
+                throw new Exception(lang('technical_error'));
+            }
+            Clipbucket_db::getInstance()->delete(tbl(self::$tableNameThumb), ['id_collection_thumb'], [$thumb['id_collection_thumb']]);
+        } else {
+            return;
         }
-        Clipbucket_db::getInstance()->delete(tbl(self::$tableNameThumb), ['id_collection_thumb'], [$thumb['id_collection_thumb']]);
     }
 
     /**
+     * Build the HTML image tag for a custom collection thumbnail.
+     *
      * @param int $collection_id
      * @param int|string $width
-     * @param $params_html
+     * @param array $params_html
      * @return string
      * @throws Exception
      */
@@ -474,7 +860,9 @@ class CollectionThumbs
     }
 
     /**
-     * Used to get watermark file
+     * Get the collection watermark URL when the file exists.
+     *
+     * @return bool|string
      */
     public static function watermark_file(): bool|string
     {
@@ -485,8 +873,9 @@ class CollectionThumbs
     }
 
     /**
-     * Fetches watermark default position from database
-     * @return bool|string : { position of watermark }
+     * Get the configured watermark position.
+     *
+     * @return bool|string
      */
     public static function get_watermark_position()
     {
@@ -494,11 +883,10 @@ class CollectionThumbs
     }
 
     /**
-     * Used to set watermark position
+     * Calculate the watermark coordinates within an image.
      *
-     * @param $image_to_mark
-     * @param $watermark
-     *
+     * @param string $image_to_mark
+     * @param string $watermark
      * @return array
      */
     public static function position_watermark($image_to_mark, $watermark): array
@@ -550,11 +938,10 @@ class CollectionThumbs
     }
 
     /**
-     * Used to watermark image
+     * Apply the collection watermark to an image.
      *
-     * @param $input
-     * @param $output
-     *
+     * @param string $input
+     * @param string $output
      * @return bool|void
      */
     public static function watermark_image($input, $output)
@@ -583,6 +970,12 @@ class CollectionThumbs
                 imagejpeg($source_image, $output, 90);
                 break;
 
+            case IMAGETYPE_WEBP:
+                $source_image = imagecreatefromwebp($input);
+                imagecopy($source_image, $watermark_image, $paddings[0], $paddings[1], 0, 0, $watermark_width, $watermark_height);
+                imagewebp($source_image, $output, 90);
+                break;
+
             case 3: //PNG
                 $source_image = imagecreatefrompng($input);
                 imagecopy($source_image, $watermark_image, $paddings[0], $paddings[1], 0, 0, $watermark_width, $watermark_height);
@@ -592,15 +985,13 @@ class CollectionThumbs
     }
 
     /**
-     * Used to crop the image
-     * Image will be crop to dead-center
+     * Crop an image around its center to the requested dimensions.
      *
-     * @param $input
-     * @param $output
-     * @param $ext
-     * @param $width
-     * @param $height
-     *
+     * @param string $input
+     * @param string $output
+     * @param string $ext
+     * @param int $width
+     * @param int $height
      * @return bool|void
      */
     public static function crop_image($input, $output, $ext, $width, $height)
@@ -645,30 +1036,42 @@ class CollectionThumbs
     }
 
     /**
-     * @param $id_collection
-     * @param $requested_width
-     * @return array|string[]
+     * Get the nearest rendition of the referenced custom thumbnail.
+     *
+     * @param int $id_collection
+     * @param int|string $requested_width
+     * @return array
      * @throws Exception
      */
     public static function getNearestResolutionThumb($id_collection, $requested_width): array
     {
-        if (empty($id_collection)) {
-            return [];
+        return self::getNearestImageResolution(self::getDefaultImageId((int)$id_collection), $requested_width);
+    }
+
+    /**
+     * Get the nearest configured rendition within a single source image.
+     *
+     * @param int $id_collection_image
+     * @param int|string $requested_width
+     * @return array
+     * @throws Exception
+     */
+    private static function getNearestImageResolution(int $id_collection_image, int|string $requested_width): array
+    {
+        $thumbs = self::getAllThumbs(['id_collection_image' => $id_collection_image]);
+        $smaller = null;
+        $larger = null;
+        foreach ($thumbs as $thumb) {
+            if ($thumb['is_original_size']) {
+                continue;
+            }
+            if ($thumb['width'] <= (int)$requested_width && (!$smaller || $thumb['width'] > $smaller)) {
+                $smaller = $thumb['width'];
+            }
+            if ($thumb['width'] > (int)$requested_width && (!$larger || $thumb['width'] < $larger)) {
+                $larger = $thumb['width'];
+            }
         }
-        //search for a resolution that exists
-        //the biggest resolution that is smaller than the requested one
-        $sql = 'SELECT width FROM ' . tbl(self::$tableNameThumb) . ' WHERE collection_id = ' . (int)$id_collection . ' AND width < ' . (int)($requested_width) . ' ORDER BY width DESC LIMIT 1';
-        $resolutions = Clipbucket_db::getInstance()->_select($sql);
-        if (!empty($resolutions[0]) && !empty($resolutions[0]['width'])) {
-            return $resolutions[0];
-        }
-        //if no resolution is found, return the smaller resolution that is bigger than the requested one
-        $sql = 'SELECT width FROM ' . tbl(self::$tableNameThumb) . ' WHERE collection_id = ' . (int)$id_collection . ' AND width > ' . (int)($requested_width) . '  ORDER BY width ASC LIMIT 1';
-        $resolutions = Clipbucket_db::getInstance()->_select($sql);
-        if (!empty($resolutions[0]) && !empty($resolutions[0]['width'])) {
-            return $resolutions[0];
-        }
-        //if nothing is found return original
-        return ['width' => 'original'];
+        return ['width' => $smaller ?? $larger ?? 'original'];
     }
 }

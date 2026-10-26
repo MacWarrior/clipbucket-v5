@@ -9,6 +9,13 @@
             </button>
             <ul class="dropdown-menu pull-right" role="menu">
                 <li><a href="{DirPath::getUrl('admin_area')}manage_items.php?collection={$data.collection_id}&amp;type={$data.type}">{lang code='manage_items'}</a></li>
+                <li><a href="{DirPath::getUrl('admin_area')}manage_thumb_collection.php?collection={$data.collection_id}&amp;type=thumbnail">{lang('manage_x', lang('thumbs'))}</a></li>
+                {if $data.type == 'videos' && config('enable_collection_poster') == 'yes'}
+                    <li><a href="{DirPath::getUrl('admin_area')}manage_thumb_collection.php?collection={$data.collection_id}&amp;type=poster">{lang('manage_x', lang('posters'))}</a></li>
+                {/if}
+                {if $data.type == 'videos' && config('enable_collection_backdrop') == 'yes'}
+                    <li><a href="{DirPath::getUrl('admin_area')}manage_thumb_collection.php?collection={$data.collection_id}&amp;type=backdrop">{lang('manage_x', lang('backdrop'))}</a></li>
+                {/if}
                 {if $data.featured == 'yes'}
                     <li><a href="{DirPath::getUrl('admin_area')}edit_collection.php?collection={$data.collection_id}&amp;mode=make_unfeature">{lang('make_unfeatured')}</a></li>
                 {else}
@@ -158,28 +165,24 @@
                             <h5>{lang code="default_thumb"}</h5>
                             <ul class="ace-thumbnails thumb">
                                 {foreach from=$items item=item}
-                                    <li style="background-image:url({Collection::getInstance()->getItemThumb($item, $data.type)});" {if $item['id']==$data.thumb_objectid}class="selected"{/if} title="{lang('select_as_default_x',lang('thumbnail'))}">
-                                        <label for="thumb_{$item['id']}">
+                                    <li style="background-image:url('{Collection::getInstance()->getItemThumb($item, $data.type)|escape:'html'}');" {if $item.id == $data.thumb_objectid}class="selected"{/if} title="{lang('select_as_default_x', lang('thumbnail'))|escape:'html'}">
+                                        <label for="thumb_{$item.id}">
                                             <span class="content_bottom">
-                                              <input type="radio" id="thumb_{$item['id']}" value="{$item['id']}" name="default_thumb" {if $item['id']==$data.thumb_objectid}checked{/if}/>
+                                                <input type="radio" id="thumb_{$item.id}" value="{$item.id}" name="default_thumb" {if $item.id == $data.thumb_objectid}checked{/if}/>
                                             </span>
                                         </label>
                                     </li>
                                 {/foreach}
-                                {if !empty($custom_thumb)}
-                                    <li style="background-image:url({$custom_thumb});" {if ((int)$data.thumb_objectid == -1)}class="selected"{/if} title="{lang('select_as_default_x',lang('thumbnail'))}">
-                                        <label for="thumb_custom">
+                                {foreach from=$custom_thumbs item=image}
+                                    <li style="background-image:url('{CollectionThumbs::getImageFile($image)|escape:'html'}');" {if $data.thumb_objectid == -1 && $selected_image == $image.id_collection_image}class="selected"{/if} title="{lang('select_as_default_x', lang('thumbnail'))|escape:'html'}">
+                                        <label for="thumb_custom_{$image.id_collection_image}">
                                             <span class="content_bottom">
-                                              <input type="radio" id="thumb_custom" value="-1" name="default_thumb" {if ((int)$data.thumb_objectid == -1)}checked{/if}/>
+                                                <input type="radio" id="thumb_custom_{$image.id_collection_image}" value="custom_{$image.id_collection_image}" name="default_thumb" {if $data.thumb_objectid == -1 && $selected_image == $image.id_collection_image}checked{/if}/>
                                             </span>
                                         </label>
                                     </li>
-                                {/if}
+                                {/foreach}
                             </ul>
-                            <div class="col-md-10">
-                                <label>{lang('upload_custom_thumbnail')}</label>
-                                <input type="file" name="collection_thumb" id="collection_thumb"/>
-                            </div>
                         </div>
                     </div>
                     <br>
