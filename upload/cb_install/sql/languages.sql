@@ -1973,4 +1973,8 @@ VALUES ('noted_x'),
        ('lang_name_too_long'),
        ('confirm_delete_users'),
        ('add_user'),
-       ('add_new_user');
+       ('add_new_user'),
+       ('collection_delete_successfully'),
+       ('option_enable_collection_poster'),
+       ('option_enable_collection_backdrop'),
+       ('collection_delete_successfully');

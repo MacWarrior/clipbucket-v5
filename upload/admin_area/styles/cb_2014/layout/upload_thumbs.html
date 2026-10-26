@@ -29,7 +29,7 @@
                     {lang code="upload_backdrop"}
                 {/if}
             </h4>
-            <input name="vid_thumb[]" type="file"/>
+            <input name="vid_thumb[]" type="file" accept="image/*" required/>
             <input name="db_type" type="hidden" value="{$db_type}">
             <br/>
             <input type="submit" name="upload_thumbs" value="{lang code='upload'}" class="btn btn-primary btn-sm"

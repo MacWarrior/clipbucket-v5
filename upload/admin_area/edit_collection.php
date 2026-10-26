@@ -7,15 +7,8 @@ pages::getInstance()->page_redir();
 
 $id = $_GET['collection'];
 if (isset($_POST['update_collection'])) {
+    unset($_FILES['collection_thumb'], $_POST['collection_thumb']);
     Collections::getInstance()->update_collection();
-    if (isset($_POST['default_thumb'])) {
-        Collection::getInstance()->setDefautThumb($_POST['default_thumb'], $id);
-    }
-}
-
-if (isset($_POST['delete_preview'])) {
-    $id = mysql_clean($_POST['delete_preview']);
-    Collections::getInstance()->delete_thumbs($id);
 }
 
 //Performing Actionsf
@@ -32,6 +25,56 @@ if (empty($collection)) {
     redirect_to(DirPath::getUrl('admin_area') . 'collection_manager.php?missing_collection=1');
 }
 
+$items = Collection::getInstance()->getItemRecursivly(['collection_id' => $collection['collection_id']]);
+if ($collection['type'] == 'videos') {
+    foreach ($items as &$item) {
+        $item['id'] = $item['videoid'];
+    }
+} else {
+    foreach ($items as &$item) {
+        $item['id'] = $item['photo_id'];
+    }
+}
+unset($item);
+
+if (isset($_POST['update_collection'], $_POST['default_thumb']) && !error()) {
+    try {
+        $default_thumb = $_POST['default_thumb'];
+        if (!is_string($default_thumb)) {
+            throw new Exception(lang('technical_error'));
+        }
+        if (preg_match('/^custom_([1-9][0-9]*)$/', $default_thumb, $matches)) {
+            if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '999')) {
+                CollectionThumbs::setDefaultImage((int)$id, (int)$matches[1]);
+            } else {
+                e('Sorry, you cannot perform this action until the application has been fully updated by an administrator');
+            }
+        } elseif (ctype_digit($default_thumb) && in_array((int)$default_thumb, array_column($items, 'id'))) {
+            Collection::getInstance()->setDefautThumb((int)$default_thumb, (int)$id);
+        } else {
+            throw new Exception(lang('technical_error'));
+        }
+    } catch (Exception $exception) {
+        e($exception->getMessage());
+    }
+    $collection = Collection::getInstance()->getOne([
+        'collection_id'         => $id,
+        'hide_empty_collection' => 'no',
+        'with_items'            => true
+    ]);
+}
+
+$custom_thumbs = CollectionThumbs::getAll([
+    'collection_id' => $collection['collection_id'],
+    'type'          => 'thumbnail'
+]);
+if (empty($collection['thumb_objectid'])) {
+    $collection['thumb_objectid'] = Collection::getDefaultThumb($collection['collection_id']);
+}
+assign('items', $items);
+assign('custom_thumbs', $custom_thumbs);
+assign('selected_image', CollectionThumbs::getDefaultImageId($collection['collection_id']));
+
 /* Generating breadcrumb */
 global $breadcrumb;
 $breadcrumb[0] = [
@@ -47,17 +90,6 @@ $breadcrumb[2] = [
     'url'   => DirPath::getUrl('admin_area') . 'edit_collection.php?collection=' . display_clean($id)
 ];
 
-$items = Collection::getInstance()->getItemRecursivly(['collection_id'=> $collection['collection_id']]);
-if ($collection['type'] == 'videos') {
-    foreach ($items as &$item) {
-        $item['id'] = $item['videoid'];
-    }
-} else {
-    foreach ($items as &$item) {
-        $item['id'] = $item['photo_id'];
-    }
-}
-assign('items', $items);
 assign('data', $collection);
 assign('link_user', DirPath::getUrl('admin_area') . 'view_user.php?uid=' . $collection['userid']);
 
@@ -80,7 +112,7 @@ ClipBucket::getInstance()->addAdminCSS([
     'tagit.ui-zendesk' . $min_suffixe . '.css' => 'admin'
 ]);
 
-if( config('enable_visual_editor_comments') == 'yes' ){
+if (config('enable_visual_editor_comments') == 'yes') {
     ClipBucket::getInstance()->addAdminJS(['toastui/toastui-editor-all' . $min_suffixe . '.js' => 'libs']);
     ClipBucket::getInstance()->addAdminCSS(['/toastui/toastui-editor' . $min_suffixe . '.css' => 'libs']);
 }

@@ -508,6 +508,23 @@ class AdminTool
                     $this->insertTaskData([$insert_values]);
                 }
                 unset($photo_thumbs);
+
+                //COLLECTION THUMBS
+                if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '999')) {
+                    foreach (['thumbnail', 'poster', 'backdrop'] as $type) {
+                        $collection_thumbs = new GlobIterator(DirPath::get('thumbs') . 'collection' . DIRECTORY_SEPARATOR . '[0-9]*' . DIRECTORY_SEPARATOR . $type . DIRECTORY_SEPARATOR . '[0-9]*' . DIRECTORY_SEPARATOR . '*.' . $extension);
+                        foreach ($collection_thumbs as $thumb) {
+                            $collection_id = basename(dirname($thumb->getPathname(), 3));
+                            $insert_values = [
+                                'type'       => 'collection_thumb',
+                                'data'       => DirPath::getFromProjectRoot($thumb->getPathname()),
+                                'collection' => $collection_id
+                            ];
+                            $this->insertTaskData([$insert_values]);
+                        }
+                        unset($collection_thumbs);
+                    }
+                }
             }
 
             //THUMBS
