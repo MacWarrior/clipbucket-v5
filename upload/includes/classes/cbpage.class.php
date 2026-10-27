@@ -366,14 +366,28 @@ class cbpage
 
     /**
      * Function used to update order
+     * @param array $page_ids
+     * @return bool
      * @throws Exception
      */
-    function update_order()
+    function update_order(array $page_ids): bool
     {
-        $pages = $this->get_pages();
-        foreach ($pages as $page) {
-            Clipbucket_db::getInstance()->update(tbl($this->page_tbl), ['page_order'], [$_POST['page_ord_' . $page['page_id']]], ' page_id = ' . (int)$page['page_id']);
+        $pages = $this->get_pages() ?: [];
+        $existing_ids = array_column($pages, 'page_id');
+        foreach ($page_ids as &$page_id) {
+            $page_id = (int)$page_id;
         }
+        if (count($page_ids) !== count($existing_ids) || count(array_unique($page_ids)) !== count($page_ids) || array_diff($page_ids, $existing_ids)) {
+            e(lang('missing_params'));
+            return false;
+        }
+        foreach (array_values($page_ids) as $order => $page_id_val) {
+            if (!Clipbucket_db::getInstance()->update(tbl($this->page_tbl), ['page_order'], [$order + 1], ' page_id = ' . (int)$page_id_val)) {
+                e(lang('error_occured'));
+                return false;
+            }
+        }
+        return true;
     }
 
     /**

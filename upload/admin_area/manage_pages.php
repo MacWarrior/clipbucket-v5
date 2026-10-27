@@ -75,6 +75,26 @@ if (isset($_POST['delete_selected']) && is_array($_POST['check_page'])) {
     }
 }
 
+if (isset($_POST['display_selected']) && is_array($_POST['check_page'] ?? null)) {
+    foreach($_POST['check_page'] as $id){
+        cbpage::getInstance()->page_actions('display', $id);
+    }
+    if( !error() && !warning() ) {
+        errorhandler::getInstance()->flush();
+        e('Selected pages are now displayed in footer', 'm');
+    }
+}
+
+if (isset($_POST['hide_selected']) && is_array($_POST['check_page'] ?? null)) {
+    foreach($_POST['check_page'] as $id){
+        cbpage::getInstance()->page_actions('hide', $id);
+    }
+    if( !error() && !warning() ) {
+        errorhandler::getInstance()->flush();
+        e('Selected pages are now hidden from footer', 'm');
+    }
+}
+
 $mode = $_GET['mode'];
 
 if (isset($_POST['add_page'])) {
@@ -89,20 +109,12 @@ if (isset($_POST['add_page'])) {
     }
 }
 
-//Updating order
-if (isset($_POST['update_order'])) {
-    cbpage::getInstance()->update_order();
-    if( !error() && !warning() ) {
-        errorhandler::getInstance()->flush();
-        e(lang('page_order_has_been_updated'), 'm');
-    }
-}
 if (empty($mode) || $mode == 'view') {
     if ($_GET['msg']) {
         e(mysql_clean($_GET['msg']), 'm');
     }
     assign('mode', 'manage');
-    assign('cbpages', cbpage::getInstance()->get_pages());
+    assign('cbpages', cbpage::getInstance()->get_pages(['order' => 'page_order ASC, page_id ASC']));
 } else {
     if (!Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '184')) {
         SessionMessageHandler::add_message('Sorry, you cannot perform this action until the application has been fully updated by an administrator', 'e', User::redirectAfterLoginOrError('url'));
@@ -129,8 +141,9 @@ if (empty($mode) || $mode == 'view') {
 
 $min_suffixe = System::isInDev() ? '' : '.min';
 ClipBucket::getInstance()->addAdminJS([
+    'jquery-ui-1.13.2.min.js' => 'global',
     'summernote/summernote' . $min_suffixe . '.js' => 'libs',
-    'pages/manage_pages/manage_pages'.$min_suffixe.'.js' => 'admin'
+    'pages/manage_pages/manage_pages.js' => 'admin'
 ]);
 ClipBucket::getInstance()->addAdminCSS([
     'summernote/summernote' . $min_suffixe . '.css'     => 'libs'
