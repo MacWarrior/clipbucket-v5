@@ -29,6 +29,25 @@ class SessionMessageHandler
     }
 
     /**
+     * @param array $messages $message = ['message'=>'the message', 'type'=>'w']
+     * @param string $url
+     * @return bool
+     */
+    public static function add_messages(array $messages, string $url = ''): bool
+    {
+        if (empty($_SESSION['messages'])) {
+            $_SESSION['messages'] = [];
+        }
+        foreach ($messages as $message) {
+            self::add_message($message['message'], $message['type']);
+        }
+        if (!empty($url)) {
+            redirect_to($url);
+        }
+        return true;
+    }
+
+    /**
      * @return array
      */
     public static function get_messages(): array

@@ -8,17 +8,17 @@ if (isset($_POST['mode'])) {
     switch ($mode) {
         case 'playlistMore':
             global $Smarty;
-            $load_hit = $_POST['loadHit'];
-            $load_limit = $_POST['loadLimit'];
+            $load_hit = (int)$_POST['loadHit'];
+            $load_limit = (int)$_POST['loadLimit'];
             $playlist = $_POST['playlist'];
             $start = $load_limit * $load_hit - $load_limit;
             $sql_limit = "$start, $load_limit";
             $total_items = CBvideo::getInstance()->action->count_playlist_items($playlist);
-            $items = CBvideo::getInstance()->get_playlist_items($playlist, 'playlist_items.date_added DESC', $sql_limit);
             if ($start >= $total_items) {
                 echo 'none';
                 return false;
             }
+            $items = CBvideo::getInstance()->get_playlist_items($playlist, 'playlist_items.date_added DESC', $sql_limit);
             foreach ($items as $key => $video) {
                 assign('video', $video);
                 assign('control', 'onWatch');

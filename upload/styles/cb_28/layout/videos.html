@@ -10,7 +10,7 @@
 
             <div class="filter-dropdowns clearfix">
                     <div class="cat-col col-lg-6 col-md-6 col-sm-6 col-xs-12 clearfix">
-                        {if config('enable_video_categories')!='no'}
+                        {if config('enable_video_categories')!='no' && config('enable_video_categories_as_submenu')!='yes'}
                             {include file="$style_dir/blocks/category_list.html" type=$type_link}
                         {/if}
                     </div>

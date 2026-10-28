@@ -124,7 +124,7 @@ switch ($mode) {
             CBvideo::getInstance()->action->delete_playlist_item($delid);
         }
 
-        $playlist = Playlist::getInstance()->getOne($pid);
+        $playlist = Playlist::getInstance()->getOneById($pid);
         if ($playlist) {
             assign('playlist', $playlist);
             //Getting Playlist Item

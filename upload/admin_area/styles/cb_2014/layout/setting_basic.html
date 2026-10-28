@@ -66,7 +66,7 @@
                                     <label class="nowrap" for="site_title" title="Website title">Website title</label>
                                 </div>
                                 <div class="col-md-8">
-                                    <input class="form-control" name="site_title" id="site_title" value="{$row.site_title}" size="45"/>
+                                    <input class="form-control" name="site_title" id="site_title" value="{display_clean($row.site_title)}" size="45"/>
                                 </div>
                             </div>
                             <hr/>
@@ -75,7 +75,7 @@
                                     <label class="nowrap" for="site_slogan" title="Website slogan">Website slogan</label>
                                 </div>
                                 <div class="col-md-8">
-                                    <input class="form-control" name="site_slogan" id="site_slogan" value="{$row.site_slogan}" size="45"/>
+                                    <input class="form-control" name="site_slogan" id="site_slogan" value="{display_clean($row.site_slogan)}" size="45"/>
                                 </div>
                             </div>
                             <hr/>
@@ -84,21 +84,21 @@
                                     <label class="nowrap" for="keywords" title="Meta Keywords">Meta Keywords</label>
                                 </div>
                                 <div class="col-md-8">
-                                    <input class="form-control" name="keywords" id="keywords" value="{$row.keywords}" size="45"/>
+                                    <input class="form-control" name="keywords" id="keywords" value="{display_clean($row.keywords)}" size="45"/>
                                 </div>
                             </div>
                             <hr/>
                             <div class="row">
                                 <div class="col-md-12">
                                     <label class="nowrap" for="description" title="Meta Description">Meta Description</label>
-                                    <textarea class="form-control" name="description" id="description" cols="45" rows="5">{$row.description}</textarea>
+                                    <textarea class="form-control" name="description" id="description" cols="45" rows="5">{display_clean($row.description)}</textarea>
                                 </div>
                             </div>
                             <hr/>
                             <div class="row">
                                 <div class="col-md-12">
                                     <label class="nowrap" for="censored_words" title="{lang code='option_censored_words'}"><span class="fa fa-question-circle tips" title="{lang code='separated_by_commas'}"></span> {lang code='option_censored_words'}</label>
-                                    <textarea class="form-control" name="censored_words" id="censored_words" cols="45" rows="5">{$row.censored_words}</textarea>
+                                    <textarea class="form-control" name="censored_words" id="censored_words" cols="45" rows="5">{display_clean($row.censored_words)}</textarea>
                                 </div>
                             </div>
                             <hr/>
@@ -144,7 +144,7 @@
                             <div class="row">
                                 <div class="col-md-12">
                                     <label class="nowrap" for="closed_msg" title="Closed message">Closed message</label>
-                                    <textarea class="form-control" name="closed_msg" id="closed_msg" cols="45" rows="5">{$row.closed_msg}</textarea>
+                                    <textarea class="form-control" name="closed_msg" id="closed_msg" cols="45" rows="5">{display_clean($row.closed_msg)}</textarea>
                                 </div>
                             </div>
                             <hr/>
@@ -271,6 +271,7 @@
                         <div class="col-md-2">
                             <ul class="nav nav-pills nav-stacked interfaces" style="margin:0;">
                                 <li class="active"><a data-toggle="tab" href="interfaces_global">{lang code='global'}</a></li>
+                                <li><a data-toggle="tab" href="interfaces_main_menu">{lang('main_menu')|ucfirst}</a></li>
                                 <li><a data-toggle="tab" href="interfaces_home">{lang code='menu_home'}</a></li>
                                 <li><a data-toggle="tab" href="interfaces_videos">{lang('videos')|ucfirst}</a></li>
                                 <li><a data-toggle="tab" href="interfaces_video">{lang('video')|ucfirst}</a></li>
@@ -291,6 +292,16 @@
                                             </div>
                                             <div class="col-md-2 row-size no_padding">
                                                 <input value="1" name="allow_language_change" id="allow_language_change" {if $row.allow_language_change=='1'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+                                                <span class="lbl"></span>
+                                            </div>
+                                        </div>
+                                        <hr/>
+                                        <div class="row">
+                                            <div class="col-md-10">
+                                                <label class="nowrap" for="display_language_flag" title="{lang('option_display_language_flag')}">{lang('option_display_language_flag')}</label>
+                                            </div>
+                                            <div class="col-md-2 row-size no_padding">
+                                                <input value="yes" name="display_language_flag" id="display_language_flag" {if $row.display_language_flag=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
                                                 <span class="lbl"></span>
                                             </div>
                                         </div>
@@ -484,7 +495,7 @@
                                         <div class="row">
                                             <div class="col-md-12">
                                                 <label class="nowrap" for="custom_css" title="{lang code='option_custom_css'}">{lang code='option_custom_css'}</label>
-                                                <textarea class="form-control" name="custom_css" id="custom_css" style="resize:vertical;">{$custom_css}</textarea>
+                                                <textarea class="form-control" name="custom_css" id="custom_css" style="resize:vertical;">{display_clean($custom_css)}</textarea>
                                             </div>
                                         </div>
                                         <hr/>
@@ -561,7 +572,7 @@
                                                 <label class="nowrap" for="list_featured_videos" title="{lang code='option_list_featured_videos'}"> {lang code='option_list_featured_videos'}</label>
                                             </div>
                                             <div class="col-md-4">
-                                                <input class="form-control" name="list_featured_videos" id="list_featured_videos" value="{$row.list_featured_videos}" type="number" min="0"/>
+                                                <input class="form-control" name="list_featured_videos" id="list_featured_videos" value="{(int)$row.list_featured_videos}" type="number" min="0"/>
                                             </div>
                                         </div>
                                         <hr/>
@@ -641,7 +652,7 @@
                                                 <label class="nowrap" for="list_recent_videos" title="{lang code='option_list_recent_videos'}"><span class="fa fa-question-circle tips" title="{lang code='tips_only_with_slider_option'}"></span> {lang code='option_list_recent_videos'}</label>
                                             </div>
                                             <div class="col-md-4">
-                                                <input class="form-control" name="list_recent_videos" id="list_recent_videos" value="{$row.list_recent_videos}" type="number" min="0"/>
+                                                <input class="form-control" name="list_recent_videos" id="list_recent_videos" value="{(int)$row.list_recent_videos}" type="number" min="0"/>
                                             </div>
                                         </div>
                                         <hr/>
@@ -712,7 +723,7 @@
                                                 <label class="nowrap" for="list_home_collection_videos" title="{lang code='option_list_home_collection_videos'}">{lang code='option_list_home_collection_videos'}</label>
                                             </div>
                                             <div class="col-md-4">
-                                                <input class="form-control" name="list_home_collection_videos" id="list_home_collection_videos" value="{$row.list_home_collection_videos}" type="number" min="0"/>
+                                                <input class="form-control" name="list_home_collection_videos" id="list_home_collection_videos" value="{(int)$row.list_home_collection_videos}" type="number" min="0"/>
                                             </div>
                                         </div>
                                         <hr/>
@@ -761,26 +772,41 @@
                                 </div>
                             </div>
                             <div class="tab-pane interfaces" id="interfaces_video">
-                                <div class="row">
-                                    <div class="col-md-10">
-                                        <div class="row">
-                                            <div class="col-md-4">
-                                                <label class="nowrap" for="enable_access_view_video_history" title="{lang code='enable_access_view_video_history'}">{lang code='enable_access_view_video_history'}</label>
-                                            </div>
-                                            <div class="col-md-2 row-size no_padding">
-                                                <input value="yes" name="enable_access_view_video_history" id="enable_access_view_video_history" {if $row.enable_access_view_video_history=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
-                                                <span class="lbl"></span>
-                                            </div>
-                                            <div class="col-md-4">
-                                                <label class="nowrap" for="enable_favorite_icon" title="{lang code='option_enable_favorite_icon'}"><span class="fa fa-question-circle tips" title="{lang code='option_enable_favorite_icon_hint'}"></span>{lang code='option_enable_favorite_icon'}</label>
-                                            </div>
-                                            <div class="col-md-2 row-size">
-                                                <input value="yes" name="enable_favorite_icon" id="enable_favorite_icon" {if $row.enable_favorite_icon=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
-                                                <span class="lbl"></span>
-                                            </div>
+                                <div class="col-md-4">
+                                    <div class="row">
+                                        <div class="col-md-10">
+                                            <label class="nowrap" for="enable_access_view_video_history" title="{lang code='enable_access_view_video_history'}">{lang code='enable_access_view_video_history'}</label>
                                         </div>
-                                        <hr/>
+                                        <div class="col-md-2 row-size no_padding">
+                                            <input value="yes" name="enable_access_view_video_history" id="enable_access_view_video_history" {if $row.enable_access_view_video_history=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+                                            <span class="lbl"></span>
+                                        </div>
                                     </div>
+                                    <hr/>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="row">
+                                        <div class="col-md-10">
+                                            <label class="nowrap" for="enable_favorite_icon" title="{lang code='option_enable_favorite_icon'}"><span class="fa fa-question-circle tips" title="{lang code='option_enable_favorite_icon_hint'}"></span>{lang code='option_enable_favorite_icon'}</label>
+                                        </div>
+                                        <div class="col-md-2 row-size">
+                                            <input value="yes" name="enable_favorite_icon" id="enable_favorite_icon" {if $row.enable_favorite_icon=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+                                            <span class="lbl"></span>
+                                        </div>
+                                    </div>
+                                    <hr/>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="row">
+                                        <div class="col-md-10">
+                                            <label class="nowrap" for="video_enable_fullwidth" title="{lang code='option_enable_fullwidth'}">{lang code='option_enable_fullwidth'}</label>
+                                        </div>
+                                        <div class="col-md-2 no_padding">
+                                            <input value="yes" name="video_enable_fullwidth" id="video_enable_fullwidth" {if $row.video_enable_fullwidth=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+                                            <span class="lbl"></span>
+                                        </div>
+                                    </div>
+                                    <hr/>
                                 </div>
                             </div>
                             <div class="tab-pane interfaces" id="interfaces_photos">
@@ -819,7 +845,7 @@
                                                 <label class="nowrap" for="limit_photo_related" title="{lang('limit_photo_related')}">{lang('limit_photo_related')}</label>
                                             </div>
                                             <div class="col-md-4">
-                                                <input class="form-control" name="limit_photo_related" id="limit_photo_related" value="{$row.limit_photo_related}"/>
+                                                <input class="form-control" name="limit_photo_related" id="limit_photo_related" type="number" value="{(int)$row.limit_photo_related}"/>
                                             </div>
                                         </div>
                                         <hr/>
@@ -972,6 +998,119 @@
                                     </div>
                                 </div>
                             </div>
+                            <div class="tab-pane interfaces" id="interfaces_main_menu">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="row">
+                                            <h4>{lang('enable_categ_as_submenu')} :</h4>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-8">
+                                                <label class="nowrap" for="enable_video_categories_as_submenu" title="{lang('option_enable_video_categories_as_submenu')}">{lang('option_enable_video_categories_as_submenu')}</label>
+                                            </div>
+                                            <div class="col-md-2 row-size">
+                                                <input value="yes" name="enable_video_categories_as_submenu" id="enable_video_categories_as_submenu" {if $row.enable_video_categories_as_submenu=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5" {if config('videosSection')!='yes'}disabled="disabled"{/if}/>
+                                                <span class="lbl"></span>
+                                                <input type="hidden" name="enable_video_categories_as_submenu" id="enable_video_categories_as_submenu_hidden" value="{$row.enable_video_categories_as_submenu}" {if config('videosSection')=='yes'}disabled="disabled"{/if}/>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-8">
+                                                <label class="nowrap" for="enable_photo_categories_as_submenu" title="{lang('option_enable_photo_categories_as_submenu')}">{lang('option_enable_photo_categories_as_submenu')}</label>
+                                            </div>
+                                            <div class="col-md-2 row-size">
+                                                <input value="yes" name="enable_photo_categories_as_submenu" id="enable_photo_categories_as_submenu" {if $row.enable_photo_categories_as_submenu=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5" {if config('photosSection')!='yes'}disabled="disabled"{/if}/>
+                                                <span class="lbl"></span>
+                                                <input type="hidden" name="enable_photo_categories_as_submenu" id="enable_photo_categories_as_submenu_hidden" value="{$row.enable_photo_categories_as_submenu}" {if config('photosSection')=='yes'}disabled="disabled"{/if}/>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-8">
+                                                <label class="nowrap" for="enable_collection_categories_as_submenu" title="{lang('option_enable_collection_categories_as_submenu')}">{lang('option_enable_collection_categories_as_submenu')}</label>
+                                            </div>
+                                            <div class="col-md-2 row-size">
+                                                <input value="yes" name="enable_collection_categories_as_submenu" id="enable_collection_categories_as_submenu" {if $row.enable_collection_categories_as_submenu=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5" {if config('collectionsSection')!='yes'}disabled="disabled"{/if}/>
+                                                <span class="lbl"></span>
+                                                <input type="hidden" name="enable_collection_categories_as_submenu" id="enable_collection_categories_as_submenu_hidden" value="{$row.enable_collection_categories_as_submenu}" {if config('collectionsSection')=='yes'}disabled="disabled"{/if}/>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-8">
+                                                <label class="nowrap" for="enable_channel_categories_as_submenu" title="{lang('option_enable_channel_categories_as_submenu')}">{lang('option_enable_channel_categories_as_submenu')}</label>
+                                            </div>
+                                            <div class="col-md-2 row-size">
+                                                <input value="yes" name="enable_channel_categories_as_submenu" id="enable_channel_categories_as_submenu" {if $row.enable_channel_categories_as_submenu=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5" {if config('channelsSection')!='yes'}disabled="disabled"{/if}/>
+                                                <span class="lbl"></span>
+                                                <input type="hidden" name="enable_channel_categories_as_submenu" id="enable_channel_categories_as_submenu_hidden" value="{$row.enable_channel_categories_as_submenu}" {if config('channelsSection')=='yes'}disabled="disabled"{/if}/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <h4 class="nowrap" for="enable_channel_categories_as_submenu" title="{lang('option_main_menu_order')}">{lang('option_main_menu_order')}</h4>
+                                                <input type="hidden" name="main_menu_order" value="{$row.main_menu_order}" class="main-menu-order"/>
+                                                <ul class="list-unstyled main-menus-sortable">
+                                                    {foreach from=$sections item=$menu}
+                                                        <li class="main-menu-sortable main-menu-sort-handle" data-section-id="{$menu}" {if config($menu|cat:'sSection') != 'yes'} style="display: none;"{/if}>
+                                                            <span class="glyphicon glyphicon-move "></span>
+                                                            {ucfirst(lang($menu|cat:'s'))}
+                                                        </li>
+                                                    {/foreach}
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <hr/>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="row">
+                                            <h4>{lang('enable_all_categ_for')} :</h4>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-8">
+                                                <label class="nowrap" for="enable_all_categ_for_video" title="{lang('videos')}">{lang('videos')}</label>
+                                            </div>
+                                            <div class="col-md-2 row-size">
+                                                <input value="yes" name="enable_all_categ_for_video" id="enable_all_categ_for_video" {if $row.enable_all_categ_for_video=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5" {if config('videosSection')!='yes' || config('enable_video_categories_as_submenu') != 'yes'}disabled="disabled"{/if}/>
+                                                <span class="lbl"></span>
+                                                <input type="hidden" name="enable_all_categ_for_video" id="enable_all_categ_for_video_hidden" value="{$row.enable_all_categ_for_video}" {if config('videosSection')=='yes' && config('enable_photo_categories_as_submenu') !='yes'}disabled="disabled"{/if}/>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-8">
+                                                <label class="nowrap" for="enable_all_categ_for_photo" title="{lang('photos')}">{lang('photos')}</label>
+                                            </div>
+                                            <div class="col-md-2 row-size">
+                                                <input value="yes" name="enable_all_categ_for_photo" id="enable_all_categ_for_photo" {if $row.enable_all_categ_for_photo=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5" {if config('photosSection')!='yes' || config('enable_photo_categories_as_submenu') !='yes'}disabled="disabled"{/if}/>
+                                                <span class="lbl"></span>
+                                                <input type="hidden" name="enable_all_categ_for_photo" id="enable_all_categ_for_photo" value="{$row.enable_all_categ_for_photo}" {if config('photosSection')=='yes' && config('enable_photo_categories_as_submenu') !='yes'}disabled="disabled"{/if}/>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-8">
+                                                <label class="nowrap" for="enable_all_categ_for_collection" title="{lang('collections')}">{lang('collections')}</label>
+                                            </div>
+                                            <div class="col-md-2 row-size">
+                                                <input value="yes" name="enable_all_categ_for_collection" id="enable_all_categ_for_collection" {if $row.enable_all_categ_for_collection=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5" {if config('collectionsSection')!='yes' || config('enable_collection_categories_as_submenu') != 'yes'}disabled="disabled"{/if}/>
+                                                <span class="lbl"></span>
+                                                <input type="hidden" name="enable_all_categ_for_collection" id="enable_all_categ_for_collection" value="{$row.enable_all_categ_for_collection}" {if config('collectionsSection')=='yes' && config('enable_photo_categories_as_submenu') !='yes'}disabled="disabled"{/if}/>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-8">
+                                                <label class="nowrap" for="enable_all_categ_for_channel" title="{lang('channels')}">{lang('channels')}</label>
+                                            </div>
+                                            <div class="col-md-2 row-size">
+                                                <input value="yes" name="enable_all_categ_for_channel" id="enable_all_categ_for_channel" {if $row.enable_all_categ_for_channel=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5" {if config('channelsSection')!='yes' || config('enable_channel_categories_as_submenu') != 'yes'}disabled="disabled"{/if}/>
+                                                <span class="lbl"></span>
+                                                <input type="hidden" name="enable_all_categ_for_channel" id="enable_all_categ_for_channel" value="{$row.enable_all_categ_for_channel}" {if config('channelsSection')=='yes' && config('enable_photo_categories_as_submenu') !='yes'}disabled="disabled"{/if}/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -983,7 +1122,7 @@
                                     <label class="nowrap" for="min_username" title="Minimum Username Length">Minimum Username Length</label>
                                 </div>
                                 <div class="col-md-6">
-                                    <input class="form-control" name="min_username" id="min_username" value="{$row.min_username}"/>
+                                    <input class="form-control" name="min_username" id="min_username" type="number" value="{(int)$row.min_username}"/>
                                 </div>
                             </div>
                             <hr/>
@@ -1007,7 +1146,7 @@
                                     <label class="nowrap" for="min_age_reg" title="Minimum age for registration"><span class="fa fa-question-circle tips" title="Leave blank to disable this option"></span> Minimum age for registration</label>
                                 </div>
                                 <div class="col-md-6">
-                                    <input class="form-control" name="min_age_reg" id="min_age_reg" value="{$row.min_age_reg}" size="6" maxlength="3"/>
+                                    <input class="form-control" name="min_age_reg" id="min_age_reg" type="number" value="{(int)$row.min_age_reg}" size="6" maxlength="3"/>
                                 </div>
                             </div>
                             <hr/>
@@ -1048,7 +1187,7 @@
                             <div class="row">
                                 <div class="col-md-12">
                                     <label class="nowrap" for="disallowed_usernames" title="Disallowed usernames"><span class="fa fa-question-circle tips" title="{lang code='separated_by_commas'}"></span> Disallowed usernames</label>
-                                    <textarea class="form-control" name="disallowed_usernames" id="disallowed_usernames" cols="45" rows="5">{$row.disallowed_usernames}</textarea>
+                                    <textarea class="form-control" name="disallowed_usernames" id="disallowed_usernames" cols="45" rows="5">{display_clean($row.disallowed_usernames)}</textarea>
                                 </div>
                             </div>
                             <hr/>
@@ -1110,7 +1249,7 @@
                                     <label class="nowrap" for="max_username" title="Maximum Username Length">Maximum Username Length</label>
                                 </div>
                                 <div class="col-md-6">
-                                    <input class="form-control" name="max_username" id="max_username" value="{$row.max_username}"/>
+                                    <input class="form-control" name="max_username" id="max_username" type="number" value="{(int)$row.max_username}"/>
                                 </div>
                             </div>
                             <hr/>
@@ -1155,7 +1294,7 @@
                                         <label class="nowrap" for="email_domain_restriction" title="Email domain restriction"><span class="fa fa-question-circle tips" title="List of authorized domains, separated by commas"></span> Email domain restriction</label>
                                     </div>
                                     <div class="col-md-6">
-                                        <input class="form-control" name="email_domain_restriction" id="email_domain_restriction" value="{$row.email_domain_restriction}"/>
+                                        <input class="form-control" name="email_domain_restriction" id="email_domain_restriction" value="{display_clean($row.email_domain_restriction)}"/>
                                     </div>
                                 </div>
                             </div>
@@ -1165,7 +1304,7 @@
                                     <label class="nowrap" for="max_profile_pic_width" title="Max profile pic width"><span class="fa fa-question-circle tips" title="In Pixels"></span> Max profile pic width</label>
                                 </div>
                                 <div class="col-md-6">
-                                    <input class="form-control" name="max_profile_pic_width" id="max_profile_pic_width" value="{$row.max_profile_pic_width}"/>
+                                    <input class="form-control" name="max_profile_pic_width" id="max_profile_pic_width" type="number" value="{(int)$row.max_profile_pic_width}"/>
                                 </div>
                             </div>
                             <hr/>
@@ -1175,7 +1314,7 @@
                                     <label class="nowrap" for="max_bg_width" title="Max Background width"><span class="fa fa-question-circle tips" title="In Pixels"></span> Max Background width</label>
                                 </div>
                                 <div class="col-md-6">
-                                    <input class="form-control" name="max_bg_width" id="max_bg_width" value="{$row.max_bg_width}"/>
+                                    <input class="form-control" name="max_bg_width" id="max_bg_width" type="number" value="{(int)$row.max_bg_width}"/>
                                 </div>
                             </div>
                             <hr/>
@@ -1560,13 +1699,13 @@
                                     <label class="nowrap" for="vid_cat_width" title="Category Width">Category Width</label>
                                 </div>
                                 <div class="col-md-2 row-size">
-                                    <input class="form-control" name="vid_cat_width" id="vid_cat_width" value="{$row.vid_cat_width}"/>
+                                    <input class="form-control" name="vid_cat_width" id="vid_cat_width" type="number" value="{(int)$row.vid_cat_width}"/>
                                 </div>
                                 <div class="col-md-4">
                                     <label class="nowrap" for="vid_cat_height" title="Category height">Category height</label>
                                 </div>
                                 <div class="col-md-2 row-size">
-                                    <input class="form-control" name="vid_cat_height" id="vid_cat_height" value="{$row.vid_cat_height}"/>
+                                    <input class="form-control" name="vid_cat_height" id="vid_cat_height" type="number" value="{(int)$row.vid_cat_height}"/>
                                 </div>
                             </div>
                             <hr/>
@@ -1681,7 +1820,7 @@
                                     <label class="nowrap" for="video_categories" title="{lang('max_video_categories')}"><span class="fa fa-question-circle tips" title="{lang code='max_video_categories_hint'}"></span> {lang('max_video_categories')}</label>
                                 </div>
                                 <div class="col-md-2 row-size">
-                                    <input class="form-control" name="video_categories" id="video_categories" value="{$row.video_categories}"/>
+                                    <input class="form-control" name="video_categories" id="video_categories" type="number" value="{(int)$row.video_categories}"/>
                                 </div>
                             </div>
                             <hr/>
@@ -1761,13 +1900,13 @@
                                     <label class="nowrap" for="min_video_title" title="Min">Min</label>
                                 </div>
                                 <div class="col-md-2">
-                                    <input class="form-control" name="min_video_title" id="min_video_title" value="{$row.min_video_title}"/>
+                                    <input class="form-control" name="min_video_title" id="min_video_title" type="number" value="{(int)$row.min_video_title}"/>
                                 </div>
                                 <div class="col-md-2">
                                     <label class="nowrap" for="max_video_title" title="Max">Max</label>
                                 </div>
                                 <div class="col-md-2">
-                                    <input class="form-control" name="max_video_title" id="max_video_title" value="{$row.max_video_title}"/>
+                                    <input class="form-control" name="max_video_title" id="max_video_title" type="number" value="{(int)$row.max_video_title}"/>
                                 </div>
                             </div>
                             <hr/>
@@ -1779,13 +1918,13 @@
                                     <label class="nowrap" for="min_video_desc" title="Min">Min</label>
                                 </div>
                                 <div class="col-md-2">
-                                    <input class="form-control" name="min_video_desc" id="min_video_desc" value="{$row.min_video_desc}"/>
+                                    <input class="form-control" name="min_video_desc" id="min_video_desc" type="number" value="{(int)$row.min_video_desc}"/>
                                 </div>
                                 <div class="col-md-2">
                                     <label class="nowrap" for="max_video_desc" title="Max">Max</label>
                                 </div>
                                 <div class="col-md-2">
-                                    <input class="form-control" name="max_video_desc" id="max_video_desc" value="{$row.max_video_desc}"/>
+                                    <input class="form-control" name="max_video_desc" id="max_video_desc" type="number" value="{(int)$row.max_video_desc}"/>
                                 </div>
                             </div>
                             <hr/>
@@ -1867,7 +2006,7 @@
                                 </div>
                                 <div class="col-md-6">
                                     <div class="input-group">
-                                        <input class="form-control" name="tmdb_token" id="tmdb_token" value="{$row.tmdb_token}" size="45" {if $row.enable_tmdb!='yes'}disabled="disabled" title="{lang('option_require_x_enabled',lang('enable_tmdb'))}"{/if}/>
+                                        <input class="form-control" name="tmdb_token" id="tmdb_token" value="{display_clean($row.tmdb_token)}" size="45" {if $row.enable_tmdb!='yes'}disabled="disabled" title="{lang('option_require_x_enabled',lang('enable_tmdb'))}"{/if}/>
                                         <span class="input-group-addon glyphicon glyphicon-refresh {if $row.enable_tmdb != 'yes'}disabled{/if}" id="tmdb_token_test"
                                               title="{if $row.enable_tmdb == 'yes'}{lang code='tmdb_token_check'}{else}{lang('option_require_x_enabled',lang('enable_tmdb'))}{/if}"></span>
                                         <input value="{$row.tmdb_token}" name="tmdb_token" id="tmdb_token_hidden" type="hidden" {if $row.enable_tmdb=='yes'}disabled="disabled"{/if}/>
@@ -2005,9 +2144,9 @@
                                     <label class="nowrap" for="tmdb_mature_content_age" title="{lang code='tmdb_mature_content_age'}">{lang code='tmdb_mature_content_age'}</label>
                                 </div>
                                 <div class="col-md-2 row-size">
-                                    <input value="{$row.tmdb_mature_content_age}" name="tmdb_mature_content_age" id="tmdb_mature_content_age" {if $row.enable_tmdb_mature_content!='yes'}disabled{/if} class="form-control"/>
+                                    <input value="{(int)$row.tmdb_mature_content_age}" type="number" name="tmdb_mature_content_age" id="tmdb_mature_content_age" {if $row.enable_tmdb_mature_content!='yes'}disabled{/if} class="form-control"/>
                                     <span class="lbl"></span>
-                                    <input value="{$row.tmdb_mature_content_age}" name="tmdb_mature_content_age" id="tmdb_mature_content_age_hidden" type="hidden" {if $row.enable_tmdb_mature_content=='yes'}disabled="disabled"{/if}/>
+                                    <input value="{(int)$row.tmdb_mature_content_age}" name="tmdb_mature_content_age" id="tmdb_mature_content_age_hidden" type="hidden" {if $row.enable_tmdb_mature_content=='yes'}disabled="disabled"{/if}/>
                                 </div>
                             </div>
                             <hr/>
@@ -2026,15 +2165,19 @@
                                     <label class="nowrap" for="enable_external_rate_from_tmdb" title="{lang code='option_enable_external_rate_from_tmdb'}">{lang code='option_enable_external_rate_from_tmdb'}</label>
                                 </div>
                                 <div class="col-md-2 row-size">
-                                    <input value="yes" name="enable_external_rate_from_tmdb" id="enable_external_rate_from_tmdb" {if $row.enable_external_rate_from_tmdb=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+                                    <input value="yes" name="enable_external_rate_from_tmdb" id="enable_external_rate_from_tmdb" {if $row.enable_external_rate_from_tmdb=='yes'}checked{/if} type="checkbox"
+                                           class="ace ace-switch ace-switch-5" {if $row.enable_external_rate_field!='yes'}disabled title="{lang('option_require_x_enabled',lang('option_enable_external_rate_field'))}"{/if}/>
                                     <span class="lbl"></span>
+                                    <input value="{$row.enable_external_rate_from_tmdb}" name="enable_external_rate_from_tmdb" id="enable_external_rate_from_tmdb_hidden" type="hidden" {if $row.enable_external_rate_field=='yes'}disabled{/if}/>
                                 </div>
                                 <div class="col-md-4">
                                     <label class="nowrap" for="enable_external_ratings_from_tmdb" title="{lang code='option_enable_external_ratings_from_tmdb'}">{lang code='option_enable_external_ratings_from_tmdb'}</label>
                                 </div>
                                 <div class="col-md-2 row-size">
-                                    <input value="yes" name="enable_external_ratings_from_tmdb" id="enable_external_ratings_from_tmdb" {if $row.enable_external_ratings_from_tmdb=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+                                    <input value="yes" name="enable_external_ratings_from_tmdb" id="enable_external_ratings_from_tmdb" {if $row.enable_external_ratings_from_tmdb=='yes'}checked{/if} type="checkbox"
+                                           class="ace ace-switch ace-switch-5" {if $row.enable_external_ratings_field!='yes'}disabled title="{lang('option_require_x_enabled',lang('option_enable_external_ratings_field'))}"{/if}/>
                                     <span class="lbl"></span>
+                                    <input value="{$row.enable_external_ratings_from_tmdb}" name="enable_external_ratings_from_tmdb" id="enable_external_ratings_from_tmdb_hidden" type="hidden" {if $row.enable_external_ratings_field=='yes'}disabled{/if}/>
                                 </div>
                             </div>
                             <hr/>
@@ -2049,7 +2192,7 @@
                                     <label class="nowrap" for="max_photo_categories" title="{lang('option_max_photo_categories')}"><span class="fa fa-question-circle tips" title="{lang code='option_max_photo_categories_hint'}"></span> {lang('option_max_photo_categories')}</label>
                                 </div>
                                 <div class="col-md-4 row-size">
-                                    <input class="form-control" name="max_photo_categories" id="max_photo_categories" value="{$row.max_photo_categories}"/>
+                                    <input class="form-control" name="max_photo_categories" id="max_photo_categories" type="number" value="{(int)$row.max_photo_categories}"/>
                                 </div>
                             </div>
                             <hr/>
@@ -2094,7 +2237,7 @@
                                     <label class="nowrap" for="max_collection_categories" title="{lang('option_max_collection_categories')}"><span class="fa fa-question-circle tips" title="{lang code='option_max_collection_categories_hint'}"></span> {lang('option_max_collection_categories')}</label>
                                 </div>
                                 <div class="col-md-4 row-size">
-                                    <input class="form-control" name="max_collection_categories" id="max_collection_categories" value="{$row.max_collection_categories}"/>
+                                    <input class="form-control" name="max_collection_categories" type="number" id="max_collection_categories" value="{(int)$row.max_collection_categories}"/>
                                 </div>
                             </div>
                             <hr/>
@@ -2183,7 +2326,7 @@
                                     <label class="nowrap" for="max_comment_chr" title="Maximum Comment Characters">Maximum Comment Characters</label>
                                 </div>
                                 <div class="col-md-6 row-size">
-                                    <input class="form-control" name="max_comment_chr" id="max_comment_chr" value="{$row.max_comment_chr}"/>
+                                    <input class="form-control" name="max_comment_chr" id="max_comment_chr" type="number" value="{(int)$row.max_comment_chr}"/>
                                 </div>
                             </div>
                             <hr/>
@@ -2342,7 +2485,7 @@
                                     <label class="nowrap" for="videos_list_per_page" title="Per page">Per page</label>
                                 </div>
                                 <div class="col-md-4 row-size">
-                                    <input class="form-control" name="videos_list_per_page" id="videos_list_per_page" value="{$row.videos_list_per_page}"/>
+                                    <input class="form-control" name="videos_list_per_page" id="videos_list_per_page" type="number" value="{(int)$row.videos_list_per_page}"/>
                                 </div>
                             </div>
                             <hr/>
@@ -2351,7 +2494,7 @@
                                     <label class="nowrap" for="videos_items_ufav_page" title="Favorites">Favorites</label>
                                 </div>
                                 <div class="col-md-4 row-size">
-                                    <input class="form-control" name="videos_items_ufav_page" id="videos_items_ufav_page" value="{$row.videos_items_ufav_page}"/>
+                                    <input class="form-control" name="videos_items_ufav_page" id="videos_items_ufav_page" type="number" value="{(int)$row.videos_items_ufav_page}"/>
                                 </div>
                             </div>
                             <hr/>
@@ -2360,7 +2503,7 @@
                                     <label class="nowrap" for="videos_items_hme_page" title="Home Tabs">Home Tabs</label>
                                 </div>
                                 <div class="col-md-4 row-size">
-                                    <input class="form-control" name="videos_items_hme_page" id="videos_items_hme_page" value="{$row.videos_items_hme_page}"/>
+                                    <input class="form-control" name="videos_items_hme_page" id="videos_items_hme_page" type="number" value="{(int)$row.videos_items_hme_page}"/>
                                 </div>
                             </div>
                             <hr/>
@@ -2369,7 +2512,7 @@
                                     <label class="nowrap" for="videos_item_channel_page" title="Channel page">Channel page</label>
                                 </div>
                                 <div class="col-md-4 row-size">
-                                    <input class="form-control" name="videos_item_channel_page" id="videos_item_channel_page" value="{$row.videos_item_channel_page}"/>
+                                    <input class="form-control" name="videos_item_channel_page" id="videos_item_channel_page" type="number" value="{(int)$row.videos_item_channel_page}"/>
                                 </div>
                             </div>
                             <hr/>
@@ -2378,7 +2521,7 @@
                                     <label class="nowrap" for="videos_items_search_page" title="Search Result">Search Result</label>
                                 </div>
                                 <div class="col-md-4 row-size">
-                                    <input class="form-control" name="videos_items_search_page" id="videos_items_search_page" value="{$row.videos_items_search_page}"/>
+                                    <input class="form-control" name="videos_items_search_page" id="videos_items_search_page" type="number" value="{(int)$row.videos_items_search_page}"/>
                                 </div>
                             </div>
                             <hr/>
@@ -2387,7 +2530,7 @@
                                     <label class="nowrap" for="videos_items_uvid_page" title="User Videos">User Videos</label>
                                 </div>
                                 <div class="col-md-4 row-size">
-                                    <input class="form-control" name="videos_items_uvid_page" id="videos_items_uvid_page" value="{$row.videos_items_uvid_page}"/>
+                                    <input class="form-control" name="videos_items_uvid_page" id="videos_items_uvid_page" type="number" value="{(int)$row.videos_items_uvid_page}"/>
                                 </div>
                             </div>
                             <hr/>
@@ -2396,7 +2539,7 @@
                                     <label class="nowrap" for="tmdb_search" title="User Videos">{lang code='tmdb_search'}</label>
                                 </div>
                                 <div class="col-md-4 row-size">
-                                    <input class="form-control" name="tmdb_search" id="tmdb_search" value="{$row.tmdb_search}"/>
+                                    <input class="form-control" name="tmdb_search" id="tmdb_search" type="number" value="{(int)$row.tmdb_search}"/>
                                 </div>
                             </div>
                             <hr/>
@@ -2405,7 +2548,7 @@
                                     <label class="nowrap" for="video_list_view_video_history" title="User Videos">{lang code='video_list_view_video_history'}</label>
                                 </div>
                                 <div class="col-md-4 row-size">
-                                    <input class="form-control" name="video_list_view_video_history" id="video_list_view_video_history" value="{$row.video_list_view_video_history}"/>
+                                    <input class="form-control" name="video_list_view_video_history" id="video_list_view_video_history" type="number" value="{(int)$row.video_list_view_video_history}"/>
                                 </div>
                             </div>
 
@@ -2422,7 +2565,7 @@
                                     <label class="nowrap" for="photo_main_list" title="Main Limit"><span class="fa fa-question-circle tips" title="We use this limit in most of place where photo is displayed like, My Account, Manage Photos, Manage Favotires Photos etc"></span> Main Limit</label>
                                 </div>
                                 <div class="col-md-4 row-size">
-                                    <input class="form-control" name="photo_main_list" id="photo_main_list" value="{$row.photo_main_list}"/>
+                                    <input class="form-control" name="photo_main_list" id="photo_main_list" type="number" value="{(int)$row.photo_main_list}"/>
                                 </div>
                             </div>
                             <hr/>
@@ -2431,7 +2574,7 @@
                                     <label class="nowrap" for="photo_home_tabs" title="Home Tabs"><span class="fa fa-question-circle tips" title="Number of photos to display on Homepage"></span> Home Tabs</label>
                                 </div>
                                 <div class="col-md-4 row-size">
-                                    <input class="form-control" name="photo_home_tabs" id="photo_home_tabs" value="{$row.photo_home_tabs}"/>
+                                    <input class="form-control" name="photo_home_tabs" id="photo_home_tabs" type="number" value="{(int)$row.photo_home_tabs}"/>
                                 </div>
                             </div>
                             <hr/>
@@ -2440,7 +2583,7 @@
                                     <label class="nowrap" for="photo_search_result" title="Search Result"><span class="fa fa-question-circle tips" title="Number of photos to display on Search page"></span> Search Result</label>
                                 </div>
                                 <div class="col-md-4 row-size">
-                                    <input class="form-control" name="photo_search_result" id="photo_search_result" value="{$row.photo_search_result}"/>
+                                    <input class="form-control" name="photo_search_result" id="photo_search_result" type="number" value="{(int)$row.photo_search_result}"/>
                                 </div>
                             </div>
                             <hr/>
@@ -2449,7 +2592,7 @@
                                     <label class="nowrap" for="photo_channel_page" title="Channel Page"><span class="fa fa-question-circle tips" title="Number of photos to display on User's page"></span> Channel Page</label>
                                 </div>
                                 <div class="col-md-4 row-size">
-                                    <input class="form-control" name="photo_channel_page" id="photo_channel_page" value="{$row.photo_channel_page}"/>
+                                    <input class="form-control" name="photo_channel_page" id="photo_channel_page" type="number" value="{(int)$row.photo_channel_page}"/>
                                 </div>
                             </div>
                             <hr/>
@@ -2458,7 +2601,7 @@
                                     <label class="nowrap" for="photo_user_photos" title="User Photos"><span class="fa fa-question-circle tips" title="Number of photos to display on User's photos page"></span> User Photos</label>
                                 </div>
                                 <div class="col-md-4 row-size">
-                                    <input class="form-control" name="photo_user_photos" id="photo_user_photos" value="{$row.photo_user_photos}"/>
+                                    <input class="form-control" name="photo_user_photos" id="photo_user_photos" type="number" value="{(int)$row.photo_user_photos}"/>
                                 </div>
                             </div>
                             <hr/>
@@ -2467,7 +2610,7 @@
                                     <label class="nowrap" for="photo_user_favorites" title="User favorites"><span class="fa fa-question-circle tips" title="Number of photos to display on User's favorites page"></span> User favorites</label>
                                 </div>
                                 <div class="col-md-4 row-size">
-                                    <input class="form-control" name="photo_user_favorites" id="photo_user_favorites" value="{$row.photo_user_favorites}"/>
+                                    <input class="form-control" name="photo_user_favorites" id="photo_user_favorites" type="number" value="{(int)$row.photo_user_favorites}"/>
                                 </div>
                             </div>
                             <hr/>
@@ -2476,7 +2619,7 @@
                                     <label class="nowrap" for="photo_other_limit" title="Other Limit"><span class="fa fa-question-circle tips" title="Use anywhere you want"></span> Other Limit</label>
                                 </div>
                                 <div class="col-md-4 row-size">
-                                    <input class="form-control" name="photo_other_limit" id="photo_other_limit" value="{$row.photo_other_limit}"/>
+                                    <input class="form-control" name="photo_other_limit" id="photo_other_limit" type="number" value="{(int)$row.photo_other_limit}"/>
                                 </div>
                             </div>
                             <hr/>
@@ -2494,7 +2637,7 @@
                                     <label class="nowrap" for="collection_per_page" title="Collections Page"><span class="fa fa-question-circle tips" title="Number of collections to display on Collections page"></span> Collection Page</label>
                                 </div>
                                 <div class="col-md-4 row-size">
-                                    <input class="form-control" name="collection_per_page" id="collection_per_page" value="{$row.collection_per_page}"/>
+                                    <input class="form-control" name="collection_per_page" id="collection_per_page" type="number" value="{(int)$row.collection_per_page}"/>
                                 </div>
                             </div>
                             <hr/>
@@ -2503,7 +2646,7 @@
                                     <label class="nowrap" for="collection_items_page" title="Items Page"><span class="fa fa-question-circle tips" title="Number of items to display in a Collection"></span> Items Page</label>
                                 </div>
                                 <div class="col-md-4 row-size">
-                                    <input class="form-control" name="collection_items_page" id="collection_items_page" value="{$row.collection_items_page}"/>
+                                    <input class="form-control" name="collection_items_page" id="collection_items_page" type="number" value="{(int)$row.collection_items_page}"/>
                                 </div>
                             </div>
                             <hr/>
@@ -2512,7 +2655,7 @@
                                     <label class="nowrap" for="collection_search_result" title="Search Result"><span class="fa fa-question-circle tips" title="Number of collections to display in search results"></span> Search Result</label>
                                 </div>
                                 <div class="col-md-4 row-size">
-                                    <input class="form-control" name="collection_search_result" id="collection_search_result" value="{$row.collection_search_result}"/>
+                                    <input class="form-control" name="collection_search_result" id="collection_search_result" type="number" value="{(int)$row.collection_search_result}"/>
                                 </div>
                             </div>
                             <hr/>
@@ -2521,7 +2664,7 @@
                                     <label class="nowrap" for="collection_home_top_collections" title="Homepage Top Collections"><span class="fa fa-question-circle tips" title="Number of collections to display on homepage top collections"></span> Homepage Top Collections</label>
                                 </div>
                                 <div class="col-md-4 row-size">
-                                    <input class="form-control" name="collection_home_top_collections" id="collection_home_top_collections" value="{$row.collection_home_top_collections}"/>
+                                    <input class="form-control" name="collection_home_top_collections" id="collection_home_top_collections" type="number" value="{(int)$row.collection_home_top_collections}"/>
                                 </div>
                             </div>
                             <hr/>
@@ -2530,7 +2673,7 @@
                                     <label class="nowrap" for="collection_collection_top_collections" title="Collections page Top Collections"><span class="fa fa-question-circle tips" title="Number of collections to display on collection page top collections"></span> Collections page Top Collections</label>
                                 </div>
                                 <div class="col-md-4 row-size">
-                                    <input class="form-control" name="collection_collection_top_collections" id="collection_collection_top_collections" value="{$row.collection_collection_top_collections}"/>
+                                    <input class="form-control" name="collection_collection_top_collections" id="collection_collection_top_collections" type="number" value="{(int)$row.collection_collection_top_collections}"/>
                                 </div>
                             </div>
                             <hr/>
@@ -2539,7 +2682,7 @@
                                     <label class="nowrap" for="collection_photos_top_collections" title="Photos page Top Collections"><span class="fa fa-question-circle tips" title="Number of collections to display on photos page top collections"></span> Photos page Top Collections</label>
                                 </div>
                                 <div class="col-md-4 row-size">
-                                    <input class="form-control" name="collection_photos_top_collections" id="collection_photos_top_collections" value="{$row.collection_photos_top_collections}"/>
+                                    <input class="form-control" name="collection_photos_top_collections" id="collection_photos_top_collections" type="number" value="{(int)$row.collection_photos_top_collections}"/>
                                 </div>
                             </div>
                             <hr/>
@@ -2557,7 +2700,7 @@
                                     <label class="nowrap" for="channels_list_per_page" title="Per page">Per page</label>
                                 </div>
                                 <div class="col-md-4 row-size">
-                                    <input class="form-control" name="channels_list_per_page" id="channels_list_per_page" value="{$row.channels_list_per_page}"/>
+                                    <input class="form-control" name="channels_list_per_page" id="channels_list_per_page" type="number" value="{(int)$row.channels_list_per_page}"/>
                                 </div>
                             </div>
                             <hr/>
@@ -2566,7 +2709,7 @@
                                     <label class="nowrap" for="users_items_subscriptions" title="Subscriptions in channel view">Subscriptions in channel view</label>
                                 </div>
                                 <div class="col-md-4 row-size">
-                                    <input class="form-control" name="users_items_subscriptions" id="users_items_subscriptions" value="{$row.users_items_subscriptions}"/>
+                                    <input class="form-control" name="users_items_subscriptions" id="users_items_subscriptions" type="number" value="{(int)$row.users_items_subscriptions}"/>
                                 </div>
                             </div>
                             <hr/>
@@ -2575,7 +2718,7 @@
                                     <label class="nowrap" for="users_items_search_page" title="Search Page">Search Page</label>
                                 </div>
                                 <div class="col-md-4 row-size">
-                                    <input class="form-control" name="users_items_search_page" id="users_items_search_page" value="{$row.users_items_search_page}"/>
+                                    <input class="form-control" name="users_items_search_page" id="users_items_search_page" type="number" value="{(int)$row.users_items_search_page}"/>
                                 </div>
                             </div>
                             <hr/>
@@ -2584,7 +2727,7 @@
                                     <label class="nowrap" for="users_items_contacts_channel" title="Users contacts in channel view">Users contacts in channel view</label>
                                 </div>
                                 <div class="col-md-4 row-size">
-                                    <input class="form-control" name="users_items_contacts_channel" id="users_items_contacts_channel" value="{$row.users_items_contacts_channel}"/>
+                                    <input class="form-control" name="users_items_contacts_channel" id="users_items_contacts_channel" type="number" value="{(int)$row.users_items_contacts_channel}"/>
                                 </div>
                             </div>
                             <hr/>
@@ -2605,7 +2748,7 @@
                                     <label class="nowrap" for="comments_per_page" title="Comments per page">Comments per page</label>
                                 </div>
                                 <div class="col-md-4 row-size no_padding">
-                                    <input class="form-control" name="comments_per_page" id="comments_per_page" value="{$row.comments_per_page}" size="5"/>
+                                    <input class="form-control" name="comments_per_page" id="comments_per_page" type="number" value="{(int)$row.comments_per_page}" size="5"/>
                                 </div>
                             </div>
                         </div>

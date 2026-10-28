@@ -2,15 +2,11 @@
 
 require 'includes/config.inc.php';
 
-if (!User::getInstance()->hasPermission('view_video') || config('videosSection') != 'yes') {
-    redirect_to(Network::get_server_url());
+if ( config('videosSection') != 'yes') {
+    redirect_to(User::getInstance()->getDefaultHomepageFromUserLevel());
 }
 
 $vkey = $_GET['v'] ?? false;
-
-if( empty($vkey) ){
-    redirect_to(Network::get_server_url());
-}
 
 if(is_numeric($vkey)){
     $search = 'videoid';
@@ -19,8 +15,11 @@ if(is_numeric($vkey)){
 }
 
 $vdo = Video::getInstance()->getOne([$search => $vkey]);
+if (!empty($vdo) && (($vdo['broadcast'] == 'public' || $vdo['active'] == 'yes') && !User::getInstance()->hasPermission('view_video') )) {
+    SessionMessageHandler::add_message('video_not_exist_or_cant_access', 'w', cblink(['name' => 'signin']));
+}
 if( !video_playable($vdo) ) {
-    redirect_to(Network::get_server_url());
+    addErrorHandlerMessagesToSessionMessageHandler('all', User::getInstance()->getDefaultHomepageFromUserLevel());
 }
 $ids_to_check_progress=[];
 if (in_array($vdo['status'], ['Processing', 'Waiting'])) {

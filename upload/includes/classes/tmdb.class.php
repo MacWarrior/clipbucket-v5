@@ -14,6 +14,8 @@ class Tmdb
 
     private $language = '';
 
+    private static $tablename = 'video_tmdb';
+
     /**
      * @param \Classes\Curl $curl
      * @return void
@@ -276,7 +278,7 @@ class Tmdb
      * @return void
      * @throws Exception
      */
-    public function importDataFromTmdb(int $videoid, int $tmdb_id, $type = 'movie')
+    public function importDataFromTmdb(int $videoid, int $tmdb_id, string $type = 'movie'): void
     {
         if( empty($videoid) ){
             e(lang('class_vdo_del_err'));
@@ -523,12 +525,14 @@ class Tmdb
         }
         self::getInstance()->deleteOldCacheEntries();
         $title = !empty($params['video_title']) ? $params['video_title'] : $video_info['title'];
+        if (!in_array($params['sort'], ['title', 'release_date'])) {
+            unset($params['sort']);
+        }
         $sort = empty($params['sort']) ? 'release_date' : $params['sort'];
         $sort_order = empty($params['sort_order']) ? 'DESC' : $params['sort_order'];
-        if( in_array($sort_order, ['ASC', 'DESC']) ){
+        if( !in_array($sort_order, ['ASC', 'DESC']) ){
             $sort_order = 'DESC';
         }
-
         $cache_results = $this->getSearchInfo($title, $type);
         if (!empty($cache_results)) {
             $years = json_decode($cache_results[0]['list_years'], true);
@@ -550,8 +554,8 @@ class Tmdb
                         $results=['results'=>[]];
                         break;
                 }
-                $total_rows = $results['total_results'];
-                $tmdb_results = array_merge($tmdb_results, $results['results']);
+                $total_rows = $results['total_results'] ?? 0;
+                $tmdb_results = array_merge($tmdb_results, $results['results'] ?? []);
 
                 foreach ($results['results'] as $result) {
                     $year = substr($result[$date_field], 0, 4);
@@ -598,8 +602,6 @@ class Tmdb
      * @param int $videoid
      * @param int $id_tmdb
      * @param string $type_tmdb
-     * @param $tmdb_rate
-     * @param $tmdb_ratings
      * @return bool
      * @throws Exception
      */
@@ -621,5 +623,10 @@ class Tmdb
             $sql .= $field . ' = VALUES('.$field.') ';
         }
         return Clipbucket_db::getInstance()->execute($sql);
+    }
+
+    public static function getTableName(): string
+    {
+        return self::$tablename;
     }
 }

@@ -9,10 +9,11 @@ if (!empty($_POST['category_id'])) {
 
 $cats = Category::getInstance()->getAll([
     'category_type' => Category::getInstance()->getIdsCategoriesType($_POST['type'])
+    ,'parent_only'=>true
 ]);
 
 //Assign Category Values
-assign('category', $cats);
+assign('categories', $cats);
 assign('type', $_POST['type']);
 assign('total', $cats = Category::getInstance()->getAll([
     'category_type' => Category::getInstance()->getIdsCategoriesType($_POST['type']),

@@ -576,6 +576,7 @@ async function update(type){
     //check conversion
     var is_checked = await check_before_launch_update();
     if (!is_checked) {
+        updateListeners();
         return;
     }
     $.ajax({

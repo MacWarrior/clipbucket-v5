@@ -78,6 +78,9 @@ if (isset($_POST['delete_selected']) && is_array($_POST['check_page'])) {
 $mode = $_GET['mode'];
 
 if (isset($_POST['add_page'])) {
+    if (!Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '184')) {
+        SessionMessageHandler::add_message('Sorry, you cannot perform this action until the application has been fully updated by an administrator', 'e', User::redirectAfterLoginOrError('url'));
+    }
     if (cbpage::getInstance()->create_page($_POST)) {
         $mode = 'view';
     }
@@ -94,35 +97,34 @@ if (isset($_POST['update_order'])) {
         e(lang('page_order_has_been_updated'), 'm');
     }
 }
-
-switch ($mode) {
-    case 'new':
-        assign('mode', 'new');
-        break;
-
-    case 'view':
-    default:
-        if ($_GET['msg']) {
-            e(mysql_clean($_GET['msg']), 'm');
-        }
-        assign('mode', 'manage');
-        assign('cbpages', cbpage::getInstance()->get_pages());
-        break;
-
-    case 'edit':
+if (empty($mode) || $mode == 'view') {
+    if ($_GET['msg']) {
+        e(mysql_clean($_GET['msg']), 'm');
+    }
+    assign('mode', 'manage');
+    assign('cbpages', cbpage::getInstance()->get_pages());
+} else {
+    if (!Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '184')) {
+        SessionMessageHandler::add_message('Sorry, you cannot perform this action until the application has been fully updated by an administrator', 'e', User::redirectAfterLoginOrError('url'));
+    }
+    assign('mode', $mode);
+    if ($mode == 'edit') {
         if (isset($_POST['update_page'])) {
             $_POST['page_id'] = $_GET['pid'];
             cbpage::getInstance()->edit_page($_POST);
         }
-
-        assign('mode', 'edit');
         $page = cbpage::getInstance()->get_page(mysql_clean($_GET['pid']));
-        assign('page', $page);
         if (!$page) {
             e('Page does not exist');
         }
-        break;
+        $breadcrumb[2] = ['title' => lang('edit_page')];
+    } else {
+        $breadcrumb[2] = ['title' => lang('add_new_page')];
+    }
 
+    assign('languages', cbpage::getPageTranslationFlags($page));
+    assign('page', $page);
+    assign('selected_lang', (int)$_POST['selected_lang']);
 }
 
 $min_suffixe = System::isInDev() ? '' : '.min';

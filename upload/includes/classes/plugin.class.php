@@ -234,20 +234,19 @@ class CBPlugin
 
     /**
      * @param      $file
-     * @param null $v
      * @param null $folder
      *
      * @return bool
      * @throws Exception
      */
-    function is_installed($file, $v = null, $folder = null): bool
+    function is_installed($file, $folder = null): bool
     {
         $folder_check = '';
         if ($folder) {
-            $folder_check = " AND plugin_folder ='$folder'";
+            $folder_check = ' AND plugin_folder = \'' . mysql_clean($folder) . '\'';
         }
 
-        $details = Clipbucket_db::getInstance()->select(tbl('plugins'), 'plugin_file', "plugin_file='" . $file . "' $folder_check");
+        $details = Clipbucket_db::getInstance()->select(tbl('plugins'), 'plugin_file', 'plugin_file=\'' . mysql_clean($file) . '\'' . $folder_check);
         if (count($details) > 0) {
             return true;
         }
@@ -395,12 +394,12 @@ class CBPlugin
     function pluginActive($plugin_file, $active = 'yes', $folder = null)
     {
         if ($folder) {
-            $folder_query = " AND plugin_folder = '$folder'";
+            $folder_query = ' AND plugin_folder = \'' . mysql_clean($folder) . '\'';
         }
 
         if ($this->is_installed($plugin_file)) {
-            Clipbucket_db::getInstance()->execute('UPDATE ' . tbl('plugins') . " SET plugin_active='" . $active . "' WHERE plugin_file='" . $plugin_file . "' $folder_query");
-            $active_msg = $active == 'yes' ? 'activated' : 'deactiveted';
+            Clipbucket_db::getInstance()->execute('UPDATE ' . tbl('plugins') . ' SET plugin_active=\'' . mysql_clean($active) . '\' WHERE plugin_file=\'' . mysql_clean($plugin_file) . '\'' . ($folder_query??''));
+            $active_msg = ($active == 'yes' ? 'activated' : 'deactiveted');
             $msg = e(lang('plugin_has_been_s', $active_msg), 'm');
         } else {
             $msg = e(lang('plugin_no_install_err'));
@@ -420,15 +419,12 @@ class CBPlugin
     function uninstallPlugin($file, $folder = null)
     {
         if ($this->is_installed($file)) {
-            if ($folder) {
-                $folder_query = " AND plugin_folder = '$folder'";
-            }
-
-            if ($folder != '') {
+            if (!empty($folder)) {
+                $folder_query = ' AND plugin_folder = \'' . mysql_clean($folder) . '\'';
                 $folder = $folder . DIRECTORY_SEPARATOR;
             }
 
-            Clipbucket_db::getInstance()->execute('DELETE FROM ' . tbl('plugins') . " WHERE plugin_file='" . $file . "' $folder_query");
+            Clipbucket_db::getInstance()->execute('DELETE FROM ' . tbl('plugins') . ' WHERE plugin_file=\'' . mysql_clean($file) . '\'' . ($folder_query ??''));
 
             $plug_uninstall_file = DirPath::get('plugins') . $folder . 'uninstall_' . $file;
             if (file_exists($plug_uninstall_file)) {

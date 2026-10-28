@@ -8,7 +8,7 @@ function is_playlist_viewable($list_id)
     if (is_array($list_id)) {
         $playlist = $list_id;
     } else {
-        $playlist = Playlist::getInstance()->getOne($list_id);
+        $playlist = Playlist::getInstance()->getOneById($list_id);
     }
 
     if (isset($playlist['playlist_id'])) {

@@ -8,7 +8,7 @@
             {/if}
             {$categories = getCategoryList(['type'=>'user'])}
             <div class="filter-dropdowns clearfix">
-                {if config('enable_user_category') == 'yes'}
+                {if config('enable_user_category') == 'yes' && config('enable_channel_categories_as_submenu')!='yes'}
                 <div class="cat-col col-lg-6 col-md-6 col-sm-6 col-xs-12 clearfix">
                     {include file="$style_dir/blocks/category_list.html" type='channels'}
                 </div>

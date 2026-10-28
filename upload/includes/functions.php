@@ -249,13 +249,13 @@ function get_directory_size(string $path, array $excluded = []): array
             if ($file != '.' && $file != '..' && !is_link($nextpath)) {
                 if (is_dir($nextpath)) {
                     $dircount++;
-                    $result = get_directory_size($nextpath);
+                    $result = get_directory_size($nextpath . DIRECTORY_SEPARATOR);
                     $totalsize += $result['size'];
                     $totalcount += $result['count'];
                     $dircount += $result['dircount'];
                 } elseif (is_file($nextpath)
                     && !array_filter($excluded, function ($value) use ($nextpath) {
-                        return strpos($nextpath, $value) !== false;
+                        return str_contains($nextpath, $value);
                     })
                 ) {
                     $totalsize += filesize($nextpath);
@@ -384,6 +384,7 @@ function getCategoryList($params = [])
         case 'videos':
         case 'v':
             $type = 'video';
+            $type_option = 'enable_all_categ_for_video';
             break;
 
         case 'users':
@@ -391,27 +392,31 @@ function getCategoryList($params = [])
         case 'u':
         case 'channels':
             $type = 'user';
+            $type_option = 'enable_all_categ_for_collection';
             break;
         case 'collection':
         case 'collections':
         case 'cl':
             $type = 'collection';
+            $type_option = 'enable_all_categ_for_collection';
             break;
         case 'photo':
             $type = 'photo';
+            $type_option = 'enable_all_categ_for_photo';
             break;
     }
     $cats = [];
+    if (!empty($params['with_all']) && config($type_option) == 'yes') {
+        $cats[] = ['category_id' => 'all', 'category_name' => lang('cat_all')];
+    }
     if( Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.0', '331') ){
         $params['category_type'] = Category::getInstance()->getIdsCategoriesType($type);
         $params['parent_only'] = true;
-        $cats = Category::getInstance()->getAll($params);
-        foreach ($cats as &$cat) {
+        $cats_type = Category::getInstance()->getAll($params);
+        foreach ($cats_type as &$cat) {
             $cat['children'] = Category::getInstance()->getChildren($cat['category_id']);
         }
-    }
-    if (!empty($params['with_all'])) {
-        $cats[] = ['category_id' => 'all', 'category_name' => lang('cat_all')];
+        $cats = array_merge($cats, $cats_type);
     }
     if (!empty($params['echo'])) {
         echo CBvideo::getInstance()->displayDropdownCategory($cats, $params);
@@ -1931,10 +1936,19 @@ function get_country($code)
     $result = Clipbucket_db::getInstance()->select(tbl('countries'), 'name_en,iso2', " iso2='$code' OR iso3='$code'");
     if (count($result) > 0) {
         $result = $result[0];
-        $flag = '<img src="' . DirPath::getUrl('root') . 'images/icons/country/' . strtolower($result['iso2']) . '.png" alt="" border="0">&nbsp;';
+        $flag = get_country_flag($result['iso2']);
         return $flag . $result['name_en'];
     }
     return false;
+}
+
+function get_country_flag($code){
+    return '<img src="' . get_country_flag_url($code) .'" alt="" border="0">&nbsp;';
+}
+
+function get_country_flag_url($code)
+{
+    return DirPath::getUrl('images') . 'icons/country/' . strtolower($code) . '.webp';
 }
 
 /**
@@ -2033,21 +2047,27 @@ function sort_link($data, $mode, $type): string
     }
 
     //default value
-    $time = $_GET['time'] ?? 'all_time';
-    $page = $_GET['page'] ?? '1';
-    if (isset($_GET['sort'])) {
-        $sort = $_GET['sort'];
-    } else {
-        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '299')) {
-            $sort = SortType::getDefaultByType($type)['id'];
-        } else {
-            $sort = 0;
-        }
+    $time = $_GET['time'] ?? null;
+    $page = (int)$_GET['page'] ?? '1';
+    $sort = 0;
+    if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '299')) {
+        $sort = SortType::getDefaultByType($type)['id'];
     }
     if (config($config_enable_category) != 'yes') {
         $cat ='';
     } else {
         $cat = $_GET['cat'] ?? 'all';
+    }
+    if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '299')) {
+        $allowed_sort = SortType::getSortTypes($type);
+        if (in_array($_GET['sort'], array_keys($allowed_sort))) {
+            $sort = $_GET['sort'];
+        }
+    } elseif(isset($_GET['sort'])) {
+        $sort = htmlspecialchars($_GET['sort']);
+    }
+    if (!is_numeric($cat) && $cat != 'all') {
+        $cat = 'all';
     }
 
     //applying filters
@@ -2068,29 +2088,35 @@ function sort_link($data, $mode, $type): string
             break;
     }
 
+    if (!in_array($time, array_keys(time_links())) || empty($time)){
+        $time = 'all_time';
+    }
+
+
+    $page = (int)$page;
     //prepare url
     if (SEO == 'yes') {
-        $sort = '/' . $sort;
-        $time = '/' . $time;
-        $page = '/' . (empty($page)?1:$page);
+        $sort_url = '/' . $sort;
+        $time_url = '/' . $time;
+        $page_url = '/' . (empty($page)?1:$page);
         if ($cat) {
-            $cat = '/' . $cat;
+            $cat_url = '/' . $cat;
         }
     } else {
-        $time = '&time=' . $time;
+        $time_url = '&time=' . $time;
         if ($page) {
-            $page = '&page=' . $page;
+            $page_url = '&page=' . $page;
         }
         if ($cat) {
-            $cat = '?cat=' . $cat;
-            $sort = '&sort=' . $sort;
+            $cat_url = '?cat=' . $cat;
+            $sort_url = '&sort=' . $sort;
         } else {
-            $sort = '?sort=' . $sort;
+            $sort_url = '?sort=' . $sort;
         }
     }
 
     //return url
-    return Dirpath::getUrl('root') . $type . ((SEO != 'yes') ? '.php' : '') . $cat . $sort . $time . $page;
+    return Dirpath::getUrl('root') . $type . ((SEO != 'yes') ? '.php' : '') . ($cat_url??'') . $sort_url . $time_url .( $page_url ??'');
 }
 
 /**
@@ -2557,35 +2583,36 @@ function datecreated($in): string
  */
 function updateObjectStats($type, $object, $id, $op = '+'): void
 {
+    $id = (int)$id;
     switch ($type) {
-        case "favorite":
-        case "favourite":
-        case "favorites":
-        case "favourites":
-        case "fav":
+        case 'favorite':
+        case 'favourite':
+        case 'favorites':
+        case 'favourites':
+        case 'fav':
             switch ($object) {
-                case "video":
-                case "videos":
-                case "v":
-                    Clipbucket_db::getInstance()->update(tbl('video'), ['favourite_count'], ["|f|favourite_count" . $op . "1"], " videoid = '" . $id . "'");
+                case 'video':
+                case 'videos':
+                case 'v':
+                    Clipbucket_db::getInstance()->update(tbl('video'), ['favourite_count'], ['|f|favourite_count' . $op . '1'], ' videoid = ' . $id);
                     break;
 
-                case "photo":
-                case "photos":
-                case "p":
-                    Clipbucket_db::getInstance()->update(tbl('photos'), ['total_favorites'], ["|f|total_favorites" . $op . "1"], " photo_id = '" . $id . "'");
+                case 'photo':
+                case 'photos':
+                case 'p':
+                    Clipbucket_db::getInstance()->update(tbl('photos'), ['total_favorites'], ['|f|total_favorites' . $op . '1'], ' photo_id = ' . $id);
                     break;
             }
             break;
 
-        case "playlist":
-        case "playList":
-        case "plist":
+        case 'playlist':
+        case 'playList':
+        case 'plist':
             switch ($object) {
-                case "video":
-                case "videos":
-                case "v":
-                    Clipbucket_db::getInstance()->update(tbl('video'), ['playlist_count'], ["|f|playlist_count" . $op . "1"], " videoid = '" . $id . "'");
+                case 'video':
+                case 'videos':
+                case 'v':
+                    Clipbucket_db::getInstance()->update(tbl('video'), ['playlist_count'], ['|f|playlist_count' . $op . '1'], ' videoid = ' . $id);
                     break;
             }
             break;
@@ -3628,7 +3655,12 @@ function save_subtitle_ajax()
     }
 
     $video = Video::getInstance()->getOne(['videoid' => mysql_clean($_POST['videoid'])]);
-    $subtitle_list = get_video_subtitles($video);
+    if ($video['userid'] != User::getInstance()->getCurrentUserID() && !User::getInstance()->hasAdminAccess()) {
+        e(lang('insufficient_privileges'));
+        echo json_encode(['success' => false, 'msg'=>getTemplateMsg()]);
+        die();
+    }
+    $subtitle_list = Subtitle::getVideoSubtitles($video);
     foreach ($subtitle_list as $subtitle) {
         if ($subtitle['title'] == $_POST['title']) {
             e(lang('subtitle_already_exists'));
@@ -3643,11 +3675,11 @@ function save_subtitle_ajax()
     if (!is_dir($subtitle_dir)) {
         mkdir($subtitle_dir, 0755, true);
     }
-    $num = (int)get_video_subtitle_last_num($video['videoid']);
+    $num = (int)Subtitle::getVideoSubtitleLastNum($video['videoid']);
     $display_count = str_pad((string)($num + 1), 2, '0', STR_PAD_LEFT);
-    $temp_file_path = $subtitle_dir . $video['file_name'] . '-' . $display_count . '.srt';
+    $temp_file_path = $subtitle_dir . $video['file_name'] . '-' . $display_count . '.' . Subtitle::getExtension();
 
-    if (pathinfo($_FILES['subtitles']['name'])['extension']!= 'srt') {
+    if (pathinfo($_FILES['subtitles']['name'])['extension']!= Subtitle::getExtension()) {
         e(lang('invalid_subtitle_extension'));
         $success = false;
     } elseif (!FFMpeg::isValidWebVTTWithFFmpeg($_FILES['subtitles']['tmp_name'], $video['duration'])) {
@@ -3666,7 +3698,7 @@ function save_subtitle_ajax()
     $response['success'] = $success;
     $response['msg'] = getTemplateMsg();
     if (!empty($_POST['is_for_upload'])) {
-        $subtitle_list = get_video_subtitles($video);
+        $subtitle_list = Subtitle::getVideoSubtitles($video);
         assign('videoid', $video['videoid']);
         assign('vstatus', $video['status']);
         assign('subtitle_list', $subtitle_list);
@@ -3698,6 +3730,32 @@ function getSQLRequestsFromFile($file)
 function upload_error($error)
 {
     echo json_encode(['error' => $error]);
+}
+
+/**
+ * @param string $type
+ * @param string $url
+ * @return bool
+ */
+function addErrorHandlerMessagesToSessionMessageHandler(string $type = 'all', string $url = ''): bool
+{
+    $messages = [];
+    if ($type == 'all' || $type == 'e') {
+        foreach (errorhandler::getInstance()->get_error() as $message) {
+            $messages[] = ['type' => 'e', 'message' => $message['secure'] ? display_clean($message['val']) : $message['val']];
+        }
+    }
+    if ($type == 'all' || $type == 'm') {
+        foreach (errorhandler::getInstance()->get_message() as $message) {
+            $messages[] = ['type' => 'm', 'message' => $message['secure'] ? display_clean($message['val']) : $message['val']];
+        }
+    }
+    if ($type == 'all' || $type == 'w') {
+        foreach (errorhandler::getInstance()->get_warning() as $message) {
+            $messages[] = ['type' => 'w', 'message' => $message['secure'] ? display_clean($message['val']) : $message['val']];
+        }
+    }
+    return SessionMessageHandler::add_messages($messages, $url);
 }
 
 include('functions_db.php');

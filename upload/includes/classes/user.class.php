@@ -189,28 +189,16 @@ class User extends Objects
         $this->search_limit = (int)config('users_items_search_page');
 
         $this->default_homepage_list = [
-            'homepage'
-            ,'my_account'
+            ['title' => 'homepage', 'disabled' => false],
+            ['title' => 'my_account', 'disabled' => false],
+            ['title' => 'videos', 'disabled' => (config('videosSection') != 'yes')],
+            ['title' => 'photos', 'disabled' => (config('photosSection') != 'yes')],
+            ['title' => 'collections', 'disabled' => (config('collectionsSection') != 'yes')],
+            ['title' => 'channels', 'disabled' => (config('channelsSection') != 'yes')]
         ];
 
-        if( config('videosSection') == 'yes' ){
-            $this->default_homepage_list[] = 'videos';
-
-            if( config('enable_public_video_page') == 'yes'){
-                $this->default_homepage_list[] = 'public_videos';
-            }
-        }
-
-        if( config('photosSection') == 'yes' ){
-            $this->default_homepage_list[] = 'photos';
-        }
-
-        if( config('collectionsSection') == 'yes' ){
-            $this->default_homepage_list[] = 'collections';
-        }
-
-        if( config('channelsSection') == 'yes' ){
-            $this->default_homepage_list[] = 'channels';
+        if (config('videosSection') == 'yes' && config('enable_public_video_page') == 'yes') {
+            $this->default_homepage_list[] = ['title' => 'public_videos', 'disabled' => false];
         }
 
         if( $user_id ){
@@ -399,6 +387,7 @@ class User extends Objects
 
         $param_category = $params['category'] ?? false;
         $param_join_flag = $params['join_flag'] ?? false;
+        $param_can_be_modified_by_current_user = $params['can_be_modified_by_current_user'] ?? false;
 
         $conditions = [];
         if( $param_userid ){
@@ -527,6 +516,19 @@ class User extends Objects
                 $join[] = '  INNER JOIN ' . cb_sql_table(UserLevel::getTableNameLevelPermissionValue()) . ' ON ' . UserLevel::getTableNameLevelPermissionValue() . '.user_level_id = ' . $this->getTableNameLevel() . '.user_level_id ';
                 $join[] = '  INNER JOIN ' . cb_sql_table(UserLevel::getTableNameLevelPermission()) . ' ON ' . UserLevel::getTableNameLevelPermissionValue() . '.id_user_levels_permission = ' . UserLevel::getTableNameLevelPermission() . '.id_user_levels_permission  
                 AND ' . UserLevel::getTableNameLevelPermission() . '.permission_name = \'enable_channel_page\' ';
+
+                if ($param_can_be_modified_by_current_user) {
+                    $select[] = 'has_right_to_edit.nb_diff';
+                    $join[] /** @lang MySQL */ = 'LEFT JOIN ( SELECT COUNT(USER_LEVELS_PERMISSIONS_VALUES_LOG_USER.permission_value) as nb_diff, ' . UserLevel::getTableNameLevelPermissionValue() . '.user_level_id
+                    FROM ' . cb_sql_table(UserLevel::getTableNameLevelPermissionValue()) . ' 
+                    LEFT JOIN cb_user_levels_permissions_values as USER_LEVELS_PERMISSIONS_VALUES_LOG_USER
+                    ON ' . UserLevel::getTableNameLevelPermissionValue() . '.id_user_levels_permission = USER_LEVELS_PERMISSIONS_VALUES_LOG_USER.id_user_levels_permission
+                                AND USER_LEVELS_PERMISSIONS_VALUES_LOG_USER.user_level_id = ' . User::getInstance()->getCurrentUserLevelID() . '
+                                AND USER_LEVELS_PERMISSIONS_VALUES_LOG_USER.permission_value != ' . UserLevel::getTableNameLevelPermissionValue() . '.permission_value AND ' . UserLevel::getTableNameLevelPermissionValue() . '.permission_value = \'yes\'
+                    GROUP BY  ' . UserLevel::getTableNameLevelPermissionValue() . '.user_level_id
+                    ) AS has_right_to_edit ON has_right_to_edit.user_level_id = ' . $this->getTableName() . '.level ';
+
+                }
             } else {
                 $is_channel_enable = '(' .   UserLevel::getTableNameLevelPermission() . '.enable_channel_page = \'yes\' AND ' . $this->getTableNameProfile() . '.disabled_channel != \'yes\')';
             }
@@ -642,6 +644,9 @@ class User extends Objects
         return UserLevel::hasPermissionOrRedirect($permission, $this->getCurrentUserLevelID(), $must_be_logged);
     }
 
+    /**
+     * @throws Exception
+     */
     public function isUserConnectedOrRedirect(): void
     {
         if (!$this->isUserConnected()) {
@@ -1016,15 +1021,26 @@ class User extends Objects
     }
 
     /**
-     * @return void
+     * @param $return
+     * @return string|void
      * @throws Exception
      */
-    public static function redirectAfterLogin(): void
+    public static function redirectAfterLoginOrError($return = 'redirect')
     {
         if ($_COOKIE['pageredir']) {
-            redirect_to($_COOKIE['pageredir']);
+            $url = $_COOKIE['pageredir'];
         } else {
-            redirect_to(User::getInstance()->getDefaultHomepageFromUserLevel());
+            if( BACK_END ){
+                $url = DirPath::getUrl('admin_area');
+            } else {
+                $url = User::getInstance()->getDefaultHomepageFromUserLevel();
+            }
+        }
+        if ($return == 'redirect') {
+            redirect_to($url);
+        }
+        if ($return == 'url') {
+            return $url;
         }
     }
 
@@ -1043,19 +1059,58 @@ class User extends Objects
             case 'homepage':
                 $link = '';
                 break;
+
             case 'public_videos':
-                $link = 'videos_public.php';
+                if (config('videosSection') != 'yes') {
+                    $link = '';
+                } else {
+                    $link = 'videos_public.php';
+                }
                 break;
+
             case 'my_account':
                 $link = 'myaccount.php';
                 break;
+
+            case 'videos':
+                if (config('videosSection') != 'yes') {
+                    $link = '';
+                } else {
+                    $link = 'videos.php';
+                }
+                break;
+
+            case 'photos':
+                if (config('photosSection') != 'yes') {
+                    $link = '';
+                } else {
+                    $link = 'photos.php';
+                }
+                break;
+
+            case 'collections':
+                if (config('collectionsSection') != 'yes') {
+                    $link = '';
+                } else {
+                    $link = 'collections.php';
+                }
+                break;
+
+            case 'channels':
+                if (config('channelsSection') != 'yes') {
+                    $link = '';
+                } else {
+                    $link = 'channels.php';
+                }
+                break;
+
             default:
                 $link = $default_hompepage . '.php';
         }
         return Network::get_server_url() . $link;
     }
 
-    public function getDefaultHomepageList()
+    public function getDefaultHomepageList(): array
     {
         return $this->default_homepage_list;
     }
@@ -1096,11 +1151,12 @@ class User extends Objects
         }
 
         $uid = $this->get('userid');
+        $anonymous_id = userquery::getInstance()->get_anonymous_user();
 
         // Delete reports on deleted user
         Flag::unFlagByElementId($uid, 'user');
         // reattribute reports by deleted user
-        Clipbucket_db::getInstance()->execute('UPDATE ' . tbl('flags') . ' SET userid=' . (int)$anonymous_id . ' WHERE userid=' . (int)$user_id);
+        Clipbucket_db::getInstance()->execute('UPDATE ' . tbl('flags') . ' SET userid=' . (int)$anonymous_id . ' WHERE userid=' . (int)$uid);
         // Delete categories
         Category::getInstance()->unlinkAll('user', $uid);
         // Delete tags
@@ -1336,7 +1392,7 @@ class User extends Objects
      * @return void
      * @throws Exception
      */
-    public function deleteUserRatings($user_id)
+    public function deleteUserRatings($user_id): void
     {
         if (!Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '117')) {
             throw new Exception(lang('cant_perform_action_until_app_fully_updated'));
@@ -4716,12 +4772,12 @@ class userquery extends CBCategory
     /**
      * Function will let admin to login as user
      *
-     * @param      $id
+     * @param int $id
      *
      * @return bool
      * @throws Exception
      */
-    function login_as_user($id): bool
+    function login_as_user(int $id): bool
     {
         $udetails = $this->get_user_details($id);
         if ($udetails) {
@@ -4737,13 +4793,9 @@ class userquery extends CBCategory
 
             //Error Logging
             if (!empty($msg)) {
-                //Logging Action
                 $log_array['success'] = 'no';
                 $log_array['details'] = $msg[0]['val'];
-                insert_log('login_as', [
-                    'success'=>'no',
-                    'details'=> $msg[0]['val']
-                ]);
+                insert_log('login_as', $log_array);
             }
         }
 
@@ -4758,14 +4810,14 @@ class userquery extends CBCategory
     function get_anonymous_user(): int
     {
         /*Added to resolve bug 222*/
-        $result = Clipbucket_db::getInstance()->select(tbl('users'), 'userid', " username='anonymous' AND email='anonymous@website'", '1');
+        $result = Clipbucket_db::getInstance()->select(tbl('users'), 'userid', ' username = \'anonymous\' AND email = \'anonymous@website\'', '1');
         if (isset($result[0]['userid'])) {
             return (int)$result[0]['userid'];
         }
 
         execute_sql_file(\DirPath::get('cb_install') . 'sql' .DIRECTORY_SEPARATOR . 'add_anonymous_user.sql');
 
-        $result = Clipbucket_db::getInstance()->select(tbl('users'), 'userid', " username='anonymous' AND email='anonymous@website'", '1');
+        $result = Clipbucket_db::getInstance()->select(tbl('users'), 'userid', ' username = \'anonymous\' AND email = \'anonymous@website\'', '1');
         return (int)$result[0]['userid'];
     }
 

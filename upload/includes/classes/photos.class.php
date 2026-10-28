@@ -408,7 +408,7 @@ class Photo extends Objects
             }
 
             /** USER */
-            $like_user = ' lower(users.username) LIKE \'' . $param_search . '\'';
+            $like_user = ' lower(users.username) LIKE \'' . mysql_clean($param_search) . '\'';
             $cond .= ' OR ' . $like_user;
             $order_search .= ', MAX(CASE WHEN ' . $like_user . ' THEN 1 ELSE 0 END ) DESC ';
 
@@ -1173,11 +1173,12 @@ class CBPhotos
     function photo_exists($id): bool
     {
         if (is_numeric($id)) {
-            $result = Clipbucket_db::getInstance()->select(tbl($this->p_tbl), 'photo_id', ' photo_id = ' . (int)$id);
+            $cond = ' photo_id = ' . (int)$id;
         } else {
-            $result = Clipbucket_db::getInstance()->select(tbl($this->p_tbl), 'photo_id', ' photo_key = \'' . $id . '\'');
+            $cond = ' photo_key = \'' . mysql_clean($id) . '\'';
         }
 
+        $result = Clipbucket_db::getInstance()->select(tbl($this->p_tbl), 'photo_id', $cond);
         if ($result) {
             return true;
         }
@@ -1195,9 +1196,9 @@ class CBPhotos
     function get_photo($pid)
     {
         if (is_numeric($pid)) {
-            $field = 'photo_id';
+            $where = 'photo_id = ' . (int)$pid;
         } else {
-            $field = 'photo_key';
+            $where = 'photo_key = \'' . mysql_clean($pid) . '\'';
         }
 
         $select_tag = '';
@@ -1211,9 +1212,9 @@ class CBPhotos
 
         $query = 'SELECT P.* '. $select_tag.'  
                     FROM ' . tbl($this->p_tbl) . ' AS P 
-                   '.$join_tag.'
-                    WHERE P.' . $field . ' = \'' . mysql_clean($pid) . '\'
-                    GROUP BY P.photo_id';
+                    ' . $join_tag . '
+                    WHERE P.' . $where . '
+                     GROUP BY P.photo_id';
 
         $result = Clipbucket_db::getInstance()->_select($query);
         if (count($result) > 0) {
@@ -1346,7 +1347,7 @@ class CBPhotos
             $cond .= $p['extra_cond'];
         }
 
-        if ($p['get_orphans'] || User::getInstance()->hasAdminAccess() || user_id() == ($p['user'] ?? 0)) {
+        if ($p['get_orphans'] || User::getInstance()->hasAdminAccess() || User::getInstance()->getCurrentUserID() == ($p['user'] ?? 0)) {
             $p['collection'] = '0';
         }
 
@@ -2075,7 +2076,7 @@ class CBPhotos
 
             $insert_id = Clipbucket_db::getInstance()->insert(tbl($this->p_tbl), $query_field, $query_val);
 
-            $photo = $this->get_photo($insert_id);
+            $photo = Photo::getInstance()->getOne(['photo_id'=> $insert_id]);
             Collection::getInstance()->addCollectionItem($insert_id, $array['collection_id'], 'photos');
 
             if (!$array['server_url'] || $array['server_url'] == 'undefined') {

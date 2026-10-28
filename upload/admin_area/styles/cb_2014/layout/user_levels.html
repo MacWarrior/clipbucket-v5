@@ -1,8 +1,11 @@
-<div class="heading">
-    <h2>User Levels</h2>
-</div>
 {if $view=='view'}
-    <a class="btn btn-primary btn-sm pull-right" href="?mode=add">Add New Level <b>+</b></a>
+    <div class="heading">
+        <h2>{lang('manage_x', strtolower(lang('user_levels')))}
+            {if $view=='view'}
+                <a class="btn btn-primary btn-sm pull-right" href="?mode=add">{lang('add_user_level')} <b>+</b></a>
+            {/if}
+        </h2>
+    </div>
     <br>
     <br>
     <table class="table table-bordered table-striped">
@@ -15,7 +18,7 @@
         </tr>
         {section name=l loop=$levels}
             <tr>
-                <td>{$levels[l].user_level_name}</td>
+                <td>{display_clean($levels[l].user_level_name)}</td>
                 <td>
                     <input name="user_level_active" data-id="{$levels[l].user_level_id}"{if $levels[l].user_level_active == 'yes'} checked{/if}{if $levels[l].user_level_is_default == 'yes'} disabled title="{lang('default_userlevel_cannot_be_disabled')}"{elseif in_array($levels[l].user_level_id, [3,4])} disabled="disabled" title="{lang('userlevel_cannot_be_disabled')}"{/if} type="checkbox" class="ace ace-switch ace-switch-5 user_level_active"/>
                     <span class="lbl"></span>
@@ -46,12 +49,20 @@
         {/section}
     </table>
 {elseif ($view=='edit' || $view=='add')}
+    <div class="heading">
+        {if $view == 'add'}
+            <h2>{lang('add_user_level')}</h2>
+        {else}
+            <h2>{lang('manage_x', strtolower(lang('user_levels')))}</h2>
+        {/if}
+
+    </div>
     <form method="post">
         <h3>User Level Details</h3>
         <div class="form-group">
             <div class="row">
                 <label for="level_name">Level name</label>
-                <input class="form-control" name="level_name" type="text" id="level_name" value="{$level_details.user_level_name}"/>
+                <input class="form-control" name="level_name" type="text" id="level_name" value="{display_clean($level_details.user_level_name)}"/>
             </div>
             {if Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.2', '87')}
                 <div class="row">
@@ -70,16 +81,17 @@
                     {if $perm.id_user_levels_permission !="" && $types[t].user_permission_type_id == $perm.id_user_permission_types }
                         <div class="col-md-4">
                             <div class="row">
-                                <div class="col-md-10 col-md-offset-1 myWell">
+                                <div class="col-md-12 col-md-offset-1 myWell">
                                     <div class="col-md-8 paddingTop">
                                         <strong>{lang($perm.permission_name)}</strong><br/>
                                         <small><em>{lang($perm.permission_description)}</em></small>
                                     </div>
                                     {if $perm.permission_name == 'default_homepage'}
                                         <div class="col-md-4 paddingTop">
-                                            <select name="permission_value[{$perm.id_user_levels_permission}]" >
+                                            <select name="permission_value[{$perm.id_user_levels_permission}]" required="required">
+                                                {if empty($perm.permission_value)}<option value=""></option>{/if}
                                                 {foreach from=User::getInstance()->getDefaultHomepageList() item=page}
-                                                    <option value="{$page}" {if $page== $perm.permission_value}selected="selected"{/if}>{lang($page)}</option>
+                                                    <option value="{$page.title}" {if $page.title == $perm.permission_value}selected="selected"{/if} {if $page.disabled}disabled="disabled"{/if}>{lang($page.title)} {if $page.disabled}({lang('disabled')}){/if}</option>
                                                 {/foreach}
                                             </select>
                                         </div>

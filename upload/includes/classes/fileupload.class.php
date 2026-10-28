@@ -227,6 +227,7 @@ class FileUpload
 
         if ($this->checkMimeType) {
             $extension = getExtMimeType($this->tempFilePath);
+            $this->fileExtension = $extension;
         }
         if (!in_array($extension, $this->allowedExtensions)) {
             $this->error(lang('wrong_image_extension',
