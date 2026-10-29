@@ -23,7 +23,7 @@
         <div class="row">
             <div class="col-md-6">
                 <div class="form-group">
-                    <label for="page_name">Page Code</label>
+                    <label for="page_name">{lang('page_code')}</label>
                     <input name="page_name" class="form-control" type="text" id="page_name" value="{display_clean($page.page_name)}"></td>
                 </div>
             </div>
@@ -31,7 +31,7 @@
         <div class="row">
             <div class="col-md-6">
                 <div class="form-group">
-                    <label for="page_title">Page Title</label>
+                    <label for="page_title">{lang('page_title')}</label>
                     {foreach from=$languages item=language}
                         <input type="text" style="display: {if $language.is_shown}block{else}none{/if}" name="page_title[{$language.language_id}]" id="page_title{$language.language_id}" class="form-control" value="{$page.page_titles[$language.language_id]}">
                     {/foreach}
@@ -39,7 +39,7 @@
             </div>
         </div>
         <div class="form-group col-md-12">
-            <label for="page_content">Page Content</label>
+            <label for="page_content">{lang('page_content')}</label>
             {foreach from=$languages item=language}
                 <textarea style="display: {if $language.is_shown}block{else}none{/if}" name="page_content[{$language.language_id}]" id="page_content{$language.language_id}" cols="8" rows="8" class="form-control">{$page.page_contents[$language.language_id]}</textarea>
             {/foreach}
@@ -50,45 +50,48 @@
     </form>
 {/if}
 {if $mode=='manage'}
-    <div class="heading">
-        <h2>{lang('manage_x', lang('pages')|lower)}</h2>
-    </div>
     <form name="page_form" action="?" method="post">
-        <div class="btn-group">
-            <input class="btn btn-primary btn-xs btn" type="submit" name="activate_selected" value="{lang code='activate'}"/>
-            <input class="btn btn-primary btn-xs btn" type="submit" name="deactivate_selected" value="{lang code='deactivate'}"/>
-            <input class="btn btn-primary btn-xs btn" type="submit" name="update_order" value="Update order"/>
-            <input class="btn btn-primary btn-xs btn" type="submit" name="delete_selected" value="{lang code='delete'}" onclick="return confirm_it('Are you sure you want to delete selected page(s)')"/>
+        <div class="heading clearfix">
+            <h2 class="pull-left">{lang('manage_x', lang('pages')|lower)}
+                <div class="btn-group">
+                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                        Action <span class="caret caret_margin"></span>
+                    </button>
+                    <ul class="dropdown-menu pull-right inputs" role="menu">
+                        <li><a href="?mode=new">{lang('add_new_page')}</a></li>
+                        <li><input type="submit" name="activate_selected" value="{lang code='activate'}"></li>
+                        <li><input type="submit" name="deactivate_selected" value="{lang code='deactivate'}"></li>
+                        <li><input type="submit" name="display_selected" value="{lang('display_in_footer')}"></li>
+                        <li><input type="submit" name="hide_selected" value="{lang('hide_from_footer')}"></li>
+                        <li><input type="submit" name="delete_selected" value="{lang code='delete'}" onclick="return _cb.confirm_it('Are you sure you want to delete selected page(s)')"></li>
+                    </ul>
+                </div>
+            </h2>
         </div>
-        <div class="form-group">
-            <input type="button" value="Create New Page +" class="btn btn-primary btn-sm pull-right" onClick="window.location='?mode=new'"/>
-        </div>
-        <br><br>
-        <table class="table table-bordered">
+        <div id="page_order_message" role="status"></div>
+        <table class="table table-bordered table-striped">
+            <thead>
             <tr>
                 <td width="30"><input type="checkbox" name="checkall" onclick="checkUncheckAll(this);"/></td>
-                <td width="50">Order</td>
                 <td class="head">Details</td>
                 <td width="120" align="center">Options</td>
             </tr>
 
-            {assign var = bgcolor value = ""}
+            </thead>
+            <tbody id="pages_sortable">
             {section name=list loop=$cbpages}
-                <tr class="video_opt_td" bgcolor="{$bgcolor}">
+                <tr class="video_opt_td page-sortable" data-page-id="{$cbpages[list].page_id}" style="cursor: move;">
                     <td width="30" align="center" valign="top" class="video_opt_td">
                         <input name="check_page[]" type="checkbox" id="check_video" value="{$cbpages[list].page_id}"/>
-                    </td>
-                    <td width="50" align="center" valign="top" class="video_opt_td">
-                        <input type="text" style="border: 1px solid rgb(153, 153, 153); padding: 2px; width: 30px;" value="{$cbpages[list].page_order}" name="page_ord_{$cbpages[list].page_id}"/>
                     </td>
                     <td valign="top" class="video_opt_td"
                         onmouseover="$('#vid_opt-{$cbpages[list].page_id}').show()"
                         onmouseout="$('#vid_opt-{$cbpages[list].page_id}').hide()" style="padding-left:10px">
-                        </a>
                         <div class="row">
                             <div class="col-md-10">
                                 <div class="row">
                                     <div class="col-md-3">
+                                        <span class="glyphicon glyphicon-move"></span>
                                         <a href="{cbpage::getInstance()->page_link($cbpages[list])}" target="_blank" style="text-indent:10px">
                                             {display_clean(cbpage::getInstance()->getPageTranslation($cbpages[list]['page_id'], null, true, 'title'))}</a>
                                     </div>
@@ -118,7 +121,7 @@
                             <button class="btn btn-primary btn-xs dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown">
                                 Actions <i class="caret"></i>
                             </button>
-                            <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+                            <ul class="dropdown-menu pull-right" role="menu" aria-labelledby="dropdownMenu1">
                                 <li role="presentation"><a role="menuitem" tabindex="-1" href="{cbpage::getInstance()->page_link($cbpages[list])}">{lang code='watch'}</a></li>
                                 <li role="presentation"><a role="menuitem" tabindex="-1" href="?mode=edit&pid={$cbpages[list].page_id}">{lang code='edit'}</a></li>
                                 {if $cbpages[list].active == yes}
@@ -130,34 +133,23 @@
                                     <li role="presentation"><a class="disabled" role="menuitem" tabindex="-1" href="#">{lang code='delete'}</a></li>
                                 {/if}
                                 {if $cbpages[list].display!='yes'}
-                                    <li role="presentation"><a role="menuitem" tabindex="-1" href="?display={$cbpages[list].page_id}">Display in footer</a></li>
+                                    <li role="presentation"><a role="menuitem" tabindex="-1" href="?display={$cbpages[list].page_id}">{lang('display_in_footer')}</a></li>
                                 {else}
-                                    <li role="presentation"><a role="menuitem" tabindex="-1" href="?hide={$cbpages[list].page_id}">Hide from footer</a></li>
+                                    <li role="presentation"><a role="menuitem" tabindex="-1" href="?hide={$cbpages[list].page_id}">{lang('hide_from_footer')}</a></li>
                                 {/if}
                             </ul>
                         </div>
                     </td>
                 </tr>
-                {if $bgcolor == ""}
-                    {assign var = bgcolor value = "#EEEEEE"}
-                {else}
-                    {assign var = bgcolor value = ""}
-                {/if}
-
             {/section}
+            </tbody>
         </table>
-
-        <div class="btn-group">
-            <input class="btn btn-primary btn-xs btn" type="submit" name="activate_selected" value="{lang code='activate'}"/>
-            <input class="btn btn-primary btn-xs btn" type="submit" name="deactivate_selected" value="{lang code='deactivate'}"/>
-            <input class="btn btn-primary btn-xs btn" type="submit" name="update_order" value="Update order"/>
-            <input class="btn btn-primary btn-xs btn" type="submit" name="delete_selected" value="{lang code='delete'}" onclick="return confirm_it('Are you sure you want to delete selected page(s)')"/>
-        </div>
 
     </form>
 {/if}
 <script>
     let errors = {
+        "page_order": '{lang_js('error_occured')}',
         "empty_page_name": '{lang_js('page_name_empty')}',
         "empty_page_title": '{lang_js('page_title_empty')}',
         "page_name_cant_have_space": '{lang_js('page_name_cant_have_space')}',

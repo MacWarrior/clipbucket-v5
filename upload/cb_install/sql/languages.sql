@@ -1973,4 +1973,10 @@ VALUES ('noted_x'),
        ('lang_name_too_long'),
        ('confirm_delete_users'),
        ('add_user'),
-       ('add_new_user');
+       ('add_new_user'),
+       ('add_new_page'),
+       ('display_in_footer'),
+       ('hide_from_footer'),
+       ('page_code'),
+       ('page_title'),
+       ('page_content');
