@@ -411,6 +411,10 @@ class FFMpeg
         if( !empty($this->video_files) && file_exists($this->output_file) && filesize($this->output_file) > 0 ){
             $conversion_status = 'completed';
             $video_status = 'Successful';
+            if ($this->conversion_type == 'mp4' && config('keep_audio_tracks') && Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '999')) {
+                $audio_file = $this->output_dir . $this->file_name . '-' . $this->video_files[0] . '.mp4';
+                VideoAudioTrack::insertFromFile($videoid, $audio_file);
+            }
         } else {
             $conversion_status = 'failed';
             $video_status = 'Failed';
@@ -801,7 +805,6 @@ class FFMpeg
                 $video_track_id = self::get_media_stream_id('video', $this->input_file);
                 $cmd .= ' -map 0:' . $video_track_id;
                 $audio_output_index = 0;
-                //TODO insert into video_audio_tracks table
                 // Making selected audio track the primary one
                 if ($this->audio_track >= 0) {
                     $cmd .= ' -map 0:' . $this->audio_track;
@@ -1145,6 +1148,16 @@ class FFMpeg
         $data = [];
         foreach ($tracks_json as $track) {
             if ($track['codec_type'] != $type) {
+                continue;
+            }
+
+            if ($type == 'audio') {
+                $tags = $track['tags'] ?? [];
+                $language = trim($tags['language'] ?? $tags['LANGUAGE'] ?? '');
+                $data[$track['index']] = [
+                    'language' => strtolower($language) == 'und' ? '' : $language,
+                    'title'    => trim($tags['title'] ?? '')
+                ];
                 continue;
             }
 

@@ -15,6 +15,38 @@ class VideoAudioTrack
     }
 
     /**
+     * @throws Exception
+     */
+    public static function insertFromFile(int $videoid, string $filepath): void
+    {
+        $existing_tracks = self::getAudioTracks($videoid);
+        $existing_numbers = array_column($existing_tracks, 'track_number');
+        $order = empty($existing_tracks) ? 0 : max(array_column($existing_tracks, 'order')) + 1;
+        $tracks = array_values(FFMpeg::get_track_infos($filepath, 'audio'));
+        $without_language = count(array_filter($tracks, function ($track) {
+            return $track['language'] == '';
+        }));
+
+        foreach ($tracks as $number => $track) {
+            if (in_array($number, $existing_numbers)) {
+                continue;
+            }
+
+            if ($track['language'] != '') {
+                $title = $track['language'];
+            } elseif ($without_language == 1) {
+                $title = 'original version';
+            } else {
+                $title = $track['title'] != '' ? $track['title'] : (string)$number;
+            }
+
+            $sql = 'INSERT IGNORE INTO ' . tbl(self::$tablename) . '(`videoid`, `track_number`, `title`, `order`) VALUES (' . $videoid . ', ' . $number . ', \'' . mysql_clean($title) . '\', ' . $order . ')';
+            Clipbucket_db::getInstance()->execute($sql);
+            $order++;
+        }
+    }
+
+    /**
      * @param $params
      * @return bool
      * @throws Exception

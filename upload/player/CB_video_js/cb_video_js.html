@@ -201,8 +201,7 @@
             {/literal}
         {/if}
         const video = cb_player_obj;
-        hasAudioTracksApi = false;
-        // hasAudioTracksApi = "audioTracks" in video;
+        hasAudioTracksApi = "audioTracks" in video;
         if ($('.warning_audio_api') && !hasAudioTracksApi) {
             $('.warning_audio_api').removeClass('hidden');
         }
