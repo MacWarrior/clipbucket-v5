@@ -127,7 +127,7 @@
                                     <li role="presentation"><a role="menuitem" tabindex="-1" href="?activate={$cbpages[list].page_id}">{lang code='activate'}</a></li>
                                 {/if}
                                 {if $cbpages[list].delete_able =='yes'}
-                                    <li role="presentation"><a class="disabled" role="menuitem" tabindex="-1" href="#">{lang code='delete'}</a></li>
+                                    <li role="presentation"><a role="menuitem" tabindex="-1" href="?delete={$cbpages[list].page_id}">{lang code='delete'}</a></li>
                                 {/if}
                                 {if $cbpages[list].display!='yes'}
                                     <li role="presentation"><a role="menuitem" tabindex="-1" href="?display={$cbpages[list].page_id}">Display in footer</a></li>

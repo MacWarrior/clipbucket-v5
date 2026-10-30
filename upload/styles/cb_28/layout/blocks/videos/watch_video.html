@@ -10,8 +10,8 @@
         </span>
     {/if}
     {if config('audio_api_notification') == 'yes' && $video.file_type == 'mp4' && count(VideoAudioTrack::getAudioTracks($video.videoid)) > 1}
-        <span class="label label-warning hidden warning_audio_api" style="font-size:1em;">
-            {lang('audio_api_notification', '<a href="'|cat:'">'|cat:lang('here')|cat:'</a>')}
+        <span class="label label-warning hidden warning_audio_api" style="font-size:1em;display:table;margin:0 auto 10px;white-space:normal;">
+            {lang('audio_api_notification', '<a href="'|cat:cbpage::getInstance()->page_link(cbpage::getInstance()->getPageFromName('activate_audio_api'))|cat:'">'|cat:lang('here')|cat:'</a>')}
         </span>
     {/if}
     <div id="cb_player" class="cb_player no_select"{$aspect_ratio}>

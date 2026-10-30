@@ -1977,5 +1977,4 @@ VALUES ('noted_x'),
        ('config_audio_api_notification'),
        ('config_audio_api_notification_hint'),
        ('audio_api_notification'),
-       ('here'),
        ('video_audio_track_list_management');
