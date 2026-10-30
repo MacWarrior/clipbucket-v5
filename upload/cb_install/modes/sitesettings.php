@@ -46,9 +46,7 @@
             $arr_cli=[];
             $current_datetime_cli = System::get_php_cli_config('CurrentDatetime');
             if (!System::isDateTimeSynchro($arr) || !System::isDateTimeSynchro($arr,$current_datetime_cli)) {
-                $query = /** @lang MySQL */'SELECT timezones.timezone FROM '.cb_sql_table('timezones').' ORDER BY timezones.timezone';
-                $rs = Clipbucket_db::getInstance()->_select($query);
-                $allTimezone = array_column($rs, 'timezone');?>
+                $allTimezone = timezone_identifiers_list();?>
                 <div class="field">
                     <label  for="timezone"><?php echo lang('option_timezone'); ?></label>
                     <select class="form-control check_timezone has-error"  required name="timezone" id="timezone" style="display:inline-block;">

@@ -1090,13 +1090,6 @@ CREATE TABLE IF NOT EXISTS `{tbl_prefix}tmdb_search_result`
 ALTER TABLE `{tbl_prefix}tmdb_search_result`
     ADD CONSTRAINT `search_result` FOREIGN KEY (`id_tmdb_search`) REFERENCES `{tbl_prefix}tmdb_search` (`id_tmdb_search`) ON DELETE CASCADE ON UPDATE CASCADE;
 
-CREATE TABLE IF NOT EXISTS `{tbl_prefix}timezones` (
-   `id` INT AUTO_INCREMENT PRIMARY KEY,
-   `timezone` VARCHAR(255) NOT NULL UNIQUE
-) ENGINE = InnoDB
-DEFAULT CHARSET = utf8mb4
-COLLATE utf8mb4_unicode_520_ci;
-
 CREATE TABLE IF NOT EXISTS `{tbl_prefix}users_storage_histo`
 (
     `id_user`       BIGINT   NOT NULL,
