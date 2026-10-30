@@ -279,6 +279,11 @@ function display_subtitle_list($data): void
     assign('subtitle_list', $data);
     echo templateWithMsgJson('blocks/subtitle_list.html');
 }
+function display_audio_track_list($data): void
+{
+    assign('audio_track_list', $data);
+    echo templateWithMsgJson('blocks/audio_track_list.html');
+}
 
 function display_tmdb_result($data, $videoid): void
 {

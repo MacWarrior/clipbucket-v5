@@ -67,7 +67,7 @@ class cbpage
     /**
      * @throws Exception
      */
-    private function getMaxPageOrder(): int
+    public function getMaxPageOrder(): int
     {
         $result = Clipbucket_db::getInstance()->select(tbl($this->page_tbl), 'MAX(page_order)+1 AS max_page_order');
         if (count($result) > 0) {
@@ -97,6 +97,28 @@ class cbpage
                 , ' '.$this->page_tbl.'.page_id =' . (int)$id
             );
         }
+        if (count($result) > 0) {
+            return $result[0];
+        }
+        return false;
+    }
+
+    /**
+     * @param string $name
+     * @param bool $with_translations
+     * @return false|mixed
+     * @throws Exception
+     */
+    public function getPageFromName(string $name, bool $with_translations = false)
+    {
+        $tables = cb_sql_table($this->page_tbl);
+        $fields = $this->page_tbl . '.*';
+        if ($with_translations && Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '184')) {
+            $tables .= ' LEFT JOIN ' . cb_sql_table('pages_translations') . ' ON ' . $this->page_tbl . '.page_id = pages_translations.page_id AND pages_translations.language_id = ' . Language::getInstance()->lang_id;
+            $fields .= ', CASE WHEN pages_translations.page_content != \'\' THEN pages_translations.page_content ELSE (SELECT page_content FROM '.tbl('pages_translations').' WHERE page_id = '.$this->page_tbl .'.page_id AND page_content != \'\' limit 1) END as page_content
+            , CASE WHEN pages_translations.page_title != \'\' THEN pages_translations.page_title ELSE (SELECT page_title FROM '.tbl('pages_translations').' WHERE page_id = '.$this->page_tbl .'.page_id AND page_title != \'\' limit 1) END as page_title, pages_translations.language_id';
+        }
+        $result = Clipbucket_db::getInstance()->select($tables, $fields, ' '.$this->page_tbl.'.page_name like \'' . display_clean($name) . '\'', '0,1' );
         if (count($result) > 0) {
             return $result[0];
         }
@@ -161,7 +183,6 @@ class cbpage
         $limit = null;
         $conds = [];
         $join = '';
-        $cond = false;
         if (isset($params['order'])) {
             $order = $params['order'];
         }
@@ -175,6 +196,9 @@ class cbpage
 
         if (isset($params['display_only'])) {
             $conds[] = ' display=\'yes\' ';
+        }
+        if (isset($params['page_name'])) {
+            $conds[] = ' page_name like \'' . display_clean($params['page_name']) . '\'';
         }
         $select = $this->page_tbl. '.*';
 

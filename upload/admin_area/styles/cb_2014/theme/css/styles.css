@@ -1489,3 +1489,21 @@ li:has(.category-name){
     margin-bottom: 6px;
     background: #f5fbff;
 }
+
+.drag-handle {
+    cursor: grab;
+}
+
+.ligne-placeholder {
+    height: 45px;
+    background: #eee;
+    border: 2px dashed #999;
+}
+
+.ui-sortable-helper {
+    display: table;
+}
+
+#manageAudioTracks tbody tr {
+    position: relative;
+}

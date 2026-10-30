@@ -1973,4 +1973,8 @@ VALUES ('noted_x'),
        ('lang_name_too_long'),
        ('confirm_delete_users'),
        ('add_user'),
-       ('add_new_user');
+       ('add_new_user'),
+       ('config_audio_api_notification'),
+       ('config_audio_api_notification_hint'),
+       ('audio_api_notification'),
+       ('video_audio_track_list_management');
