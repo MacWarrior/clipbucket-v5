@@ -1,6 +1,6 @@
 {
   "version":"5.5.3",
-  "revision":"221",
+  "revision":"222",
   "status":"stable",
   "detail":[
     {
@@ -129,6 +129,7 @@
         ,"Fix password reset form (<i>#895</i>)"
         ,"Fix error message on unauthorized video access (<i>#904</i>)"
         ,"Fix video orders"
+        ,"Fix photo upload (<i>#910</i>)"
       ]
     },
     {
