@@ -1976,5 +1976,4 @@ VALUES ('noted_x'),
        ('add_new_user'),
        ('collection_delete_successfully'),
        ('option_enable_collection_poster'),
-       ('option_enable_collection_backdrop'),
-       ('collection_delete_successfully');
+       ('option_enable_collection_backdrop');

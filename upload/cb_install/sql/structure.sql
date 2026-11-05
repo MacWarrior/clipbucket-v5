@@ -67,7 +67,10 @@ CREATE TABLE `{tbl_prefix}collections` (
   `sort_type` INT NULL,
   `total_rate_up` INT NOT NULL DEFAULT 0,
   `total_rate_down` INT NOT NULL DEFAULT 0,
-  `default_thumbnail` INT NULL
+  `default_thumbnail` INT NULL,
+  `default_poster` INT NULL,
+  `default_backdrop` INT NULL,
+  `use_backdrop_as_default_thumb` ENUM('yes', 'no') NOT NULL DEFAULT 'no'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_520_ci;
 
 CREATE TABLE `{tbl_prefix}collection_items` (
@@ -1429,7 +1432,7 @@ CREATE TABLE IF NOT EXISTS `{tbl_prefix}collection_image` (
 );
 
 ALTER TABLE `{tbl_prefix}collection_image`
-    ADD CONSTRAINT `collection_image_ibfk_1` FOREIGN KEY (collection_id) REFERENCES `{tbl_prefix}collections` (collection_id)
+    ADD CONSTRAINT `collection_image_ibfk_1` FOREIGN KEY (collection_id) REFERENCES `{tbl_prefix}collections` (collection_id);
 
 CREATE TABLE IF NOT EXISTS `{tbl_prefix}collection_thumb` (
     id_collection_thumb INT                NOT NULL AUTO_INCREMENT PRIMARY KEY,
@@ -1442,4 +1445,11 @@ CREATE TABLE IF NOT EXISTS `{tbl_prefix}collection_thumb` (
     UNIQUE KEY `collection_image_resolution` (id_collection_image, width, height, is_original_size)
 );
 ALTER TABLE `{tbl_prefix}collection_thumb`
-    ADD CONSTRAINT `collection_thumb_ibfk_1` FOREIGN KEY (collection_id) REFERENCES `{tbl_prefix}collections` (collection_id) ON DELETE NO ACTION ON UPDATE NO ACTION;
+    ADD CONSTRAINT `collection_thumb_image_ibfk_1` FOREIGN KEY (id_collection_image) REFERENCES `{tbl_prefix}collection_image` (id_collection_image) ON DELETE NO ACTION ON UPDATE NO ACTION;
+ALTER TABLE `{tbl_prefix}collections`
+    ADD CONSTRAINT `collection_default_thumb_ibfk_1` FOREIGN KEY (default_thumbnail) REFERENCES `{tbl_prefix}collection_image` (id_collection_image) ON DELETE SET NULL;
+ALTER TABLE `{tbl_prefix}collections`
+    ADD CONSTRAINT `collection_default_poster_ibfk_1` FOREIGN KEY (default_poster) REFERENCES `{tbl_prefix}collection_image` (id_collection_image) ON DELETE SET NULL;
+ALTER TABLE `{tbl_prefix}collections`
+    ADD CONSTRAINT `collection_default_backdrop_ibfk_1` FOREIGN KEY (default_backdrop) REFERENCES `{tbl_prefix}collection_image` (id_collection_image) ON DELETE SET NULL;
+

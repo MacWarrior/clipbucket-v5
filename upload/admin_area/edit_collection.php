@@ -64,6 +64,60 @@ if (isset($_POST['update_collection'], $_POST['default_thumb']) && !error()) {
     ]);
 }
 
+if (CollectionThumbs::isTypeAllowed($collection, 'poster')) {
+    if (isset($_POST['update_collection'], $_POST['default_poster']) && !error()) {
+        try {
+            $default_poster = filter_var($_POST['default_poster'], FILTER_VALIDATE_INT, ['options' => ['min_range' => 1]]);
+            if (!$default_poster) {
+                throw new Exception(lang('technical_error'));
+            }
+            if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '999')) {
+                CollectionThumbs::setDefaultImage((int)$id, $default_poster, 'poster');
+            } else {
+                e('Sorry, you cannot perform this action until the application has been fully updated by an administrator');
+            }
+        } catch (Exception $exception) {
+            e($exception->getMessage());
+        }
+    }
+    $collection['default_poster'] = CollectionThumbs::getDefaultImageId((int)$id, 'poster');
+    $posters = [];
+    foreach (CollectionThumbs::getAll(['collection_id' => $id, 'type' => 'poster']) as $image) {
+        $posters[] = [
+            'thumb_id' => $image['id_collection_image'],
+            'thumb'    => CollectionThumbs::getImageFile($image, 90)
+        ];
+    }
+    assign('vidthumbs_poster', $posters);
+}
+
+if (CollectionThumbs::isTypeAllowed($collection, 'backdrop')) {
+    if (isset($_POST['update_collection'], $_POST['default_backdrop']) && !error()) {
+        try {
+            $default_backdrop = filter_var($_POST['default_backdrop'], FILTER_VALIDATE_INT, ['options' => ['min_range' => 1]]);
+            if (!$default_backdrop) {
+                throw new Exception(lang('technical_error'));
+            }
+            if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '999')) {
+                CollectionThumbs::setDefaultImage((int)$id, $default_backdrop, 'backdrop');
+            } else {
+                e('Sorry, you cannot perform this action until the application has been fully updated by an administrator');
+            }
+        } catch (Exception $exception) {
+            e($exception->getMessage());
+        }
+    }
+    $collection['default_backdrop'] = CollectionThumbs::getDefaultImageId((int)$id, 'backdrop');
+    $backdrops = [];
+    foreach (CollectionThumbs::getAll(['collection_id' => $id, 'type' => 'backdrop']) as $image) {
+        $backdrops[] = [
+            'thumb_id' => $image['id_collection_image'],
+            'thumb'    => CollectionThumbs::getImageFile($image, 168)
+        ];
+    }
+    assign('vidthumbs_backdrop', $backdrops);
+}
+
 $custom_thumbs = CollectionThumbs::getAll([
     'collection_id' => $collection['collection_id'],
     'type'          => 'thumbnail'

@@ -40,7 +40,7 @@ class MWIP extends \Migration
             is_original_size BOOL DEFAULT FALSE NOT NULL,
             UNIQUE KEY `collection_image_resolution` (id_collection_image, width, height, is_original_size)
         )');
-        self::alterTable('ALTER TABLE `{tbl_prefix}collection_thumb` ADD CONSTRAINT `collection_thumb_image_ibfk_1` FOREIGN KEY (id_collection_image) REFERENCES `{tbl_prefix}collection_image` (id_collection_image)', [
+        self::alterTable('ALTER TABLE `{tbl_prefix}collection_thumb` ADD CONSTRAINT `collection_thumb_image_ibfk_1` FOREIGN KEY (id_collection_image) REFERENCES `{tbl_prefix}collection_image` (id_collection_image) ON DELETE NO ACTION ON UPDATE NO ACTION', [
             'table'  => 'collection_image',
             'column' => 'id_collection_image'
         ], [
@@ -66,10 +66,47 @@ class MWIP extends \Migration
             ]
         ]);
 
+        self::alterTable('ALTER TABLE `{tbl_prefix}collections` ADD COLUMN `default_poster` INT NULL', [
+            'table' => 'collections'
+        ], [
+            'table'  => 'collections',
+            'column' => 'default_poster'
+        ]);
+        self::alterTable('ALTER TABLE `{tbl_prefix}collections` ADD CONSTRAINT `collection_default_poster_ibfk_1` FOREIGN KEY (default_poster) REFERENCES `{tbl_prefix}collection_image` (id_collection_image) ON DELETE SET NULL', [
+            'table'  => 'collection_image',
+            'column' => 'id_collection_image'
+        ], [
+            'constraint' => [
+                'type' => 'FOREIGN KEY',
+                'name' => 'collection_default_poster_ibfk_1'
+            ]
+        ]);
+
+        self::alterTable('ALTER TABLE `{tbl_prefix}collections` ADD COLUMN `default_backdrop` INT NULL', [
+            'table' => 'collections'
+        ], [
+            'table'  => 'collections',
+            'column' => 'default_backdrop'
+        ]);
+        self::alterTable('ALTER TABLE `{tbl_prefix}collections` ADD CONSTRAINT `collection_default_backdrop_ibfk_1` FOREIGN KEY (default_backdrop) REFERENCES `{tbl_prefix}collection_image` (id_collection_image) ON DELETE SET NULL', [
+            'table'  => 'collection_image',
+            'column' => 'id_collection_image'
+        ], [
+            'constraint' => [
+                'type' => 'FOREIGN KEY',
+                'name' => 'collection_default_backdrop_ibfk_1'
+            ]
+        ]);
+
+        self::alterTable("ALTER TABLE `{tbl_prefix}collections` ADD COLUMN `use_backdrop_as_default_thumb` ENUM('yes', 'no') NOT NULL DEFAULT 'no'", [
+            'table' => 'collections'
+        ], [
+            'table'  => 'collections',
+            'column' => 'use_backdrop_as_default_thumb'
+        ]);
+
         self::generateConfig('enable_collection_poster', 'no');
         self::generateConfig('enable_collection_backdrop', 'no');
-        self::generateConfig('collection_tmdb_get_backdrop', 'no');
-        self::generateConfig('collection_tmdb_get_poster', 'no');
         self::generateTranslation('option_enable_collection_poster', [
             'fr'=>'Activer les affiches pour les collections',
             'en'=>'Enable collection posters'

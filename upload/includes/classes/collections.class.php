@@ -66,6 +66,12 @@ class Collection extends Objects
             $this->fields[] = 'voters';
         }
 
+        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '999')) {
+            $this->fields[] = 'default_backdrop';
+            $this->fields[] = 'default_poster';
+            $this->fields[] = 'use_backdrop_as_default_thumb';
+        }
+
         $this->fields_items = [
             'ci_id'
             ,'collection_id'
@@ -88,6 +94,22 @@ class Collection extends Objects
             'public' => lang('collect_borad_pub')
             ,'private' => lang('collect_broad_pri')
         ];
+    }
+
+    /**
+     * Check whether a collection uses its default backdrop as its thumbnail.
+     *
+     * @param array $data
+     * @return bool
+     */
+    public static function getUseBackdropDefault(array $data): bool
+    {
+        if (!Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '999')) {
+            return false;
+        }
+        return config('enable_collection_backdrop') == 'yes'
+            && !empty($data['default_backdrop'])
+            && ($data['use_backdrop_as_default_thumb'] ?? 'no') == 'yes';
     }
 
     public function getBroadcastOptions(): array
@@ -1671,6 +1693,20 @@ class Collections extends CBCategory
             ];
         }
 
+        if (config('enable_collection_backdrop') == 'yes' && Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '999')) {
+            $return['use_backdrop_as_default_thumb'] = [
+                'type'              => 'checkboxv2',
+                'id'                => 'use_backdrop_as_default_thumb',
+                'name'              => 'use_backdrop_as_default_thumb',
+                'value'             => 'yes',
+                'label'             => lang('use_backdrop_as_default_thumb'),
+                'checked'           => $default['use_backdrop_as_default_thumb'] ?? 'no',
+                'db_field'          => 'use_backdrop_as_default_thumb',
+                'required'          => 'no',
+                'validate_function' => 'yes_or_no'
+            ];
+        }
+
         $return['public_upload'] = [
             'title'             => lang('collect_allow_public_up'),
             'class'             => 'form-control',
@@ -2367,11 +2403,6 @@ class Collections extends CBCategory
             return false;
         }
 
-        if (!empty($col_data['thumb_objectid'])) {
-            $object_id = $col_data['thumb_objectid'];
-        } else {
-            $object_id = Collection::assignDefaultThumb($col_data['collection_id']);
-        }
         if (!$size || $size == 's') {
             $width = 168;
             $height = 105;
@@ -2383,6 +2414,24 @@ class Collections extends CBCategory
                 $width = '416';
                 $height = '260';
             }
+        }
+        if (Collection::getUseBackdropDefault($col_data)) {
+            $image = CollectionThumbs::getOne([
+                'collection_id'       => $col_data['collection_id'],
+                'id_collection_image' => $col_data['default_backdrop'],
+                'type'                => 'backdrop'
+            ]);
+            if (!empty($image)) {
+                $thumb = CollectionThumbs::getImageFile($image, $width);
+                if (!empty($thumb)) {
+                    return $thumb;
+                }
+            }
+        }
+        if (!empty($col_data['thumb_objectid'])) {
+            $object_id = $col_data['thumb_objectid'];
+        } else {
+            $object_id = Collection::assignDefaultThumb($col_data['collection_id']);
         }
         if ($object_id == -1) {
             $thumb = CollectionThumbs::getThumbFile($col_data['collection_id'], $width);

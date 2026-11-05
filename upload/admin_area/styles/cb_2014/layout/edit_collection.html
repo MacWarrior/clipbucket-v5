@@ -10,10 +10,10 @@
             <ul class="dropdown-menu pull-right" role="menu">
                 <li><a href="{DirPath::getUrl('admin_area')}manage_items.php?collection={$data.collection_id}&amp;type={$data.type}">{lang code='manage_items'}</a></li>
                 <li><a href="{DirPath::getUrl('admin_area')}manage_thumb_collection.php?collection={$data.collection_id}&amp;type=thumbnail">{lang('manage_x', lang('thumbs'))}</a></li>
-                {if $data.type == 'videos' && config('enable_collection_poster') == 'yes'}
+                {if config('enable_collection_poster') == 'yes'}
                     <li><a href="{DirPath::getUrl('admin_area')}manage_thumb_collection.php?collection={$data.collection_id}&amp;type=poster">{lang('manage_x', lang('posters'))}</a></li>
                 {/if}
-                {if $data.type == 'videos' && config('enable_collection_backdrop') == 'yes'}
+                {if config('enable_collection_backdrop') == 'yes'}
                     <li><a href="{DirPath::getUrl('admin_area')}manage_thumb_collection.php?collection={$data.collection_id}&amp;type=backdrop">{lang('manage_x', lang('backdrop'))}</a></li>
                 {/if}
                 {if $data.featured == 'yes'}
@@ -80,6 +80,16 @@
                     <li>
                         <a data-toggle="tab" href="#default_thumb"><i class="glyphicon glyphicon-picture"></i>&nbsp;{lang('default_thumb')}</a>
                     </li>
+                    {if config('enable_collection_poster') == 'yes'}
+                        <li>
+                            <a data-toggle="tab" href="#posters"><i class="glyphicon glyphicon-picture"></i>&nbsp;{lang('default_x', lang('poster'))|ucfirst}</a>
+                        </li>
+                    {/if}
+                    {if config('enable_collection_backdrop') == 'yes'}
+                        <li>
+                            <a data-toggle="tab" href="#backdrops"><i class="glyphicon glyphicon-picture"></i>&nbsp;{lang('default_x', lang('backdrop'))|ucfirst}</a>
+                        </li>
+                    {/if}
                 </ul>
                 <div class="tab-content">
                     <div id="cldetails" class="tab-pane active">
@@ -185,6 +195,20 @@
                             </ul>
                         </div>
                     </div>
+                    {if config('enable_collection_poster') == 'yes'}
+                        <div id="posters" class="tab-pane">
+                            {include file="$style_dir/blocks/poster_mini_list.html"}
+                        </div>
+                    {/if}
+                    {if config('enable_collection_backdrop') == 'yes'}
+                        <div id="backdrops" class="tab-pane">
+                            {if !empty($otherFields['use_backdrop_as_default_thumb'])}
+                                {$formObj->createField($otherFields['use_backdrop_as_default_thumb'])}
+                                <hr/>
+                            {/if}
+                            {include file="$style_dir/blocks/backdrop_mini_list.html"}
+                        </div>
+                    {/if}
                     <br>
                     <div class="row">
                         <legend>Collection Stats</legend>
@@ -224,6 +248,9 @@
                     <div id="fields" class="tab-pane in active">
                         <div class="form-group">
                             {foreach from=$otherFields item=field}
+                                {if $field.id == 'use_backdrop_as_default_thumb'}
+                                    {continue}
+                                {/if}
                                 {if $field.id == 'hierarchy_featured'}
                                     <div class="switch-inline">
                                         <label class="label label-danger" style="margin-top: 4px !important;" for="{$field.id}">{$field.title} :</label>{if $field.hint_icon}<span class="fa fa-question-circle tips" style="margin-left: 5px;" title="{$field.hint_icon}"></span> {/if}

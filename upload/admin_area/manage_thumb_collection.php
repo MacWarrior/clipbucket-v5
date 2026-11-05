@@ -60,6 +60,9 @@ if (isset($_POST['upload_thumbs'])) {
                     'error'    => $files['error'][$key]
                 ], $type);
                 if ($image_id) {
+                    if (($type == 'poster' || $type == 'backdrop') && !CollectionThumbs::getDefaultImageId($collection_id, $type)) {
+                        CollectionThumbs::setDefaultImage($collection_id, $image_id, $type);
+                    }
                     $uploaded = true;
                 }
             }

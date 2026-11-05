@@ -289,6 +289,22 @@
     color: #703970;
 }
 
+.myTable .last .select2-container,
+.myTable .last .select2-container span{
+    border-bottom: none;
+}
+
+.myTable .last .select2-container,
+.myTable .last .select2-container .selection,
+.myTable .last .select2-container .dropdown-wrapper{
+    padding-left: 0;
+}
+
+.myTable .last .select2-container .select2-selection--single{
+    position: relative;
+    border-bottom: solid 1px #aaa;
+}
+
 .myTable .first label{
     color: #576373;
     background-color: #EDF3F4;
