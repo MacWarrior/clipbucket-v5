@@ -209,16 +209,18 @@
                     <div id="fields" class="tab-pane in active">
                         <div class="form-group">
                             {foreach from=$otherFields item=field}
-                                {if $field.id == 'hierarchy_featured'}
+                                {if $field.id == 'hierarchy_featured' || $field.id == 'sub_item_featured' || $field.id == 'sub_collection_featured'}
                                     <div class="switch-inline">
-                                        <label class="label label-danger" style="margin-top: 4px !important;" for="{$field.id}">{$field.title} :</label>{if $field.hint_icon}<span class="fa fa-question-circle tips" style="margin-left: 5px;" title="{$field.hint_icon}"></span> {/if}
+                                        <label class="label label-danger" for="{$field.id}">{$field.title} :</label>{if $field.hint_icon}<span class="fa fa-question-circle tips" title="{$field.hint_icon}"></span> {/if}
                                         {$formObj->createField($field)}
                                     </div>
                                 {else}
-                                    <label class="label label-danger" for="{$field.id}">{$field.title} :</label>{if $field.hint_icon}<span class="fa fa-question-circle tips" style="margin-left: 5px;" title="{$field.hint_icon}"></span> {/if}
-                                    {$field.hint_1}<br/>
-                                    {$formObj->createField($field)}<br/>
-                                    {$field.hint_2}
+                                    <div class="collection-field">
+                                        <label class="label label-danger" for="{$field.id}">{$field.title} :</label>{if $field.hint_icon}<span class="fa fa-question-circle tips" style="margin-left: 5px;" title="{$field.hint_icon}"></span> {/if}
+                                        {$field.hint_1}<br/>
+                                        {$formObj->createField($field)}<br/>
+                                        {$field.hint_2}
+                                    </div>
                                 {/if}
                             {/foreach}
                         </div>
