@@ -89,5 +89,42 @@ class MWIP extends \Migration
             'table'  => 'collections',
             'column' => 'external_ratings'
         ]);
+
+        self::generateConfig('enable_get_collection_title_from_tmdb', 'yes');
+        self::generateConfig('enable_get_collection_description_from_tmdb', 'yes');
+        self::generateConfig('enable_search_tmdb', 'no');
+        self::generateConfig('enable_search_tmdb_fo', 'no');
+        self::generateConfig('enable_get_collection_poster_from_tmdb', 'no');
+        self::generateConfig('enable_get_collection_backdrop_from_tmdb', 'no');
+        self::generateConfig('enable_get_collection_genre_from_tmdb', 'no');
+
+        self::generateTranslation('option_enable_get_collection_title_from_tmdb', [
+            'fr'=>'Récupérer le titre depuis TMDB'
+            ,'en'=>'Get title from TMDB'
+        ]);
+        self::generateTranslation('option_enable_get_collection_description_from_tmdb', [
+            'fr'=>'Récupérer le titre depuis TMDB'
+            ,'en'=>'Get description from TMDB'
+        ]);
+        self::generateTranslation('option_enable_search_tmdb', [
+            'fr'=>'Activer la recherche TMDB'
+            ,'en'=>'Enable TMDB search'
+        ]);
+        self::generateTranslation('option_enable_search_tmdb_fo', [
+            'fr'=>'Activer la recherche TMDB sur lr front office'
+            ,'en'=>'Enable TMDB search on front end'
+        ]);
+        self::generateTranslation('option_enable_get_collection_poster_from_tmdb', [
+            'fr'=>'Récupérer les affiches depuis TMDB'
+            ,'en'=>'Get posters from TMDB'
+        ]);
+        self::generateTranslation('option_enable_get_collection_backdrop_from_tmdb', [
+            'fr'=>'Récupérer les décors depuis TMDB'
+            ,'en'=>'Get backdrops from TMDB'
+        ]);
+        self::generateTranslation('option_enable_get_collection_genre_from_tmdb', [
+            'fr'=>'Récupérer les genre depuis TMDB'
+            ,'en'=>'Get genre from TMDB'
+        ]);
     }
 }
