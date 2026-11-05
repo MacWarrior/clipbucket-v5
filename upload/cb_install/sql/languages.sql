@@ -1977,4 +1977,7 @@ VALUES ('noted_x'),
        ('display_in_footer'),
        ('hide_from_footer'),
        ('selected_page_hidden'),
-       ('selected_page_displayed');
+       ('selected_page_displayed'),
+       ('collection_delete_successfully'),
+       ('option_enable_collection_poster'),
+       ('option_enable_collection_backdrop');

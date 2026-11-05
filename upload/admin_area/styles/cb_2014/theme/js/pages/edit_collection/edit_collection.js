@@ -1,6 +1,20 @@
 $(document).ready(function(){
     init_tags('collection_tags', available_tags);
 
+    $('#collection_id_parent').select2({
+        width: 'element'
+    });
+
+    $('.poster li').on('click', function () {
+        $('.poster li.selected').removeClass('selected');
+        $(this).addClass('selected');
+    });
+
+    $('.backdrop li').on('click', function () {
+        $('.backdrop li.selected').removeClass('selected');
+        $(this).addClass('selected');
+    });
+
     $('.del_cmt').on('click', function () {
         var id = $(this).data('id');
         deleteComment(id);

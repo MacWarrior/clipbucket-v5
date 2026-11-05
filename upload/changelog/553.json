@@ -1,6 +1,6 @@
 {
   "version":"5.5.3",
-  "revision":"226",
+  "revision":"227",
   "status":"stable",
   "detail":[
     {
@@ -86,6 +86,7 @@
         ,"Implement video rating display"
         ,"Implement categories as submenus"
         ,"Implement custom thumbnails upload before the end of video conversion"
+        ,"Implement collection custom thumbnails, backdrop & posters"
         ,"Update media rating"
         ,"Update collection management"
         ,"Update TMDB search interface"
