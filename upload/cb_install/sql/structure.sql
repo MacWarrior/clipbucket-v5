@@ -1417,3 +1417,16 @@ CREATE TABLE IF NOT EXISTS `{tbl_prefix}pages_translations`
 ALTER TABLE `{tbl_prefix}pages_translations`
     ADD CONSTRAINT `pages_translations_ibfk_1` FOREIGN KEY (`page_id`) REFERENCES `{tbl_prefix}pages` (`page_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
     ADD CONSTRAINT `pages_translations_ibfk_2` FOREIGN KEY (`language_id`) REFERENCES `{tbl_prefix}languages` (`language_id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+CREATE TABLE IF NOT EXISTS `{tbl_prefix}video_audio_tracks`
+(
+    `videoid`      BIGINT(20)  NOT NULL,
+    `track_number` TINYINT     NULL,
+    `title`        VARCHAR(64) NOT NULL,
+    `order`        TINYINT     NOT NULL,
+    PRIMARY KEY (`videoid`, `track_number`)
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8mb4
+  COLLATE utf8mb4_unicode_520_ci;
+ALTER TABLE `{tbl_prefix}video_audio_tracks`
+    ADD CONSTRAINT `video_audio_tracks_ibfk_1` FOREIGN KEY (`videoid`) REFERENCES `{tbl_prefix}video` (`videoid`) ON DELETE RESTRICT ON UPDATE NO ACTION;

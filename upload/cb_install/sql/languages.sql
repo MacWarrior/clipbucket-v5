@@ -1977,4 +1977,8 @@ VALUES ('noted_x'),
        ('display_in_footer'),
        ('hide_from_footer'),
        ('selected_page_hidden'),
-       ('selected_page_displayed');
+       ('selected_page_displayed'),
+       ('config_audio_api_notification'),
+       ('config_audio_api_notification_hint'),
+       ('audio_api_notification'),
+       ('video_audio_track_list_management');
