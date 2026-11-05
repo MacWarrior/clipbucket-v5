@@ -1979,8 +1979,6 @@ VALUES ('noted_x'),
        ('selected_page_hidden'),
        ('selected_page_displayed'),
        ('add_new_page'),
-       ('display_in_footer'),
-       ('hide_from_footer'),
        ('page_code'),
        ('page_title'),
        ('page_content');
