@@ -1,6 +1,6 @@
 {
   "version":"5.5.3",
-  "revision":"221",
+  "revision":"223",
   "status":"stable",
   "detail":[
     {
@@ -31,7 +31,7 @@
         ,"Update manage tags type filter"
         ,"Update interfaces display when medias are disabled"
         ,"Update comments display on reports & stats"
-        ,"Update Manage videos actions display"
+        ,"Update Manage videos & manage pages actions display"
         ,"Update mass upload cache usage"
         ,"Add links to flagged tags"
         ,"Hide poster & backdrop tabs when empty on video edition page"
@@ -129,6 +129,7 @@
         ,"Fix password reset form (<i>#895</i>)"
         ,"Fix error message on unauthorized video access (<i>#904</i>)"
         ,"Fix video orders"
+        ,"Fix photo upload (<i>#910</i>)"
       ]
     },
     {
