@@ -349,15 +349,7 @@ assign('cron_copy_paste', $cron_line ?? '');
 
 assign('is_there_conversion_lock', FFMpeg::isThereAnyConversionLocks());
 
-$allTimezone = [];
-if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '99')) {
-    $query = /** @lang MySQL */
-        'SELECT timezones.timezone
-                            FROM ' . cb_sql_table('timezones') . '
-                            ORDER BY timezones.timezone';
-    $rs = Clipbucket_db::getInstance()->_select($query);
-    $allTimezone = array_column($rs, 'timezone');
-}
+$allTimezone = timezone_identifiers_list();
 assign('allTimezone', $allTimezone);
 
 $min_suffixe = System::isInDev() ? '' : '.min';
