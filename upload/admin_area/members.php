@@ -220,10 +220,11 @@ $page = mysql_clean($_GET['page']);
 $get_limit = create_query_limit($page, config('admin_pages'));
 
 $params = [
-    'not_userid' => $anonymous_id
-    ,'limit'      => $get_limit
-    ,'order'      => 'doj DESC'
-    ,'join_flag'  => true
+    'not_userid'                       => $anonymous_id
+    ,'limit'                           => $get_limit
+    ,'order'                           => 'doj DESC'
+    ,'join_flag'                       => true
+    ,'can_be_modified_by_current_user' => true
 ];
 if (isset($_GET['search'])) {
     $params['userid']   = $_GET['userid'] ?? false;
@@ -237,15 +238,6 @@ if (isset($_GET['search'])) {
 }
 
 $users = User::getInstance()->getAll($params);
-
-// TODO : Implement super-admin flag on user_levels
-if (User::getInstance()->get('level') > 1) {
-    foreach ($users as $key => $currentUser) {
-        if ($currentUser['level'] == 1) {
-            unset($users[$key]);
-        }
-    }
-}
 Assign('users', $users);
 
 if( empty($users) ){
@@ -283,6 +275,11 @@ $cat_array = [
     'category_type'    => 'user'
 ];
 assign('cat_array', $cat_array);
+
+$min_suffixe = System::isInDev() ? '' : '.min';
+ClipBucket::getInstance()->addAdminJS([
+    'pages/members/members' . $min_suffixe . '.js' => 'admin',
+]);
 
 subtitle(lang('manage_x', strtolower(lang('users'))));
 template_files('members.html');

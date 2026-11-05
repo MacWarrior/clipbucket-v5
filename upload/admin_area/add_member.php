@@ -9,13 +9,19 @@ pages::getInstance()->page_redir();
 /* Generating breadcrumb */
 global $breadcrumb;
 $breadcrumb[0] = ['title' => lang('users'), 'url' => ''];
-$breadcrumb[1] = ['title' => 'Add Member', 'url' => DirPath::getUrl('admin_area') . 'add_member.php'];
+$breadcrumb[1] = ['title' => lang('manage_x', strtolower(lang('users'))), 'url' => DirPath::getUrl('admin_area') . 'members.php'];
+$breadcrumb[2] = ['title' => ucfirst(lang('add_user')), 'url' => DirPath::getUrl('admin_area') . 'add_member.php'];
 
 if (isset($_POST['add_member'])) {
-    if (userquery::getInstance()->signup_user($_POST)) {
-        sessionMessageHandler::add_message(lang('new_mem_added'), 'm',  DirPath::getUrl('admin_area') . 'members.php');
+    if (UserLevel::canUserEditUserLevel($_POST['level'])) {
+        if (userquery::getInstance()->signup_user($_POST)) {
+            sessionMessageHandler::add_message(lang('new_mem_added'), 'm', DirPath::getUrl('admin_area') . 'members.php');
+        }
+    } else {
+        e(lang('cannot_access_page'), 'w');
     }
 }
+assign('levels', UserLevel::getAll(['can_be_modified_by_current_user'=>true, 'no_anonymous'=>true]));
 
 $min_suffixe = System::isInDev() ? '' : '.min';
 ClipBucket::getInstance()->addAdminJS(['pages/add_member/add_member'.$min_suffixe.'.js' => 'admin']);
@@ -26,6 +32,6 @@ if( Language::getInstance()->getLang() != 'en'){
 ClipBucket::getInstance()->addAdminJS(['jquery_plugs/datepicker'.$datepicker_js_lang.'.js' => 'global']);
 ClipBucket::getInstance()->addAdminCSS(['jquery_ui/jquery_ui' . $min_suffixe . '.css' => 'libs']);
 
-subtitle('Add New Member');
+subtitle(lang('add_new_user'));
 template_files('add_members.html');
 display_it();

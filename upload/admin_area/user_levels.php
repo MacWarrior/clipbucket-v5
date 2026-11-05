@@ -24,7 +24,7 @@ if (!User::getInstance()->hasPermission('allow_manage_user_level') && userquery:
 }
 
 $mode = $_GET['mode'];
-$user_level_id = mysql_clean($_GET['lid']);
+$user_level_id = (int)$_GET['lid'];
 $action = mysql_clean($_GET['action']);
 
 //Deleting Level
@@ -73,7 +73,7 @@ switch ($mode) {
         $level_perms = UserLevel::getAllPermissions(['user_level_id' => $user_level_id]);
 
         $breadcrumb[] = [
-            'title' => lang('editing_template', display_clean(display_clean($levelDetails['user_level_name']))),
+            'title' => lang('editing_template', display_clean($levelDetails['user_level_name'])),
             'url'   => DirPath::getUrl('admin_area') . 'user_levels.php?mode=edit&lid=' . display_clean($user_level_id)
         ];
 

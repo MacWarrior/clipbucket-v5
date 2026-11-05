@@ -1213,8 +1213,8 @@ class CBPhotos
         $query = 'SELECT P.* '. $select_tag.'  
                     FROM ' . tbl($this->p_tbl) . ' AS P 
                     ' . $join_tag . '
-                    WHERE P.' . $where .
-                    'GROUP BY P.photo_id';
+                    WHERE P.' . $where . '
+                     GROUP BY P.photo_id';
 
         $result = Clipbucket_db::getInstance()->_select($query);
         if (count($result) > 0) {
@@ -2076,7 +2076,7 @@ class CBPhotos
 
             $insert_id = Clipbucket_db::getInstance()->insert(tbl($this->p_tbl), $query_field, $query_val);
 
-            $photo = $this->get_photo($insert_id);
+            $photo = Photo::getInstance()->getOne(['photo_id'=> $insert_id]);
             Collection::getInstance()->addCollectionItem($insert_id, $array['collection_id'], 'photos');
 
             if (!$array['server_url'] || $array['server_url'] == 'undefined') {

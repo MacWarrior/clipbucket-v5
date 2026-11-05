@@ -7,6 +7,9 @@ if (empty($_GET['type'])) {
     redirect_to(DirPath::getUrl('admin_area'));
 }
 $type = $_GET['type'] ;
+if (!in_array($type, Flag::getFlagElementTypes())) {
+    SessionMessageHandler::add_message(lang('unknown_type'), 'w', DirPath::getUrl('admin_area'));
+}
 $right = Flag::getPermissionByType($type);
 User::getInstance()->hasPermissionOrRedirect($right,true);
 

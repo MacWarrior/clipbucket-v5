@@ -2087,7 +2087,7 @@ class CBvideo extends CBCategory
      * @param $vdetails
      * @throws Exception
      */
-    function remove_thumbs($vdetails)
+    function remove_thumbs($vdetails): void
     {
         $video_images = VideoThumbs::getAll(['videoid' => $vdetails['videoid']]);
         foreach ($video_images as $video_image) {
@@ -2103,7 +2103,7 @@ class CBvideo extends CBCategory
      * @param $vdetails
      * @throws Exception
      */
-    function remove_log($vdetails)
+    function remove_log($vdetails): void
     {
         $str = $vdetails['file_directory'] . DIRECTORY_SEPARATOR;
         $file1 = DirPath::get('logs') . $str . $vdetails['file_name'] . '.log';
