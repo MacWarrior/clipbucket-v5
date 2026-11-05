@@ -3,7 +3,7 @@
         <input type="hidden" value="{$selected_lang}" name="selected_lang" id="selected_lang"/>
         <div class="row">
             <div class="col-md-6" style="padding-left: 0;">
-                <h2 class="pull-left paddingLeftLarge" >{if $mode == 'new'}{lang('add_new_page')}{else}{lang('editing_template', '')}<small>&gt; {display_clean(cbpage::getInstance()->getPageTranslation($page['page_id'], null, true, 'title'))}</small>{/if}</h2>
+                <h2 class="pull-left paddingLeftLarge" >{if $mode == 'new'}{lang('new_page')}{else}{lang('editing_template', '')}<small>&gt; {display_clean(cbpage::getInstance()->getPageTranslation($page['page_id'], null, true, 'title'))}</small>{/if}</h2>
             </div>
             <div class="col-md-6" style="text-align: right;">
                 <span style="font-size: 16px;">{lang('translations')} : </span>
@@ -33,7 +33,7 @@
                 <div class="form-group">
                     <label for="page_title">{lang('page_title')}</label>
                     {foreach from=$languages item=language}
-                        <input type="text" style="display: {if $language.is_shown}block{else}none{/if}" name="page_title[{$language.language_id}]" id="page_title{$language.language_id}" class="form-control" value="{$page.page_titles[$language.language_id]}">
+                        <input type="text" style="display: {if $language.is_shown}block{else}none{/if}" name="page_title[{$language.language_id}]" id="page_title{$language.language_id}" class="form-control" value="{display_clean($page.page_titles[$language.language_id])}">
                     {/foreach}
                 </div>
             </div>
@@ -55,15 +55,16 @@
             <h2 class="pull-left">{lang('manage_x', lang('pages')|lower)}
                 <div class="btn-group">
                     <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-                        Action <span class="caret caret_margin"></span>
+                        Actions <span class="caret caret_margin"></span>
                     </button>
                     <ul class="dropdown-menu pull-right inputs" role="menu">
-                        <li><a href="?mode=new">{lang('add_new_page')}</a></li>
-                        <li><input type="submit" name="activate_selected" value="{lang code='activate'}"></li>
-                        <li><input type="submit" name="deactivate_selected" value="{lang code='deactivate'}"></li>
-                        <li><input type="submit" name="display_selected" value="{lang('display_in_footer')}"></li>
-                        <li><input type="submit" name="hide_selected" value="{lang('hide_from_footer')}"></li>
-                        <li><input type="submit" name="delete_selected" value="{lang code='delete'}" onclick="return _cb.confirm_it('Are you sure you want to delete selected page(s)')"></li>
+                        <li><a href="{DirPath::getUrl('admin_area')}manage_pages.php?mode=new" >{lang('new_page')}</a></li>
+                        <li><input  type="submit" name="activate_selected" value="{lang code='activate'}"/></li>
+                        <li><input  type="submit" name="deactivate_selected" value="{lang code='deactivate'}"/></li>
+                        <li><input  type="submit" name="update_order" value="Update order"/></li>
+                        <li><input  type="submit" name="delete_selected" value="{lang code='delete'}" onclick="return confirm_it('Are you sure you want to delete selected page(s)')"/></li>
+                        <li><input  type="submit" name="hide_selected" value="{lang('hide_from_footer')}"/></li>
+                        <li><input  type="submit" name="display_selected" value="{lang('display_in_footer')}"/></li>
                     </ul>
                 </div>
             </h2>

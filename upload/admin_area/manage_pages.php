@@ -37,12 +37,14 @@ if (isset($_GET['delete'])) {
 if (isset($_GET['display'])) {
     $pid = mysql_clean($_GET['display']);
     cbpage::getInstance()->page_actions('display', $pid);
+    e(lang('page_display_changed'), 'm');
 }
 
 //Hiding
 if (isset($_GET['hide'])) {
     $pid = mysql_clean($_GET['hide']);
     cbpage::getInstance()->page_actions('hide', $pid);
+    e(lang('page_display_changed'), 'm');
 }
 
 if (isset($_POST['activate_selected']) && is_array($_POST['check_page'])) {
@@ -75,23 +77,22 @@ if (isset($_POST['delete_selected']) && is_array($_POST['check_page'])) {
     }
 }
 
-if (isset($_POST['display_selected']) && is_array($_POST['check_page'] ?? null)) {
+if (isset($_POST['display_selected']) && is_array($_POST['check_page'])) {
     foreach($_POST['check_page'] as $id){
         cbpage::getInstance()->page_actions('display', $id);
     }
     if( !error() && !warning() ) {
         errorhandler::getInstance()->flush();
-        e('Selected pages are now displayed in footer', 'm');
+        e(lang('selected_page_displayed'), 'm');
     }
 }
-
-if (isset($_POST['hide_selected']) && is_array($_POST['check_page'] ?? null)) {
+if (isset($_POST['hide_selected']) && is_array($_POST['check_page'])) {
     foreach($_POST['check_page'] as $id){
         cbpage::getInstance()->page_actions('hide', $id);
     }
     if( !error() && !warning() ) {
         errorhandler::getInstance()->flush();
-        e('Selected pages are now hidden from footer', 'm');
+        e(lang('selected_page_hidden'), 'm');
     }
 }
 
@@ -131,7 +132,8 @@ if (empty($mode) || $mode == 'view') {
         }
         $breadcrumb[2] = ['title' => lang('edit_page')];
     } else {
-        $breadcrumb[2] = ['title' => lang('add_new_page')];
+        $page = [];
+        $breadcrumb[2] = ['title' => lang('new_page')];
     }
 
     assign('languages', cbpage::getPageTranslationFlags($page));
