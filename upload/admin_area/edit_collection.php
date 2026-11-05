@@ -44,7 +44,7 @@ if (isset($_POST['update_collection'], $_POST['default_thumb']) && !error()) {
             throw new Exception(lang('technical_error'));
         }
         if (preg_match('/^custom_([1-9][0-9]*)$/', $default_thumb, $matches)) {
-            if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '999')) {
+            if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '227')) {
                 CollectionThumbs::setDefaultImage((int)$id, (int)$matches[1]);
             } else {
                 e('Sorry, you cannot perform this action until the application has been fully updated by an administrator');
@@ -71,7 +71,7 @@ if (CollectionThumbs::isTypeAllowed($collection, 'poster')) {
             if (!$default_poster) {
                 throw new Exception(lang('technical_error'));
             }
-            if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '999')) {
+            if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '227')) {
                 CollectionThumbs::setDefaultImage((int)$id, $default_poster, 'poster');
             } else {
                 e('Sorry, you cannot perform this action until the application has been fully updated by an administrator');
@@ -98,7 +98,7 @@ if (CollectionThumbs::isTypeAllowed($collection, 'backdrop')) {
             if (!$default_backdrop) {
                 throw new Exception(lang('technical_error'));
             }
-            if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '999')) {
+            if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '227')) {
                 CollectionThumbs::setDefaultImage((int)$id, $default_backdrop, 'backdrop');
             } else {
                 e('Sorry, you cannot perform this action until the application has been fully updated by an administrator');

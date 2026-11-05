@@ -41,7 +41,7 @@ assign('translation_type', $translation_type);
 
 
 if (isset($_POST['upload_thumbs'])) {
-    if (!Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '999')) {
+    if (!Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '227')) {
         e('Sorry, you cannot perform this action until the application has been fully updated by an administrator');
     } else {
         $files = $_FILES['collection_thumb'] ?? [];

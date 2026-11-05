@@ -66,7 +66,7 @@ class Collection extends Objects
             $this->fields[] = 'voters';
         }
 
-        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '999')) {
+        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '227')) {
             $this->fields[] = 'default_backdrop';
             $this->fields[] = 'default_poster';
             $this->fields[] = 'use_backdrop_as_default_thumb';
@@ -104,7 +104,7 @@ class Collection extends Objects
      */
     public static function getUseBackdropDefault(array $data): bool
     {
-        if (!Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '999')) {
+        if (!Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '227')) {
             return false;
         }
         return config('enable_collection_backdrop') == 'yes'
@@ -1718,7 +1718,7 @@ class Collections extends CBCategory
             ];
         }
 
-        if (config('enable_collection_backdrop') == 'yes' && Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '999')) {
+        if (config('enable_collection_backdrop') == 'yes' && Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '227')) {
             $return['use_backdrop_as_default_thumb'] = [
                 'type'              => 'checkboxv2',
                 'id'                => 'use_backdrop_as_default_thumb',

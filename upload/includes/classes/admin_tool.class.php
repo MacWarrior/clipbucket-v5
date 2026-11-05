@@ -510,7 +510,7 @@ class AdminTool
                 unset($photo_thumbs);
 
                 //COLLECTION THUMBS
-                if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '999')) {
+                if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '227')) {
                     foreach (['thumbnail', 'poster', 'backdrop'] as $type) {
                         $collection_thumbs = new GlobIterator(DirPath::get('thumbs') . 'collection' . DIRECTORY_SEPARATOR . '[0-9]*' . DIRECTORY_SEPARATOR . $type . DIRECTORY_SEPARATOR . '[0-9]*' . DIRECTORY_SEPARATOR . '*.' . $extension);
                         foreach ($collection_thumbs as $thumb) {

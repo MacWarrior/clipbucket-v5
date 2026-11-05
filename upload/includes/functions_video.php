@@ -1544,7 +1544,7 @@ function clean_orphan_files($file): string
             break;
 
         case 'collection_thumb':
-            if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '999')) {
+            if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '227')) {
                 $query = 'SELECT collection_id FROM ' . tbl('collections') . ' WHERE collection_id = ' . (int)$file['collection'];
                 $filename = $file['collection'];
                 if (config('cache_enable') == 'yes') {

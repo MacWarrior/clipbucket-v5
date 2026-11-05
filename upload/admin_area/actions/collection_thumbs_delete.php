@@ -5,7 +5,7 @@ require_once dirname(__FILE__, 3) . '/includes/admin_config.php';
 
 User::getInstance()->hasPermissionAjax('collection_moderation');
 
-if (!Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '999')) {
+if (!Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '227')) {
     e('Sorry, you cannot perform this action until the application has been fully updated by an administrator');
     echo json_encode(['success' => false, 'msg' => getTemplateMsg()]);
     die();

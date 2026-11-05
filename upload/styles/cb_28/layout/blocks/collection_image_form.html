@@ -22,10 +22,10 @@
         <div class="row" style="margin-left: 5px; margin-right: 5px;">
             <h5><label for="new_collection_{$image_type}">{lang("upload_{$image_type}")}</label></h5>
             <input name="collection_{$image_type}[]" id="new_collection_{$image_type}" type="file" accept="image/*"
-                {if !Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '999')} disabled="disabled"{/if}/>
+                {if !Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '227')} disabled="disabled"{/if}/>
             <div class="form-group pull-right">
                 <input type="submit" name="update_collection" value="{lang code='upload'}" class="btn btn-primary btn-sm"
-                    {if !Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '999')} disabled="disabled" title="{lang('cant_perform_action_until_app_fully_updated')}"{/if}/>
+                    {if !Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '227')} disabled="disabled" title="{lang('cant_perform_action_until_app_fully_updated')}"{/if}/>
             </div>
         </div>
     </div>

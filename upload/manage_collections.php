@@ -132,7 +132,7 @@ switch ($mode) {
             }
             if (isset($_POST['update_collection']) && !error()) {
                 try {
-                    if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '999')) {
+                    if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '227')) {
                         $files = $_FILES['collection_' . $image_type] ?? [];
                         if (!empty($files['name']) && is_array($files['name'])) {
                             foreach ($files['name'] as $key => $name) {

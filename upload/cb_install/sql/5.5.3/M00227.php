@@ -4,7 +4,7 @@ namespace V5_5_3;
 
 require_once \DirPath::get('classes') . DIRECTORY_SEPARATOR . 'migration' . DIRECTORY_SEPARATOR . 'migration.class.php';
 
-class MWIP extends \Migration
+class M00227 extends \Migration
 {
     /**
      * @throws \Exception
@@ -28,7 +28,6 @@ class MWIP extends \Migration
                 'name' => 'collection_image_ibfk_1'
             ]
         ]);
-
 
         self::query('CREATE TABLE IF NOT EXISTS `{tbl_prefix}collection_thumb` (
             id_collection_thumb INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
