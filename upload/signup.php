@@ -45,7 +45,7 @@ if (isset($_POST['signup'])) {
             assign('udetails', $udetails);
             if (empty(ClipBucket::getInstance()->configs['email_verification'])) {
                 // login user and redirect to home page
-                userquery::getInstance()->login_as_user($udetails['userid']);
+                userquery::getInstance()->login_as_user((int)$udetails['userid']);
                 header('Location: ' . DirPath::getUrl('root'));
             } else {
                 assign('mode', 'signup_success');

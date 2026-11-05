@@ -73,7 +73,7 @@ switch ($mode) {
         $level_perms = UserLevel::getAllPermissions(['user_level_id' => $user_level_id]);
 
         $breadcrumb[] = [
-            'title' => lang('editing_template', display_clean(display_clean($levelDetails['user_level_name']))),
+            'title' => lang('editing_template', display_clean($levelDetails['user_level_name'])),
             'url'   => DirPath::getUrl('admin_area') . 'user_levels.php?mode=edit&lid=' . display_clean($user_level_id)
         ];
 
