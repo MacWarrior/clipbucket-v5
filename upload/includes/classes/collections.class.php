@@ -677,6 +677,7 @@ class Collection extends Objects
         }
         return $items[0];
     }
+
     /**
      * @throws Exception
      */
