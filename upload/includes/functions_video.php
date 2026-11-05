@@ -1543,6 +1543,23 @@ function clean_orphan_files($file): string
             }
             break;
 
+        case 'collection_thumb':
+            if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '999')) {
+                $query = 'SELECT collection_id FROM ' . tbl('collections') . ' WHERE collection_id = ' . (int)$file['collection'];
+                $filename = $file['collection'];
+                if (config('cache_enable') == 'yes') {
+                    $redis_type_key = 'collection';
+                    $cache_lookup_key = $redis_key_prefix . ':' . $redis_type_key . ':' . md5($filename);
+                    $result = CacheRedis::getInstance()->get($cache_lookup_key);
+                }
+                if (empty($result)) {
+                    $result = Clipbucket_db::getInstance()->_select($query);
+                }
+            } else {
+                return '';
+            }
+            break;
+
         case 'userfeeds':
             $query = 'SELECT userid FROM ' . tbl('users') . ' WHERE userid = ' . (int)$file['user'];
             $filename = $file['user'];
@@ -1648,6 +1665,11 @@ function clean_orphan_files($file): string
         case 'video_thumb':
             unlink($full_path);
             $stop_path = DirPath::get('thumbs') . 'video' . DIRECTORY_SEPARATOR;
+            break;
+
+        case 'collection_thumb':
+            unlink($full_path);
+            $stop_path = DirPath::get('thumbs') . 'collection';
             break;
 
         case 'subtitle':

@@ -101,17 +101,81 @@ switch ($mode) {
             redirect_to(cblink(['name' => 'my_account']));
         }
 
+        $collection = Collection::getInstance()->getOne([
+            'collection_id'         => $collection_id,
+            'hide_empty_collection' => 'no'
+        ]);
+        if (empty($collection)) {
+            SessionMessageHandler::add_message(lang('collection_not_exist'), 'e', DirPath::getUrl('root') . 'manage_collections.php');
+            break;
+        }
+        if (!Collections::getInstance()->is_collection_owner($collection, user_id()) && !User::getInstance()->hasAdminAccess()) {
+            SessionMessageHandler::add_message(lang('cant_edit_collection'), 'e', DirPath::getUrl('root') . 'manage_collections.php');
+            break;
+        }
+
         if (isset($_POST['update_collection'])) {
+            $_POST['collection_id'] = $collection['collection_id'];
             Collections::getInstance()->update_collection($_POST);
             if (isset($_POST['default_thumb'])) {
                 Collection::getInstance()->setDefautThumb($_POST['default_thumb'], $collection_id);
             }
         }
 
-        $collection = Collection::getInstance()->getOne(['collection_id' => $collection_id]);
+        $collection = Collection::getInstance()->getOne(['collection_id' => $collection_id, 'hide_empty_collection' => 'no']);
         if (empty($collection)) {
             SessionMessageHandler::add_message(lang('collection_not_exist'), 'e', DirPath::getUrl('root') . 'manage_collections.php');
         }
+        foreach (['poster', 'backdrop'] as $image_type) {
+            if (!CollectionThumbs::isTypeAllowed($collection, $image_type)) {
+                continue;
+            }
+            if (isset($_POST['update_collection']) && !error()) {
+                try {
+                    if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '999')) {
+                        $files = $_FILES['collection_' . $image_type] ?? [];
+                        if (!empty($files['name']) && is_array($files['name'])) {
+                            foreach ($files['name'] as $key => $name) {
+                                if (($files['error'][$key] ?? UPLOAD_ERR_NO_FILE) == UPLOAD_ERR_NO_FILE) {
+                                    continue;
+                                }
+                                if (!is_uploaded_file($files['tmp_name'][$key] ?? '')) {
+                                    e(lang('error_uploading_thumb'));
+                                    continue;
+                                }
+                                $image_id = CollectionThumbs::importImage($collection, [
+                                    'name'     => $name,
+                                    'tmp_name' => $files['tmp_name'][$key],
+                                    'error'    => $files['error'][$key]
+                                ], $image_type);
+                                if ($image_id && !CollectionThumbs::getDefaultImageId((int)$collection_id, $image_type)) {
+                                    CollectionThumbs::setDefaultImage((int)$collection_id, $image_id, $image_type);
+                                }
+                            }
+                        }
+                        if (isset($_POST['default_' . $image_type])) {
+                            $default_image = filter_var($_POST['default_' . $image_type], FILTER_VALIDATE_INT, ['options' => ['min_range' => 1]]);
+                            if (!$default_image) {
+                                throw new Exception(lang('technical_error'));
+                            }
+                            CollectionThumbs::setDefaultImage((int)$collection_id, $default_image, $image_type);
+                        }
+                    } else {
+                        if (isset($_POST['default_' . $image_type]) || !empty($_FILES['collection_' . $image_type]['name'][0])) {
+                            e(lang('cant_perform_action_until_app_fully_updated'));
+                        }
+                    }
+                } catch (Exception $exception) {
+                    e($exception->getMessage());
+                }
+            }
+            $collection['default_' . $image_type] = CollectionThumbs::getDefaultImageId((int)$collection_id, $image_type);
+            assign('collection_' . $image_type . 's', CollectionThumbs::getAll([
+                'collection_id' => $collection_id,
+                'type'          => $image_type
+            ]));
+        }
+
         $items = Collection::getInstance()->getItemRecursivly(['collection_id' => $collection['collection_id']]);
         if ($collection['type'] == 'videos') {
             foreach ($items as &$item) {
@@ -130,7 +194,7 @@ switch ($mode) {
         assign('fields', $reqFields);
         assign('other_fields', $otherFields);
         assign('c', $collection);
-
+        assign('custom_thumb', CollectionThumbs::getThumbFile($collection['collection_id']));
         subtitle(lang('edit_collection'));
         break;
 

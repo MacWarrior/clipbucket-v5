@@ -1973,7 +1973,10 @@ VALUES ('noted_x'),
        ('lang_name_too_long'),
        ('confirm_delete_users'),
        ('add_user'),
-       ('add_new_user');
+       ('add_new_user'),
+       ('collection_delete_successfully'),
+       ('option_enable_collection_poster'),
+       ('option_enable_collection_backdrop');
 INSERT INTO `{tbl_prefix}languages_keys` (`language_key`)
 VALUES ('tmdb_choose'),
        ('tmdb_back'),
