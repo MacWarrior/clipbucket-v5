@@ -11,7 +11,7 @@ if (isset($_POST['update_collection'])) {
     Collections::getInstance()->update_collection();
 }
 
-//Performing Actionsf
+//Performing Actions
 if ($_GET['mode'] != '') {
     Collections::getInstance()->collection_actions($_GET['mode'], $id);
 }

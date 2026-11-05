@@ -1986,7 +1986,7 @@ class Collections extends CBCategory
     function is_collection_owner($cdetails, $userid = null): bool
     {
         if ($userid == null) {
-            $userid = user_id();
+            $userid = User::getInstance()->getCurrentUserID();
         }
 
         if (!is_array($cdetails)) {
@@ -2173,7 +2173,7 @@ class Collections extends CBCategory
                 e(lang('you_not_logged_in'));
             } elseif (!$this->collection_exists($cid)) {
                 e(lang('collect_not_exist'));
-            } elseif (!$this->is_collection_owner($cid, user_id()) && !User::getInstance()->hasAdminAccess()) {
+            } elseif (!$this->is_collection_owner($cid, User::getInstance()->getCurrentUserID()) && !User::getInstance()->hasAdminAccess()) {
                 e(lang('cant_edit_collection'));
             } else {
                 Clipbucket_db::getInstance()->update(tbl($this->section_tbl), $query_field, $query_val, ' collection_id = ' . (int)$cid);
