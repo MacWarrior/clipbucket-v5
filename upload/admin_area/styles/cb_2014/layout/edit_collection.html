@@ -77,15 +77,17 @@
                     <li>
                         <a data-toggle="tab" href="#uinformation"><i class="glyphicon glyphicon-user"></i>Uploader Information</a>
                     </li>
-                    <li>
-                        <a data-toggle="tab" href="#default_thumb"><i class="glyphicon glyphicon-picture"></i>&nbsp;{lang('default_thumb')}</a>
-                    </li>
-                    {if config('enable_collection_poster') == 'yes'}
+                    {if !empty($items) || !empty($custom_thumbs)}
+                        <li>
+                            <a data-toggle="tab" href="#default_thumb"><i class="glyphicon glyphicon-picture"></i>&nbsp;{lang('default_thumb')}</a>
+                        </li>
+                    {/if}
+                    {if config('enable_collection_poster') == 'yes' && !empty($vidthumbs_poster)}
                         <li>
                             <a data-toggle="tab" href="#posters"><i class="glyphicon glyphicon-picture"></i>&nbsp;{lang('default_x', lang('poster'))|ucfirst}</a>
                         </li>
                     {/if}
-                    {if config('enable_collection_backdrop') == 'yes'}
+                    {if config('enable_collection_backdrop') == 'yes' && !empty($vidthumbs_backdrop)}
                         <li>
                             <a data-toggle="tab" href="#backdrops"><i class="glyphicon glyphicon-picture"></i>&nbsp;{lang('default_x', lang('backdrop'))|ucfirst}</a>
                         </li>
@@ -170,37 +172,39 @@
                             {/if}
                         </div>
                     </div>
-                    <div id="default_thumb" class="tab-pane">
-                        <div class="row">
-                            <h5>{lang code="default_thumb"}</h5>
-                            <ul class="ace-thumbnails thumb">
-                                {foreach from=$items item=item}
-                                    <li style="background-image:url('{Collection::getInstance()->getItemThumb($item, $data.type)|escape:'html'}');" {if $item.id == $data.thumb_objectid}class="selected"{/if} title="{lang('select_as_default_x', lang('thumbnail'))|escape:'html'}">
-                                        <label for="thumb_{$item.id}">
-                                            <span class="content_bottom">
-                                                <input type="radio" id="thumb_{$item.id}" value="{$item.id}" name="default_thumb" {if $item.id == $data.thumb_objectid}checked{/if}/>
-                                            </span>
-                                        </label>
-                                    </li>
-                                {/foreach}
-                                {foreach from=$custom_thumbs item=image}
-                                    <li style="background-image:url('{CollectionThumbs::getImageFile($image)|escape:'html'}');" {if $data.thumb_objectid == -1 && $selected_image == $image.id_collection_image}class="selected"{/if} title="{lang('select_as_default_x', lang('thumbnail'))|escape:'html'}">
-                                        <label for="thumb_custom_{$image.id_collection_image}">
-                                            <span class="content_bottom">
-                                                <input type="radio" id="thumb_custom_{$image.id_collection_image}" value="custom_{$image.id_collection_image}" name="default_thumb" {if $data.thumb_objectid == -1 && $selected_image == $image.id_collection_image}checked{/if}/>
-                                            </span>
-                                        </label>
-                                    </li>
-                                {/foreach}
-                            </ul>
+                    {if !empty($items) || !empty($custom_thumbs)}
+                        <div id="default_thumb" class="tab-pane">
+                            <div class="row">
+                                <h5>{lang code="default_thumb"}</h5>
+                                <ul class="ace-thumbnails thumb">
+                                    {foreach from=$items item=item}
+                                        <li style="background-image:url('{Collection::getInstance()->getItemThumb($item, $data.type)|escape:'html'}');" {if $item.id == $data.thumb_objectid}class="selected"{/if} title="{lang('select_as_default_x', lang('thumbnail'))|escape:'html'}">
+                                            <label for="thumb_{$item.id}">
+                                                <span class="content_bottom">
+                                                    <input type="radio" id="thumb_{$item.id}" value="{$item.id}" name="default_thumb" {if $item.id == $data.thumb_objectid}checked{/if}/>
+                                                </span>
+                                            </label>
+                                        </li>
+                                    {/foreach}
+                                    {foreach from=$custom_thumbs item=image}
+                                        <li style="background-image:url('{CollectionThumbs::getImageFile($image)|escape:'html'}');" {if $data.thumb_objectid == -1 && $selected_image == $image.id_collection_image}class="selected"{/if} title="{lang('select_as_default_x', lang('thumbnail'))|escape:'html'}">
+                                            <label for="thumb_custom_{$image.id_collection_image}">
+                                                <span class="content_bottom">
+                                                    <input type="radio" id="thumb_custom_{$image.id_collection_image}" value="custom_{$image.id_collection_image}" name="default_thumb" {if $data.thumb_objectid == -1 && $selected_image == $image.id_collection_image}checked{/if}/>
+                                                </span>
+                                            </label>
+                                        </li>
+                                    {/foreach}
+                                </ul>
+                            </div>
                         </div>
-                    </div>
-                    {if config('enable_collection_poster') == 'yes'}
+                    {/if}
+                    {if config('enable_collection_poster') == 'yes' && !empty($vidthumbs_poster)}
                         <div id="posters" class="tab-pane">
                             {include file="$style_dir/blocks/poster_mini_list.html"}
                         </div>
                     {/if}
-                    {if config('enable_collection_backdrop') == 'yes'}
+                    {if config('enable_collection_backdrop') == 'yes' && !empty($vidthumbs_backdrop)}
                         <div id="backdrops" class="tab-pane">
                             {if !empty($otherFields['use_backdrop_as_default_thumb'])}
                                 {$formObj->createField($otherFields['use_backdrop_as_default_thumb'])}
@@ -266,8 +270,10 @@
                         </div>
                     </div>
                     <div id="clpreview" class="tab-pane">
-                        <div class="form-group">
-                            <img style="padding:2px; border:1px solid #ccc;" src="{Collections::getInstance()->coll_first_thumb($data,'m')}" class="img-responsive{if config('keep_ratio_photo') && $data.type == 'photos'} crop_image_max {/if} "/>
+                        <div class="collections clearfix">
+                            <div class="clearfix collection-item col-lg-6 col-md-6 col-sm-12 col-xs-6">
+                                {include file=$collection_preview_template collection=$preview_collection theme=$collection_preview_theme thumbsize='m'}
+                            </div>
                         </div>
                     </div>
                     {if config('enable_comments_collection') == 'yes'}

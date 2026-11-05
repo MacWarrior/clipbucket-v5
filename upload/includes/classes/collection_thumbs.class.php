@@ -544,7 +544,7 @@ class CollectionThumbs
                         throw new Exception(lang('error_uploading_thumb'));
                     }
                     self::convertImage($path, $ext_destination);
-                    if (!empty($res['should_watermark']) && config('watermark_collection')) {
+                    if (!empty($res['should_watermark']) && config('watermark_photo')) {
                         self::watermark_image($path, $path);
                     }
                     // Width/height identify the configured rendition, including for small sources.

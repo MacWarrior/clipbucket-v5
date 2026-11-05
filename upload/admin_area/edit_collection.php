@@ -145,6 +145,15 @@ $breadcrumb[2] = [
 ];
 
 assign('data', $collection);
+assign('preview_collection', Collection::getInstance()->getOne([
+    'collection_id'         => $collection['collection_id'],
+    'hide_empty_collection' => 'no',
+    'with_items'            => true,
+    'with_sub_items'        => true,
+    'count_items_only'      => true
+]));
+assign('collection_preview_template', SITETEMPLATEDIR . DIRECTORY_SEPARATOR . 'layout' . DIRECTORY_SEPARATOR . 'blocks' . DIRECTORY_SEPARATOR . 'collection-item.html');
+assign('collection_preview_theme', DirPath::getUrl('styles') . config('template_dir') . '/theme');
 assign('link_user', DirPath::getUrl('admin_area') . 'view_user.php?uid=' . $collection['userid']);
 
 $params = [];
@@ -162,6 +171,7 @@ ClipBucket::getInstance()->addAdminJS([
 ]);
 
 ClipBucket::getInstance()->addAdminCSS([
+    'pages/edit_collection/preview.css'     => 'admin',
     'jquery.tagit' . $min_suffixe . '.css'     => 'admin',
     'tagit.ui-zendesk' . $min_suffixe . '.css' => 'admin'
 ]);
