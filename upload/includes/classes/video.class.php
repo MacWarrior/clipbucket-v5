@@ -699,7 +699,7 @@ class Video extends Objects
         }
         $cond .= ')';
 
-        $current_user_id = user_id();
+        $current_user_id = User::getInstance()->getCurrentUserID();
         if ($current_user_id) {
             $select_contacts = 'SELECT contact_userid FROM ' . tbl('contacts') . ' WHERE confirmed = \'yes\' AND userid = ' . (int)$current_user_id;
             $condition_video_users = '';

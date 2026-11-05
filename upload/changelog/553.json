@@ -1,6 +1,6 @@
 {
   "version":"5.5.3",
-  "revision":"224",
+  "revision":"225",
   "status":"stable",
   "detail":[
     {
@@ -243,7 +243,7 @@
         ,"Fix possible SQL injection (Thanks @drkim-dev, @FutureBuildingEN, @Bnyt7, @de3erve-hunter, @QwesiRED, @manus-use & @leediay153 !)"
         ,"Fix possible XSS injection (Thanks @sy460129 & @leediay153 !)"
         ,"Fix possible SSRF (Thanks @Takumi142857 !)"
-        ,"Fix possible IDOR (Thanks @iys8, @de3erve-hunter, @Bnyt7, @Mr-In4inci3le, @sy460129 & @QwesiRED !)"
+        ,"Fix possible IDOR (Thanks @iys8, @de3erve-hunter, @Bnyt7, @Mr-In4inci3le, @sy460129 & @QwesiRED !) (<i>#922</i>)"
       ]
     }
   ]
