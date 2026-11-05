@@ -7392,6 +7392,45 @@ h4:has(i) {
   flex:0 0 auto;
 }
 
+#updateCollection .collection-options {
+  display: grid;
+  grid-template-columns: minmax(0, max-content) max-content max-content;
+  align-items: center;
+  gap: 12px;
+  clear: both;
+  margin-bottom: 15px;
+}
+
+#updateCollection .collection-options .switch-inline {
+  display: contents;
+}
+
+#updateCollection .collection-options .switch-inline > label {
+  grid-column: 1;
+  margin: 0;
+  white-space: normal;
+}
+
+#updateCollection .collection-options .switch-inline > .tips {
+  grid-column: 2;
+}
+
+#updateCollection .collection-options .switch-inline > .row {
+  grid-column: 3;
+  display: flex;
+  align-items: center;
+}
+
+#updateCollection .collection-options .row > div,
+#updateCollection .collection-options .form-check {
+  display: flex;
+  align-items: center;
+}
+
+#updateCollection .collection-options .row label {
+  margin: 0;
+}
+
 .rating .rating-holder {
   display: inline-block;
 }
