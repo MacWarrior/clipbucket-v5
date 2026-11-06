@@ -1984,4 +1984,5 @@ VALUES ('noted_x'),
        ('add_new_page'),
        ('page_code'),
        ('page_title'),
-       ('page_content');
+       ('page_content'),
+       ('help_drag_and_drop');

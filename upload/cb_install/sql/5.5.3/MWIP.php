@@ -35,5 +35,9 @@ class MWIP extends \Migration
             'fr'=>'Contenu de la page',
             'en'=>'Page Content'
         ]);
+        self::generateTranslation('help_drag_and_drop', [
+            'fr'=>'Attraper et relâcher la ligne pour changer l\'ordre d\'affichage',
+            'en'=>'Drag and drop the line to change display order'
+        ]);
     }
 }
