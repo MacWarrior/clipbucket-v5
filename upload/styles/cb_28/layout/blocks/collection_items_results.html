@@ -13,7 +13,7 @@
             <th>{lang('title')}</th>
             <th>{lang('date_added')}</th>
             <th>{lang('description')}</th>
-            <th>{lang('thumbs')}</th>
+            <th>{lang('preview')}</th>
         </tr>
         </thead>
         <tbody class="collection-items-results">
@@ -33,7 +33,20 @@
                 <td>{display_clean($item.date)}</td>
                 <td>{display_clean($item.description)}</td>
                 <td>
-                    <img alt="" src="{display_clean($item.thumb)}" style="max-width:100px;max-height:100px;"{if $item.blur} class="blur"{/if}>
+                    {if $item.type != 'video'}
+                        <img alt="" src="{display_clean($item.thumb)}" style="max-width:100px;max-height:100px;"{if $item.blur} class="blur"{/if}>
+                    {else}
+                    <div class="slider-video-container"{if empty($width) === false} style="--width:{$width}px;"{/if} data-id="{$video['videoid']}">
+                        <div class="thumb-video-padding">
+                            <div class="thumb-video video-link{if $popup_video && $video.status|lower == 'successful'} cd-popup-trigger{/if}" data-videoid="{$video.videoid}" data-href="{video_link($video)}" title="{display_clean($video.title)|title}">
+                                <img src="{VideoThumbs::getDefaultThumbFile($video.videoid, '416', '260')}" loading="lazy" class="{if Video::getInstance()->isToBlur($video['videoid'])}blur{/if}" {Video::get_thumbs_preview($video, '416x260')}/>
+                                <div class="status"></div>
+                                {assign var=left_value value=10}
+                                {ANCHOR place='in_video_thumb' data=$video}
+                            </div>
+                        </div><div class="shadow"></div>
+                    </div>
+                    {/if}
                 </td>
             </tr>
             {foreachelse}

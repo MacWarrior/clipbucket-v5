@@ -119,7 +119,11 @@ assign('obj', $items);
 assign('type', $type);
 assign('collection', $c);
 $min_suffixe = System::isInDev() ? '' : '.min';
-ClipBucket::getInstance()->addAdminJS(['collection_items' . $min_suffixe . '.js' => 'global']);
+ClipBucket::getInstance()->addAdminJS([
+    'preview_thumbs' . $min_suffixe . '.js'                   => 'global',
+    'collection_items' . $min_suffixe . '.js'                 => 'global',
+    'pages/manage_items/video_preview' . $min_suffixe . '.js' => 'admin'
+]);
 subtitle(lang('manage_items'));
 template_files('manage_items.html');
 display_it();

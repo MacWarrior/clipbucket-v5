@@ -46,21 +46,7 @@ if ($response['success']) {
         $total_pages = (int)count_pages($total, $limit);
         pages::getInstance()->paginate($total_pages, $page, 'javascript:void(0);', 'data-page="#page#"');
         $existing = array_column(Collection::getInstance()->getItems(['collection_id' => $collection_id]) ?: [], $id_field);
-        $items = [];
-        foreach ($results as $result) {
-            $id = (int)$result[$id_field];
-            $items[] = [
-                'id'          => $id,
-                'title'       => display_clean($type == 'videos' ? $result['title'] : $result['photo_title']),
-                'description' => display_clean($type == 'videos' ? $result['description'] : $result['photo_description']),
-                'date'        => $result['date_added'],
-                'thumb'       => Collection::getInstance()->getItemThumb($result, $type),
-                'blur'        => $object->isToBlur($id),
-                'exists'      => in_array($id, $existing)
-            ];
-        }
-
-        assign('items', $items);
+        assign('items', $results);
         $response['template'] = getTemplate('blocks/collection_items_results.html');
     }
 }

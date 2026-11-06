@@ -47,6 +47,16 @@ function eventListeners() {
             window.location.href = window.location.href;
         }
     });
+    modal.on('click', '.thumb-video', function (event) {
+        if (event.target.tagName === 'IMG') {
+            if ($('#collection-video-preview').length) {
+                event.preventDefault();
+                openCollectionVideoPreview(this);
+            } else {
+                window.location.href = this.getAttribute('data-href');
+            }
+        }
+    });
     modal.on('submit', '.collection-items-search', function (event) {
         event.preventDefault();
         query = modal.find('#collection-items-query').val();
@@ -133,6 +143,9 @@ function search(targetPage) {
             page = data.page;
             modal.find('.modal-body').html(data.html);
             results = modal.find('.collection-items-results');
+            if (typeof listenerPreviewThumbs === 'function') {
+                listenerPreviewThumbs(results.find('img[data-thumbs]').get());
+            }
             modal.find('#collection-items-query').val(query);
             results.find('.collection-items-check').each(function () {
                 if ($(this).data('exists')) {
@@ -154,5 +167,38 @@ function search(targetPage) {
             controls();
             hideSpinner();
         }
+    });
+}
+function listenerPreviewThumbs (images) {
+    images.forEach(img => {
+        let thumbnails;
+        try {
+            let thumbsData = img.getAttribute("data-thumbs");
+            thumbnails = JSON.parse(thumbsData);
+        } catch (error) {
+            return;
+        }
+        if (!Array.isArray(thumbnails) || thumbnails.length === 0) return;
+        let index = 0;
+        let interval;
+        let parent = img.closest("div");
+        parent.addEventListener("mouseenter", function () {
+            if( img.src ){
+                img.dataset.originalSrc = img.src;
+            }
+            interval = setInterval(() => {
+                index = (index + 1) % thumbnails.length;
+                if (thumbnails[index]) {
+                    img.src = thumbnails[index];
+                }
+            }, 500);
+        });
+        parent.addEventListener("mouseleave", function () {
+            clearInterval(interval);
+            if (img.dataset.originalSrc) {
+                img.src = img.dataset.originalSrc;
+            }
+            index = 0;
+        });
     });
 }
