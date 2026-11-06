@@ -993,7 +993,7 @@ class VideoThumbs
         $thumb_video_directory = DirPath::get('thumbs' ) . 'video' . DIRECTORY_SEPARATOR;
         if (!empty($file['name'])) {
             $ext_original = getExt($file['name'][$file_array_key]);
-            $ext_destination = 'jpg';
+            $ext_destination = strtolower((string)config('video_thumbs_format'));
             $num = self::getLastNum($video['videoid'], $type, $is_auto) + 1;
             $temp_file_path = $temp_directory . $video['file_name'] . '-' . $num . '-' . $type . '.' . $ext_destination;
 

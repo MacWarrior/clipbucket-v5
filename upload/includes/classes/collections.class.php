@@ -71,6 +71,12 @@ class Collection extends Objects
             $this->fields[] = 'voters';
         }
 
+        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '227')) {
+            $this->fields[] = 'default_backdrop';
+            $this->fields[] = 'default_poster';
+            $this->fields[] = 'use_backdrop_as_default_thumb';
+        }
+
         $this->fields_items = [
             'ci_id'
             ,'collection_id'
@@ -93,6 +99,22 @@ class Collection extends Objects
             'public' => lang('collect_borad_pub')
             ,'private' => lang('collect_broad_pri')
         ];
+    }
+
+    /**
+     * Check whether a collection uses its default backdrop as its thumbnail.
+     *
+     * @param array $data
+     * @return bool
+     */
+    public static function getUseBackdropDefault(array $data): bool
+    {
+        if (!Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '227')) {
+            return false;
+        }
+        return config('enable_collection_backdrop') == 'yes'
+            && !empty($data['default_backdrop'])
+            && ($data['use_backdrop_as_default_thumb'] ?? 'no') == 'yes';
     }
 
     public function getBroadcastOptions(): array
@@ -894,6 +916,17 @@ class Collection extends Objects
      */
     public static function assignDefaultThumb($collection_id)
     {
+        $thumb_num = self::getDefaultThumb($collection_id);
+
+        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '145')) {
+            $sql = 'UPDATE ' . tbl('collections') . ' SET thumb_objectid = ' . (int)$thumb_num . ' WHERE collection_id = ' . (int)$collection_id;
+            Clipbucket_db::getInstance()->execute($sql);
+        }
+        return is_numeric($thumb_num) ? $thumb_num : false;
+    }
+
+    public static function getDefaultThumb($collection_id)
+    {
         $tested_collection = $collection_id;
         do {
             $sql = '
@@ -915,11 +948,6 @@ class Collection extends Objects
             $thumb_num = $res[0]['default_thumb'] ?? false;
             $tested_collection = $res[0]['child_id'] ?? false;
         } while (empty($thumb_num) && !empty($tested_collection));
-
-        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '145')) {
-            $sql = 'UPDATE ' . tbl('collections') . ' SET thumb_objectid = ' . (int)$thumb_num . ' WHERE collection_id = ' . (int)$collection_id;
-            Clipbucket_db::getInstance()->execute($sql);
-        }
         return is_numeric($thumb_num) ? $thumb_num : false;
     }
 
@@ -1240,7 +1268,7 @@ class Collections extends CBCategory
             'collection_type'  => $data['type'],
             'total_items'      => $data['total_objects'],
             'collection_link'  => $this->collection_links($data, 'view'),
-            'collection_thumb' => $this->get_thumb($data, 'small', true)
+            'collection_thumb' => $this->coll_first_thumb($data, 's')
         ];
         $this->action->share_template_name = 'share_collection';
         $this->action->val_array = $this->share_variables;
@@ -1704,6 +1732,20 @@ class Collections extends CBCategory
             ];
         }
 
+        if (config('enable_collection_backdrop') == 'yes' && Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '227')) {
+            $return['use_backdrop_as_default_thumb'] = [
+                'type'              => 'checkboxv2',
+                'id'                => 'use_backdrop_as_default_thumb',
+                'name'              => 'use_backdrop_as_default_thumb',
+                'value'             => 'yes',
+                'label'             => lang('use_backdrop_as_default_thumb'),
+                'checked'           => $default['use_backdrop_as_default_thumb'] ?? 'no',
+                'db_field'          => 'use_backdrop_as_default_thumb',
+                'required'          => 'no',
+                'validate_function' => 'yes_or_no'
+            ];
+        }
+
         $return['public_upload'] = [
             'title'             => lang('collect_allow_public_up'),
             'class'             => 'form-control',
@@ -1989,7 +2031,7 @@ class Collections extends CBCategory
     function is_collection_owner($cdetails, $userid = null): bool
     {
         if ($userid == null) {
-            $userid = user_id();
+            $userid = User::getInstance()->getCurrentUserID();
         }
 
         if (!is_array($cdetails)) {
@@ -2018,7 +2060,7 @@ class Collections extends CBCategory
             return;
         }
 
-        if ($collection['userid'] != user_id() && !User::getInstance()->hasAdminAccess()) {
+        if ($collection['userid'] != User::getInstance()->getCurrentUserID() && !User::getInstance()->hasAdminAccess()) {
             e(lang('cant_perform_action_collect'));
             return;
         }
@@ -2047,7 +2089,7 @@ class Collections extends CBCategory
         Category::getInstance()->unlinkAll('collection', $cid);
 
         Clipbucket_db::getInstance()->delete(tbl($this->items), ['collection_id'], [$cid]);
-        $this->delete_thumbs($cid);
+        CollectionThumbs::deleteThumbs($cid);
 
         $params = [];
         $params['type'] = 'cl';
@@ -2083,27 +2125,6 @@ class Collections extends CBCategory
     }
 
     /**
-     * Function used to delete collection preview
-     *
-     * @param $cid
-     *
-     * @return bool|void
-     */
-    function delete_thumbs($cid)
-    {
-        $glob = glob(DirPath::get('collection_thumbs') . $cid . '*.jpg');
-        if( !$glob ){
-            return false;
-        }
-
-        foreach ($glob as $file) {
-            if (file_exists($file)) {
-                unlink($file);
-            }
-        }
-    }
-
-    /**
      * Function used to create collection preview
      *
      * @param $cid
@@ -2119,27 +2140,6 @@ class Collections extends CBCategory
             return;
         }
 
-        $exts = Photo::getAllowedPhotoExtension();
-        foreach ($exts as $un_ext) {
-            if (file_exists(DirPath::get('collection_thumbs') . $cid . '.' . $un_ext) && file_exists(DirPath::get('collection_thumbs') . $cid . '-small.' . $un_ext) && file_exists(DirPath::get('collection_thumbs') . $cid . '-orignal.' . $un_ext)) {
-                unlink(DirPath::get('collection_thumbs') . $cid . '.' . $un_ext);
-                unlink(DirPath::get('collection_thumbs') . $cid . '-small.' . $un_ext);
-                unlink(DirPath::get('collection_thumbs') . $cid . '-orignal.' . $un_ext);
-            }
-        }
-
-        $thumb = DirPath::get('collection_thumbs') . $cid . '.' . $ext;
-        $sThumb = DirPath::get('collection_thumbs') . $cid . '-small.' . $ext;
-        $oThumb = DirPath::get('collection_thumbs') . $cid . '-orignal.' . $ext;
-
-        if (!move_uploaded_file($file['tmp_name'], $thumb)) {
-            e(lang('class_error_occured'));
-            return;
-        }
-
-        VideoThumbs::createThumb($thumb, $thumb, $this->collect_thumb_width, $ext, $this->collect_thumb_height);
-        VideoThumbs::createThumb($thumb, $sThumb, $this->collect_small_thumb_width, $ext, $this->collect_small_thumb_height);
-        VideoThumbs::createThumb($thumb, $oThumb, $this->collect_orignal_thumb_width, $ext, $this->collect_orignal_thumb_height);
     }
 
     /**
@@ -2218,7 +2218,7 @@ class Collections extends CBCategory
                 e(lang('you_not_logged_in'));
             } elseif (!$this->collection_exists($cid)) {
                 e(lang('collect_not_exist'));
-            } elseif (!$this->is_collection_owner($cid, user_id()) && !User::getInstance()->hasAdminAccess()) {
+            } elseif (!$this->is_collection_owner($cid, User::getInstance()->getCurrentUserID()) && !User::getInstance()->hasAdminAccess()) {
                 e(lang('cant_edit_collection'));
             } else {
                 Clipbucket_db::getInstance()->update(tbl($this->section_tbl), $query_field, $query_val, ' collection_id = ' . (int)$cid);
@@ -2234,87 +2234,16 @@ class Collections extends CBCategory
                 e(lang('collection_updated'), 'm');
 
                 if (!empty($array['collection_thumb']['tmp_name'])) {
-                    $this->upload_thumb($cid, $array['collection_thumb']);
+                    $collection = Collection::getInstance()->getOne([
+                        'collection_id'         => $cid,
+                        'hide_empty_collection' => 'no'
+                    ]);
+                    CollectionThumbs::uploadThumb($collection, $_FILES['collection_thumb'], 1);
                 }
             }
         }
     }
 
-    /**
-     * Function used get default thumb
-     */
-    function get_default_thumb($size = null): string
-    {
-        if ($size == 'small' && file_exists(TEMPLATEDIR . '/images/thumbs/collection_thumb-small.png')) {
-            return TEMPLATEDIR . '/images/thumbs/collection_thumb-small.png';
-        }
-
-        if (!$size && file_exists(TEMPLATEDIR . '/images/thumbs/collection_thumb.png')) {
-            return TEMPLATEDIR . '/images/thumbs/collection_thumb.png';
-        }
-
-        if ($size == 'small') {
-            $thumb = DirPath::getUrl('collection_thumbs') . 'no_thumb-small.png';
-        } else {
-            $thumb = DirPath::getUrl('collection_thumbs') . 'no_thumb.png';
-        }
-
-        return $thumb;
-    }
-
-    /**
-     * Function used get collection thumb
-     * @throws Exception
-     */
-    function get_thumb($cdetails, $size = null, $return_c_thumb = false)
-    {
-        if (is_numeric($cdetails)) {
-            $cdetails = $this->get_collection($cdetails);
-            $cid = $cdetails['collection_id'];
-        } else {
-            $cid = $cdetails['collection_id'];
-        }
-
-        $exts = ['jpg', 'png', 'gif', 'jpeg'];
-
-        if ($return_c_thumb) {
-            foreach ($exts as $ext) {
-                if ($size == 'small') {
-                    $s = '-small';
-                }
-                if (file_exists(DirPath::get('collection_thumbs') . $cid . $s . '.' . $ext)) {
-                    return DirPath::getUrl('collection_thumbs') . $cid . $s . '.' . $ext;
-                }
-            }
-        } else {
-            $item = $this->get_collection_items($cid, 'ci_id DESC', 1);
-            $type = $item[0]['type'];
-            switch ($type) {
-                case 'videos':
-                    $thumb = VideoThumbs::getDefaultThumbFile($item[0]['object_id']);
-                    break;
-
-                case 'photos':
-                    $thumb = PhotoThumbs::getThumbFile($item[0]['object_id']);
-                    break;
-            }
-
-            if ($thumb) {
-                return $thumb;
-            }
-
-            foreach ($exts as $ext) {
-                if ($size == 'small') {
-                    $s = '-small';
-                }
-                if (file_exists(DirPath::get('collection_thumbs') . $cid . $s . '.' . $ext)) {
-                    return DirPath::getUrl('collection_thumbs') . $cid . $s . '.' . $ext;
-                }
-            }
-        }
-
-        return $this->get_default_thumb($size);
-    }
 
     /**
      * Used to get current rating
@@ -2544,25 +2473,46 @@ class Collections extends CBCategory
             return false;
         }
 
+        if (!$size || $size == 's') {
+            $width = 168;
+            $height = 105;
+        } else {
+            if ($size == 'l') {
+                $width = 632;
+                $height = 395;
+            } else {
+                $width = '416';
+                $height = '260';
+            }
+        }
+        if (Collection::getUseBackdropDefault($col_data)) {
+            $image = CollectionThumbs::getOne([
+                'collection_id'       => $col_data['collection_id'],
+                'id_collection_image' => $col_data['default_backdrop'],
+                'type'                => 'backdrop'
+            ]);
+            if (!empty($image)) {
+                $thumb = CollectionThumbs::getImageFile($image, $width);
+                if (!empty($thumb)) {
+                    return $thumb;
+                }
+            }
+        }
         if (!empty($col_data['thumb_objectid'])) {
             $object_id = $col_data['thumb_objectid'];
         } else {
             $object_id = Collection::assignDefaultThumb($col_data['collection_id']);
         }
+        if ($object_id == -1) {
+            $thumb = CollectionThumbs::getThumbFile($col_data['collection_id'], $width);
+            if (!empty($thumb)) {
+                return $thumb;
+            } else {
+                $object_id = Collection::getDefaultThumb($col_data['collection_id']);
+            }
+        }
 
         if( $col_data['type'] == 'videos' ){
-            if (!$size || $size == 's') {
-                $width = 168;
-                $height = 105;
-            } else {
-                if ($size == 'l') {
-                    $width = 632;
-                    $height = 395;
-                } else {
-                    $width = '416';
-                    $height = '260';
-                }
-            }
             if (empty(Video::getInstance()->getOne(['videoid'=>$object_id]))) {
                 $object_id = Collection::getInstance()->getFirstItemViewable(['collection_id'=>$col_data['collection_id']])['videoid'] ?? false;
             }
