@@ -1980,4 +1980,9 @@ VALUES ('noted_x'),
        ('selected_page_displayed'),
        ('collection_delete_successfully'),
        ('option_enable_collection_poster'),
-       ('option_enable_collection_backdrop');
+       ('option_enable_collection_backdrop'),
+       ('add_new_page'),
+       ('page_code'),
+       ('page_title'),
+       ('page_content'),
+       ('help_drag_and_drop');
