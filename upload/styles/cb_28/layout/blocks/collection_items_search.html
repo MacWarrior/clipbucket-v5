@@ -1,5 +1,6 @@
 <div class="modal fade" id="collection-items-modal" tabindex="-1" role="dialog" aria-labelledby="collection-items-title"
      data-collection-id="{$collection_items_id|escape:'html'}" data-token="{$collection_items_token|escape:'html'}"
+     data-progress-url="{DirPath::getUrl('root')}actions/progress_video.php"
      data-url="{DirPath::getUrl('root')}actions/collection_items.php" data-error="{lang('error_occured')|escape:'html'}"
      data-empty="{lang('no_results_found')|escape:'html'}" data-exists="{lang('object_exists_collection', '%s')|escape:'html'}">
     <div class="modal-dialog" role="document" style="width:80%;max-width:1200px;margin:30px auto;">

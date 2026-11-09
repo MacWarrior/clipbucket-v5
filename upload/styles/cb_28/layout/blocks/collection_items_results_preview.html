@@ -1,0 +1,11 @@
+<div class="slider-video-container" style="width:200px;max-width:100%;" data-id="{$item['videoid']}">
+    <div class="thumb-video-padding">
+        <div class="thumb-holder thumb-video video-link{if $popup_video && $item.status|lower == 'successful'} cd-popup-trigger{/if}" data-videoid="{$item.videoid}" data-href="{video_link($item)}" title="{display_clean($item.title)|title}">
+            <img src="{VideoThumbs::getDefaultThumbFile($item.videoid, '416', '260')}" loading="lazy" class="img-responsive{if Video::getInstance()->isToBlur($item['videoid'])} blur{/if}" {Video::get_thumbs_preview($item, '416x260')}/>
+            <div class="status"></div>
+            {assign var=left_value value=10}
+            {ANCHOR place='in_video_thumb' data=$item}
+        </div>
+    </div>
+    <div class="shadow"></div>
+</div>

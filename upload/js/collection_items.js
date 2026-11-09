@@ -7,6 +7,8 @@ var request = null;
 var busy = false;
 var changed = false;
 const selected = new Set();
+var intervalId;
+
 $(function () {
     modal = $('#collection-items-modal');
     if (!modal.length) {
@@ -43,6 +45,7 @@ function eventListeners() {
         }
     });
     modal.on('hidden.bs.modal', function () {
+        clearInterval(intervalId);
         if (changed) {
             window.location.href = window.location.href;
         }
@@ -126,6 +129,7 @@ function controls() {
 }
 
 function search(targetPage) {
+    clearInterval(intervalId);
     if (request) {
         request.abort();
     }
@@ -146,6 +150,7 @@ function search(targetPage) {
             if (typeof listenerPreviewThumbs === 'function') {
                 listenerPreviewThumbs(results.find('img[data-thumbs]').get());
             }
+            progressVideoCheck(data.ids_to_check_progress);
             modal.find('#collection-items-query').val(query);
             results.find('.collection-items-check').each(function () {
                 if ($(this).data('exists')) {
@@ -201,4 +206,34 @@ function listenerPreviewThumbs (images) {
             index = 0;
         });
     });
+}
+
+function progressVideoCheck(ids_to_check_progress) {
+    clearInterval(intervalId);
+    if (ids_to_check_progress !== undefined && ids_to_check_progress.length > 0) {
+        intervalId = setInterval(function () {
+            $.post({
+                url: modal.data('progress-url'),
+                dataType: 'json',
+                data: {
+                    ids: ids_to_check_progress,
+                    output: 'collection'
+                },
+                success: function (response) {
+                    var data = response.data.videos;
+
+                    data.forEach(function (video) {
+                        const preview = results.find('.slider-video-container[data-id="' + video.videoid + '"]');
+                        if (preview.length) {
+                            preview.replaceWith(video.html);
+                            listenerPreviewThumbs(results.find('.slider-video-container[data-id="' + video.videoid + '"] img[data-thumbs]').get());
+                        }
+                    });
+                    if (response.all_complete) {
+                        clearInterval(intervalId);
+                    }
+                }
+            })
+        }, 30000);
+    }
 }

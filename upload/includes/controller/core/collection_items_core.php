@@ -40,6 +40,12 @@ if ($response['success']) {
         $params = ['search' => trim($_POST['query'] ?? '')];
         $params['limit'] = create_query_limit($page, $limit);
         $results = $object->getAll($params);
+        $ids_to_check_progress = [];
+        foreach ($results as $video) {
+            if (in_array($video['status'], ['Processing', 'Waiting'])) {
+                $ids_to_check_progress[] = $video['videoid'];
+            }
+        }
         unset($params['limit']);
         $params['count'] = true;
         $total = $object->getAll($params);
@@ -47,15 +53,18 @@ if ($response['success']) {
         pages::getInstance()->paginate($total_pages, $page, 'javascript:void(0);', 'data-page="#page#"');
         $existing = array_column(Collection::getInstance()->getItems(['collection_id' => $collection_id]) ?: [], $id_field);
         assign('items', $results);
+        assign('ids_to_check_progress', $ids_to_check_progress);
+        $response['ids_to_check_progress']=$ids_to_check_progress;
         $response['template'] = getTemplate('blocks/collection_items_results.html');
     }
 }
 echo json_encode([
-    'success' => $response['success'],
-    'html'    => $response['template'] ?? '',
-    'added'   => $added ?? [],
-    'msg'     => getTemplateMsg(),
-    'page'    => $page ?? 0,
-    'pages'   => $total_pages ?? 0
+    'success'               => $response['success'],
+    'html'                  => $response['template'] ?? '',
+    'added'                 => $added ?? [],
+    'msg'                   => getTemplateMsg(),
+    'page'                  => $page ?? 0,
+    'pages'                 => $total_pages ?? 0,
+    'ids_to_check_progress' => $response['ids_to_check_progress'] ?? []
 ]);
 exit();

@@ -33,16 +33,7 @@
                 <td>{display_clean($item.date_added)}</td>
                 <td>{display_clean($item.description)}</td>
                 <td>
-                    <div class="slider-video-container" style="--width:200px;" data-id="{$item['videoid']}">
-                        <div class="thumb-video-padding">
-                            <div class="thumb-video video-link{if $popup_video && $item.status|lower == 'successful'} cd-popup-trigger{/if}" data-videoid="{$item.videoid}" data-href="{video_link($item)}" title="{display_clean($item.title)|title}">
-                                <img src="{VideoThumbs::getDefaultThumbFile($item.videoid, '416', '260')}" loading="lazy" class="{if Video::getInstance()->isToBlur($item['videoid'])}blur{/if}" {Video::get_thumbs_preview($item, '416x260')}/>
-                                <div class="status"></div>
-                                {assign var=left_value value=10}
-                                {ANCHOR place='in_video_thumb' data=$item}
-                            </div>
-                        </div><div class="shadow"></div>
-                    </div>
+                    {include file="$style_dir/blocks/collection_items_results_preview.html" item=$item}
                 </td>
             </tr>
             {foreachelse}

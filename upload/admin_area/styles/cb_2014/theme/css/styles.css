@@ -1596,3 +1596,20 @@ li:has(.category-name){
     white-space: nowrap;
     text-overflow: ellipsis;
 }
+.collection-items-results .thumb-holder .processing {
+    display: grid;
+    align-content: center;
+    justify-items: center;
+    line-height: normal;
+    pointer-events: none;
+}
+
+.collection-items-results .thumb-holder .processing .fa {
+    font-size: 25px;
+}
+
+.collection-items-results .thumb-holder .processing span {
+    position: static;
+    height: auto;
+    margin-top: 0.5rem;
+}
