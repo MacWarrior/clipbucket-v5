@@ -1973,4 +1973,11 @@ VALUES ('noted_x'),
        ('lang_name_too_long'),
        ('confirm_delete_users'),
        ('add_user'),
-       ('add_new_user');
+       ('add_new_user'),
+       ('display_in_footer'),
+       ('hide_from_footer'),
+       ('selected_page_hidden'),
+       ('selected_page_displayed'),
+       ('collection_delete_successfully'),
+       ('option_enable_collection_poster'),
+       ('option_enable_collection_backdrop');

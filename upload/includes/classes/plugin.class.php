@@ -40,6 +40,7 @@ class Plugin
         $param_plugin_id = $params['plugin_id'] ?? false;
         $param_plugin_file = $params['plugin_file'] ?? false;
         $param_plugin_folder = $params['plugin_folder'] ?? false;
+        $param_plugin_active = $params['plugin_active'] ?? null;
 
         $param_condition = $params['condition'] ?? false;
         $param_limit = $params['limit'] ?? false;
@@ -61,6 +62,9 @@ class Plugin
         }
         if( $param_condition ){
             $conditions[] = '(' . $param_condition . ')';
+        }
+        if ($param_plugin_active !== null) {
+            $conditions[] = 'plugins.plugin_active = \''.($param_plugin_active ? 'yes' : 'no').'\'';
         }
 
         if( $param_count ){
