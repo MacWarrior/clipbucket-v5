@@ -250,13 +250,12 @@ class UserLevel
             $select[] = 'has_right_to_edit.nb_diff';
             $join[] /** @lang MySQL */ = ' LEFT JOIN ( SELECT COUNT(USER_LEVELS_PERMISSIONS_VALUES_LOG_USER.permission_value) as nb_diff, ' . self::getTableNameLevelPermissionValue() . '.user_level_id
                     FROM ' . cb_sql_table(self::getTableNameLevelPermissionValue()) . ' 
-                    LEFT JOIN cb_user_levels_permissions_values as USER_LEVELS_PERMISSIONS_VALUES_LOG_USER
+                    LEFT JOIN ' . self::getTableNameLevelPermissionValue() . ' as USER_LEVELS_PERMISSIONS_VALUES_LOG_USER
                         ON ' . self::getTableNameLevelPermissionValue() . '.id_user_levels_permission = USER_LEVELS_PERMISSIONS_VALUES_LOG_USER.id_user_levels_permission
                                 AND USER_LEVELS_PERMISSIONS_VALUES_LOG_USER.user_level_id = ' . User::getInstance()->getCurrentUserLevelID() . '
                                 AND USER_LEVELS_PERMISSIONS_VALUES_LOG_USER.permission_value != ' . self::getTableNameLevelPermissionValue() . '.permission_value AND ' . self::getTableNameLevelPermissionValue() . '.permission_value = \'yes\'
                     GROUP BY  ' . self::getTableNameLevelPermissionValue() . '.user_level_id
                     ) AS has_right_to_edit ON has_right_to_edit.user_level_id = ' . self::$tableName . '.user_level_id ';
-
         }
         $sql = 'SELECT ' . implode(', ', $select) . '
                 FROM ' . cb_sql_table(self::$tableName)
