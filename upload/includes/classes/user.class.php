@@ -528,7 +528,7 @@ class User extends Objects
                     $select[] = 'has_right_to_edit.nb_diff';
                     $join[] /** @lang MySQL */ = 'LEFT JOIN ( SELECT COUNT(USER_LEVELS_PERMISSIONS_VALUES_LOG_USER.permission_value) as nb_diff, ' . UserLevel::getTableNameLevelPermissionValue() . '.user_level_id
                     FROM ' . cb_sql_table(UserLevel::getTableNameLevelPermissionValue()) . ' 
-                    LEFT JOIN cb_user_levels_permissions_values as USER_LEVELS_PERMISSIONS_VALUES_LOG_USER
+                    LEFT JOIN ' . tbl(UserLevel::getTableNameLevelPermissionValue()) . ' as USER_LEVELS_PERMISSIONS_VALUES_LOG_USER
                     ON ' . UserLevel::getTableNameLevelPermissionValue() . '.id_user_levels_permission = USER_LEVELS_PERMISSIONS_VALUES_LOG_USER.id_user_levels_permission
                                 AND USER_LEVELS_PERMISSIONS_VALUES_LOG_USER.user_level_id = ' . User::getInstance()->getCurrentUserLevelID() . '
                                 AND USER_LEVELS_PERMISSIONS_VALUES_LOG_USER.permission_value != ' . UserLevel::getTableNameLevelPermissionValue() . '.permission_value AND ' . UserLevel::getTableNameLevelPermissionValue() . '.permission_value = \'yes\'
