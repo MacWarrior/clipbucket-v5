@@ -87,7 +87,7 @@
                                                 <img src="{VideoThumbs::getDefaultThumbFile($obj[list].videoid)}" width="120" height="70" id="video_{$obj[list].videoid}" style="padding:2px; border:1px solid #ccc" />
                                             </div>
                                             <div class="col-md-9">
-                                                <a href="{DirPath::getUrl('admin_area')}edit_collection.php?collection={$obj[list].collection_id}" target="_blank">{display_clean($obj[list].title)}</a>
+                                                <a href="{DirPath::getUrl('admin_area')}edit_video.php?video={$obj[list].videoid}" target="_blank">{display_clean($obj[list].title)}</a>
                                                 <br/>
                                                 <span>
                                                     <strong>{$obj[list].date_added|niceTime}</strong>
