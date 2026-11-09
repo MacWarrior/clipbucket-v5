@@ -7,23 +7,27 @@
     </h4>
     <div class="sectionContent" style="display: none;">
         <div class="row" style="margin-left: 5px; margin-right: 5px;">
-            <h5>{lang code="extracted_thumbs"}</h5>
-            {foreach from=$vidthumbs item=vid_thumb}
-                {if $vid_thumb.thumb_id}
-                    {$thumb_id = $vid_thumb.thumb_id}
-                {else}
-                    {$thumb_id = $vid_thumb.thumb_num}
-                {/if}
-                <div class="col-md-3">
-                    <div class="form-group text-center">
-                        <label for="thumb_{$thumb_id}"><img class="edit-img-thumbnail" src="{$vid_thumb.thumb}{$cache_key}"  />
-                            {if !$use_backdrop_default}
-                                <input class="show" style="margin:5px auto;" type="radio" value="{$thumb_id}" id="thumb_{$thumb_id}" name="default_thumb" {if $v.default_thumbnail==$vid_thumb.thumb_id}checked{/if}/>
-                            {/if}
-                        </label>
+            <h5 class="extracted_thumbs">{lang code="extracted_thumbs"}</h5>
+            {if empty($vidthumbs) && !empty($is_from_upload)}
+                {lang('extracted_thumb_not_available_yet')}
+            {else}
+                {foreach from=$vidthumbs item=vid_thumb}
+                    {if $vid_thumb.thumb_id}
+                        {$thumb_id = $vid_thumb.thumb_id}
+                    {else}
+                        {$thumb_id = $vid_thumb.thumb_num}
+                    {/if}
+                    <div class="col-md-3">
+                        <div class="form-group text-center">
+                            <label for="thumb_{$thumb_id}"><img class="edit-img-thumbnail" src="{$vid_thumb.thumb}{$cache_key}"  />
+                                {if !$use_backdrop_default}
+                                    <input class="show" style="margin:5px auto;" type="radio" value="{$thumb_id}" id="thumb_{$thumb_id}" name="default_thumb" {if $v.default_thumbnail==$vid_thumb.thumb_id}checked{/if}/>
+                                {/if}
+                            </label>
+                        </div>
                     </div>
-                </div>
-            {/foreach}
+                {/foreach}
+            {/if}
         </div>
         {if !empty($vidthumbs_custom)}
             <hr/>
@@ -54,7 +58,7 @@
                 <h5>{lang code='upload_custom_thumbnail'}</h5>
                 <input name="vid_thumb[]" id="new_thumbs" type="file" />
                 <div class="form-group pull-right">
-                    <input type="submit" id="upload_thumbs" value="{lang code='upload'}" class="btn btn-primary btn-sm" {if !Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '14')} disabled="disabled" title="Sorry, you cannot perform this action until the application has been fully updated by an administrator" {/if}/>
+                    <input type="submit" id="upload_thumbs" value="{lang code='upload'}"  {if !empty($disable_submit)}disabled="disabled"{/if} class="btn btn-primary btn-sm" {if !Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '14')} disabled="disabled" title="Sorry, you cannot perform this action until the application has been fully updated by an administrator" {/if}/>
                 </div>
             </div>
             {ANCHOR place="after_edit_video_form_thumbs_upload"}

@@ -159,11 +159,23 @@ if (isset($_POST['update'])) {
 
     //Numeric Array
     $num_array = [
+        'max_video_duration',
         'max_upload_size',
         'max_photo_size',
         'chunk_upload_size',
         'cloudflare_upload_limit',
-        'option_maximum_allowed_subtitle_size'
+        'maximum_allowed_subtitle_size',
+        'num_thumbs',
+        'srate',
+        'sbrate',
+        'vrate',
+        'max_conversion',
+        'photo_lar_width',
+        'photo_thumb_width',
+        'photo_thumb_height',
+        'proxy_port',
+        'smtp_port',
+        'cache_port',
     ];
 
     $has_missing_config = false;
@@ -337,15 +349,7 @@ assign('cron_copy_paste', $cron_line ?? '');
 
 assign('is_there_conversion_lock', FFMpeg::isThereAnyConversionLocks());
 
-$allTimezone = [];
-if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '99')) {
-    $query = /** @lang MySQL */
-        'SELECT timezones.timezone
-                            FROM ' . cb_sql_table('timezones') . '
-                            ORDER BY timezones.timezone';
-    $rs = Clipbucket_db::getInstance()->_select($query);
-    $allTimezone = array_column($rs, 'timezone');
-}
+$allTimezone = timezone_identifiers_list();
 assign('allTimezone', $allTimezone);
 
 $min_suffixe = System::isInDev() ? '' : '.min';

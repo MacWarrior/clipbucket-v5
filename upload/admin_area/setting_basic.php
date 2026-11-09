@@ -111,6 +111,8 @@ if (isset($_POST['update'])) {
         , 'enable_video_executive_producer'
         , 'enable_video_director'
         , 'enable_video_crew'
+        , 'enable_collection_poster'
+        , 'enable_collection_backdrop'
         , 'enable_video_poster'
         , 'enable_video_backdrop'
         , 'enable_edit_button'
@@ -390,6 +392,8 @@ if (isset($_POST['update'])) {
         ,'enable_video_executive_producer'
         ,'enable_video_director'
         ,'enable_video_crew'
+        ,'enable_collection_poster'
+        ,'enable_collection_backdrop'
         ,'enable_video_poster'
         ,'enable_video_backdrop'
         ,'enable_edit_button'
@@ -562,13 +566,26 @@ if (isset($_POST['update'])) {
         ,'max_photo_categories'
         ,'max_collection_categories'
         ,'ratio_photo'
+
+        ,'list_recent_videos'
+        ,'list_home_collection_videos'
+        ,'limit_photo_related'
+        ,'min_age_reg'
+        ,'max_username'
+        ,'max_bg_width'
+        ,'vid_cat_width'
+        ,'vid_cat_height'
+        ,'max_comment_chr'
+        ,'tmdb_search'
+        ,'photo_other_limit'
+        ,'comments_per_page'
     ];
 
     $has_missing_config = false;
     foreach ($rows as $field) {
         $value = ($_POST[$field]);
         if (in_array($field, $num_array)) {
-            if ($field == 'min_age_reg' && ($value > 99 || $value <= 0 || !is_numeric($value))) {
+            if ($field == 'min_age_reg' && ($value > 99 || $value < 0 || !is_numeric($value))) {
                 e(lang('error_age_restriction_save'));
                 continue;
             }

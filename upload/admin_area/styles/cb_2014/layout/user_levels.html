@@ -18,7 +18,7 @@
         </tr>
         {section name=l loop=$levels}
             <tr>
-                <td>{$levels[l].user_level_name}</td>
+                <td>{display_clean($levels[l].user_level_name)}</td>
                 <td>
                     <input name="user_level_active" data-id="{$levels[l].user_level_id}"{if $levels[l].user_level_active == 'yes'} checked{/if}{if $levels[l].user_level_is_default == 'yes'} disabled title="{lang('default_userlevel_cannot_be_disabled')}"{elseif in_array($levels[l].user_level_id, [3,4])} disabled="disabled" title="{lang('userlevel_cannot_be_disabled')}"{/if} type="checkbox" class="ace ace-switch ace-switch-5 user_level_active"/>
                     <span class="lbl"></span>
@@ -62,7 +62,7 @@
         <div class="form-group">
             <div class="row">
                 <label for="level_name">Level name</label>
-                <input class="form-control" name="level_name" type="text" id="level_name" value="{$level_details.user_level_name}"/>
+                <input class="form-control" name="level_name" type="text" id="level_name" value="{display_clean($level_details.user_level_name)}"/>
             </div>
             {if Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.2', '87')}
                 <div class="row">

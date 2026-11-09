@@ -1010,16 +1010,20 @@ class Upload
      * @return string[]
      * @throws Exception
      */
-    public static function displayVideoThumbsForm($video): array
+    public static function displayVideoThumbsForm($video, $is_from_upload = false): array
     {
         assign('v', $video);
+        assign('is_from_upload', $is_from_upload);
         assign('cache_key', Video::getInstance()->getVideoCacheKey($video['last_modified'] ?? ''));
         if ($video['status'] != 'Waiting') {
-            $vidthumbs= VideoThumbs::getAllThumbFiles($video['videoid'], '168','105',type: 'thumbnail', is_auto: true, return_with_num: true) ?: [VideoThumbs::getDefaultMissingThumb(return_with_num: true)];
+            $vidthumbs= VideoThumbs::getAllThumbFiles($video['videoid'], '168','105',type: 'thumbnail', is_auto: true, return_with_num: true) ?: [ VideoThumbs::getDefaultMissingThumb(return_with_num: true)];
             $vidthumbs_custom = VideoThumbs::getAllThumbFiles($video['videoid'], '168','105',type: 'thumbnail', is_auto: false, return_with_num: true);
+        } elseif (empty($is_from_upload)) {
+            $vidthumbs = [ VideoThumbs::getDefaultMissingThumb(return_with_num: true)];
+            $vidthumbs_custom =[];
         } else {
-            $vidthumbs = [VideoThumbs::getDefaultMissingThumb(return_with_num: true)];
-            $vidthumbs_custom = [];
+            $vidthumbs = [];
+            $vidthumbs_custom = VideoThumbs::getAllThumbFiles($video['videoid'], '168','105',type: 'thumbnail', is_auto: false, return_with_num: true);
         }
         assign('vidthumbs', $vidthumbs);
         assign('vidthumbs_custom', $vidthumbs_custom);

@@ -15,9 +15,9 @@
             </tr>
             {foreach from=$emails item=email}
                 <tr>
-                    <td>{$email.code}</td>
-                    <td>{$email.title}</td>
-                    <td>{$email.template_code}</td>
+                    <td>{display_clean($email.code)}</td>
+                    <td>{display_clean($email.title)}</td>
+                    <td>{display_clean($email.template_code)}</td>
                     <td>
                         <div class="dropdown">
                             <button id="dropdownMenu1" class="btn btn-primary btn-xs dropdown-toggle" data-toggle="dropdown">{lang('action')} <i class="caret"></i>

@@ -2058,6 +2058,17 @@ function sort_link($data, $mode, $type): string
     } else {
         $cat = $_GET['cat'] ?? 'all';
     }
+    if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '299')) {
+        $allowed_sort = SortType::getSortTypes($type);
+        if (in_array($_GET['sort'], array_keys($allowed_sort))) {
+            $sort = $_GET['sort'];
+        }
+    } elseif(isset($_GET['sort'])) {
+        $sort = htmlspecialchars($_GET['sort']);
+    }
+    if (!is_numeric($cat) && $cat != 'all') {
+        $cat = 'all';
+    }
 
     //applying filters
     switch ($mode) {
@@ -2080,17 +2091,7 @@ function sort_link($data, $mode, $type): string
     if (!in_array($time, array_keys(time_links())) || empty($time)){
         $time = 'all_time';
     }
-    if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '299')) {
-        $allowed_sort = SortType::getSortTypes($type);
-        if (in_array($_GET['sort'], array_keys($allowed_sort))) {
-            $sort = $_GET['sort'];
-        }
-    } elseif(isset($_GET['sort'])) {
-        $sort = htmlspecialchars($_GET['sort']);
-    }
-    if (!is_numeric($cat) && $cat != 'all') {
-        $cat = 'all';
-    }
+
 
     $page = (int)$page;
     //prepare url

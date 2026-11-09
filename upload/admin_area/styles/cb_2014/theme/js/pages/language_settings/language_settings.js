@@ -144,7 +144,7 @@ $(document).ready(function () {
             type: "post",
             data: {id_language_key: id, translation: value, language_id: language_id},
             success: function () {
-                $('#' + id).html(value);
+                $('#' + id).text(value);
                 $('#input-' + id).hide();
                 $('#ok-' + id).hide();
                 $('#remove-' + id).hide();

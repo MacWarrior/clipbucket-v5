@@ -1,6 +1,6 @@
 {
   "version":"5.5.3",
-  "revision":"203",
+  "revision":"228",
   "status":"stable",
   "detail":[
     {
@@ -11,6 +11,7 @@
         ,"Refactor users deletion"
         ,"Refactor action logs"
         ,"Refactor TMDB data storage"
+        ,"Refactor manage users actions display"
         ,"Implement email alias allow option"
         ,"Implement templates edition"
         ,"Implement Regenerate videos thumbs tool"
@@ -30,7 +31,8 @@
         ,"Update manage tags type filter"
         ,"Update interfaces display when medias are disabled"
         ,"Update comments display on reports & stats"
-        ,"Update Manage videos actions display"
+        ,"Update Manage videos & manage pages actions display"
+        ,"Update mass upload cache usage"
         ,"Add links to flagged tags"
         ,"Hide poster & backdrop tabs when empty on video edition page"
         ,"Only show template editor menu while in dev mode"
@@ -83,6 +85,8 @@
         ,"Implement random photo order"
         ,"Implement video rating display"
         ,"Implement categories as submenus"
+        ,"Implement custom thumbnails upload before the end of video conversion"
+        ,"Implement collection custom thumbnails, backdrop & posters"
         ,"Update media rating"
         ,"Update collection management"
         ,"Update TMDB search interface"
@@ -125,6 +129,10 @@
         ,"Fix missing CSS file"
         ,"Fix password reset form (<i>#895</i>)"
         ,"Fix error message on unauthorized video access (<i>#904</i>)"
+        ,"Fix video orders"
+        ,"Fix photo upload (<i>#910</i>)"
+        ,"Fix empty collection error"
+        ,"Fix submit on multi video upload (<i>#907</i>)"
       ]
     },
     {
@@ -135,6 +143,7 @@
         ,"Implement PHP profiling"
         ,"Update compatibility to PHP 8.5.X"
         ,"Update changelog"
+        ,"Update timezone management"
         ,"Cleanup code"
         ,"Drop support for PHP 8.0"
         ,"Drop outdated & unused columns"
@@ -235,9 +244,9 @@
       "description": [
         "Fix possible RCE (Thanks @Takumi142857, @drkim-dev, @QwesiRED, @m0x41nos & @Bnyt7 !)"
         ,"Fix possible SQL injection (Thanks @drkim-dev, @FutureBuildingEN, @Bnyt7, @de3erve-hunter, @QwesiRED, @manus-use & @leediay153 !)"
-        ,"Fix possible XSS injection (Thanks @sy460129 !)"
+        ,"Fix possible XSS injection (Thanks @sy460129 & @leediay153 !)"
         ,"Fix possible SSRF (Thanks @Takumi142857 !)"
-        ,"Fix possible IDOR (Thanks @iys8, @de3erve-hunter, @Bnyt7, @Mr-In4inci3le, @sy460129 & @QwesiRED !)"
+        ,"Fix possible IDOR (Thanks @iys8, @de3erve-hunter, @Bnyt7, @Mr-In4inci3le, @sy460129 & @QwesiRED !) (<i>#922</i>)"
       ]
     }
   ]
