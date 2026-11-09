@@ -97,6 +97,7 @@ require_once DirPath::get('classes') . 'sort_type.class.php';
 require_once DirPath::get('classes') . 'video_conversion_queue.class.php';
 require_once DirPath::get('classes') . 'video_thumbs.class.php';
 require_once DirPath::get('classes') . 'photo_thumbs.class.php';
+require_once DirPath::get('classes') . 'collection_thumbs.class.php';
 
 $cb_columns = new cb_columns();
 $row = myquery::getInstance()->Get_Website_Details();

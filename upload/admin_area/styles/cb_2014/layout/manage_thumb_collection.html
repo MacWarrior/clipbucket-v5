@@ -1,0 +1,28 @@
+{if !empty($data)}
+    <h3>{lang('manage_x', lang($translation_type)|lower)}</h3>
+    <form action="{DirPath::getUrl('admin_area')}manage_thumb_collection.php?collection={$data.collection_id}&amp;type={$type}" method="post" enctype="multipart/form-data" id="thumb_list">
+        {include file="$style_dir/blocks/collection_thumb_list.html"}
+    </form>
+    <hr>
+    <form action="{DirPath::getUrl('admin_area')}manage_thumb_collection.php?collection={$data.collection_id}&amp;type={$type}" method="post" enctype="multipart/form-data" name="form1">
+        <h4>
+            {if $type == 'thumbnail'}
+                {lang code="upload_custom_thumbnail"}
+            {elseif $type == 'poster'}
+                {lang code="upload_poster"}
+            {else}
+                {lang code="upload_backdrop"}
+            {/if}
+        </h4>
+        <input name="collection_thumb[]" type="file" accept="image/*" required/>
+        <br/>
+        <input type="submit" name="upload_thumbs" value="{lang code='upload'}" class="btn btn-primary btn-sm"
+                {if !Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '227')} disabled="disabled" title="Sorry, you cannot perform this action until the application has been fully updated by an administrator" {/if}
+        />
+    </form>
+{/if}
+
+<script>
+    var collection_id = '{$data.collection_id}';
+    var image_type = '{$type|escape:'javascript'}';
+</script>
