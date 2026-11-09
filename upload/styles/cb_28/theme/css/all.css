@@ -7358,3 +7358,29 @@ h4:has(i) {
 #header .main-links .dropdown-menu>li:hover>.sub-menu {
   display: block;
 }
+
+#collection-items-modal #collection-items-query {
+  padding: 0 4px;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.2;
+  color: #858585;
+  background-color: #fff;
+  background-clip: padding-box;
+  border: 1px solid #d5d5d5 !important;
+  border-radius: 0 !important;
+  box-shadow: none;
+  transition-duration: .1s;
+}
+
+#collection-items-modal #collection-items-query:hover {
+  border-color: #b5b5b5 !important;
+}
+
+#collection-items-modal #collection-items-query:focus {
+  color: #696969;
+  background-color: #fff;
+  border-color: #f59942 !important;
+  box-shadow: none;
+  outline: 0;
+}
