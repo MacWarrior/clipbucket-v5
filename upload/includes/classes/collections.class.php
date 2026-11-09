@@ -57,7 +57,7 @@ class Collection extends Objects
             $this->fields[] = 'hierarchy_featured';
         }
 
-        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '999')) {
+        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '231')) {
             $this->fields[] = 'sub_item_featured';
             $this->fields[] = 'sub_collection_featured';
         }
@@ -1778,7 +1778,7 @@ class Collections extends CBCategory
             ];
         }
 
-        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '999')) {
+        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '231')) {
             $return['sub_item_featured'] = [
                 'title'             => lang('sub_item_featured'),
                 'class'             => 'form-control',
