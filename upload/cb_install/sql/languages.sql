@@ -1980,4 +1980,8 @@ VALUES ('noted_x'),
        ('selected_page_displayed'),
        ('collection_delete_successfully'),
        ('option_enable_collection_poster'),
-       ('option_enable_collection_backdrop');
+       ('option_enable_collection_backdrop'),
+       ('sub_item_featured'),
+       ('display_collection_sub_item_featured_hint'),
+       ('sub_collection_featured'),
+       ('display_collection_sub_collection_featured_hint');
