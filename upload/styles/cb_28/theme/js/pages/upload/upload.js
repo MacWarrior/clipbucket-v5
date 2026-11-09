@@ -376,7 +376,7 @@ $(document).ready(function(){
             index++
         });
 
-        $('.updateVideoInfoForm').on({
+        $('.updateVideoInfoForm').off().on({
             submit: function(e){
                 e.preventDefault();
                 const form_parent = $(this).parents('[id^=tab]');
