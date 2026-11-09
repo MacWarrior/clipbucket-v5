@@ -55,6 +55,8 @@ CREATE TABLE `{tbl_prefix}collections` (
   `date_added` datetime NOT NULL,
   `featured` varchar(4) NOT NULL DEFAULT 'no',
   `hierarchy_featured` ENUM('yes', 'no') DEFAULT 'no',
+  `sub_item_featured` ENUM('yes', 'no') DEFAULT 'no',
+  `sub_collection_featured` ENUM('yes', 'no') DEFAULT 'no',
   `broadcast` varchar(10) NOT NULL,
   `allow_comments` enum('yes','no') NOT NULL DEFAULT 'yes',
   `allow_rating` enum('yes','no') NOT NULL DEFAULT 'yes',
