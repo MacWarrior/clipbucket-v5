@@ -172,6 +172,29 @@ function pageViewHistory(page) {
     getViewHistory(videoid, page);
 }
 
+function deleteAudioTrack(number) {
+    if (confirm_it(lang_confirm_delete_audio_track.replace('%s', number))) {
+        $.ajax({
+            url: admin_url + 'actions/audio_track_delete.php',
+            type: "POST",
+            data: {videoid: videoid, track_number: number},
+            dataType: 'json',
+            beforeSend: function () {
+                showSpinner();
+            },
+            success: function (result) {
+                $('.page-content').prepend(result['msg']);
+                if (result['success'] === true) {
+                    $('#manageAudioTracks tbody tr[data-id="' + number + '"]').remove();
+                }
+            },
+            complete: function () {
+                hideSpinner();
+            }
+        });
+    }
+}
+
 function editAudioTrack(number) {
     $('#at_buttons-' + number).css('display', 'inline');
     $('#edit_at_' + number).css('display', 'inline');

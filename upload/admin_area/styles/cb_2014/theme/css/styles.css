@@ -1642,7 +1642,7 @@ li:has(.category-name){
 
 
 .drag-handle {
-    cursor: grab;
+    cursor: move;
 }
 
 .ligne-placeholder {
@@ -1657,4 +1657,8 @@ li:has(.category-name){
 
 #manageAudioTracks tbody tr {
     position: relative;
+}
+
+#manageAudioTracks tbody tr .glyphicon-move {
+    color: #999;
 }

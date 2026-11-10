@@ -200,8 +200,8 @@
                 cb_player_obj.vr({projection: video_fov});
             {/literal}
         {/if}
-        const video = cb_player_obj;
-        hasAudioTracksApi = "audioTracks" in video;
+        const video = document.createElement('video');
+        hasAudioTracksApi = video.audioTracks !== undefined && video.audioTracks !== null;
         if ($('.warning_audio_api') && !hasAudioTracksApi) {
             $('.warning_audio_api').removeClass('hidden');
         }

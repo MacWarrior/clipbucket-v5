@@ -29,7 +29,7 @@
                                 <li><a href="{DirPath::getUrl('admin_area')}edit_video.php?video={$data.videoid}&amp;mode=check_castable">{lang code='castable_status_check'}</a></li>
                             {/if}
                             <li><a href="{DirPath::getUrl('admin_area')}edit_video.php?video={$data.videoid}&amp;mode=update_bits_color">{lang code='update_bits_color'}</a></li>
-                            <li><a href="javascript:void(0);" onClick="javascript:Confirm_Delete('video_manager.php?delete_video={$data.videoid}')">{lang code='delete'}</a></li>
+                            <li><a href="javascript:void(0);" onClick="javascript:Confirm_Delete('video_manager.php?delete_video={$data.videoid}', lang_confirm_delete_video)">{lang code='delete'}</a></li>
                             {if $data.embeded != 'yes'}
                                 <li role="presentation"><a role="menuitem" tabindex="-1" href="javascript:void(0);" onClick="regenerateThumbs({$data.videoid});">Regenerate thumbnails</a></li>
                             {/if}
@@ -689,5 +689,6 @@
     lang['tag_too_short_dynamic_2'] = '{lang_js("tag_too_short_dynamic", 2)}';
     lang['tag_too_short_dynamic_3'] = '{lang_js("tag_too_short_dynamic", 3)}';
     var lang_confirm_delete_video = '{lang_js('confirm_delete_video')}';
+    var lang_confirm_delete_audio_track = '{lang_js('confirm_delete_audio_track')}';
 </script>
 {/if}

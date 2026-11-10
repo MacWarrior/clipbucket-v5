@@ -33,8 +33,8 @@ class MWIP extends \Migration
         self::generateConfig('audio_api_notification', 'no');
 
         self::generateTranslation('config_audio_api_notification', [
-            'fr' => 'Activer la notification de l’API Audio lorsque cela est pertinent.',
-            'en' => 'Enable Audio API notification when relevant.'
+            'fr' => 'Activer la notification de l’API Audio lorsque cela est pertinent',
+            'en' => 'Enable Audio API notification when relevant'
         ]);
         self::generateTranslation('config_audio_api_notification_hint', [
             'fr' => 'Affiche une notification discrète si une vidéo MP4 dispose de plusieurs pistes audio mais que l’API navigateur n’est pas disponible',
@@ -47,6 +47,10 @@ class MWIP extends \Migration
         self::generateTranslation('video_audio_track_list_management', [
             'fr' => 'Pistes audios',
             'en' => 'Audio tracks'
+        ]);
+        self::generateTranslation('confirm_delete_audio_track', [
+            'fr'=>'Êtes-vous certains de vouloir supprimer la piste audio n°%s ?',
+            'en'=>'Are you sure you want to delete audio track n°%s ?'
         ]);
 
 
@@ -356,10 +360,8 @@ class MWIP extends \Migration
             $fields = ['page_name', 'userid', 'date_added', 'active', 'page_order', 'delete_able', 'display'];
             $values = [$name, \User::getInstance()->getCurrentUserID(), now(), 'yes', Cbpage::getInstance()->getMaxPageOrder(), 'no', 'no'];
             $insert_id = \Clipbucket_db::getInstance()->insert(tbl(Cbpage::getInstance()->page_tbl), $fields, $values);
-            if (\Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '184')) {
-                foreach ($content as $lang_id => $content_trad) {
-                    Cbpage::getInstance()->insertOrUpdatePageTranslation($insert_id, $lang_id, $title[$lang_id], $content_trad);
-                }
+            foreach ($content as $lang_id => $content_trad) {
+                Cbpage::getInstance()->insertOrUpdatePageTranslation($insert_id, $lang_id, $title[$lang_id], $content_trad);
             }
         }
     }

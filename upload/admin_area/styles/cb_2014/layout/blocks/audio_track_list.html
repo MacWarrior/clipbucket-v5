@@ -1,6 +1,7 @@
 <table class="table table-bordered table-striped manageAudioTracks" id="manageAudioTracks">
     <thead>
     <tr>
+        <th></th>
         <th class="col-md-1">{lang code='number'}</th>
         <th class="col-md-10">{lang code='title'}</th>
         <th class="col-md-10">{lang code='order'}</th>
@@ -10,8 +11,9 @@
     <tbody>
     {section name=sub loop=$audio_track_list}
         <tr data-id="{$audio_track_list[sub].track_number}">
-            <td>{$audio_track_list[sub].track_number}</td>
-            <td>
+            <td class="drag-handle alignCenter"><span class="glyphicon glyphicon-move"></span></td>
+            <td class="drag-handle">{$audio_track_list[sub].track_number}</td>
+            <td class="drag-handle">
                 <span style="display: block;" id="span_at_{$audio_track_list[sub].track_number}">{display_clean($audio_track_list[sub].title)}</span>
                 <input type="text" class="form-control" value="{display_clean($audio_track_list[sub].title)}" id="edit_at_{$audio_track_list[sub].track_number}" style="display:none; width: 80%;">
                 <div style="text-align: center; vertical-align: middle;display: none;" id="at_buttons-{$audio_track_list[sub].track_number}">
@@ -19,15 +21,19 @@
                     <span class="glyphicon glyphicon-remove-circle cancel_translation" title="{lang code='cancel'}" style="color:#d15b47;font-size:1.5em;cursor:pointer; margin-left: 15px;" onclick="cancelEditAudioTrack('{$audio_track_list[sub].track_number}');"></span>
                 </div>
             </td>
-            <td class="order">{$audio_track_list[sub].order}</td>
+            <td class="order drag-handle">{$audio_track_list[sub].order}</td>
             <td class="drag-handle">
                 <div class="dropdown clearfix alignCenter">
-                    ☰
                     <button id="dropdownMenu1" class="btn btn-primary btn-xs dropdown-toggle" data-toggle="dropdown">Actions <i class="caret"></i></button>
                     <ul class="dropdown-menu pull-right" aria-labelledby="dropdownMenu1" role="menu">
                         <li role="presentation">
                             <a role="menuitem" tabindex="-1" style="cursor:pointer;" onclick="editAudioTrack('{$audio_track_list[sub].track_number}')">
                                 {lang code='edit'}
+                            </a>
+                        </li>
+                        <li role="presentation">
+                            <a role="menuitem" tabindex="-1" style="cursor:pointer;" onclick="deleteAudioTrack('{$audio_track_list[sub].track_number}')">
+                                {lang code='delete'}
                             </a>
                         </li>
                     </ul>

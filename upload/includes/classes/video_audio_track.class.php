@@ -58,6 +58,28 @@ class VideoAudioTrack
     }
 
     /**
+     * @param $params
+     * @return bool
+     * @throws Exception
+     */
+    public static function deleteAudioTrack($params): bool
+    {
+        $sql = 'DELETE FROM ' . tbl(self::$tablename) . ' WHERE `videoid` = ' . (int)$params['videoid'] . ' AND `track_number` = ' . (int)$params['track_number'];
+        return (bool)Clipbucket_db::getInstance()->execute($sql);
+    }
+
+    /**
+     * @param $videoid
+     * @return bool
+     * @throws Exception
+     */
+    public static function deleteAudioTracks($videoid): bool
+    {
+        $sql = 'DELETE FROM ' . tbl(self::$tablename) . ' WHERE `videoid` = ' . (int)$videoid;
+        return (bool)Clipbucket_db::getInstance()->execute($sql);
+    }
+
+    /**
      * @param $videoid
      * @param $lines
      * @return bool

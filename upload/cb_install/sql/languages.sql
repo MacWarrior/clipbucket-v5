@@ -1988,4 +1988,5 @@ VALUES ('noted_x'),
        ('config_audio_api_notification'),
        ('config_audio_api_notification_hint'),
        ('audio_api_notification'),
-       ('video_audio_track_list_management');
+       ('video_audio_track_list_management'),
+       ('confirm_delete_audio_track');

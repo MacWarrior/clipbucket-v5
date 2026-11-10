@@ -2065,6 +2065,8 @@ class CBvideo extends CBCategory
                 $params['type_id'] = $vdetails['videoid'];
                 Comments::delete($params);
 
+                VideoAudioTrack::deleteAudioTracks($vdetails['videoid']);
+
                 //Finally Removing Database entry of video
                 Clipbucket_db::getInstance()->execute('DELETE FROM ' . tbl('video') . ' WHERE videoid = ' . (int)$vdetails['videoid']);
                 Clipbucket_db::getInstance()->update(tbl('users'), ['total_videos'], ['|f|total_videos-1'], ' userid= ' . (int)$vdetails['userid']);
