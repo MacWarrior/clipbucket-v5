@@ -1639,3 +1639,26 @@ li:has(.category-name){
     white-space: nowrap;
     text-overflow: ellipsis;
 }
+
+
+.drag-handle {
+    cursor: move;
+}
+
+.ligne-placeholder {
+    height: 45px;
+    background: #eee;
+    border: 2px dashed #999;
+}
+
+.ui-sortable-helper {
+    display: table;
+}
+
+#manageAudioTracks tbody tr {
+    position: relative;
+}
+
+#manageAudioTracks tbody tr .glyphicon-move {
+    color: #999;
+}

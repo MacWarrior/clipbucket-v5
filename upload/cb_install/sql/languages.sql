@@ -1984,4 +1984,9 @@ VALUES ('noted_x'),
        ('sub_item_featured'),
        ('display_collection_sub_item_featured_hint'),
        ('sub_collection_featured'),
-       ('display_collection_sub_collection_featured_hint');
+       ('display_collection_sub_collection_featured_hint'),
+       ('config_audio_api_notification'),
+       ('config_audio_api_notification_hint'),
+       ('audio_api_notification'),
+       ('video_audio_track_list_management'),
+       ('confirm_delete_audio_track');

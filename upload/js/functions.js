@@ -2,8 +2,11 @@ var page = baseurl+'actions/ajax.php';
 var loading_img = "<img style='vertical-align:middle' src='"+imageurl+"/ajax-loader.gif'>";
 var loading = loading_img+" Loading...";
 
-function Confirm_Delete(delUrl) {
-    if (confirm("Are you sure you want to delete")) {
+function Confirm_Delete(delUrl, lang) {
+    if (typeof lang === 'undefined') {
+        lang = "Are you sure you want to delete";
+    }
+    if (confirm(lang)) {
         document.location = delUrl;
     }
 }

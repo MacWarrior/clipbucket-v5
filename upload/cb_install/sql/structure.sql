@@ -1448,3 +1448,15 @@ ALTER TABLE `{tbl_prefix}collections`
 ALTER TABLE `{tbl_prefix}collections`
     ADD CONSTRAINT `collection_default_backdrop_ibfk_1` FOREIGN KEY (default_backdrop) REFERENCES `{tbl_prefix}collection_image` (id_collection_image) ON DELETE SET NULL;
 
+CREATE TABLE IF NOT EXISTS `{tbl_prefix}video_audio_tracks`
+(
+    `videoid`      BIGINT(20)  NOT NULL,
+    `track_number` TINYINT     NULL,
+    `title`        VARCHAR(64) NOT NULL,
+    `order`        TINYINT     NOT NULL,
+    PRIMARY KEY (`videoid`, `track_number`)
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8mb4
+  COLLATE utf8mb4_unicode_520_ci;
+ALTER TABLE `{tbl_prefix}video_audio_tracks`
+    ADD CONSTRAINT `video_audio_tracks_ibfk_1` FOREIGN KEY (`videoid`) REFERENCES `{tbl_prefix}video` (`videoid`) ON DELETE RESTRICT ON UPDATE NO ACTION;

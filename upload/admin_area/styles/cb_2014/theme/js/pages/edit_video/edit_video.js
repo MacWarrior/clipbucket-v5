@@ -172,6 +172,58 @@ function pageViewHistory(page) {
     getViewHistory(videoid, page);
 }
 
+function deleteAudioTrack(number) {
+    if (confirm_it(lang_confirm_delete_audio_track.replace('%s', number))) {
+        $.ajax({
+            url: admin_url + 'actions/audio_track_delete.php',
+            type: "POST",
+            data: {videoid: videoid, track_number: number},
+            dataType: 'json',
+            beforeSend: function () {
+                showSpinner();
+            },
+            success: function (result) {
+                $('.page-content').prepend(result['msg']);
+                if (result['success'] === true) {
+                    $('#manageAudioTracks tbody tr[data-id="' + number + '"]').remove();
+                }
+            },
+            complete: function () {
+                hideSpinner();
+            }
+        });
+    }
+}
+
+function editAudioTrack(number) {
+    $('#at_buttons-' + number).css('display', 'inline');
+    $('#edit_at_' + number).css('display', 'inline');
+    $('#span_at_' + number).hide();
+}
+
+function cancelEditAudioTrack(number) {
+    $('#at_buttons-' + number).hide();
+    $('#edit_at_' + number).hide();
+    $('#span_at_' + number).show();
+}
+
+function saveAudioTrack(number) {
+
+    showSpinner();
+    $.ajax({
+        url: admin_url + 'actions/audio_track_edit.php',
+        type: "POST",
+        data: {title: $('#edit_at_' + number).val(), videoid: videoid, track_number: number},
+        dataType: 'json',
+        success: function (result) {
+            $('#audio_track_list').html(result['template']);
+            hideSpinner();
+            $('.close').click();
+            $('.page-content').prepend(result['msg']);
+        }
+    });
+}
+
 $( document ).ready(function() {
     $("[id^=tags]").each(function(elem){
         init_tags(this.id, available_tags[this.id.replace('tags_', '')], '#list_'+this.id);
@@ -280,4 +332,37 @@ $( document ).ready(function() {
         yearRange: "-99y:+0",
         regional: language
     });
+
+    var tbody = $("#manageAudioTracks tbody");
+
+    tbody.sortable({
+        items: "tr",
+        axis: "y",
+        handle: ".drag-handle",
+        placeholder: "ligne-placeholder",
+        forcePlaceholderSize: true,
+        tolerance: "pointer",
+        cursor: "move",
+
+
+        update: function() {
+            var lignes = [];
+            $("#manageAudioTracks tbody tr").each(function (index) {
+                var ordre = index ;
+                var id = $(this).data("id");
+
+                $(this).find(".order").text(ordre);
+                lignes.push(id);
+            });
+            $.ajax({
+                url: admin_url + "/actions/audio_track_update_order.php",
+                type: "POST",
+                dataType: "json",
+                data: {
+                    lines: lignes,
+                    videoid: videoid
+                }
+            });
+        }
+    }).disableSelection();
 });

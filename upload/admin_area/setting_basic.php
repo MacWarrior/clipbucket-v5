@@ -209,6 +209,7 @@ if (isset($_POST['update'])) {
         , 'enable_all_categ_for_photo'
         , 'enable_all_categ_for_collection'
         , 'enable_all_categ_for_channel'
+        , 'audio_api_notification'
     ];
 
     $config_booleans_to_refactor = [
@@ -511,6 +512,7 @@ if (isset($_POST['update'])) {
         , 'enable_all_categ_for_photo'
         , 'enable_all_categ_for_collection'
         , 'enable_all_categ_for_channel'
+        , 'audio_api_notification'
     ];
 
     //Numeric Array

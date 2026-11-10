@@ -71,6 +71,7 @@ class CB_video_js
 
         assign('video_files', $video_play);
         assign('vdata', $vdetails);
+        assign('audio_tracks', VideoAudioTrack::getAudioTracks($vdetails['videoid']));
         assign('anonymous_id', userquery::getInstance()->get_anonymous_user());
 
         if( config('enable_video_embed_players') == 'yes' && !BACK_END ){
