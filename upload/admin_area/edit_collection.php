@@ -11,7 +11,7 @@ if (isset($_POST['update_collection'])) {
     Collections::getInstance()->update_collection();
 }
 
-//Performing Actionsf
+//Performing Actions
 if ($_GET['mode'] != '') {
     Collections::getInstance()->collection_actions($_GET['mode'], $id);
 }
@@ -44,7 +44,7 @@ if (isset($_POST['update_collection'], $_POST['default_thumb']) && !error()) {
             throw new Exception(lang('technical_error'));
         }
         if (preg_match('/^custom_([1-9][0-9]*)$/', $default_thumb, $matches)) {
-            if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '999')) {
+            if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '227')) {
                 CollectionThumbs::setDefaultImage((int)$id, (int)$matches[1]);
             } else {
                 e('Sorry, you cannot perform this action until the application has been fully updated by an administrator');
@@ -71,7 +71,7 @@ if (CollectionThumbs::isTypeAllowed($collection, 'poster')) {
             if (!$default_poster) {
                 throw new Exception(lang('technical_error'));
             }
-            if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '999')) {
+            if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '227')) {
                 CollectionThumbs::setDefaultImage((int)$id, $default_poster, 'poster');
             } else {
                 e('Sorry, you cannot perform this action until the application has been fully updated by an administrator');
@@ -98,7 +98,7 @@ if (CollectionThumbs::isTypeAllowed($collection, 'backdrop')) {
             if (!$default_backdrop) {
                 throw new Exception(lang('technical_error'));
             }
-            if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '999')) {
+            if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '227')) {
                 CollectionThumbs::setDefaultImage((int)$id, $default_backdrop, 'backdrop');
             } else {
                 e('Sorry, you cannot perform this action until the application has been fully updated by an administrator');
@@ -145,6 +145,15 @@ $breadcrumb[2] = [
 ];
 
 assign('data', $collection);
+assign('preview_collection', Collection::getInstance()->getOne([
+    'collection_id'         => $collection['collection_id'],
+    'hide_empty_collection' => 'no',
+    'with_items'            => true,
+    'with_sub_items'        => true,
+    'count_items_only'      => true
+]));
+assign('collection_preview_template', SITETEMPLATEDIR . DIRECTORY_SEPARATOR . 'layout' . DIRECTORY_SEPARATOR . 'blocks' . DIRECTORY_SEPARATOR . 'collection-item.html');
+assign('collection_preview_theme', DirPath::getUrl('styles') . config('template_dir') . '/theme');
 assign('link_user', DirPath::getUrl('admin_area') . 'view_user.php?uid=' . $collection['userid']);
 
 $params = [];
@@ -163,8 +172,9 @@ ClipBucket::getInstance()->addAdminJS([
 ]);
 
 ClipBucket::getInstance()->addAdminCSS([
-    'jquery.tagit' . $min_suffixe . '.css'     => 'admin',
-    'tagit.ui-zendesk' . $min_suffixe . '.css' => 'admin'
+    'pages/edit_collection/preview.css' . $min_suffixe . '.css' => 'admin',
+    'jquery.tagit' . $min_suffixe . '.css'                      => 'admin',
+    'tagit.ui-zendesk' . $min_suffixe . '.css'                  => 'admin'
 ]);
 
 if (config('enable_visual_editor_comments') == 'yes') {

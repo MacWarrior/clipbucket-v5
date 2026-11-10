@@ -55,6 +55,8 @@ CREATE TABLE `{tbl_prefix}collections` (
   `date_added` datetime NOT NULL,
   `featured` varchar(4) NOT NULL DEFAULT 'no',
   `hierarchy_featured` ENUM('yes', 'no') DEFAULT 'no',
+  `sub_item_featured` ENUM('yes', 'no') DEFAULT 'no',
+  `sub_collection_featured` ENUM('yes', 'no') DEFAULT 'no',
   `broadcast` varchar(10) NOT NULL,
   `allow_comments` enum('yes','no') NOT NULL DEFAULT 'yes',
   `allow_rating` enum('yes','no') NOT NULL DEFAULT 'yes',
@@ -1097,13 +1099,6 @@ CREATE TABLE IF NOT EXISTS `{tbl_prefix}tmdb_search_result`
 ALTER TABLE `{tbl_prefix}tmdb_search_result`
     ADD CONSTRAINT `search_result` FOREIGN KEY (`id_tmdb_search`) REFERENCES `{tbl_prefix}tmdb_search` (`id_tmdb_search`) ON DELETE CASCADE ON UPDATE CASCADE;
 
-CREATE TABLE IF NOT EXISTS `{tbl_prefix}timezones` (
-   `id` INT AUTO_INCREMENT PRIMARY KEY,
-   `timezone` VARCHAR(255) NOT NULL UNIQUE
-) ENGINE = InnoDB
-DEFAULT CHARSET = utf8mb4
-COLLATE utf8mb4_unicode_520_ci;
-
 CREATE TABLE IF NOT EXISTS `{tbl_prefix}users_storage_histo`
 (
     `id_user`       BIGINT   NOT NULL,
@@ -1455,3 +1450,4 @@ ALTER TABLE `{tbl_prefix}collections`
     ADD CONSTRAINT `collection_default_poster_ibfk_1` FOREIGN KEY (default_poster) REFERENCES `{tbl_prefix}collection_image` (id_collection_image) ON DELETE SET NULL;
 ALTER TABLE `{tbl_prefix}collections`
     ADD CONSTRAINT `collection_default_backdrop_ibfk_1` FOREIGN KEY (default_backdrop) REFERENCES `{tbl_prefix}collection_image` (id_collection_image) ON DELETE SET NULL;
+

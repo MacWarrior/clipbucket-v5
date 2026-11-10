@@ -9,7 +9,7 @@ if( !isSectionEnabled('collections') || (!isSectionEnabled('videos') && !isSecti
     redirect_to(cblink(['name' => 'my_account']));
 }
 
-$udetails = userquery::getInstance()->get_user_details(user_id());
+$udetails = userquery::getInstance()->get_user_details(User::getInstance()->getCurrentUserID());
 assign('user', $udetails);
 $order = 'collection_items.date_added DESC';
 
@@ -26,8 +26,6 @@ switch ($mode) {
         if( !User::getInstance()->hasPermission('allow_create_collection') ){
             redirect_to(cblink(['name' => 'my_account']));
         }
-
-
         if (isset($_GET['delete_collection'])) {
             $collection_id = $_GET['delete_collection'];
             Collections::getInstance()->delete_collection($collection_id);
@@ -42,7 +40,7 @@ switch ($mode) {
             e(lang('selected_collects_del'), 'm');
         }
         $collectArray = [
-            'userid'  => user_id(),
+            'userid'  => User::getInstance()->getCurrentUserID(),
             'limit' => $get_limit,
             'allow_children'=>true
         ];
@@ -109,7 +107,7 @@ switch ($mode) {
             SessionMessageHandler::add_message(lang('collection_not_exist'), 'e', DirPath::getUrl('root') . 'manage_collections.php');
             break;
         }
-        if (!Collections::getInstance()->is_collection_owner($collection, user_id()) && !User::getInstance()->hasAdminAccess()) {
+        if (!Collections::getInstance()->is_collection_owner($collection, User::getInstance()->getCurrentUserID()) && !User::getInstance()->hasAdminAccess()) {
             SessionMessageHandler::add_message(lang('cant_edit_collection'), 'e', DirPath::getUrl('root') . 'manage_collections.php');
             break;
         }
@@ -132,7 +130,7 @@ switch ($mode) {
             }
             if (isset($_POST['update_collection']) && !error()) {
                 try {
-                    if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '999')) {
+                    if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '227')) {
                         $files = $_FILES['collection_' . $image_type] ?? [];
                         if (!empty($files['name']) && is_array($files['name'])) {
                             foreach ($files['name'] as $key => $name) {

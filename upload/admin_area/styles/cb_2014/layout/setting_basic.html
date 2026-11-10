@@ -2263,6 +2263,18 @@
                                 </div>
                             </div>
                             <hr/>
+                            </div>
+                            <hr/>
+                            <div class="row">
+                                <div class="col-md-8">
+                                    <label for="enable_collection_poster">{lang('option_enable_collection_poster')}</label>
+                                </div>
+                                <div class="col-md-2 row-size">
+                                    <input value="yes" name="enable_collection_poster" id="enable_collection_poster" {if $row.enable_collection_poster=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+                                    <span class="lbl"></span>
+                                </div>
+                            </div>
+                            <hr/>
                             <div class="row">
                                 <div class="col-md-8">
                                     <label for="enable_get_collection_title_from_tmdb">{lang('option_enable_get_collection_title_from_tmdb')}</label>
@@ -2309,10 +2321,22 @@
                                 <div class="col-md-8">
                                     <label class="nowrap" for="enable_sub_collection" title="Enable Sub-Collections">Enable Sub-Collections</label>
                                 </div>
-                                <div class="col-md-2 row-size no_padding">
+                                <div class="col-md-2 row-size">
                                     <input value="yes" name="enable_sub_collection" id="enable_sub_collection" {if $row.enable_sub_collection=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
                                     <span class="lbl"></span>
                                 </div>
+                            </div>
+                            <hr/>
+                            <div class="row">
+                                <div class="col-md-8">
+                                    <label for="enable_collection_backdrop">{lang('option_enable_collection_backdrop')}</label>
+                                </div>
+                                <div class="col-md-2 row-size">
+                                    <input value="yes" name="enable_collection_backdrop" id="enable_collection_backdrop" {if $row.enable_collection_backdrop=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+                                    <span class="lbl"></span>
+                                </div>
+                            </div>
+                            <hr/>
                             </div>
                             <hr/>
                             <div class="row">

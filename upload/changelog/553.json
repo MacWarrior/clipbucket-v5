@@ -1,6 +1,6 @@
 {
   "version":"5.5.3",
-  "revision":"222",
+  "revision":"232",
   "status":"stable",
   "detail":[
     {
@@ -31,7 +31,7 @@
         ,"Update manage tags type filter"
         ,"Update interfaces display when medias are disabled"
         ,"Update comments display on reports & stats"
-        ,"Update Manage videos actions display"
+        ,"Update Manage videos & manage pages actions display"
         ,"Update mass upload cache usage"
         ,"Add links to flagged tags"
         ,"Hide poster & backdrop tabs when empty on video edition page"
@@ -65,6 +65,8 @@
         ,"Fix default homepage check"
         ,"Fix template edition file selection (Thanks @leediay153 !)"
         ,"Fix template edition display"
+        ,"Fix collection items link"
+        ,"Fix possible SQL error on user edition page"
       ]
     },
     {
@@ -86,6 +88,8 @@
         ,"Implement video rating display"
         ,"Implement categories as submenus"
         ,"Implement custom thumbnails upload before the end of video conversion"
+        ,"Implement collection custom thumbnails, backdrop & posters"
+        ,"Implement featured collections display options"
         ,"Update media rating"
         ,"Update collection management"
         ,"Update TMDB search interface"
@@ -130,6 +134,9 @@
         ,"Fix error message on unauthorized video access (<i>#904</i>)"
         ,"Fix video orders"
         ,"Fix photo upload (<i>#910</i>)"
+        ,"Fix empty collection error"
+        ,"Fix submit on multi video upload (<i>#907</i>)"
+        ,"Fix personnal messages notification emails"
       ]
     },
     {
@@ -140,6 +147,7 @@
         ,"Implement PHP profiling"
         ,"Update compatibility to PHP 8.5.X"
         ,"Update changelog"
+        ,"Update timezone management"
         ,"Cleanup code"
         ,"Drop support for PHP 8.0"
         ,"Drop outdated & unused columns"
@@ -242,7 +250,7 @@
         ,"Fix possible SQL injection (Thanks @drkim-dev, @FutureBuildingEN, @Bnyt7, @de3erve-hunter, @QwesiRED, @manus-use & @leediay153 !)"
         ,"Fix possible XSS injection (Thanks @sy460129 & @leediay153 !)"
         ,"Fix possible SSRF (Thanks @Takumi142857 !)"
-        ,"Fix possible IDOR (Thanks @iys8, @de3erve-hunter, @Bnyt7, @Mr-In4inci3le, @sy460129 & @QwesiRED !)"
+        ,"Fix possible IDOR (Thanks @iys8, @de3erve-hunter, @Bnyt7, @Mr-In4inci3le, @sy460129 & @QwesiRED !) (<i>#922</i>)"
       ]
     }
   ]

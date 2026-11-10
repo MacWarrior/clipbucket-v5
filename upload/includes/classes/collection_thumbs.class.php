@@ -99,7 +99,7 @@ class CollectionThumbs
      */
     public static function getAll(array $params): array
     {
-        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '999')) {
+        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '227')) {
             $param_first_only = $params['first_only'] ?? false;
             $param_collection_id = $params['collection_id'] ?? false;
             $param_id_collection_image = $params['id_collection_image'] ?? false;
@@ -166,7 +166,7 @@ class CollectionThumbs
      */
     public static function getAllThumbs(array $params)
     {
-        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '999')) {
+        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '227')) {
             $param_first_only = $params['first_only'] ?? false;
             $param_limit = $params['limit'] ?? false;
             $param_count = $params['count'] ?? false;
@@ -296,7 +296,7 @@ class CollectionThumbs
         if (!in_array($type, ['thumbnail', 'poster', 'backdrop'], true)) {
             return 0;
         }
-        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '999')) {
+        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '227')) {
             $result = Clipbucket_db::getInstance()->_select('SELECT default_' . $type . ' FROM ' . tbl('collections')
                 . ' WHERE collection_id = ' . $collection_id);
             return (int)($result[0]['default_' . $type] ?? 0);
@@ -409,7 +409,7 @@ class CollectionThumbs
      */
     public static function setDefaultImage(int $collection_id, int $id_collection_image, string $type = 'thumbnail'): void
     {
-        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '999')) {
+        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '227')) {
             if (!in_array($type, ['thumbnail', 'poster', 'backdrop'], true)) {
                 throw new Exception(lang('technical_error'));
             }
@@ -469,7 +469,7 @@ class CollectionThumbs
      */
     public static function importImage(array $collection, array $file, string $type = 'thumbnail'): int
     {
-        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '999')) {
+        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '227')) {
             if (!self::isTypeAllowed($collection, $type)) {
                 e(lang('technical_error'));
                 return 0;
@@ -544,7 +544,7 @@ class CollectionThumbs
                         throw new Exception(lang('error_uploading_thumb'));
                     }
                     self::convertImage($path, $ext_destination);
-                    if (!empty($res['should_watermark']) && config('watermark_collection')) {
+                    if (!empty($res['should_watermark']) && config('watermark_photo')) {
                         self::watermark_image($path, $path);
                     }
                     // Width/height identify the configured rendition, including for small sources.
@@ -785,7 +785,7 @@ class CollectionThumbs
      */
     public static function deleteCollectionImage(array $image): void
     {
-        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '999')) {
+        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '227')) {
             $image = self::getOne([
                 'id_collection_image' => $image['id_collection_image'],
                 'collection_id'       => $image['collection_id']
@@ -816,7 +816,7 @@ class CollectionThumbs
      */
     public static function deleteCollectionThumb(array $thumb): void
     {
-        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '999')) {
+        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '227')) {
             $path = DirPath::get('thumbs') . 'collection' . DIRECTORY_SEPARATOR . self::getThumbPath(
                 $thumb['collection_id'],
                 $thumb['type'],

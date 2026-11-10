@@ -57,6 +57,11 @@ class Collection extends Objects
             $this->fields[] = 'hierarchy_featured';
         }
 
+        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '231')) {
+            $this->fields[] = 'sub_item_featured';
+            $this->fields[] = 'sub_collection_featured';
+        }
+
         if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '117')) {
             $this->fields[] = 'total_rate_up';
             $this->fields[] = 'total_rate_down';
@@ -66,7 +71,7 @@ class Collection extends Objects
             $this->fields[] = 'voters';
         }
 
-        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '999')) {
+        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '227')) {
             $this->fields[] = 'default_backdrop';
             $this->fields[] = 'default_poster';
             $this->fields[] = 'use_backdrop_as_default_thumb';
@@ -104,7 +109,7 @@ class Collection extends Objects
      */
     public static function getUseBackdropDefault(array $data): bool
     {
-        if (!Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '999')) {
+        if (!Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '227')) {
             return false;
         }
         return config('enable_collection_backdrop') == 'yes'
@@ -291,6 +296,7 @@ class Collection extends Objects
         $param_with_sub_items = $params['with_sub_items'] ?? false;
         $param_count_items_only = $params['count_items_only'] ?? false;
         $param_limit_item = $params['limit_item'] ?? false;
+        $param_check_for_featured_restriction = $params['check_for_featured_restriction'] ?? false;
 
         $conditions = [];
         if( $param_collection_id !== false ){
@@ -574,8 +580,12 @@ class Collection extends Objects
                         FROM descendants
                         WHERE depth > 0;';
                     $collection_child_list = Clipbucket_db::getInstance()->_select($sql_childs, 60, 'collection_childrens_'. $collection['collection_id']);
-                    $params_item['collection_id'] = array_map(fn($item) => $item['collection_id'], $collection_child_list);
-                    $params_item['collection_id'][] = $collection['collection_id'];
+                    if (($param_check_for_featured_restriction && $collection['sub_item_featured'] == 'yes') || !$param_check_for_featured_restriction) {
+                        $params_item['collection_id'] = array_map(fn($item) => $item['collection_id'], $collection_child_list);
+                        $params_item['collection_id'][] = $collection['collection_id'];
+                    } else {
+                        $params_item['collection_id'] = $collection['collection_id'];
+                    }
                 } else {
                     $params_item['collection_id'] = $collection['collection_id'];
                 }
@@ -604,6 +614,10 @@ class Collection extends Objects
                         $params_item['order'] = $this->getTableNameItems() . '.date_added ASC';
                     }
                     $collection['items'] = Photo::getInstance()->getAll($params_item);
+                }
+
+                if ($collection['sub_collection_featured'] == 'yes' && !empty($collection_child_list)) {
+                    $collection['items_collections'] = $this->getAll(['condition' => ' ' . $this->getTableName() . '.collection_id IN (' . implode(', ',array_column($collection_child_list, 'collection_id')) . ')' , 'allow_children'=>true]);
                 }
 
                 if( $param_count_items_only ){
@@ -698,6 +712,31 @@ class Collection extends Objects
             return false;
         }
         return $items[0];
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function getFirstItemViewable(array $params = [])
+    {
+        $items = $this->getItems($params);
+        if( empty($items) ){
+            return false;
+        }
+        foreach ($items as $item) {
+            if (!empty($item['videoid'])) {
+                $first_item = Video::getInstance()->getOne(['videoid'=>$item['videoid']]);
+                if (!empty($first_item)) {
+                    return $first_item;
+                }
+            } elseif (!empty($item['photo_id'])) {
+                $first_item = Video::getInstance()->getOne(['photo_id'=>$item['photo_id']]);
+                if (!empty($first_item)) {
+                    return $first_item;
+                }
+            }
+        }
+        return false;
     }
 
     /**
@@ -1693,7 +1732,7 @@ class Collections extends CBCategory
             ];
         }
 
-        if (config('enable_collection_backdrop') == 'yes' && Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '999')) {
+        if (config('enable_collection_backdrop') == 'yes' && Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '227')) {
             $return['use_backdrop_as_default_thumb'] = [
                 'type'              => 'checkboxv2',
                 'id'                => 'use_backdrop_as_default_thumb',
@@ -1733,6 +1772,37 @@ class Collections extends CBCategory
                 'checked'           => $default['hierarchy_featured'] ?? 'no',
                 'hint_icon'         => lang('display_collection_hierarchy_featured_hint'),
                 'db_field'          => 'hierarchy_featured',
+                'required'          => 'no',
+                'validate_function' => 'yes_or_no',
+                'default_value'     => 'yes'
+            ];
+        }
+
+        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '231')) {
+            $return['sub_item_featured'] = [
+                'title'             => lang('sub_item_featured'),
+                'class'             => 'form-control',
+                'type'              => 'checkboxv2',
+                'id'                => 'sub_item_featured',
+                'name'              => 'sub_item_featured',
+                'value'             => 'yes',
+                'checked'           => $default['sub_item_featured'] ?? 'no',
+                'hint_icon'         => lang('display_collection_sub_item_featured_hint'),
+                'db_field'          => 'sub_item_featured',
+                'required'          => 'no',
+                'validate_function' => 'yes_or_no',
+                'default_value'     => 'yes'
+            ];
+            $return['sub_collection_featured'] = [
+                'title'             => lang('sub_collection_featured'),
+                'class'             => 'form-control',
+                'type'              => 'checkboxv2',
+                'id'                => 'sub_collection_featured',
+                'name'              => 'sub_collection_featured',
+                'value'             => 'yes',
+                'checked'           => $default['sub_collection_featured'] ?? 'no',
+                'hint_icon'         => lang('display_collection_sub_collection_featured_hint'),
+                'db_field'          => 'sub_collection_featured',
                 'required'          => 'no',
                 'validate_function' => 'yes_or_no',
                 'default_value'     => 'yes'
@@ -1961,7 +2031,7 @@ class Collections extends CBCategory
     function is_collection_owner($cdetails, $userid = null): bool
     {
         if ($userid == null) {
-            $userid = user_id();
+            $userid = User::getInstance()->getCurrentUserID();
         }
 
         if (!is_array($cdetails)) {
@@ -2148,7 +2218,7 @@ class Collections extends CBCategory
                 e(lang('you_not_logged_in'));
             } elseif (!$this->collection_exists($cid)) {
                 e(lang('collect_not_exist'));
-            } elseif (!$this->is_collection_owner($cid, user_id()) && !User::getInstance()->hasAdminAccess()) {
+            } elseif (!$this->is_collection_owner($cid, User::getInstance()->getCurrentUserID()) && !User::getInstance()->hasAdminAccess()) {
                 e(lang('cant_edit_collection'));
             } else {
                 Clipbucket_db::getInstance()->update(tbl($this->section_tbl), $query_field, $query_val, ' collection_id = ' . (int)$cid);
@@ -2443,6 +2513,9 @@ class Collections extends CBCategory
         }
 
         if( $col_data['type'] == 'videos' ){
+            if (empty(Video::getInstance()->getOne(['videoid'=>$object_id]))) {
+                $object_id = Collection::getInstance()->getFirstItemViewable(['collection_id'=>$col_data['collection_id']])['videoid'] ?? false;
+            }
             return VideoThumbs::getDefaultThumbFile($object_id, $width, $height);
         }
 
@@ -2452,6 +2525,9 @@ class Collections extends CBCategory
             $size = '900';
         } elseif ($size == 'm') {
             $size = '550';
+        }
+        if (empty(Photo::getInstance()->getOne(['photo_id'=>$object_id]))) {
+            $object_id = Collection::getInstance()->getFirstItemViewable(['collection_id'=>$col_data['collection_id']])['photo_id'] ?? false;
         }
         return PhotoThumbs::getThumbFile($object_id, $size);
     }
