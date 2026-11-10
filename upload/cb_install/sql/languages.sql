@@ -1984,10 +1984,7 @@ VALUES ('noted_x'),
        ('sub_item_featured'),
        ('display_collection_sub_item_featured_hint'),
        ('sub_collection_featured'),
-       ('display_collection_sub_collection_featured_hint'),
-       ('collection_delete_successfully'),
-       ('option_enable_collection_poster'),
-       ('option_enable_collection_backdrop');
+       ('display_collection_sub_collection_featured_hint');
 INSERT INTO `{tbl_prefix}languages_keys` (`language_key`)
 VALUES ('tmdb_choose'),
        ('tmdb_back'),
