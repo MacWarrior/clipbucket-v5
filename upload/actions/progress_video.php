@@ -9,6 +9,10 @@ $videos = Video::getInstance()->getAll([
 $all_complete = true;
 
 switch ($_POST['output']) {
+    case 'collection':
+        $template = 'blocks/collection_items_results_preview.html';
+        break;
+
     case 'videos':
     case 'home':
         if ( $_POST['output'] == 'home') {
@@ -85,6 +89,9 @@ if( config('enable_quicklist') == 'yes' && Session::isCookieConsent('fast_qlist'
 }
 foreach ($videos as $video) {
     assign('video', $video);
+    if ($_POST['output'] == 'collection') {
+        assign('item', $video);
+    }
     $data = ['videoid' => $video['videoid'], 'status'=>$video['status']];
     if( !in_array($video['status'], ['Successful', 'Failed']) ){
         $all_complete = false;
