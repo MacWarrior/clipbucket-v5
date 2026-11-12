@@ -368,7 +368,15 @@ INSERT INTO `{tbl_prefix}config` (`configid`, `name`, `value`) VALUES
     (NULL, 'enable_all_categ_for_collection', 'yes'),
     (NULL, 'enable_all_categ_for_channel', 'yes'),
     (NULL, 'enable_collection_poster', 'no'),
-    (NULL, 'enable_collection_backdrop', 'no');
+    (NULL, 'enable_collection_backdrop', 'no'),
+    (NULL, 'enable_get_collection_title_from_tmdb', 'yes'),
+    (NULL, 'enable_get_collection_description_from_tmdb', 'yes'),
+    (NULL, 'enable_search_tmdb', 'no'),
+    (NULL, 'enable_search_tmdb_fo', 'no'),
+    (NULL, 'enable_get_collection_poster_from_tmdb', 'no'),
+    (NULL, 'enable_get_collection_backdrop_from_tmdb', 'no'),
+    (NULL, 'enable_get_collection_genre_from_tmdb', 'no');
+
 
 INSERT INTO `{tbl_prefix}video_resolution` (`title`, `ratio`, `enabled`, `width`, `height`, `video_bitrate`) VALUES
 	('240p', '16/9', 1, 426, 240, 240000),

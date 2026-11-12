@@ -1985,3 +1985,18 @@ VALUES ('noted_x'),
        ('display_collection_sub_item_featured_hint'),
        ('sub_collection_featured'),
        ('display_collection_sub_collection_featured_hint');
+INSERT INTO `{tbl_prefix}languages_keys` (`language_key`)
+VALUES ('tmdb_choose'),
+       ('tmdb_back'),
+       ('tmdb_season'),
+       ('tmdb_episode'),
+       ('tmdb_new_search_confirm'),
+       ('tmdb_dont_ask_again');
+INSERT INTO `{tbl_prefix}languages_keys` (`language_key`)
+VALUES ('option_enable_get_collection_title_from_tmdb'),
+       ('option_enable_get_collection_description_from_tmdb'),
+       ('option_enable_search_tmdb'),
+       ('option_enable_search_tmdb_fo'),
+       ('option_enable_get_collection_poster_from_tmdb'),
+       ('option_enable_get_collection_backdrop_from_tmdb'),
+       ('option_enable_get_collection_genre_from_tmdb');

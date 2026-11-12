@@ -165,15 +165,15 @@ assign('comments', $comments);
 
 $min_suffixe = System::isInDev() ? '' : '.min';
 ClipBucket::getInstance()->addAdminJS([
+    'tmdb' . $min_suffixe . '.js'                                  => 'global',
     'tag-it' . $min_suffixe . '.js'                                => 'admin',
     'pages/edit_collection/edit_collection' . $min_suffixe . '.js' => 'admin',
     'init_default_tag/init_default_tag' . $min_suffixe . '.js'     => 'admin'
 ]);
 
 ClipBucket::getInstance()->addAdminCSS([
-    'pages/edit_collection/preview.css'     => 'admin',
-    'jquery.tagit' . $min_suffixe . '.css'     => 'admin',
-    'tagit.ui-zendesk' . $min_suffixe . '.css' => 'admin'
+    'jquery.tagit' . $min_suffixe . '.css'                  => 'admin',
+    'tagit.ui-zendesk' . $min_suffixe . '.css'              => 'admin'
 ]);
 
 if (config('enable_visual_editor_comments') == 'yes') {
