@@ -447,13 +447,15 @@ class CollectionThumbs
      *
      * @param array $collection
      * @param array $file
+     * @param string $type
+     * @param bool $is_auto
      * @return void
      * @throws Exception
      */
-    public static function uploadThumb(array $collection, $file): void
+    public static function uploadThumb(array $collection, $file, string $type = 'thumbnail', bool $is_auto = false): void
     {
-        $id_collection_image = self::importImage($collection, $file);
-        if ($id_collection_image) {
+        $id_collection_image = self::importImage($collection, $file, $type, $is_auto);
+        if ($id_collection_image && $type == 'thumbnail') {
             self::setDefaultImage($collection['collection_id'], $id_collection_image);
         }
     }
@@ -464,10 +466,11 @@ class CollectionThumbs
      * @param array $collection
      * @param array $file
      * @param string $type
+     * @param bool $is_auto
      * @return int Image identifier, or zero if the import failed.
      * @throws Exception
      */
-    public static function importImage(array $collection, array $file, string $type = 'thumbnail'): int
+    public static function importImage(array $collection, array $file, string $type = 'thumbnail', bool $is_auto = false): int
     {
         if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '227')) {
             if (!self::isTypeAllowed($collection, $type)) {
@@ -497,7 +500,7 @@ class CollectionThumbs
                     $ext_original = 'png';
                 }
                 $last = Clipbucket_db::getInstance()->_select('SELECT MAX(num) AS num FROM ' . tbl(self::$tableName)
-                    . ' WHERE collection_id = ' . (int)$collection['collection_id'] . " AND type = '" . mysql_clean($type) . "' AND is_auto = 0");
+                    . ' WHERE collection_id = ' . (int)$collection['collection_id'] . " AND type = '" . mysql_clean($type) . "' AND is_auto = " . (int)$is_auto);
                 $id_collection_image = (int)Clipbucket_db::getInstance()->insert(tbl(self::$tableName), [
                     'collection_id',
                     'type',
@@ -507,7 +510,7 @@ class CollectionThumbs
                     $collection['collection_id'],
                     $type,
                     (int)($last[0]['num'] ?? 0) + 1,
-                    0
+                    (int)$is_auto
                 ]);
                 if (!$id_collection_image) {
                     throw new Exception(lang('error_uploading_thumb'));
@@ -792,6 +795,12 @@ class CollectionThumbs
             ]);
             if (empty($image)) {
                 return;
+            }
+            if (in_array($image['type'], ['poster', 'backdrop'], true)) {
+                Clipbucket_db::getInstance()->update(
+                    tbl('collections'), ['default_' . $image['type']], ['|f|NULL'],
+                    'collection_id = ' . (int)$image['collection_id'] . ' AND default_' . $image['type'] . ' = ' . (int)$image['id_collection_image']
+                );
             }
             Clipbucket_db::getInstance()->update(
                 tbl('collections')

@@ -2223,11 +2223,21 @@
                     <div class="row">
                         <div class="col-md-4">
                             <div class="row">
-                                <div class="col-md-8">
+                                <div class="col-md-10">
                                     <label class="nowrap" for="hide_empty_collection" title="{lang code='option_hide_empty_collection'}">{lang code='option_hide_empty_collection'}</label>
                                 </div>
                                 <div class="col-md-2 row-size">
                                     <input value="yes" name="hide_empty_collection" id="hide_empty_collection" {if $row.hide_empty_collection=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+                                    <span class="lbl"></span>
+                                </div>
+                            </div>
+                            <hr/>
+                            <div class="row">
+                                <div class="col-md-10">
+                                    <label class="nowrap" for="enable_collection_categories" title="{lang('enable_categories')}">{lang('enable_categories')}</label>
+                                </div>
+                                <div class="col-md-2 row-size">
+                                    <input value="yes" name="enable_collection_categories" id="enable_collection_categories" {if $row.enable_collection_categories=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
                                     <span class="lbl"></span>
                                 </div>
                             </div>
@@ -2241,84 +2251,8 @@
                                 </div>
                             </div>
                             <hr/>
-                        </div>
-                        <div class="col-md-4">
                             <div class="row">
-                                <div class="col-md-8">
-                                    <label class="nowrap" for="enable_collection_categories" title="{lang('enable_categories')}">{lang('enable_categories')}</label>
-                                </div>
-                                <div class="col-md-2 row-size">
-                                    <input value="yes" name="enable_collection_categories" id="enable_collection_categories" {if $row.enable_collection_categories=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
-                                    <span class="lbl"></span>
-                                </div>
-                            </div>
-                            <hr/>
-                            <div class="row">
-                                <div class="col-md-8">
-                                    <label for="enable_collection_poster">{lang('option_enable_collection_poster')}</label>
-                                </div>
-                                <div class="col-md-2 row-size">
-                                    <input value="yes" name="enable_collection_poster" id="enable_collection_poster" {if $row.enable_collection_poster=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
-                                    <span class="lbl"></span>
-                                </div>
-                            </div>
-                            <hr/>
-                            </div>
-                            <hr/>
-                            <div class="row">
-                                <div class="col-md-8">
-                                    <label for="enable_collection_poster">{lang('option_enable_collection_poster')}</label>
-                                </div>
-                                <div class="col-md-2 row-size">
-                                    <input value="yes" name="enable_collection_poster" id="enable_collection_poster" {if $row.enable_collection_poster=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
-                                    <span class="lbl"></span>
-                                </div>
-                            </div>
-                            <hr/>
-                            <div class="row">
-                                <div class="col-md-8">
-                                    <label for="enable_get_collection_title_from_tmdb">{lang('option_enable_get_collection_title_from_tmdb')}</label>
-                                </div>
-                                <div class="col-md-2 row-size">
-                                    <input value="yes" name="enable_get_collection_title_from_tmdb" id="enable_get_collection_title_from_tmdb" {if $row.enable_get_collection_title_from_tmdb=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
-                                    <span class="lbl"></span>
-                                </div>
-                            </div>
-                            <hr/>
-                            <div class="row">
-                                <div class="col-md-8">
-                                    <label for="enable_search_tmdb">{lang('option_enable_search_tmdb')}</label>
-                                </div>
-                                <div class="col-md-2 row-size">
-                                    <input value="yes" name="enable_search_tmdb" id="enable_search_tmdb" {if $row.enable_search_tmdb=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
-                                    <span class="lbl"></span>
-                                </div>
-                            </div>
-                            <hr/>
-                            <div class="row">
-                                <div class="col-md-8">
-                                    <label for="enable_get_collection_poster_from_tmdb">{lang('option_enable_get_collection_poster_from_tmdb')}</label>
-                                </div>
-                                <div class="col-md-2 row-size">
-                                    <input value="yes" name="enable_get_collection_poster_from_tmdb" id="enable_get_collection_poster_from_tmdb" {if $row.enable_get_collection_poster_from_tmdb=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
-                                    <span class="lbl"></span>
-                                </div>
-                            </div>
-                            <hr/>
-                            <div class="row">
-                                <div class="col-md-8">
-                                    <label for="enable_get_collection_genre_from_tmdb">{lang('option_enable_get_collection_genre_from_tmdb')}</label>
-                                </div>
-                                <div class="col-md-2 row-size">
-                                    <input value="yes" name="enable_get_collection_genre_from_tmdb" id="enable_get_collection_genre_from_tmdb" {if $row.enable_get_collection_genre_from_tmdb=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
-                                    <span class="lbl"></span>
-                                </div>
-                            </div>
-                            <hr/>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="row">
-                                <div class="col-md-8">
+                                <div class="col-md-10">
                                     <label class="nowrap" for="enable_sub_collection" title="Enable Sub-Collections">Enable Sub-Collections</label>
                                 </div>
                                 <div class="col-md-2 row-size">
@@ -2328,7 +2262,17 @@
                             </div>
                             <hr/>
                             <div class="row">
-                                <div class="col-md-8">
+                                <div class="col-md-10">
+                                    <label for="enable_collection_poster">{lang('option_enable_collection_poster')}</label>
+                                </div>
+                                <div class="col-md-2 row-size">
+                                    <input value="yes" name="enable_collection_poster" id="enable_collection_poster" {if $row.enable_collection_poster=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+                                    <span class="lbl"></span>
+                                </div>
+                            </div>
+                            <hr/>
+                            <div class="row">
+                                <div class="col-md-10">
                                     <label for="enable_collection_backdrop">{lang('option_enable_collection_backdrop')}</label>
                                 </div>
                                 <div class="col-md-2 row-size">
@@ -2337,20 +2281,20 @@
                                 </div>
                             </div>
                             <hr/>
-                            </div>
-                            <hr/>
+                        </div>
+                        <div class="col-md-4">
                             <div class="row">
-                                <div class="col-md-8">
-                                    <label for="enable_collection_backdrop">{lang('option_enable_collection_backdrop')}</label>
+                                <div class="col-md-10">
+                                    <label for="enable_search_tmdb">{lang('option_enable_search_tmdb')}</label>
                                 </div>
                                 <div class="col-md-2 row-size">
-                                    <input value="yes" name="enable_collection_backdrop" id="enable_collection_backdrop" {if $row.enable_collection_backdrop=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+                                    <input value="yes" name="enable_search_tmdb" id="enable_search_tmdb" {if $row.enable_search_tmdb=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
                                     <span class="lbl"></span>
                                 </div>
                             </div>
                             <hr/>
                             <div class="row">
-                                <div class="col-md-8">
+                                <div class="col-md-10">
                                     <label for="enable_search_tmdb_fo">{lang('option_enable_search_tmdb_fo')}</label>
                                 </div>
                                 <div class="col-md-2 row-size">
@@ -2360,27 +2304,17 @@
                             </div>
                             <hr/>
                             <div class="row">
-                                <div class="col-md-8">
-                                    <label for="enable_get_collection_backdrop_from_tmdb">{lang('option_enable_get_collection_backdrop_from_tmdb')}</label>
+                                <div class="col-md-10">
+                                    <label for="enable_get_collection_title_from_tmdb">{lang('option_enable_get_collection_title_from_tmdb')}</label>
                                 </div>
                                 <div class="col-md-2 row-size">
-                                    <input value="yes" name="enable_get_collection_backdrop_from_tmdb" id="enable_get_collection_backdrop_from_tmdb" {if $row.enable_get_collection_backdrop_from_tmdb=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+                                    <input value="yes" name="enable_get_collection_title_from_tmdb" id="enable_get_collection_title_from_tmdb" {if $row.enable_get_collection_title_from_tmdb=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
                                     <span class="lbl"></span>
                                 </div>
                             </div>
                             <hr/>
                             <div class="row">
-                                <div class="col-md-8">
-                                    <label for="enable_get_collection_description_from_tmdb">{lang('option_enable_get_collection_description_from_tmdb')}</label>
-                                </div>
-                                <div class="col-md-2 row-size">
-                                    <input value="yes" name="enable_get_collection_description_from_tmdb" id="enable_get_collection_description_from_tmdb" {if $row.enable_get_collection_description_from_tmdb=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
-                                    <span class="lbl"></span>
-                                </div>
-                            </div>
-                            <hr/>
-                            <div class="row">
-                                <div class="col-md-8">
+                                <div class="col-md-10">
                                     <label for="enable_get_collection_description_from_tmdb">{lang('option_enable_get_collection_description_from_tmdb')}</label>
                                 </div>
                                 <div class="col-md-2 row-size">
@@ -2390,8 +2324,41 @@
                             </div>
                             <hr/>
                         </div>
+                        <div class="col-md-4">
+                            <div class="row">
+                                <div class="col-md-10">
+                                    <label for="enable_get_collection_poster_from_tmdb">{lang('option_enable_get_collection_poster_from_tmdb')}</label>
+                                </div>
+                                <div class="col-md-2 row-size">
+                                    <input value="yes" name="enable_get_collection_poster_from_tmdb" id="enable_get_collection_poster_from_tmdb" {if $row.enable_get_collection_poster_from_tmdb=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+                                    <span class="lbl"></span>
+                                </div>
+                            </div>
+                            <hr/>
+                            <div class="row">
+                                <div class="col-md-10">
+                                    <label for="enable_get_collection_backdrop_from_tmdb">{lang('option_enable_get_collection_backdrop_from_tmdb')}</label>
+                                </div>
+                                <div class="col-md-2 row-size">
+                                    <input value="yes" name="enable_get_collection_backdrop_from_tmdb" id="enable_get_collection_backdrop_from_tmdb" {if $row.enable_get_collection_backdrop_from_tmdb=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+                                    <span class="lbl"></span>
+                                </div>
+                            </div>
+                            <hr/>
+                            <div class="row">
+                                <div class="col-md-10">
+                                    <label for="enable_get_collection_genre_from_tmdb">{lang('option_enable_get_collection_genre_from_tmdb')}</label>
+                                </div>
+                                <div class="col-md-2 row-size">
+                                    <input value="yes" name="enable_get_collection_genre_from_tmdb" id="enable_get_collection_genre_from_tmdb" {if $row.enable_get_collection_genre_from_tmdb=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+                                    <span class="lbl"></span>
+                                </div>
+                            </div>
+                            <hr/>
+                        </div>
                     </div>
                 </div>
+
                 <div id="config_comments" class="tab-pane">
                     <div class="row">
                         <div class="col-md-4">

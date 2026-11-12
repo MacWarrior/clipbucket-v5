@@ -1,6 +1,4 @@
-{if $data.collection_id && $data.type == 'videos' && config('enable_tmdb') == 'yes' && config('tmdb_token') != ''}
-    <button type="button" class="btn btn-primary" onclick="openCollectionTmdb(this)" data-id="{$data.collection_id|intval}" data-url="{DirPath::getUrl('admin_area')}actions/">{lang('tmdb_search')|escape:'html'}</button>
-{/if}
+
 {assign var=requiredFields value=Collections::getInstance()->load_required_fields($data)}
 {assign var=otherFields value=Collections::getInstance()->load_other_fields($data)}
 
@@ -27,6 +25,11 @@
                 <li><a href="{DirPath::getUrl('root')}view_collection.php?cid={$data.collection_id}">{lang('view_collection')}</a></li>
                 <li>
                     <a href="javascript:void(0);" onClick="if (confirm('{lang('confirm_collection_delete')}')) document.location = 'collection_manager.php?delete_collection={$data.collection_id}'">{lang code='delete'}</a>
+                </li>
+                <li>
+                    {if $data.collection_id && $data.type == 'videos' && config('enable_tmdb') == 'yes' && config('tmdb_token') != ''}
+                        <a href="javascript:void(0);" onclick="openCollectionTmdb(this)" data-id="{(int)$data.collection_id}" data-url="{DirPath::getUrl('admin_area')}actions/">{lang('get_data_tmdb')}</a>
+                    {/if}
                 </li>
             </ul>
         </div>
@@ -297,6 +300,8 @@
         <input type="submit" class="btn btn-primary" value="{lang('update')}" style="margin:15px 0 0 15px;" name="update_collection"/>
     </div>
 </form>
+<div class="modal fade" id="myModal" role="dialog">
+</div>
 <script>
     var available_tags = JSON.parse('{$available_tags|json_encode|escape:'javascript'}');
     var text_confirm_comment = '{lang_js('text_confirm_comment')}';

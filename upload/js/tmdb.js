@@ -43,6 +43,14 @@ $(function () {
             body.find('#type_tmdb').val(values.type);
             body.find('#search_title').val(values.video_title);
             body.find('#selected_year').val(values.selected_year);
+            updateSearchLabel();
+        }
+
+        function updateSearchLabel() {
+            var type = body.find('#type_tmdb').val();
+            body.find('.tmdb-search-label').each(function () {
+                $(this).toggle($(this).data('type') === type);
+            });
         }
 
         function lock(value) {
@@ -105,6 +113,9 @@ $(function () {
                     current.after(result.template);
                     levels.push(current.next('.tmdb-level'));
                 }
+                if (levels.length > 2) {
+                    levels[levels.length - 1].find('.tmdb-series-title').text(levels[1].find('.tmdb-series-title').text());
+                }
                 modal.scrollTop(0);
             }).fail(function () {
                 error();
@@ -120,6 +131,9 @@ $(function () {
         };
 
         body.off('.tmdb');
+
+        updateSearchLabel();
+        body.on('change.tmdb', '#type_tmdb', updateSearchLabel);
 
         body.on('click.tmdb', '#search', function () {
             if (busy) return;
@@ -153,14 +167,24 @@ $(function () {
             search(1, sort.data('type'), sort.hasClass('icon-sort-up') ? 'DESC' : 'ASC', searchState);
         });
 
-        body.on('click.tmdb', '.tmdb-back', function () {
-            if (busy || levels.length === 1) return;
-            levels.pop().remove();
+        function returnToLevel(index) {
+            if (busy || !Number.isInteger(index) || index < 0 || index >= levels.length - 1) return;
+            while (levels.length > index + 1) {
+                levels.pop().remove();
+            }
             var parent = levels[levels.length - 1];
             parent.show();
             restore(parent.data('fields'));
             modal.scrollTop(parent.data('scroll'));
             body.find('.tmdb-confirm').hide();
+        }
+
+        body.on('click.tmdb', '.tmdb-back', function () {
+            returnToLevel(levels.length - 2);
+        });
+
+        body.on('click.tmdb', '.tmdb-breadcrumb', function () {
+            returnToLevel($(this).data('level'));
         });
 
         body.on('click.tmdb', '.tmdb-choose', function () {

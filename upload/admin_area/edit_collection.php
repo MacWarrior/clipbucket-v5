@@ -172,9 +172,8 @@ ClipBucket::getInstance()->addAdminJS([
 ]);
 
 ClipBucket::getInstance()->addAdminCSS([
-    'pages/edit_collection/preview.css' . $min_suffixe . '.css' => 'admin',
-    'jquery.tagit' . $min_suffixe . '.css'                      => 'admin',
-    'tagit.ui-zendesk' . $min_suffixe . '.css'                  => 'admin'
+    'jquery.tagit' . $min_suffixe . '.css'                  => 'admin',
+    'tagit.ui-zendesk' . $min_suffixe . '.css'              => 'admin'
 ]);
 
 if (config('enable_visual_editor_comments') == 'yes') {

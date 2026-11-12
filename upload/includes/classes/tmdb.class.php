@@ -431,10 +431,6 @@ class Tmdb
                 return ($image['iso_639_1'] ?? null) == $this->language || ($image['iso_639_1'] ?? null) == 'null';
             });
             $posters = $preferred ?: $posters;
-            if ($posters && !is_callable(['CollectionThumb', 'uploadThumbs'])) {
-                e(lang('tmdb_collection_thumb_unavailable'));
-                return;
-            }
             if (config('tmdb_get_title') === 'yes' && !empty($details['name'])) {
                 $video_info['collection_name'] = $details['name'];
             }
@@ -449,19 +445,36 @@ class Tmdb
                 return;
             }
             $this->updateExternalRatings($videoid, $details, 'collection');
+            foreach (CollectionThumbs::getAll(['collection_id' => $videoid, 'type' => 'poster', 'is_auto' => true]) as $image) {
+                CollectionThumbs::deleteCollectionImage($image);
+            }
             if (!$posters) {
                 Collection::assignDefaultThumb($videoid);
             } else {
-                $files = ['tmp_name' => [], 'name' => []];
                 foreach ($posters as $poster) {
                     $name = str_replace('/', '', $poster['file_path']);
                     $path = DirPath::get('temp') . $name;
                     file_put_contents($path, file_get_contents(self::IMAGE_URL . $poster['file_path']));
-                    $files['tmp_name'][] = $path;
-                    $files['name'][] = $name;
+                    $file['tmp_name'] = $path;
+                    $file['name'] = $name;
+                    CollectionThumbs::uploadThumb($video_info, $file, 'poster', true);
                 }
-                // Contract supplied by the caller: same arguments as VideoThumbs::uploadThumbs.
-                CollectionThumb::uploadThumbs($videoid, $files, 'thumbnail', true);
+            }
+            $backdrops = $images['backdrops'] ?? [];
+            $preferred = array_filter($backdrops, function ($image) {
+                return ($image['iso_639_1'] ?? null) == $this->language || ($image['iso_639_1'] ?? null) == 'null';
+            });
+            $backdrops = $preferred ?: $backdrops;
+            foreach (CollectionThumbs::getAll(['collection_id' => $videoid, 'type' => 'backdrop', 'is_auto' => true]) as $image) {
+                CollectionThumbs::deleteCollectionImage($image);
+            }
+            foreach ($backdrops as $backdrop) {
+                $name = str_replace('/', '', $backdrop['file_path']);
+                $path = DirPath::get('temp') . $name;
+                file_put_contents($path, file_get_contents(self::IMAGE_URL . $backdrop['file_path']));
+                $file['tmp_name'] = $path;
+                $file['name'] = $name;
+                CollectionThumbs::uploadThumb($video_info, $file, 'backdrop', true);
             }
             return;
         }
