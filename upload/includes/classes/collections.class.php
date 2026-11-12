@@ -564,14 +564,14 @@ class Collection extends Objects
                                 c.collection_id,
                                 0 AS depth,
                                 CAST(c.collection_id AS CHAR(2000)) AS path
-                            FROM cb_collections c
+                            FROM ' . tbl(self::getTableName()) . ' c
                             WHERE c.collection_id = ' . (int)$collection['collection_id'] . '
                             UNION ALL
                             SELECT
                                 ch.collection_id,
                                 d.depth + 1 AS depth,
                                 CONCAT(d.path, \',\', ch.collection_id) AS path
-                            FROM cb_collections ch
+                            FROM ' . tbl(self::getTableName()) . ' ch
                             JOIN descendants d ON ch.collection_id_parent = d.collection_id
                             WHERE d.depth < 100
                                 AND FIND_IN_SET(ch.collection_id, d.path) = 0
@@ -579,7 +579,7 @@ class Collection extends Objects
                         SELECT collection_id
                         FROM descendants
                         WHERE depth > 0;';
-                    $collection_child_list = Clipbucket_db::getInstance()->_select($sql_childs, 60, 'collection_childrens_'. $collection['collection_id']);
+                    $collection_child_list = Clipbucket_db::getInstance()->_select($sql_childs, 60, 'collection_childrens_' . $collection['collection_id']);
                     if (($param_check_for_featured_restriction && $collection['sub_item_featured'] == 'yes') || !$param_check_for_featured_restriction) {
                         $params_item['collection_id'] = array_map(fn($item) => $item['collection_id'], $collection_child_list);
                         $params_item['collection_id'][] = $collection['collection_id'];
