@@ -2339,7 +2339,7 @@ class Collections extends CBCategory
                 case 'vc':
                 case 'view_collection':
                 case 'view':
-                    if (empty($details['collection_id'])) {
+                    if (empty($cdetails['collection_id'])) {
                         return $base_url;
                     }
                     if (SEO == 'yes') {
