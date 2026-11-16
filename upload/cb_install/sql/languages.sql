@@ -1984,4 +1984,9 @@ VALUES ('noted_x'),
        ('sub_item_featured'),
        ('display_collection_sub_item_featured_hint'),
        ('sub_collection_featured'),
-       ('display_collection_sub_collection_featured_hint');
+       ('display_collection_sub_collection_featured_hint'),
+       ('add_new_page'),
+       ('page_code'),
+       ('page_title'),
+       ('page_content'),
+       ('help_drag_and_drop');

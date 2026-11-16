@@ -1,6 +1,6 @@
 {
   "version":"5.5.3",
-  "revision":"232",
+  "revision":"234",
   "status":"stable",
   "detail":[
     {
@@ -33,6 +33,7 @@
         ,"Update comments display on reports & stats"
         ,"Update Manage videos & manage pages actions display"
         ,"Update mass upload cache usage"
+        ,"Update page management UX/UI"
         ,"Add links to flagged tags"
         ,"Hide poster & backdrop tabs when empty on video edition page"
         ,"Only show template editor menu while in dev mode"
@@ -173,6 +174,7 @@
         ,"Fix nginx vhost rules"
         ,"Fix .htaccess rules"
         ,"Fix PHP 8.5 compatibility (<i>#905</i>)"
+        ,"Fix possible SQL error on collections"
       ]
     },
     {
