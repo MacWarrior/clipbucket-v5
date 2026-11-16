@@ -174,7 +174,7 @@
         ,"Fix nginx vhost rules"
         ,"Fix .htaccess rules"
         ,"Fix PHP 8.5 compatibility (<i>#905</i>)"
-        ,"Fix possible SQL error"
+        ,"Fix possible SQL error on collections"
       ]
     },
     {
