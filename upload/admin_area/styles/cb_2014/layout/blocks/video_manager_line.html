@@ -110,7 +110,7 @@
                 <li><a role="menuitem" tabindex="-1" href="{DirPath::getUrl('admin_area')}edit_video.php?video={$video.videoid}">{lang code='edit'}</a></li>
 
                 {if $video.status|lower == 'successful'}
-                    <li><a role="menuitem" tabindex="-1" href="{DirPath::getUrl('root')}watch_video.php?v={$video.videokey}" target="_blank">{lang code='watch'}</a></li>
+                    <li><a role="menuitem" tabindex="-1" href="{video_link($video)}" target="_blank">{lang code='watch'}</a></li>
                 {/if}
 
                 {if $video.featured == yes}
