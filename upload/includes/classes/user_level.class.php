@@ -120,16 +120,16 @@ class UserLevel
         $conditions = [];
         $join = [];
         if (!$param_no_values) {
-            $join[] = ' INNER JOIN ' . cb_sql_table(self::$tableNamePermissionValue) . ' ON ' . self::$tableNamePermission . '.id_user_levels_permission = ' . self::$tableNamePermissionValue . '.id_user_levels_permission';
+            $join[] = ' INNER JOIN ' . cb_sql_table(self::getTableNameLevelPermissionValue()) . ' ON ' . self::$tableNamePermission . '.id_user_levels_permission = ' . self::getTableNameLevelPermissionValue() . '.id_user_levels_permission';
         }
         if ($param_userid !== false) {
             $conditions[] = ' users.userid = ' . (int)$param_userid;
-            $join[] = ' LEFT JOIN ' . cb_sql_table('users') . ' ON users.level = ' . self::$tableNamePermissionValue . '.user_level_id';
+            $join[] = ' LEFT JOIN ' . cb_sql_table('users') . ' ON users.level = ' . self::getTableNameLevelPermissionValue() . '.user_level_id';
         }
 
         $select = self::getAllPermissionsFields($param_no_values);
         if ($param_user_level_id) {
-            $conditions[] = ' ' . self::$tableNamePermissionValue . '.user_level_id = ' . (int)$param_user_level_id;
+            $conditions[] = ' ' . self::getTableNameLevelPermissionValue() . '.user_level_id = ' . (int)$param_user_level_id;
         }
 
         if ($param_name) {
@@ -160,7 +160,7 @@ class UserLevel
 
         if (!$no_values) {
             $fields_values = array_map(function ($field) {
-                return self::$tableNamePermissionValue . '.' . $field;
+                return self::getTableNameLevelPermissionValue() . '.' . $field;
             }, self::$fieldsPermissionValue);
         }
 
@@ -250,13 +250,12 @@ class UserLevel
             $select[] = 'has_right_to_edit.nb_diff';
             $join[] /** @lang MySQL */ = ' LEFT JOIN ( SELECT COUNT(USER_LEVELS_PERMISSIONS_VALUES_LOG_USER.permission_value) as nb_diff, ' . self::getTableNameLevelPermissionValue() . '.user_level_id
                     FROM ' . cb_sql_table(self::getTableNameLevelPermissionValue()) . ' 
-                    LEFT JOIN cb_user_levels_permissions_values as USER_LEVELS_PERMISSIONS_VALUES_LOG_USER
+                    LEFT JOIN ' . tbl(self::getTableNameLevelPermissionValue()) . ' as USER_LEVELS_PERMISSIONS_VALUES_LOG_USER
                         ON ' . self::getTableNameLevelPermissionValue() . '.id_user_levels_permission = USER_LEVELS_PERMISSIONS_VALUES_LOG_USER.id_user_levels_permission
                                 AND USER_LEVELS_PERMISSIONS_VALUES_LOG_USER.user_level_id = ' . User::getInstance()->getCurrentUserLevelID() . '
                                 AND USER_LEVELS_PERMISSIONS_VALUES_LOG_USER.permission_value != ' . self::getTableNameLevelPermissionValue() . '.permission_value AND ' . self::getTableNameLevelPermissionValue() . '.permission_value = \'yes\'
                     GROUP BY  ' . self::getTableNameLevelPermissionValue() . '.user_level_id
                     ) AS has_right_to_edit ON has_right_to_edit.user_level_id = ' . self::$tableName . '.user_level_id ';
-
         }
         $sql = 'SELECT ' . implode(', ', $select) . '
                 FROM ' . cb_sql_table(self::$tableName)
@@ -368,7 +367,7 @@ class UserLevel
                 return false;
             }
             Clipbucket_db::getInstance()->update(tbl('users'), ['level'], [3], ' level = ' . (int)$user_level_id);
-            Clipbucket_db::getInstance()->delete(tbl(self::$tableNamePermissionValue), ['user_level_id'], [(int)$user_level_id]);
+            Clipbucket_db::getInstance()->delete(tbl(self::getTableNameLevelPermissionValue()), ['user_level_id'], [(int)$user_level_id]);
             Clipbucket_db::getInstance()->delete(tbl(self::$tableName), ['user_level_id'], [(int)$user_level_id]);
             $inactive_user = self::getOne(['user_level_id' => 3]);
             e(lang('level_del_sucess', $inactive_user['user_level_name']), 'm');
