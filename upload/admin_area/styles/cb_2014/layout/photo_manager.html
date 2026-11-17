@@ -84,7 +84,7 @@
                                     <a href="{DirPath::getUrl('admin_area')}edit_photo.php?photo={$photos[list].photo_id}">{lang code='edit'}</a>
                                 </li>
                                 <li>
-                                    <a href="{$baseurl}view_item.php?item={$photos[list].photo_key}&amp;type=photos&amp;collection={$photos[list].collection_id}" target="_blank">{lang code='watch'}</a>
+                                    <a href="{Collections::getInstance()->collection_links($photos[list], 'view_item')}" target="_blank">{lang code='watch'}</a>
                                 </li>
                                 <li>
                                     {if $photos[list]['active'] == 'yes'}

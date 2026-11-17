@@ -1,6 +1,6 @@
 {
   "version":"5.5.3",
-  "revision":"233",
+  "revision":"235",
   "status":"stable",
   "detail":[
     {
@@ -68,6 +68,7 @@
         ,"Fix template edition display"
         ,"Fix collection items link"
         ,"Fix possible SQL error on user edition page"
+        ,"Fix SEO URLs"
       ]
     },
     {
@@ -174,6 +175,7 @@
         ,"Fix nginx vhost rules"
         ,"Fix .htaccess rules"
         ,"Fix PHP 8.5 compatibility (<i>#905</i>)"
+        ,"Fix possible SQL error on collections"
       ]
     },
     {
