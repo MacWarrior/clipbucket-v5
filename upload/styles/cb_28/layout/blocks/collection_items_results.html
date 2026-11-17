@@ -17,30 +17,32 @@
         </tr>
         </thead>
         <tbody class="collection-items-results">
-        {foreach from=$items item=item}
-            <tr>
-                <td>
-                    <input type="checkbox" class="collection-items-check" value="{(int)$item.videoid}"
-                           data-exists="{if $item.exists}true{else}false{/if}" aria-label="{display_clean($item.title)}"
-                           {if $item.exists}checked disabled{/if}>
-                </td>
-                <td>
-                    {display_clean($item.title)}
-                    {if $item.exists}
-                        <small class="help-block">{lang('object_exists_collection', $item.title)|escape:'html'}</small>
-                    {/if}
-                </td>
-                <td>{display_clean($item.date_added)}</td>
-                <td>{display_clean($item.description)}</td>
-                <td>
-                    {include file="$style_dir/blocks/collection_items_results_preview.html" item=$item}
-                </td>
-            </tr>
-            {foreachelse}
+        {if empty($items)}
             <tr>
                 <td colspan="5">{lang('no_results_found')}</td>
             </tr>
-        {/foreach}
+        {else}
+            {foreach from=$items item=item}
+                <tr>
+                    <td>
+                        <input type="checkbox" class="collection-items-check" value="{(int)$item.videoid}"
+                               data-exists="{if $item.exists}true{else}false{/if}" aria-label="{display_clean($item.title)}"
+                               {if $item.exists}checked disabled{/if}>
+                    </td>
+                    <td>
+                        {display_clean($item.title)}
+                        {if $item.exists}
+                            <small class="help-block">{display_clean(lang('object_exists_collection', $item.title))}</small>
+                        {/if}
+                    </td>
+                    <td>{display_clean($item.date_added)}</td>
+                    <td>{display_clean($item.description)}</td>
+                    <td>
+                        {include file="$style_dir/blocks/collection_items_results_preview.html" item=$item}
+                    </td>
+                </tr>
+            {/foreach}
+        {/if}
         </tbody>
     </table>
 </div>

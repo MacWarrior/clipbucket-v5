@@ -40,8 +40,10 @@ if ($response['success']) {
         $params = ['search' => trim($_POST['query'] ?? '')];
         $params['limit'] = create_query_limit($page, $limit);
         $results = $object->getAll($params);
+        $existing = array_column(Collection::getInstance()->getItems(['collection_id' => $collection_id]) ?: [], $id_field);
         $ids_to_check_progress = [];
-        foreach ($results as $video) {
+        foreach ($results as $key => $video) {
+            $results[$key]['exists'] = in_array($video[$id_field], $existing);
             if (in_array($video['status'], ['Processing', 'Waiting'])) {
                 $ids_to_check_progress[] = $video['videoid'];
             }
@@ -51,8 +53,7 @@ if ($response['success']) {
         $total = $object->getAll($params);
         $total_pages = (int)count_pages($total, $limit);
         pages::getInstance()->paginate($total_pages, $page, 'javascript:void(0);', 'data-page="#page#"');
-        $existing = array_column(Collection::getInstance()->getItems(['collection_id' => $collection_id]) ?: [], $id_field);
-        assign('items', $results);
+        assign('items', $results ?? []);
         assign('ids_to_check_progress', $ids_to_check_progress);
         $response['ids_to_check_progress']=$ids_to_check_progress;
         $response['template'] = getTemplate('blocks/collection_items_results.html');

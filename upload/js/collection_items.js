@@ -162,7 +162,7 @@ function search(targetPage) {
         },
         error: function (xhr, status) {
             if (status !== 'abort') {
-                showError(xhr);
+                console.error(xhr);
             }
         },
         complete: function () {
