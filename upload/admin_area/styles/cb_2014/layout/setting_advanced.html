@@ -753,6 +753,20 @@
                             </div>
                         </div>
                         <hr class="config_smtp config_smtp_auth" {if $row.mail_type=='mail'||$row.smtp_auth!='yes'}style="display:none;"{/if}/>
+                        <div class="row config_smtp config_smtp_auth" {if $row.mail_type=='mail'||$row.smtp_auth!='yes'}style="display:none;"{/if}>
+                            <div class="col-md-6">
+                                <label class="nowrap" for="smtp_secure" title="SMTP Password">SMTP Secure</label>
+                            </div>
+                            <div class="col-md-6 row-size">
+                                <select name="smtp_secure" id="smtp_secure">
+                                    <option value=""></option>
+                                    {foreach from=EmailTemplate::$allowedSMTPSecure item=secure}
+                                        <option value="{$secure}" {if $row.smtp_secure==$secure}selected{/if}>{strtoupper($secure)}</option>
+                                    {/foreach}
+                                </select>
+                            </div>
+                        </div>
+                        <hr class="config_smtp config_smtp_auth" {if $row.mail_type=='mail'||$row.smtp_auth!='yes'}style="display:none;"{/if}/>
 
                     </div>
 
