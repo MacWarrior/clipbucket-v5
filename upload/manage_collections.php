@@ -61,7 +61,7 @@ switch ($mode) {
         if( !User::getInstance()->hasPermission('allow_create_collection') ){
             redirect_to(cblink(['name' => 'my_account']));
         }
-        $back_url = (!empty($_GET['parent_id']) && is_numeric($_GET['parent_id']) ?  'view_collection.php?cid=' . (int)$_GET['parent_id'] : 'manage_collections.php');
+        $back_url = (!empty($_GET['parent_id']) && is_numeric($_GET['parent_id']) ?  Collections::getInstance()->collection_links((int)$_GET['parent_id'],'view') : (DirPath::getUrl('root').'manage_collections.php'));
         assign('back_url', $back_url);
         $params = [];
         if (!empty($_GET['type']) && Collection::getInstance()->isValidType($_GET['type'])) {
@@ -82,12 +82,11 @@ switch ($mode) {
         if (!empty($_POST)) {
             $new_collection_id = Collections::getInstance()->create_collection($_POST);
             if (!error()) {
-                $url = 'manage_collections.php';
+                $url = DirPath::getUrl('root') . 'manage_collections.php';
                 if ((!empty($_GET['parent_id']) && is_numeric($_GET['parent_id'])) || $_GET['from'] == 'collections') {
-                    $url = 'view_collection.php?cid=' . (int)$new_collection_id;
-                    redirect_to(DirPath::getUrl('root') . $url);
+                    $url = Collections::getInstance()->collection_links((int)$new_collection_id,'view');
                 }
-                e(lang('collect_added_msg'), 'm');
+                SessionMessageHandler::add_message(lang('collect_added_msg'), 'm', $url);
             }
         }
         break;

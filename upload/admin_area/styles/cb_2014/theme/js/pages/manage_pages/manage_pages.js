@@ -1,5 +1,47 @@
 let has_error = false;
-$(document).ready(function () {
+$(function () {
+    const pages = $('#pages_sortable');
+    let previous_order;
+    pages.sortable({
+        items: '> .page-sortable',
+        axis: 'y',
+        distance: 5,
+        helper: function (event, row) {
+            row.children().each(function () {
+                $(this).width($(this).width());
+            });
+            return row;
+        },
+        start: function () {
+            previous_order = pages.children('.page-sortable').get();
+        },
+        update: function () {
+            const page_ids = pages.children('.page-sortable').map(function () {
+                return $(this).data('page-id');
+            }).get();
+            pages.sortable('disable');
+            $.ajax({
+                url: admin_url + 'actions/page_update_order.php',
+                type: 'POST',
+                dataType: 'json',
+                data: {page_ids: page_ids},
+                success: function (result) {
+                    if (!result.success) {
+                        pages.append(previous_order);
+                    }
+                    $('#page_order_message').html(result.msg);
+                },
+                error: function () {
+                    pages.append(previous_order);
+                    $('#page_order_message').text(errors.page_order);
+                },
+                complete: function () {
+                    pages.sortable('enable');
+                }
+            });
+        }
+    });
+
     $('#page_content').summernote();
 
     function removeErrClass(obj) {
