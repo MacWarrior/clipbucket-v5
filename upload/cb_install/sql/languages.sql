@@ -1989,4 +1989,5 @@ VALUES ('noted_x'),
        ('page_code'),
        ('page_title'),
        ('page_content'),
-       ('help_drag_and_drop');
+       ('help_drag_and_drop'),
+       ('preview');
