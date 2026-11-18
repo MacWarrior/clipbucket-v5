@@ -23,26 +23,41 @@ class Comments extends Objects
         $param_first_only = $params['first_only'] ?? false;
         $param_hierarchy = $params['hierarchy'] ?? false;
 
+        $conditions = [];
+
         $left_join = '';
         $case_when = '';
-        if( (!$param_type || $param_type == 'v') && Comments::isVideoCommentEnabled()){
-            $left_join .= ' LEFT JOIN '.cb_sql_table('video').' ON comments.type = \'v\' AND comments.type_id = video.videoid';
+        if ((!$param_type || $param_type == 'v') && Comments::isVideoCommentEnabled()) {
+            $left_join .= ' LEFT JOIN ' . cb_sql_table('video') . ' ON comments.type = \'v\' AND comments.type_id = video.videoid';
             $case_when .= ' WHEN comments.type = \'v\' THEN video.title';
+            $video_constraint = Video::getInstance()->getGenericConstraints();
+            if ($video_constraint) {
+                $conditions[] = $video_constraint;
+            }
         }
-        if( (!$param_type || $param_type == 'p') && Comments::isPhotoCommentEnabled()){
-            $left_join .= ' LEFT JOIN '.cb_sql_table('photos').' ON comments.type = \'p\' AND comments.type_id = photos.photo_id';
+        if ((!$param_type || $param_type == 'p') && Comments::isPhotoCommentEnabled()) {
+            $left_join .= ' LEFT JOIN ' . cb_sql_table('photos') . ' ON comments.type = \'p\' AND comments.type_id = photos.photo_id';
             $case_when .= ' WHEN comments.type = \'p\' THEN photos.photo_title';
+            $photo_constraint = Photo::getInstance()->getGenericConstraints();
+            if ($photo_constraint) {
+                $conditions[] = $photo_constraint;
+            }
         }
-        if( (!$param_type || $param_type == 'cl') && Comments::isCollectionCommentEnabled()){
-            $left_join .= ' LEFT JOIN '.cb_sql_table('collections').' ON comments.type = \'cl\' AND comments.type_id = collections.collection_id';
+        if ((!$param_type || $param_type == 'cl') && Comments::isCollectionCommentEnabled()) {
+            $left_join .= ' LEFT JOIN ' . cb_sql_table('collections') . ' ON comments.type = \'cl\' AND comments.type_id = collections.collection_id';
             $case_when .= ' WHEN comments.type = \'cl\' THEN collections.collection_name';
+            $collection_constraint = Collection::getInstance()->getGenericConstraints();
+            if ($collection_constraint) {
+                $conditions[] = $collection_constraint;
+            }
         }
-        if(( !$param_type || $param_type == Comments::$libelle_type_channel) && Comments::isChannelCommentEnabled()){
-            $left_join .= ' LEFT JOIN '.tbl('users').' channels ON comments.type = \''.Comments::$libelle_type_channel.'\' AND comments.type_id = channels.userid';
-            $case_when .= ' WHEN comments.type = \''.Comments::$libelle_type_channel.'\' THEN channels.username';
+        if ((!$param_type || $param_type == Comments::$libelle_type_channel) && Comments::isChannelCommentEnabled()) {
+            $left_join .= ' LEFT JOIN ' . tbl('users') . ' channels ON comments.type = \'' . Comments::$libelle_type_channel . '\' AND comments.type_id = channels.userid';
+            $case_when .= ' WHEN comments.type = \'' . Comments::$libelle_type_channel . '\' THEN channels.username';
+            $channel = User::getInstance()->getOne(['userid' => $param_type_id, 'channel_enable' => true]);
+            $conditions[] = '1 = ' . ($channel || User::getInstance()->hasAdminAccess() ? 1 : 0);
         }
 
-        $conditions = [];
         if (!Comments::isVideoCommentEnabled()) {
             $conditions[] = 'comments.type != \'v\'';
         }
