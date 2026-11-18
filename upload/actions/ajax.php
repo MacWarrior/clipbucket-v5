@@ -484,8 +484,8 @@ if (!empty($mode)) {
             if (empty($_POST['obj_id']) || empty($_POST['cid']) || empty($_POST['type']) ) {
                 e(lang('missing_params'));
             } else {
-                Collection::removeItemFromCollection($cid, $obj_id, $type);
-                if ($type == 'photos') {
+                $been_removed = Collection::removeItemFromCollection($cid, $obj_id, $type);
+                if ($type == 'photos' && $been_removed) {
                     CBPhotos::getInstance()->make_photo_orphan($cid, $obj_id);
                 }
             }
