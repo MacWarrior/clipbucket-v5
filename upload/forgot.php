@@ -35,45 +35,32 @@ switch ($mode) {
         break;
 
     case 'reset_pass':
-        if (!empty($_REQUEST['email']) && !empty($_REQUEST['avcode']) && empty($_POST['change_password'])) {
-            $user = User::getInstance()->getOne(['email_strict' => $_REQUEST['email']]);
-            if (empty($user)) {
-                e(lang('recap_verify_failed'));
-            } else {
-                $success = true;
+        $input = !empty($_POST) ? $_POST : $_GET;
+        $email = is_string($input['email'] ?? null) ? $input['email'] : '';
+        $avcode = is_string($input['avcode'] ?? null) ? $input['avcode'] : '';
+        assign('email', $email);
+        assign('avcode', $avcode);
+        assign('pass_change', false);
 
-                $code = $_REQUEST['avcode'];
-                if (empty($user['avcode']) || $user['avcode'] != $code) {
-                    e(lang('recap_verify_failed'));
-                    $success = false;
-                } else {
-                    assign('avcode', $user['avcode']);
-                    assign('email', $user['email']);
-                }
-                assign('pass_change', $success);
-                //display pass field
+        $user = $email !== '' && $avcode !== '' ? User::getInstance()->getOne(['email_strict' => $email]) : false;
+        if (empty($user) || !User::isPasswordResetTokenValid($user, $avcode)) {
+            if (!empty($_POST) || isset($_GET['email']) || isset($_GET['avcode'])) {
+                e(lang('recap_verify_failed'));
             }
-        } else {
-            $user = User::getInstance()->getOne(['email_strict' => $_POST['email']]);
-            assign('avcode', $_POST['avcode'] ?? '');
-            assign('email', $_POST['email'] ?? '');
-            if (!empty($user) && $user['avcode'] == ($_POST['avcode'] ?? null) && !empty($user['avcode'])) {
-                assign('pass_change', true);
-                if (!empty($_POST['change_password'])) {
-                    if (empty($_POST['password']) || empty($_POST['cpassword'])) {
-                        e(lang('usr_pass_err2'));
-                    } elseif ($_POST['password'] != $_POST['cpassword']) {
-                        e(lang('usr_cpass_err1'));
-                    } else {
-                        Clipbucket_db::getInstance()->update(tbl('users'), ['password', 'avcode'], [pass_code($_POST['password'], $user['userid']), ''], ' userid=' . (int)$user['userid']);
-                        Session::kill_all_sessions($user['userid']);
-                        sessionMessageHandler::add_message(lang('usr_pass_email_msg'), 'm', DirPath::getUrl('root') . 'signup.php?mode=login');
-                    }
-                }
+            break;
+        }
+
+        assign('pass_change', true);
+        if (!empty($_POST['change_password'])) {
+            if (empty($_POST['password']) || empty($_POST['cpassword'])
+                || !is_string($_POST['password']) || !is_string($_POST['cpassword'])) {
+                e(lang('usr_pass_err2'));
+            } elseif ($_POST['password'] !== $_POST['cpassword']) {
+                e(lang('usr_cpass_err1'));
+            } elseif (User::changePasswordWithResetToken($user, $avcode, $_POST['password'])) {
+                sessionMessageHandler::add_message(lang('usr_pass_email_msg'), 'm', DirPath::getUrl('root') . 'signup.php?mode=login');
             } else {
-                if (!empty($_POST)) {
-                    e(lang('recap_verify_failed'));
-                }
+                e(lang('recap_verify_failed'));
                 assign('pass_change', false);
             }
         }

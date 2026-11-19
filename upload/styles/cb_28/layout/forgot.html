@@ -16,17 +16,17 @@
 
                     <div class="form-group">
                         <label for="email">{lang code='user_email_address'}</label>
-                        <input type="text" name="email" id="email" class="form-control" placeholder="{lang code='user_email_address'}" required autofocus value="{{$email}}"/>
+                        <input type="text" name="email" id="email" class="form-control" placeholder="{lang code='user_email_address'}" required autofocus value="{display_clean($email)}"/>
                     </div>
                     <div {if $mode !='reset_pass' } class="hidden"{/if}>
                         <label for="avcode">{lang code='email_variable_avcode'}</label>
-                        <input type="text" name="avcode" id="avcode" class="form-control" placeholder="{lang code='email_variable_avcode'}" {if $mode =='reset_pass' } required {/if} value="{{$avcode}}"/>
+                        <input type="text" name="avcode" id="avcode" class="form-control" placeholder="{lang code='email_variable_avcode'}" {if $mode =='reset_pass' } required {/if} value="{display_clean($avcode)}"/>
                     </div>
                     <br/>
                     <input name="reset" type="submit" class="btn btn-success btn-block" value="{lang code='user_reset'}"/>
                 {else}
-                    <input type="hidden" name="email" id="email" value="{{$email}}"/>
-                    <input type="hidden" name="avcode" id="avcode" value="{{$avcode}}"/>
+                    <input type="hidden" name="email" id="email" value="{display_clean($email)}"/>
+                    <input type="hidden" name="avcode" id="avcode" value="{display_clean($avcode)}"/>
                     <div class="clearfix text-box">
                         <p>{lang('user_change_pass')}</p>
                         <div class="form-group clearfix">

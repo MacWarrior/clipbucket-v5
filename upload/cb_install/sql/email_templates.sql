@@ -104,7 +104,7 @@ INSERT INTO `{tbl_prefix}email` (`code`, `id_email_template`, `is_deletable`, `t
     <br/><br/>
     If somehow above link isn\'t working, please go to : <a href="{{baseurl}}activation.php">{{baseurl}}activation.php</a><br/>
     And use your activation code : <b>{{avcode}}</b>
-    <br/><br/>
+    <br/>Your activation code will expire in 15 minutes<br/><br/>
     Welcome aboard !', 0),
     ('private_message', 1, 0, '[{{website_title}}] {{sender_username}} has sent you a private message', 'Hello {{user_username}},
     <br/><br/>
@@ -122,9 +122,11 @@ INSERT INTO `{tbl_prefix}email` (`code`, `id_email_template`, `is_deletable`, `t
     You have requested a password reset, please follow the link in order to reset your password : <br/>
     <a href="{{reset_password_link}}">Reset my password</a>
     <hr/>
-    <br/><br/>
+    <br/>
     If somehow above link isn''t working, please go to : <a href="{{baseurl}}forgot.php?mode=reset_pass">{{baseurl}}forgot.php</a><br/>
     And use your activation code : <b>{{avcode}}</b>
+    <br/>
+    Your activation code will expire in 15 minutes
     <br/><br/>
     <div style="text-align:center;font-weight:bold;">
     If you have not requested a password reset, please ignore this message
@@ -202,6 +204,8 @@ INSERT INTO `{tbl_prefix}email` (`code`, `id_email_template`, `is_deletable`, `t
     <br/><br/>
     If somehow above link isn''t working, please go to : <a href="{{baseurl}}activation.php">{{baseurl}}activation.php</a><br/>
     And use your activation code : <b>{{avcode}}</b>
+    <br/>
+    Your activation code will expire in 15 minutes
     <br/><br/>
     Welcome aboard !', 0),
     ('verify_email',1,0,'[{{website_title}}] Email address verification','Hello <b>{{user_username}}</b>,
@@ -210,7 +214,7 @@ INSERT INTO `{tbl_prefix}email` (`code`, `id_email_template`, `is_deletable`, `t
     <br/><br/>
     If somehow above link isn\'t working, please go to : <a href="{{baseurl}}email_confirm.php">{{baseurl}}email_confirm.php</a><br/>
 And use your activation code : <b>{{avcode}}</b>
-<br/><br/>
+<br/>Your activation code will expire in 15 minutes<br/><br/>
 Have a nice day !', 0),
     ('mfa_code',1,0,'[{{website_title}}] Authentification','Hello <b>{{user_username}}</b>,
     <br/><br/>
