@@ -56,6 +56,29 @@ class myquery
     }
 
     /**
+     * Search metadata only: never expose configuration values (tokens, passwords).
+     */
+    public function getSettingsSearchDescriptions(): array
+    {
+        if (!Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '999')) {
+            return [];
+        }
+
+        $descriptions = [];
+        $rows = db_select('SELECT name, description_key FROM ' . tbl('config') . ' WHERE description_key IS NOT NULL');
+        foreach ($rows ?: [] as $row) {
+            $descriptions[$row['name']] = lang($row['description_key']);
+        }
+        // These controls use files or video_resolution rather than the config table.
+        foreach (['custom_css', 'enable_dev_mode', 'discord_error_log', 'discord_webhook_url', 'enable_profiling',
+            'profiling_db_host', 'profiling_db_name', 'profiling_db_user', 'profiling_db_password', 'profiling_db_port',
+            'resolution_enabled', 'resolution_bitrate'] as $name) {
+            $descriptions[$name] = lang('settings_description_' . $name);
+        }
+        return $descriptions;
+    }
+
+    /**
      * @throws Exception
      */
     public function getVideoResolutions(): array

@@ -1943,6 +1943,10 @@ class AdminTool
     public static function executeSqlRequestsIgnore(string $request): bool
     {
         require_once DirPath::get('classes') . 'migration' . DIRECTORY_SEPARATOR . 'migration.class.php';
+        // The missing-config tool also runs against databases awaiting migration.
+        if (str_contains($request, '`description_key`') && !Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '999')) {
+            return true;
+        }
         $request = \Migration::prepare($request);
         $request = preg_replace('/INSERT INTO/', 'INSERT IGNORE INTO', $request);
         return (bool)Clipbucket_db::getInstance()->execute($request);

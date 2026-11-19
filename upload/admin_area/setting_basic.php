@@ -688,5 +688,6 @@ ClipBucket::getInstance()->addAdminJS([
     'jquery-ui-1.13.2.min.js'             => 'global'
     ,'pages/main/main'.$min_suffixe.'.js' => 'admin'
 ]);
+assign('settings_search_descriptions', myquery::getInstance()->getSettingsSearchDescriptions());
 template_files('setting_basic.html');
 display_it();

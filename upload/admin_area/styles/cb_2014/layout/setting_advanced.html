@@ -1,5 +1,6 @@
-<div class="heading">
+<div class="heading settings-heading">
     <h2>{lang('advanced_settings')}</h2>
+    {include file="$style_dir/blocks/settings_search.html"}
 </div>
 
 <form name="form1" method="post" id="main_form" enctype="multipart/form-data">
@@ -59,7 +60,7 @@
                             <hr/>
                             <div class="row">
                                 <div class="col-md-4">
-                                    <label class="nowrap" for="enable_video_file_upload" title="Enable file upload">Enable video file upload</label>
+                                    <label class="nowrap" for="enable_video_file_upload" title="{display_clean(lang('settings_title_enable_video_file_upload'))}">{display_clean(lang('settings_title_enable_video_file_upload'))}</label>
                                 </div>
                                 <div class="col-md-2 row-size">
                                     <input value="yes" name="enable_video_file_upload" id="enable_video_file_upload" {if $row.enable_video_file_upload=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
@@ -76,7 +77,7 @@
                             <hr/>
                             <div class="row">
                                 <div class="col-md-4">
-                                    <label class="nowrap" for="delete_mass_upload" title="Delete Mass upload"><span class="fa fa-question-circle tips" title="Delete original files once uploaded from mass upload"></span> Delete Mass upload</label>
+                                    <label class="nowrap" for="delete_mass_upload" title="{display_clean(lang('settings_title_delete_mass_upload'))}"><span class="fa fa-question-circle tips" title="Delete original files once uploaded from mass upload"></span> {display_clean(lang('settings_title_delete_mass_upload'))}</label>
                                 </div>
                                 <div class="col-md-2 row-size">
                                     <input value="yes" name="delete_mass_upload" id="delete_mass_upload" {if $row.delete_mass_upload=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
@@ -86,7 +87,7 @@
                             <hr/>
                             <div class="row">
                                 <div class="col-md-6">
-                                    <label class="nowrap" for="max_video_duration" title="Max video duration">Max video duration</label>
+                                    <label class="nowrap" for="max_video_duration" title="{display_clean(lang('settings_title_max_video_duration'))}">{display_clean(lang('settings_title_max_video_duration'))}</label>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="input-group">
@@ -175,7 +176,7 @@
                             <hr/>
                             <div class="row">
                                 <div class="col-md-4">
-                                    <label class="nowrap" for="enable_photo_file_upload" title="Enable photo file upload">Enable photo file upload</label>
+                                    <label class="nowrap" for="enable_photo_file_upload" title="{display_clean(lang('settings_title_enable_photo_file_upload'))}">{display_clean(lang('settings_title_enable_photo_file_upload'))}</label>
                                 </div>
                                 <div class="col-md-2 row-size">
                                     <input value="yes" name="enable_photo_file_upload" id="enable_photo_file_upload" {if $row.enable_photo_file_upload=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
@@ -288,9 +289,7 @@
                                     <span class="lbl"></span>
                                 </div>
                                 <div class="col-md-3">
-                                    <label class="nowrap" for="chunk_upload_size" title="Max upload file size">
-                                        Chunk size
-                                    </label>
+                                    <label class="nowrap" for="chunk_upload_size" title="{display_clean(lang('settings_title_chunk_upload_size'))}">{display_clean(lang('settings_title_chunk_upload_size'))}</label>
                                 </div>
                                 <div class="col-md-3">
                                     <div class="input-group">
@@ -309,7 +308,7 @@
                         <div class="col-md-4">
                             <div class="row">
                                 <div class="col-md-6">
-                                    <label class="nowrap" for="num_thumbs" title="Number of video thumbs">Number of video thumbs</label>
+                                    <label class="nowrap" for="num_thumbs" title="{display_clean(lang('settings_title_num_thumbs'))}">{display_clean(lang('settings_title_num_thumbs'))}</label>
                                 </div>
                                 <div class="col-md-6">
                                     <input class="form-control" name="num_thumbs" id="num_thumbs" value="{(int)$row.num_thumbs}" type="number"/>
@@ -346,7 +345,7 @@
                             <hr/>
                             <div class="row">
                                 <div class="col-md-6">
-                                    <label class="nowrap" for="srate" title="Audio Rate">Audio Rate</label>
+                                    <label class="nowrap" for="srate" title="{display_clean(lang('settings_title_srate'))}">{display_clean(lang('settings_title_srate'))}</label>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="input-group">
@@ -358,7 +357,7 @@
                             <hr/>
                             <div class="row">
                                 <div class="col-md-6">
-                                    <label class="nowrap" for="sbrate" title="Audio Bitrate">Audio Bitrate</label>
+                                    <label class="nowrap" for="sbrate" title="{display_clean(lang('settings_title_sbrate'))}">{display_clean(lang('settings_title_sbrate'))}</label>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="input-group">
@@ -370,7 +369,7 @@
                             <hr/>
                             <div class="row">
                                 <div class="col-md-6">
-                                    <label class="nowrap" for="vrate" title="Frame rate target"><span class="fa fa-question-circle tips" title="Video rate will be calculated to be the closer as possible from this value"></span> Frame rate target</label>
+                                    <label class="nowrap" for="vrate" title="{display_clean(lang('settings_title_vrate'))}"><span class="fa fa-question-circle tips" title="Video rate will be calculated to be the closer as possible from this value"></span> {display_clean(lang('settings_title_vrate'))}</label>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="input-group">
@@ -382,13 +381,13 @@
                             <hr/>
                             <div class="row">
                                 <div class="col-md-3">
-                                    <label class="nowrap" for="video_codec" title="Video Codec">Video Codec</label>
+                                    <label class="nowrap" for="video_codec" title="{display_clean(lang('settings_title_video_codec'))}">{display_clean(lang('settings_title_video_codec'))}</label>
                                 </div>
                                 <div class="col-md-3">
                                     <input class="form-control" name="video_codec" id="video_codec" value="{display_clean($row.video_codec)}"/>
                                 </div>
                                 <div class="col-md-3">
-                                    <label class="nowrap" for="audio_codec" title="Audio Codec">Audio Codec</label>
+                                    <label class="nowrap" for="audio_codec" title="{display_clean(lang('settings_title_audio_codec'))}">{display_clean(lang('settings_title_audio_codec'))}</label>
                                 </div>
                                 <div class="col-md-3">
                                     <input class="form-control" name="audio_codec" id="audio_codec" value="{display_clean($row.audio_codec)}"/>
@@ -397,7 +396,7 @@
                             <hr/>
                             <div class="row">
                                 <div class="col-md-3">
-                                    <label class="nowrap" for="subtitle_format" title="Subtitle Format">Subtitle Format</label>
+                                    <label class="nowrap" for="subtitle_format" title="{display_clean(lang('settings_title_subtitle_format'))}">{display_clean(lang('settings_title_subtitle_format'))}</label>
                                 </div>
                                 <div class="col-md-3">
                                     <input class="form-control" name="subtitle_format" id="subtitle_format" value="{display_clean($row.subtitle_format)}"/>
@@ -409,7 +408,7 @@
                         <div class="col-md-4">
                             <div class="row">
                                 <div class="col-md-10">
-                                    <label class="nowrap" for="chromecast_fix" title="Chromecast compatibility" class="nowrap"><span class="fa fa-question-circle tips" title="Force audio conversion to Stereo"></span> Chromecast compatibility</label>
+                                    <label class="nowrap" for="chromecast_fix" title="{display_clean(lang('settings_title_chromecast_fix'))}" class="nowrap"><span class="fa fa-question-circle tips" title="Force audio conversion to Stereo"></span> {display_clean(lang('settings_title_chromecast_fix'))}</label>
                                 </div>
                                 <div class="col-md-2 row-size">
                                     <input value="1" name="chromecast_fix" id="chromecast_fix" {if $row.chromecast_fix=='1'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
@@ -419,7 +418,7 @@
                             <hr/>
                             <div class="row">
                                 <div class="col-md-10">
-                                    <label class="nowrap" for="force_8bits" title="Improve compatibility"><span class="fa fa-question-circle tips" title="Force video to 8bits colors maximum"></span> Improve compatibility</label>
+                                    <label class="nowrap" for="force_8bits" title="{display_clean(lang('settings_title_force_8bits'))}"><span class="fa fa-question-circle tips" title="Force video to 8bits colors maximum"></span> {display_clean(lang('settings_title_force_8bits'))}</label>
                                 </div>
                                 <div class="col-md-2 row-size">
                                     <input value="1" name="force_8bits" id="force_8bits" {if $row.force_8bits=='1'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
@@ -429,7 +428,7 @@
                             <hr/>
                             <div class="row">
                                 <div class="col-md-10">
-                                    <label class="nowrap" for="extract_subtitles" title="Extract subtitles"><span class="fa fa-question-circle tips" title="Extract subtitles to dedicated files"></span> Extract subtitles</label>
+                                    <label class="nowrap" for="extract_subtitles" title="{display_clean(lang('settings_title_extract_subtitles'))}"><span class="fa fa-question-circle tips" title="Extract subtitles to dedicated files"></span> {display_clean(lang('settings_title_extract_subtitles'))}</label>
                                 </div>
                                 <div class="col-md-2 row-size">
                                     <input value="1" name="extract_subtitles" id="extract_subtitles" {if $row.extract_subtitles=='1'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
@@ -449,29 +448,27 @@
                             <hr/>
                             <div class="row">
                                 <div class="col-md-6 row-size">
-                                    <label><span class="fa fa-question-circle tips" title="Choose it wisely ! MP4 won't allow multiple audio tracks ; HLS won't allow download and require FFmpeg 4.3+"></span> Conversion type</label>
+                                    <label data-settings-label="conversion_type"><span class="fa fa-question-circle tips" title="Choose it wisely ! MP4 won't allow multiple audio tracks ; HLS won't allow download and require FFmpeg 4.3+"></span> {display_clean(lang('settings_title_conversion_type'))}</label>
                                 </div>
                                 <div class="col-md-1">
                                     <input value="mp4" name="conversion_type" id="convesion_type_mp4" {if $row.conversion_type=='mp4'}checked{/if} type="radio" class="ace ace-switch ace-switch-5"/>
                                     <span class="lbl"></span>
                                 </div>
                                 <div class="col-md-2">
-                                    <label class="nowrap" for="convesion_type_mp4" title="MP4">MP4</label>
+                                    <label class="nowrap" for="convesion_type_mp4" title="{display_clean(lang('settings_title_convesion_type_mp4'))}">{display_clean(lang('settings_title_convesion_type_mp4'))}</label>
                                 </div>
                                 <div class="col-md-1">
                                     <input value="hls" name="conversion_type" id="convesion_type_hls" {if $row.conversion_type=='hls'}checked{/if} type="radio" class="ace ace-switch ace-switch-5" {if $ffmpeg_version<'4.3'}disabled title='Require FFmpeg 4.3+'{/if}/>
                                     <span class="lbl"></span>
                                 </div>
                                 <div class="col-md-2">
-                                    <label class="nowrap" for="convesion_type_hls" title="HLS">HLS</label>
+                                    <label class="nowrap" for="convesion_type_hls" title="{display_clean(lang('settings_title_convesion_type_hls'))}">{display_clean(lang('settings_title_convesion_type_hls'))}</label>
                                 </div>
                             </div>
                             <hr/>
                             <div class="row">
                                 <div class="col-md-10">
-                                    <label class="nowrap" for="stay_mp4" title="Stay MP4 as it is"><span class="fa fa-question-circle tips" title="Only use this option if you only want MP4 file uplad : this option disable video conversion and keep mp4 files as they are uploaded"></span> Stay MP4 as
-                                        it
-                                        is</label>
+                                    <label class="nowrap" for="stay_mp4" title="{display_clean(lang('settings_title_stay_mp4'))}"><span class="fa fa-question-circle tips" title="Only use this option if you only want MP4 file uplad : this option disable video conversion and keep mp4 files as they are uploaded"></span> {display_clean(lang('settings_title_stay_mp4'))}</label>
                                 </div>
                                 <div class="col-md-2 row-size">
                                     <input value="yes" name="stay_mp4" id="stay_mp4" {if $row.stay_mp4=='yes'}checked{/if} type="checkbox" {if $row.conversion_type=='hls'}disabled{/if} class="ace ace-switch ace-switch-5"/>
@@ -482,7 +479,7 @@
                             <hr/>
                             <div class="row">
                                 <div class="col-md-10">
-                                    <label class="nowrap" for="keep_audio_tracks" title="Keep audio tracks"><span class="fa fa-question-circle tips" title="Conserve all audio tracks in video files"></span> Keep audio tracks</label>
+                                    <label class="nowrap" for="keep_audio_tracks" title="{display_clean(lang('settings_title_keep_audio_tracks'))}"><span class="fa fa-question-circle tips" title="Conserve all audio tracks in video files"></span> {display_clean(lang('settings_title_keep_audio_tracks'))}</label>
                                 </div>
                                 <div class="col-md-2 row-size">
                                     <input value="1" name="keep_audio_tracks" id="keep_audio_tracks" {if $row.keep_audio_tracks=='1'}checked{/if} type="checkbox" {if $row.conversion_type=='hls'}disabled{/if} class="ace ace-switch ace-switch-5"/>
@@ -493,7 +490,7 @@
                             <hr/>
                             <div class="row">
                                 <div class="col-md-10">
-                                    <label class="nowrap" for="keep_subtitles" title="Keep subtitles"><span class="fa fa-question-circle tips" title="Conserve subtitles in video files"></span> Keep subtitles</label>
+                                    <label class="nowrap" for="keep_subtitles" title="{display_clean(lang('settings_title_keep_subtitles'))}"><span class="fa fa-question-circle tips" title="Conserve subtitles in video files"></span> {display_clean(lang('settings_title_keep_subtitles'))}</label>
                                 </div>
                                 <div class="col-md-2 row-size">
                                     <input value="1" name="keep_subtitles" id="keep_subtitles" {if $row.keep_subtitles=='1'}checked{/if} type="checkbox" {if $row.conversion_type=='hls'}disabled{/if} class="ace ace-switch ace-switch-5"/>
@@ -618,7 +615,7 @@
                             <hr/>
                             <div class="row">
                                 <div class="col-md-10">
-                                    <label class="nowrap" for="allow_conversion_1_percent" title="Allow 1% difference"><span class="fa fa-question-circle tips" title="Allow a 1% lower difference between expected video height/width and current video height/width"></span> Allow 1% difference</label>
+                                    <label class="nowrap" for="allow_conversion_1_percent" title="{display_clean(lang('settings_title_allow_conversion_1_percent'))}"><span class="fa fa-question-circle tips" title="Allow a 1% lower difference between expected video height/width and current video height/width"></span> {display_clean(lang('settings_title_allow_conversion_1_percent'))}</label>
                                 </div>
                                 <div class="col-md-2 row-size">
                                     <input value="yes" name="allow_conversion_1_percent" id="allow_conversion_1_percent" {if $row.allow_conversion_1_percent=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
@@ -664,7 +661,7 @@
                     <div class="col-md-4">
                         <div class="row">
                             <div class="col-md-6">
-                                <label class="nowrap" for="send_comment_notification" title="Send Comment Notification">Send Comment Notification</label>
+                                <label class="nowrap" for="send_comment_notification" title="{display_clean(lang('settings_title_send_comment_notification'))}">{display_clean(lang('settings_title_send_comment_notification'))}</label>
                             </div>
                             <div class="col-md-6 row-size">
                                 <input value="yes" name="send_comment_notification" id="send_comment_notification" {if $row.send_comment_notification=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
@@ -674,7 +671,7 @@
                         <hr/>
                         <div class="row">
                             <div class="col-md-6">
-                                <label class="nowrap" for="approve_video_notification" title="Send Video Approve Notification">Send Video Approve Notification</label>
+                                <label class="nowrap" for="approve_video_notification" title="{display_clean(lang('settings_title_approve_video_notification'))}">{display_clean(lang('settings_title_approve_video_notification'))}</label>
                             </div>
                             <div class="col-md-6 row-size">
                                 <input value="yes" name="approve_video_notification" id="approve_video_notification" {if $row.approve_video_notification=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
@@ -697,7 +694,7 @@
                     <div class="col-md-4">
                         <div class="row">
                             <div class="col-md-6">
-                                <label class="nowrap" for="mail_type" title="Mailer">Mailer</label>
+                                <label class="nowrap" for="mail_type" title="{display_clean(lang('settings_title_mail_type'))}">{display_clean(lang('settings_title_mail_type'))}</label>
                             </div>
                             <div class="col-md-6 row-size">
                                 <select class="form-control" name="mail_type" id="mail_type">
@@ -709,7 +706,7 @@
                         <hr/>
                         <div class="row config_smtp" {if $row.mail_type=='mail'}style="display:none;"{/if}>
                             <div class="col-md-6">
-                                <label class="nowrap" for="smtp_host" title="SMTP Host">SMTP Host</label>
+                                <label class="nowrap" for="smtp_host" title="{display_clean(lang('settings_title_smtp_host'))}">{display_clean(lang('settings_title_smtp_host'))}</label>
                             </div>
                             <div class="col-md-6 row-size">
                                 <input class="form-control" name="smtp_host" id="smtp_host" value="{display_clean($row.smtp_host)}"/>
@@ -718,7 +715,7 @@
                         <hr class="config_smtp" {if $row.mail_type=='mail'}style="display:none;"{/if}/>
                         <div class="row config_smtp" {if $row.mail_type=='mail'}style="display:none;"{/if}>
                             <div class="col-md-6">
-                                <label class="nowrap" for="smtp_port" title="SMTP Port">SMTP Port</label>
+                                <label class="nowrap" for="smtp_port" title="{display_clean(lang('settings_title_smtp_port'))}">{display_clean(lang('settings_title_smtp_port'))}</label>
                             </div>
                             <div class="col-md-6 row-size">
                                 <input class="form-control" name="smtp_port" id="smtp_port" value="{(int)$row.smtp_port}"/>
@@ -727,7 +724,7 @@
                         <hr class="config_smtp" {if $row.mail_type=='mail'}style="display:none;"{/if}/>
                         <div class="row config_smtp" {if $row.mail_type=='mail'}style="display:none;"{/if}>
                             <div class="col-md-6">
-                                <label class="nowrap" for="smtp_auth" title="SMTP Auth">SMTP Auth</label>
+                                <label class="nowrap" for="smtp_auth" title="{display_clean(lang('settings_title_smtp_auth'))}">{display_clean(lang('settings_title_smtp_auth'))}</label>
                             </div>
                             <div class="col-md-6 row-size">
                                 <input value="yes" name="smtp_auth" id="smtp_auth" {if $row.smtp_auth=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
@@ -737,7 +734,7 @@
                         <hr class="config_smtp config_smtp_auth" {if $row.mail_type=='mail'||$row.smtp_auth!='yes'}style="display:none;"{/if}/>
                         <div class="row config_smtp config_smtp_auth" {if $row.mail_type=='mail'||$row.smtp_auth!='yes'}style="display:none;"{/if}>
                             <div class="col-md-6">
-                                <label class="nowrap" for="smtp_user" title="SMTP Username">SMTP Username</label>
+                                <label class="nowrap" for="smtp_user" title="{display_clean(lang('settings_title_smtp_user'))}">{display_clean(lang('settings_title_smtp_user'))}</label>
                             </div>
                             <div class="col-md-6 row-size">
                                 <input class="form-control" name="smtp_user" id="smtp_user" value="{display_clean($row.smtp_user)}"/>
@@ -746,7 +743,7 @@
                         <hr class="config_smtp config_smtp_auth" {if $row.mail_type=='mail'||$row.smtp_auth!='yes'}style="display:none;"{/if}/>
                         <div class="row config_smtp config_smtp_auth" {if $row.mail_type=='mail'||$row.smtp_auth!='yes'}style="display:none;"{/if}>
                             <div class="col-md-6">
-                                <label class="nowrap" for="smtp_pass" title="SMTP Password">SMTP Password</label>
+                                <label class="nowrap" for="smtp_pass" title="{display_clean(lang('settings_title_smtp_pass'))}">{display_clean(lang('settings_title_smtp_pass'))}</label>
                             </div>
                             <div class="col-md-6 row-size">
                                 <input class="form-control" name="smtp_pass" id="smtp_pass" value="{display_clean($row.smtp_pass)}"/>
@@ -763,7 +760,7 @@
                     <div class="col-md-3">
                         <div class="row">
                             <div class="col-md-8">
-                                <label class="nowrap" for="proxy_enable" title="Enable proxy">Enable proxy</label>
+                                <label class="nowrap" for="proxy_enable" title="{display_clean(lang('settings_title_proxy_enable'))}">{display_clean(lang('settings_title_proxy_enable'))}</label>
                             </div>
                             <div class="col-md-4 row-size">
                                 <input value="yes" name="proxy_enable" id="proxy_enable" {if $row.proxy_enable=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
@@ -774,7 +771,7 @@
 
                         <div class="row">
                             <div class="col-md-8">
-                                <label class="nowrap" for="proxy_auth" title="Enable proxy authentification">Enable proxy authentification</label>
+                                <label class="nowrap" for="proxy_auth" title="{display_clean(lang('settings_title_proxy_auth'))}">{display_clean(lang('settings_title_proxy_auth'))}</label>
                             </div>
                             <div class="col-md-4 row-size">
                                 <input value="yes" name="proxy_auth" id="proxy_auth" {if $row.proxy_auth=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
@@ -787,7 +784,7 @@
                     <div class="col-md-3">
                         <div class="row">
                             <div class="col-md-4">
-                                <label class="nowrap" for="proxy_url" title="URL">URL</label>
+                                <label class="nowrap" for="proxy_url" title="{display_clean(lang('settings_title_proxy_url'))}">{display_clean(lang('settings_title_proxy_url'))}</label>
                             </div>
                             <div class="col-md-8 row-size">
                                 <input class="form-control" name="proxy_url" id="proxy_url" value="{display_clean($row.proxy_url)}"/>
@@ -796,7 +793,7 @@
                         <hr/>
                         <div class="row">
                             <div class="col-md-4">
-                                <label class="nowrap" for="proxy_username" title="Username">Username</label>
+                                <label class="nowrap" for="proxy_username" title="{display_clean(lang('settings_title_proxy_username'))}">{display_clean(lang('settings_title_proxy_username'))}</label>
                             </div>
                             <div class="col-md-8 row-size">
                                 <input class="form-control" name="proxy_username" id="proxy_username" value="{display_clean($row.proxy_username)}"/>
@@ -808,7 +805,7 @@
                     <div class="col-md-3">
                         <div class="row">
                             <div class="col-md-4">
-                                <label class="nowrap" for="proxy_port" title="Port">Port</label>
+                                <label class="nowrap" for="proxy_port" title="{display_clean(lang('settings_title_proxy_port'))}">{display_clean(lang('settings_title_proxy_port'))}</label>
                             </div>
                             <div class="col-md-8 row-size">
                                 <input class="form-control" type="number" name="proxy_port" id="proxy_port" value="{(int)$row.proxy_port}"/>
@@ -817,7 +814,7 @@
                         <hr/>
                         <div class="row">
                             <div class="col-md-4">
-                                <label class="nowrap" for="proxy_password" title="Password">Password</label>
+                                <label class="nowrap" for="proxy_password" title="{display_clean(lang('settings_title_proxy_password'))}">{display_clean(lang('settings_title_proxy_password'))}</label>
                             </div>
                             <div class="col-md-8 row-size">
                                 <input class="form-control" name="proxy_password" id="proxy_password" value="{display_clean($row.proxy_password)}"/>
@@ -996,7 +993,7 @@
                     <div class="col-md-4">
                         <div class="row">
                             <div class="col-md-6">
-                                <label class="nowrap" for="php_path" title="PHP Path"><span class="fa fa-question-circle tips" title="PHP Binary Path"></span> PHP Path</label>
+                                <label class="nowrap" for="php_path" title="{display_clean(lang('settings_title_php_path'))}"><span class="fa fa-question-circle tips" title="PHP Binary Path"></span> {display_clean(lang('settings_title_php_path'))}</label>
                             </div>
                             <div class="col-md-6">
                                 <input class="form-control" name="php_path" id="php_path" value="{display_clean($row.php_path)}"/>
@@ -1005,7 +1002,7 @@
                         <hr/>
                         <div class="row">
                             <div class="col-md-6">
-                                <label class="nowrap" for="media_info" title="Mediainfo Path"><span class="fa fa-question-circle tips" title="Mediainfo Binary Path"></span> Mediainfo Path</label>
+                                <label class="nowrap" for="media_info" title="{display_clean(lang('settings_title_media_info'))}"><span class="fa fa-question-circle tips" title="Mediainfo Binary Path"></span> {display_clean(lang('settings_title_media_info'))}</label>
                             </div>
                             <div class="col-md-6">
                                 <input class="form-control" name="media_info" id="media_info" value="{display_clean($row.media_info)}"/>
@@ -1014,7 +1011,7 @@
                         <hr/>
                         <div class="row">
                             <div class="col-md-6">
-                                <label class="nowrap" for="ffmpegpath" title="FFmpeg Path"><span class="fa fa-question-circle tips" title="FFmpeg Binary Path"></span> FFmpeg Path</label>
+                                <label class="nowrap" for="ffmpegpath" title="{display_clean(lang('settings_title_ffmpegpath'))}"><span class="fa fa-question-circle tips" title="FFmpeg Binary Path"></span> {display_clean(lang('settings_title_ffmpegpath'))}</label>
                             </div>
                             <div class="col-md-6">
                                 <input class="form-control" name="ffmpegpath" id="ffmpegpath" value="{display_clean($row.ffmpegpath)}"/>
@@ -1023,7 +1020,7 @@
                         <hr/>
                         <div class="row">
                             <div class="col-md-6">
-                                <label class="nowrap" for="ffprobe_path" title="FFprobe Path"><span class="fa fa-question-circle tips" title="FFprobe Binary Path"></span> FFprobe Path</label>
+                                <label class="nowrap" for="ffprobe_path" title="{display_clean(lang('settings_title_ffprobe_path'))}"><span class="fa fa-question-circle tips" title="FFprobe Binary Path"></span> {display_clean(lang('settings_title_ffprobe_path'))}</label>
                             </div>
                             <div class="col-md-6">
                                 <input class="form-control" name="ffprobe_path" id="ffprobe_path" value="{display_clean($row.ffprobe_path)}"/>
@@ -1032,10 +1029,7 @@
                         <hr/>
                         <div class="row">
                             <div class="col-md-6">
-                                <label class="nowrap" for="max_conversion" title="Max videos to convert at once">
-                                    <span class="fa fa-question-circle tips" title="Video conversion use lot of ressources, be aware of what's you're doing !"></span>
-                                    Max videos to convert at once
-                                </label>
+                                <label class="nowrap" for="max_conversion" title="{display_clean(lang('settings_title_max_conversion'))}"><span class="fa fa-question-circle tips" title="Video conversion use lot of ressources, be aware of what's you're doing !"></span> {display_clean(lang('settings_title_max_conversion'))}</label>
                             </div>
                             <div class="col-md-6">
                                 <input class="form-control" name="max_conversion" id="max_conversion" value="{(int)$row.max_conversion}" type="number"/>
@@ -1139,7 +1133,7 @@
                         <hr/>
                         <div class="row">
                             <div class="col-md-4">
-                                <label class="nowrap" for="store_guest_session" title="Store guest Session">Store guest Session</label>
+                                <label class="nowrap" for="store_guest_session" title="{display_clean(lang('settings_title_store_guest_session'))}">{display_clean(lang('settings_title_store_guest_session'))}</label>
                             </div>
                             <div class="col-md-2 row-size no_padding">
                                 <input value="yes" id="store_guest_session" {if $row.store_guest_session=='yes'}checked{/if} name="store_guest_session" type="checkbox" class="ace ace-switch ace-switch-5 bootstrap-switch-on"/>

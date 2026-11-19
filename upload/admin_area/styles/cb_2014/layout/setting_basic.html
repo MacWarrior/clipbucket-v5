@@ -1,5 +1,6 @@
-<div class="heading">
+<div class="heading settings-heading">
     <h2>{lang('basic_settings')}</h2>
+    {include file="$style_dir/blocks/settings_search.html"}
 </div>
 
 <form name="form1" method="post" id="main_form" enctype="multipart/form-data">
@@ -63,7 +64,7 @@
                         <div class="col-md-4">
                             <div class="row">
                                 <div class="col-md-4">
-                                    <label class="nowrap" for="site_title" title="Website title">Website title</label>
+                                    <label class="nowrap" for="site_title" title="{display_clean(lang('settings_title_site_title'))}">{display_clean(lang('settings_title_site_title'))}</label>
                                 </div>
                                 <div class="col-md-8">
                                     <input class="form-control" name="site_title" id="site_title" value="{display_clean($row.site_title)}" size="45"/>
@@ -72,7 +73,7 @@
                             <hr/>
                             <div class="row">
                                 <div class="col-md-4">
-                                    <label class="nowrap" for="site_slogan" title="Website slogan">Website slogan</label>
+                                    <label class="nowrap" for="site_slogan" title="{display_clean(lang('settings_title_site_slogan'))}">{display_clean(lang('settings_title_site_slogan'))}</label>
                                 </div>
                                 <div class="col-md-8">
                                     <input class="form-control" name="site_slogan" id="site_slogan" value="{display_clean($row.site_slogan)}" size="45"/>
@@ -81,7 +82,7 @@
                             <hr/>
                             <div class="row">
                                 <div class="col-md-4">
-                                    <label class="nowrap" for="keywords" title="Meta Keywords">Meta Keywords</label>
+                                    <label class="nowrap" for="keywords" title="{display_clean(lang('settings_title_keywords'))}">{display_clean(lang('settings_title_keywords'))}</label>
                                 </div>
                                 <div class="col-md-8">
                                     <input class="form-control" name="keywords" id="keywords" value="{display_clean($row.keywords)}" size="45"/>
@@ -90,7 +91,7 @@
                             <hr/>
                             <div class="row">
                                 <div class="col-md-12">
-                                    <label class="nowrap" for="description" title="Meta Description">Meta Description</label>
+                                    <label class="nowrap" for="description" title="{display_clean(lang('settings_title_description'))}">{display_clean(lang('settings_title_description'))}</label>
                                     <textarea class="form-control" name="description" id="description" cols="45" rows="5">{display_clean($row.description)}</textarea>
                                 </div>
                             </div>
@@ -106,7 +107,7 @@
                         <div class="col-md-4">
                             <div class="row">
                                 <div class="col-md-4">
-                                    <label class="nowrap" for="closed" title="Website closed">Website closed</label>
+                                    <label class="nowrap" for="closed" title="{display_clean(lang('settings_title_closed'))}">{display_clean(lang('settings_title_closed'))}</label>
                                 </div>
                                 <div class="col-md-2 row-size">
                                     <input value="1" id="closed" {if $row.closed=='1'}checked{/if} name="closed" type="checkbox" class="ace ace-switch ace-switch-5"/>
@@ -114,7 +115,7 @@
                                 </div>
 
                                 <div class="col-md-4">
-                                    <label class="nowrap" for="enable_update_checker" title="Enable update checker">Enable update checker</label>
+                                    <label class="nowrap" for="enable_update_checker" title="{display_clean(lang('settings_title_enable_update_checker'))}">{display_clean(lang('settings_title_enable_update_checker'))}</label>
                                 </div>
                                 <div class="col-md-2 row-size">
                                     <input value="1" id="enable_update_checker" {if $row.enable_update_checker=='1'}checked{/if} name="enable_update_checker" type="checkbox" class="ace ace-switch ace-switch-5"/>
@@ -124,7 +125,7 @@
                             <hr/>
                             <div class="row">
                                 <div class="col-md-4">
-                                    <label class="nowrap" for="seo" title="Use SEO Urls">Use SEO Urls</label>
+                                    <label class="nowrap" for="seo" title="{display_clean(lang('settings_title_seo'))}">{display_clean(lang('settings_title_seo'))}</label>
                                 </div>
                                 <div class="col-md-2 row-size">
                                     <input value="yes" name="seo" id="seo" {if $row.seo=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
@@ -134,7 +135,7 @@
                             <hr/>
                             <div class="row">
                                 <div class="col-md-4">
-                                    <label class="nowrap" for="date_format" title="Date Format">Date Format</label>
+                                    <label class="nowrap" for="date_format" title="{display_clean(lang('settings_title_date_format'))}">{display_clean(lang('settings_title_date_format'))}</label>
                                 </div>
                                 <div class="col-md-8">
                                     <input class="form-control" name="date_format" id="date_format" value="{$row.date_format}" size="45"/>
@@ -143,14 +144,14 @@
                             <hr/>
                             <div class="row">
                                 <div class="col-md-12">
-                                    <label class="nowrap" for="closed_msg" title="Closed message">Closed message</label>
+                                    <label class="nowrap" for="closed_msg" title="{display_clean(lang('settings_title_closed_msg'))}">{display_clean(lang('settings_title_closed_msg'))}</label>
                                     <textarea class="form-control" name="closed_msg" id="closed_msg" cols="45" rows="5">{display_clean($row.closed_msg)}</textarea>
                                 </div>
                             </div>
                             <hr/>
                             <div class="row">
                                 <div class="col-md-4">
-                                    <label class="nowrap" for="enable_rss_feeds" title="Enable RSS feeds">Enable RSS feeds</label>
+                                    <label class="nowrap" for="enable_rss_feeds" title="{display_clean(lang('settings_title_enable_rss_feeds'))}">{display_clean(lang('settings_title_enable_rss_feeds'))}</label>
                                 </div>
                                 <div class="col-md-2 row-size">
                                     <input value="yes" id="enable_rss_feeds" {if $row.enable_rss_feeds=='yes'}checked{/if} name="enable_rss_feeds" type="checkbox" class="ace ace-switch ace-switch-5"/>
@@ -179,14 +180,14 @@
                         <div class="col-md-4">
                             <div class="row">
                                 <div class="col-md-4">
-                                    <label class="nowrap" for="videosSection" title="Enable Videos">Enable Videos</label>
+                                    <label class="nowrap" for="videosSection" title="{display_clean(lang('settings_title_videossection'))}">{display_clean(lang('settings_title_videossection'))}</label>
                                 </div>
                                 <div class="col-md-2 row-size">
                                     <input value="yes" name="videosSection" id="videosSection" {if $row.videosSection=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
                                     <span class="lbl"></span>
                                 </div>
                                 <div class="col-md-4">
-                                    <label class="nowrap" for="photosSection" title="Enable Photos">Enable Photos</label>
+                                    <label class="nowrap" for="photosSection" title="{display_clean(lang('settings_title_photossection'))}">{display_clean(lang('settings_title_photossection'))}</label>
                                 </div>
                                 <div class="col-md-2 row-size">
                                     <input value="yes" name="photosSection" id="photosSection" {if $row.photosSection=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
@@ -196,14 +197,14 @@
                             <hr/>
                             <div class="row">
                                 <div class="col-md-4">
-                                    <label class="nowrap" for="collectionsSection" title="Enable Collections">Enable Collections</label>
+                                    <label class="nowrap" for="collectionsSection" title="{display_clean(lang('settings_title_collectionssection'))}">{display_clean(lang('settings_title_collectionssection'))}</label>
                                 </div>
                                 <div class="col-md-2 row-size">
                                     <input value="yes" name="collectionsSection" id="collectionsSection" {if $row.collectionsSection=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
                                     <span class="lbl"></span>
                                 </div>
                                 <div class="col-md-4">
-                                    <label class="nowrap" for="channelsSection" title="Enable Channels">Enable Channels</label>
+                                    <label class="nowrap" for="channelsSection" title="{display_clean(lang('settings_title_channelssection'))}">{display_clean(lang('settings_title_channelssection'))}</label>
                                 </div>
                                 <div class="col-md-2 row-size">
                                     <input value="yes" name="channelsSection" id="channelsSection" {if $row.channelsSection=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
@@ -213,14 +214,14 @@
                             <hr/>
                             <div class="row">
                                 <div class="col-md-4">
-                                    <label class="nowrap" for="enable_advertisement" title="Enable advertisement">Enable advertisement</label>
+                                    <label class="nowrap" for="enable_advertisement" title="{display_clean(lang('settings_title_enable_advertisement'))}">{display_clean(lang('settings_title_enable_advertisement'))}</label>
                                 </div>
                                 <div class="col-md-2 row-size">
                                     <input value="yes" name="enable_advertisement" id="enable_advertisement" {if $row.enable_advertisement=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
                                     <span class="lbl"></span>
                                 </div>
                                 <div class="col-md-4">
-                                    <label class="nowrap" for="feedsSection" title="Enable feeds">Enable feeds</label>
+                                    <label class="nowrap" for="feedsSection" title="{display_clean(lang('settings_title_feedssection'))}">{display_clean(lang('settings_title_feedssection'))}</label>
                                 </div>
                                 <div class="col-md-2 row-size">
                                     <input value="yes" name="feedsSection" id="feedsSection" {if $row.feedsSection=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
@@ -230,14 +231,14 @@
                             <hr/>
                             <div class="row">
                                 <div class="col-md-4">
-                                    <label class="nowrap" for="allow_registeration" title="Enable registrations">Enable registrations</label>
+                                    <label class="nowrap" for="allow_registeration" title="{display_clean(lang('settings_title_allow_registeration'))}">{display_clean(lang('settings_title_allow_registeration'))}</label>
                                 </div>
                                 <div class="col-md-2 row-size">
                                     <input value="1" id="allow_registeration" {if $row.allow_registeration=='1'}checked{/if} name="allow_registeration" type="checkbox" class="ace ace-switch ace-switch-5"/>
                                     <span class="lbl"></span>
                                 </div>
                                 <div class="col-md-4">
-                                    <label class="nowrap" for="use_subs" title="Use Sub-Categories">Use Sub-Categories</label>
+                                    <label class="nowrap" for="use_subs" title="{display_clean(lang('settings_title_use_subs'))}">{display_clean(lang('settings_title_use_subs'))}</label>
                                 </div>
                                 <div class="col-md-2 row-size">
                                     <input value="1" name="use_subs" id="use_subs" {if $row.use_subs=='1'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
@@ -288,7 +289,7 @@
                                     <div class="col-md-4">
                                         <div class="row">
                                             <div class="col-md-10">
-                                                <label class="nowrap" for="allow_language_change" title="Allow language change">Allow language change</label>
+                                                <label class="nowrap" for="allow_language_change" title="{display_clean(lang('settings_title_allow_language_change'))}">{display_clean(lang('settings_title_allow_language_change'))}</label>
                                             </div>
                                             <div class="col-md-2 row-size no_padding">
                                                 <input value="1" name="allow_language_change" id="allow_language_change" {if $row.allow_language_change=='1'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
@@ -851,7 +852,7 @@
                                         <hr/>
                                         <div class="row">
                                             <div class="col-md-8">
-                                                <label class="nowrap" for="enable_edit_button" title="{lang code='enable_edit_button'}">{lang code='enable_edit_button'}</label>
+                                                <label class="nowrap" for="enable_edit_photo_button" title="{lang code='enable_edit_button'}">{lang code='enable_edit_button'}</label>
                                             </div>
                                             <div class="col-md-2 row-size">
                                                 <input value="yes" name="enable_edit_photo_button" id="enable_edit_photo_button" {if $row.enable_edit_photo_button=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
@@ -1048,7 +1049,7 @@
                                     <div class="col-md-6">
                                         <div class="row">
                                             <div class="col-md-12">
-                                                <h4 class="nowrap" for="enable_channel_categories_as_submenu" title="{lang('option_main_menu_order')}">{lang('option_main_menu_order')}</h4>
+                                                <h4 class="nowrap" data-settings-label="main_menu_order" title="{lang('option_main_menu_order')}">{lang('option_main_menu_order')}</h4>
                                                 <input type="hidden" name="main_menu_order" value="{$row.main_menu_order}" class="main-menu-order"/>
                                                 <ul class="list-unstyled main-menus-sortable">
                                                     {foreach from=$sections item=$menu}
@@ -1119,7 +1120,7 @@
                         <div class="col-md-4">
                             <div class="row">
                                 <div class="col-md-6">
-                                    <label class="nowrap" for="min_username" title="Minimum Username Length">Minimum Username Length</label>
+                                    <label class="nowrap" for="min_username" title="{display_clean(lang('settings_title_min_username'))}">{display_clean(lang('settings_title_min_username'))}</label>
                                 </div>
                                 <div class="col-md-6">
                                     <input class="form-control" name="min_username" id="min_username" type="number" value="{(int)$row.min_username}"/>
@@ -1128,7 +1129,7 @@
                             <hr/>
                             <div class="row">
                                 <div class="col-md-4">
-                                    <label class="nowrap" for="default_country_iso2" title="Default Country">Default Country</label>
+                                    <label class="nowrap" for="default_country_iso2" title="{display_clean(lang('settings_title_default_country_iso2'))}">{display_clean(lang('settings_title_default_country_iso2'))}</label>
                                 </div>
                                 <div class="col-md-8">
                                     <select class="form-control" name="default_country_iso2" id="default_country_iso2">
@@ -1143,7 +1144,7 @@
                             <hr/>
                             <div class="row">
                                 <div class="col-md-6">
-                                    <label class="nowrap" for="min_age_reg" title="Minimum age for registration"><span class="fa fa-question-circle tips" title="Leave blank to disable this option"></span> Minimum age for registration</label>
+                                    <label class="nowrap" for="min_age_reg" title="{display_clean(lang('settings_title_min_age_reg'))}"><span class="fa fa-question-circle tips" title="Leave blank to disable this option"></span> {display_clean(lang('settings_title_min_age_reg'))}</label>
                                 </div>
                                 <div class="col-md-6">
                                     <input class="form-control" name="min_age_reg" id="min_age_reg" type="number" value="{(int)$row.min_age_reg}" size="6" maxlength="3"/>
@@ -1152,14 +1153,14 @@
                             <hr/>
                             <div class="row">
                                 <div class="col-md-4">
-                                    <label class="nowrap" for="gravatars" title="Enable Gravatars">Enable Gravatars</label>
+                                    <label class="nowrap" for="gravatars" title="{display_clean(lang('settings_title_gravatars'))}">{display_clean(lang('settings_title_gravatars'))}</label>
                                 </div>
                                 <div class="col-md-2 row-size">
                                     <input value="yes" name="gravatars" id="gravatars" {if $row.gravatars=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
                                     <span class="lbl"></span>
                                 </div>
                                 <div class="col-md-4">
-                                    <label class="nowrap" for="picture_url" title="Allow picture URL">Allow picture URL</label>
+                                    <label class="nowrap" for="picture_url" title="{display_clean(lang('settings_title_picture_url'))}">{display_clean(lang('settings_title_picture_url'))}</label>
                                 </div>
                                 <div class="col-md-2 row-size">
                                     <input value="yes" name="picture_url" id="picture_url" {if $row.picture_url=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
@@ -1169,14 +1170,14 @@
                             <hr/>
                             <div class="row">
                                 <div class="col-md-4">
-                                    <label class="nowrap" for="picture_upload" title="Allow picture upload">Allow picture upload</label>
+                                    <label class="nowrap" for="picture_upload" title="{display_clean(lang('settings_title_picture_upload'))}">{display_clean(lang('settings_title_picture_upload'))}</label>
                                 </div>
                                 <div class="col-md-2 row-size">
                                     <input value="yes" name="picture_upload" id="picture_upload" {if $row.picture_upload=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
                                     <span class="lbl"></span>
                                 </div>
                                 <div class="col-md-4">
-                                    <label class="nowrap" for="background_url" title="Allow Background URL">Allow Background URL</label>
+                                    <label class="nowrap" for="background_url" title="{display_clean(lang('settings_title_background_url'))}">{display_clean(lang('settings_title_background_url'))}</label>
                                 </div>
                                 <div class="col-md-2 row-size">
                                     <input value="yes" name="background_url" id="background_url" {if $row.background_url=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
@@ -1232,7 +1233,7 @@
                             <hr/>
                             <div class="row">
                                 <div class="col-md-8">
-                                    <label class="nowrap" for="pick_geo_country" title="IP Geolocalisation"><span class="fa fa-question-circle tips" title="Replace default country"></span> IP Geolocalisation</label>
+                                    <label class="nowrap" for="pick_geo_country" title="{display_clean(lang('settings_title_pick_geo_country'))}"><span class="fa fa-question-circle tips" title="Replace default country"></span> {display_clean(lang('settings_title_pick_geo_country'))}</label>
                                 </div>
                                 <div class="col-md-4 row-size">
                                     <input value="1" name="pick_geo_country" id="pick_geo_country" {if $row.pick_geo_country=='1'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
@@ -1246,7 +1247,7 @@
                         <div class="col-md-4">
                             <div class="row">
                                 <div class="col-md-6">
-                                    <label class="nowrap" for="max_username" title="Maximum Username Length">Maximum Username Length</label>
+                                    <label class="nowrap" for="max_username" title="{display_clean(lang('settings_title_max_username'))}">{display_clean(lang('settings_title_max_username'))}</label>
                                 </div>
                                 <div class="col-md-6">
                                     <input class="form-control" name="max_username" id="max_username" type="number" value="{(int)$row.max_username}"/>
@@ -1255,7 +1256,7 @@
                             <hr/>
                             <div class="row">
                                 <div class="col-md-4">
-                                    <label class="nowrap" for="email_verification" title="Email verification">Email verification</label>
+                                    <label class="nowrap" for="email_verification" title="{display_clean(lang('settings_title_email_verification'))}">{display_clean(lang('settings_title_email_verification'))}</label>
                                 </div>
                                 <div class="col-md-2 row-size">
                                     <input value="1" name="email_verification" id="email_verification" {if $row.email_verification=='1'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
@@ -1272,14 +1273,14 @@
                             <hr/>
                             <div class="row">
                                 <div class="col-md-4">
-                                    <label class="nowrap" for="background_upload" title="Allow background upload">Allow background upload</label>
+                                    <label class="nowrap" for="background_upload" title="{display_clean(lang('settings_title_background_upload'))}">{display_clean(lang('settings_title_background_upload'))}</label>
                                 </div>
                                 <div class="col-md-2 row-size">
                                     <input value="yes" name="background_upload" id="background_upload" {if $row.background_upload=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
                                     <span class="lbl"></span>
                                 </div>
                                 <div class="col-md-4">
-                                    <label class="nowrap" for="background_color" title="Allow background color">Allow background color</label>
+                                    <label class="nowrap" for="background_color" title="{display_clean(lang('settings_title_background_color'))}">{display_clean(lang('settings_title_background_color'))}</label>
                                 </div>
                                 <div class="col-md-2 row-size">
                                     <input value="yes" name="background_color" id="background_color" {if $row.background_color=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
@@ -1291,7 +1292,7 @@
                             <div class="row">
                                 <div class="row">
                                     <div class="col-md-6">
-                                        <label class="nowrap" for="email_domain_restriction" title="Email domain restriction"><span class="fa fa-question-circle tips" title="List of authorized domains, separated by commas"></span> Email domain restriction</label>
+                                        <label class="nowrap" for="email_domain_restriction" title="{display_clean(lang('settings_title_email_domain_restriction'))}"><span class="fa fa-question-circle tips" title="List of authorized domains, separated by commas"></span> {display_clean(lang('settings_title_email_domain_restriction'))}</label>
                                     </div>
                                     <div class="col-md-6">
                                         <input class="form-control" name="email_domain_restriction" id="email_domain_restriction" value="{display_clean($row.email_domain_restriction)}"/>
@@ -1301,7 +1302,7 @@
                             <hr/>
                             <div class="row">
                                 <div class="col-md-6">
-                                    <label class="nowrap" for="max_profile_pic_width" title="Max profile pic width"><span class="fa fa-question-circle tips" title="In Pixels"></span> Max profile pic width</label>
+                                    <label class="nowrap" for="max_profile_pic_width" title="{display_clean(lang('settings_title_max_profile_pic_width'))}"><span class="fa fa-question-circle tips" title="In Pixels"></span> {display_clean(lang('settings_title_max_profile_pic_width'))}</label>
                                 </div>
                                 <div class="col-md-6">
                                     <input class="form-control" name="max_profile_pic_width" id="max_profile_pic_width" type="number" value="{(int)$row.max_profile_pic_width}"/>
@@ -1311,7 +1312,7 @@
 
                             <div class="row">
                                 <div class="col-md-6">
-                                    <label class="nowrap" for="max_bg_width" title="Max Background width"><span class="fa fa-question-circle tips" title="In Pixels"></span> Max Background width</label>
+                                    <label class="nowrap" for="max_bg_width" title="{display_clean(lang('settings_title_max_bg_width'))}"><span class="fa fa-question-circle tips" title="In Pixels"></span> {display_clean(lang('settings_title_max_bg_width'))}</label>
                                 </div>
                                 <div class="col-md-6">
                                     <input class="form-control" name="max_bg_width" id="max_bg_width" type="number" value="{(int)$row.max_bg_width}"/>
@@ -1320,7 +1321,7 @@
                             <hr/>
                             <div class="row">
                                 <div class="col-md-8">
-                                    <label class="nowrap" for="allow_unicode_usernames" title="Allow Special Characters in usernames">Allow Special Characters in usernames</label>
+                                    <label class="nowrap" for="allow_unicode_usernames" title="{display_clean(lang('settings_title_allow_unicode_usernames'))}">{display_clean(lang('settings_title_allow_unicode_usernames'))}</label>
                                 </div>
                                 <div class="col-md-4 row-size">
                                     <input value="yes" name="allow_unicode_usernames" id="allow_unicode_usernames" {if $row.allow_unicode_usernames=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
@@ -1330,7 +1331,7 @@
                             <hr/>
                             <div class="row">
                                 <div class="col-md-8">
-                                    <label class="nowrap" for="allow_username_spaces" title="Allow spaces in usernames">Allow spaces in usernames</label>
+                                    <label class="nowrap" for="allow_username_spaces" title="{display_clean(lang('settings_title_allow_username_spaces'))}">{display_clean(lang('settings_title_allow_username_spaces'))}</label>
                                 </div>
                                 <div class="col-md-4 row-size">
                                     <input value="yes" name="allow_username_spaces" id="allow_username_spaces" {if $row.allow_username_spaces=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
@@ -1631,14 +1632,14 @@
                         <div class="col-md-4">
                             <div class="row">
                                 <div class="col-md-4">
-                                    <label class="nowrap" for="video_embed" title="Embedding">Embedding</label>
+                                    <label class="nowrap" for="video_embed" title="{display_clean(lang('settings_title_video_embed'))}">{display_clean(lang('settings_title_video_embed'))}</label>
                                 </div>
                                 <div class="col-md-2 row-size">
                                     <input value="1" name="video_embed" id="video_embed" {if $row.video_embed=='1'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
                                     <span class="lbl"></span>
                                 </div>
                                 <div class="col-md-4">
-                                    <label class="nowrap" for="video_download" title="Download">Download</label>
+                                    <label class="nowrap" for="video_download" title="{display_clean(lang('settings_title_video_download'))}">{display_clean(lang('settings_title_video_download'))}</label>
                                 </div>
                                 <div class="col-md-2 row-size">
                                     <input value="1" name="video_download" id="video_download" {if $row.video_download=='1'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
@@ -1648,7 +1649,7 @@
                             <hr/>
                             <div class="row">
                                 <div class="col-md-6">
-                                    <label class="nowrap" for="seo_vido_url" title="Seo video url pattern">Seo video url pattern</label>
+                                    <label class="nowrap" for="seo_vido_url" title="{display_clean(lang('settings_title_seo_vido_url'))}">{display_clean(lang('settings_title_seo_vido_url'))}</label>
                                 </div>
                                 <div class="col-md-6 row-size">
                                     <select class="form-control" name="seo_vido_url" id="seo_vido_url">
@@ -1686,7 +1687,7 @@
                                     <span class="lbl"></span>
                                 </div>
                                 <div class="col-md-4">
-                                    <label class="nowrap" for="video_round_views" title="Round views">Round views</label>
+                                    <label class="nowrap" for="video_round_views" title="{display_clean(lang('settings_title_video_round_views'))}">{display_clean(lang('settings_title_video_round_views'))}</label>
                                 </div>
                                 <div class="col-md-2 row-size">
                                     <input value="yes" name="video_round_views" id="video_round_views" {if $row.video_round_views=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
@@ -1696,13 +1697,13 @@
                             <hr/>
                             <div class="row">
                                 <div class="col-md-4">
-                                    <label class="nowrap" for="vid_cat_width" title="Category Width">Category Width</label>
+                                    <label class="nowrap" for="vid_cat_width" title="{display_clean(lang('settings_title_vid_cat_width'))}">{display_clean(lang('settings_title_vid_cat_width'))}</label>
                                 </div>
                                 <div class="col-md-2 row-size">
                                     <input class="form-control" name="vid_cat_width" id="vid_cat_width" type="number" value="{(int)$row.vid_cat_width}"/>
                                 </div>
                                 <div class="col-md-4">
-                                    <label class="nowrap" for="vid_cat_height" title="Category height">Category height</label>
+                                    <label class="nowrap" for="vid_cat_height" title="{display_clean(lang('settings_title_vid_cat_height'))}">{display_clean(lang('settings_title_vid_cat_height'))}</label>
                                 </div>
                                 <div class="col-md-2 row-size">
                                     <input class="form-control" name="vid_cat_height" id="vid_cat_height" type="number" value="{(int)$row.vid_cat_height}"/>
@@ -1786,8 +1787,7 @@
                                     <span class="lbl"></span>
                                 </div>
                                 <div class="col-md-4">
-                                    <label class="nowrap" for="activation" title="Video Activation"><span class="fa fa-question-circle tips" title="If left unchecked, all videos will be published directly. If checked, admin will have to approve videos before they appear on website"></span> Video
-                                        Activation</label>
+                                    <label class="nowrap" for="activation" title="{display_clean(lang('settings_title_activation'))}"><span class="fa fa-question-circle tips" title="If left unchecked, all videos will be published directly. If checked, admin will have to approve videos before they appear on website"></span> {display_clean(lang('settings_title_activation'))}</label>
                                 </div>
                                 <div class="col-md-2 row-size">
                                     <input value="1" name="activation" id="activation" {if $row.activation=='1'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
@@ -1800,7 +1800,7 @@
                         <div class="col-md-4">
                             <div class="row">
                                 <div class="col-md-10">
-                                    <label class="nowrap" for="bits_color_warning" title="Enable video disclaimer if video if not compatible with all browsers (If bits color > 8)">Enable video disclaimer if video if not compatible with all browsers (If bits color > 8)</label>
+                                    <label class="nowrap" for="bits_color_warning" title="{display_clean(lang('settings_title_bits_color_warning'))}">{display_clean(lang('settings_title_bits_color_warning'))}</label>
                                 </div>
                                 <div class="col-md-2 row-size">
                                     <input value="1" name="bits_color_warning" id="bits_color_warning" {if $row.bits_color_warning=='1'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
@@ -1894,16 +1894,16 @@
                             <hr/>
                             <div class="row">
                                 <div class="col-md-4">
-                                    <label class="nowrap" title="Video title size">Video title size</label>
+                                    <label class="nowrap" title="{display_clean(lang('settings_title_video_title_size'))}">{display_clean(lang('settings_title_video_title_size'))}</label>
                                 </div>
                                 <div class="col-md-2">
-                                    <label class="nowrap" for="min_video_title" title="Min">Min</label>
+                                    <label class="nowrap" for="min_video_title" title="{display_clean(lang('settings_title_min_video_title'))}">{display_clean(lang('settings_title_min_video_title'))}</label>
                                 </div>
                                 <div class="col-md-2">
                                     <input class="form-control" name="min_video_title" id="min_video_title" type="number" value="{(int)$row.min_video_title}"/>
                                 </div>
                                 <div class="col-md-2">
-                                    <label class="nowrap" for="max_video_title" title="Max">Max</label>
+                                    <label class="nowrap" for="max_video_title" title="{display_clean(lang('settings_title_max_video_title'))}">{display_clean(lang('settings_title_max_video_title'))}</label>
                                 </div>
                                 <div class="col-md-2">
                                     <input class="form-control" name="max_video_title" id="max_video_title" type="number" value="{(int)$row.max_video_title}"/>
@@ -1912,16 +1912,16 @@
                             <hr/>
                             <div class="row">
                                 <div class="col-md-4">
-                                    <label class="nowrap" title="Video description size">Video description size</label>
+                                    <label class="nowrap" title="{display_clean(lang('settings_title_video_description_size'))}">{display_clean(lang('settings_title_video_description_size'))}</label>
                                 </div>
                                 <div class="col-md-2">
-                                    <label class="nowrap" for="min_video_desc" title="Min">Min</label>
+                                    <label class="nowrap" for="min_video_desc" title="{display_clean(lang('settings_title_min_video_desc'))}">{display_clean(lang('settings_title_min_video_desc'))}</label>
                                 </div>
                                 <div class="col-md-2">
                                     <input class="form-control" name="min_video_desc" id="min_video_desc" type="number" value="{(int)$row.min_video_desc}"/>
                                 </div>
                                 <div class="col-md-2">
-                                    <label class="nowrap" for="max_video_desc" title="Max">Max</label>
+                                    <label class="nowrap" for="max_video_desc" title="{display_clean(lang('settings_title_max_video_desc'))}">{display_clean(lang('settings_title_max_video_desc'))}</label>
                                 </div>
                                 <div class="col-md-2">
                                     <input class="form-control" name="max_video_desc" id="max_video_desc" type="number" value="{(int)$row.max_video_desc}"/>
@@ -1979,7 +1979,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-4">-
+                        <div class="col-md-4">
                             <div class="row">
                                 <div class="col-md-10">
                                     <label class="nowrap" for="enable_tmdb" title="Enable RSS feeds">{lang code='enable_tmdb'}</label>
@@ -2207,8 +2207,7 @@
                                     <span class="lbl"></span>
                                 </div>
                                 <div class="col-md-4">
-                                    <label class="nowrap" for="photo_activation" title="Photo Activation"><span class="fa fa-question-circle tips" title="If left unchecked, all photos will be published directly. If checked, admin will have to approve videos before they appear on website"></span>
-                                        Photo Activation</label>
+                                    <label class="nowrap" for="photo_activation" title="{display_clean(lang('settings_title_photo_activation'))}"><span class="fa fa-question-circle tips" title="If left unchecked, all photos will be published directly. If checked, admin will have to approve videos before they appear on website"></span> {display_clean(lang('settings_title_photo_activation'))}</label>
                                 </div>
                                 <div class="col-md-2 row-size">
                                     <input value="1" name="photo_activation" id="photo_activation" {if $row.photo_activation=='1'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
@@ -2267,7 +2266,7 @@
                         <div class="col-md-4">
                             <div class="row">
                                 <div class="col-md-8">
-                                    <label class="nowrap" for="enable_sub_collection" title="Enable Sub-Collections">Enable Sub-Collections</label>
+                                    <label class="nowrap" for="enable_sub_collection" title="{display_clean(lang('settings_title_enable_sub_collection'))}">{display_clean(lang('settings_title_enable_sub_collection'))}</label>
                                 </div>
                                 <div class="col-md-2 row-size">
                                     <input value="yes" name="enable_sub_collection" id="enable_sub_collection" {if $row.enable_sub_collection=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
@@ -2336,7 +2335,7 @@
                         <div class="col-md-4">
                             <div class="row">
                                 <div class="col-md-4">
-                                    <label class="nowrap" for="comments_captcha" title="Comments captcha">Comments captcha</label>
+                                    <label class="nowrap" for="comments_captcha" title="{display_clean(lang('settings_title_comments_captcha'))}">{display_clean(lang('settings_title_comments_captcha'))}</label>
                                 </div>
                                 <div class="col-md-8 row-size">
                                     <select class="form-control" name="comments_captcha" id="comments_captcha">
@@ -2349,7 +2348,7 @@
                             <hr/>
                             <div class="row">
                                 <div class="col-md-6">
-                                    <label class="nowrap" for="max_comment_chr" title="Maximum Comment Characters">Maximum Comment Characters</label>
+                                    <label class="nowrap" for="max_comment_chr" title="{display_clean(lang('settings_title_max_comment_chr'))}">{display_clean(lang('settings_title_max_comment_chr'))}</label>
                                 </div>
                                 <div class="col-md-6 row-size">
                                     <input class="form-control" name="max_comment_chr" id="max_comment_chr" type="number" value="{(int)$row.max_comment_chr}"/>
@@ -2358,7 +2357,7 @@
                             <hr/>
                             <div class="row">
                                 <div class="col-md-10">
-                                    <label class="nowrap" for="anonym_comments" title="Allow guests to comment">Allow guests to comment</label>
+                                    <label class="nowrap" for="anonym_comments" title="{display_clean(lang('settings_title_anonym_comments'))}">{display_clean(lang('settings_title_anonym_comments'))}</label>
                                 </div>
                                 <div class="col-md-2 row-size">
                                     <input value="yes" name="anonym_comments" id="anonym_comments" {if $row.anonym_comments=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
@@ -2399,14 +2398,14 @@
                         <div class="col-md-4">
                             <div class="row">
                                 <div class="col-md-4">
-                                    <label class="nowrap" for="video_rating" title="Video rating">Video rating</label>
+                                    <label class="nowrap" for="video_rating" title="{display_clean(lang('settings_title_video_rating'))}">{display_clean(lang('settings_title_video_rating'))}</label>
                                 </div>
                                 <div class="col-md-2 row-size">
                                     <input value="yes" name="video_rating" id="video_rating" {if $row.video_rating=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
                                     <span class="lbl"></span>
                                 </div>
                                 <div class="col-md-4">
-                                    <label class="nowrap" for="photo_rating" title="Video rating">Photo rating</label>
+                                    <label class="nowrap" for="photo_rating" title="{display_clean(lang('settings_title_photo_rating'))}">{display_clean(lang('settings_title_photo_rating'))}</label>
                                 </div>
                                 <div class="col-md-2 row-size">
                                     <input value="yes" name="photo_rating" id="photo_rating" {if $row.photo_rating=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
@@ -2416,14 +2415,14 @@
                             <hr/>
                             <div class="row">
                                 <div class="col-md-4">
-                                    <label class="nowrap" for="own_video_rating" title="Rate own video">Rate own video</label>
+                                    <label class="nowrap" for="own_video_rating" title="{display_clean(lang('settings_title_own_video_rating'))}">{display_clean(lang('settings_title_own_video_rating'))}</label>
                                 </div>
                                 <div class="col-md-2 row-size">
                                     <input value="yes" name="own_video_rating" id="own_video_rating" {if $row.own_video_rating=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
                                     <span class="lbl"></span>
                                 </div>
                                 <div class="col-md-4">
-                                    <label class="nowrap" for="own_photo_rating" title="Rate own photo">Rate own photo</label>
+                                    <label class="nowrap" for="own_photo_rating" title="{display_clean(lang('settings_title_own_photo_rating'))}">{display_clean(lang('settings_title_own_photo_rating'))}</label>
                                 </div>
                                 <div class="col-md-2 row-size">
                                     <input value="yes" name="own_photo_rating" id="own_photo_rating" {if $row.own_photo_rating=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
@@ -2436,14 +2435,14 @@
                         <div class="col-md-4">
                             <div class="row">
                                 <div class="col-md-4">
-                                    <label class="nowrap" for="collection_rating" title="Collection rating">Collection rating</label>
+                                    <label class="nowrap" for="collection_rating" title="{display_clean(lang('settings_title_collection_rating'))}">{display_clean(lang('settings_title_collection_rating'))}</label>
                                 </div>
                                 <div class="col-md-2 row-size">
                                     <input value="yes" name="collection_rating" id="collection_rating" {if $row.collection_rating=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
                                     <span class="lbl"></span>
                                 </div>
                                 <div class="col-md-4">
-                                    <label class="nowrap" for="channel_rating" title="Channel rating">Channel rating</label>
+                                    <label class="nowrap" for="channel_rating" title="{display_clean(lang('settings_title_channel_rating'))}">{display_clean(lang('settings_title_channel_rating'))}</label>
                                 </div>
                                 <div class="col-md-2 row-size">
                                     <input value="yes" name="channel_rating" id="channel_rating" {if $row.channel_rating=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
@@ -2454,14 +2453,14 @@
                             <hr/>
                             <div class="row">
                                 <div class="col-md-4">
-                                    <label class="nowrap" for="own_collection_rating" title="Rate own collection">Rate own collection</label>
+                                    <label class="nowrap" for="own_collection_rating" title="{display_clean(lang('settings_title_own_collection_rating'))}">{display_clean(lang('settings_title_own_collection_rating'))}</label>
                                 </div>
                                 <div class="col-md-2 row-size">
                                     <input value="yes" name="own_collection_rating" id="own_collection_rating" {if $row.own_collection_rating=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
                                     <span class="lbl"></span>
                                 </div>
                                 <div class="col-md-4">
-                                    <label class="nowrap" for="own_channel_rating" title="Rate own channel">Rate own channel</label>
+                                    <label class="nowrap" for="own_channel_rating" title="{display_clean(lang('settings_title_own_channel_rating'))}">{display_clean(lang('settings_title_own_channel_rating'))}</label>
                                 </div>
                                 <div class="col-md-2 row-size">
                                     <input value="yes" name="own_channel_rating" id="own_channel_rating" {if $row.own_channel_rating=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
@@ -2475,7 +2474,7 @@
                         <div class="col-md-4">
                             <div class="row">
                                 <div class="col-md-4">
-                                    <label class="nowrap" for="comment_rating" title="Comments rating">Comments rating</label>
+                                    <label class="nowrap" for="comment_rating" title="{display_clean(lang('settings_title_comment_rating'))}">{display_clean(lang('settings_title_comment_rating'))}</label>
                                 </div>
                                 <div class="col-md-2 row-size">
                                     <input value="yes" name="comment_rating" id="comment_rating" {if $row.comment_rating=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
@@ -2508,7 +2507,7 @@
                             <hr/>
                             <div class="row">
                                 <div class="col-md-8">
-                                    <label class="nowrap" for="videos_list_per_page" title="Per page">Per page</label>
+                                    <label class="nowrap" for="videos_list_per_page" title="{display_clean(lang('settings_title_videos_list_per_page'))}">{display_clean(lang('settings_title_videos_list_per_page'))}</label>
                                 </div>
                                 <div class="col-md-4 row-size">
                                     <input class="form-control" name="videos_list_per_page" id="videos_list_per_page" type="number" value="{(int)$row.videos_list_per_page}"/>
@@ -2517,7 +2516,7 @@
                             <hr/>
                             <div class="row">
                                 <div class="col-md-8">
-                                    <label class="nowrap" for="videos_items_ufav_page" title="Favorites">Favorites</label>
+                                    <label class="nowrap" for="videos_items_ufav_page" title="{display_clean(lang('settings_title_videos_items_ufav_page'))}">{display_clean(lang('settings_title_videos_items_ufav_page'))}</label>
                                 </div>
                                 <div class="col-md-4 row-size">
                                     <input class="form-control" name="videos_items_ufav_page" id="videos_items_ufav_page" type="number" value="{(int)$row.videos_items_ufav_page}"/>
@@ -2526,7 +2525,7 @@
                             <hr/>
                             <div class="row">
                                 <div class="col-md-8">
-                                    <label class="nowrap" for="videos_items_hme_page" title="Home Tabs">Home Tabs</label>
+                                    <label class="nowrap" for="videos_items_hme_page" title="{display_clean(lang('settings_title_videos_items_hme_page'))}">{display_clean(lang('settings_title_videos_items_hme_page'))}</label>
                                 </div>
                                 <div class="col-md-4 row-size">
                                     <input class="form-control" name="videos_items_hme_page" id="videos_items_hme_page" type="number" value="{(int)$row.videos_items_hme_page}"/>
@@ -2535,7 +2534,7 @@
                             <hr/>
                             <div class="row">
                                 <div class="col-md-8">
-                                    <label class="nowrap" for="videos_item_channel_page" title="Channel page">Channel page</label>
+                                    <label class="nowrap" for="videos_item_channel_page" title="{display_clean(lang('settings_title_videos_item_channel_page'))}">{display_clean(lang('settings_title_videos_item_channel_page'))}</label>
                                 </div>
                                 <div class="col-md-4 row-size">
                                     <input class="form-control" name="videos_item_channel_page" id="videos_item_channel_page" type="number" value="{(int)$row.videos_item_channel_page}"/>
@@ -2544,7 +2543,7 @@
                             <hr/>
                             <div class="row">
                                 <div class="col-md-8">
-                                    <label class="nowrap" for="videos_items_search_page" title="Search Result">Search Result</label>
+                                    <label class="nowrap" for="videos_items_search_page" title="{display_clean(lang('settings_title_videos_items_search_page'))}">{display_clean(lang('settings_title_videos_items_search_page'))}</label>
                                 </div>
                                 <div class="col-md-4 row-size">
                                     <input class="form-control" name="videos_items_search_page" id="videos_items_search_page" type="number" value="{(int)$row.videos_items_search_page}"/>
@@ -2553,7 +2552,7 @@
                             <hr/>
                             <div class="row">
                                 <div class="col-md-8">
-                                    <label class="nowrap" for="videos_items_uvid_page" title="User Videos">User Videos</label>
+                                    <label class="nowrap" for="videos_items_uvid_page" title="{display_clean(lang('settings_title_videos_items_uvid_page'))}">{display_clean(lang('settings_title_videos_items_uvid_page'))}</label>
                                 </div>
                                 <div class="col-md-4 row-size">
                                     <input class="form-control" name="videos_items_uvid_page" id="videos_items_uvid_page" type="number" value="{(int)$row.videos_items_uvid_page}"/>
@@ -2588,7 +2587,7 @@
                             <hr/>
                             <div class="row">
                                 <div class="col-md-8">
-                                    <label class="nowrap" for="photo_main_list" title="Main Limit"><span class="fa fa-question-circle tips" title="We use this limit in most of place where photo is displayed like, My Account, Manage Photos, Manage Favotires Photos etc"></span> Main Limit</label>
+                                    <label class="nowrap" for="photo_main_list" title="{display_clean(lang('settings_title_photo_main_list'))}"><span class="fa fa-question-circle tips" title="We use this limit in most of place where photo is displayed like, My Account, Manage Photos, Manage Favotires Photos etc"></span> {display_clean(lang('settings_title_photo_main_list'))}</label>
                                 </div>
                                 <div class="col-md-4 row-size">
                                     <input class="form-control" name="photo_main_list" id="photo_main_list" type="number" value="{(int)$row.photo_main_list}"/>
@@ -2597,7 +2596,7 @@
                             <hr/>
                             <div class="row">
                                 <div class="col-md-8">
-                                    <label class="nowrap" for="photo_home_tabs" title="Home Tabs"><span class="fa fa-question-circle tips" title="Number of photos to display on Homepage"></span> Home Tabs</label>
+                                    <label class="nowrap" for="photo_home_tabs" title="{display_clean(lang('settings_title_photo_home_tabs'))}"><span class="fa fa-question-circle tips" title="Number of photos to display on Homepage"></span> {display_clean(lang('settings_title_photo_home_tabs'))}</label>
                                 </div>
                                 <div class="col-md-4 row-size">
                                     <input class="form-control" name="photo_home_tabs" id="photo_home_tabs" type="number" value="{(int)$row.photo_home_tabs}"/>
@@ -2606,7 +2605,7 @@
                             <hr/>
                             <div class="row">
                                 <div class="col-md-8">
-                                    <label class="nowrap" for="photo_search_result" title="Search Result"><span class="fa fa-question-circle tips" title="Number of photos to display on Search page"></span> Search Result</label>
+                                    <label class="nowrap" for="photo_search_result" title="{display_clean(lang('settings_title_photo_search_result'))}"><span class="fa fa-question-circle tips" title="Number of photos to display on Search page"></span> {display_clean(lang('settings_title_photo_search_result'))}</label>
                                 </div>
                                 <div class="col-md-4 row-size">
                                     <input class="form-control" name="photo_search_result" id="photo_search_result" type="number" value="{(int)$row.photo_search_result}"/>
@@ -2615,7 +2614,7 @@
                             <hr/>
                             <div class="row">
                                 <div class="col-md-8">
-                                    <label class="nowrap" for="photo_channel_page" title="Channel Page"><span class="fa fa-question-circle tips" title="Number of photos to display on User's page"></span> Channel Page</label>
+                                    <label class="nowrap" for="photo_channel_page" title="{display_clean(lang('settings_title_photo_channel_page'))}"><span class="fa fa-question-circle tips" title="Number of photos to display on User's page"></span> {display_clean(lang('settings_title_photo_channel_page'))}</label>
                                 </div>
                                 <div class="col-md-4 row-size">
                                     <input class="form-control" name="photo_channel_page" id="photo_channel_page" type="number" value="{(int)$row.photo_channel_page}"/>
@@ -2624,7 +2623,7 @@
                             <hr/>
                             <div class="row">
                                 <div class="col-md-8">
-                                    <label class="nowrap" for="photo_user_photos" title="User Photos"><span class="fa fa-question-circle tips" title="Number of photos to display on User's photos page"></span> User Photos</label>
+                                    <label class="nowrap" for="photo_user_photos" title="{display_clean(lang('settings_title_photo_user_photos'))}"><span class="fa fa-question-circle tips" title="Number of photos to display on User's photos page"></span> {display_clean(lang('settings_title_photo_user_photos'))}</label>
                                 </div>
                                 <div class="col-md-4 row-size">
                                     <input class="form-control" name="photo_user_photos" id="photo_user_photos" type="number" value="{(int)$row.photo_user_photos}"/>
@@ -2633,7 +2632,7 @@
                             <hr/>
                             <div class="row">
                                 <div class="col-md-8">
-                                    <label class="nowrap" for="photo_user_favorites" title="User favorites"><span class="fa fa-question-circle tips" title="Number of photos to display on User's favorites page"></span> User favorites</label>
+                                    <label class="nowrap" for="photo_user_favorites" title="{display_clean(lang('settings_title_photo_user_favorites'))}"><span class="fa fa-question-circle tips" title="Number of photos to display on User's favorites page"></span> {display_clean(lang('settings_title_photo_user_favorites'))}</label>
                                 </div>
                                 <div class="col-md-4 row-size">
                                     <input class="form-control" name="photo_user_favorites" id="photo_user_favorites" type="number" value="{(int)$row.photo_user_favorites}"/>
@@ -2642,7 +2641,7 @@
                             <hr/>
                             <div class="row">
                                 <div class="col-md-8">
-                                    <label class="nowrap" for="photo_other_limit" title="Other Limit"><span class="fa fa-question-circle tips" title="Use anywhere you want"></span> Other Limit</label>
+                                    <label class="nowrap" for="photo_other_limit" title="{display_clean(lang('settings_title_photo_other_limit'))}"><span class="fa fa-question-circle tips" title="Use anywhere you want"></span> {display_clean(lang('settings_title_photo_other_limit'))}</label>
                                 </div>
                                 <div class="col-md-4 row-size">
                                     <input class="form-control" name="photo_other_limit" id="photo_other_limit" type="number" value="{(int)$row.photo_other_limit}"/>
@@ -2660,7 +2659,7 @@
                             <hr/>
                             <div class="row">
                                 <div class="col-md-8">
-                                    <label class="nowrap" for="collection_per_page" title="Collections Page"><span class="fa fa-question-circle tips" title="Number of collections to display on Collections page"></span> Collection Page</label>
+                                    <label class="nowrap" for="collection_per_page" title="{display_clean(lang('settings_title_collection_per_page'))}"><span class="fa fa-question-circle tips" title="Number of collections to display on Collections page"></span> {display_clean(lang('settings_title_collection_per_page'))}</label>
                                 </div>
                                 <div class="col-md-4 row-size">
                                     <input class="form-control" name="collection_per_page" id="collection_per_page" type="number" value="{(int)$row.collection_per_page}"/>
@@ -2669,7 +2668,7 @@
                             <hr/>
                             <div class="row">
                                 <div class="col-md-8">
-                                    <label class="nowrap" for="collection_items_page" title="Items Page"><span class="fa fa-question-circle tips" title="Number of items to display in a Collection"></span> Items Page</label>
+                                    <label class="nowrap" for="collection_items_page" title="{display_clean(lang('settings_title_collection_items_page'))}"><span class="fa fa-question-circle tips" title="Number of items to display in a Collection"></span> {display_clean(lang('settings_title_collection_items_page'))}</label>
                                 </div>
                                 <div class="col-md-4 row-size">
                                     <input class="form-control" name="collection_items_page" id="collection_items_page" type="number" value="{(int)$row.collection_items_page}"/>
@@ -2678,7 +2677,7 @@
                             <hr/>
                             <div class="row">
                                 <div class="col-md-8">
-                                    <label class="nowrap" for="collection_search_result" title="Search Result"><span class="fa fa-question-circle tips" title="Number of collections to display in search results"></span> Search Result</label>
+                                    <label class="nowrap" for="collection_search_result" title="{display_clean(lang('settings_title_collection_search_result'))}"><span class="fa fa-question-circle tips" title="Number of collections to display in search results"></span> {display_clean(lang('settings_title_collection_search_result'))}</label>
                                 </div>
                                 <div class="col-md-4 row-size">
                                     <input class="form-control" name="collection_search_result" id="collection_search_result" type="number" value="{(int)$row.collection_search_result}"/>
@@ -2687,7 +2686,7 @@
                             <hr/>
                             <div class="row">
                                 <div class="col-md-8">
-                                    <label class="nowrap" for="collection_home_top_collections" title="Homepage Top Collections"><span class="fa fa-question-circle tips" title="Number of collections to display on homepage top collections"></span> Homepage Top Collections</label>
+                                    <label class="nowrap" for="collection_home_top_collections" title="{display_clean(lang('settings_title_collection_home_top_collections'))}"><span class="fa fa-question-circle tips" title="Number of collections to display on homepage top collections"></span> {display_clean(lang('settings_title_collection_home_top_collections'))}</label>
                                 </div>
                                 <div class="col-md-4 row-size">
                                     <input class="form-control" name="collection_home_top_collections" id="collection_home_top_collections" type="number" value="{(int)$row.collection_home_top_collections}"/>
@@ -2696,7 +2695,7 @@
                             <hr/>
                             <div class="row">
                                 <div class="col-md-8">
-                                    <label class="nowrap" for="collection_collection_top_collections" title="Collections page Top Collections"><span class="fa fa-question-circle tips" title="Number of collections to display on collection page top collections"></span> Collections page Top Collections</label>
+                                    <label class="nowrap" for="collection_collection_top_collections" title="{display_clean(lang('settings_title_collection_collection_top_collections'))}"><span class="fa fa-question-circle tips" title="Number of collections to display on collection page top collections"></span> {display_clean(lang('settings_title_collection_collection_top_collections'))}</label>
                                 </div>
                                 <div class="col-md-4 row-size">
                                     <input class="form-control" name="collection_collection_top_collections" id="collection_collection_top_collections" type="number" value="{(int)$row.collection_collection_top_collections}"/>
@@ -2705,7 +2704,7 @@
                             <hr/>
                             <div class="row">
                                 <div class="col-md-8">
-                                    <label class="nowrap" for="collection_photos_top_collections" title="Photos page Top Collections"><span class="fa fa-question-circle tips" title="Number of collections to display on photos page top collections"></span> Photos page Top Collections</label>
+                                    <label class="nowrap" for="collection_photos_top_collections" title="{display_clean(lang('settings_title_collection_photos_top_collections'))}"><span class="fa fa-question-circle tips" title="Number of collections to display on photos page top collections"></span> {display_clean(lang('settings_title_collection_photos_top_collections'))}</label>
                                 </div>
                                 <div class="col-md-4 row-size">
                                     <input class="form-control" name="collection_photos_top_collections" id="collection_photos_top_collections" type="number" value="{(int)$row.collection_photos_top_collections}"/>
@@ -2723,7 +2722,7 @@
                             <hr/>
                             <div class="row">
                                 <div class="col-md-8">
-                                    <label class="nowrap" for="channels_list_per_page" title="Per page">Per page</label>
+                                    <label class="nowrap" for="channels_list_per_page" title="{display_clean(lang('settings_title_channels_list_per_page'))}">{display_clean(lang('settings_title_channels_list_per_page'))}</label>
                                 </div>
                                 <div class="col-md-4 row-size">
                                     <input class="form-control" name="channels_list_per_page" id="channels_list_per_page" type="number" value="{(int)$row.channels_list_per_page}"/>
@@ -2732,7 +2731,7 @@
                             <hr/>
                             <div class="row">
                                 <div class="col-md-8">
-                                    <label class="nowrap" for="users_items_subscriptions" title="Subscriptions in channel view">Subscriptions in channel view</label>
+                                    <label class="nowrap" for="users_items_subscriptions" title="{display_clean(lang('settings_title_users_items_subscriptions'))}">{display_clean(lang('settings_title_users_items_subscriptions'))}</label>
                                 </div>
                                 <div class="col-md-4 row-size">
                                     <input class="form-control" name="users_items_subscriptions" id="users_items_subscriptions" type="number" value="{(int)$row.users_items_subscriptions}"/>
@@ -2741,7 +2740,7 @@
                             <hr/>
                             <div class="row">
                                 <div class="col-md-8">
-                                    <label class="nowrap" for="users_items_search_page" title="Search Page">Search Page</label>
+                                    <label class="nowrap" for="users_items_search_page" title="{display_clean(lang('settings_title_users_items_search_page'))}">{display_clean(lang('settings_title_users_items_search_page'))}</label>
                                 </div>
                                 <div class="col-md-4 row-size">
                                     <input class="form-control" name="users_items_search_page" id="users_items_search_page" type="number" value="{(int)$row.users_items_search_page}"/>
@@ -2750,7 +2749,7 @@
                             <hr/>
                             <div class="row">
                                 <div class="col-md-8">
-                                    <label class="nowrap" for="users_items_contacts_channel" title="Users contacts in channel view">Users contacts in channel view</label>
+                                    <label class="nowrap" for="users_items_contacts_channel" title="{display_clean(lang('settings_title_users_items_contacts_channel'))}">{display_clean(lang('settings_title_users_items_contacts_channel'))}</label>
                                 </div>
                                 <div class="col-md-4 row-size">
                                     <input class="form-control" name="users_items_contacts_channel" id="users_items_contacts_channel" type="number" value="{(int)$row.users_items_contacts_channel}"/>
@@ -2771,7 +2770,7 @@
                             </div>
                             <div class="row">
                                 <div class="col-md-8">
-                                    <label class="nowrap" for="comments_per_page" title="Comments per page">Comments per page</label>
+                                    <label class="nowrap" for="comments_per_page" title="{display_clean(lang('settings_title_comments_per_page'))}">{display_clean(lang('settings_title_comments_per_page'))}</label>
                                 </div>
                                 <div class="col-md-4 row-size no_padding">
                                     <input class="form-control" name="comments_per_page" id="comments_per_page" type="number" value="{(int)$row.comments_per_page}" size="5"/>
@@ -2785,10 +2784,7 @@
                         <div class="col-md-6">
                             <div class="row">
                                 <div class="col-md-8">
-                                    <label for="embed_player_width">
-                                        <span class="fa fa-question-circle tips" title="Embeddable player default width in pixels"></span>
-                                        Embed Player default Width
-                                    </label>
+                                    <label for="embed_player_width"><span class="fa fa-question-circle tips" title="Embeddable player default width in pixels"></span> {display_clean(lang('settings_title_embed_player_width'))}</label>
                                 </div>
                                 <div class="col-md-4">
                                     <input class="form-control" name="embed_player_width" type="text" id="embed_player_width" value="{$row.embed_player_width}"/>
@@ -2797,10 +2793,7 @@
                             <hr/>
                             <div class="row">
                                 <div class="col-md-8">
-                                    <label for="embed_player_height">
-                                        <span class="fa fa-question-circle tips" title="Embeddable player default height in pixels"></span>
-                                        Embed Player default Height
-                                    </label>
+                                    <label for="embed_player_height"><span class="fa fa-question-circle tips" title="Embeddable player default height in pixels"></span> {display_clean(lang('settings_title_embed_player_height'))}</label>
                                 </div>
                                 <div class="col-md-4">
                                     <input class="form-control" name="embed_player_height" type="text" id="embed_player_height" value="{$row.embed_player_height}"/>
@@ -2809,10 +2802,7 @@
                             <hr/>
                             <div class="row">
                                 <div class="col-md-8">
-                                    <label for="autoplay_embed">
-                                        <span class="fa fa-question-circle tips" title="Autoplay embeded video by default"></span>
-                                        Autoplay Embed
-                                    </label>
+                                    <label for="autoplay_embed"><span class="fa fa-question-circle tips" title="Autoplay embeded video by default"></span> {display_clean(lang('settings_title_autoplay_embed'))}</label>
                                 </div>
                                 <div class="col-md-4">
                                     <input value="yes" name="autoplay_embed" id="autoplay_embed" {if $row.autoplay_embed=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
@@ -2824,10 +2814,7 @@
                         <div class="col-md-6">
                             <div class="row">
                                 <div class="col-md-8">
-                                    <label for="control_bar_logo">
-                                        <span class="fa fa-question-circle tips" title="Add a logo in the controls bar"></span>
-                                        Enable Controls bar logo
-                                    </label>
+                                    <label for="control_bar_logo"><span class="fa fa-question-circle tips" title="Add a logo in the controls bar"></span> {display_clean(lang('settings_title_control_bar_logo'))}</label>
                                 </div>
                                 <div class="col-md-4">
                                     <input value="yes" name="control_bar_logo" id="control_bar_logo" {if $row.control_bar_logo=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
@@ -2837,10 +2824,7 @@
                             <hr/>
                             <div class="row">
                                 <div class="col-md-4">
-                                    <label for="control_bar_logo_url">
-                                        <span class="fa fa-question-circle tips" title="Maximum 40x30pxl"></span>
-                                        Controls bar logo
-                                    </label>
+                                    <label for="upload_player-logo"><span class="fa fa-question-circle tips" title="Maximum 40x30pxl"></span> {display_clean(lang('settings_title_upload_player-logo'))}</label>
                                 </div>
                                 <div class="col-md-8">
                                     <input type="file" accept='image/*' name="upload_player-logo" id="upload_player-logo" style="display:inline-block;" {if $row.control_bar_logo!='yes'}disabled{/if}/>
@@ -2852,10 +2836,7 @@
                             <hr/>
                             <div class="row">
                                 <div class="col-md-4">
-                                    <label for="player_logo_url">
-                                        <span class="fa fa-question-circle tips" title="Will be opened in a new tab"></span>
-                                        Controls bar logo URL
-                                    </label>
+                                    <label for="player_logo_url"><span class="fa fa-question-circle tips" title="Will be opened in a new tab"></span> {display_clean(lang('settings_title_player_logo_url'))}</label>
                                 </div>
                                 <div class="col-md-8">
                                     <input class="form-control" name="player_logo_url" type="text" id="player_logo_url" value="{$row.player_logo_url}" {if $row.control_bar_logo!='yes' }disabled{/if}/>
@@ -2869,10 +2850,7 @@
                         <div class="col-md-6">
                             <div class="row">
                                 <div class="col-md-8">
-                                    <label for="autoplay_video">
-                                        <span class="fa fa-question-circle tips" title="if yes, all videos will be played automatically"></span>
-                                        Autoplay
-                                    </label>
+                                    <label for="autoplay_video"><span class="fa fa-question-circle tips" title="if yes, all videos will be played automatically"></span> {display_clean(lang('settings_title_autoplay_video'))}</label>
                                 </div>
                                 <div class="col-md-2">
                                     <input value="yes" name="autoplay_video" id="autoplay_video" {if $row.autoplay_video=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
@@ -2882,10 +2860,7 @@
                             <hr/>
                             <div class="row">
                                 <div class="col-md-8">
-                                    <label for="chromecast">
-                                        <span class="fa fa-question-circle tips" title="Allow users to stream videos on Chromecast"></span>
-                                        Enable Chromecast support
-                                    </label>
+                                    <label for="chromecast"><span class="fa fa-question-circle tips" title="Allow users to stream videos on Chromecast"></span> {display_clean(lang('settings_title_chromecast'))}</label>
                                 </div>
                                 <div class="col-md-2">
                                     <input value="yes" name="chromecast" id="chromecast" {if $row.chromecast=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
@@ -2895,10 +2870,7 @@
                             <hr/>
                             <div class="row">
                                 <div class="col-md-8">
-                                    <label for="player_subtitles">
-                                        <span class="fa fa-question-circle tips" title="Allow users to select subtitles"></span>
-                                        Enable subtitles
-                                    </label>
+                                    <label for="player_subtitles"><span class="fa fa-question-circle tips" title="Allow users to select subtitles"></span> {display_clean(lang('settings_title_player_subtitles'))}</label>
                                 </div>
                                 <div class="col-md-2">
                                     <input value="1" name="player_subtitles" id="player_subtitles" {if $row.player_subtitles=='1'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
@@ -2908,7 +2880,7 @@
                             <hr/>
                             <div class="row">
                                 <div class="col-md-8">
-                                    <label class="nowrap" for="player_default_resolution" title="Default video resolution">Default video resolution</label>
+                                    <label class="nowrap" for="player_default_resolution" title="{display_clean(lang('settings_title_player_default_resolution'))}">{display_clean(lang('settings_title_player_default_resolution'))}</label>
                                 </div>
                                 <div class="col-md-2 row-size">
                                     <select class="form-control" name="player_default_resolution" id="player_default_resolution">
@@ -2928,10 +2900,7 @@
                         <div class="col-md-6">
                             <div class="row">
                                 <div class="col-md-8">
-                                    <label for="contextual_menu_disabled">
-                                        <span class="fa fa-question-circle tips" title="Disable right click on video"></span>
-                                        Disable contextual menu
-                                    </label>
+                                    <label for="contextual_menu_disabled"><span class="fa fa-question-circle tips" title="Disable right click on video"></span> {display_clean(lang('settings_title_contextual_menu_disabled'))}</label>
                                 </div>
                                 <div class="col-md-2 row-size">
                                     <input value="yes" name="contextual_menu_disabled" id="contextual_menu_disabled" {if $row.contextual_menu_disabled=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
@@ -2941,10 +2910,7 @@
                             <hr/>
                             <div class="row">
                                 <div class="col-md-8">
-                                    <label for="player_thumbnails">
-                                        <span class="fa fa-question-circle tips" title="Enable player thumbnails"></span>
-                                        Thumbnails
-                                    </label>
+                                    <label for="player_thumbnails"><span class="fa fa-question-circle tips" title="Enable player thumbnails"></span> {display_clean(lang('settings_title_player_thumbnails'))}</label>
                                 </div>
                                 <div class="col-md-2 row-size">
                                     <input value="yes" name="player_thumbnails" id="player_thumbnails" {if $row.player_thumbnails=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
@@ -2966,7 +2932,7 @@
                             <hr/>
                             <div class="row">
                                 <div class="col-md-8">
-                                    <label class="nowrap" for="player_default_resolution_hls" title="Default HLS video resolution">Default HLS video resolution</label>
+                                    <label class="nowrap" for="player_default_resolution_hls" title="{display_clean(lang('settings_title_player_default_resolution_hls'))}">{display_clean(lang('settings_title_player_default_resolution_hls'))}</label>
                                 </div>
                                 <div class="col-md-2 row-size">
                                     <select class="form-control" name="player_default_resolution_hls" id="player_default_resolution_hls">

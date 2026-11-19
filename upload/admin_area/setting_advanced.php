@@ -364,5 +364,6 @@ ClipBucket::getInstance()->addAdminCSS([
     'tagit.ui-zendesk' . $min_suffixe . '.css' => 'admin'
 ]);
 assign('available_tags_photo_types', Photo::getAllowedUploadTypes());
+assign('settings_search_descriptions', myquery::getInstance()->getSettingsSearchDescriptions());
 template_files('setting_advanced.html');
 display_it();
