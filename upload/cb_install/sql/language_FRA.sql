@@ -3249,3 +3249,1011 @@ INSERT INTO `{tbl_prefix}languages_translations` (`id_language_key`, `translatio
 VALUES ((SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE `language_key` = 'page_content'), 'Contenu de la page', @language_id);
 INSERT INTO `{tbl_prefix}languages_translations` (`id_language_key`, `translation`, `language_id`)
 VALUES ((SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE `language_key` = 'help_drag_and_drop'), 'Attraper et relâcher la ligne pour changer l''ordre d''affichage', @language_id);
+
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_activation'), 'Exige l''approbation d''une vidéo avant sa publication.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_allow_conversion_1_percent'), 'Tolère une dimension source inférieure de un pour cent à la résolution cible.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_allow_language_change'), 'Permet aux visiteurs de choisir la langue du site.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_allow_registeration'), 'Permet aux visiteurs de créer un compte.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_allow_tag_space'), 'Autorise les espaces à l''intérieur des tags.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_allow_unicode_usernames'), 'Autorise les caractères Unicode dans les identifiants utilisateur.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_allow_username_spaces'), 'Autorise les espaces dans les identifiants utilisateur.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_allowed_photo_types'), 'Définit les extensions de fichiers photo acceptées, séparées par des virgules.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_allowed_video_types'), 'Définit les extensions de fichiers vidéo acceptées, séparées par des virgules.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_anonym_comments'), 'Permet aux visiteurs non connectés de publier des commentaires.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_approve_video_notification'), 'Envoie un email lorsque la vidéo est approuvée.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_audio_codec'), 'Choisit l''encodeur audio utilisé par FFmpeg.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_automate_launch_mode'), 'Choisit le déclenchement des tâches automatiques par cron, par activité utilisateur ou leur désactivation.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_autoplay_embed'), 'Demande le démarrage automatique des vidéos intégrées.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_autoplay_video'), 'Demande le démarrage automatique de la lecture vidéo.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_background_color'), 'Permet de choisir la couleur de fond du profil.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_background_upload'), 'Permet d''envoyer une image de fond pour le profil.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_background_url'), 'Permet de choisir l''image de fond du profil par son adresse.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_base_url'), 'Définit l''adresse publique de référence du site utilisée notamment dans les emails.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_bits_color_warning'), 'Avertit des problèmes de compatibilité lorsque la profondeur des couleurs dépasse huit bits.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_cache_auth'), 'Active l''authentification auprès du serveur Redis.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_cache_enable'), 'Active le cache Redis pour limiter les calculs et accès aux données répétés.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_cache_host'), 'Définit l''adresse du serveur de cache Redis.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_cache_password'), 'Définit le mot de passe de connexion au cache Redis.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_cache_port'), 'Définit le port réseau du serveur Redis.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_can_upload_subtitles'), 'Permet d''ajouter des fichiers de sous-titres aux vidéos.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_censored_words'), 'Liste les mots séparés par des virgules à masquer lorsque la censure est activée.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_channel_rating'), 'Autorise la notation des chaînes.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_channel_video_style'), 'Choisit la présentation des vignettes pour les vidéos des chaînes.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_channelssection'), 'Active la section des chaînes sur le site.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_channels_list_per_page'), 'Limite le nombre de chaînes par page.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_chromecast'), 'Active la diffusion des vidéos vers un appareil Chromecast.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_chromecast_fix'), 'Convertit l''audio en stéréo pour améliorer la compatibilité Chromecast.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_chunk_upload_size'), 'Définit la taille des morceaux d''envoi de fichiers, en Mo.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_closed'), 'Ferme le site aux visiteurs pendant la maintenance.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_closed_msg'), 'Définit le message présenté lorsque le site est fermé.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_cloudflare_upload_limit'), 'Déclare la limite de taille des requêtes Cloudflare en Mo pour le diagnostic des envois.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_collection_collection_top_collections'), 'Enregistre le paramètre « collections mises en avant sur la page collection » ; son effet actuel n’est pas identifié dans l’application.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_collection_enable_fullwidth'), 'Étend une collection sur toute la largeur disponible.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_collection_home_top_collections'), 'Limite le nombre de collections mises en avant sur l’accueil et la liste des collections.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_collection_items_page'), 'Limite le nombre de éléments par page dans une collection.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_collection_per_page'), 'Limite le nombre de collections par page.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_collection_photos_top_collections'), 'Limite le nombre de collections mises en avant sur la page des photos.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_collection_rating'), 'Autorise la notation des collections.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_collection_search_result'), 'Limite le nombre de collections par page de recherche.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_collectionssection'), 'Active la section des collections sur le site.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_collections_enable_fullwidth'), 'Étend la liste des collections sur toute la largeur disponible.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_comment_rating'), 'Autorise la notation des commentaires.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_comments_captcha'), 'Choisit les utilisateurs devant résoudre un captcha pour commenter.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_comments_per_page'), 'Enregistre le paramètre « commentaires par page » ; son effet actuel n’est pas identifié dans l’application.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_contextual_menu_disabled'), 'Désactive le menu du clic droit sur la vidéo.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_control_bar_logo'), 'Affiche un logo dans la barre de commandes du lecteur.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_conversion_type'), 'Choisit une sortie MP4 ou une diffusion HLS pour les vidéos converties.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_custom_css'), 'Applique une feuille de style personnalisée enregistrée dans le fichier custom.css.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_date_format'), 'Définit le format PHP utilisé pour afficher les dates.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_default_country_iso2'), 'Présélectionne le pays du profil utilisateur.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_default_theme'), 'Choisit le thème visuel clair ou sombre utilisé par défaut.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_delete_collection_on_delete_user'), 'Supprime les collections du compte lors de sa suppression.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_delete_comments_on_delete_user'), 'Supprime les commentaires du compte lors de sa suppression.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_delete_mass_upload'), 'Supprime les fichiers sources après leur import par l''envoi en masse.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_delete_photo_on_delete_user'), 'Supprime les photos du compte lors de sa suppression.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_delete_playlist_on_delete_user'), 'Supprime les listes de lecture du compte lors de sa suppression.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_delete_video_on_delete_user'), 'Supprime les vidéos du compte lors de sa suppression.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_description'), 'Définit la description générale du site, notamment dans les flux RSS.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_disable_email'), 'Désactive l''envoi des emails du site.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_disallowed_usernames'), 'Définit les noms interdits lors du choix d''un identifiant utilisateur.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_discord_error_log'), 'Active l''envoi des journaux d''erreur vers Discord.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_discord_webhook_url'), 'Définit l''adresse du webhook Discord destinataire des journaux.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_display_featured_video'), 'Affiche les vidéos mises en avant sur la page d''accueil.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_display_language_flag'), 'Affiche le drapeau à côté du nom des langues.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_email_domain_restriction'), 'Limite les inscriptions aux domaines email autorisés, séparés par des virgules.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_email_sender_address'), 'Définit l''adresse de l''expéditeur des emails du site.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_email_sender_name'), 'Définit le nom de l''expéditeur des emails du site.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_email_verification'), 'Demande la validation de l''adresse email lors de l''inscription.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_embed_player_height'), 'Définit la hauteur par défaut du lecteur intégré, en pixels.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_embed_player_width'), 'Définit la largeur par défaut du lecteur intégré, en pixels.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_enable_360_video'), 'Active la lecture des vidéos panoramiques à 360 degrés.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_enable_access_view_video_history'), 'Affiche l''accès à l''historique des vues lorsque son enregistrement est activé.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_enable_advertisement'), 'Affiche les emplacements publicitaires sur le site.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_enable_age_restriction'), 'Applique les restrictions d''âge aux contenus.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_enable_all_categ_for_channel'), 'Enregistre le choix « Toutes » pour les catégories de chaînes ; le code actuel lit le réglage des collections à sa place.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_enable_all_categ_for_collection'), 'Ajoute le choix « Toutes » dans la navigation par catégories des collections et chaînes.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_enable_all_categ_for_photo'), 'Ajoute le choix « Toutes » dans la navigation par catégories des photos.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_enable_all_categ_for_video'), 'Ajoute le choix « Toutes » dans la navigation par catégories des vidéos.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_enable_allow_alias_email'), 'Accepte les adresses email contenant un alias avec le signe plus.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_enable_anonymous_stats'), 'Autorise l''envoi des statistiques anonymes de l''installation.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_enable_blur_restricted_content'), 'Floute les contenus soumis à une restriction d''âge au lieu de les masquer.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_enable_channel_categories_as_submenu'), 'Présente les catégories des chaînes dans le sous-menu de navigation.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_enable_channel_description'), 'Permet de renseigner la description d''une chaîne.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_enable_channel_slogan'), 'Permet de renseigner un slogan pour une chaîne.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_enable_channels_slogan_display'), 'Affiche le slogan dans les vignettes des chaînes.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_enable_chunk_upload'), 'Découpe les envois de fichiers en morceaux pour le transfert.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_enable_collection_backdrop'), 'Permet de gérer les arrière-plans des collections.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_enable_collection_categories'), 'Active le classement des collections par catégories.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_enable_collection_categories_as_submenu'), 'Présente les catégories des collections dans le sous-menu de navigation.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_enable_collection_internal_sharing'), 'Permet le partage des collections par message interne.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_enable_collection_link_sharing'), 'Permet le partage des collections par lien.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_enable_collection_poster'), 'Permet de gérer les affiches des collections.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_enable_comments_censor'), 'Masque les mots interdits dans les commentaires.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_enable_comments_channel'), 'Autorise les commentaires sur les chaînes.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_enable_comments_collection'), 'Autorise les commentaires sur les collections.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_enable_comments_photo'), 'Autorise les commentaires sur les photos.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_enable_comments_video'), 'Autorise les commentaires sur les vidéos.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_enable_cookie_banner'), 'Affiche le bandeau de consentement et applique les préférences de cookies.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_enable_country'), 'Active le champ « pays » du profil utilisateur.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_enable_country_video_field'), 'Permet de renseigner le champ « pays » des vidéos.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_enable_dev_mode'), 'Active le mode développement au moyen du fichier development.dev.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_enable_edit_button'), 'Affiche les commandes de modification des vidéos pour les utilisateurs autorisés.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_enable_edit_photo_button'), 'Affiche le bouton de modification d''une photo pour les utilisateurs autorisés.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_enable_external_rate_field'), 'Permet de renseigner la note externe d''un contenu.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_enable_external_rate_from_tmdb'), 'Importe la note moyenne fournie par TMDB.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_enable_external_rate_ratings_on_fo'), 'Permet de modifier les notes et votes externes depuis le site public.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_enable_external_ratings_field'), 'Permet de renseigner le nombre de votes externes d''un contenu.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_enable_external_ratings_from_tmdb'), 'Importe le nombre de votes fourni par TMDB.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_enable_favorite_icon'), 'Affiche l’icône des favoris sur les vidéos.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_enable_favorite_icon_collection'), 'Affiche l’icône des favoris sur les collections.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_enable_favorite_icon_photo'), 'Affiche l’icône des favoris sur les photos.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_enable_featured_collection_hierarchy'), 'Présente la hiérarchie des collections mises en avant sur l''accueil.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_enable_gender'), 'Active le champ « genre » du profil utilisateur.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_enable_global_age_restriction'), 'Restreint globalement l''accès au site selon l''âge minimal configuré.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_enable_hide_uploader_name'), 'Masque le nom de l''auteur dans les affichages de contenus concernés.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_enable_location_video_field'), 'Permet de renseigner le champ « lieu » des vidéos.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_enable_multi_factor_authentification'), 'Active l''authentification multifacteur des comptes.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_enable_photo_categories'), 'Active le classement des photos par catégories.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_enable_photo_categories_as_submenu'), 'Présente les catégories des photos dans le sous-menu de navigation.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_enable_photo_file_upload'), 'Permet d''envoyer des fichiers photo depuis l''ordinateur.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_enable_profiling'), 'Active la mesure des performances avec la base de profilage.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_enable_public_video_page'), 'Permet l''accès public à la page vidéo selon les permissions existantes.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_enable_quicklist'), 'Permet de constituer une liste rapide de vidéos à regarder.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_enable_recorded_date_video_field'), 'Permet de renseigner le champ « date d’enregistrement » des vidéos.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_enable_rss_feeds'), 'Rend les flux de syndication RSS accessibles.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_enable_sitemap'), 'Permet la génération du plan du site pour les moteurs de recherche.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_enable_social_networks_links_footer'), 'Affiche les liens vers les réseaux sociaux dans le pied de page.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_enable_social_networks_links_home_sidebar'), 'Affiche les liens vers les réseaux sociaux dans la barre latérale de l’accueil.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_enable_storage_history'), 'Enregistre l''historique de l''espace de stockage utilisé.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_enable_storage_history_fo'), 'Rend l''historique du stockage accessible dans l''espace utilisateur.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_enable_sub_collection'), 'Permet d''organiser les collections en sous-collections.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_enable_theme_change'), 'Permet aux visiteurs de changer le thème visuel.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_enable_tmdb'), 'Active la recherche et l''import de métadonnées depuis TMDB.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_enable_tmdb_mature_content'), 'Inclut les contenus pour adultes dans la recherche TMDB.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_enable_update_checker'), 'Autorise la vérification des mises à jour de ClipBucket.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_enable_user_about'), 'Active le champ « présentation personnelle » du profil utilisateur.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_enable_user_category'), 'Active le champ « catégorie » du profil utilisateur.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_enable_user_city'), 'Active le champ « ville » du profil utilisateur.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_enable_user_compagnies'), 'Active le champ « entreprises » du profil utilisateur.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_enable_user_dob_edition'), 'Permet aux utilisateurs de modifier leur date de naissance.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_enable_user_education'), 'Active le champ « formation » du profil utilisateur.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_enable_user_favorite_books'), 'Active le champ « livres favoris » du profil utilisateur.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_enable_user_favorite_movies'), 'Active le champ « films favoris » du profil utilisateur.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_enable_user_favorite_music'), 'Active le champ « musique favorite » du profil utilisateur.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_enable_user_firstname_lastname'), 'Active le champ « nom et prénom » du profil utilisateur.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_enable_user_hobbies'), 'Active le champ « loisirs » du profil utilisateur.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_enable_user_hometown'), 'Active le champ « ville d’origine » du profil utilisateur.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_enable_user_occupation'), 'Active le champ « profession » du profil utilisateur.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_enable_user_postcode'), 'Active le champ « code postal » du profil utilisateur.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_enable_user_profil_censor'), 'Masque les mots interdits dans les textes des profils.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_enable_user_relation_status'), 'Active le champ « situation familiale » du profil utilisateur.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_enable_user_schools'), 'Active le champ « établissements scolaires » du profil utilisateur.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_enable_user_self_deletion'), 'Permet à un utilisateur de supprimer son propre compte.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_enable_user_status'), 'Active le champ « statut » du profil utilisateur.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_enable_user_website'), 'Active le champ « site web » du profil utilisateur.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_enable_video_actor'), 'Active les métadonnées « acteurs » des vidéos.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_enable_video_backdrop'), 'Permet de gérer les arrière-plans des vidéos.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_enable_video_categories'), 'Active le classement des vidéos par catégories.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_enable_video_categories_as_submenu'), 'Présente les catégories des vidéos dans le sous-menu de navigation.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_enable_video_crew'), 'Active les métadonnées « équipe technique » des vidéos.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_enable_video_description_censor'), 'Masque les mots interdits dans les descriptions de vidéos.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_enable_video_description_link'), 'Rend les liens des descriptions de vidéos cliquables.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_enable_video_director'), 'Active les métadonnées « réalisateurs » des vidéos.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_enable_video_embed_players'), 'Permet d''utiliser les lecteurs intégrés externes associés aux vidéos.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_enable_video_executive_producer'), 'Active les métadonnées « producteurs délégués » des vidéos.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_enable_video_file_upload'), 'Permet d''envoyer des fichiers vidéo depuis l''ordinateur.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_enable_video_genre'), 'Active les métadonnées « genres » des vidéos.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_enable_video_internal_sharing'), 'Permet le partage des vidéos par message interne.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_enable_video_link_sharing'), 'Permet le partage des vidéos par lien.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_enable_video_poster'), 'Permet de gérer les affiches des vidéos.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_enable_video_producer'), 'Active les métadonnées « producteurs » des vidéos.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_enable_video_remote_play'), 'Permet d''ajouter une vidéo lue depuis une adresse distante.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_enable_video_social_sharing'), 'Affiche le partage des vidéos sur les réseaux sociaux.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_enable_video_thumbs_preview'), 'Fait défiler les miniatures des vidéos au survol.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_enable_video_view_history'), 'Enregistre l''historique des consultations de vidéos.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_enable_visual_editor_comments'), 'Active l''éditeur visuel des textes dans les formulaires concernés.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_extract_subtitles'), 'Extrait les sous-titres de la vidéo dans des fichiers séparés.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_favicon_name'), 'Remplace l''icône du site affichée par le navigateur.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_featured_video_style'), 'Choisit la présentation des vignettes pour les vidéos mises en avant de l’accueil.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_feedssection'), 'Enregistre l’activation du fil d’activité ; aucun effet actuel n’est identifié dans l’application.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_ffmpegpath'), 'Définit le chemin de l’exécutable FFmpeg utilisé par le serveur.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_ffprobe_path'), 'Définit le chemin de l’exécutable FFprobe utilisé par le serveur.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_force_8bits'), 'Limite la profondeur des couleurs vidéo à huit bits pour améliorer la compatibilité.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_git_path'), 'Définit le chemin de l’exécutable Git utilisé par le serveur.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_gravatars'), 'Utilise Gravatar pour les avatars des utilisateurs.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_hide_empty_collection'), 'Masque les collections ne contenant aucun élément.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_home_disable_sidebar'), 'Masque la barre latérale de la page d''accueil.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_home_display_featured_collections'), 'Affiche les collections mises en avant sur la page d''accueil.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_home_display_recent_videos'), 'Affiche les vidéos récentes sur la page d''accueil.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_home_enable_fullwidth'), 'Étend la page d’accueil sur toute la largeur disponible.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_homepage_collection_video_ratio'), 'Choisit le rapport largeur sur hauteur des vignettes des vidéos des collections sur l’accueil.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_homepage_collection_video_style'), 'Choisit la présentation des vignettes pour les vidéos des collections sur l’accueil.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_homepage_recent_video_ratio'), 'Choisit le rapport largeur sur hauteur des vignettes des vidéos récentes sur l’accueil.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_homepage_recent_video_style'), 'Choisit la présentation des vignettes pour les vidéos récentes de l’accueil.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_homepage_recent_videos_display'), 'Choisit une pagination ou un carrousel pour les vidéos récentes de l''accueil.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_keep_audio_tracks'), 'Conserve les pistes audio dans les fichiers vidéo convertis.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_keep_ratio_photo'), 'Impose le rapport d''affichage configuré aux photos.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_keep_subtitles'), 'Conserve les sous-titres dans les fichiers vidéo convertis.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_keywords'), 'Définit les mots-clés des métadonnées du site.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_limit_photo_related'), 'Limite le nombre de photos apparentées proposées.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_list_featured_videos'), 'Limite le nombre de vidéos mises en avant sur l’accueil.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_list_home_collection_videos'), 'Limite le nombre de vidéos par collection sur l’accueil.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_list_recent_videos'), 'Limite le nombre de vidéos récentes sur l’accueil.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_logo_name'), 'Remplace le logo du site par l''image envoyée.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_mail_type'), 'Choisit l''envoi des emails par PHP mail ou par SMTP.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_main_menu_order'), 'Définit l''ordre des sections du menu principal.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_max_bg_width'), 'Limite la largeur des images de fond envoyées, en pixels.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_max_collection_categories'), 'Limite le nombre de catégories associées à une collection ; zéro désactive cette limite.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_max_comment_chr'), 'Limite la longueur des commentaires en caractères.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_max_conversion'), 'Limite le nombre de conversions vidéo lancées simultanément.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_max_photo_categories'), 'Limite le nombre de catégories associées à une photo ; zéro désactive cette limite.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_max_photo_size'), 'Limite la taille des fichiers photo envoyés, en Mo.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_max_profile_pic_width'), 'Limite la largeur des avatars envoyés, en pixels.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_max_upload_size'), 'Limite la taille des fichiers envoyés, en Mo.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_max_username'), 'Fixe la longueur maximale de l’identifiant utilisateur, en caractères.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_max_video_desc'), 'Enregistre le paramètre « longueur maximale de description vidéo » ; son effet actuel n’est pas identifié dans l’application.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_max_video_duration'), 'Limite la durée des vidéos envoyées, en minutes.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_max_video_title'), 'Fixe la longueur maximale du titre vidéo, en caractères.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_maximum_allowed_subtitle_size'), 'Limite la taille des fichiers de sous-titres envoyés, en Mo.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_media_info'), 'Définit le chemin de l’exécutable MediaInfo utilisé par le serveur.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_min_age_reg'), 'Fixe l''âge minimal en années pour l''inscription et la restriction globale d''accès.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_min_username'), 'Fixe la longueur minimale de l’identifiant utilisateur, en caractères.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_min_video_desc'), 'Enregistre le paramètre « longueur minimale de description vidéo » ; son effet actuel n’est pas identifié dans l’application.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_min_video_title'), 'Fixe la longueur minimale du titre vidéo, en caractères.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_nginx_path'), 'Définit le chemin de l’exécutable Nginx utilisé par le serveur.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_num_thumbs'), 'Définit le nombre de miniatures extraites lors du traitement d''une vidéo.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_only_keep_max_resolution'), 'Ne conserve que la plus grande résolution vidéo générée.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_own_channel_rating'), 'Permet aux utilisateurs de noter leurs propres chaînes.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_own_collection_rating'), 'Permet aux utilisateurs de noter leurs propres collections.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_own_comment_rating'), 'Permet aux utilisateurs de noter leurs propres commentaires.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_own_photo_rating'), 'Permet aux utilisateurs de noter leurs propres photos.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_own_video_rating'), 'Permet aux utilisateurs de noter leurs propres vidéos.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_photo_activation'), 'Exige l''approbation d''une photo avant sa publication.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_photo_channel_page'), 'Limite le nombre de photos par chargement sur une chaîne.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_photo_crop'), 'Active le recadrage lors du redimensionnement des photos.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_photo_enable_nsfw_check'), 'Analyse les photos envoyées pour détecter un contenu sensible avec AIVision.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_photo_home_tabs'), 'Enregistre le paramètre « photos sur l’accueil » ; son effet actuel n’est pas identifié dans l’application.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_photo_lar_width'), 'Définit la largeur des grandes images photo en pixels.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_photo_main_list'), 'Limite le nombre de photos par page des listes et de la gestion.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_photo_med_height'), 'Définit la hauteur des images photo moyennes en pixels.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_photo_med_width'), 'Définit la largeur des images photo moyennes en pixels.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_photo_nsfw_check_model'), 'Choisit le modèle de détection de contenu sensible pour les photos.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_photo_other_limit'), 'Enregistre le paramètre « limite photo complémentaire » ; son effet actuel n’est pas identifié dans l’application.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_photo_rating'), 'Autorise la notation des photos.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_photo_ratio'), 'Enregistre le paramètre « rapport de taille photo » ; son effet actuel n’est pas identifié dans l’application.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_photo_search_result'), 'Limite le nombre de photos par page de recherche.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_photo_thumb_height'), 'Définit la hauteur des petites miniatures photo en pixels.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_photo_thumb_width'), 'Définit la largeur des petites miniatures photo en pixels.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_photo_thumbs_format'), 'Conserve le format photo ou convertit les miniatures en WebP.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_photo_user_favorites'), 'Enregistre le paramètre « photos favorites de l’utilisateur » ; son effet actuel n’est pas identifié dans l’application.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_photo_user_photos'), 'Enregistre le paramètre « photos de l’utilisateur » ; son effet actuel n’est pas identifié dans l’application.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_photossection'), 'Active la section des photos sur le site.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_photos_enable_fullwidth'), 'Étend la liste des photos sur toute la largeur disponible.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_php_path'), 'Définit le chemin de l’exécutable PHP en ligne de commande utilisé par le serveur.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_pick_geo_country'), 'Présélectionne le pays d''après la géolocalisation de l''adresse IP.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_picture_upload'), 'Permet d''envoyer un fichier image comme avatar.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_picture_url'), 'Permet de définir un avatar à partir d''une adresse d''image.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_player-logo_name'), 'Remplace le logo de la barre de commandes du lecteur.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_player_default_resolution'), 'Choisit la résolution initiale du lecteur parmi les fichiers disponibles.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_player_default_resolution_hls'), 'Enregistre le paramètre « résolution initiale HLS » ; son effet actuel n’est pas identifié dans l’application.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_player_logo_url'), 'Définit l''adresse ouverte par le logo du lecteur.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_player_subtitles'), 'Permet de sélectionner des sous-titres dans le lecteur.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_player_thumbnails'), 'Affiche les aperçus sur la barre de progression du lecteur.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_playlistssection'), 'Active les listes de lecture vidéo.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_popup_video'), 'Ouvre les vidéos de l''accueil dans une fenêtre de lecture superposée.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_profiling_db_host'), 'Définit le serveur de la base de données de profilage.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_profiling_db_name'), 'Définit le nom de la base de données de profilage.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_profiling_db_password'), 'Définit le mot de passe de la base de profilage.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_profiling_db_port'), 'Définit le port réseau de la base de profilage.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_profiling_db_user'), 'Définit l''identifiant de connexion à la base de profilage.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_proxy_auth'), 'Active l''authentification auprès du serveur mandataire.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_proxy_enable'), 'Fait passer les requêtes réseau sortantes par un serveur mandataire.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_proxy_password'), 'Définit le mot de passe de connexion au serveur mandataire.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_proxy_port'), 'Définit le port réseau du serveur mandataire.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_proxy_url'), 'Définit l''adresse du serveur mandataire pour les requêtes réseau.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_proxy_username'), 'Définit l''identifiant de connexion au serveur mandataire.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_random_photo_order'), 'Autorise le tri aléatoire des photos.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_random_video_order'), 'Autorise le tri aléatoire des vidéos.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_ratio_photo'), 'Définit le rapport largeur sur hauteur d''affichage des photos.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_resolution_bitrate'), 'Définit le débit vidéo de cette résolution en bits par seconde.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_resolution_enabled'), 'Active la génération de cette résolution pendant la conversion vidéo.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_sbrate'), 'Définit le débit audio de conversion en bits par seconde.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_send_comment_notification'), 'Envoie un email au propriétaire lorsqu''un commentaire est publié.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_seo'), 'Utilise des adresses réécrites pour les pages du site.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_seo_vido_url'), 'Choisit la forme des adresses réécrites des vidéos.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_show_collapsed_checkboxes'), 'Présente les choix de catégories dans une liste repliable.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_site_slogan'), 'Définit le slogan du site et sa présentation dans les métadonnées sociales.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_site_title'), 'Définit le nom du site utilisé dans les titres et les messages.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_smtp_auth'), 'Active l''authentification auprès du serveur SMTP.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_smtp_host'), 'Définit le serveur utilisé pour envoyer les emails par SMTP.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_smtp_pass'), 'Définit le mot de passe de connexion au serveur SMTP.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_smtp_port'), 'Définit le port réseau du serveur SMTP.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_smtp_user'), 'Définit l''identifiant de connexion au serveur SMTP.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_srate'), 'Définit la fréquence d''échantillonnage audio de conversion en hertz.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_stay_mp4'), 'Conserve les fichiers MP4 envoyés sans reconversion vidéo.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_store_guest_session'), 'Conserve les sessions des visiteurs non connectés.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_subtitle_format'), 'Choisit le format des sous-titres conservés ou extraits par FFmpeg.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_thumb_background_color'), 'Définit la couleur de remplissage autour des miniatures vidéo.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_timezone'), 'Définit le fuseau horaire utilisé par le site.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_tmdb_enable_on_front_end'), 'Autorise l''utilisation de l''import TMDB sur le site public.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_tmdb_get_actors'), 'Importe les données « acteurs » depuis TMDB lors de la mise à jour du contenu.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_tmdb_get_age_restriction'), 'Importe les données « restriction d’âge » depuis TMDB lors de la mise à jour du contenu.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_tmdb_get_backdrop'), 'Importe les données « arrière-plans » depuis TMDB lors de la mise à jour du contenu.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_tmdb_get_crew'), 'Importe les données « équipe technique » depuis TMDB lors de la mise à jour du contenu.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_tmdb_get_description'), 'Importe les données « description » depuis TMDB lors de la mise à jour du contenu.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_tmdb_get_director'), 'Importe les données « réalisateurs » depuis TMDB lors de la mise à jour du contenu.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_tmdb_get_executive_producer'), 'Importe les données « producteurs délégués » depuis TMDB lors de la mise à jour du contenu.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_tmdb_get_genre'), 'Importe les données « genres » depuis TMDB lors de la mise à jour du contenu.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_tmdb_get_poster'), 'Importe les données « affiches » depuis TMDB lors de la mise à jour du contenu.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_tmdb_get_producer'), 'Importe les données « producteurs » depuis TMDB lors de la mise à jour du contenu.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_tmdb_get_release_date'), 'Enregistre le choix d’import de date TMDB ; le code actuel importe la date sans consulter ce réglage.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_tmdb_get_title'), 'Importe les données « titre » depuis TMDB lors de la mise à jour du contenu.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_tmdb_mature_content_age'), 'Définit l''âge en années utilisé pour les contenus TMDB réservés aux adultes.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_tmdb_search'), 'Limite le nombre de résultats par page de recherche TMDB.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_tmdb_token'), 'Définit le jeton d''authentification des requêtes vers TMDB.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_use_backdrop_as_default_thumb'), 'Autorise, interdit ou impose l''usage d''un arrière-plan comme miniature par défaut.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_use_subs'), 'Permet de gérer des sous-catégories.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_users_items_contacts_channel'), 'Enregistre le paramètre « contacts sur une chaîne » ; son effet actuel n’est pas identifié dans l’application.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_users_items_search_page'), 'Limite le nombre de utilisateurs par page de recherche.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_users_items_subscriptions'), 'Enregistre le paramètre « abonnements sur une chaîne » ; son effet actuel n’est pas identifié dans l’application.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_vid_cat_height'), 'Définit la hauteur des miniatures de catégories vidéo en pixels.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_vid_cat_width'), 'Définit la largeur des miniatures de catégories vidéo en pixels.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_video_categories'), 'Limite le nombre de catégories associées à une vidéo ; zéro désactive cette limite.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_video_codec'), 'Choisit l''encodeur vidéo utilisé par FFmpeg.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_video_download'), 'Affiche le téléchargement des vidéos téléchargeables.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_video_embed'), 'Permet de proposer le code d''intégration des vidéos sur un autre site.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_video_enable_fullwidth'), 'Étend la page de lecture vidéo sur toute la largeur disponible.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_video_enable_nsfw_check'), 'Analyse les vidéos envoyées pour détecter un contenu sensible avec AIVision.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_video_list_view_video_history'), 'Limite le nombre de entrées par page d’historique des vues vidéo.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_video_nsfw_check_model'), 'Choisit le modèle de détection de contenu sensible pour les vidéos.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_video_rating'), 'Autorise la notation des vidéos.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_video_remove_black_bars'), 'Détecte et recadre les bandes noires pendant la conversion vidéo.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_video_round_views'), 'Abrège l''affichage du nombre de vues des vidéos.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_video_thumbs_format'), 'Choisit le format des images de miniatures vidéo générées.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_video_thumbs_preview_count'), 'Limite le nombre de miniatures utilisées pour l''aperçu au survol.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_videossection'), 'Active la section des vidéos sur le site.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_videos_enable_fullwidth'), 'Étend la liste des vidéos sur toute la largeur disponible.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_videos_item_channel_page'), 'Limite le nombre de vidéos par chargement sur une chaîne.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_videos_items_hme_page'), 'Limite le nombre de vidéos dans les anciens onglets de l’accueil.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_videos_items_search_page'), 'Limite le nombre de vidéos par page de recherche.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_videos_items_ufav_page'), 'Enregistre le paramètre « vidéos favorites de l’utilisateur » ; son effet actuel n’est pas identifié dans l’application.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_videos_items_uvid_page'), 'Enregistre le paramètre « vidéos de l’utilisateur » ; son effet actuel n’est pas identifié dans l’application.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_videos_list_per_page'), 'Limite le nombre de vidéos par page dans les listes.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_videos_video_style'), 'Choisit la présentation des vignettes pour les liste des vidéos.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_description_vrate'), 'Définit la fréquence cible d''images vidéo par seconde.');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_title_site_title'), 'Titre du site');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_title_site_slogan'), 'Slogan du site');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_title_keywords'), 'Mots-clés des métadonnées');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_title_description'), 'Description des métadonnées');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_title_closed'), 'Site fermé');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_title_enable_update_checker'), 'Vérifier les mises à jour');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_title_seo'), 'Adresses réécrites');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_title_date_format'), 'Format des dates');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_title_closed_msg'), 'Message de fermeture');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_title_enable_rss_feeds'), 'Activer les flux RSS');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_title_videossection'), 'Activer les vidéos');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_title_photossection'), 'Activer les photos');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_title_collectionssection'), 'Activer les collections');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_title_channelssection'), 'Activer les chaînes');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_title_enable_advertisement'), 'Activer la publicité');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_title_feedssection'), 'Activer le fil d''activité');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_title_allow_registeration'), 'Activer les inscriptions');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_title_use_subs'), 'Utiliser les sous-catégories');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_title_allow_language_change'), 'Autoriser le changement de langue');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_title_min_username'), 'Longueur minimale des identifiants');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_title_default_country_iso2'), 'Pays par défaut');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_title_min_age_reg'), 'Âge minimal d''inscription');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_title_gravatars'), 'Activer Gravatar');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_title_picture_url'), 'Autoriser les avatars par adresse');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_title_picture_upload'), 'Autoriser l''envoi d''avatars');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_title_background_url'), 'Autoriser les fonds par adresse');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_title_pick_geo_country'), 'Géolocalisation IP');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_title_max_username'), 'Longueur maximale des identifiants');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_title_email_verification'), 'Vérification des emails');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_title_background_upload'), 'Autoriser l''envoi de fonds');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_title_background_color'), 'Autoriser la couleur de fond');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_title_email_domain_restriction'), 'Restriction des domaines email');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_title_max_profile_pic_width'), 'Largeur maximale des avatars');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_title_max_bg_width'), 'Largeur maximale des fonds');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_title_allow_unicode_usernames'), 'Autoriser les caractères spéciaux dans les identifiants');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_title_allow_username_spaces'), 'Autoriser les espaces dans les identifiants');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_title_video_embed'), 'Intégration vidéo');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_title_video_download'), 'Téléchargement');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_title_seo_vido_url'), 'Modèle des adresses vidéo réécrites');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_title_video_round_views'), 'Arrondir le nombre de vues');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_title_vid_cat_width'), 'Largeur des catégories');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_title_vid_cat_height'), 'Hauteur des catégories');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_title_activation'), 'Approbation des vidéos');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_title_video_title_size'), 'Longueur du titre vidéo');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_title_min_video_title'), 'Minimum');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_title_max_video_title'), 'Maximum');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_title_video_description_size'), 'Longueur de la description vidéo');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_title_min_video_desc'), 'Minimum');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_title_max_video_desc'), 'Maximum');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_title_photo_activation'), 'Approbation des photos');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_title_enable_sub_collection'), 'Activer les sous-collections');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_title_comments_captcha'), 'Captcha des commentaires');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_title_max_comment_chr'), 'Longueur maximale des commentaires');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_title_anonym_comments'), 'Autoriser les commentaires des visiteurs');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_title_video_rating'), 'Notation des vidéos');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_title_photo_rating'), 'Notation des photos');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_title_own_video_rating'), 'Noter ses propres vidéos');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_title_own_photo_rating'), 'Noter ses propres photos');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_title_collection_rating'), 'Notation des collections');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_title_channel_rating'), 'Notation des chaînes');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_title_own_collection_rating'), 'Noter ses propres collections');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_title_own_channel_rating'), 'Noter sa propre chaîne');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_title_comment_rating'), 'Notation des commentaires');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_title_videos_list_per_page'), 'Par page');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_title_videos_items_ufav_page'), 'Favoris');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_title_videos_items_hme_page'), 'Onglets de l''accueil');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_title_videos_item_channel_page'), 'Page de chaîne');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_title_videos_items_search_page'), 'Résultats de recherche');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_title_videos_items_uvid_page'), 'Vidéos de l''utilisateur');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_title_photo_main_list'), 'Limite principale');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_title_photo_home_tabs'), 'Onglets de l''accueil');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_title_photo_search_result'), 'Résultats de recherche');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_title_photo_channel_page'), 'Page de chaîne');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_title_photo_user_photos'), 'Photos de l''utilisateur');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_title_photo_user_favorites'), 'Favoris de l''utilisateur');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_title_photo_other_limit'), 'Autre limite');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_title_collection_per_page'), 'Page des collections');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_title_collection_items_page'), 'Page des éléments');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_title_collection_search_result'), 'Résultats de recherche');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_title_collection_home_top_collections'), 'Collections mises en avant sur l''accueil');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_title_collection_collection_top_collections'), 'Collections mises en avant sur la page collection');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_title_collection_photos_top_collections'), 'Collections mises en avant sur la page photo');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_title_channels_list_per_page'), 'Par page');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_title_users_items_subscriptions'), 'Abonnements sur la chaîne');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_title_users_items_search_page'), 'Page de recherche');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_title_users_items_contacts_channel'), 'Contacts sur la chaîne');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_title_comments_per_page'), 'Commentaires par page');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_title_embed_player_width'), 'Largeur du lecteur intégré');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_title_embed_player_height'), 'Hauteur du lecteur intégré');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_title_autoplay_embed'), 'Lecture automatique intégrée');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_title_control_bar_logo'), 'Activer le logo du lecteur');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_title_upload_player-logo'), 'Logo du lecteur');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_title_player_logo_url'), 'Adresse du logo du lecteur');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_title_autoplay_video'), 'Lecture automatique');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_title_chromecast'), 'Activer Chromecast');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_title_player_subtitles'), 'Activer les sous-titres');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_title_player_default_resolution'), 'Résolution vidéo par défaut');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_title_contextual_menu_disabled'), 'Désactiver le menu contextuel');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_title_player_thumbnails'), 'Miniatures');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_title_player_default_resolution_hls'), 'Résolution HLS par défaut');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_title_enable_video_file_upload'), 'Activer l''envoi de fichiers vidéo');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_title_delete_mass_upload'), 'Supprimer les sources de l''envoi en masse');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_title_max_video_duration'), 'Durée vidéo maximale');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_title_enable_photo_file_upload'), 'Activer l''envoi de fichiers photo');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_title_chunk_upload_size'), 'Taille des morceaux');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_title_num_thumbs'), 'Nombre de miniatures vidéo');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_title_srate'), 'Fréquence audio');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_title_sbrate'), 'Débit audio');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_title_vrate'), 'Fréquence d''images cible');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_title_video_codec'), 'Codec vidéo');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_title_audio_codec'), 'Codec audio');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_title_subtitle_format'), 'Format des sous-titres');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_title_chromecast_fix'), 'Compatibilité Chromecast');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_title_force_8bits'), 'Améliorer la compatibilité');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_title_extract_subtitles'), 'Extraire les sous-titres');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_title_conversion_type'), 'Type de conversion');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_title_convesion_type_mp4'), 'MP4');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_title_convesion_type_hls'), 'HLS');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_title_stay_mp4'), 'Conserver les MP4 d''origine');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_title_keep_audio_tracks'), 'Conserver les pistes audio');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_title_keep_subtitles'), 'Conserver les sous-titres');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_title_allow_conversion_1_percent'), 'Tolérer un écart de 1 %');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_title_send_comment_notification'), 'Notifier les commentaires');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_title_approve_video_notification'), 'Notifier l''approbation vidéo');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_title_mail_type'), 'Mode d''envoi des emails');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_title_smtp_host'), 'Serveur SMTP');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_title_smtp_port'), 'Port SMTP');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_title_smtp_auth'), 'Authentification SMTP');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_title_smtp_user'), 'Identifiant SMTP');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_title_smtp_pass'), 'Mot de passe SMTP');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_title_proxy_enable'), 'Activer le serveur mandataire');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_title_proxy_auth'), 'Authentification du serveur mandataire');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_title_proxy_url'), 'Adresse');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_title_proxy_username'), 'Identifiant');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_title_proxy_port'), 'Port');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_title_proxy_password'), 'Mot de passe');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_title_php_path'), 'Chemin PHP');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_title_media_info'), 'Chemin MediaInfo');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_title_ffmpegpath'), 'Chemin FFmpeg');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_title_ffprobe_path'), 'Chemin FFprobe');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_title_max_conversion'), 'Conversions vidéo simultanées');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_title_store_guest_session'), 'Conserver les sessions des visiteurs');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_title_bits_color_warning'), 'Avertissement de compatibilité vidéo au-delà de huit bits');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_search_label'), 'Rechercher un réglage');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_search_previous'), 'Précédent');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_search_next'), 'Suivant');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_search_empty'), 'Aucun résultat');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_search_first'), 'Premier résultat atteint');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_search_last'), 'Dernier résultat atteint');
+
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_search_reset'), 'Réinitialiser la recherche');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_search_tab_result'), 'Il y a %s résultat dans cet onglet');
+INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'settings_search_tab_results'), 'Il y a %s résultats dans cet onglet');

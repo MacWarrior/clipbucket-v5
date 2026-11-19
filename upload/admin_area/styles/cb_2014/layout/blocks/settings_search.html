@@ -1,0 +1,33 @@
+{if !empty($settings_search_descriptions)}
+    <div id="settings-search-anchor">
+        <div id="settings-search" role="search"
+             data-empty="{display_clean(lang('settings_search_empty'))}"
+             data-first="{display_clean(lang('settings_search_first'))}"
+             data-tab-result="{display_clean(lang('settings_search_tab_result'))}"
+             data-tab-results="{display_clean(lang('settings_search_tab_results'))}"
+             data-last="{display_clean(lang('settings_search_last'))}">
+            <label class="sr-only" for="settings-search-input">{display_clean(lang('settings_search_label'))}</label>
+            <div class="settings-search-field">
+                <span class="glyphicon glyphicon-search settings-search-icon" aria-hidden="true"></span>
+                <input id="settings-search-input" type="search" autocomplete="off" placeholder="{display_clean(lang('settings_search_label'))}" aria-describedby="settings-search-status"/>
+                <span class="settings-search-actions">
+            <button id="settings-search-reset" type="button" disabled aria-label="{display_clean(lang('settings_search_reset'))}" title="{display_clean(lang('settings_search_reset'))}"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></button>
+            <button id="settings-search-previous" type="button" disabled aria-label="{display_clean(lang('settings_search_previous'))}" title="{display_clean(lang('settings_search_previous'))}"><span class="glyphicon glyphicon-arrow-up" aria-hidden="true"></span></button>
+            <button id="settings-search-next" type="button" disabled aria-label="{display_clean(lang('settings_search_next'))}" title="{display_clean(lang('settings_search_next'))}"><span class="glyphicon glyphicon-arrow-down" aria-hidden="true"></span></button>
+        </span>
+            </div>
+            <div id="settings-search-status" role="status" aria-live="polite" aria-atomic="true"></div>
+            <div hidden>
+                {foreach from=$settings_search_descriptions key=name item=description}
+                    <span data-settings-name="{display_clean($name)}" data-settings-description="{display_clean($description)}"></span>
+                {/foreach}
+            </div>
+            <template id="settings-search-count-template"><span class="badge settings-search-count"></span></template>
+            <template id="settings-search-unavailable-template">
+                <div class="settings-search-unavailable">
+                    <span class="settings-search-reason" role="status" aria-live="polite"></span>
+                </div>
+            </template>
+        </div>
+    </div>
+{/if}
