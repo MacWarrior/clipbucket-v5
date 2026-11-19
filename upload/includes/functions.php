@@ -100,9 +100,11 @@ function getBytesFromFileSize($size)
  */
 function RandomString($length): string
 {
-    $string = md5(microtime());
-    $highest_startpoint = 32 - $length;
-    return substr($string, rand(0, $highest_startpoint), $length);
+    $length = (int)$length;
+    if ($length < 1) {
+        return '';
+    }
+    return substr(bin2hex(random_bytes((int)ceil($length / 2))), 0, $length);
 }
 
 /**

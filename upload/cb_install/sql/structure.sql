@@ -356,6 +356,7 @@ CREATE TABLE `{tbl_prefix}users` (
   `country` varchar(20) NOT NULL DEFAULT 'PK',
   `level` int(6) NOT NULL DEFAULT 2,
   `avcode` mediumtext NOT NULL,
+  `password_reset_expires_at` BIGINT UNSIGNED NULL DEFAULT NULL,
   `doj` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `last_logged` datetime NOT NULL DEFAULT '1000-01-01 00:00:00',
   `num_visits` bigint(20) NOT NULL DEFAULT 0,
