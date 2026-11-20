@@ -2069,8 +2069,8 @@ class CBvideo extends CBCategory
                 Clipbucket_db::getInstance()->execute('DELETE FROM ' . tbl('video') . ' WHERE videoid = ' . (int)$vdetails['videoid']);
                 Clipbucket_db::getInstance()->update(tbl('users'), ['total_videos'], ['|f|total_videos-1'], ' userid= ' . (int)$vdetails['userid']);
 
+                errorhandler::getInstance()->flush_msg();
                 if( !error() && !warning() ) {
-                    errorhandler::getInstance()->flush();
                     e(lang('class_vdo_del_msg'), 'm');
                 }
             } else {
