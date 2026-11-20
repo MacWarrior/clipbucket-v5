@@ -9,6 +9,25 @@
     var video_title = "{display_clean($vdata.title)}";
 </script>
 
+{if !empty($player_params.theater_mode)}
+<style>
+    .video-js .vjs-theater-mode-control .vjs-icon-placeholder::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        width: 1.5em;
+        height: .9em;
+        margin: auto;
+        border: 2px solid currentColor;
+        border-radius: 2px;
+    }
+
+    .video-js .vjs-theater-mode-control.vjs-theater-mode-active .vjs-icon-placeholder::before {
+        width: 1.1em;
+    }
+</style>
+{/if}
+
 {if !empty($embed_players)}
 <ul class="default_bootstrap nav nav-tabs">
     <li class="active"><a data-toggle="tab" href="#default_player"><img alt="favicon" src="{get_website_favicon_path()}" class="icon"/>{config('site_title')}</a></li>
@@ -122,6 +141,71 @@
         }
     };
 
+    {if !empty($player_params.theater_mode)}
+    function initTheaterMode(player) {
+        const layout = player.el().closest('[data-theater-layout]');
+        if (!layout) {
+            return;
+        }
+
+        const desktop = window.matchMedia({json_encode($player_params.theater_mode, JSON_HEX_TAG)});
+        const enterLabel = {json_encode(lang('theater_mode'), JSON_HEX_TAG)};
+        const exitLabel = {json_encode(lang('exit_theater_mode'), JSON_HEX_TAG)};
+        const rememberMode = {if config('remember_theater_mode') === 'yes'}true{else}false{/if};
+        let theaterMode = {if Session::getTheaterModePreference() === 'cinema'}true{else}false{/if};
+        let preferenceRequest = Promise.resolve();
+
+        {literal}
+        const controlBar = player.controlBar;
+        const pictureInPicture = controlBar.getChild('PictureInPictureToggle');
+        const fullscreen = controlBar.getChild('FullscreenToggle');
+        const siblings = controlBar.children();
+        const button = new class extends videojs.getComponent('Button') {
+            handleClick() {
+                if (!desktop.matches || player.isFullscreen()) {
+                    return;
+                }
+
+                theaterMode = !theaterMode;
+                refresh();
+                if (rememberMode) {
+                    const body = new URLSearchParams({mode: theaterMode ? 'cinema' : 'normal'});
+                    preferenceRequest = preferenceRequest.then(() => fetch(baseurl + 'actions/theater_mode.php', {
+                        method: 'POST',
+                        body,
+                        keepalive: true
+                    })).catch(() => {});
+                }
+            }
+        }(player, {name: 'TheaterModeToggle'});
+        button.addClass('vjs-theater-mode-control');
+        controlBar.addChild(button, {}, pictureInPicture ? siblings.indexOf(pictureInPicture) + 1 : siblings.indexOf(fullscreen));
+
+        function refresh() {
+            const active = desktop.matches && theaterMode;
+            const label = active ? exitLabel : enterLabel;
+            layout.classList.toggle('theater-mode', active);
+            button.toggleClass('vjs-theater-mode-active', active);
+            button.controlText(label);
+            button.el().setAttribute('aria-label', label);
+            if (desktop.matches && !player.isFullscreen()) {
+                button.show();
+            } else {
+                button.hide();
+            }
+        }
+
+        desktop.addEventListener('change', refresh);
+        player.on('fullscreenchange', refresh);
+        player.one('dispose', function() {
+            desktop.removeEventListener('change', refresh);
+            layout.classList.remove('theater-mode');
+        });
+        refresh();
+        {/literal}
+    }
+    {/if}
+
     //Setting CallBack
     var cb_vjs_callback = function(){
 
@@ -144,6 +228,10 @@
 
         // PLUGIN : Clipbucket - Volume
         this.clipbucket_volume();
+
+        {if !empty($player_params.theater_mode)}
+        initTheaterMode(this);
+        {/if}
 
         // PLUGIN : resolution MP4
         {if $vdata['file_type'] == 'mp4'}
