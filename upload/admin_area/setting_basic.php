@@ -168,6 +168,7 @@ if (isset($_POST['update'])) {
         , 'collections_enable_fullwidth'
         , 'collection_enable_fullwidth'
         , 'autoplay_video'
+        , 'remember_theater_mode'
         , 'autoplay_embed'
         , 'contextual_menu_disabled'
         , 'control_bar_logo'
@@ -579,11 +580,12 @@ if (isset($_POST['update'])) {
         ,'tmdb_search'
         ,'photo_other_limit'
         ,'comments_per_page'
+        ,'remember_theater_mode'
     ];
 
     $has_missing_config = false;
     foreach ($rows as $field) {
-        $value = ($_POST[$field]);
+        $value = $_POST[$field] ?? null;
         if (in_array($field, $num_array)) {
             if ($field == 'min_age_reg' && ($value > 99 || $value < 0 || !is_numeric($value))) {
                 e(lang('error_age_restriction_save'));

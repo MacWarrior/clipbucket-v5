@@ -10,7 +10,12 @@
     </span>
     {/if}
     <div id="cb_player" class="cb_player no_select"{$aspect_ratio}>
-        {show_player vdetails=$video}
+        {* Another theme can pass theater_mode as its desktop media query and style .theater-mode on a [data-theater-layout] ancestor. *}
+        {if THIS_PAGE === 'watch_video' || THIS_PAGE === 'progress_video'}
+            {show_player vdetails=$video theater_mode='(min-width: 992px)'}
+        {else}
+            {show_player vdetails=$video}
+        {/if}
     </div>
 {else}
     <div id="cb_player" class="clearfix cb_player"{$aspect_ratio}>
