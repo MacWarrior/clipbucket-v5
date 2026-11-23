@@ -74,7 +74,7 @@ switch ($mode) {
             $params['type'] = $parent_collection['type'];
         }
         $reqFields = Collections::getInstance()->load_required_fields($params);
-        $otherFields = Collections::getInstance()->load_other_fields();
+        $otherFields = Collections::getInstance()->load_other_fields($params);
 
         assign('fields', $reqFields);
         assign('other_fields', $otherFields);
