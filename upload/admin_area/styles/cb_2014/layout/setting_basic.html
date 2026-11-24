@@ -572,7 +572,7 @@
                                                 <label class="nowrap" for="list_featured_videos" title="{lang code='option_list_featured_videos'}"> {lang code='option_list_featured_videos'}</label>
                                             </div>
                                             <div class="col-md-4">
-                                                <input class="form-control" name="list_featured_videos" id="list_featured_videos" value="{if trim((string)$row.list_featured_videos) !== ''}{(int)$row.list_featured_videos}{/if}" type="number" min="0"/>
+                                                <input class="form-control" name="list_featured_videos" id="list_featured_videos" value="{(int)$row.list_featured_videos}" type="number" min="0"/>
                                             </div>
                                         </div>
                                         <hr/>
@@ -652,7 +652,7 @@
                                                 <label class="nowrap" for="list_recent_videos" title="{lang code='option_list_recent_videos'}"><span class="fa fa-question-circle tips" title="{lang code='tips_only_with_slider_option'}"></span> {lang code='option_list_recent_videos'}</label>
                                             </div>
                                             <div class="col-md-4">
-                                                <input class="form-control" name="list_recent_videos" id="list_recent_videos" value="{if trim((string)$row.list_recent_videos) !== ''}{(int)$row.list_recent_videos}{/if}" type="number" min="0"/>
+                                                <input class="form-control" name="list_recent_videos" id="list_recent_videos" value="{(int)$row.list_recent_videos}" type="number" min="0"/>
                                             </div>
                                         </div>
                                         <hr/>
@@ -723,7 +723,7 @@
                                                 <label class="nowrap" for="list_home_collection_videos" title="{lang code='option_list_home_collection_videos'}">{lang code='option_list_home_collection_videos'}</label>
                                             </div>
                                             <div class="col-md-4">
-                                                <input class="form-control" name="list_home_collection_videos" id="list_home_collection_videos" value="{if trim((string)$row.list_home_collection_videos) !== ''}{(int)$row.list_home_collection_videos}{/if}" type="number" min="0"/>
+                                                <input class="form-control" name="list_home_collection_videos" id="list_home_collection_videos" value="{(int)$row.list_home_collection_videos}" type="number" min="0"/>
                                             </div>
                                         </div>
                                         <hr/>
@@ -845,7 +845,7 @@
                                                 <label class="nowrap" for="limit_photo_related" title="{lang('limit_photo_related')}">{lang('limit_photo_related')}</label>
                                             </div>
                                             <div class="col-md-4">
-                                                <input class="form-control" name="limit_photo_related" id="limit_photo_related" type="number" value="{if trim((string)$row.limit_photo_related) !== ''}{(int)$row.limit_photo_related}{/if}"/>
+                                                <input class="form-control" name="limit_photo_related" id="limit_photo_related" type="number" value="{(int)$row.limit_photo_related}"/>
                                             </div>
                                         </div>
                                         <hr/>
@@ -1122,7 +1122,7 @@
                                     <label class="nowrap" for="min_username" title="Minimum Username Length">Minimum Username Length</label>
                                 </div>
                                 <div class="col-md-6">
-                                    <input class="form-control" name="min_username" id="min_username" type="number" value="{if trim((string)$row.min_username) !== ''}{(int)$row.min_username}{/if}"/>
+                                    <input class="form-control" name="min_username" id="min_username" type="number" value="{(int)$row.min_username}"/>
                                 </div>
                             </div>
                             <hr/>
@@ -1146,7 +1146,7 @@
                                     <label class="nowrap" for="min_age_reg" title="Minimum age for registration"><span class="fa fa-question-circle tips" title="Leave blank to disable this option"></span> Minimum age for registration</label>
                                 </div>
                                 <div class="col-md-6">
-                                    <input class="form-control" name="min_age_reg" id="min_age_reg" type="number" value="{if trim((string)$row.min_age_reg) !== ''}{(int)$row.min_age_reg}{/if}" size="6" maxlength="3"/>
+                                    <input class="form-control" name="min_age_reg" id="min_age_reg" type="number" value="{(int)$row.min_age_reg}" size="6" maxlength="3"/>
                                 </div>
                             </div>
                             <hr/>
@@ -1249,7 +1249,7 @@
                                     <label class="nowrap" for="max_username" title="Maximum Username Length">Maximum Username Length</label>
                                 </div>
                                 <div class="col-md-6">
-                                    <input class="form-control" name="max_username" id="max_username" type="number" value="{if trim((string)$row.max_username) !== ''}{(int)$row.max_username}{/if}"/>
+                                    <input class="form-control" name="max_username" id="max_username" type="number" value="{(int)$row.max_username}"/>
                                 </div>
                             </div>
                             <hr/>
@@ -1304,7 +1304,7 @@
                                     <label class="nowrap" for="max_profile_pic_width" title="Max profile pic width"><span class="fa fa-question-circle tips" title="In Pixels"></span> Max profile pic width</label>
                                 </div>
                                 <div class="col-md-6">
-                                    <input class="form-control" name="max_profile_pic_width" id="max_profile_pic_width" type="number" value="{if trim((string)$row.max_profile_pic_width) !== ''}{(int)$row.max_profile_pic_width}{/if}"/>
+                                    <input class="form-control" name="max_profile_pic_width" id="max_profile_pic_width" type="number" value="{(int)$row.max_profile_pic_width}"/>
                                 </div>
                             </div>
                             <hr/>
@@ -1314,7 +1314,7 @@
                                     <label class="nowrap" for="max_bg_width" title="Max Background width"><span class="fa fa-question-circle tips" title="In Pixels"></span> Max Background width</label>
                                 </div>
                                 <div class="col-md-6">
-                                    <input class="form-control" name="max_bg_width" id="max_bg_width" type="number" value="{if trim((string)$row.max_bg_width) !== ''}{(int)$row.max_bg_width}{/if}"/>
+                                    <input class="form-control" name="max_bg_width" id="max_bg_width" type="number" value="{(int)$row.max_bg_width}"/>
                                 </div>
                             </div>
                             <hr/>
@@ -1699,13 +1699,13 @@
                                     <label class="nowrap" for="vid_cat_width" title="Category Width">Category Width</label>
                                 </div>
                                 <div class="col-md-2 row-size">
-                                    <input class="form-control" name="vid_cat_width" id="vid_cat_width" type="number" value="{if trim((string)$row.vid_cat_width) !== ''}{(int)$row.vid_cat_width}{/if}"/>
+                                    <input class="form-control" name="vid_cat_width" id="vid_cat_width" type="number" value="{(int)$row.vid_cat_width}"/>
                                 </div>
                                 <div class="col-md-4">
                                     <label class="nowrap" for="vid_cat_height" title="Category height">Category height</label>
                                 </div>
                                 <div class="col-md-2 row-size">
-                                    <input class="form-control" name="vid_cat_height" id="vid_cat_height" type="number" value="{if trim((string)$row.vid_cat_height) !== ''}{(int)$row.vid_cat_height}{/if}"/>
+                                    <input class="form-control" name="vid_cat_height" id="vid_cat_height" type="number" value="{(int)$row.vid_cat_height}"/>
                                 </div>
                             </div>
                             <hr/>
@@ -1820,7 +1820,7 @@
                                     <label class="nowrap" for="video_categories" title="{lang('max_video_categories')}"><span class="fa fa-question-circle tips" title="{lang code='max_video_categories_hint'}"></span> {lang('max_video_categories')}</label>
                                 </div>
                                 <div class="col-md-2 row-size">
-                                    <input class="form-control" name="video_categories" id="video_categories" type="number" value="{if trim((string)$row.video_categories) !== ''}{(int)$row.video_categories}{/if}"/>
+                                    <input class="form-control" name="video_categories" id="video_categories" type="number" value="{(int)$row.video_categories}"/>
                                 </div>
                             </div>
                             <hr/>
@@ -1900,13 +1900,13 @@
                                     <label class="nowrap" for="min_video_title" title="Min">Min</label>
                                 </div>
                                 <div class="col-md-2">
-                                    <input class="form-control" name="min_video_title" id="min_video_title" type="number" value="{if trim((string)$row.min_video_title) !== ''}{(int)$row.min_video_title}{/if}"/>
+                                    <input class="form-control" name="min_video_title" id="min_video_title" type="number" value="{(int)$row.min_video_title}"/>
                                 </div>
                                 <div class="col-md-2">
                                     <label class="nowrap" for="max_video_title" title="Max">Max</label>
                                 </div>
                                 <div class="col-md-2">
-                                    <input class="form-control" name="max_video_title" id="max_video_title" type="number" value="{if trim((string)$row.max_video_title) !== ''}{(int)$row.max_video_title}{/if}"/>
+                                    <input class="form-control" name="max_video_title" id="max_video_title" type="number" value="{(int)$row.max_video_title}"/>
                                 </div>
                             </div>
                             <hr/>
@@ -1918,13 +1918,13 @@
                                     <label class="nowrap" for="min_video_desc" title="Min">Min</label>
                                 </div>
                                 <div class="col-md-2">
-                                    <input class="form-control" name="min_video_desc" id="min_video_desc" type="number" value="{if trim((string)$row.min_video_desc) !== ''}{(int)$row.min_video_desc}{/if}"/>
+                                    <input class="form-control" name="min_video_desc" id="min_video_desc" type="number" value="{(int)$row.min_video_desc}"/>
                                 </div>
                                 <div class="col-md-2">
                                     <label class="nowrap" for="max_video_desc" title="Max">Max</label>
                                 </div>
                                 <div class="col-md-2">
-                                    <input class="form-control" name="max_video_desc" id="max_video_desc" type="number" value="{if trim((string)$row.max_video_desc) !== ''}{(int)$row.max_video_desc}{/if}"/>
+                                    <input class="form-control" name="max_video_desc" id="max_video_desc" type="number" value="{(int)$row.max_video_desc}"/>
                                 </div>
                             </div>
                             <hr/>
@@ -2144,9 +2144,9 @@
                                     <label class="nowrap" for="tmdb_mature_content_age" title="{lang code='tmdb_mature_content_age'}">{lang code='tmdb_mature_content_age'}</label>
                                 </div>
                                 <div class="col-md-2 row-size">
-                                    <input value="{if trim((string)$row.tmdb_mature_content_age) !== ''}{(int)$row.tmdb_mature_content_age}{/if}" type="number" name="tmdb_mature_content_age" id="tmdb_mature_content_age" {if $row.enable_tmdb_mature_content!='yes'}disabled{/if} class="form-control"/>
+                                    <input value="{(int)$row.tmdb_mature_content_age}" type="number" name="tmdb_mature_content_age" id="tmdb_mature_content_age" {if $row.enable_tmdb_mature_content!='yes'}disabled{/if} class="form-control"/>
                                     <span class="lbl"></span>
-                                    <input value="{if trim((string)$row.tmdb_mature_content_age) !== ''}{(int)$row.tmdb_mature_content_age}{/if}" name="tmdb_mature_content_age" id="tmdb_mature_content_age_hidden" type="hidden" {if $row.enable_tmdb_mature_content=='yes'}disabled="disabled"{/if}/>
+                                    <input value="{(int)$row.tmdb_mature_content_age}" name="tmdb_mature_content_age" id="tmdb_mature_content_age_hidden" type="hidden" {if $row.enable_tmdb_mature_content=='yes'}disabled="disabled"{/if}/>
                                 </div>
                             </div>
                             <hr/>
@@ -2192,7 +2192,7 @@
                                     <label class="nowrap" for="max_photo_categories" title="{lang('option_max_photo_categories')}"><span class="fa fa-question-circle tips" title="{lang code='option_max_photo_categories_hint'}"></span> {lang('option_max_photo_categories')}</label>
                                 </div>
                                 <div class="col-md-4 row-size">
-                                    <input class="form-control" name="max_photo_categories" id="max_photo_categories" type="number" value="{if trim((string)$row.max_photo_categories) !== ''}{(int)$row.max_photo_categories}{/if}"/>
+                                    <input class="form-control" name="max_photo_categories" id="max_photo_categories" type="number" value="{(int)$row.max_photo_categories}"/>
                                 </div>
                             </div>
                             <hr/>
@@ -2237,7 +2237,7 @@
                                     <label class="nowrap" for="max_collection_categories" title="{lang('option_max_collection_categories')}"><span class="fa fa-question-circle tips" title="{lang code='option_max_collection_categories_hint'}"></span> {lang('option_max_collection_categories')}</label>
                                 </div>
                                 <div class="col-md-4 row-size">
-                                    <input class="form-control" name="max_collection_categories" type="number" id="max_collection_categories" value="{if trim((string)$row.max_collection_categories) !== ''}{(int)$row.max_collection_categories}{/if}"/>
+                                    <input class="form-control" name="max_collection_categories" type="number" id="max_collection_categories" value="{(int)$row.max_collection_categories}"/>
                                 </div>
                             </div>
                             <hr/>
@@ -2352,7 +2352,7 @@
                                     <label class="nowrap" for="max_comment_chr" title="Maximum Comment Characters">Maximum Comment Characters</label>
                                 </div>
                                 <div class="col-md-6 row-size">
-                                    <input class="form-control" name="max_comment_chr" id="max_comment_chr" type="number" value="{if trim((string)$row.max_comment_chr) !== ''}{(int)$row.max_comment_chr}{/if}"/>
+                                    <input class="form-control" name="max_comment_chr" id="max_comment_chr" type="number" value="{(int)$row.max_comment_chr}"/>
                                 </div>
                             </div>
                             <hr/>
@@ -2511,7 +2511,7 @@
                                     <label class="nowrap" for="videos_list_per_page" title="Per page">Per page</label>
                                 </div>
                                 <div class="col-md-4 row-size">
-                                    <input class="form-control" name="videos_list_per_page" id="videos_list_per_page" type="number" value="{if trim((string)$row.videos_list_per_page) !== ''}{(int)$row.videos_list_per_page}{/if}"/>
+                                    <input class="form-control" name="videos_list_per_page" id="videos_list_per_page" type="number" value="{(int)$row.videos_list_per_page}"/>
                                 </div>
                             </div>
                             <hr/>
@@ -2520,7 +2520,7 @@
                                     <label class="nowrap" for="videos_items_ufav_page" title="Favorites">Favorites</label>
                                 </div>
                                 <div class="col-md-4 row-size">
-                                    <input class="form-control" name="videos_items_ufav_page" id="videos_items_ufav_page" type="number" value="{if trim((string)$row.videos_items_ufav_page) !== ''}{(int)$row.videos_items_ufav_page}{/if}"/>
+                                    <input class="form-control" name="videos_items_ufav_page" id="videos_items_ufav_page" type="number" value="{(int)$row.videos_items_ufav_page}"/>
                                 </div>
                             </div>
                             <hr/>
@@ -2529,7 +2529,7 @@
                                     <label class="nowrap" for="videos_items_hme_page" title="Home Tabs">Home Tabs</label>
                                 </div>
                                 <div class="col-md-4 row-size">
-                                    <input class="form-control" name="videos_items_hme_page" id="videos_items_hme_page" type="number" value="{if trim((string)$row.videos_items_hme_page) !== ''}{(int)$row.videos_items_hme_page}{/if}"/>
+                                    <input class="form-control" name="videos_items_hme_page" id="videos_items_hme_page" type="number" value="{(int)$row.videos_items_hme_page}"/>
                                 </div>
                             </div>
                             <hr/>
@@ -2538,7 +2538,7 @@
                                     <label class="nowrap" for="videos_item_channel_page" title="Channel page">Channel page</label>
                                 </div>
                                 <div class="col-md-4 row-size">
-                                    <input class="form-control" name="videos_item_channel_page" id="videos_item_channel_page" type="number" value="{if trim((string)$row.videos_item_channel_page) !== ''}{(int)$row.videos_item_channel_page}{/if}"/>
+                                    <input class="form-control" name="videos_item_channel_page" id="videos_item_channel_page" type="number" value="{(int)$row.videos_item_channel_page}"/>
                                 </div>
                             </div>
                             <hr/>
@@ -2547,7 +2547,7 @@
                                     <label class="nowrap" for="videos_items_search_page" title="Search Result">Search Result</label>
                                 </div>
                                 <div class="col-md-4 row-size">
-                                    <input class="form-control" name="videos_items_search_page" id="videos_items_search_page" type="number" value="{if trim((string)$row.videos_items_search_page) !== ''}{(int)$row.videos_items_search_page}{/if}"/>
+                                    <input class="form-control" name="videos_items_search_page" id="videos_items_search_page" type="number" value="{(int)$row.videos_items_search_page}"/>
                                 </div>
                             </div>
                             <hr/>
@@ -2556,7 +2556,7 @@
                                     <label class="nowrap" for="videos_items_uvid_page" title="User Videos">User Videos</label>
                                 </div>
                                 <div class="col-md-4 row-size">
-                                    <input class="form-control" name="videos_items_uvid_page" id="videos_items_uvid_page" type="number" value="{if trim((string)$row.videos_items_uvid_page) !== ''}{(int)$row.videos_items_uvid_page}{/if}"/>
+                                    <input class="form-control" name="videos_items_uvid_page" id="videos_items_uvid_page" type="number" value="{(int)$row.videos_items_uvid_page}"/>
                                 </div>
                             </div>
                             <hr/>
@@ -2565,7 +2565,7 @@
                                     <label class="nowrap" for="tmdb_search" title="User Videos">{lang code='tmdb_search'}</label>
                                 </div>
                                 <div class="col-md-4 row-size">
-                                    <input class="form-control" name="tmdb_search" id="tmdb_search" type="number" value="{if trim((string)$row.tmdb_search) !== ''}{(int)$row.tmdb_search}{/if}"/>
+                                    <input class="form-control" name="tmdb_search" id="tmdb_search" type="number" value="{(int)$row.tmdb_search}"/>
                                 </div>
                             </div>
                             <hr/>
@@ -2574,7 +2574,7 @@
                                     <label class="nowrap" for="video_list_view_video_history" title="User Videos">{lang code='video_list_view_video_history'}</label>
                                 </div>
                                 <div class="col-md-4 row-size">
-                                    <input class="form-control" name="video_list_view_video_history" id="video_list_view_video_history" type="number" value="{if trim((string)$row.video_list_view_video_history) !== ''}{(int)$row.video_list_view_video_history}{/if}"/>
+                                    <input class="form-control" name="video_list_view_video_history" id="video_list_view_video_history" type="number" value="{(int)$row.video_list_view_video_history}"/>
                                 </div>
                             </div>
 
@@ -2591,7 +2591,7 @@
                                     <label class="nowrap" for="photo_main_list" title="Main Limit"><span class="fa fa-question-circle tips" title="We use this limit in most of place where photo is displayed like, My Account, Manage Photos, Manage Favotires Photos etc"></span> Main Limit</label>
                                 </div>
                                 <div class="col-md-4 row-size">
-                                    <input class="form-control" name="photo_main_list" id="photo_main_list" type="number" value="{if trim((string)$row.photo_main_list) !== ''}{(int)$row.photo_main_list}{/if}"/>
+                                    <input class="form-control" name="photo_main_list" id="photo_main_list" type="number" value="{(int)$row.photo_main_list}"/>
                                 </div>
                             </div>
                             <hr/>
@@ -2600,7 +2600,7 @@
                                     <label class="nowrap" for="photo_home_tabs" title="Home Tabs"><span class="fa fa-question-circle tips" title="Number of photos to display on Homepage"></span> Home Tabs</label>
                                 </div>
                                 <div class="col-md-4 row-size">
-                                    <input class="form-control" name="photo_home_tabs" id="photo_home_tabs" type="number" value="{if trim((string)$row.photo_home_tabs) !== ''}{(int)$row.photo_home_tabs}{/if}"/>
+                                    <input class="form-control" name="photo_home_tabs" id="photo_home_tabs" type="number" value="{(int)$row.photo_home_tabs}"/>
                                 </div>
                             </div>
                             <hr/>
@@ -2609,7 +2609,7 @@
                                     <label class="nowrap" for="photo_search_result" title="Search Result"><span class="fa fa-question-circle tips" title="Number of photos to display on Search page"></span> Search Result</label>
                                 </div>
                                 <div class="col-md-4 row-size">
-                                    <input class="form-control" name="photo_search_result" id="photo_search_result" type="number" value="{if trim((string)$row.photo_search_result) !== ''}{(int)$row.photo_search_result}{/if}"/>
+                                    <input class="form-control" name="photo_search_result" id="photo_search_result" type="number" value="{(int)$row.photo_search_result}"/>
                                 </div>
                             </div>
                             <hr/>
@@ -2618,7 +2618,7 @@
                                     <label class="nowrap" for="photo_channel_page" title="Channel Page"><span class="fa fa-question-circle tips" title="Number of photos to display on User's page"></span> Channel Page</label>
                                 </div>
                                 <div class="col-md-4 row-size">
-                                    <input class="form-control" name="photo_channel_page" id="photo_channel_page" type="number" value="{if trim((string)$row.photo_channel_page) !== ''}{(int)$row.photo_channel_page}{/if}"/>
+                                    <input class="form-control" name="photo_channel_page" id="photo_channel_page" type="number" value="{(int)$row.photo_channel_page}"/>
                                 </div>
                             </div>
                             <hr/>
@@ -2627,7 +2627,7 @@
                                     <label class="nowrap" for="photo_user_photos" title="User Photos"><span class="fa fa-question-circle tips" title="Number of photos to display on User's photos page"></span> User Photos</label>
                                 </div>
                                 <div class="col-md-4 row-size">
-                                    <input class="form-control" name="photo_user_photos" id="photo_user_photos" type="number" value="{if trim((string)$row.photo_user_photos) !== ''}{(int)$row.photo_user_photos}{/if}"/>
+                                    <input class="form-control" name="photo_user_photos" id="photo_user_photos" type="number" value="{(int)$row.photo_user_photos}"/>
                                 </div>
                             </div>
                             <hr/>
@@ -2636,7 +2636,7 @@
                                     <label class="nowrap" for="photo_user_favorites" title="User favorites"><span class="fa fa-question-circle tips" title="Number of photos to display on User's favorites page"></span> User favorites</label>
                                 </div>
                                 <div class="col-md-4 row-size">
-                                    <input class="form-control" name="photo_user_favorites" id="photo_user_favorites" type="number" value="{if trim((string)$row.photo_user_favorites) !== ''}{(int)$row.photo_user_favorites}{/if}"/>
+                                    <input class="form-control" name="photo_user_favorites" id="photo_user_favorites" type="number" value="{(int)$row.photo_user_favorites}"/>
                                 </div>
                             </div>
                             <hr/>
@@ -2645,7 +2645,7 @@
                                     <label class="nowrap" for="photo_other_limit" title="Other Limit"><span class="fa fa-question-circle tips" title="Use anywhere you want"></span> Other Limit</label>
                                 </div>
                                 <div class="col-md-4 row-size">
-                                    <input class="form-control" name="photo_other_limit" id="photo_other_limit" type="number" value="{if trim((string)$row.photo_other_limit) !== ''}{(int)$row.photo_other_limit}{/if}"/>
+                                    <input class="form-control" name="photo_other_limit" id="photo_other_limit" type="number" value="{(int)$row.photo_other_limit}"/>
                                 </div>
                             </div>
                             <hr/>
@@ -2663,7 +2663,7 @@
                                     <label class="nowrap" for="collection_per_page" title="Collections Page"><span class="fa fa-question-circle tips" title="Number of collections to display on Collections page"></span> Collection Page</label>
                                 </div>
                                 <div class="col-md-4 row-size">
-                                    <input class="form-control" name="collection_per_page" id="collection_per_page" type="number" value="{if trim((string)$row.collection_per_page) !== ''}{(int)$row.collection_per_page}{/if}"/>
+                                    <input class="form-control" name="collection_per_page" id="collection_per_page" type="number" value="{(int)$row.collection_per_page}"/>
                                 </div>
                             </div>
                             <hr/>
@@ -2672,7 +2672,7 @@
                                     <label class="nowrap" for="collection_items_page" title="Items Page"><span class="fa fa-question-circle tips" title="Number of items to display in a Collection"></span> Items Page</label>
                                 </div>
                                 <div class="col-md-4 row-size">
-                                    <input class="form-control" name="collection_items_page" id="collection_items_page" type="number" value="{if trim((string)$row.collection_items_page) !== ''}{(int)$row.collection_items_page}{/if}"/>
+                                    <input class="form-control" name="collection_items_page" id="collection_items_page" type="number" value="{(int)$row.collection_items_page}"/>
                                 </div>
                             </div>
                             <hr/>
@@ -2681,7 +2681,7 @@
                                     <label class="nowrap" for="collection_search_result" title="Search Result"><span class="fa fa-question-circle tips" title="Number of collections to display in search results"></span> Search Result</label>
                                 </div>
                                 <div class="col-md-4 row-size">
-                                    <input class="form-control" name="collection_search_result" id="collection_search_result" type="number" value="{if trim((string)$row.collection_search_result) !== ''}{(int)$row.collection_search_result}{/if}"/>
+                                    <input class="form-control" name="collection_search_result" id="collection_search_result" type="number" value="{(int)$row.collection_search_result}"/>
                                 </div>
                             </div>
                             <hr/>
@@ -2690,7 +2690,7 @@
                                     <label class="nowrap" for="collection_home_top_collections" title="Homepage Top Collections"><span class="fa fa-question-circle tips" title="Number of collections to display on homepage top collections"></span> Homepage Top Collections</label>
                                 </div>
                                 <div class="col-md-4 row-size">
-                                    <input class="form-control" name="collection_home_top_collections" id="collection_home_top_collections" type="number" value="{if trim((string)$row.collection_home_top_collections) !== ''}{(int)$row.collection_home_top_collections}{/if}"/>
+                                    <input class="form-control" name="collection_home_top_collections" id="collection_home_top_collections" type="number" value="{(int)$row.collection_home_top_collections}"/>
                                 </div>
                             </div>
                             <hr/>
@@ -2699,7 +2699,7 @@
                                     <label class="nowrap" for="collection_collection_top_collections" title="Collections page Top Collections"><span class="fa fa-question-circle tips" title="Number of collections to display on collection page top collections"></span> Collections page Top Collections</label>
                                 </div>
                                 <div class="col-md-4 row-size">
-                                    <input class="form-control" name="collection_collection_top_collections" id="collection_collection_top_collections" type="number" value="{if trim((string)$row.collection_collection_top_collections) !== ''}{(int)$row.collection_collection_top_collections}{/if}"/>
+                                    <input class="form-control" name="collection_collection_top_collections" id="collection_collection_top_collections" type="number" value="{(int)$row.collection_collection_top_collections}"/>
                                 </div>
                             </div>
                             <hr/>
@@ -2708,7 +2708,7 @@
                                     <label class="nowrap" for="collection_photos_top_collections" title="Photos page Top Collections"><span class="fa fa-question-circle tips" title="Number of collections to display on photos page top collections"></span> Photos page Top Collections</label>
                                 </div>
                                 <div class="col-md-4 row-size">
-                                    <input class="form-control" name="collection_photos_top_collections" id="collection_photos_top_collections" type="number" value="{if trim((string)$row.collection_photos_top_collections) !== ''}{(int)$row.collection_photos_top_collections}{/if}"/>
+                                    <input class="form-control" name="collection_photos_top_collections" id="collection_photos_top_collections" type="number" value="{(int)$row.collection_photos_top_collections}"/>
                                 </div>
                             </div>
                             <hr/>
@@ -2726,7 +2726,7 @@
                                     <label class="nowrap" for="channels_list_per_page" title="Per page">Per page</label>
                                 </div>
                                 <div class="col-md-4 row-size">
-                                    <input class="form-control" name="channels_list_per_page" id="channels_list_per_page" type="number" value="{if trim((string)$row.channels_list_per_page) !== ''}{(int)$row.channels_list_per_page}{/if}"/>
+                                    <input class="form-control" name="channels_list_per_page" id="channels_list_per_page" type="number" value="{(int)$row.channels_list_per_page}"/>
                                 </div>
                             </div>
                             <hr/>
@@ -2735,7 +2735,7 @@
                                     <label class="nowrap" for="users_items_subscriptions" title="Subscriptions in channel view">Subscriptions in channel view</label>
                                 </div>
                                 <div class="col-md-4 row-size">
-                                    <input class="form-control" name="users_items_subscriptions" id="users_items_subscriptions" type="number" value="{if trim((string)$row.users_items_subscriptions) !== ''}{(int)$row.users_items_subscriptions}{/if}"/>
+                                    <input class="form-control" name="users_items_subscriptions" id="users_items_subscriptions" type="number" value="{(int)$row.users_items_subscriptions}"/>
                                 </div>
                             </div>
                             <hr/>
@@ -2744,7 +2744,7 @@
                                     <label class="nowrap" for="users_items_search_page" title="Search Page">Search Page</label>
                                 </div>
                                 <div class="col-md-4 row-size">
-                                    <input class="form-control" name="users_items_search_page" id="users_items_search_page" type="number" value="{if trim((string)$row.users_items_search_page) !== ''}{(int)$row.users_items_search_page}{/if}"/>
+                                    <input class="form-control" name="users_items_search_page" id="users_items_search_page" type="number" value="{(int)$row.users_items_search_page}"/>
                                 </div>
                             </div>
                             <hr/>
@@ -2753,7 +2753,7 @@
                                     <label class="nowrap" for="users_items_contacts_channel" title="Users contacts in channel view">Users contacts in channel view</label>
                                 </div>
                                 <div class="col-md-4 row-size">
-                                    <input class="form-control" name="users_items_contacts_channel" id="users_items_contacts_channel" type="number" value="{if trim((string)$row.users_items_contacts_channel) !== ''}{(int)$row.users_items_contacts_channel}{/if}"/>
+                                    <input class="form-control" name="users_items_contacts_channel" id="users_items_contacts_channel" type="number" value="{(int)$row.users_items_contacts_channel}"/>
                                 </div>
                             </div>
                             <hr/>
@@ -2774,7 +2774,7 @@
                                     <label class="nowrap" for="comments_per_page" title="Comments per page">Comments per page</label>
                                 </div>
                                 <div class="col-md-4 row-size no_padding">
-                                    <input class="form-control" name="comments_per_page" id="comments_per_page" type="number" value="{if trim((string)$row.comments_per_page) !== ''}{(int)$row.comments_per_page}{/if}" size="5"/>
+                                    <input class="form-control" name="comments_per_page" id="comments_per_page" type="number" value="{(int)$row.comments_per_page}" size="5"/>
                                 </div>
                             </div>
                         </div>
