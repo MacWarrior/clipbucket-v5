@@ -1,6 +1,6 @@
 {
   "version":"5.5.3",
-  "revision":"236",
+  "revision":"237",
   "status":"stable",
   "detail":[
     {
@@ -219,6 +219,7 @@
       "description": [
         "Translate hardcoded texts"
         ,"Fix possible not-updated translations"
+        ,"Fix missing translation"
       ]
     },
     {
