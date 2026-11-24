@@ -1,6 +1,6 @@
 {
   "version":"5.5.3",
-  "revision":"235",
+  "revision":"236",
   "status":"stable",
   "detail":[
     {
@@ -34,6 +34,7 @@
         ,"Update Manage videos & manage pages actions display"
         ,"Update mass upload cache usage"
         ,"Update page management UX/UI"
+        ,"Update secure SMTP settings"
         ,"Add links to flagged tags"
         ,"Hide poster & backdrop tabs when empty on video edition page"
         ,"Only show template editor menu while in dev mode"
