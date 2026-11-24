@@ -1,0 +1,22 @@
+<div class="row">
+    <div class="col-md-12">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">Google Analytics 4</h3>
+            </div>
+            <div class="panel-body">
+                <form method="post" action="">
+                    <div class="form-group">
+                        <label for="measurement_id">Measurement ID</label>
+                        <input type="text" class="form-control" id="measurement_id" name="measurement_id" value="{$ga4_measurement_id|escape:'html'}" placeholder="G-XXXXXXXXXX" maxlength="32">
+                        <p class="help-block">Example: G-XXXXXXXXXX</p>
+                    </div>
+                    <div class="checkbox">
+                        <label><input type="checkbox" name="enabled" value="yes" {if $ga4_enabled == 'yes'}checked{/if}> Enable Google Analytics 4</label>
+                    </div>
+                    <button type="submit" name="update" value="1" class="btn btn-primary">Save Settings</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
