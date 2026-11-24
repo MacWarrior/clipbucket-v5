@@ -16,7 +16,7 @@ if(is_numeric($vkey)){
 
 $vdo = Video::getInstance()->getOne([$search => $vkey]);
 if (!empty($vdo) && (($vdo['broadcast'] == 'public' || $vdo['active'] == 'yes') && !User::getInstance()->hasPermission('view_video') )) {
-    SessionMessageHandler::add_message('video_not_exist_or_cant_access', 'w', cblink(['name' => 'signin']));
+    SessionMessageHandler::add_message(lang('video_not_exist_or_cant_access'), 'w', cblink(['name' => 'signin']));
 }
 if( !video_playable($vdo) ) {
     addErrorHandlerMessagesToSessionMessageHandler('all', User::getInstance()->getDefaultHomepageFromUserLevel());
