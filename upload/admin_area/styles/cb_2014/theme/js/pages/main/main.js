@@ -361,6 +361,7 @@ function initSettingsSearch() {
         return;
     }
     const input = document.getElementById('settings-search-input');
+    const showDescriptions = document.getElementById('settings-show-descriptions');
     const previous = document.getElementById('settings-search-previous');
     const reset = document.getElementById('settings-search-reset');
     const next = document.getElementById('settings-search-next');
@@ -427,6 +428,29 @@ function initSettingsSearch() {
         });
         return entry;
     }).filter(entry => entry.panes.length);
+
+    const descriptionTemplate = document.getElementById('settings-config-description-template');
+    entries.forEach(entry => {
+        const label = entry.labels[0];
+        if (!label || !entry.description) return;
+        const description = descriptionTemplate.content.firstElementChild.cloneNode(true);
+        description.textContent = entry.description;
+        label.after(description);
+
+        const labelColumn = label.parentElement;
+        const switchColumn = labelColumn.nextElementSibling;
+        if (labelColumn.parentElement.classList.contains('row') && entry.controls.some(control =>
+            control.type === 'checkbox' && control.parentElement === switchColumn)) {
+            labelColumn.classList.add('settings-switch-label');
+            switchColumn.classList.add('settings-switch-control');
+        }
+    });
+
+    function updateDescriptionVisibility() {
+        form.classList.toggle('settings-descriptions-visible', showDescriptions.checked);
+    }
+    showDescriptions.addEventListener('change', updateDescriptionVisibility);
+    updateDescriptionVisibility();
 
     // Sort by the navigation's visual order, including nested interface/ratio tabs.
     entries.sort((a, b) => {
@@ -622,7 +646,10 @@ function initSettingsSearch() {
         if (normalize(input.value)) scheduleSearch();
     });
     input.addEventListener('keydown', event => {
-        if (event.key === 'Enter') event.preventDefault();
+        if (event.key === 'Enter' && !event.isComposing) {
+            event.preventDefault();
+            next.click();
+        }
     });
 
     function move(direction) {

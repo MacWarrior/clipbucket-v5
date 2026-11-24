@@ -1,7 +1,4 @@
-<div class="heading settings-heading">
-    <h2>{lang('basic_settings')}</h2>
-    {include file="$style_dir/blocks/settings_search.html"}
-</div>
+{include file="$style_dir/blocks/settings_search.html" settings_title='basic_settings'}
 
 <form name="form1" method="post" id="main_form" enctype="multipart/form-data">
     <div class="row">
@@ -1106,7 +1103,7 @@
                                             <div class="col-md-2 row-size">
                                                 <input value="yes" name="enable_all_categ_for_channel" id="enable_all_categ_for_channel" {if $row.enable_all_categ_for_channel=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5" {if config('channelsSection')!='yes' || config('enable_channel_categories_as_submenu') != 'yes'}disabled="disabled"{/if}/>
                                                 <span class="lbl"></span>
-                                                <input type="hidden" name="enable_all_categ_for_channel" id="enable_all_categ_for_channel" value="{$row.enable_all_categ_for_channel}" {if config('channelsSection')=='yes' && config('enable_photo_categories_as_submenu') !='yes'}disabled="disabled"{/if}/>
+                                                <input type="hidden" name="enable_all_categ_for_channel" id="enable_all_categ_for_channel_hidden" value="{$row.enable_all_categ_for_channel}" {if config('channelsSection')=='yes' && config('enable_channel_categories_as_submenu') == 'yes'}disabled="disabled"{/if}/>
                                             </div>
                                         </div>
                                     </div>
@@ -2516,15 +2513,6 @@
                             <hr/>
                             <div class="row">
                                 <div class="col-md-8">
-                                    <label class="nowrap" for="videos_items_ufav_page" title="{display_clean(lang('settings_title_videos_items_ufav_page'))}">{display_clean(lang('settings_title_videos_items_ufav_page'))}</label>
-                                </div>
-                                <div class="col-md-4 row-size">
-                                    <input class="form-control" name="videos_items_ufav_page" id="videos_items_ufav_page" type="number" value="{(int)$row.videos_items_ufav_page}"/>
-                                </div>
-                            </div>
-                            <hr/>
-                            <div class="row">
-                                <div class="col-md-8">
                                     <label class="nowrap" for="videos_items_hme_page" title="{display_clean(lang('settings_title_videos_items_hme_page'))}">{display_clean(lang('settings_title_videos_items_hme_page'))}</label>
                                 </div>
                                 <div class="col-md-4 row-size">
@@ -2596,15 +2584,6 @@
                             <hr/>
                             <div class="row">
                                 <div class="col-md-8">
-                                    <label class="nowrap" for="photo_home_tabs" title="{display_clean(lang('settings_title_photo_home_tabs'))}"><span class="fa fa-question-circle tips" title="Number of photos to display on Homepage"></span> {display_clean(lang('settings_title_photo_home_tabs'))}</label>
-                                </div>
-                                <div class="col-md-4 row-size">
-                                    <input class="form-control" name="photo_home_tabs" id="photo_home_tabs" type="number" value="{(int)$row.photo_home_tabs}"/>
-                                </div>
-                            </div>
-                            <hr/>
-                            <div class="row">
-                                <div class="col-md-8">
                                     <label class="nowrap" for="photo_search_result" title="{display_clean(lang('settings_title_photo_search_result'))}"><span class="fa fa-question-circle tips" title="Number of photos to display on Search page"></span> {display_clean(lang('settings_title_photo_search_result'))}</label>
                                 </div>
                                 <div class="col-md-4 row-size">
@@ -2623,28 +2602,10 @@
                             <hr/>
                             <div class="row">
                                 <div class="col-md-8">
-                                    <label class="nowrap" for="photo_user_photos" title="{display_clean(lang('settings_title_photo_user_photos'))}"><span class="fa fa-question-circle tips" title="Number of photos to display on User's photos page"></span> {display_clean(lang('settings_title_photo_user_photos'))}</label>
-                                </div>
-                                <div class="col-md-4 row-size">
-                                    <input class="form-control" name="photo_user_photos" id="photo_user_photos" type="number" value="{(int)$row.photo_user_photos}"/>
-                                </div>
-                            </div>
-                            <hr/>
-                            <div class="row">
-                                <div class="col-md-8">
                                     <label class="nowrap" for="photo_user_favorites" title="{display_clean(lang('settings_title_photo_user_favorites'))}"><span class="fa fa-question-circle tips" title="Number of photos to display on User's favorites page"></span> {display_clean(lang('settings_title_photo_user_favorites'))}</label>
                                 </div>
                                 <div class="col-md-4 row-size">
                                     <input class="form-control" name="photo_user_favorites" id="photo_user_favorites" type="number" value="{(int)$row.photo_user_favorites}"/>
-                                </div>
-                            </div>
-                            <hr/>
-                            <div class="row">
-                                <div class="col-md-8">
-                                    <label class="nowrap" for="photo_other_limit" title="{display_clean(lang('settings_title_photo_other_limit'))}"><span class="fa fa-question-circle tips" title="Use anywhere you want"></span> {display_clean(lang('settings_title_photo_other_limit'))}</label>
-                                </div>
-                                <div class="col-md-4 row-size">
-                                    <input class="form-control" name="photo_other_limit" id="photo_other_limit" type="number" value="{(int)$row.photo_other_limit}"/>
                                 </div>
                             </div>
                             <hr/>
@@ -2731,15 +2692,6 @@
                             <hr/>
                             <div class="row">
                                 <div class="col-md-8">
-                                    <label class="nowrap" for="users_items_subscriptions" title="{display_clean(lang('settings_title_users_items_subscriptions'))}">{display_clean(lang('settings_title_users_items_subscriptions'))}</label>
-                                </div>
-                                <div class="col-md-4 row-size">
-                                    <input class="form-control" name="users_items_subscriptions" id="users_items_subscriptions" type="number" value="{(int)$row.users_items_subscriptions}"/>
-                                </div>
-                            </div>
-                            <hr/>
-                            <div class="row">
-                                <div class="col-md-8">
                                     <label class="nowrap" for="users_items_search_page" title="{display_clean(lang('settings_title_users_items_search_page'))}">{display_clean(lang('settings_title_users_items_search_page'))}</label>
                                 </div>
                                 <div class="col-md-4 row-size">
@@ -2749,10 +2701,10 @@
                             <hr/>
                             <div class="row">
                                 <div class="col-md-8">
-                                    <label class="nowrap" for="users_items_contacts_channel" title="{display_clean(lang('settings_title_users_items_contacts_channel'))}">{display_clean(lang('settings_title_users_items_contacts_channel'))}</label>
+                                    <label class="nowrap" for="channel_popular_users" title="{display_clean(lang('settings_title_channel_popular_users'))}">{display_clean(lang('settings_title_channel_popular_users'))}</label>
                                 </div>
                                 <div class="col-md-4 row-size">
-                                    <input class="form-control" name="users_items_contacts_channel" id="users_items_contacts_channel" type="number" value="{(int)$row.users_items_contacts_channel}"/>
+                                    <input class="form-control" name="channel_popular_users" id="channel_popular_users" type="number" value="{(int)$row.channel_popular_users}"/>
                                 </div>
                             </div>
                             <hr/>

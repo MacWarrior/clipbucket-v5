@@ -305,12 +305,9 @@ if (isset($_POST['update'])) {
         ,'picture_upload'
         ,'photosSection'
         ,'photo_main_list'
-        ,'photo_home_tabs'
         ,'photo_search_result'
         ,'photo_channel_page'
-        ,'photo_user_photos'
         ,'photo_user_favorites'
-        ,'photo_other_limit'
 
         ,'site_title'
         ,'site_slogan'
@@ -345,15 +342,13 @@ if (isset($_POST['update'])) {
         ,'enable_global_age_restriction'
         ,'enable_sitemap'
 
-        ,'users_items_subscriptions'
-        ,'users_items_contacts_channel'
+        ,'channel_popular_users'
         ,'users_items_search_page'
 
         ,'vid_cat_height'
         ,'vid_cat_width'
         ,'videosSection'
         ,'videos_items_hme_page'
-        ,'videos_items_ufav_page'
         ,'videos_items_uvid_page'
         ,'videos_items_search_page'
         ,'videos_item_channel_page'
@@ -522,12 +517,10 @@ if (isset($_POST['update'])) {
         ,'min_video_title'
         ,'min_video_desc'
 
-        ,'users_items_subscriptions'
-        ,'users_items_contacts_channel'
+        ,'channel_popular_users'
         ,'users_items_search_page'
 
         ,'videos_items_hme_page'
-        ,'videos_items_ufav_page'
         ,'videos_items_uvid_page'
         ,'videos_items_search_page'
         ,'videos_item_channel_page'
@@ -536,12 +529,9 @@ if (isset($_POST['update'])) {
         ,'tmdb_mature_content_age'
 
         ,'photo_main_list'
-        ,'photo_home_tabs'
         ,'photo_search_result'
         ,'photo_channel_page'
-        ,'photo_user_photos'
         ,'photo_user_favorites'
-        ,'photo_other_limit'
 
         ,'collection_per_page'
         ,'collection_search_result'
@@ -577,7 +567,6 @@ if (isset($_POST['update'])) {
         ,'vid_cat_height'
         ,'max_comment_chr'
         ,'tmdb_search'
-        ,'photo_other_limit'
         ,'comments_per_page'
     ];
 

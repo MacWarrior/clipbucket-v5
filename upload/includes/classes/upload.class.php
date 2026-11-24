@@ -316,11 +316,12 @@ class Upload
                 'name'         => 'description',
                 'class'        => 'desc',
                 'value'        => $desc,
-                'size'         => '35',
                 'extra_params' => ' rows="4"',
                 'db_field'     => 'description',
                 'required'     => 'yes',
-                'anchor_after' => 'after_desc_compose_box'
+                'anchor_after' => 'after_desc_compose_box',
+                'min_length' => config('min_video_desc'),
+                'max_length' => config('max_video_desc')
             ],
             'tags_video'  => [
                 'title'             => lang('tag_title'),

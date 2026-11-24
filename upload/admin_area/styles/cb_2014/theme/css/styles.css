@@ -1649,9 +1649,79 @@ li:has(.category-name){
     padding-bottom: 16px;
     margin-bottom: 20px;
 }
-.settings-heading > h2 {
+.settings-heading-title {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-width: 0;
+}
+.settings-heading-title > h2 {
     margin: 0;
     min-width: 0;
+}
+.settings-descriptions-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    flex-shrink: 0;
+    margin: 0 !important;
+    padding: 6px 10px;
+    border-radius: 20px;
+    background: #f1f6fb;
+    color: #36546e;
+    font-size: 12px;
+    cursor: pointer;
+}
+.settings-descriptions-toggle input[type="checkbox"] {
+    width: 15px;
+    height: 15px;
+    margin: 0;
+    accent-color: #2b6cb0;
+}
+.settings-config-description {
+    display: none;
+    margin: 1px 0 6px;
+    color: #627286;
+    font-size: 12px;
+    font-style: italic;
+    line-height: 1.45;
+    overflow-wrap: anywhere;
+}
+.settings-descriptions-visible .settings-config-description {
+    display: block;
+}
+.settings-descriptions-visible .row-size:has(> .settings-config-description) {
+    height: auto;
+    min-height: 34px;
+}
+.settings-descriptions-visible #config_player .col-md-6 .row:has(> div > .settings-config-description) {
+    height: auto;
+    min-height: 31px;
+}
+@media (max-width: 991px) {
+    #main_form .row:has(> .settings-switch-label) {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        align-items: start;
+    }
+    #main_form .row:has(> .settings-switch-label)::before,
+    #main_form .row:has(> .settings-switch-label)::after {
+        display: none;
+    }
+    #main_form .row:has(> .settings-switch-label) > :not(.settings-switch-label, .settings-switch-control) {
+        grid-column: 1 / -1;
+    }
+    #main_form .settings-switch-label,
+    #main_form .settings-switch-control {
+        width: auto;
+    }
+    #main_form .settings-switch-label {
+        grid-column: 1;
+    }
+    #main_form .settings-switch-control {
+        grid-column: 2;
+        min-width: 70px;
+    }
 }
 #settings-search-anchor {
     width: 400px;
@@ -1838,13 +1908,15 @@ li:has(.category-name){
 }
 @media (max-width: 600px) {
     .heading.settings-heading {
+        flex-wrap: wrap;
         gap: 8px;
     }
-    .settings-heading > h2 {
+    .settings-heading-title > h2 {
         font-size: 20px;
     }
     #settings-search-anchor {
-        width: 55%;
+        width: 100%;
+        max-width: none;
     }
     #settings-search-input {
         padding-left: 32px;

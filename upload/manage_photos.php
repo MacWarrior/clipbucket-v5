@@ -85,7 +85,7 @@ switch ($mode) {
         if( !User::getInstance()->hasPermission('view_photos') ){
             redirect_to(cblink(['name' => 'my_account']));
         }
-
+        $favorites_per_page = config('photo_user_favorites') ?: config('photo_main_list');
         assign('mode', 'favorite');
         if ($_GET['remove_fav_photo']) {
             $photo = mysql_clean($_GET['remove_fav_photo']);
@@ -109,13 +109,13 @@ switch ($mode) {
         }
 
         $photo_arr = [
-            'limit' => $get_limit
+            'limit' => create_query_limit($page, $favorites_per_page)
             ,'cond' => $cond
         ];
         $photos = Photo::getInstance()->getAllFavorites($photo_arr);
         assign('photos', $photos);
 
-        if( $page == 1 && is_array($photos) && count($photos) < config('photo_main_list') ){
+        if( $page == 1 && is_array($photos) && count($photos) < $favorites_per_page ){
             $total_rows = count($photos);
         } else {
             $photo_arr['count_only'] = true;
@@ -123,7 +123,7 @@ switch ($mode) {
             $total_rows = Photo::getInstance()->getAllFavorites($photo_arr);
         }
 
-        $total_pages = count_pages($total_rows, config('photo_main_list'));
+        $total_pages = count_pages($total_rows, $favorites_per_page);
 
         //Pagination
         pages::getInstance()->paginate($total_pages, $page);

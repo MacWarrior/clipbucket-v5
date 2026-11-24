@@ -156,6 +156,19 @@
             displayCurrentQuality: false,
             vjsIconClass: 'vjs-icon-cog'
         });
+        {if (int)config('player_default_resolution_hls') > 0}
+        const defaultHlsResolution = {(int)config('player_default_resolution_hls')};
+        this.one('loadedmetadata', () => {
+            const selector = this.hlsQualitySelector;
+            if (selector.getCurrentQuality?.() !== 'auto') {
+                return;
+            }
+            const item = selector._qualityButton?.items?.find(item => item.item.value === defaultHlsResolution);
+            if (item) {
+                item.handleClick();
+            }
+        });
+        {/if}
         {/if}
 
         {if config('contextual_menu_disabled') === 'yes'}

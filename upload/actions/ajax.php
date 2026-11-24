@@ -621,7 +621,7 @@ if (!empty($mode)) {
          * Getting comments along with template
          */
         case 'getComments':
-            $limit = config('comment_per_page') ? config('comment_per_page') : 10;
+            $limit = config('comments_per_page') ? config('comments_per_page') : 10;
             $page = $_POST['page'];
             if (empty($_POST['type']) || empty($_POST['type_id']) ) {
                 e(lang('missing_params'));

@@ -130,29 +130,32 @@ if( !empty($udetails['tags']) ){
 
 $popular_users = User::getInstance()->getAll([
     'order'          => 'users.profile_hits DESC',
-    'limit'          => '5',
+    'limit'          => config('channel_popular_users') ?: 5,
     'channel_enable' => true,
     'ban_status'     => 'no',
     'condition'      => 'usr_status = \'ok\' AND users.userid != '. (int)$udetails['userid']
 ]);
 assign('popular_users',$popular_users);
 
-$user_feeds = cbfeeds::getInstance()->getUserFeeds($udetails);
+$user_feeds = [];
+if (config('feedsSection') == 'yes') {
+    $user_feeds = cbfeeds::getInstance()->getUserFeeds($udetails);
+}
 assign('userFeeds', $user_feeds);
 
-if( isSectionEnabled('videos') ){
-    if( User::getInstance($udetails['userid'])->get('show_my_videos') == 'yes' ){
+if (isSectionEnabled('videos')) {
+    if (User::getInstance($udetails['userid'])->get('show_my_videos') == 'yes') {
         $params = [
-            'userid' => $udetails['userid']
-            ,'order' => 'date_added DESC'
-            ,'limit' => config('videos_item_channel_page')
+            'userid' => $udetails['userid'],
+            'order'  => 'date_added DESC',
+            'limit'  => config('videos_item_channel_page')
         ];
         $videos = Video::getInstance()->getAll($params);
-    $first_video = $videos[0];
-    assign('first_video', $first_video);
+        $first_video = $videos[0];
+        assign('first_video', $first_video);
         $ids_to_check_progress = [];
-        $display_type='';
-        if( Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '271') ) {
+        $display_type = '';
+        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '271')) {
             $display_type = 'view_channel';
             foreach ($videos as $video) {
                 if (in_array($video['status'], ['Processing', 'Waiting'])) {

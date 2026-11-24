@@ -1,4 +1,14 @@
-{if !empty($settings_search_descriptions)}
+<div class="heading settings-heading">
+    <div class="settings-heading-title">
+        <h2>{lang($settings_title)}</h2>
+        {if !empty($settings_search_descriptions)}
+            <label class="settings-descriptions-toggle" for="settings-show-descriptions">
+                <input id="settings-show-descriptions" type="checkbox" aria-controls="main_form" autocomplete="off"/>
+                {display_clean(lang('settings_show_descriptions'))}
+            </label>
+        {/if}
+    </div>
+    {if !empty($settings_search_descriptions)}
     <div id="settings-search-anchor">
         <div id="settings-search" role="search"
              data-empty="{display_clean(lang('settings_search_empty'))}"
@@ -19,10 +29,11 @@
             <div id="settings-search-status" role="status" aria-live="polite" aria-atomic="true"></div>
             <div hidden>
                 {foreach from=$settings_search_descriptions key=name item=description}
-                    <span data-settings-name="{display_clean($name)}" data-settings-description="{display_clean($description)}"></span>
+                    <span data-settings-name="{display_clean($name)}" data-settings-description="{display_clean($description)}" ></span>
                 {/foreach}
             </div>
             <template id="settings-search-count-template"><span class="badge settings-search-count"></span></template>
+            <template id="settings-config-description-template"><p class="settings-config-description"></p></template>
             <template id="settings-search-unavailable-template">
                 <div class="settings-search-unavailable">
                     <span class="settings-search-reason" role="status" aria-live="polite"></span>
@@ -30,4 +41,5 @@
             </template>
         </div>
     </div>
-{/if}
+    {/if}
+</div>

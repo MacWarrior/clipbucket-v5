@@ -1,7 +1,4 @@
-<div class="heading settings-heading">
-    <h2>{lang('advanced_settings')}</h2>
-    {include file="$style_dir/blocks/settings_search.html"}
-</div>
+{include file="$style_dir/blocks/settings_search.html" settings_title='advanced_settings'}
 
 <form name="form1" method="post" id="main_form" enctype="multipart/form-data">
     <div class="row">
@@ -1148,20 +1145,10 @@
                 <div class="row">
                     <div class="col-md-6">
                         <div class="row">
-                            <div class="col-md-3">
-                                <label class="nowrap" for="photo_ratio" title="Photo ratio"><span class="fa fa-question-circle tips" title="{lang('option_photo_ratio_help')}"></span> {lang('option_photo_ratio')}</label>
-                            </div>
-                            <div class="col-md-3 row-size">
-                                <select class="form-control" id="photo_ratio" name="photo_ratio">
-                                    <option class="form-control" value="4:3" {if $row.photo_ratio=='4:3'}selected{/if} >4:3</option>
-                                    <option class="form-control" value="16:9" {if $row.photo_ratio=='16:9'}selected{/if}>16:9</option>
-                                    <option class="form-control" value="16:10" {if $row.photo_ratio=='16:10'}selected{/if}>16:10</option>
-                                </select>
-                            </div>
-                            <div class="col-md-3">
+                            <div class="col-md-6">
                                 <label class="nowrap" for="photo_thumbs_format" title="{lang code='option_photo_thumbs_format'}"><span class="fa fa-question-circle tips" title="{lang('photo_thumbs_format_tips')}"></span> {lang code='option_photo_thumbs_format'}</label>
                             </div>
-                            <div class="col-md-3">
+                            <div class="col-md-6">
                                 <select class="form-control" name="photo_thumbs_format" id="photo_thumbs_format">
                                     {assign var=array_modes value=[
                                         'webp'  => 'webp'

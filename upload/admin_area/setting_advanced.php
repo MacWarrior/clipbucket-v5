@@ -138,7 +138,6 @@ if (isset($_POST['update'])) {
         'thumb_background_color',
         'subtitle_format',
         'store_guest_session',
-        'photo_ratio',
         'photo_lar_width',
         'photo_crop',
         'photo_thumb_width',

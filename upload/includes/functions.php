@@ -392,7 +392,7 @@ function getCategoryList($params = [])
         case 'u':
         case 'channels':
             $type = 'user';
-            $type_option = 'enable_all_categ_for_collection';
+            $type_option = 'enable_all_categ_for_channel';
             break;
         case 'collection':
         case 'collections':

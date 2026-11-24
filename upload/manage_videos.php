@@ -16,7 +16,8 @@ assign('p', userquery::getInstance()->get_user_profile($udetails['userid']));
 $mode = $_GET['mode'];
 
 $page = (int)$_GET['page'];
-$get_limit = create_query_limit($page, config('videos_list_per_page'));
+$videos_per_page = config('videos_items_uvid_page') ?: config('videos_list_per_page');
+$get_limit = create_query_limit($page, $videos_per_page);
 
 $favorites = User::getInstance()->getFavoritesVideos();
 assign('favorites', $favorites);
@@ -50,7 +51,7 @@ switch ($mode) {
 
         $videos = Video::getInstance()->getAll($params_video);
 
-        if( $page == 1 && is_array($videos) && count($videos) < config('videos_list_per_page') ){
+        if( $page == 1 && is_array($videos) && count($videos) < $videos_per_page ){
             $total_rows = count($videos);
         } else {
             $params_video['count'] = true;
@@ -58,7 +59,7 @@ switch ($mode) {
             $total_rows = Video::getInstance()->getAll($params_video);
         }
 
-        $total_pages = count_pages($total_rows, config('videos_list_per_page'));
+        $total_pages = count_pages($total_rows, $videos_per_page);
 
         subtitle(lang("vdo_manage_vdeos"));
         break;
@@ -87,7 +88,7 @@ switch ($mode) {
 
         $videos = Video::getInstance()->getAllFavorites($params);
 
-        if( $page == 1 && is_array($videos) && count($videos) < config('videos_list_per_page') ){
+        if( $page == 1 && is_array($videos) && count($videos) < $videos_per_page ){
             $favorites_count = count($videos);
         } else {
             $params['count_only'] = 'yes';
@@ -95,7 +96,7 @@ switch ($mode) {
             $favorites_count = Video::getInstance()->getAllFavorites($params);
         }
 
-        $total_pages = count_pages($favorites_count, config('videos_list_per_page'));
+        $total_pages = count_pages($favorites_count, $videos_per_page);
         subtitle(lang('com_manage_fav'));
         break;
 }

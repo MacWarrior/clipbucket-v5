@@ -309,7 +309,10 @@ class Tmdb
 
         $update_video = false;
 
-        $video_info['datecreated'] = $details[self::$fields_date[$type]];
+        if (config('tmdb_get_release_date') == 'yes' && !empty($details[self::$fields_date[$type]])) {
+            $video_info['datecreated'] = $details[self::$fields_date[$type]];
+            $update_video = true;
+        }
         if (config('tmdb_get_title') == 'yes' && !empty($details[self::$fields_title[$type]])) {
             $video_info['title'] = $details[self::$fields_title[$type]];
             $update_video = true;

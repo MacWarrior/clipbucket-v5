@@ -16,6 +16,16 @@ class MWIP extends \Migration
             'column' => 'description_key'
         ]);
 
+        // Copy the current limit before removing the legacy setting.
+        self::generateConfig('channel_popular_users', '5');
+        self::deleteConfig('photo_home_tabs');
+        self::deleteConfig('photo_other_limit');
+        self::deleteConfig('photo_ratio');
+        self::deleteConfig('photo_user_photos');
+        self::deleteConfig('users_items_subscriptions');
+        self::deleteConfig('videos_items_ufav_page');
+        self::deleteConfig('users_items_contacts_channel');
+
         // Stable configuration names; never overwrite administrator values.
         self::query('UPDATE `{tbl_prefix}config` SET `description_key` = \'settings_description_activation\' WHERE `name` = \'activation\';');
         self::query('UPDATE `{tbl_prefix}config` SET `description_key` = \'settings_description_allow_conversion_1_percent\' WHERE `name` = \'allow_conversion_1_percent\';');
@@ -255,21 +265,17 @@ class MWIP extends \Migration
         self::query('UPDATE `{tbl_prefix}config` SET `description_key` = \'settings_description_photo_channel_page\' WHERE `name` = \'photo_channel_page\';');
         self::query('UPDATE `{tbl_prefix}config` SET `description_key` = \'settings_description_photo_crop\' WHERE `name` = \'photo_crop\';');
         self::query('UPDATE `{tbl_prefix}config` SET `description_key` = \'settings_description_photo_enable_nsfw_check\' WHERE `name` = \'photo_enable_nsfw_check\';');
-        self::query('UPDATE `{tbl_prefix}config` SET `description_key` = \'settings_description_photo_home_tabs\' WHERE `name` = \'photo_home_tabs\';');
         self::query('UPDATE `{tbl_prefix}config` SET `description_key` = \'settings_description_photo_lar_width\' WHERE `name` = \'photo_lar_width\';');
         self::query('UPDATE `{tbl_prefix}config` SET `description_key` = \'settings_description_photo_main_list\' WHERE `name` = \'photo_main_list\';');
         self::query('UPDATE `{tbl_prefix}config` SET `description_key` = \'settings_description_photo_med_height\' WHERE `name` = \'photo_med_height\';');
         self::query('UPDATE `{tbl_prefix}config` SET `description_key` = \'settings_description_photo_med_width\' WHERE `name` = \'photo_med_width\';');
         self::query('UPDATE `{tbl_prefix}config` SET `description_key` = \'settings_description_photo_nsfw_check_model\' WHERE `name` = \'photo_nsfw_check_model\';');
-        self::query('UPDATE `{tbl_prefix}config` SET `description_key` = \'settings_description_photo_other_limit\' WHERE `name` = \'photo_other_limit\';');
         self::query('UPDATE `{tbl_prefix}config` SET `description_key` = \'settings_description_photo_rating\' WHERE `name` = \'photo_rating\';');
-        self::query('UPDATE `{tbl_prefix}config` SET `description_key` = \'settings_description_photo_ratio\' WHERE `name` = \'photo_ratio\';');
         self::query('UPDATE `{tbl_prefix}config` SET `description_key` = \'settings_description_photo_search_result\' WHERE `name` = \'photo_search_result\';');
         self::query('UPDATE `{tbl_prefix}config` SET `description_key` = \'settings_description_photo_thumb_height\' WHERE `name` = \'photo_thumb_height\';');
         self::query('UPDATE `{tbl_prefix}config` SET `description_key` = \'settings_description_photo_thumb_width\' WHERE `name` = \'photo_thumb_width\';');
         self::query('UPDATE `{tbl_prefix}config` SET `description_key` = \'settings_description_photo_thumbs_format\' WHERE `name` = \'photo_thumbs_format\';');
         self::query('UPDATE `{tbl_prefix}config` SET `description_key` = \'settings_description_photo_user_favorites\' WHERE `name` = \'photo_user_favorites\';');
-        self::query('UPDATE `{tbl_prefix}config` SET `description_key` = \'settings_description_photo_user_photos\' WHERE `name` = \'photo_user_photos\';');
         self::query('UPDATE `{tbl_prefix}config` SET `description_key` = \'settings_description_photossection\' WHERE `name` = \'photosSection\';');
         self::query('UPDATE `{tbl_prefix}config` SET `description_key` = \'settings_description_photos_enable_fullwidth\' WHERE `name` = \'photos_enable_fullwidth\';');
         self::query('UPDATE `{tbl_prefix}config` SET `description_key` = \'settings_description_php_path\' WHERE `name` = \'php_path\';');
@@ -329,9 +335,8 @@ class MWIP extends \Migration
         self::query('UPDATE `{tbl_prefix}config` SET `description_key` = \'settings_description_tmdb_token\' WHERE `name` = \'tmdb_token\';');
         self::query('UPDATE `{tbl_prefix}config` SET `description_key` = \'settings_description_use_backdrop_as_default_thumb\' WHERE `name` = \'use_backdrop_as_default_thumb\';');
         self::query('UPDATE `{tbl_prefix}config` SET `description_key` = \'settings_description_use_subs\' WHERE `name` = \'use_subs\';');
-        self::query('UPDATE `{tbl_prefix}config` SET `description_key` = \'settings_description_users_items_contacts_channel\' WHERE `name` = \'users_items_contacts_channel\';');
+        self::query('UPDATE `{tbl_prefix}config` SET `description_key` = \'settings_description_channel_popular_users\' WHERE `name` = \'channel_popular_users\';');
         self::query('UPDATE `{tbl_prefix}config` SET `description_key` = \'settings_description_users_items_search_page\' WHERE `name` = \'users_items_search_page\';');
-        self::query('UPDATE `{tbl_prefix}config` SET `description_key` = \'settings_description_users_items_subscriptions\' WHERE `name` = \'users_items_subscriptions\';');
         self::query('UPDATE `{tbl_prefix}config` SET `description_key` = \'settings_description_vid_cat_height\' WHERE `name` = \'vid_cat_height\';');
         self::query('UPDATE `{tbl_prefix}config` SET `description_key` = \'settings_description_vid_cat_width\' WHERE `name` = \'vid_cat_width\';');
         self::query('UPDATE `{tbl_prefix}config` SET `description_key` = \'settings_description_video_categories\' WHERE `name` = \'video_categories\';');
@@ -352,11 +357,13 @@ class MWIP extends \Migration
         self::query('UPDATE `{tbl_prefix}config` SET `description_key` = \'settings_description_videos_item_channel_page\' WHERE `name` = \'videos_item_channel_page\';');
         self::query('UPDATE `{tbl_prefix}config` SET `description_key` = \'settings_description_videos_items_hme_page\' WHERE `name` = \'videos_items_hme_page\';');
         self::query('UPDATE `{tbl_prefix}config` SET `description_key` = \'settings_description_videos_items_search_page\' WHERE `name` = \'videos_items_search_page\';');
-        self::query('UPDATE `{tbl_prefix}config` SET `description_key` = \'settings_description_videos_items_ufav_page\' WHERE `name` = \'videos_items_ufav_page\';');
         self::query('UPDATE `{tbl_prefix}config` SET `description_key` = \'settings_description_videos_items_uvid_page\' WHERE `name` = \'videos_items_uvid_page\';');
         self::query('UPDATE `{tbl_prefix}config` SET `description_key` = \'settings_description_videos_list_per_page\' WHERE `name` = \'videos_list_per_page\';');
         self::query('UPDATE `{tbl_prefix}config` SET `description_key` = \'settings_description_videos_video_style\' WHERE `name` = \'videos_video_style\';');
         self::query('UPDATE `{tbl_prefix}config` SET `description_key` = \'settings_description_vrate\' WHERE `name` = \'vrate\';');
+
+        self::deleteTranslation('option_photo_ratio');
+        self::deleteTranslation('option_photo_ratio_help');
 
         self::generateTranslation('settings_description_activation', [
             'fr' => 'Exige l\'approbation d\'une vidéo avant sa publication.',
@@ -507,8 +514,8 @@ class MWIP extends \Migration
             'en' => 'Declares the Cloudflare request size limit in MB for upload diagnostics.'
         ]);
         self::generateTranslation('settings_description_collection_collection_top_collections', [
-            'fr' => 'Enregistre le paramètre « collections mises en avant sur la page collection » ; son effet actuel n’est pas identifié dans l’application.',
-            'en' => 'Stores the featured collections on a collection page setting; its current effect is not identified in the application.'
+            'fr' => 'Limite le nombre de collections mises en avant sur la page des collections.',
+            'en' => 'Limits the number of top collections shown on the collections page.'
         ]);
         self::generateTranslation('settings_description_collection_enable_fullwidth', [
             'fr' => 'Étend une collection sur toute la largeur disponible.',
@@ -555,8 +562,8 @@ class MWIP extends \Migration
             'en' => 'Chooses which users must solve a captcha to comment.'
         ]);
         self::generateTranslation('settings_description_comments_per_page', [
-            'fr' => 'Enregistre le paramètre « commentaires par page » ; son effet actuel n’est pas identifié dans l’application.',
-            'en' => 'Stores the comments per page setting; its current effect is not identified in the application.'
+            'fr' => 'Limite le nombre de commentaires chargés par requête.',
+            'en' => 'Limits the number of comments loaded per request.'
         ]);
         self::generateTranslation('settings_description_contextual_menu_disabled', [
             'fr' => 'Désactive le menu du clic droit sur la vidéo.',
@@ -679,12 +686,12 @@ class MWIP extends \Migration
             'en' => 'Applies age restrictions to content.'
         ]);
         self::generateTranslation('settings_description_enable_all_categ_for_channel', [
-            'fr' => 'Enregistre le choix « Toutes » pour les catégories de chaînes ; le code actuel lit le réglage des collections à sa place.',
-            'en' => 'Stores the All choice for channel categories; current code reads the collection setting instead.'
+            'fr' => 'Ajoute le choix « Toutes » dans la navigation par catégories des chaînes.',
+            'en' => 'Adds the All choice to category navigation for channels.'
         ]);
         self::generateTranslation('settings_description_enable_all_categ_for_collection', [
-            'fr' => 'Ajoute le choix « Toutes » dans la navigation par catégories des collections et chaînes.',
-            'en' => 'Adds the All choice to category navigation for collections and channels.'
+            'fr' => 'Ajoute le choix « Toutes » dans la navigation par catégories des collections.',
+            'en' => 'Adds the All choice to category navigation for collections.'
         ]);
         self::generateTranslation('settings_description_enable_all_categ_for_photo', [
             'fr' => 'Ajoute le choix « Toutes » dans la navigation par catégories des photos.',
@@ -1099,8 +1106,8 @@ class MWIP extends \Migration
             'en' => 'Chooses the card layout for featured homepage videos.'
         ]);
         self::generateTranslation('settings_description_feedssection', [
-            'fr' => 'Enregistre l’activation du fil d’activité ; aucun effet actuel n’est identifié dans l’application.',
-            'en' => 'Stores activity feed activation; no current effect is identified in the application.'
+            'fr' => 'Affiche le fil d’activité d’un utilisateur sur sa chaîne lorsque le réglage est activé.',
+            'en' => 'Shows a user\'s activity feed on their channel when enabled.'
         ]);
         self::generateTranslation('settings_description_ffmpegpath', [
             'fr' => 'Définit le chemin de l’exécutable FFmpeg utilisé par le serveur.',
@@ -1243,8 +1250,8 @@ class MWIP extends \Migration
             'en' => 'Sets the maximum username length in characters.'
         ]);
         self::generateTranslation('settings_description_max_video_desc', [
-            'fr' => 'Enregistre le paramètre « longueur maximale de description vidéo » ; son effet actuel n’est pas identifié dans l’application.',
-            'en' => 'Stores the maximum video description length setting; its current effect is not identified in the application.'
+            'fr' => 'Définit le nombre maximal de caractères pour la description d’une vidéo.',
+            'en' => 'Sets the maximum number of characters in a video description.'
         ]);
         self::generateTranslation('settings_description_max_video_duration', [
             'fr' => 'Limite la durée des vidéos envoyées, en minutes.',
@@ -1271,8 +1278,8 @@ class MWIP extends \Migration
             'en' => 'Sets the minimum username length in characters.'
         ]);
         self::generateTranslation('settings_description_min_video_desc', [
-            'fr' => 'Enregistre le paramètre « longueur minimale de description vidéo » ; son effet actuel n’est pas identifié dans l’application.',
-            'en' => 'Stores the minimum video description length setting; its current effect is not identified in the application.'
+            'fr' => 'Définit le nombre minimal de caractères pour la description d’une vidéo.',
+            'en' => 'Sets the minimum number of characters in a video description.'
         ]);
         self::generateTranslation('settings_description_min_video_title', [
             'fr' => 'Fixe la longueur minimale du titre vidéo, en caractères.',
@@ -1326,10 +1333,6 @@ class MWIP extends \Migration
             'fr' => 'Analyse les photos envoyées pour détecter un contenu sensible avec AIVision.',
             'en' => 'Analyzes uploaded photos for sensitive content using AIVision.'
         ]);
-        self::generateTranslation('settings_description_photo_home_tabs', [
-            'fr' => 'Enregistre le paramètre « photos sur l’accueil » ; son effet actuel n’est pas identifié dans l’application.',
-            'en' => 'Stores the homepage photos setting; its current effect is not identified in the application.'
-        ]);
         self::generateTranslation('settings_description_photo_lar_width', [
             'fr' => 'Définit la largeur des grandes images photo en pixels.',
             'en' => 'Sets large photo image width in pixels.'
@@ -1350,17 +1353,9 @@ class MWIP extends \Migration
             'fr' => 'Choisit le modèle de détection de contenu sensible pour les photos.',
             'en' => 'Chooses the sensitive content detection model for photos.'
         ]);
-        self::generateTranslation('settings_description_photo_other_limit', [
-            'fr' => 'Enregistre le paramètre « limite photo complémentaire » ; son effet actuel n’est pas identifié dans l’application.',
-            'en' => 'Stores the additional photo limit setting; its current effect is not identified in the application.'
-        ]);
         self::generateTranslation('settings_description_photo_rating', [
             'fr' => 'Autorise la notation des photos.',
             'en' => 'Allows rating photos.'
-        ]);
-        self::generateTranslation('settings_description_photo_ratio', [
-            'fr' => 'Enregistre le paramètre « rapport de taille photo » ; son effet actuel n’est pas identifié dans l’application.',
-            'en' => 'Stores the photo size ratio setting; its current effect is not identified in the application.'
         ]);
         self::generateTranslation('settings_description_photo_search_result', [
             'fr' => 'Limite le nombre de photos par page de recherche.',
@@ -1379,12 +1374,8 @@ class MWIP extends \Migration
             'en' => 'Keeps the photo format or converts thumbnails to WebP.'
         ]);
         self::generateTranslation('settings_description_photo_user_favorites', [
-            'fr' => 'Enregistre le paramètre « photos favorites de l’utilisateur » ; son effet actuel n’est pas identifié dans l’application.',
-            'en' => 'Stores the user favorite photos setting; its current effect is not identified in the application.'
-        ]);
-        self::generateTranslation('settings_description_photo_user_photos', [
-            'fr' => 'Enregistre le paramètre « photos de l’utilisateur » ; son effet actuel n’est pas identifié dans l’application.',
-            'en' => 'Stores the user photos setting; its current effect is not identified in the application.'
+            'fr' => 'Limite le nombre de photos favorites affichées par page dans la gestion des photos.',
+            'en' => 'Limits the number of favorite photos shown per page in photo management.'
         ]);
         self::generateTranslation('settings_description_photossection', [
             'fr' => 'Active la section des photos sur le site.',
@@ -1419,8 +1410,8 @@ class MWIP extends \Migration
             'en' => 'Chooses the initial player resolution from available files.'
         ]);
         self::generateTranslation('settings_description_player_default_resolution_hls', [
-            'fr' => 'Enregistre le paramètre « résolution initiale HLS » ; son effet actuel n’est pas identifié dans l’application.',
-            'en' => 'Stores the initial HLS resolution setting; its current effect is not identified in the application.'
+            'fr' => 'Sélectionne la résolution initiale des vidéos HLS si elle est disponible. Le lecteur reste en mode automatique si la résolution manque.',
+            'en' => 'Selects the initial resolution for HLS videos when available. The player stays in Auto mode when that resolution is unavailable.'
         ]);
         self::generateTranslation('settings_description_player_logo_url', [
             'fr' => 'Définit l\'adresse ouverte par le logo du lecteur.',
@@ -1623,8 +1614,8 @@ class MWIP extends \Migration
             'en' => 'Imports producers data from TMDB when updating content.'
         ]);
         self::generateTranslation('settings_description_tmdb_get_release_date', [
-            'fr' => 'Enregistre le choix d’import de date TMDB ; le code actuel importe la date sans consulter ce réglage.',
-            'en' => 'Stores the TMDB date import choice; current code imports the date without consulting this setting.'
+            'fr' => 'Importe la date de sortie d’un film ou de première diffusion d’une série dans le champ de date de la vidéo lorsque ce champ est activé.',
+            'en' => 'Imports a movie release date or a series first air date into the video date field when that field is enabled.'
         ]);
         self::generateTranslation('settings_description_tmdb_get_title', [
             'fr' => 'Importe les données « titre » depuis TMDB lors de la mise à jour du contenu.',
@@ -1650,17 +1641,13 @@ class MWIP extends \Migration
             'fr' => 'Permet de gérer des sous-catégories.',
             'en' => 'Allows managing subcategories.'
         ]);
-        self::generateTranslation('settings_description_users_items_contacts_channel', [
-            'fr' => 'Enregistre le paramètre « contacts sur une chaîne » ; son effet actuel n’est pas identifié dans l’application.',
-            'en' => 'Stores the channel contacts setting; its current effect is not identified in the application.'
+        self::generateTranslation('settings_description_channel_popular_users', [
+            'fr' => 'Limite le nombre d’utilisateurs populaires affichés sur une chaîne, par nombre de visites de profil.',
+            'en' => 'Limits the number of popular users shown on a channel, ranked by profile views.'
         ]);
         self::generateTranslation('settings_description_users_items_search_page', [
             'fr' => 'Limite le nombre de utilisateurs par page de recherche.',
             'en' => 'Limits the number of users per search page.'
-        ]);
-        self::generateTranslation('settings_description_users_items_subscriptions', [
-            'fr' => 'Enregistre le paramètre « abonnements sur une chaîne » ; son effet actuel n’est pas identifié dans l’application.',
-            'en' => 'Stores the channel subscriptions setting; its current effect is not identified in the application.'
         ]);
         self::generateTranslation('settings_description_vid_cat_height', [
             'fr' => 'Définit la hauteur des miniatures de catégories vidéo en pixels.',
@@ -1742,13 +1729,9 @@ class MWIP extends \Migration
             'fr' => 'Limite le nombre de vidéos par page de recherche.',
             'en' => 'Limits the number of videos per search page.'
         ]);
-        self::generateTranslation('settings_description_videos_items_ufav_page', [
-            'fr' => 'Enregistre le paramètre « vidéos favorites de l’utilisateur » ; son effet actuel n’est pas identifié dans l’application.',
-            'en' => 'Stores the user favorite videos setting; its current effect is not identified in the application.'
-        ]);
         self::generateTranslation('settings_description_videos_items_uvid_page', [
-            'fr' => 'Enregistre le paramètre « vidéos de l’utilisateur » ; son effet actuel n’est pas identifié dans l’application.',
-            'en' => 'Stores the user videos setting; its current effect is not identified in the application.'
+            'fr' => 'Limite le nombre de vidéos affichées par page dans la gestion des vidéos envoyées et favorites.',
+            'en' => 'Limits the number of videos shown per page in uploaded and favorite video management.'
         ]);
         self::generateTranslation('settings_description_videos_list_per_page', [
             'fr' => 'Limite le nombre de vidéos par page dans les listes.',
@@ -2018,10 +2001,6 @@ class MWIP extends \Migration
             'fr' => 'Par page',
             'en' => 'Per page'
         ]);
-        self::generateTranslation('settings_title_videos_items_ufav_page', [
-            'fr' => 'Favoris',
-            'en' => 'Favorites'
-        ]);
         self::generateTranslation('settings_title_videos_items_hme_page', [
             'fr' => 'Onglets de l\'accueil',
             'en' => 'Home Tabs'
@@ -2042,10 +2021,6 @@ class MWIP extends \Migration
             'fr' => 'Limite principale',
             'en' => 'Main Limit'
         ]);
-        self::generateTranslation('settings_title_photo_home_tabs', [
-            'fr' => 'Onglets de l\'accueil',
-            'en' => 'Home Tabs'
-        ]);
         self::generateTranslation('settings_title_photo_search_result', [
             'fr' => 'Résultats de recherche',
             'en' => 'Search Result'
@@ -2054,17 +2029,9 @@ class MWIP extends \Migration
             'fr' => 'Page de chaîne',
             'en' => 'Channel Page'
         ]);
-        self::generateTranslation('settings_title_photo_user_photos', [
-            'fr' => 'Photos de l\'utilisateur',
-            'en' => 'User Photos'
-        ]);
         self::generateTranslation('settings_title_photo_user_favorites', [
             'fr' => 'Favoris de l\'utilisateur',
             'en' => 'User favorites'
-        ]);
-        self::generateTranslation('settings_title_photo_other_limit', [
-            'fr' => 'Autre limite',
-            'en' => 'Other Limit'
         ]);
         self::generateTranslation('settings_title_collection_per_page', [
             'fr' => 'Page des collections',
@@ -2094,17 +2061,13 @@ class MWIP extends \Migration
             'fr' => 'Par page',
             'en' => 'Per page'
         ]);
-        self::generateTranslation('settings_title_users_items_subscriptions', [
-            'fr' => 'Abonnements sur la chaîne',
-            'en' => 'Subscriptions in channel view'
-        ]);
         self::generateTranslation('settings_title_users_items_search_page', [
             'fr' => 'Page de recherche',
             'en' => 'Search Page'
         ]);
-        self::generateTranslation('settings_title_users_items_contacts_channel', [
-            'fr' => 'Contacts sur la chaîne',
-            'en' => 'Users contacts in channel view'
+        self::generateTranslation('settings_title_channel_popular_users', [
+            'fr' => 'Utilisateurs populaires sur la chaîne',
+            'en' => 'Popular users on the channel'
         ]);
         self::generateTranslation('settings_title_comments_per_page', [
             'fr' => 'Commentaires par page',
@@ -2369,6 +2332,10 @@ class MWIP extends \Migration
         self::generateTranslation('settings_search_tab_results', [
             'fr' => 'Il y a %s résultats dans cet onglet',
             'en' => 'There are %s results in this tab'
+        ]);
+        self::generateTranslation('settings_show_descriptions', [
+            'fr' => 'Afficher les descriptions',
+            'en' => 'Show descriptions'
         ]);
     }
 }

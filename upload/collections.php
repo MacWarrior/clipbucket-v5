@@ -33,7 +33,7 @@ $collections = Collection::getInstance()->getAll($params);
 assign('collections', $collections);
 
 $params = [
-    'limit'             => config('collection_home_top_collections')
+    'limit'             => config('collection_collection_top_collections')
     ,'order'            => 'COUNT(CASE WHEN collections.type = \'videos\' THEN video.videoid ELSE photos.photo_id END) DESC'
     ,'with_items'       => true
     ,'with_sub_items'   => true
