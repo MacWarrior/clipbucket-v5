@@ -5,7 +5,9 @@ require_once dirname(__FILE__, 3) . '/includes/admin_config.php';
 require_once DirPath::get('libs') . 'htmlpurifier' . DIRECTORY_SEPARATOR . 'library' . DIRECTORY_SEPARATOR . 'HTMLPurifier.auto.php';
 User::getInstance()->hasPermissionOrRedirect('email_template_management');
 
-if( empty($_POST['email_content'] || empty($_POST['id_email_template'])) ){
+$content = $_POST['email_content'] ?? '';
+$plain_text = ($_POST['format'] ?? '') === 'txt';
+if (!is_string($content) || ($plain_text && !EmailTemplate::supportsPlainText())) {
     echo json_encode([
         'success' => false,
         'msg'     => lang('technical_error')
@@ -13,7 +15,8 @@ if( empty($_POST['email_content'] || empty($_POST['id_email_template'])) ){
     die();
 }
 
+$render = EmailTemplate::getRenderedEmail((int)($_POST['id_email_template'] ?? 0), $content, $plain_text);
 echo json_encode([
     'success'      => true,
-    'email_render' => EmailTemplate::purify(EmailTemplate::getRenderedEmail(($_POST['id_email_template'] ?? 0), $_POST['email_content']))
+    'email_render' => $plain_text ? $render : EmailTemplate::purify($render)
 ]);

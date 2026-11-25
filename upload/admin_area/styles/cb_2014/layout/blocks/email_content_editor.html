@@ -1,0 +1,67 @@
+<div class="row"{if $plain_text} data-email-text-preview="{display_clean($render_action)}"{/if}>
+    <div class="col-md-6">
+        <label for="{$field_id}"><b>{if $supports_plain_text}{display_clean(lang($label_key))}{else}{display_clean(ucfirst(lang('content')))}{/if}</b></label>
+        {if $plain_text}
+            <span class="fa fa-question-circle tips" title="{display_clean(lang('email_content_txt_hint'))}"></span>
+        {/if}
+        <textarea name="{$field_name}" id="{$field_id}" class="form-control" style="min-height:200px;resize:vertical;">
+{display_clean($field_value)}</textarea>
+    </div>
+    <div class="col-md-6">
+        <b>{display_clean(lang('rendered'))}</b>
+        {if $plain_text}
+            <div id="{$preview_id}" class="well well-sm" style="min-height:200px;white-space:pre-wrap;overflow-wrap:anywhere;">{display_clean($preview)}</div>
+        {else}
+            <div id="{$preview_id}" class="tab-content" style="min-height:200px;padding:0;">{EmailTemplate::purify($preview)}</div>
+        {/if}
+    </div>
+</div>
+<div class="row">
+    <div class="col-xs-12">
+        {include file="$layout_dir/blocks/email_list_variable.html"}
+    </div>
+</div>
+{if $plain_text}
+    <script>
+        $(function () {
+            const editor = $('#{$field_id}');
+            const preview = $('#{$preview_id}');
+            const form = editor.closest('form');
+            const template = form.find('[data-email-template-select]');
+            const action = editor.closest('[data-email-text-preview]').data('email-text-preview');
+            let timer;
+            let request;
+
+            function refreshTextPreview() {
+                clearTimeout(timer);
+                if (request) {
+                    request.abort();
+                }
+
+                timer = setTimeout(() => {
+                    if (!editor[0].isConnected) {
+                        return;
+                    }
+
+                    request = $.post({
+                        url: admin_url + 'actions/' + action,
+                        data: {
+                            email_content: editor.val(),
+                            id_email_template: template.val(),
+                            format: 'txt'
+                        },
+                        dataType: 'json',
+                        success: (response) => {
+                            if (response.success) {
+                                preview.text(response.email_render);
+                            }
+                        }
+                    });
+                }, 500);
+            }
+
+            editor.on('input', refreshTextPreview);
+            template.on('change', refreshTextPreview);
+        });
+    </script>
+{/if}

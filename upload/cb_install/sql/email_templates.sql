@@ -224,6 +224,7 @@ INSERT IGNORE INTO `{tbl_prefix}email_variable_link` (`id_email`, `id_email_vari
 VALUES ((SELECT id_email FROM `{tbl_prefix}email` WHERE code = 'share_video' LIMIT 1), (SELECT id_email_variable FROM `{tbl_prefix}email_variable` WHERE code = 'sender_username' LIMIT 1)),
        ((SELECT id_email FROM `{tbl_prefix}email` WHERE code = 'share_video' LIMIT 1), (SELECT id_email_variable FROM `{tbl_prefix}email_variable` WHERE code = 'video_description' LIMIT 1)),
        ((SELECT id_email FROM `{tbl_prefix}email` WHERE code = 'share_video' LIMIT 1), (SELECT id_email_variable FROM `{tbl_prefix}email_variable` WHERE code = 'video_link' LIMIT 1)),
+       ((SELECT id_email FROM `{tbl_prefix}email` WHERE code = 'share_video' LIMIT 1), (SELECT id_email_variable FROM `{tbl_prefix}email_variable` WHERE code = 'video_title' LIMIT 1)),
        ((SELECT id_email FROM `{tbl_prefix}email` WHERE code = 'share_video' LIMIT 1), (SELECT id_email_variable FROM `{tbl_prefix}email_variable` WHERE code = 'video_thumb' LIMIT 1)),
        ((SELECT id_email FROM `{tbl_prefix}email` WHERE code = 'share_video' LIMIT 1), (SELECT id_email_variable FROM `{tbl_prefix}email_variable` WHERE code = 'sender_message' LIMIT 1)),
 

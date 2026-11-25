@@ -1142,6 +1142,7 @@ CREATE TABLE IF NOT EXISTS `{tbl_prefix}email_template`
     is_default             BOOLEAN DEFAULT FALSE,
     is_deletable           BOOLEAN DEFAULT TRUE,
     content                TEXT,
+    content_txt            TEXT DEFAULT '',
     disabled               BOOLEAN DEFAULT FALSE,
     code_unique_for_enable VARCHAR(32) GENERATED ALWAYS AS ( CASE WHEN disabled = FALSE THEN code ELSE NULL END ) UNIQUE
 ) ENGINE = InnoDB
@@ -1156,6 +1157,7 @@ CREATE TABLE IF NOT EXISTS `{tbl_prefix}email`
     is_deletable           BOOLEAN DEFAULT TRUE,
     title                  VARCHAR(256),
     content                TEXT,
+    content_txt            TEXT DEFAULT '',
     disabled               BOOLEAN DEFAULT FALSE,
     code_unique_for_enable VARCHAR(32) GENERATED ALWAYS AS ( CASE WHEN disabled = FALSE THEN code ELSE NULL END ) UNIQUE
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE utf8mb4_unicode_520_ci;
