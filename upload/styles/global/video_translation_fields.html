@@ -1,0 +1,75 @@
+<style>
+    .video-translations .video-upload-language-row {
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        gap: 6px;
+        white-space: nowrap;
+    }
+
+    .video-translations .video-upload-language-row .flag_language img {
+        display: block;
+    }
+
+    .video-translations .flag_language:has(img.selected) {
+        display: inline-block;
+        padding: 4px;
+        background: #0080b4;
+        border-radius: 8px;
+        line-height: 0;
+    }
+
+    .video-translations .flag_language img.grey_filter {
+        filter: grayscale(100%);
+    }
+
+    .video-translations .flag_language img.grey_filter:hover {
+        filter: grayscale(0%);
+    }
+</style>
+<div class="video-translations"
+     data-specified="{display_clean(lang('specified'))}"
+     data-partial="{display_clean(lang('partially_specified'))}"
+     data-empty="{display_clean(lang('no_specified'))}">
+    <div class="text-right{if !empty($video_upload)} video-upload-language-row{/if}" style="margin-bottom: 8px;">
+        <span>{display_clean(lang('translations'))}</span>
+        {foreach $video_translation_languages as $language}
+            <a href="#" class="flag_language"
+               data-id="{$language.language_id}" data-language-name="{display_clean($language.language_name)}"
+               aria-current="{if $language.is_shown}true{else}false{/if}"
+               title="{display_clean($language.language_name)} — {if $language.is_specified == 2}{display_clean(lang('specified'))}{elseif $language.is_specified == 1}{display_clean(lang('partially_specified'))}{else}{display_clean(lang('no_specified'))}{/if}">
+                <img src="{get_country_flag_url($language.language_flag)}" alt="{display_clean($language.language_name)}"
+                     class="{if $language.is_shown}selected{/if}{if !$language.is_specified} grey_filter{/if}" style="height: 18px;">
+            </a>
+        {/foreach}
+    </div>
+    <input type="hidden" name="selected_video_language" value="{foreach $video_translation_languages as $language}{if $language.is_shown}{$language.language_id}{break}{/if}{/foreach}">
+    {ANCHOR place="before_desc_compose_box"}
+    {foreach $video_translation_languages as $language}
+        <div class="video-translation-fields" data-id="{$language.language_id}"
+             data-default="{if $language.language_default == 'yes'}true{else}false{/if}" {if !$language.is_shown}hidden{/if}>
+            <div class="form-group">
+                <label style="display: block;">
+                    {display_clean(lang('vdo_title'))}
+                    <input type="text" class="form-control" {if !$clone_upload_form && $language.language_default == 'yes'}id="title"{/if}
+                           name="{if $clone_upload_form && $language.language_default == 'yes'}title{else}video_translations[{$language.language_id}][title]{/if}"
+                           data-field="title" data-min="{config('min_video_title')|intval}" data-max="{config('max_video_title')|intval}"
+                           data-required-message="{display_clean(lang('all_fields_req'))} — {display_clean($language.language_name)} — {display_clean(lang('vdo_title'))}"
+                           data-length-message="{display_clean(lang('please_enter_val_bw_min_max', [lang('vdo_title'), config('min_video_title'), config('max_video_title')]))}"
+                           value="{display_clean($language.title)}">
+                </label>
+            </div>
+            <div class="form-group">
+                <label style="display: block;">
+                    {display_clean(lang('vdo_desc'))}
+                    <textarea class="form-control desc" rows="4"
+                              name="{if $clone_upload_form && $language.language_default == 'yes'}description{else}video_translations[{$language.language_id}][description]{/if}"
+                              data-field="description" data-min="{config('min_video_desc')|intval}" data-max="{config('max_video_desc')|intval}"
+                              data-required-message="{display_clean(lang('all_fields_req'))} — {display_clean($language.language_name)} — {display_clean(lang('vdo_desc'))}"
+                              data-length-message="{display_clean(lang('please_enter_val_bw_min_max', [lang('vdo_desc'), config('min_video_desc'), config('max_video_desc')]))}">{display_clean($language.description)}</textarea>
+                </label>
+            </div>
+        </div>
+    {/foreach}
+    {ANCHOR place="after_desc_compose_box"}
+</div>

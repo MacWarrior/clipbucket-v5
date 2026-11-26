@@ -187,7 +187,7 @@ class Video extends Objects
 
     private function getFields(): array
     {
-        return $this->fields;
+        return VideoTranslations::isEnabled() ? array_diff($this->fields, ['title', 'description']) : $this->fields;
     }
 
     private function getFieldsCategories(): array
@@ -389,13 +389,14 @@ class Video extends Objects
         $param_exist = $params['exist'] ?? false;
         $param_count = $params['count'] ?? false;
         $param_disable_generic_constraints = $params['disable_generic_constraints'] ?? false;
-        $param_public = $params['public'];
+        $param_public = $params['public'] ?? null;
         $param_not_join_user_profile = $params['not_join_user_profile'] ?? false;
-        $param_join_flag= $params['join_flag'];
+        $param_join_flag = $params['join_flag'] ?? false;
         $param_get_detail = $params['get_detail'] ?? false;
         $param_date_span = $params['date_span'] ?? false;
         $param_get_tmdb = $params['get_tmdb'] ?? false;
         $param_not_empty_tmdb = $params['not_empty_tmdb'] ?? false;
+        $translations_enabled = VideoTranslations::isEnabled();
 
         $conditions = [];
         if( $param_videoid !== false ){
@@ -445,11 +446,23 @@ class Video extends Objects
                 - categories
                 - description
              */
-            $match_title = 'MATCH(video.title) AGAINST (\'' . $param_search . '\' IN NATURAL LANGUAGE MODE)';
-            $match_description = 'MATCH(video.description, video.title) AGAINST (\'' . $param_search . '\' IN NATURAL LANGUAGE MODE)';
-            $like_title = 'LOWER(' . $this->getTableName() . '.title) LIKE \'%' . $param_search . '%\'';
-            $order_search = ' ORDER BY CASE WHEN ' . $like_title . ' THEN 100 ELSE ' . $match_title . ' END DESC';
-            $cond = '(' . $match_title . ' OR ' . $match_description . '  OR ' . $like_title;
+            $title = $translations_enabled ? 'translation.video_title' : 'video.title';
+            $description = $translations_enabled ? 'translation.video_description' : 'video.description';
+            $match_title = 'MATCH(' . $title . ') AGAINST (\'' . $param_search . '\' IN NATURAL LANGUAGE MODE)';
+            $match_description = 'MATCH(' . $description . ', ' . $title . ') AGAINST (\'' . $param_search . '\' IN NATURAL LANGUAGE MODE)';
+            $like_title = 'LOWER(' . $title . ') LIKE \'%' . $param_search . '%\'';
+            $match_video = $match_title . ' OR ' . $match_description . ' OR ' . $like_title;
+            $title_score = 'CASE WHEN ' . $like_title . ' THEN 100 ELSE ' . $match_title . ' END';
+            $description_score = $match_description;
+            if ($translations_enabled) {
+                $like_description = 'LOWER(' . $description . ') LIKE \'%' . $param_search . '%\'';
+                $match_video = VideoTranslations::exists($match_video . ' OR ' . $like_description);
+                $title_score = VideoTranslations::searchScore($title_score);
+                $description_score = VideoTranslations::searchScore('CASE WHEN ' . $like_description . ' THEN 100 ELSE ' . $match_description . ' END');
+                $like_title = VideoTranslations::exists($like_title);
+            }
+            $order_search = ' ORDER BY ' . $title_score . ' DESC';
+            $cond = '(' . $match_video;
 
             /** TAG */
             if( Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.0', '264') ){
@@ -469,9 +482,9 @@ class Video extends Objects
                 $match_categ = 'MATCH(categories.category_name) AGAINST (\'' . $param_search . '\' IN NATURAL LANGUAGE MODE)';
                 $like_categ = ' LOWER(categories.category_name) LIKE \'%' . $param_search . '%\' ';
                 $cond .= ' OR ' . $match_categ . ' OR ' . $like_categ;
-                $order_search .= ', MAX(CASE WHEN '.$like_title .' THEN 100 ELSE ' . $match_categ . ' END) DESC ';
+                $order_search .= ', MAX(CASE WHEN ' . $like_title . ' THEN 100 ELSE ' . $match_categ . ' END) DESC ';
             }
-            $order_search .= ', ' . $match_description . ' DESC ';
+            $order_search .= ', ' . $description_score . ' DESC ';
             $cond .= ')';
 
             $conditions[] = $cond;
@@ -487,7 +500,7 @@ class Video extends Objects
         }
 
         if ($param_title) {
-            $conditions[] = '(MATCH(video.title) AGAINST (\'' . mysql_clean($param_title) . '\' IN NATURAL LANGUAGE MODE) OR LOWER(' . $this->getTableName() . '.title) LIKE \'%' . mysql_clean($param_title) . '%\' )';
+            $conditions[] = VideoTranslations::searchTitle($param_title);
         }
 
         if (!User::getInstance()->hasAdminAccess() && !$param_exist && !$param_disable_generic_constraints) {
@@ -500,14 +513,21 @@ class Video extends Objects
             $select = ['COUNT(DISTINCT ' . $this->getTableName() . '.videoid) AS count'];
         } else {
             $select = $this->getVideoFields();
-            foreach ($this->fields as $field) {
+            foreach ($this->getFields() as $field) {
                 $group[] = $this->tablename . '.' . $field;
+            }
+            if ($translations_enabled) {
+                $select = array_merge($select, VideoTranslations::displayFields());
+                $group[] = 'video_translation.language_id, video_translation.video_title, video_translation.video_description';
             }
             $select[] = 'users.username AS user_username';
             $group[] = 'users.username';
         }
 
         $join = [];
+        if ($translations_enabled && !$param_count) {
+            $join[] = VideoTranslations::displayJoin();
+        }
 
         if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.0', '264') && ($param_get_detail || $param_search || $param_tags)) {
             if( !$param_count ){
@@ -616,12 +636,11 @@ class Video extends Objects
         }
 
         $order = '';
-        if (!empty($order_search)) {
+        $title_order = VideoTranslations::titleOrder($param_order);
+        if (!$param_count && $title_order !== $param_order) {
+            $order = ' ORDER BY ' . $title_order;
+        } elseif (!$param_count && !empty($order_search)) {
             $order = $order_search;
-            if (!$param_count) {
-                $group[]='video.title';
-                $group[]='video.description';
-            }
         } elseif( $param_order && !$param_count ){
             $replace_to_group = str_replace(['asc', 'desc', 'rand()'], '', strtolower($param_order));
             if (!empty($replace_to_group)) {
@@ -917,7 +936,7 @@ class Video extends Objects
         }
     }
 
-    public function getDescription(string $description): string
+    public function getDescription(?string $description): string
     {
         $params = [
             'censor' => (config('enable_video_description_censor') == 'yes'),
@@ -925,7 +944,7 @@ class Video extends Objects
             'links' => (config('enable_video_description_link') == 'yes')
         ];
 
-        return CMS::getInstance($description, $params)->getClean();
+        return CMS::getInstance($description ?? '', $params)->getClean();
     }
 
     /**
@@ -1600,6 +1619,10 @@ class CBvideo extends CBCategory
             , 'video_files', 'file_server_path', 'video_version', 'subscription_email'
         ];
 
+        if (VideoTranslations::isEnabled()) {
+            $basic_fields = array_diff($basic_fields, ['title', 'description']);
+        }
+
         if (!Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '14')) {
             $basic_fields[] = 'thumbs_version';
         }
@@ -1717,6 +1740,10 @@ class CBvideo extends CBCategory
         }
 
         $query = 'SELECT ' . table_fields($fields) . ' ' . $select_tag . ' ' . $select_categ . ' FROM ' . cb_sql_table('video');
+        if (VideoTranslations::isEnabled()) {
+            $query = 'SELECT ' . table_fields($fields) . ', ' . implode(', ', VideoTranslations::displayFields())
+                . ' ' . $select_tag . ' ' . $select_categ . ' FROM ' . cb_sql_table('video') . VideoTranslations::displayJoin();
+        }
         $query .= ' LEFT JOIN ' . cb_sql_table('users') . ' ON video.userid = users.userid';
         $query .= $join_tag;
         $query .= $join_categ;
@@ -1844,7 +1871,7 @@ class CBvideo extends CBCategory
      * @param null $array
      * @throws Exception
      */
-    function update_video($array = null): void
+    function update_video($array = null, ?int $translation_language_id = null, array $imported_translation = []): void
     {
         if (!$array) {
             $array = $_POST;
@@ -1852,7 +1879,8 @@ class CBvideo extends CBCategory
         if (is_array($_FILES)) {
             $array = array_merge($array, $_FILES);
         }
-        Upload::getInstance()->validate_video_upload_form($array, true);
+        $translations_enabled = VideoTranslations::isEnabled();
+        Upload::getInstance()->validate_video_upload_form($array, true, $translation_language_id === null ? null : $imported_translation);
 
         if (empty(errorhandler::getInstance()->get_error())) {
             $required_fields = Upload::getInstance()->loadRequiredFields($array);
@@ -1866,6 +1894,11 @@ class CBvideo extends CBCategory
             if (function_exists('custom_fields_list')) {
                 $custom_flds = Upload::getInstance()->load_custom_form_fields($array, true);
                 $upload_fields = array_merge($upload_fields, $custom_flds);
+            }
+
+            if ($translations_enabled) {
+                $translations = $translation_language_id === null ? VideoTranslations::values($array) : [$translation_language_id => $imported_translation];
+                unset($upload_fields['title'], $upload_fields['desc']);
             }
 
             if (isset($array['videoid'])) {
@@ -1942,14 +1975,16 @@ class CBvideo extends CBCategory
                 }
             }
             //changes made
-            //title index
-            $query_val[0] = str_replace('&lt;!--', '', $query_val[0]);
-            $query_val[0] = str_replace('\'', '’', $query_val[0]);
-            //description index
-            $query_val[1] = str_replace('&lt;!--', '', $query_val[1]);
-            $query_val[1] = str_replace('\'', '’', $query_val[1]);
-            //Tag index
-            $query_val[3] = strtolower($query_val[3]);
+            if (!$translations_enabled) {
+                //title index
+                $query_val[0] = str_replace('&lt;!--', '', $query_val[0]);
+                $query_val[0] = str_replace('\'', '’', $query_val[0]);
+                //description index
+                $query_val[1] = str_replace('&lt;!--', '', $query_val[1]);
+                $query_val[1] = str_replace('\'', '’', $query_val[1]);
+                //Tag index
+                $query_val[3] = strtolower($query_val[3]);
+            }
 
             if (!User::getInstance()->getCurrentUserID()) {
                 e(lang('you_dont_have_permission_to_update_this_video'));
@@ -1969,7 +2004,11 @@ class CBvideo extends CBCategory
                 $query_val[] = now();
             }
 
-            Clipbucket_db::getInstance()->update(tbl('video'), $query_field, $query_val, ' videoid = ' . (int)$vid);
+            $condition = 'videoid = ' . (int)$vid;
+            Clipbucket_db::getInstance()->update(tbl('video'), $query_field, $query_val, $condition);
+            if ($translations_enabled) {
+                VideoTranslations::save($vid, $translations, isset($array['video_translations']));
+            }
 
             foreach ($array as $key => $item) {
                 $matches = [];
@@ -2001,6 +2040,11 @@ class CBvideo extends CBCategory
                 Category::getInstance()->saveLinks('video', $vid, [Category::getInstance()->getDefaultByType('video')['category_id']]);
             }
 
+            if ($translations_enabled && isset($array['video_translations'])) {
+                $default_translation = $translations[VideoTranslations::defaultLanguageId()];
+                $array['title'] = $default_translation['title'];
+                $array['description'] = $default_translation['description'];
+            }
             cb_do_action('update_video', [
                 'object_id' => $vid,
                 'results'   => $array
@@ -2216,12 +2260,12 @@ class CBvideo extends CBCategory
         global $cb_columns;
 
         $limit = $params['limit'];
-        $order = $params['order'];
+        $order = VideoTranslations::titleOrder($params['order']);
 
         $cond = '';
         $superCond = '';
         if (!User::getInstance()->hasAdminAccess()) {
-            $superCond = Video::getInstance()->getGenericConstraints();
+            $superCond = Video::getInstance()->getGenericConstraints(['sub_request' => true]);
         } else {
             if ($params['active']) {
                 $cond .= ' ' . ('video.active') . '=\'' . $params['active'] . '\'';
@@ -2343,7 +2387,7 @@ class CBvideo extends CBCategory
             if ($tag_n_title != '') {
                 $tag_n_title .= ' OR ';
             }
-            $tag_n_title .= ' ' . ('video.title') . ' LIKE \'%' . $params['title'] . '%\'';
+            $tag_n_title .= VideoTranslations::searchTitle($params['title'], false);
         }
 
         if ($tag_n_title) {
@@ -2498,6 +2542,10 @@ class CBvideo extends CBCategory
         ];
 
         $fields = table_fields($fields);
+        $video_from = cb_sql_table('video') . VideoTranslations::displayJoin();
+        if (VideoTranslations::isEnabled()) {
+            $fields .= ', ' . implode(', ', VideoTranslations::displayFields());
+        }
 
         $join_tag = '';
         $group_tag = '';
@@ -2510,7 +2558,7 @@ class CBvideo extends CBCategory
         }
 
         if (!$params['count_only'] && !$params['show_related']) {
-            $query = 'SELECT ' . $fields . ' FROM ' . cb_sql_table('video');
+            $query = 'SELECT ' . $fields . ' FROM ' . $video_from;
             $query .= ' LEFT JOIN ' . cb_sql_table('users') . ' ON video.userid = users.userid';
             $query .=  $join_tag;
             if (!empty($superCond)) {
@@ -2540,7 +2588,7 @@ class CBvideo extends CBCategory
                     $cond = $superCond . ' AND ';
                 }
 
-                $cond .= '(MATCH(video.title) AGAINST (\'' . mysql_clean($params['title']) . '\' IN NATURAL LANGUAGE MODE) ';
+                $cond .= '(' . (VideoTranslations::isEnabled() ? VideoTranslations::searchTitle($params['title'] ?? '') : 'MATCH(video.title) AGAINST (\'' . mysql_clean($params['title']) . '\' IN NATURAL LANGUAGE MODE)') . ' ';
                 if( $match_tag != ''){
                     $cond .= 'OR MATCH('.$match_tag.') AGAINST (\'' . mysql_clean($params['title']) . '\' IN NATURAL LANGUAGE MODE)';
                 }
@@ -2554,7 +2602,7 @@ class CBvideo extends CBCategory
                 $cond .= ' ' . ('video.videoid') . ' <> \'' . $params['exclude'] . '\' ';
             }
 
-            $query = ' SELECT ' . $fields . ' FROM ' . cb_sql_table('video');
+            $query = ' SELECT ' . $fields . ' FROM ' . $video_from;
             $query .= ' LEFT JOIN ' . cb_sql_table('users').' ON video.userid = users.userid ';
             $query .=  $join_tag;
 
@@ -2576,7 +2624,7 @@ class CBvideo extends CBCategory
                     }
 
                     //Try Finding videos via tags
-                    $cond .= '(MATCH(video.title) AGAINST (\'' . mysql_clean($params['tags']) . '\' IN NATURAL LANGUAGE MODE) ';
+                    $cond .= '(' . (VideoTranslations::isEnabled() ? VideoTranslations::searchTitle($params['tags'] ?? '') : 'MATCH(video.title) AGAINST (\'' . mysql_clean($params['tags']) . '\' IN NATURAL LANGUAGE MODE)') . ' ';
                     if ($match_tag != '') {
                         $cond .= 'OR MATCH(' . $match_tag . ') AGAINST (\'' . mysql_clean($params['tags']) . '\' IN NATURAL LANGUAGE MODE)';
                     }
@@ -2590,7 +2638,7 @@ class CBvideo extends CBCategory
                     $cond .= ' ' . ('video.videoid') . ' <> \'' . $params['exclude'] . '\' ';
                 }
 
-                $query = ' SELECT ' . $fields . ' FROM ' . cb_sql_table('video');
+                $query = ' SELECT ' . $fields . ' FROM ' . $video_from;
                 $query .= ' LEFT JOIN ' . cb_sql_table('users').' ON video.userid = users.userid ';
                 $query .=  $join_tag;
 
@@ -2623,7 +2671,7 @@ class CBvideo extends CBCategory
                 $cond = ' WHERE ' . $cond;
             }
 
-            $query_count = 'SELECT COUNT(*) AS total FROM (SELECT videoid FROM '.cb_sql_table('video') . ' ' . $cond . ' GROUP BY video.videoid) T';
+            $query_count = 'SELECT COUNT(DISTINCT video.videoid) AS total FROM ' . cb_sql_table('video') . $join_tag . ' ' . $cond;
             $count = Clipbucket_db::getInstance()->_select($query_count);
             if (!empty($count)) {
                 $result = $count[0]['total'];
@@ -2816,16 +2864,21 @@ class CBvideo extends CBCategory
             $where = ' AND ' . Video::getInstance()->getGenericConstraints(['show_unlisted' => true]);
         }
 
-        $query = 'SELECT ' . table_fields($fields) . ' FROM ' . cb_sql_table('playlist_items');
+        $select = table_fields($fields);
+        if (VideoTranslations::isEnabled()) {
+            $select .= ', ' . implode(', ', VideoTranslations::displayFields());
+        }
+        $query = 'SELECT ' . $select . ' FROM ' . cb_sql_table('playlist_items');
         $query .= ' LEFT JOIN ' . cb_sql_table('playlists') . ' ON playlist_items.playlist_id = playlists.playlist_id';
         $query .= ' LEFT JOIN ' . cb_sql_table('video') . ' ON playlist_items.object_id = video.videoid';
+        $query .= VideoTranslations::displayJoin();
         if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.2', '72')) {
             $query .= ' LEFT JOIN ' . cb_sql_table('video_users') . ' ON video_users.videoid = video.videoid';
         }
         $query .= ' WHERE playlist_items.playlist_id = ' . (int)$playlist_id . $where;
 
         if (!is_null($order)) {
-            $query .= ' ORDER BY ' . $order;
+            $query .= ' ORDER BY ' . VideoTranslations::titleOrder($order);
         }
 
         if ($limit > 0) {

@@ -45,7 +45,11 @@
             <div id="updateVideoInfo">
                 {ANCHOR place="before_upload_form_required_fields"}
                 <div class="requiredFields">
+                    {if $video_translation_languages}
+                        {include file="./video_translation_fields.html" clone_upload_form=true video_upload=true}
+                    {/if}
                     {foreach $requiredFields.fields as $field}
+                        {if $video_translation_languages && in_array($field.name, ['title', 'description'])}{continue}{/if}
 
                         {$field.class='form-control'}
                         {$field.notShowSeprator='yes'}

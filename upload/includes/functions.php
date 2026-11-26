@@ -1716,6 +1716,7 @@ function validate_cb_form($input, $array): void
 {
     //Check the Collpase Category Checkboxes
     if (is_array($input)) {
+        $block = false;
         foreach ($input as $field) {
             $field['name'] = formObj::rmBrackets($field['name']);
             $title = $field['title'];

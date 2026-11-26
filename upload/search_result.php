@@ -34,6 +34,9 @@ $params['ban_status'] = 'no';
 switch($type) {
     case 'videos':
         $obj = Video::getInstance();
+        if (VideoTranslations::isEnabled() && in_array($_GET['sort'] ?? null, ['alphabetical', 'reverse_alphabetical'], true)) {
+            $params = $obj->getFilterParams($_GET['sort'], $params);
+        }
         break;
 
     case 'photos':

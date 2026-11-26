@@ -6,7 +6,7 @@ if( config('enable_sitemap') != 'yes' ){
     redirect_to(cblink(['name' => 'error_403']));
 }
 
-header("Content-Type: text/xml charset=utf-8");
+header('Content-Type: text/xml; charset=UTF-8');
 $params = ['limit' => 100];
 $videos = Video::getInstance()->getAll($params);
 ?>
@@ -20,8 +20,8 @@ $videos = Video::getInstance()->getAll($params);
                 <video:content_loc><?php echo get_video_file($video); ?></video:content_loc>
                 <video:player_loc allow_embed="yes">/player/old_players/embed_player.swf?file=<?php echo get_video_file($video); ?></video:player_loc>
                 <video:thumbnail_loc><?php echo VideoThumbs::getDefaultThumbFile($video['videoid'], '416', '260'); ?></video:thumbnail_loc>
-                <video:title><![CDATA[<?php echo substr($video['title'], 0, 500); ?>]]></video:title>
-                <video:description><![CDATA[<?php echo substr($video['description'], 0, 300); ?>]]></video:description>
+                <video:title><?php echo htmlspecialchars(mb_substr($video['title'], 0, 500), ENT_XML1 | ENT_SUBSTITUTE); ?></video:title>
+                <video:description><?php echo htmlspecialchars(mb_substr($video['description'] ?? '', 0, 300), ENT_XML1 | ENT_SUBSTITUTE); ?></video:description>
                 <video:rating><?php
                     $vrating = $video['rating'] / 2;
                     $findcond = strpos($vrating, '.');

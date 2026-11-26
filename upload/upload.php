@@ -48,6 +48,10 @@ ClipBucket::getInstance()->addJS([
     'plupload/js/moxie' . $min_suffixe . '.js'                 => 'admin',
     'plupload/js/plupload' . $min_suffixe . '.js'              => 'admin'
 ]);
+if (VideoTranslations::isEnabled()) {
+    assign('video_translation_languages', VideoTranslations::getFormLanguages([], isset($_POST['video_translations']) ? $_POST : null));
+    ClipBucket::getInstance()->addJS(['video_translations' . $min_suffixe . '.js' => 'global']);
+}
 ClipBucket::getInstance()->addCSS([
     'jquery.tagit' . $min_suffixe . '.css'     => 'admin',
     'tagit.ui-zendesk' . $min_suffixe . '.css' => 'admin'

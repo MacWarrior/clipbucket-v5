@@ -78,7 +78,15 @@ switch ($mode) {
         }
         $cond = '';
         if (get('query') != '') {
-            $cond = " (video.title LIKE '%" . mysql_clean(get('query')) . "%' OR video.tags LIKE '%" . mysql_clean(get('query')) . "%' )";
+            if (VideoTranslations::isEnabled()) {
+                $query = mysql_clean(get('query'));
+                $cond = '(' . VideoTranslations::exists('translation.video_title LIKE \'%' . $query . '%\' OR translation.video_description LIKE \'%' . $query . '%\'')
+                    . ' OR EXISTS (SELECT 1 FROM ' . cb_sql_table('video_tags') . '
+                        INNER JOIN ' . cb_sql_table('tags') . ' ON tags.id_tag = video_tags.id_tag
+                        WHERE video_tags.id_video = video.videoid AND tags.name LIKE \'%' . $query . '%\'))';
+            } else {
+                $cond = " (video.title LIKE '%" . mysql_clean(get('query')) . "%' OR video.tags LIKE '%" . mysql_clean(get('query')) . "%' )";
+            }
         }
         $params = [
             'limit' => $get_limit

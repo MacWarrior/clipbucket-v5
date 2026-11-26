@@ -185,6 +185,7 @@ require_once DirPath::get('classes') . 'form.class.php';
 require_once DirPath::get('classes') . 'log.class.php';
 require_once DirPath::get('classes') . 'cms.class.php';
 require_once DirPath::get('classes') . 'video.class.php';
+require_once DirPath::get('classes') . 'video_translations.class.php';
 require_once DirPath::get('classes') . 'playlist.class.php';
 require_once DirPath::get('classes') . 'player.class.php';
 require_once DirPath::get('classes') . 'cbemail.class.php';

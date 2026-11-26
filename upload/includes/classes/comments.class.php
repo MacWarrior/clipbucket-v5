@@ -29,7 +29,8 @@ class Comments extends Objects
         $case_when = '';
         if ((!$param_type || $param_type == 'v') && Comments::isVideoCommentEnabled()) {
             $left_join .= ' LEFT JOIN ' . cb_sql_table('video') . ' ON comments.type = \'v\' AND comments.type_id = video.videoid';
-            $case_when .= ' WHEN comments.type = \'v\' THEN video.title';
+            $left_join .= VideoTranslations::displayJoin();
+            $case_when .= ' WHEN comments.type = \'v\' THEN ' . VideoTranslations::displayTitle();
             $video_constraint = Video::getInstance()->getGenericConstraints();
             if ($video_constraint) {
                 $conditions[] = $video_constraint;

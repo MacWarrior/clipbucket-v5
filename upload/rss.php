@@ -78,7 +78,7 @@ header("Content-type: text/xml; charset=utf-8");
             ?>
             <item>
                 <author><?php echo $video['username']; ?></author>
-                <title><?php echo substr($video['title'], 0, 500); ?></title>
+                <title><?php echo htmlspecialchars(mb_substr($video['title'], 0, 500), ENT_XML1 | ENT_SUBSTITUTE); ?></title>
                 <link><?php echo video_link($video); ?></link>
                 <description>
                     <![CDATA[
@@ -86,8 +86,8 @@ header("Content-type: text/xml; charset=utf-8");
                         <tr>
                             <td width="130" height="90" align="center" valign="middle"><img src="<?php echo VideoThumbs::getDefaultThumbFile($video['videoid'], '416', '260'); ?>" border="1"/></td>
                             <td valign="top">
-                                <a href="<?php echo video_link($video); ?>"><?php echo $video['title']; ?></a><br/>
-                                <?php echo $video['description']; ?>
+                                <a href="<?php echo display_clean(video_link($video)); ?>"><?php echo display_clean($video['title']); ?></a><br/>
+                                <?php echo nl2br(display_clean($video['description'] ?? '')); ?>
                             </td>
                             <td width="100" valign="top" align="right">
                                 Rating <?php echo $video['rating']; ?>/10<br/>

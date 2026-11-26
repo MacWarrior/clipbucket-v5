@@ -97,7 +97,10 @@ $subtitle_list = Subtitle::getVideoSubtitles($data) ?: [];
 assign('subtitle_list', $subtitle_list);
 
 $min_suffixe = System::isInDev() ? '' : '.min';
-
+if (VideoTranslations::isEnabled()) {
+    assign('video_translation_languages', VideoTranslations::getFormLanguages($data, error() ? $_POST : null));
+    ClipBucket::getInstance()->addAdminJS(['video_translations' . $min_suffixe . '.js' => 'global']);
+}
 if( config('enable_video_embed_players') == 'yes' ){
     $list_icons = SocialNetworks::getInstance()->getAllIcons();
     assign('list_icons', $list_icons);

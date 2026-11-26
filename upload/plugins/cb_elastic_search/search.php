@@ -138,6 +138,22 @@ if (defined('IN_MODULE') && $section == 'elastic') {
                 break;
         }
 
+        if (!empty($newVideos) && VideoTranslations::isEnabled()) {
+            $videos = Video::getInstance()->getAll(['videoids' => array_column($newVideos, 'videoid')]);
+            $videos_by_id = array_column($videos ?: [], null, 'videoid');
+            foreach ($newVideos as $key => &$video) {
+                $localized = $videos_by_id[$video['videoid']] ?? null;
+                if ($localized === null) {
+                    unset($newVideos[$key]);
+                    continue;
+                }
+                $video['title'] = $localized['title'];
+                $video['description'] = $localized['description'];
+                $video['video_link'] = video_link($localized);
+            }
+            unset($video);
+        }
+
         $filters = $es->makeFilters();
         assign("filter_results", $filters);
 

@@ -230,6 +230,15 @@ abstract class Objects
         }
 
         $info = static::getObjectTableAndFieldId();
+        if (static::TYPE === 'video' && VideoTranslations::isEnabled()) {
+            $from = cb_sql_table('favorites') . ' INNER JOIN ' . cb_sql_table('video') . ' ON video.videoid = favorites.id';
+            $condition = 'favorites.' . $field . ' = ' . $value . ' AND favorites.userid = ' . (int)$user_id . $cond;
+            if (!empty($params['count_only'])) {
+                return Clipbucket_db::getInstance()->count($from, '*', $condition);
+            }
+            return Clipbucket_db::getInstance()->select($from . VideoTranslations::displayJoin(),
+                'favorites.*, video.*, ' . implode(', ', VideoTranslations::displayFields()), $condition, $limit, VideoTranslations::titleOrder($order));
+        }
         if (!empty($params['count_only'])) {
             return Clipbucket_db::getInstance()->count(tbl('favorites' . ',' . $info['table_name']), '*', ' ' . tbl('favorites') . '.' . $field . '=' . $value . ' 
                 AND ' . tbl('favorites') . '.userid=\'' . $user_id . '\' 

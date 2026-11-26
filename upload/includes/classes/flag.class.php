@@ -86,7 +86,8 @@ class Flag
             case 'video':
                 $join[] = ' INNER JOIN ' . tbl(Video::getInstance()->getTableName()) . ' AS ' . $param_element_type . ' ON ' . self::$tableName . '.id_flag_element_type = (SELECT '.self::getFieldIdElementType().' FROM ' . tbl(self::getTableNameElementType()) . ' WHERE name = \'video\' ) 
                     AND ' . self::$tableName . '.id_element = ' . $param_element_type . '.videoid ';
-                $select_element = $param_element_type . '.title ';
+                $join[] = VideoTranslations::displayJoin($param_element_type);
+                $select_element = VideoTranslations::displayTitle($param_element_type);
                 $select_is_active = 'CASE WHEN ' . $param_element_type . '.active = \'yes\' THEN 1 ELSE 0 END';
                 break;
 

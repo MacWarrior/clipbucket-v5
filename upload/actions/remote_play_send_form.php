@@ -124,10 +124,14 @@ switch($step){
             $response['error'] = 1;
         }
         $response['msg'] =getTemplateMsg();
+        if (!empty($errors)) {
+            echo json_encode($response);
+            die();
+        }
 
 
     sendClientResponseAndContinue(function () use($video_id, $response) {
-            $video = Video::getInstance()->getOne(['video_id' => $video_id]);
+            $video = Video::getInstance()->getOne(['videoid' => $video_id]);
             $response['html'] = Upload::displayVideoThumbsForm($video);
             assign('subtitle_list', Subtitle::getVideoSubtitles($video) ?: []);
             $response['percent'] = $video['convert_percent'] ?? 0;
