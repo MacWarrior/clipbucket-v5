@@ -22,6 +22,10 @@ foreach ($videos as $video) {
         assign('data', $video);
         $data['html'] = getTemplate('blocks/video_player.html');
         $data['data'] = $video;
+    } elseif ($_POST['output'] == 'collection') {
+        assign('item', $video);
+        $data['html'] = getTemplate('blocks/collection_items_results_preview.html');
+        $data['data'] = $video;
     }
     $return['videos'][] = $data;
 }
