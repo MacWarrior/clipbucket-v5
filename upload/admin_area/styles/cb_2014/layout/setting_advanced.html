@@ -90,7 +90,7 @@
                                 </div>
                                 <div class="col-md-6">
                                     <div class="input-group">
-                                        <input class="form-control" type="number" name="max_video_duration" id="max_video_duration" value="{(int)$row.max_video_duration}" size="45"/>
+                                        <input class="form-control" type="number" name="max_video_duration" id="max_video_duration" value="{if trim((string)$row.max_video_duration) !== ''}{(int)$row.max_video_duration}{/if}" size="45"/>
                                         <span class="input-group-addon" title="{lang('in_x',lang('minutes'))}">{lang code='minutes'}</span>
                                     </div>
                                 </div>
@@ -312,7 +312,7 @@
                                     <label class="nowrap" for="num_thumbs" title="Number of video thumbs">Number of video thumbs</label>
                                 </div>
                                 <div class="col-md-6">
-                                    <input class="form-control" name="num_thumbs" id="num_thumbs" value="{(int)$row.num_thumbs}" type="number"/>
+                                    <input class="form-control" name="num_thumbs" id="num_thumbs" value="{if trim((string)$row.num_thumbs) !== ''}{(int)$row.num_thumbs}{/if}" type="number"/>
                                 </div>
                             </div>
                             <hr/>
@@ -350,7 +350,7 @@
                                 </div>
                                 <div class="col-md-6">
                                     <div class="input-group">
-                                        <input class="form-control" name="srate" id="srate" value="{(int)$row.srate}" size="45" type="number"/>
+                                        <input class="form-control" name="srate" id="srate" value="{if trim((string)$row.srate) !== ''}{(int)$row.srate}{/if}" size="45" type="number"/>
                                         <span class="input-group-addon" title="{lang('in_x',lang('hz'))}">{lang code='hz'}</span>
                                     </div>
                                 </div>
@@ -362,7 +362,7 @@
                                 </div>
                                 <div class="col-md-6">
                                     <div class="input-group">
-                                        <input class="form-control" name="sbrate" id="sbrate" value="{(int)$row.sbrate}" size="45" type="number"/>
+                                        <input class="form-control" name="sbrate" id="sbrate" value="{if trim((string)$row.sbrate) !== ''}{(int)$row.sbrate}{/if}" size="45" type="number"/>
                                         <span class="input-group-addon" title="{lang('in_x',lang('bps'))}">{lang code='bps'}</span>
                                     </div>
                                 </div>
@@ -374,7 +374,7 @@
                                 </div>
                                 <div class="col-md-6">
                                     <div class="input-group">
-                                        <input class="form-control" name="vrate" id="vrate" value="{(int)$row.vrate}" size="45" type="number"/>
+                                        <input class="form-control" name="vrate" id="vrate" value="{if trim((string)$row.vrate) !== ''}{(int)$row.vrate}{/if}" size="45" type="number"/>
                                         <span class="input-group-addon" title="{lang('in_x',lang('fps'))}">{lang code='fps'}</span>
                                     </div>
                                 </div>
@@ -594,7 +594,7 @@
                                                 </div>
                                                 <div class="col-md-4">
                                                     <div class="input-group">
-                                                        <input class="form-control" name="vbrate_{$resolution.title}" id="vbrate_{$resolution.title}" value="{(int)$resolution.video_bitrate}" size="45" type="number"/>
+                                                        <input class="form-control" name="vbrate_{$resolution.title}" id="vbrate_{$resolution.title}" value="{if trim((string)$resolution.video_bitrate) !== ''}{(int)$resolution.video_bitrate}{/if}" size="45" type="number"/>
                                                         <span class="input-group-addon" title="{lang('in_x',lang('bps'))}">{lang code='bps'}</span>
                                                     </div>
                                                 </div>
@@ -721,7 +721,7 @@
                                 <label class="nowrap" for="smtp_port" title="SMTP Port">SMTP Port</label>
                             </div>
                             <div class="col-md-6 row-size">
-                                <input class="form-control" name="smtp_port" id="smtp_port" value="{(int)$row.smtp_port}"/>
+                                <input class="form-control" name="smtp_port" id="smtp_port" value="{if trim((string)$row.smtp_port) !== ''}{(int)$row.smtp_port}{/if}"/>
                             </div>
                         </div>
                         <hr class="config_smtp" {if $row.mail_type=='mail'}style="display:none;"{/if}/>
@@ -825,7 +825,7 @@
                                 <label class="nowrap" for="proxy_port" title="Port">Port</label>
                             </div>
                             <div class="col-md-8 row-size">
-                                <input class="form-control" type="number" name="proxy_port" id="proxy_port" value="{(int)$row.proxy_port}"/>
+                                <input class="form-control" type="number" name="proxy_port" id="proxy_port" value="{if trim((string)$row.proxy_port) !== ''}{(int)$row.proxy_port}{/if}"/>
                             </div>
                         </div>
                         <hr/>
@@ -888,7 +888,7 @@
                                 <label class="nowrap" for="cache_port" title="{lang code='port'}">{lang code='port'}</label>
                             </div>
                             <div class="col-md-8 row-size">
-                                <input class="form-control" name="cache_port" id="cache_port" value="{(int)$row.cache_port}"/>
+                                <input class="form-control" name="cache_port" id="cache_port" value="{if trim((string)$row.cache_port) !== ''}{(int)$row.cache_port}{/if}"/>
                             </div>
                         </div>
                         <hr/>
@@ -1052,7 +1052,7 @@
                                 </label>
                             </div>
                             <div class="col-md-6">
-                                <input class="form-control" name="max_conversion" id="max_conversion" value="{(int)$row.max_conversion}" type="number"/>
+                                <input class="form-control" name="max_conversion" id="max_conversion" value="{if trim((string)$row.max_conversion) !== ''}{(int)$row.max_conversion}{/if}" type="number"/>
                             </div>
                         </div>
                         <hr/>
@@ -1201,7 +1201,7 @@
                                 <label class="nowrap" for="photo_lar_width" title="{lang('option_large_photo_width')}">{lang('option_large_photo_width')}</label>
                             </div>
                             <div class="col-md-2 row-size">
-                                <input class="form-control" type="number" maxlength="3" name="photo_lar_width" id="photo_lar_width" value="{(int)$row.photo_lar_width}" />
+                                <input class="form-control" type="number" maxlength="3" name="photo_lar_width" id="photo_lar_width" value="{if trim((string)$row.photo_lar_width) !== ''}{(int)$row.photo_lar_width}{/if}" />
                             </div>
                             <div class="col-md-4">
                                 <label class="nowrap" for="photo_crop" title="{lang('option_crop_image')}">{lang('option_crop_image')}</label>
@@ -1223,13 +1223,13 @@
                                 <label class="nowrap" for="photo_thumb_width" title="{lang('width')}">{lang('width')}</label>
                             </div>
                             <div class="col-md-2">
-                                <input class="form-control" name="photo_thumb_width" id="photo_thumb_width" value="{(int)$row.photo_thumb_width}" type="number"/>
+                                <input class="form-control" name="photo_thumb_width" id="photo_thumb_width" value="{if trim((string)$row.photo_thumb_width) !== ''}{(int)$row.photo_thumb_width}{/if}" type="number"/>
                             </div>
                             <div class="col-md-2">
                                 <label class="nowrap" for="photo_thumb_height" title="{lang('height')}">{lang('height')}</label>
                             </div>
                             <div class="col-md-2">
-                                <input class="form-control" name="photo_thumb_height" id="photo_thumb_height" value="{(int)$row.photo_thumb_height}" type="number"/>
+                                <input class="form-control" name="photo_thumb_height" id="photo_thumb_height" value="{if trim((string)$row.photo_thumb_height) !== ''}{(int)$row.photo_thumb_height}{/if}" type="number"/>
                             </div>
                         </div>
                         <hr/>
@@ -1241,13 +1241,13 @@
                                 <label class="nowrap" for="photo_med_width" title="{lang('width')}">{lang('width')}</label>
                             </div>
                             <div class="col-md-2">
-                                <input class="form-control" name="photo_med_width" id="photo_med_width" value="{(int)$row.photo_med_width}" type="number"/>
+                                <input class="form-control" name="photo_med_width" id="photo_med_width" value="{if trim((string)$row.photo_med_width) !== ''}{(int)$row.photo_med_width}{/if}" type="number"/>
                             </div>
                             <div class="col-md-2">
                                 <label class="nowrap" for="photo_med_height" title="{lang('height')}">{lang('height')}</label>
                             </div>
                             <div class="col-md-2">
-                                <input class="form-control" name="photo_med_height" id="photo_med_height" value="{(int)$row.photo_med_height}" type="number"/>
+                                <input class="form-control" name="photo_med_height" id="photo_med_height" value="{if trim((string)$row.photo_med_height) !== ''}{(int)$row.photo_med_height}{/if}" type="number"/>
                             </div>
                         </div>
                         <hr/>
