@@ -110,6 +110,7 @@ if (isset($_POST['update'])) {
         'smtp_pass',
         'smtp_auth',
         'smtp_port',
+        'smtp_secure',
 
         'proxy_enable',
         'proxy_auth',
@@ -234,6 +235,14 @@ if (isset($_POST['update'])) {
                 }
             }
             if (!$type_ok) {
+                $value = null;
+                continue;
+            }
+        }
+
+        if ($field == 'smtp_secure') {
+            if (!in_array($value, EmailTemplate::$allowedSMTPSecure) && $value != '') {
+                e(lang('invalid_smtp_secure'));
                 $value = null;
                 continue;
             }

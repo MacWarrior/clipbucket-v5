@@ -6,6 +6,7 @@ INSERT INTO `{tbl_prefix}config` (`configid`, `name`, `value`, allow_stat)
     (NULL, 'smtp_user', '', FALSE),
     (NULL, 'smtp_pass', '', FALSE),
     (NULL, 'smtp_port', '', FALSE),
+    (NULL, 'smtp_secure', '', FALSE),
     (NULL, 'proxy_url', '',FALSE),
     (NULL, 'proxy_port', '',FALSE),
     (NULL, 'proxy_username', '',FALSE),

@@ -43,6 +43,11 @@ class EmailTemplate
         'language_key'
     ];
 
+    public static array $allowedSMTPSecure = [
+        PHPMailer::ENCRYPTION_STARTTLS,
+        PHPMailer::ENCRYPTION_SMTPS
+    ];
+
     /**
      * @throws Exception
      */
@@ -658,8 +663,16 @@ class EmailTemplate
                 $mail->SMTPAuth = true;
                 $mail->Username = config('smtp_user');
                 $mail->Password = config('smtp_pass');
+                $mail->SMTPSecure = (config('smtp_secure') ?: false);
             }
         }
+        $mail->SMTPOptions = [
+            'ssl' => [
+                'verify_peer' => true,
+                'verify_peer_name' => true,
+                'allow_self_signed' => true
+            ]
+        ];
 
         if (is_array($to) && empty($to['name'])) {
             foreach ($to as $email) {
