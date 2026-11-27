@@ -1989,4 +1989,9 @@ VALUES ('noted_x'),
        ('page_code'),
        ('page_title'),
        ('page_content'),
-       ('help_drag_and_drop');
+       ('help_drag_and_drop'),
+       ('email_content_html'),
+       ('email_content_txt'),
+       ('email_content_txt_hint'),
+       ('email_content_required'),
+       ('email_content_variable_required');

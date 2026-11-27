@@ -53,6 +53,10 @@ class EmailTemplate
      */
     public static function formatAndValidateTemplateFields(array $fields)
     {
+        $supports_plain_text = self::supportsPlainText();
+        if (!$supports_plain_text) {
+            unset($fields['content_txt']);
+        }
         //check code unique
         $existing_code = self::getOneTemplate([
             'code'                  => $fields['code'] ?: false,
@@ -65,6 +69,27 @@ class EmailTemplate
             ]));
             return false;
         }
+        if ($supports_plain_text && (isset($fields['content']) || isset($fields['content_txt']))) {
+            $contents = [
+                'email_content_html' => $fields['content'] ?? '',
+                'email_content_txt'  => $fields['content_txt'] ?? ''
+            ];
+            $has_content = false;
+            foreach ($contents as $label => $content) {
+                if (trim($content) === '') {
+                    continue;
+                }
+                $has_content = true;
+                if (stripos($content, '{{email_content}}') === false) {
+                    e(lang('email_content_variable_required', [lang($label), '{{email_content}}']));
+                    return false;
+                }
+            }
+            if (!$has_content) {
+                e(lang('email_content_required'));
+                return false;
+            }
+        }
         foreach ($fields as $field => &$value) {
             $value = mysql_clean($value);
             switch ($field) {
@@ -74,11 +99,14 @@ class EmailTemplate
                     $value = (bool)$value;
                     break;
                 case 'content':
-                    if (stripos($value, '{{email_content}}') === false) {
+                    if (!$supports_plain_text && stripos($value, '{{email_content}}') === false) {
                         e(lang('empty_email_content'));
                         return false;
                     }
                     $value = '\'' . mysql_clean($value) . '\'';
+                    break;
+                case 'content_txt':
+                    $value = '\'' . $value . '\'';
                     break;
                 case 'code':
                     if (empty($value)) {
@@ -100,6 +128,9 @@ class EmailTemplate
      */
     public static function formatAndValidateEmailFields(array $fields)
     {
+        if (!self::supportsPlainText()) {
+            unset($fields['content_txt']);
+        }
         //check code unique
         $existing_code = self::getOneEmail([
             'code'         => $fields['code'] ?: '',
@@ -122,6 +153,10 @@ class EmailTemplate
 //        $extracted_titles_variables = self::getVariablesFromEmail($fields, 'title');
 //        $extracted_content_variables = self::getVariablesFromEmail($fields, 'email');
         foreach ($fields as $field => &$value) {
+            if ($field === 'content_txt') {
+                $value = "'" . mysql_clean($value) . "'";
+                continue;
+            }
             $value = mysql_clean($value);
             switch ($field) {
                 case 'is_deletable':
@@ -147,6 +182,21 @@ class EmailTemplate
         return $fields;
     }
 
+    public static function supportsPlainText(): bool
+    {
+        return Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '999');
+    }
+
+    private static function updateContentFields(): void
+    {
+        if (self::supportsPlainText()) {
+            self::$fields['content_txt'] = 'content_txt';
+            self::$fieldsEmail['content_txt'] = 'content_txt';
+        } else {
+            unset(self::$fields['content_txt'], self::$fieldsEmail['content_txt']);
+        }
+    }
+
     /**
      * @param array $email_template
      * @return bool|mysqli_result
@@ -161,6 +211,7 @@ class EmailTemplate
         if ($email_template === false) {
             return false;
         }
+        self::updateContentFields();
         foreach (self::$fields as $field) {
             if ($field == 'id_email_template') {
                 continue;
@@ -189,6 +240,7 @@ class EmailTemplate
         if ($email === false) {
             return false;
         }
+        self::updateContentFields();
         foreach (self::$fieldsEmail as $field) {
             if ($field == 'id_email') {
                 continue;
@@ -214,6 +266,7 @@ class EmailTemplate
         if ($email_template === false) {
             return false;
         }
+        self::updateContentFields();
         foreach (self::$fields as $field) {
             if( in_array($field, ['id_email_template', 'is_deletable']) ){
                 continue;
@@ -237,6 +290,7 @@ class EmailTemplate
         if ($email === false) {
             return false;
         }
+        self::updateContentFields();
         foreach (self::$fieldsEmail as $field) {
             if( in_array($field, ['id_email', 'is_deletable']) ){
                 continue;
@@ -254,6 +308,7 @@ class EmailTemplate
      */
     private static function getAllTemplateFields(): array
     {
+        self::updateContentFields();
         return array_map(function ($field) {
             return self::$tableName . '.' . $field;
         }, self::$fields);
@@ -264,6 +319,7 @@ class EmailTemplate
      */
     private static function getAllEmailFields(): array
     {
+        self::updateContentFields();
         return array_map(function ($field) {
             return self::$tableNameEmail . '.' . $field;
         }, self::$fieldsEmail);
@@ -410,6 +466,9 @@ class EmailTemplate
             $group[] = self::$tableNameEmail . '.id_email';
             if ($param_get_template_content) {
                 $select[] = self::$tableName . '.content as template_content';
+                if (self::supportsPlainText()) {
+                    $select[] = self::$tableName . '.content_txt as template_content_txt';
+                }
             }
         } else {
             $select[] = 'COUNT(DISTINCT ' . self::$tableNameEmail . '.id_email) AS count';
@@ -597,9 +656,10 @@ class EmailTemplate
     /**
      * @param string $string
      * @param array $variables
+     * @param bool $plain_text
      * @return string
      */
-    public static function fillVariable(string $string, array $variables): string
+    public static function fillVariable(string $string, array $variables, bool $plain_text = false): string
     {
         foreach ($variables as $key => $variable) {
             if (empty($variable)) {
@@ -609,11 +669,35 @@ class EmailTemplate
         $variables = array_merge(self::getGlobalVariablesArray(), $variables);
         foreach ($variables as $name => $value) {
             if( $name != 'email_content' ){
-                $value = display_clean($value);
+                $value = $plain_text ? self::getPlainTextVariable((string)$value) : display_clean($value);
             }
             $string = str_replace('{{' . $name . '}}', $value, $string);
         }
         return $string;
+    }
+
+    private static function getPlainTextVariable(string $value): string
+    {
+        if (!preg_match('/<\/?(?:a|b|blockquote|br|code|div|em|h[1-6]|hr|i|img|li|ol|p|pre|small|span|strong|table|td|tr|u|ul)\b(?=[\s\/>])/i', $value)) {
+            return $value;
+        }
+
+        $mail = new PHPMailer();
+        $mail->CharSet = PHPMailer::CHARSET_UTF8;
+        // Keep the href before html2text() drops the link markup.
+        $value = preg_replace_callback(
+            '~<a\b(?=[\s>])((?:"[^"]*"|\x27[^\x27]*\x27|[^>"\x27])*)>(.*?)</a\s*>~is',
+            static function (array $link): string {
+                if (!preg_match('~(?:^|\s)href\s*=\s*(?:"([^"]*)"|\x27([^\x27]*)\x27|([^\s>"\x27]+))~i', $link[1], $href, PREG_UNMATCHED_AS_NULL)) {
+                    return $link[2];
+                }
+                $url = $href[1] ?? $href[2] ?? $href[3];
+                return $link[2] . ($url === '' ? '' : ' (' . $url . ')');
+            },
+            $value
+        );
+
+        return $mail->html2text(preg_replace('~<br\s*/?>~i', "\n", $value));
     }
 
     /**
@@ -622,11 +706,12 @@ class EmailTemplate
      * @param array|string $to
      * @param string $sender_email
      * @param string $sender_name
+     * @param string $content_txt
      * @return array|string|string[]|true
      * @throws \PHPMailer\PHPMailer\Exception
      * @throws Exception
      */
-    public static function send(string $subject, string $content, $to, $sender_email = '', $sender_name = '')
+    public static function send(string $subject, string $content, $to, $sender_email = '', $sender_name = '', string $content_txt = '')
     {
         if( config('disable_email') == 'yes' ){
             return true;
@@ -643,9 +728,14 @@ class EmailTemplate
                 $sender_email = 'no-reply';
             }
         }
-        $mail = new PHPMailer();
+        $mail = new class extends PHPMailer {
+            public function alternativeExists(): bool
+            {
+                // PHPMailer's empty() also discards the valid text "0".
+                return $this->AltBody !== '';
+            }
+        };
         $mail->CharSet = PHPMailer::CHARSET_UTF8;
-        $mail->isHTML();
         if (!Email::isValid($sender_email)) {
             return lang('invalid_email_sender');
         }
@@ -653,7 +743,16 @@ class EmailTemplate
         $mail->addReplyTo($sender_email, $sender_name);
 
         $mail->Subject = $subject;
-        $mail->MsgHTML($content);
+        $has_html = trim($content) !== '';
+        $has_text = trim($content_txt) !== '';
+        if ($has_html) {
+            $mail->msgHTML($content, '', $has_text ? static fn(): string => $content_txt : false);
+        } else {
+            $mail->isHTML(false);
+            $mail->Body = $has_text ? $content_txt : '';
+        }
+        // PHPMailer also considers the valid body "0" empty.
+        $mail->AllowEmpty = $mail->Body === '0';
         if (config('mail_type') == 'smtp') {
             $mail->isSMTP();
             $mail->Host = config('smtp_host');
@@ -775,15 +874,29 @@ class EmailTemplate
         return self::fillVariable(trim(stripcslashes($content)), $variables);
     }
 
+    public static function renderEmailContent(string $template, string $body, array $variables = [], bool $plain_text = false): string
+    {
+        unset($variables['email_content']);
+        $body = self::fillVariable($body, $variables, $plain_text);
+        if (trim($template) === '') {
+            return $body;
+        }
+
+        $template = self::fillVariable($template, $variables, $plain_text);
+        return str_ireplace('{{email_content}}', $body, $template);
+    }
+
     /**
      * @throws Exception
      */
-    public static function getRenderedEmail(int $id_email_template, $content): string
+    public static function getRenderedEmail(int $id_email_template, $content, bool $plain_text = false): string
     {
-        $template_content = self::getOneTemplate(['id_email_template' => $id_email_template])['content'];
-        $email_content =self::getRenderedContent($content);
-
-        return self::getRenderedContent($template_content, ['email_content'=> $email_content]);
+        $template = self::getOneTemplate(['id_email_template' => $id_email_template]);
+        $template_content = stripcslashes($template['content'] ?? '');
+        if ($plain_text && self::supportsPlainText()) {
+            $template_content = $template['content_txt'] ?? '';
+        }
+        return self::renderEmailContent($template_content, (string)$content, [], $plain_text);
     }
 
     /**
@@ -829,25 +942,30 @@ class EmailTemplate
             }
         }
 
-        //put variable on email
         $title = self::fillVariable($email['title'], $variables);
-        $email_content = self::getRenderedContent($email['content'], $variables);
-        $variables['email_content'] = $email_content;
+        $content = self::renderEmailContent(
+            stripcslashes($email['template_content'] ?? ''),
+            stripcslashes($email['content'] ?? ''),
+            $variables
+        );
+        $content_txt = '';
+        if (self::supportsPlainText()) {
+            $content_txt = self::renderEmailContent($email['template_content_txt'] ?? '', $email['content_txt'] ?? '', $variables, true);
+        }
 
-        //put email on template
-        $content = self::getRenderedContent($email['template_content'], $variables);
+        $history_content = trim($content) !== '' ? $content : $content_txt;
         //send emails
         if (is_array($to) && !isset($to['mail'])) {
-            $result = self::send($title, $content, $to, $from, $from_name);
+            $result = self::send($title, $content, $to, $from, $from_name, $content_txt);
             if ($result === true) {
                 foreach ($to as $email_address) {
-                    self::saveEmailHisto($email['id_email'], null, $email_address, $title, $content);
+                    self::saveEmailHisto($email['id_email'], null, $email_address, $title, $history_content);
                 }
             }
         } else {
-            $result = self::send($title, $content, $to, $from, $from_name);
+            $result = self::send($title, $content, $to, $from, $from_name, $content_txt);
             if ($result === true) {
-                self::saveEmailHisto($email['id_email'], $user['userid'] ?? null, $to['mail'] ?? $to, $title, $content);
+                self::saveEmailHisto($email['id_email'], $user['userid'] ?? null, $to['mail'] ?? $to, $title, $history_content);
             }
         }
         if ($result !== true) {

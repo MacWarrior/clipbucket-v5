@@ -19,6 +19,7 @@ if ($success) {
 }
 
 assign('template', $email_template);
+assign('content_html', $success ? stripcslashes($email_template['content'] ?? '') : ($email_template['content'] ?? ''));
 assign('global_vars', EmailTemplate::getGlobalVariables());
 $response = templateWithMsgJson('blocks/email_template_edit.html', false);
 $response['success'] = $success;

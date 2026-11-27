@@ -20,6 +20,7 @@ if ($success) {
 
 assign('email_templates', EmailTemplate::getAllTemplate([]));
 assign('email', $email);
+assign('content_html', $success ? stripcslashes($email['content'] ?? '') : ($email['content'] ?? ''));
 assign('global_vars', EmailTemplate::getGlobalVariables());
 assign('content_vars', EmailTemplate::getVariablesFromEmail(!empty($email['id_email']) ? $email['id_email'] : 0));
 $response = templateWithMsgJson('blocks/email_edit.html', false);

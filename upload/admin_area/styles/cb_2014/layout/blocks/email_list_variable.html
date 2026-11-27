@@ -1,6 +1,12 @@
-<h3>{lang code='title_email_variables'} <span class="fa fa-question-circle tips" title="{lang code='tips_email_variables'}"></span></h3>
+<h3>{display_clean(lang('title_email_variables'))} <span class="fa fa-question-circle tips" title="{display_clean(lang('tips_email_variables'))}"></span></h3>
 <h4>{lang('global')}</h4>
 <div class="row">
+    {if $is_template}
+        <div class="col-md-3">
+            <b>{'{{email_content}}'}</b><br>
+            <small><em>{display_clean(lang('email_variable_content'))}</em></small>
+        </div>
+    {/if}
     {foreach from=$global_vars item=var}
         <div class="col-md-3">
             <label for="{$var.code}">{$var.code}</label><br>
