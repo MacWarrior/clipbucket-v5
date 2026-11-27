@@ -1,6 +1,6 @@
 {
   "version":"5.5.3",
-  "revision":"240",
+  "revision":"241",
   "status":"stable",
   "detail":[
     {
@@ -70,6 +70,7 @@
         ,"Fix collection items link"
         ,"Fix possible SQL error on user edition page"
         ,"Fix SEO URLs"
+        ,"Fix categories creation display"
       ]
     },
     {
