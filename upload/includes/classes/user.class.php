@@ -89,6 +89,9 @@ class User extends Objects
             $this->fields[] = 'mfa_code';
             $this->fields[] = 'mfa_date';
         }
+        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '999')) {
+            $this->fields[] = 'password_reset_expires_at';
+        }
 
         $this->tablename_profile = 'user_profile';
         $this->fields_profile = [
@@ -1319,7 +1322,7 @@ class User extends Objects
             return false;
         }
 
-        if( $user['avcode'] != $avcode ){
+        if (empty($user['avcode']) || !hash_equals($user['avcode'], $avcode)) {
             e(lang('avcode_incorrect'));
             return false;
         }
@@ -1327,6 +1330,10 @@ class User extends Objects
         if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.2', '131') ) {
             $field = ['email_confirmed', 'avcode'];
             $value = ['|f|true', RandomString(10)];
+            if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '999')) {
+                $field[] = 'password_reset_expires_at';
+                $value[] = 'NULL';
+            }
             if( !empty($user['email_temp']) ) {
                 $field[] = 'email';
                 $value[] = $user['email_temp'];
@@ -1355,7 +1362,7 @@ class User extends Objects
             return false;
         }
 
-        if( $user['avcode'] != $avcode ){
+        if (empty($user['avcode']) || !hash_equals($user['avcode'], $avcode)) {
             e(lang('avcode_incorrect'));
             return false;
         }
@@ -1373,12 +1380,58 @@ class User extends Objects
     /**
      * @throws Exception
      */
-    public function refreshAvcode(): string
+    public function refreshAvcode(bool $password_reset = false): string
     {
         $userid = (int)$this->get('userid');
         $avcode = RandomString(10);
-        Clipbucket_db::getInstance()->update(tbl(User::getInstance()->getTableName()), ['avcode'], [$avcode], ' userid=' . $userid);
+        $fields = ['avcode'];
+        $values = [$avcode];
+        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '999')) {
+            $fields[] = 'password_reset_expires_at';
+            $values[] = $password_reset ? time() + 15 * 60 : 'NULL';
+        }
+        Clipbucket_db::getInstance()->update(tbl(User::getInstance()->getTableName()), $fields, $values, ' userid=' . $userid);
         return $avcode;
+    }
+
+    public static function isPasswordResetTokenValid(array $user, $avcode): bool
+    {
+        if (!Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '999')) {
+            return false;
+        }
+
+        return is_string($avcode)
+            && preg_match('/\A[0-9a-f]{10}\z/', $avcode) === 1
+            && !empty($user['avcode'])
+            && is_string($user['avcode'])
+            && !empty($user['password_reset_expires_at'])
+            && (int)$user['password_reset_expires_at'] > time()
+            && hash_equals($user['avcode'], $avcode);
+    }
+
+    /**
+     * @throws Exception
+     */
+    public static function changePasswordWithResetToken(array $user, $avcode, string $password): bool
+    {
+        if (!self::isPasswordResetTokenValid($user, $avcode)) {
+            return false;
+        }
+
+        // Consume only the token that was checked, while it is still valid.
+        $db = Clipbucket_db::getInstance();
+        $updated = $db->update(tbl('users'), ['password', 'avcode', 'password_reset_expires_at'],
+            [pass_code($password, $user['userid']), '', 'NULL'],
+            ' userid=' . (int)$user['userid']
+            . " AND BINARY avcode = '" . mysql_clean($avcode) . "'"
+            . ' AND password_reset_expires_at = ' . (int)$user['password_reset_expires_at']
+            . ' AND password_reset_expires_at > ' . time());
+        if (!$updated || $db->Affected_Rows() !== 1) {
+            return false;
+        }
+
+        Session::kill_all_sessions($user['userid']);
+        return true;
     }
 
     /**
@@ -2519,6 +2572,10 @@ class userquery extends CBCategory
      */
     function reset_password($input, bool $check_is_connected = true): bool
     {
+        if (!Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.3', '999')) {
+            e('Sorry, you cannot perform this action until the application has been fully updated by an administrator');
+            return false;
+        }
         if ($check_is_connected && User::getInstance()->isUserConnected()) {
             return false;
         }
@@ -2539,7 +2596,7 @@ class userquery extends CBCategory
             return true;
         }
 
-        $avcode = User::getInstance($user['userid'])->refreshAvcode();
+        $avcode = User::getInstance($user['userid'])->refreshAvcode(true);
         $var = [
             'reset_password_link' => DirPath::getUrl('root') . 'forgot.php?mode=reset_pass&email=' . $user['email'] . '&avcode=' . $avcode,
             'avcode'              => $avcode
