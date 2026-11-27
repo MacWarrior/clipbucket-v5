@@ -124,6 +124,12 @@ ClipBucket::getInstance()->addCSS([
     ,'readonly_tag' . $min_suffixe . '.css'     => 'admin'
 ]);
 
+if (THIS_PAGE === 'watch_video' && ClipBucket::getInstance()->template === 'cb_28') {
+    ClipBucket::getInstance()->addCSS([
+        'watch-video-theater' . $min_suffixe . '.css' => 'admin'
+    ]);
+}
+
 if( config('enable_comments_video') == 'yes' ) {
     ClipBucket::getInstance()->addJS(['pages/add_comment/add_comment' . $min_suffixe . '.js' => 'admin']);
 

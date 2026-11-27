@@ -342,7 +342,35 @@ class Session
             ];
         }
 
+        if (config('remember_theater_mode') === 'yes') {
+            $cookies[] = [
+                'name'         => 'theater_mode'
+                ,'description' => lang('cookie_description_theater_mode')
+                ,'value'       => self::getTheaterModePreference() ?? $undefined
+                ,'required'    => false
+                ,'lifetime'    => format_duration(3600)
+                ,'consent'     => self::canRememberTheaterMode()
+            ];
+        }
+
         return $cookies;
+    }
+
+    public static function canRememberTheaterMode(): bool
+    {
+        return config('remember_theater_mode') === 'yes'
+            && (self::getConsentCookie()['theater_mode'] ?? null) === 'yes';
+    }
+
+    public static function getTheaterModePreference(): ?string
+    {
+        if (!self::canRememberTheaterMode()) {
+            return null;
+        }
+
+        $mode = $_COOKIE['theater_mode'] ?? null;
+
+        return in_array($mode, ['normal', 'cinema'], true) ? $mode : null;
     }
 
     public static function isConsentCookieSet(): bool

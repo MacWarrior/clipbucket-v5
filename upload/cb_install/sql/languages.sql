@@ -1990,3 +1990,10 @@ VALUES ('noted_x'),
        ('page_title'),
        ('page_content'),
        ('help_drag_and_drop');
+
+INSERT INTO `{tbl_prefix}languages_keys` (`language_key`)
+VALUES ('theater_mode'),
+       ('exit_theater_mode'),
+       ('remember_theater_mode'),
+       ('cookie_theater_mode'),
+       ('cookie_description_theater_mode');
