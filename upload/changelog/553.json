@@ -1,6 +1,6 @@
 {
   "version":"5.5.3",
-  "revision":"238",
+  "revision":"239",
   "status":"stable",
   "detail":[
     {
@@ -140,6 +140,7 @@
         ,"Fix empty collection error"
         ,"Fix submit on multi video upload (<i>#907</i>)"
         ,"Fix personnal messages notification emails"
+        ,"Fix possible empty login"
       ]
     },
     {
