@@ -1081,7 +1081,7 @@ class Collection extends Objects
     {
         $item_id = mysql_clean($item_id);
         $collection_id = mysql_clean($collection_id);
-        if (!user_id()) {
+        if (!User::getInstance()->getCurrentUserID()) {
             e(lang('you_not_logged_in'));
             return false;
         }
@@ -1090,7 +1090,7 @@ class Collection extends Objects
             return false;
         }
         $collection = self::getInstance()->getOne(['collection_id' => $collection_id]);
-        if ((!$collection['userid'] == User::getInstance()->getCurrentUserID() && !User::getInstance()->hasAdminAccess()) || !User::getInstance()->hasPermission('view_collections')) {
+        if (($collection['userid'] != User::getInstance()->getCurrentUserID() && !User::getInstance()->hasAdminAccess()) || !User::getInstance()->hasPermission('view_collections')) {
             e(lang('cant_perform_action_collect'));
             return false;
         }
