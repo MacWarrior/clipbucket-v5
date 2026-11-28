@@ -278,11 +278,11 @@ class Tmdb
      * @return void
      * @throws Exception
      */
-    public function importDataFromTmdb(int $videoid, int $tmdb_id, string $type = 'movie'): void
+    public function importDataFromTmdb(int $videoid, int $tmdb_id, string $type = 'movie'): array
     {
         if( empty($videoid) ){
             e(lang('class_vdo_del_err'));
-            return;
+            return [];
         }
 
         $video_info = Video::getInstance()->getOne([
@@ -291,7 +291,21 @@ class Tmdb
         ]);
         if (empty($video_info)) {
             e(lang('class_vdo_del_err'));
-            return;
+            return [];
+        }
+        $user = User::getInstance();
+        $current_user_id = $user->getCurrentUserID();
+        if (!$user->hasAdminAccess() && (!$current_user_id || (int)$video_info['userid'] !== (int)$current_user_id)) {
+            e(lang('no_edit_video'));
+            return [];
+        }
+
+        $translations_enabled = VideoTranslations::isEnabled();
+        if ($translations_enabled) {
+            $default = Language::getDefaultLanguage();
+            $language_id = (int)($default['language_id'] ?? Language::$english_id);
+            $language_code = $default['language_code'] ?? 'en';
+            $this->setLanguage($language_code === 'esp' ? 'es' : $language_code);
         }
 
         switch ($type) {
@@ -299,23 +313,42 @@ class Tmdb
                 $type = 'movie';
             case 'movie':
                 $credits = $this->movieCredits($tmdb_id)['response'];
-                $details = $this->movieDetail($tmdb_id)['response'];
+                $endpoint = 'movie/' . $tmdb_id;
                 break;
             case 'series':
                 $credits = $this->seriesCredits($tmdb_id)['response'];
-                $details = $this->seriesDetail($tmdb_id)['response'];
+                $endpoint = 'tv/' . $tmdb_id;
                 break;
+        }
+        $title_field = self::$fields_title[$type];
+        $check_language = $translations_enabled && $language_id !== Language::$english_id;
+        $details = $this->requestAPI($endpoint, $check_language ? ['append_to_response' => 'translations'] : [])['response'] ?? [];
+        if ($check_language) {
+            if ($this->detailsUseEnglish($details, $title_field)) {
+                $language_id = Language::$english_id;
+            } elseif (empty($details[$title_field]) || (config('tmdb_get_description') == 'yes' && empty($details['overview']))) {
+                $english = $this->requestAPI($endpoint, ['language' => 'en'])['response'] ?? [];
+                if (!empty($english[$title_field]) && (empty($details[$title_field]) || !empty($english['overview']))) {
+                    $details = $english;
+                    $language_id = Language::$english_id;
+                }
+            }
+        }
+        if (empty($details[$title_field])) {
+            e(lang('error_occured'));
+            return [];
         }
 
         $update_video = false;
+        $translation = [];
 
         $video_info['datecreated'] = $details[self::$fields_date[$type]];
         if (config('tmdb_get_title') == 'yes' && !empty($details[self::$fields_title[$type]])) {
-            $video_info['title'] = $details[self::$fields_title[$type]];
+            $translation['title'] = $details[$title_field];
             $update_video = true;
         }
         if (config('tmdb_get_description') == 'yes' && !empty($details['overview'])) {
-            $video_info['description'] = $details['overview'];
+            $translation['description'] = $details['overview'];
             $update_video = true;
         }
         if (config('tmdb_get_age_restriction') == 'yes') {
@@ -346,7 +379,14 @@ class Tmdb
         if ($update_video) {
             $category_list = json_decode($video_info['category_list'], true);
             $video_info['category'] = array_column($category_list, 'id');
-            CBvideo::getInstance()->update_video($video_info);
+            if ($translations_enabled) {
+                CBvideo::getInstance()->update_video($video_info, $language_id, $translation);
+            } else {
+                CBvideo::getInstance()->update_video(array_replace($video_info, $translation));
+            }
+            if (error()) {
+                return [];
+            }
             $this->updateVideoTmdbInfo($videoid, $tmdb_id, $type);
         }
 
@@ -488,6 +528,30 @@ class Tmdb
             'success'       => 'yes',
             'action_obj_id' => $videoid,
         ]);
+        return $translations_enabled && $translation ? ['language_id' => $language_id, 'fields' => $translation] : [];
+    }
+
+    private function detailsUseEnglish(array $details, string $title_field): bool
+    {
+        $fields = [];
+        if (config('tmdb_get_title') == 'yes' && !empty($details[$title_field])) {
+            $fields[$title_field] = $details[$title_field];
+        }
+        if (config('tmdb_get_description') == 'yes' && !empty($details['overview'])) {
+            $fields['overview'] = $details['overview'];
+        }
+        if (!$fields) {
+            return false;
+        }
+
+        $requested = strtolower(explode('-', $this->language)[0]);
+        $languages = [];
+        foreach ($details['translations']['translations'] ?? [] as $translation) {
+            if (!array_diff_assoc($fields, $translation['data'] ?? [])) {
+                $languages[] = $translation['iso_639_1'];
+            }
+        }
+        return in_array('en', $languages, true) && !in_array($requested, $languages, true);
     }
 
     /**

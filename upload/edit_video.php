@@ -60,6 +60,10 @@ if ($vdetails['userid'] != $userid) {
 }
 
 $min_suffixe = System::isInDev() ? '' : '.min';
+if (VideoTranslations::isEnabled()) {
+    assign('video_translation_languages', VideoTranslations::getFormLanguages($vdetails, error() ? $_POST : null));
+    ClipBucket::getInstance()->addJS(['video_translations' . $min_suffixe . '.js' => 'global']);
+}
 ClipBucket::getInstance()->addJS([
     'tag-it' . $min_suffixe . '.js'                            => 'admin',
     'init_default_tag/init_default_tag' . $min_suffixe . '.js' => 'admin',

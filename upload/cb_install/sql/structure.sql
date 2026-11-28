@@ -491,11 +491,9 @@ CREATE TABLE `{tbl_prefix}video` (
   `video_password` varchar(255) NOT NULL DEFAULT '',
   `username` text NULL DEFAULT NULL,
   `userid` int(11) NULL DEFAULT NULL,
-  `title` text DEFAULT NULL,
   `file_name` varchar(32) NOT NULL DEFAULT '',
   `file_type` VARCHAR(4) NULL DEFAULT NULL,
   `file_directory` varchar(25) NOT NULL DEFAULT '',
-  `description` text DEFAULT NULL,
   `broadcast` varchar(10) NOT NULL DEFAULT '',
   `location` mediumtext DEFAULT NULL,
   `datecreated` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -673,10 +671,7 @@ ALTER TABLE `{tbl_prefix}video`
   ADD KEY `last_viewed` (`last_viewed`),
   ADD KEY `comments_count` (`comments_count`),
   ADD KEY `status` (`status`,`active`,`broadcast`,`userid`),
-  ADD KEY `videoid` (`videoid`,`videokey`(255)),
-  ADD FULLTEXT KEY `description` (`description`,`title`);
-ALTER TABLE `{tbl_prefix}video`
-  ADD FULLTEXT KEY `title` (`title`);
+  ADD KEY `videoid` (`videoid`,`videokey`(255));
 
 ALTER TABLE `{tbl_prefix}action_log`
   MODIFY `action_id` int(255) NOT NULL AUTO_INCREMENT;
@@ -977,6 +972,19 @@ ALTER TABLE `{tbl_prefix}videos_categories`
     ADD CONSTRAINT `video_categories_category` FOREIGN KEY (`id_category`) REFERENCES `{tbl_prefix}categories` (`category_id`) ON DELETE RESTRICT ON UPDATE RESTRICT;
 ALTER TABLE `{tbl_prefix}videos_categories`
     ADD CONSTRAINT `video_categories_video` FOREIGN KEY (`id_video`) REFERENCES `{tbl_prefix}video` (`videoid`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+
+CREATE TABLE `{tbl_prefix}videos_translations` (
+    `videoid` BIGINT(20) NOT NULL,
+    `language_id` INT(9) NOT NULL,
+    `video_title` TEXT DEFAULT NULL,
+    `video_description` TEXT DEFAULT NULL,
+    PRIMARY KEY (`videoid`, `language_id`),
+    KEY `language_id` (`language_id`),
+    FULLTEXT KEY `video_title` (`video_title`),
+    FULLTEXT KEY `video_description` (`video_description`, `video_title`),
+    FOREIGN KEY (`videoid`) REFERENCES `{tbl_prefix}video` (`videoid`) ON DELETE CASCADE,
+    FOREIGN KEY (`language_id`) REFERENCES `{tbl_prefix}languages` (`language_id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
 
 CREATE TABLE IF NOT EXISTS `{tbl_prefix}photos_categories`
 (

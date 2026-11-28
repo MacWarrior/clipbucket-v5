@@ -359,7 +359,11 @@
                     </ul>
                     <div class="tab-content">
                         <div id="videoinfos" class="tab-pane fade active in">
+                            {if $video_translation_languages}
+                                {include file=DirPath::get('styles')|cat:'global/video_translation_fields.html' clone_upload_form=false}
+                            {/if}
                             {foreach from=$video_fields item=field}
+                                {if $video_translation_languages && in_array($field.name, ['title', 'description'])}{continue}{/if}
                                 {if in_array($field.id, ['tags_genre','tags_actors','tags_executive_producer','tags_producer','tags_director','tags_crew','category', 'external_rate', 'external_ratings'])}
                                     {continue}
                                 {/if}

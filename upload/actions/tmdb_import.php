@@ -7,7 +7,7 @@ if (config('tmdb_enable_on_front_end') != 'yes' || config('enable_tmdb') != 'yes
     return false;
 }
 
-Tmdb::getInstance()->importDataFromTmdb($_POST['videoid'] ?? 0, $_POST['tmdb_video_id'] ?? 0, $_POST['type']);
+$translation = Tmdb::getInstance()->importDataFromTmdb($_POST['videoid'] ?? 0, $_POST['tmdb_video_id'] ?? 0, $_POST['type']);
 
 if (errorhandler::getInstance()->get_error()) {
     echo json_encode([
@@ -21,6 +21,7 @@ if (errorhandler::getInstance()->get_error()) {
         'video_detail' => $video
     ];
     if ($_POST['from']== 'upload') {
+        $return['translation'] = $translation;
         if ($video['status'] == 'Successful') {
             assign('data', $video);
             ob_start();

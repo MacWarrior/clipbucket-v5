@@ -21,7 +21,11 @@
                         <form method="post" name="edit_video" enctype="multipart/form-data">
                             {ANCHOR place="before_upload_form_required_fields"}
                             <div class="requiredFields">
+                                {if $video_translation_languages}
+                                    {include file=DirPath::get('styles')|cat:'global/video_translation_fields.html' clone_upload_form=false}
+                                {/if}
                                 {foreach $requiredFields.fields as $field}
+                                    {if $video_translation_languages && in_array($field.name, ['title', 'description'])}{continue}{/if}
                                     <div class="form-group">
                                         {$field.class='form-control'}
                                         {$field.notShowSeprator='yes'}

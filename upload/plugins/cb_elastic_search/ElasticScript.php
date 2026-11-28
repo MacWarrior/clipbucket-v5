@@ -64,8 +64,9 @@ try {
                     $extras["method"] = $method;
 
                     if ($videos) {
+                        $translations = VideoTranslations::getForVideos(array_column($videos, 'videoid'));
                         foreach ($videos as $key => $video) {
-                            $formattedVideo = $es->FormatVideo($video);
+                            $formattedVideo = $es->FormatVideo($video, $translations[$video['videoid']] ?? []);
                             $extras["id"] = $video["videoid"];
                             $response["data"] = $es->EsIndex($formattedVideo, $extras);
 

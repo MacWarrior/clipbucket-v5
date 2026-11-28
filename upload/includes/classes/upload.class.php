@@ -29,7 +29,7 @@ class Upload
      * @param bool $is_upload
      * @throws Exception
      */
-    function validate_video_upload_form($array = null, $is_upload = false): void
+    function validate_video_upload_form($array = null, $is_upload = false, ?array $imported_translation = null): void
     {
         //First Load All Fields in an array
         $required_fields = $this->loadRequiredFields($array);
@@ -51,6 +51,23 @@ class Upload
 
         //Merging Array
         $upload_fields = array_merge($required_fields, $location_fields, $option_fields);
+        if (VideoTranslations::isEnabled()) {
+            if (array_key_exists('video_translations', $array)) {
+                VideoTranslations::validateForm($array, $required_fields);
+                unset($upload_fields['title'], $upload_fields['desc']);
+            } elseif ($imported_translation !== null) {
+                unset($upload_fields['title'], $upload_fields['desc']);
+                if (isset($imported_translation['title'])) {
+                    validate_cb_form([$required_fields['title']], $imported_translation);
+                }
+                if (isset($imported_translation['description'])) {
+                    validate_cb_form([$required_fields['desc']], $imported_translation);
+                }
+            } elseif (!is_string($array['title'] ?? null) || !is_string($array['description'] ?? null)) {
+                e(lang('missing_params'));
+                return;
+            }
+        }
 
         //Adding Custom Upload Fields
         if (count($this->custom_upload_fields) > 0 && $is_upload) {
@@ -98,6 +115,11 @@ class Upload
         $option_fields = $this->loadOptionFields($array);
 
         $upload_fields = array_merge($required_fields, $location_fields, $option_fields);
+        $translations_enabled = VideoTranslations::isEnabled();
+        if ($translations_enabled) {
+            $translations = VideoTranslations::values($array);
+            unset($upload_fields['title'], $upload_fields['desc']);
+        }
         //Adding Custom Upload Fields
         if (count($this->custom_upload_fields) > 0) {
             $upload_fields = array_merge($upload_fields, $this->custom_upload_fields);
@@ -217,8 +239,14 @@ class Upload
                 $query_field[] = 'tags';
                 $query_val[] = '';
             }
-            Clipbucket_db::getInstance()->insert(tbl('video'),$query_field, $query_val);
-            $insert_id = Clipbucket_db::getInstance()->insert_id();
+            $insert_id = Clipbucket_db::getInstance()->insert(tbl('video'), $query_field, $query_val);
+            if (!$insert_id) {
+                e(lang('error_occured'));
+                return false;
+            }
+            if ($translations_enabled) {
+                VideoTranslations::save($insert_id, $translations, isset($array['video_translations']));
+            }
             Tags::saveTags($array['tags'] ?? '', 'video', $insert_id);
 
             if( Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.0', '331') ){
@@ -230,7 +258,7 @@ class Upload
                 'success'       => $insert_id ? 'yes' : 'no',
                 'action_obj_id' => $insert_id,
                 'userid'        => $userid,
-                'details'       => $array['title']
+                'details'       => $translations_enabled ? $translations[VideoTranslations::defaultLanguageId()]['title'] : $array['title']
             ]);
 
             Clipbucket_db::getInstance()->update(tbl('users'), ['total_videos'], ['|f|total_videos+1'], ' userid=\'' . $userid . '\'');
@@ -247,7 +275,11 @@ class Upload
         }
 
         // Case when video already exists
-        Clipbucket_db::getInstance()->update(tbl('video'), $query_field, $query_val, 'file_name = \''.mysql_clean($file_name).'\'');
+        $condition = 'file_name = \'' . mysql_clean($file_name) . '\'';
+        Clipbucket_db::getInstance()->update(tbl('video'), $query_field, $query_val, $condition);
+        if ($translations_enabled) {
+            VideoTranslations::save($insert_id, $translations, isset($array['video_translations']));
+        }
         return true;
     }
 
@@ -270,8 +302,8 @@ class Upload
             $default = $_POST;
         }
 
-        $title = $default['title'];
-        $desc = $default['description'];
+        $title = $default['title'] ?? '';
+        $desc = $default['description'] ?? '';
 
 
         $hint_tags = config('allow_tag_space') =='yes' ? '<span class="fa fa-question-circle tips" style="margin-left: 5px;" title=\''.lang('use_tab_tag').'\'></span>' : '';

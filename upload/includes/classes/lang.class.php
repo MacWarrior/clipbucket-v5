@@ -56,26 +56,21 @@ class Language
      */
     public function init(): void
     {
+        $lang_details = false;
         if( Session::isCookieConsent('cb_lang') ){
-            $lang = getArrayValue($_COOKIE, 'cb_lang');
-
             if( isset($_GET['set_site_lang']) ){
-                $lang = $_GET['set_site_lang'];
-                if ($this->getLangById($lang)) {
-                    Session::setCookie('cb_lang', $lang);
+                $lang_details = self::getActiveLangById($_GET['set_site_lang']);
+                if ($lang_details) {
+                    Session::setCookie('cb_lang', $lang_details['language_id']);
                 }
             }
 
-            if (!empty($lang)) {
-                $lang_details = $this->getLangById($lang);
+            if (!$lang_details) {
+                $lang_details = self::getActiveLangById(getArrayValue($_COOKIE, 'cb_lang'));
             }
         }
 
-        if (isset($lang) && isset($lang_details)) {
-            $default = $lang_details;
-        } else {
-            $default = self::getDefaultLanguage();
-        }
+        $default = $lang_details ?: self::getDefaultLanguage();
 
         if ($default['language_id']) {
             $this->lang_name = $default['language_name'];
@@ -85,6 +80,15 @@ class Language
         }
 
         $this->loadTranslations($this->lang_id);
+    }
+
+    private static function getActiveLangById($id)
+    {
+        if (!is_int($id) && !is_string($id)) {
+            return false;
+        }
+        $language = self::getLangById($id);
+        return ($language['language_active'] ?? 'no') === 'yes' ? $language : false;
     }
 
     /**

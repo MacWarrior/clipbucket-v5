@@ -99,6 +99,8 @@ class ElasticSearch
                     "first_name"        => ["type" => "text"],
                     "last_name"         => ["type" => "text"],
                     "description"       => ["type" => "text"],
+                    "video_titles"      => ["type" => "text"],
+                    "video_descriptions" => ["type" => "text"],
                     "category"          => [
                         "type"       => "object",
                         "properties" => [
@@ -323,14 +325,18 @@ class ElasticSearch
      *
      * @since   : { 30 October 2018 }
      */
-    public function FormatVideo($video)
+    public function FormatVideo($video, array $translations = [])
     {
         $newVideo = (object)[];
 
         $newVideo->videoid = $video["videoid"];
         $newVideo->userid = $video["userid"];
         $newVideo->title = $video["title"];
-        $newVideo->description = htmlspecialchars($video["description"]);
+        $newVideo->description = htmlspecialchars($video["description"] ?? '');
+        if (VideoTranslations::isEnabled()) {
+            $newVideo->video_titles = array_values(array_filter(array_column($translations, 'title'), 'is_string'));
+            $newVideo->video_descriptions = array_values(array_filter(array_column($translations, 'description'), 'is_string'));
+        }
         $newVideo->tags = $video['tags'];
 
         $categories = CBvideo::getInstance()->get_category_names($video["category"]);
@@ -566,6 +572,10 @@ class ElasticSearch
         $bool_must["should"][] = ["match" => [
             "description" => $this->publicQuery
         ]];
+        if (VideoTranslations::isEnabled()) {
+            $bool_must["should"][] = ["wildcard" => ["video_titles" => $this->publicQuery]];
+            $bool_must["should"][] = ["match" => ["video_descriptions" => $this->publicQuery]];
+        }
         $bool_must["should"][] = ["match" => [
             "category.name" => $this->publicQuery
         ]];
@@ -731,6 +741,10 @@ class ElasticSearch
         $bool_must["should"][] = ["match" => [
             "description" => $this->publicQuery
         ]];
+        if (VideoTranslations::isEnabled()) {
+            $bool_must["should"][] = ["match" => ["video_titles" => $this->publicQuery]];
+            $bool_must["should"][] = ["match" => ["video_descriptions" => $this->publicQuery]];
+        }
         $bool_must["should"][] = ["match" => [
             "tags" => $this->publicQuery
         ]];
